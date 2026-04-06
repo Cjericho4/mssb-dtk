@@ -36,6 +36,12 @@ typedef struct {
 } OuterStruct_F13F8;
 
 extern u8 lbl_3_bss_AEE8;
+extern void* lbl_3_bss_B55C;
+extern u8 lbl_3_data_1BA5C[];
+extern u8 lbl_803CBBC0;
+
+void fn_800BDA24(void* arg0);
+void fn_800A7D4C(s32 arg0, void* elem);
 
 void fn_3_EE100(void);
 void fn_3_EE388(void);

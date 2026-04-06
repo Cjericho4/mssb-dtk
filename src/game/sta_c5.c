@@ -42,7 +42,14 @@ void fn_3_EEE3C(void) {
 
 // .text:0x000EEF24 size:0x80 mapped:0x8072DFB8
 void fn_3_EEF24(void) {
-    return;
+    if (g_hugeAnimStruct.displayObjects == 0) {
+        fn_800B0A14_removeQueue();
+    } else if (g_hugeAnimStruct.renderStadiumFlag != 0) {
+        fn_800BDA24(lbl_3_bss_B55C);
+        fn_3_EE388();
+        fn_3_EEB94();
+        fn_800A7D4C(1, &lbl_3_data_1BA5C[lbl_803CBBC0 * 8]);
+    }
 }
 
 // .text:0x000EEFA4 size:0x2C mapped:0x8072E038
