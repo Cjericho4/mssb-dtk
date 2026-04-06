@@ -365,7 +365,27 @@ void fn_3_14E7C0(void* arg0) {
 
 // .text:0x0014E810 size:0x84 mapped:0x8078D8A4
 void fn_3_14E810(void) {
-    return;
+    u32 i = 0;
+    struct Struct_800339F0_Result* result;
+    ListNode_14B9F0* node;
+    s32 target_val;
+
+    do {
+        result = fn_800339F0(0, 0x1E);
+        if (result != NULL) {
+            target_val = (s8)i + 1;
+            node = result->listHead;
+            do {
+                if (node->field_0x4C == target_val) {
+                    node->field_0x4A = 0;
+                }
+                node = node->next;
+            } while (node != NULL);
+        }
+        i++;
+    } while (i < 4);
+
+    pitchingMachinePitching(0x1E);
 }
 
 // .text:0x0014E894 size:0x8C mapped:0x8078D928
