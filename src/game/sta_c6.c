@@ -4,6 +4,9 @@
 #include "stl/mem.h"
 #include "header_rep_data.h"
 
+extern long rand(void);
+extern u32 lbl_3_data_19018[3];
+
 // .text:0x000E59B4 size:0x68 mapped:0x80724A48
 void fn_3_E59B4(ActorObject *arg0) {
     void *boneData = arg0->wrapper->boneData;
@@ -66,8 +69,17 @@ void fn_3_E6410(void) {
 }
 
 // .text:0x000E64A8 size:0x80 mapped:0x8072553C
-void fn_3_E64A8(void) {
-    return;
+u32* fn_3_E64A8(void) {
+    u8 val = rand() % 3;
+    
+    switch (val) {
+        case 0:
+            return &lbl_3_data_19018[0];
+        case 1:
+            return &lbl_3_data_19018[1];
+        default:
+            return &lbl_3_data_19018[2];
+    }
 }
 
 // .text:0x000E6528 size:0x50 mapped:0x807255BC

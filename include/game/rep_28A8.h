@@ -2,6 +2,9 @@
 #define __GAME_rep_28A8_H_
 
 #include "mssbTypes.h"
+#include "game/gap_1D86C.h"
+#include "game/gap_FBCD0.h"
+#include "game/gap_5985C.h"
 
 void fn_3_D9EA0(void);
 void fn_3_DA640(void);

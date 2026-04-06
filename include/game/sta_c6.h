@@ -85,7 +85,7 @@ int fn_3_E5E14(Arg0_E5E14* arg0);
 void fn_3_E5E70(void);
 void fn_3_E5FEC(void);
 void fn_3_E6410(void);
-void fn_3_E64A8(void);
+u32* fn_3_E64A8(void);
 void fn_3_E6528(Struct_E6528* arg0);
 void fn_3_E6578(void);
 void fn_3_E6638(BaseStruct_E6638* arg0);

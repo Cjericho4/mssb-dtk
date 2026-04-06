@@ -21,8 +21,25 @@ void fn_3_E2118(void) {
 }
 
 // .text:0x000E22A4 size:0x80 mapped:0x80721338
-void fn_3_E22A4(void) {
-    return;
+void fn_3_E22A4(Arg_E22A4 *arg0) {
+    E22A4_Level6 *ptr = arg0->unk_74->unk_00->unk_10->unk_10->unk_00->unk_10->unk_04;
+    u8 val;
+
+    ptr->unk_04 &= ~0x1FFFU;
+
+    if (arg0->unk_C4 == 0) {
+        return;
+    }
+
+    val = arg0->unk_C8 + 1;
+
+    if (arg0->unk_C4 == 1 || arg0->unk_C4 == 5) {
+        if (arg0->unk_C5 % 2 == 0) {
+            val = 0;
+        }
+    }
+
+    ptr->unk_04 |= val;
 }
 
 // .text:0x000E2324 size:0x2AC mapped:0x807213B8

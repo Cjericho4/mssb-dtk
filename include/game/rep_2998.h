@@ -4,10 +4,53 @@
 #include "mssbTypes.h"
 #include "UnknownHeaders.h"
 
+typedef struct E22A4_Level6 {
+    u8 _pad[0x04];
+    u32 unk_04;
+} E22A4_Level6;
+
+typedef struct E22A4_Level5 {
+    u8 _pad[0x04];
+    E22A4_Level6 *unk_04;
+} E22A4_Level5;
+
+typedef struct E22A4_Level4 {
+    u8 _pad[0x10];
+    E22A4_Level5 *unk_10;
+} E22A4_Level4;
+
+typedef struct E22A4_Level3 {
+    E22A4_Level4 *unk_00;
+} E22A4_Level3;
+
+typedef struct E22A4_Level2 {
+    u8 _pad[0x10];
+    E22A4_Level3 *unk_10;
+} E22A4_Level2;
+
+typedef struct E22A4_Level1 {
+    u8 _pad[0x10];
+    E22A4_Level2 *unk_10;
+} E22A4_Level1;
+
+typedef struct E22A4_Level0 {
+    E22A4_Level1 *unk_00;
+} E22A4_Level0;
+
+typedef struct Arg_E22A4 {
+    u8 _pad0[0x74];
+    E22A4_Level0 *unk_74;     /* 0x74 */
+    u8 _pad78[0xC4 - 0x78];
+    u8 unk_C4;                /* 0xC4 */
+    u8 unk_C5;                /* 0xC5 */
+    u8 _padC6[0x02];
+    u8 unk_C8;                /* 0xC8 */
+} Arg_E22A4;
+
 void fn_3_E1FA8(void);
 void fn_3_E2034(void);
 void fn_3_E2118(void);
-void fn_3_E22A4(void);
+void fn_3_E22A4(Arg_E22A4 *arg0);
 void fn_3_E2324(void);
 void fn_3_E25D0(void);
 void fn_3_E266C(void);

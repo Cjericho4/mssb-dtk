@@ -85,7 +85,23 @@ void fn_3_DD1A8(void) {
 
 // .text:0x000DD37C size:0x80 mapped:0x8071C410
 void fn_3_DD37C(void) {
-    return;
+    if (g_Minigame._19CE != 0) {
+        fn_3_FBD70();
+        fn_3_FBD58();
+    }
+    
+    g_GameLogic.pre_PostMiniGameInd = 1;
+    g_GameLogic.minigameLastTurnSuccessInd = 1;
+    g_GameLogic.hudLoadingRelated = 1;
+    
+    fn_3_1DD48();
+    
+    if (g_Minigame.pointsTargetReachedInd == 0) {
+        fn_3_2E87C();
+        fn_3_5A6D4(0);
+    } else {
+        fn_3_5A6D4(8);
+    }
 }
 
 // .text:0x000DD3FC size:0x5A8 mapped:0x8071C490
