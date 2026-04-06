@@ -5,6 +5,13 @@
 #include "game/UnknownHomes_Game.h"
 #include "static/UnknownHomes_Static.h"
 #include "UnknownHeaders.h"
+#include "game/rep_31F0.h"
+#include "game/gap_114FC0.h"
+#include "game/rep_34B0.h"
+#include "game/rep_3520.h"
+#include "game/gap_1471C0.h"
+
+void fn_3_141A2C(void);
 
 void fn_3_106DFC(void);
 s32 fn_3_106E50(void);

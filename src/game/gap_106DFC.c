@@ -291,7 +291,19 @@ void fn_3_109DE0(void) {
 
 // .text:0x0010A01C size:0x84 mapped:0x807490B0
 void fn_3_10A01C(void) {
-    return;
+    if (g_Minigame.GameMode_MiniGame == MINI_GAME_ID_BOBOMB_DERBY) {
+        fn_3_1128E8();
+    } else if (g_Minigame.GameMode_MiniGame == MINI_GAME_ID_WALLBALL) {
+        fn_3_1160B8();
+    } else if (g_Minigame.GameMode_MiniGame == MINI_GAME_ID_BARREL_BATTER) {
+        fn_3_1323CC();
+    } else if (g_Minigame.GameMode_MiniGame == MINI_GAME_ID_CHAINCHOMP_SPRINT) {
+        fn_3_141A2C();
+    } else if (g_Minigame.GameMode_MiniGame == MINI_GAME_ID_PIRANHA_PANIC) {
+        fn_3_1471C0();
+    } else if (g_Minigame.GameMode_MiniGame == MINI_GAME_ID_STAR_DASH) {
+        fn_3_13C464();
+    }
 }
 
 // .text:0x0010A0A0 size:0xCA8 mapped:0x80749134
