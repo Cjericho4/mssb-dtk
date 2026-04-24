@@ -34,6 +34,26 @@ typedef struct GapDEB90Entry2D94 {
     f32 field_0x14;
 } GapDEB90Entry2D94;
 
+typedef struct {
+    u8 _pad[2];
+    s16 unk2;
+} Data18BB0Entry;
+extern Data18BB0Entry lbl_3_data_18BB0[];
+extern f32 lbl_3_data_18DD0;
+
+typedef struct {
+    void* unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    u8 _pad18[0xC];
+    u8 _pad24[2];
+    u8 unk26;
+    u8 _pad27;
+} GapDEB90E0668Entry;
+
 // .text:0x000DEB90 size:0x47C mapped:0x8071DC24
 void fn_3_DEB90(void) {
     return;
@@ -185,7 +205,38 @@ void fn_3_DFBAC(void) {
 
 // .text:0x000E0668 size:0xF0 mapped:0x8071F6FC
 void fn_3_E0668(void) {
-    return;
+    s32 r29;
+    u8 *r28;
+    VecXYZ *r27;
+    GapDEB90E0668Entry *entry;
+    s32 r25;
+
+    r28 = (u8*)&g_Minigame;
+    r25 = 0;
+    r27 = (VecXYZ*)&g_Minigame;
+    r29 = 0;
+
+    do {
+        entry = (GapDEB90E0668Entry*)((u8*)g_hugeAnimStruct.entries_2D94 + r29);
+
+        if (*(r28 + 0x193A) == 0) {
+            entry->unk26 = 0;
+        } else if (g_Minigame.wallBall_coinsVisibleFrameCounter > lbl_3_data_18BB0[g_Minigame._199E].unk2
+                   && (g_Minigame.wallBall_coinsVisibleFrameCounter & 1)) {
+            entry->unk26 = 0;
+        } else {
+            entry->unk26 = 1;
+            entry->unk4 = ((VecXYZ*)((u8*)r27 + 0xCD0))->x;
+            entry->unk8 = -((VecXYZ*)((u8*)r27 + 0xCD0))->y;
+            entry->unkC = ((VecXYZ*)((u8*)r27 + 0xCD0))->z;
+            entry->unk14 = fn_3_9FEA8(entry->unk14 + lbl_3_data_18DD0);
+        }
+
+        r25++;
+        r29 += 0x28;
+        r28++;
+        r27++;
+    } while (r25 < 0x1E);
 }
 
 // .text:0x000E0758 size:0x84 mapped:0x8071F7EC
