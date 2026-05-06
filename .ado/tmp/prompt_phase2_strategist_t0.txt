@@ -1,0 +1,72 @@
+```json
+{
+  "ops": [
+    {
+      "op": "AddLocalDecl",
+      "args": {
+        "name": "data_ptr",
+        "type": "u8*",
+        "scope": "fn_3_E7364"
+      }
+    },
+    {
+      "op": "AddLocalDecl",
+      "args": {
+        "name": "offset",
+        "type": "u32",
+        "scope": "fn_3_E7364"
+      }
+    },
+    {
+      "op": "AddLocalDecl",
+      "args": {
+        "name": "index",
+        "type": "u32",
+        "scope": "fn_3_E7364"
+      }
+    },
+    {
+      "op": "AddLocalDecl",
+      "args": {
+        "name": "val",
+        "type": "u8",
+        "scope": "fn_3_E7364"
+      }
+    }
+  ]
+}
+```
+
+### Proposed C Code
+
+```c
+typedef struct {
+    u8* ptr;
+} PointerGlobal;
+
+extern PointerGlobal lbl_3_common_bss_350E4;
+extern u8 lbl_3_data_19640;
+
+void fn_3_E7364(s32 arg0) {
+    u32 offset;
+    u8* data_ptr;
+    u32 index;
+    u8 val;
+
+    // mulli r4, r3, 0xe8
+    offset = arg0 * 0xE8;
+    
+    // lis r5, sym@ha; addi r5, r5, sym@l; lwz r5, 0(r5)
+    // The "lwz pattern" indicates a pointer global.
+    data_ptr = lbl_3_common_bss_350E4.ptr;
+    
+    // addi r0, r4, 0xc0
+    index = offset + 0xC0;
+    
+    // lbzx r0, r5, r0
+    val = data_ptr[index];
+    
+    // stb r0, sym@l(r3)
+    lbl_3_data_19640 = val;
+}
+```

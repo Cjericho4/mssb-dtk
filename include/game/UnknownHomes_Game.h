@@ -2288,7 +2288,9 @@ typedef struct Fielder {
     /* 0x020 */ u8 _pad_mid2[0x10];
     /* 0x030 */ f32 unk30;
     /* 0x034 */ f32 unk34;
-    /* 0x038 */ u8 _pad_mid3[0x18];
+    /* 0x038 */ u8 _pad_mid3[0x10];
+    /* 0x048 */ f32 unk48;
+    /* 0x04C */ u8 _pad_mid3b[0x4];
     /* 0x050 */ f32 unk50;
     /* 0x054 */ f32 unk54;
     /* 0x058 */ u8 _pad_mid4[0x10]; 
@@ -2312,7 +2314,9 @@ typedef struct Fielder {
     /* 0x1EC */ u8 unk1EC;
     /* 0x1ED */ u8 _pad3f[0x1FF - 0x1ED];
     /* 0x1FF */ u8 unk1FF;
-    /* 0x200 */ u8 _pad3c[0x25B - 0x200];
+    /* 0x200 */ u8 _pad3c[0x18];
+    /* 0x218 */ u8 unk218;
+    /* 0x219 */ u8 _pad3c2[0x25B - 0x219];
     /* 0x25B */ u8 unk_25B;
     /* 0x25C */ u8 _pad4[0x268 - 0x25C];
     } Fielder; // sizeof == 0x268

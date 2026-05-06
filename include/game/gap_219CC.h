@@ -4,7 +4,9 @@
 #include "mssbTypes.h"
 
 typedef struct {
-    u8 _data[0x2C];
+    /* 0x00 */ u8 _pad0[0xC];
+    /* 0x0C */ f32 unkC;
+    /* 0x10 */ u8 _pad10[0x1C];
 } Bss1323CSubItem; // size: 0x2C
 
 typedef struct {

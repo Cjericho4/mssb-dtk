@@ -1,0 +1,22 @@
+{
+  "ops": [
+    {
+      "op": "ReplaceFunctionBody",
+      "args": {
+        "func": "fn_3_E7364",
+        "new_body": "{\n    u32 offset;\n    u8* ptr;\n    \n    offset = index * 0xE8;\n    ptr = lbl_3_common_bss_350E4[0].ptr_0x0;\n    lbl_3_data_19640 = ptr[offset + 0xC0];\n}"
+      }
+    }
+  ],
+  "project_ops": [
+    {
+      "op": "AddStructField",
+      "args": {
+        "struct_name": "UnknownStruct_350E4",
+        "field_name": "ptr_0x0",
+        "field_type": "u8*",
+        "offset": "0x00"
+      }
+    }
+  ]
+}

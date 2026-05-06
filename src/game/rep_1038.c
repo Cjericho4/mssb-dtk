@@ -28,7 +28,7 @@ void fn_3_6C0E0(void) {
 
 void fn_3_6C108(void) {
     fn_3_B93C8(1);
-    lbl_3_common_bss_32724._pad2[4] = 0;
+    lbl_3_common_bss_32724._pad4[4] = 0;
 }
 
 // .text:0x0006C13C size:0x14 mapped:0x806AB1D0

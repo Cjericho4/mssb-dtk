@@ -289,9 +289,9 @@ void fn_3_104B20(VecXYZ* dst, SourceObj_104B20* src) {
     f32 z = src->pos.z;
     f32 y = src->pos.y;
     f32 x = src->pos.x;
-    dst->x = x;
-    dst->y = y;
     dst->z = z;
+    dst->y = y;
+    dst->x = x;
 }
 
 // .text:0x00104B3C size:0x990 mapped:0x80743BD0

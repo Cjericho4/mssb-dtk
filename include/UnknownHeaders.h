@@ -512,7 +512,9 @@ typedef struct StadiumObjectElem {
     u8 unk93;                         /* 0x93 */
     u8 _pad_0x94[0xA9 - 0x94];       /* 0x94 */
     u8 unk_A9;                        /* 0xA9 */
-    u8 _pad_0xaa[0xE8 - 0xAA];       /* 0xAA */
+    u8 _pad_0xaa[0xC0 - 0xAA];       /* 0xAA */
+    u8 unkC0;                         /* 0xC0 */
+    u8 _pad_0xc1[0xE8 - 0xC1];       /* 0xC1 */
 } StadiumObjectElem;
 
 typedef struct UnknownStruct_350E4 {
@@ -536,6 +538,7 @@ typedef struct UnknownStruct_350E4 {
     /* 0x07C */ u8 _pad_0x7c[0xA9 - 0x7C];
     /* 0x0A9 */ u8 unk_A9;
     /* 0x0AA */ u8 _pad_0xaa[0xE8 - 0xAA];
+    u8* ptr_0x0; /* 0x0 */
 } UnknownStruct_350E4;
 
 extern UnknownStruct_350E4 lbl_3_common_bss_350E4[];

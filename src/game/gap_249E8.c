@@ -1,12 +1,36 @@
 #include "game/gap_249E8.h"
 #include "game/gap_219CC.h"
 #include "game/rep_E08.h"
+#include "UnknownHeaders.h"
+#include "game/UnknownHomes_Game.h"
 
 #include <string.h>
 
 // .text:0x000249E8 size:0xF4 mapped:0x80663A7C
 void fn_3_249E8(s32 arg0) {
-    return;
+    Data1F090Entry *entry = &lbl_3_data_1F090[arg0];
+    Fielder *fielder = g_Fielders;
+    f32 temp_f0;
+    s32 i;
+    u8 r26;
+
+    i = 0;
+    r26 = entry->unk14;
+    do {
+        if (r26 == fielder->unk218) {
+            lbl_3_common_bss_1323C->unk240[i] = (s16)arg0;
+            if (entry->unk19 == 0) {
+                memcpy(fielder, entry, 0xC);
+            }
+            temp_f0 = entry->unkC;
+            lbl_3_common_bss_1323C->unk0[i].unkC = temp_f0;
+            fielder->unk48 = temp_f0;
+            lbl_3_common_bss_1323C->unk261[i] = 1;
+            AnimateCharacter(i, entry->unk10, entry->unk16, entry->unk17, entry->unk18, entry->unk12, 0, 0);
+        }
+        i++;
+        fielder++;
+    } while (i < 9);
 }
 
 // .text:0x00024ADC size:0x2E0 mapped:0x80663B70

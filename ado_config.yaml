@@ -1,0 +1,26 @@
+project_id: mssb-dtk
+project_structure:
+  asm_dir: "build/GYQE01/asm"
+  src_dir: "src"
+  symbols_file: "config/GYQE01/symbols.txt"
+  m2ctx_script: "tools/decompctx.py"
+  objdiff_path: "/home/michael/Downloads/objdiff-cli-linux-x86_64"
+  m2c_path: "tools/m2c_repo/m2c.py"
+  ninja_path: "/usr/bin/ninja"
+  object_target_template: "build/GYQE01/{target_file_no_ext}.o"
+
+phase1:
+  tier1_threshold: 3
+  max_iterations: 20
+
+phase2:
+  max_iterations: 50
+  tier1_threshold_per_class:
+    register_alloc: 5
+    instruction_count: 5
+
+llm:
+  local_url: "http://100.87.38.50:1234/v1"
+  local_model: "qwen/qwen3.6-27b"
+
+bounce_back_max_per_function: 2

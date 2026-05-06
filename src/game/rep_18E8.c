@@ -103,28 +103,16 @@ s32 fn_3_A36BC(void) {
  * @address 000A372C
  */
 s32 fn_3_A372C(void) {
-    /* * To match target:
-     * 1. Constant address -> r3 (lis r3)
-     * 2. Ball address -> r4 (lis r4)
-     * 3. Load ball.x into f2 and update r4 (lfsu f2)
-     * 4. Load constant from r3 into f1 (lfs f1)
-     * 5. Load ball.z from updated r4 into f3 (lfs f3)
-     */
-    f32 ballX = g_Ball.AtBat_Contact_BallPos.x;
+    VecXYZ* ballPos = &g_Ball.AtBat_Contact_BallPos;
+    f32 x = ballPos->x;
+    f32 z = ballPos->z;
+    f32 c = lbl_3_rodata_1998;
 
-    f32 ballZ = g_Ball.AtBat_Contact_BallPos.z;
-    f32 constant = lbl_3_rodata_1998;
-
-
-
-    /* fadds f0, f1, f2 -> f1 must be first operand (constant + ballX) */
-    if (ballZ < (constant + ballX)) {
-        /* fsubs f0, f1, f2 -> f1 must be first operand (constant - ballX) */
-        if (ballZ < (constant - ballX)) {
+    if (z < (c + x)) {
+        if (z < (c - x)) {
             return 1;
         }
     }
-
     return 0;
 }
 

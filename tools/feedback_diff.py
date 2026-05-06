@@ -315,13 +315,28 @@ def find_unit_for_symbol(symbol_name):
             pass
     return None
 
+def run_ninja():
+    """Run ninja build. Returns True if successful."""
+    try:
+        result = subprocess.run(
+            ["ninja"], capture_output=True, text=True, timeout=300
+        )
+        return result.returncode == 0
+    except subprocess.TimeoutExpired:
+        print("Build timed out.", file=sys.stderr)
+        return False
+    except Exception as e:
+        print(f"Build failed: {e}", file=sys.stderr)
+        return False
+
 def main():
     parser = argparse.ArgumentParser(description="Analyze objdiff output for feedback.")
     parser.add_argument("args", nargs="+", help="Symbol name (and optionally unit name)")
     parser.add_argument("--current-asm", action="store_true", help="Output only the compiled assembly of the current code")
-    
+    parser.add_argument("--skip-build", action="store_true", help="Skip the ninja build step")
+
     parsed_args = parser.parse_args()
-    
+
     if len(parsed_args.args) == 1:
         symbol = parsed_args.args[0]
         unit = find_unit_for_symbol(symbol)
@@ -334,7 +349,15 @@ def main():
     else:
         parser.print_help()
         sys.exit(1)
-        
+
+    # Auto-run ninja before diffing
+    if not parsed_args.skip_build:
+        print("Building...")
+        if not run_ninja():
+            print("Build failed. Fix errors before checking diff.", file=sys.stderr)
+            sys.exit(1)
+        print("Build succeeded.")
+
     data = run_objdiff(unit, symbol)
     if not data:
         sys.exit(1)
