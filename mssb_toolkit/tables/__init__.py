@@ -1,0 +1,1 @@
+from mssb_toolkit.tables.table_manager import CharacterSlot, MasterDescriptorsTable, SubfilesArchiveTable, GloveAttachmentTable, ARAMAllocator

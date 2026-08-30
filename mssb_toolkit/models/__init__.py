@@ -1,0 +1,73 @@
+"""Mario Superstar Baseball (USA GYQE01) 3D Model Subsystem.
+
+This package provides native GameCube binary model data structures, native CMPR texture
+encoders/injectors, and character model decoupling utilities.
+"""
+
+from .cmpr import (
+    COLOR_BLACK,
+    COLOR_BRIGHT_PURPLE,
+    COLOR_PURE_BLUE,
+    COLOR_PURE_GREEN,
+    COLOR_PURE_RED,
+    COLOR_PURE_YELLOW,
+    COLOR_VIBRANT_CYAN,
+    COLOR_WHITE,
+    DK_TEXTURE_OFFSETS_V5,
+    DK_TEXTURE_REGION_START,
+    DK_TEXTURE_REGION_END,
+    DK_TEXTURE_REGION_SIZE,
+    GPC_CONTAINER_SIZE,
+    GPC_EQUIPMENT_SIZE,
+    OFF_AUX_64,
+    OFF_AUX_128,
+    OFF_MIPMAP_8,
+    OFF_MIPMAP_16,
+    OFF_MIPMAP_32,
+    OFF_PRIMARY_64,
+    OFF_PRIMARY_128,
+    CMPREncoder,
+    CMPRModelInjector,
+    inject_all_10_textures,
+    create_v5_recolored_model,
+    rgb_to_rgb565,
+    rgb565_to_rgb,
+)
+from .decoupling import (
+    CMPR_SALT_OFFSETS,
+    DecoupledModelChunk,
+    ModelDecoupler,
+)
+
+__all__ = [
+    "COLOR_PURE_RED",
+    "COLOR_PURE_GREEN",
+    "COLOR_PURE_BLUE",
+    "COLOR_PURE_YELLOW",
+    "COLOR_VIBRANT_CYAN",
+    "COLOR_BRIGHT_PURPLE",
+    "COLOR_WHITE",
+    "COLOR_BLACK",
+    "DK_TEXTURE_OFFSETS_V5",
+    "DK_TEXTURE_REGION_START",
+    "DK_TEXTURE_REGION_END",
+    "DK_TEXTURE_REGION_SIZE",
+    "GPC_CONTAINER_SIZE",
+    "GPC_EQUIPMENT_SIZE",
+    "OFF_PRIMARY_64",
+    "OFF_PRIMARY_128",
+    "OFF_AUX_64",
+    "OFF_AUX_128",
+    "OFF_MIPMAP_32",
+    "OFF_MIPMAP_16",
+    "OFF_MIPMAP_8",
+    "CMPREncoder",
+    "CMPRModelInjector",
+    "inject_all_10_textures",
+    "create_v5_recolored_model",
+    "rgb_to_rgb565",
+    "rgb565_to_rgb",
+    "CMPR_SALT_OFFSETS",
+    "DecoupledModelChunk",
+    "ModelDecoupler",
+]
