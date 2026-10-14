@@ -4,7 +4,9 @@
 #include "mssbTypes.h"
 
 typedef struct {
-    u8 _pad[0x4A];
+    u8 _pad[0x40];
+    s16 playerIndex;   /* 0x40 */
+    u8 _pad42[0x8];
     u8 field_0x4A;
 } Bss37400Item;
 

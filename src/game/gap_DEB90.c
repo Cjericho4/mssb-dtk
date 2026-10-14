@@ -1,6 +1,7 @@
 #include "game/gap_DEB90.h"
 
 #include "UnknownHeaders.h"
+#include "game/gap_1658F0.h"
 #include "game/rep_1838.h"
 #include "game/gap_E1964.h"
 #include "game/gap_5985C.h"
@@ -235,7 +236,7 @@ void fn_3_DF608(void) {
     u8* p;
     u8 idx;
     idx = g_d_GameSettings._35;
-    (&g_Minigame._19DA)[idx] = 0;
+    g_Minigame._19DA[idx] = 0;
     mg = &g_Minigame;
     p = lbl_3_data_18980;
     if (idx != 0) {
@@ -261,7 +262,33 @@ void fn_3_DF608(void) {
 
 // .text:0x000DF6D4 size:0x14C mapped:0x8071E768
 void fn_3_DF6D4(void) {
-    return;
+    s32 player;
+    u8* strength;
+    s32 i;
+
+    switch (g_GameLogic._125) {
+    case 0:
+        player = g_d_GameSettings._35;
+        g_Minigame._19DA[player] = 0;
+        strength = lbl_3_data_18980;
+        for (i = 0; i < 4; i++) {
+            if (player != i) {
+                g_Minigame.players.aIStrength[i] = *strength++;
+            }
+        }
+        g_Minigame._1907 = 1;
+        g_Minigame.miniGameNumberOfParticipants = lbl_3_data_18944[g_Minigame.GameMode_MiniGame] + 1;
+        g_Minigame.multiPlayerInd = 1;
+        g_Scores.threshold = 1;
+        g_GameLogic._125++;
+        break;
+    }
+    g_Minigame._190A = 1;
+    g_Minigame._19DA[g_d_GameSettings._35] = g_d_GameSettings._35;
+    lbl_3_common_bss_37400.playerIndex = g_d_GameSettings._35;
+    g_Minigame.GameMode_MiniGame = g_d_GameSettings._33;
+    g_Minigame._19DF = 0x1E;
+    fn_3_5A6D4(0x1B);
 }
 
 // .text:0x000DF820 size:0xB4 mapped:0x8071E8B4

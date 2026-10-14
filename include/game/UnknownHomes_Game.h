@@ -1827,10 +1827,7 @@ typedef struct _MiniGameStruct {
     /*0x19D4*/ s16 _19D4;
     /*0x19D6*/ s16 _19D6;
     /*0x19D8*/ s16 _19D8;
-    /*0x19DA*/ u8 _19DA;
-    /*0x19DB*/ u8 _19DB;
-    /*0x19DC*/ u8 _19DC;
-    /*0x19DD*/ u8 _19DD;
+    /*0x19DA*/ u8 _19DA[4];
     /*0x19DE*/ u8 _19DE;
     /*0x19DF*/ u8 _19DF;
     /*0x19E0*/ u8 _19E0;
