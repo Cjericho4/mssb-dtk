@@ -23,10 +23,10 @@ void fn_3_6A258(void) {
 // .text:0x0006A25C size:0x48 mapped:0x806A92F0
 void fn_3_6A25C(void) {
     if (g_hugeAnimStruct.starAnimRelated != NULL) {
-        g_hugeAnimStruct.starAnimRelated->unk2CE = 0;
-        g_hugeAnimStruct.starAnimRelated->unk2F6 = 0;
-        g_hugeAnimStruct.starAnimRelated->unk31E = 0;
-        g_hugeAnimStruct.starAnimRelated->unk346 = 0;
+        g_hugeAnimStruct.starAnimRelated[17].visible = 0;
+        g_hugeAnimStruct.starAnimRelated[18].visible = 0;
+        g_hugeAnimStruct.starAnimRelated[19].visible = 0;
+        g_hugeAnimStruct.starAnimRelated[20].visible = 0;
     }
     lbl_3_common_bss_32724.someFlag = 0;
 }

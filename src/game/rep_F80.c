@@ -15,7 +15,32 @@ void fn_3_6A2A4(s8 arg1) {
 
 // .text:0x0006A300 size:0x100 mapped:0x806A9394
 void fn_3_6A300(void) {
-    return;
+    AnimationStruct* anim;
+    StadiumObjEntry* entry;
+
+    if (lbl_3_common_bss_32724.someFlag == 0) {
+        return;
+    }
+    anim = g_hugeAnimStruct.AnimationStructPtrs[9];
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        anim = g_hugeAnimStruct.AnimationStructPtrs[g_Minigame.rosterID];
+    }
+    if (anim->unk252 == 0x30) {
+        entry = &g_hugeAnimStruct.starAnimRelated[17];
+    } else if (anim->unk252 == 0x31) {
+        entry = &g_hugeAnimStruct.starAnimRelated[18];
+    } else if (anim->unk252 == 0x32) {
+        entry = &g_hugeAnimStruct.starAnimRelated[19];
+    } else {
+        entry = &g_hugeAnimStruct.starAnimRelated[20];
+    }
+    entry->visible = 1;
+    entry->pos.x = anim->unk34.x;
+    entry->pos.y = -anim->unk34.y;
+    entry->pos.z = anim->unk34.z;
+    entry->rot.x = anim->unk40.x;
+    entry->rot.y = -anim->unk40.y;
+    entry->rot.z = anim->unk40.z;
 }
 
 // .text:0x0006A400 size:0x14 mapped:0x806A9494

@@ -2,7 +2,7 @@
 
 // .text:0x0006C410 size:0x18 mapped:0x806AB4A4
 void fn_3_6C410(void) {
-    g_hugeAnimStruct.starAnimRelated->state_alt = 0;
+    g_hugeAnimStruct.starAnimRelated[4].visible = 0;
 }
 
 // .text:0x0006C428 size:0x4 mapped:0x806AB4BC
@@ -12,7 +12,7 @@ void fn_3_6C428(void) {
 
 // .text:0x0006C42C size:0x28 mapped:0x806AB4C0
 void fn_3_6C42C(void) {
-    g_hugeAnimStruct.starAnimRelated->state_alt = 0;
+    g_hugeAnimStruct.starAnimRelated[4].visible = 0;
     lbl_3_common_bss_32724.unk_90 = -1;
 }
 

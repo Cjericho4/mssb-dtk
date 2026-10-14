@@ -58,29 +58,27 @@ typedef struct StadiumFileHeader {
 struct ACTBone;
 struct ActLayout;
 struct AnimBank;
-typedef struct starAnimationRelated {
-    u8 _pad0[0xC6];
-    u8 state_alt;    /* 0xC6 */
-    u8 _pad1[0x2CE - 0xC7];
-    u8 unk2CE;       /* 0x2CE */
-    u8 _pad2[0x27];
-    u8 unk2F6;       /* 0x2F6 */
-    u8 _pad3[0x27];
-    u8 unk31E;       /* 0x31E */
-    u8 _pad4[0x27];
-    u8 unk346;       /* 0x346 */
-} starAnimationRelated;
+/* 0x28-byte stadium/effect object entry (arrays at hugeAnimStruct 0x2D90/0x2D94) */
+typedef struct StadiumObjEntry {
+    void* func;      /* 0x00 */
+    VecXYZ pos;      /* 0x04 */
+    VecXYZ rot;      /* 0x10 */
+    u8 _pad1C[0xA];
+    u8 visible;      /* 0x26 */
+    u8 _pad27;
+} StadiumObjEntry; /* size: 0x28 */
 
 /* AnimationStruct - 0x27C bytes, used in arrays within hugeAnimStruct.
  * Full field definitions available in in_game.h. */
 typedef struct AnimationStruct {
     u8 _pad[0x34];
     VecXYZ unk34;       /* 0x34 */
-    u8 _pad40[0x4];
-    f32 unk44;          /* 0x44 */
-    u8 _pad48[0x14];
+    VecXYZ unk40;       /* 0x40 */
+    u8 _pad4C[0x10];
     void* funcPtr_0x5c; /* 0x5C - function pointer */
-    u8 _rest[0x1FD];
+    u8 _rest[0x1F2];
+    s8 unk252;          /* 0x252 */
+    u8 _rest253[0xA];
     u8 unk_25D; /* 0x25D */
     u8 _rest2[0x1E];
 } AnimationStruct; /* size: 0x27C */
@@ -417,7 +415,7 @@ typedef struct hugeAnimStruct {
     /* 0x2D8D */ u8 field208_0x2d8d;
     /* 0x2D8E */ u8 field209_0x2d8e;
     /* 0x2D8F */ u8 field210_0x2d8f;
-    /* 0x2D90 */ starAnimationRelated* starAnimRelated;
+    /* 0x2D90 */ StadiumObjEntry* starAnimRelated;
     /* 0x2D94 */ HugeAnimEntry2D94* entries_2D94;
     /* 0x2D98 */ s32 field213_0x2d98;
     /* 0x2D9C */ struct ActLayout* ActorPointer;

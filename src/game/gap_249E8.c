@@ -64,7 +64,7 @@ void fn_3_24ADC(s32 arg0, s32 arg1) {
         lbl_3_common_bss_1323C->unk0[idx].unkC = angle;
         g_Fielders[idx].unk48 = angle;
         if (anim != NULL) {
-            anim->unk44 = entry->unkC;
+            anim->unk40.y = entry->unkC;
             anim->unk_25D = 1;
         }
         if (entry->unk10 >= 0x69 && entry->unk10 < 0x75) {
@@ -100,7 +100,7 @@ void fn_3_24ADC(s32 arg0, s32 arg1) {
         lbl_3_common_bss_1323C->unk0[idx].unkC = angle;
         runner->runningAngle = angle;
         if (anim != NULL) {
-            anim->unk44 = entry->unkC;
+            anim->unk40.y = entry->unkC;
             anim->unk_25D = 1;
         }
         lbl_3_common_bss_1323C->unk261[idx] = 1;
