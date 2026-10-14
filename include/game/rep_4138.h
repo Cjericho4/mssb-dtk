@@ -10,7 +10,14 @@ typedef struct Rep4138Bss {
     s32 index;
     u8 flag;
     u8 padD[3];
-    u8 unk10[0x18];
+    struct {
+        s32 scoreTeam1;
+        s32 scoreTeam0;
+        s32 inning;
+        s32 strikes;
+        s32 balls;
+        s32 outs;
+    } snapshot;          /* 0x10 */
 } Rep4138Bss;
 
 extern Rep4138Bss lbl_3_bss_D6E0;

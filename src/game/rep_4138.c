@@ -56,9 +56,30 @@ void fn_3_16E1A0(void) {
     dest->val5 = out;
 }
 
+typedef struct {
+    u8 _pad[8];
+} Data2A498Entry;
+extern Data2A498Entry lbl_3_data_2A498[];
+extern u8 lbl_803CBBC0;
+void fn_800A7D4C(s32 arg0, Data2A498Entry* elem);
+
 // .text:0x0016E1EC size:0x110 mapped:0x807AD280
 void fn_3_16E1EC(void) {
-    return;
+    if ((lbl_3_bss_D6E0.ptr == NULL) | (lbl_3_bss_D6E0.flag | (g_hugeAnimStruct.displayObjects == 0))) {
+        lbl_3_bss_D6E0.ptr = NULL;
+        lbl_3_bss_D6E0.index = -1;
+        lbl_3_bss_D6E0.flag = 0;
+        fn_800B0A14_removeQueue();
+    }
+    if ((g_GameLogic.gameStatus != 0x13) & (g_GameLogic.gameStatus != 0x14)) {
+        lbl_3_bss_D6E0.snapshot.scoreTeam1 = g_Scores.ScoreTeam1;
+        lbl_3_bss_D6E0.snapshot.scoreTeam0 = g_Scores.ScoreTeam0;
+        lbl_3_bss_D6E0.snapshot.inning = g_Scores.highscore;
+        lbl_3_bss_D6E0.snapshot.strikes = g_Strikes.strikes;
+        lbl_3_bss_D6E0.snapshot.balls = g_Strikes.balls;
+        lbl_3_bss_D6E0.snapshot.outs = g_Strikes.outs;
+    }
+    fn_800A7D4C(1, &lbl_3_data_2A498[lbl_803CBBC0]);
 }
 
 // .text:0x0016E2FC size:0x2C mapped:0x807AD390
@@ -98,6 +119,6 @@ void fn_3_16E338(u16 *ptr, s32 index) {
     bss->ptr = ptr;
     bss->index = index;
     bss->flag = zero;
-    memset(bss->unk10, zero, sizeof(bss->unk10));
+    memset(&bss->snapshot, zero, sizeof(bss->snapshot));
     fn_800B0A5C_insertQueue(fn_3_16E1EC, 5);
 }
