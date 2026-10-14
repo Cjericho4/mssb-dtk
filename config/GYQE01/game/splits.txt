@@ -175,6 +175,9 @@ game/rep_1188.c:
 	.text       start:0x0006D6D4 end:0x0006F4E8
 	.rodata     start:0x00001188 end:0x00001200
 
+game/gap_6F4E8.c:
+	.text       start:0x0006F4E8 end:0x0006F6CC
+
 game/rep_1200.c:
 	.text       start:0x0006F6CC end:0x000759BC
 	.rodata     start:0x00001200 end:0x000012D0
@@ -203,6 +206,9 @@ game/gap_7CE90.c:
 game/rep_13B8.c:
 	.text       start:0x0007D79C end:0x0008B094
 	.rodata     start:0x000013B8 end:0x00001508
+
+game/gap_8B094.c:
+	.text       start:0x0008B094 end:0x0008B258
 
 game/m_sound.c:
 	.text       start:0x0008B258 end:0x00090754
@@ -236,6 +242,9 @@ game/gap_97144.c:
 game/rep_1770.c:
 	.text       start:0x000993A8 end:0x0009C578
 	.rodata     start:0x00001770 end:0x000017E0
+
+game/gap_9C578.c:
+	.text       start:0x0009C578 end:0x0009CAF0
 
 game/rep_17E0.c:
 	.text       start:0x0009CAF0 end:0x0009CD90
@@ -472,6 +481,9 @@ game/rep_36D8.c:
 	.data       start:0x000265F0 end:0x00026698
 	.bss        start:0x0000B790 end:0x0000B7C0
 
+game/gap_141A2C.c:
+	.text       start:0x00141A2C end:0x00141C44
+
 game/rep_37A8.c:
 	.text       start:0x00141C44 end:0x001471C0
 	.rodata     start:0x000037A8 end:0x00003880
@@ -566,6 +578,9 @@ game/kinoko.c:
 	.rodata     start:0x00003FD8 end:0x00004090
 	.data       start:0x0002A330 end:0x0002A404
 	.bss        start:0x0000BA00 end:0x0000D6E0
+
+game/gap_16C410.c:
+	.text       start:0x0016C410 end:0x0016C548
 
 game/rep_4090.c:
 	.text       start:0x0016C548 end:0x0016D810
