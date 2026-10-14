@@ -39,7 +39,12 @@ typedef struct {
     u8 _data1[0x1E - 0x10];
 } StatTableEntry; // size: 0x1E
 
-typedef struct { u8 _pad[0x26]; } BatterStatEntry; // size: 0x26
+typedef struct {
+    u8 _pad[0x11];
+    u8 runsScored;      /* 0x11 */
+    u8 basesStolen;     /* 0x12 */
+    u8 _pad13[0x13];
+} BatterStatEntry; // size: 0x26
 
 extern StatTableEntry lbl_803535C8[2][9]; // PitcherStats entries[teamFielding][rosterSlot]
 extern BatterStatEntry lbl_803537E4[2][9]; // BatterStats entries[teamBatting][rosterSlot]
@@ -917,12 +922,23 @@ u32 fn_80033A24(void (*func)(void), s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 
 
 typedef struct Scores {
     /* 0x00 */ s32 highscore;    // This might be Inning
-    /* 0x04 */ s16 ScoreTeam0;    // Target for lha r7, 0x4(r6)
-    u8 _pad0[0x2A - 0x06];        // 0x06 to 0x29
-    /* 0x2A */ s16 ScoreTeam1;
-    u8 _pad1[0x9C - 0x2C];        // Pad to 0x9C
+    union {
+        struct {
+            /* 0x04 */ s16 ScoreTeam0;
+            u8 _pad0[0x2A - 0x06];
+            /* 0x2A */ s16 ScoreTeam1;
+            u8 _pad0b[0x50 - 0x2C];
+        };
+        struct {
+            s16 score;
+            u8 _pad2[0x24];
+        } team[2];                /* 0x04, stride 0x26 */
+    };
+    u8 _pad1[0x9C - 0x50];        // Pad to 0x9C
     /* 0x9C */ s16 field_0x9C;
-    u8 _pad2[0xAA - 0x9E];        // Pad to 0xAA
+    u8 _pad9E[0x2];
+    /* 0xA0 */ s16 prevScore;
+    u8 _pad2[0xAA - 0xA2];        // Pad to 0xAA
     /* 0xAA */ u8 threshold;     // Matches 'lbz r0, 0xaa(r4)'
     /* 0xAB */ u8 _padAB;
     /* 0xAC */ u8 unkAC;
