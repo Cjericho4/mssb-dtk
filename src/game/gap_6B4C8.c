@@ -2,6 +2,7 @@
 
 #include "UnknownHeaders.h"
 #include "game/UnknownHomes_Game.h"
+#include "game/rep_720.h"
 
 typedef struct {
     u8 _pad[0xa0];
@@ -25,6 +26,8 @@ typedef struct {
 } TeamSelectData;
 extern TeamSelectData lbl_8034E9A0;
 void fn_80011A60(void);
+AnimLevel1** fn_800111D8(AnimationStruct* anim);
+void fn_800BDE8C(s32 arg0);
 
 // .text:0x0006B4C8 size:0x110
 s32 fn_3_6B4C8(void) {
@@ -68,7 +71,58 @@ s32 fn_3_6B5D8(void) {
 
 // .text:0x0006B674 size:0x1FC
 void fn_3_6B674(void) {
-    return;
+    AnimationStruct* anim;
+    AnimLevel1* model;
+    s32 i;
+    s32 visible;
+
+    if (g_d_GameSettings.minigamesEnabled == 0 || g_Minigame.GameMode_MiniGame == 0) {
+        if (g_GameLogic.sceneID == 1) {
+            fn_800BDE8C(2);
+        } else {
+            fn_800BDE8C(1);
+        }
+    } else {
+        switch (g_Minigame.GameMode_MiniGame) {
+        case 1:
+        case 3:
+            fn_800BDE8C(2);
+            break;
+        case 2:
+        case 4:
+        case 5:
+        case 6:
+            fn_800BDE8C(1);
+            break;
+        }
+    }
+    for (i = 0; i < 13; i++) {
+        anim = g_hugeAnimStruct.AnimationStructPtrs[i];
+        if (anim == NULL || *fn_800111D8(anim) == NULL) {
+            continue;
+        }
+        visible = 1;
+        if (g_d_GameSettings.minigamesEnabled != 0) {
+            if ((g_GameLogic.gameStatus == 0x1C || (u8)(g_GameLogic.gameStatus - 0x1D) <= 1 || g_GameLogic.gameStatus == 0x1F)
+                && g_GameLogic.gameStatus == 0x1F) {
+                visible = 0;
+            }
+            if (g_d_GameSettings.GameModeSelected == 6 && g_GameLogic.sceneID == 1 && g_Minigame.minigameFielderIndex[i] >= 1) {
+                visible = 0;
+            }
+        } else if (g_GameLogic.secondaryGameMode != 0xE && g_Stats.unk36 == 0 && i != 0 && i != 9 && g_GameLogic.sceneID == 1) {
+            visible = 0;
+        }
+        if (anim->unk_25D == 2) {
+            visible = 0;
+        }
+        model = *fn_800111D8(anim);
+        if (visible) {
+            model->animFlags |= 4;
+        } else {
+            model->animFlags &= 0xFB;
+        }
+    }
 }
 
 // .text:0x0006B870 size:0x1F4
