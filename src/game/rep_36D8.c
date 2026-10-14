@@ -25,21 +25,7 @@ s32 fn_3_13D578(s8 arg0) {
 // .text:0x0013D5E8 size:0x30 mapped:0x8077C67C
 //Two instructions swapped order
 s32 fn_3_13D5E8(unk_13d5e8_struct* a, unk_13d5e8_struct* b) {
-f32 scale;
-    f32 valB;
-    f32 valA;
-    
-    // Force scale to be the first float dereferenced in the function logic
-    scale = lbl_3_rodata_3728; 
-    
-    // By separating these into distinct lines AFTER scale is assigned,
-    // we nudge the compiler to follow this sequence for the lfs instructions.
-    valB = b->value; // Target: lfs f0, 0x0(r4)
-    valA = a->value; // Target: lfs f1, 0x0(r3)
-
-    // The arithmetic (scale * valA) - (scale * valB) 
-    // triggers fmuls f0, f2, f0 then fmsubs f0, f2, f1, f0
-    return (s32)((scale * a->value) - (scale * b->value));
+    return (s32)((100.0f * a->value) - (100.0f * b->value));
 }
 
 // .text:0x0013D618 size:0x408 mapped:0x8077C6AC
