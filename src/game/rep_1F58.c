@@ -52,7 +52,7 @@ void fn_3_C0DD8(void) {
 // .text:0x000C0F8C size:0x78 mapped:0x80700020
 void fn_3_C0F8C(void) {
     GXInitTexObj(&lbl_3_bss_9D20, lbl_3_bss_9D40, 4, 4, 6, 0, 0, 0);
-    GXInitTexObjLOD(&lbl_3_bss_9D20, 1, 1, lbl_3_rodata_1FA8, lbl_3_rodata_1FA8, lbl_3_rodata_1FA8, 0, 0, 0);
+    GXInitTexObjLOD(&lbl_3_bss_9D20, 1, 1, 0.0f, 0.0f, 0.0f, 0, 0, 0);
 }
 
 // .text:0x000C1004 size:0x1C8 mapped:0x80700098
