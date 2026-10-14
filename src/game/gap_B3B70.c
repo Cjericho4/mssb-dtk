@@ -272,8 +272,28 @@ void fn_3_B6F6C(void) {
 }
 
 // .text:0x000B707C size:0x108 mapped:0x806F6110
-void fn_3_B707C(void) {
-    return;
+s32 fn_3_B707C(void) {
+    if (g_Practice.pauseMenuLoading != 0) {
+        return 0;
+    }
+    if (g_Practice.guidedPracticeCompletionRelated == 0) {
+        return 0;
+    }
+    if (g_UnkSound_32718._07 != 0) {
+        return 0;
+    }
+    if (++g_Practice._186 > 150) {
+        if (g_Practice.practiceCompleted[g_Practice.practiceType_2][g_Practice.practiceLevel] == 0) {
+            g_Practice.practiceCompletedChanged = 1;
+            g_Practice.practiceCompleted[g_Practice.practiceType_2][g_Practice.practiceLevel] = 1;
+            lbl_80354768.practiceCompleted[g_Practice.practiceType_2][g_Practice.practiceLevel] = 1;
+        }
+        g_Practice._1C7 = 1;
+        fn_3_B3A28();
+        fn_3_B1DA4(g_Practice.practiceLevel + 0xC, 1);
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x000B7184 size:0x49C mapped:0x806F6218
