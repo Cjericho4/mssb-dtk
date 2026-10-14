@@ -4,6 +4,16 @@
 #include "game/rep_1838.h"
 #include "game/rep_1D58.h"
 #include "Dolphin/GX/GXTev.h"
+#include "game/rep_3310.h"
+#include "game/gap_6A160.h"
+#include "game/rep_2940.h"
+#include "game/gap_DEB90.h"
+#include "game/rep_EA0.h"
+#include "game/gap_6B4C8.h"
+#include "game/rep_F80.h"
+#include "game/gap_EA340.h"
+#include "game/gap_1293D0.h"
+#include "static/UnknownHomes_Static.h"
 
 extern void fn_8001D0D0();
 extern f32 lbl_3_data_18D98[];
@@ -31,6 +41,26 @@ typedef struct GapE1964Entry {
     f32 field_0x14;
 } GapE1964Entry;
 
+typedef struct {
+    u8 _pad[2];
+    s16 unk2;
+} Data18BB0Entry;
+extern Data18BB0Entry lbl_3_data_18BB0[];
+extern f32 lbl_3_data_18DD0;
+
+typedef struct {
+    void* unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    u8 _pad18[0xC];
+    u8 _pad24[2];
+    u8 unk26;
+    u8 _pad27;
+} GapE19E8Entry;
+
 // .text:0x000E1964 size:0x84
 void fn_3_E1964(void) {
     s32 i;
@@ -56,9 +86,90 @@ void fn_3_E1964(void) {
     } while (i < 0x1E);
 }
 
+/* Inlined copy of fn_3_E0668. Offsets kept: field-address form changes codegen. */
+static inline void updateWallBallCoins(void) {
+    VecXYZ* r27;
+    u8* r28;
+    s32 r29;
+    GapE19E8Entry* entry;
+    s32 r25;
+
+    r25 = 0;
+    r29 = 0;
+    r28 = (u8*)&g_Minigame;
+    r27 = (VecXYZ*)&g_Minigame;
+    do {
+        entry = (GapE19E8Entry*)((u8*)g_hugeAnimStruct.entries_2D94 + r29);
+        if (*(r28 + 0x193A) == 0) {
+            entry->unk26 = 0;
+        } else if (g_Minigame.wallBall_coinsVisibleFrameCounter > lbl_3_data_18BB0[g_Minigame._199E].unk2
+                   && (g_Minigame.wallBall_coinsVisibleFrameCounter & 1)) {
+            entry->unk26 = 0;
+        } else {
+            entry->unk26 = 1;
+            entry->unk4 = ((VecXYZ*)((u8*)r27 + 0xCD0))->x;
+            entry->unk8 = -((VecXYZ*)((u8*)r27 + 0xCD0))->y;
+            entry->unkC = ((VecXYZ*)((u8*)r27 + 0xCD0))->z;
+            entry->unk14 = fn_3_9FEA8(entry->unk14 + lbl_3_data_18DD0);
+        }
+        r25++;
+        r29 += 0x28;
+        r28++;
+        r27++;
+    } while (r25 < 0x1E);
+}
+
 // .text:0x000E19E8 size:0x278
 void fn_3_E19E8(void) {
-    return;
+    s32 i;
+    u8 status;
+
+    g_hugeAnimStruct.field280_0x3087 = 1;
+    if (g_GameLogic.gameStatus == 5 && g_GameLogic._125 == 5) {
+        fn_3_11D1B0();
+    }
+    status = g_GameLogic.gameStatus;
+    if (status == 0x1B) {
+        return;
+    }
+    if (g_hugeAnimStruct.field269_0x307a == 0) {
+        for (i = 0; i < 4; i++) {
+            if (g_hugeAnimStruct.AnimationStructPtrs[i] != NULL) {
+                g_hugeAnimStruct.AnimationStructPtrs[i]->unk_25D = 0;
+            }
+        }
+        fn_3_6A25C();
+        fn_3_6A250();
+    } else if ((u8)(status - 0x1C) <= 2 || status == 0x1F) {
+        if (status == 0x1E) {
+            fn_3_E11E0();
+        }
+    } else if (status == 0xE || status == 0x22 || status == 0x24 || status == 0x26 || status == 0x27) {
+        g_hugeAnimStruct.field280_0x3087 = g_d_GameSettings.GameModeSelected != 6;
+        fn_3_E07DC();
+        fn_3_116B74();
+    } else {
+        if (status == 4) {
+            return;
+        }
+        if (status != 5) {
+            fn_3_697CC();
+            fn_3_685F0();
+            fn_3_E1478();
+            fn_3_6B674();
+            if (g_d_GameSettings.GameModeSelected == 6) {
+                updateWallBallCoins();
+            } else {
+                fn_3_11AC6C();
+            }
+            fn_3_6AB58();
+        }
+    }
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        fn_3_EDD10();
+    } else {
+        fn_3_12D1F4();
+    }
 }
 
 // .text:0x000E1C60 size:0xA0
