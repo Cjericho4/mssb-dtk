@@ -462,7 +462,7 @@ void fn_3_BF070(void) {
     do {
         AnimationStruct* animPtr = g_hugeAnimStruct.AnimationStructPtrs[i];
         if (animPtr != NULL) {
-            VecXZ* texCoord = &lbl_3_data_111C8[(s8)animPtr->_rest[0x1F2]];
+            VecXZ* texCoord = &lbl_3_data_111C8[animPtr->unk252];
             fn_8003A6B0(i, &texData[1], texCoord->x, texCoord->z);
         } else {
             fn_8003A6B0(i, &texData[1], lbl_3_data_111C8[0].x, defaultCoord->z);

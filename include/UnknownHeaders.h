@@ -80,7 +80,9 @@ typedef struct AnimationStruct {
     VecXYZ unk40;       /* 0x40 */
     u8 _pad4C[0x10];
     void* funcPtr_0x5c; /* 0x5C - function pointer */
-    u8 _rest[0x1F2];
+    u8 _rest60[0x2];
+    s16 animID;         /* 0x62 */
+    u8 _rest64[0x1EE];
     s8 unk252;          /* 0x252 */
     u8 _rest253;
     s8 unk254;          /* 0x254 */

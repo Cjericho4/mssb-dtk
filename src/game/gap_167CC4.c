@@ -4,6 +4,9 @@
 #include "static/UnknownHomes_Static.h"
 #include "game/UnknownHomes_Game.h"
 #include "game/rep_3E58.h"
+#include "game/particle_spawn.h"
+
+extern s8 lbl_3_data_28558[23];
 
 // .text:0x00167CC4 size:0x88
 void fn_3_167CC4(void) {
@@ -24,7 +27,22 @@ void fn_3_167CC4(void) {
 
 // .text:0x00167D4C size:0x1C8
 void fn_3_167D4C(void) {
-    return;
+    EffectTask* task = (EffectTask*)lbl_803CC1B8;
+
+    if (g_d_GameSettings._55 != 0 || lbl_3_common_bss_35154.unk_479 != 0) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (g_GameLogic.gameStatus != 2) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (task->owner->animID == 0x1B || task->owner->animID == 0x1A) {
+        spawnCharacterParticles(task->owner, lbl_3_data_28558[(u32)rand() % 23]);
+        task->state = 1;
+    } else if (task->state != 0) {
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x00167F14 size:0x1C0
