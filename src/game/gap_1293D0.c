@@ -1,6 +1,11 @@
 #include "game/gap_1293D0.h"
 #include "game/UnknownHomes_Game.h"
 #include "stl/mem.h"
+#include "UnknownHeaders.h"
+#include "game/gap_11D3AC.h"
+#include "game/gap_EA340.h"
+#include "game/rep_3448.h"
+#include "game/gap_AC9F8.h"
 
 // .text:0x001293D0 size:0x78 mapped:0x80768468
 void fn_3_1293D0(void) {
@@ -9,7 +14,18 @@ void fn_3_1293D0(void) {
 
 // .text:0x00129458 size:0x104 mapped:0x807684EC
 void fn_3_129458(void) {
-    return;
+    if (g_GameLogic.gameStatus == 0xE && g_GameLogic._125 == 1) {
+        lbl_3_common_bss_32724.unk_B7 = 0;
+        lbl_3_common_bss_32724.unk_B6 = 0;
+        if (g_Minigame.GameMode_MiniGame == 1 && g_Minigame.multiPlayerInd == 0 && g_Minigame._1A3C == 0 && g_Minigame.soloMinigameDifficulty == 3) {
+            fn_800B0A5C_insertQueue(fn_3_11D780, 2);
+        }
+        fn_800B0A5C_insertQueue(fn_3_EA454, 2);
+        fn_800B0A5C_insertQueue(fn_3_129370, 2);
+    }
+    if (g_GameLogic.gameStatus == 0x22 && (lbl_3_common_bss_34C90.field_0x1D2 == 7 || g_GameLogic.framesOfExitingToMenu != 0)) {
+        lbl_3_common_bss_32724.unk_B7 = 1;
+    }
 }
 
 // .text:0x0012955C size:0x4BC mapped:0x807685F0
