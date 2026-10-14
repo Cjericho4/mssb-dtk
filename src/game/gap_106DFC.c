@@ -98,7 +98,7 @@ s32 fn_3_107988(u32 arg0) {
 }
 
 // .text:0x001079C8 size:0x1D4 mapped:0x80746A5C
-void fn_3_1079C8(void) {
+void fn_3_1079C8(MinigameStanding* out, s32 arg1) {
     return;
 }
 

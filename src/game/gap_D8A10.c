@@ -3,6 +3,9 @@
 #include "UnknownHeaders.h"
 #include "static/UnknownHomes_Static.h"
 #include "musyx/musyx.h"
+#include "game/gap_106DFC.h"
+
+int fn_3_9EE24(int max);
 
 typedef struct {
     u8 _pad[0x48];
@@ -80,7 +83,64 @@ void fn_3_D8CD0(void) {
 
 // .text:0x000D9868 size:0x1C8
 void fn_3_D9868(void) {
-    return;
+    MinigameStanding standings[4];
+    u32 i;
+    u32 j;
+    u32 active;
+    u32 count;
+    u8 pick;
+
+    fn_3_1079C8(standings, 0);
+    active = 0;
+    i = 0;
+    do {
+        if (standings[i].eliminated == 0) {
+            active++;
+        }
+        i++;
+    } while (i < g_Minigame.miniGameNumberOfParticipants);
+    switch (g_Minigame.fieldingOrderMode) {
+    case 0:
+        g_Minigame.fieldOrder[0] = g_Minigame.rosterID;
+        j = 1;
+        i = 0;
+        do {
+            if (i != g_Minigame.rosterID) {
+                g_Minigame.fieldOrder[j++] = i;
+            }
+            i++;
+        } while (i < g_Minigame.miniGameNumberOfParticipants);
+        break;
+    case 3:
+        g_Minigame.fieldOrder[0] = g_Minigame.rosterID;
+        do {
+            pick = fn_3_9EE24(g_Minigame.miniGameNumberOfParticipants);
+            g_Minigame.fieldOrder[1] = pick;
+        } while ((s8)pick == (s8)g_Minigame.fieldOrder[0]);
+        break;
+    case 1:
+    case 2:
+    case 4:
+    case 5:
+        g_Minigame.fieldOrder[0] = g_Minigame.rosterID;
+        if (active == 1 && standings[0].id == g_Minigame.rosterID) {
+            count = 0;
+            i = 0;
+            do {
+                if (standings[i].eliminated == 1) {
+                    count++;
+                }
+                i++;
+            } while (i < g_Minigame.miniGameNumberOfParticipants);
+            g_Minigame.fieldOrder[1] = standings[fn_3_9EE24(count) + 1].id;
+        } else {
+            do {
+                pick = standings[fn_3_9EE24(active)].id;
+                g_Minigame.fieldOrder[1] = pick;
+            } while ((s8)pick == (s8)g_Minigame.fieldOrder[0]);
+        }
+        break;
+    }
 }
 
 // .text:0x000D9A30 size:0x470

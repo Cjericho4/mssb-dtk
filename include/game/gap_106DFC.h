@@ -25,7 +25,11 @@ void fn_3_10768C(void);
 void fn_3_107784(void);
 void fn_3_1078F8(void);
 s32 fn_3_107988(u32 arg0);
-void fn_3_1079C8(void);
+typedef struct {
+    s8 id;
+    u8 eliminated;
+} MinigameStanding;
+void fn_3_1079C8(MinigameStanding* out, s32 arg1);
 s32 fn_3_107B9C(u8* a, u8* b);
 s32 fn_3_107BD0(u8* a, u8* b);
 s32 fn_3_107C04(u8* a, u8* b);
