@@ -3,6 +3,7 @@
 #include "UnknownHeaders.h"
 #include "game/UnknownHomes_Game.h"
 #include "game/rep_720.h"
+#include "game/gap_9CD90.h"
 
 typedef struct {
     u8 _pad[0xa0];
@@ -28,6 +29,16 @@ extern TeamSelectData lbl_8034E9A0;
 void fn_80011A60(void);
 AnimLevel1** fn_800111D8(AnimationStruct* anim);
 void fn_800BDE8C(s32 arg0);
+void fn_80011BE4(s32 animIndex);
+void fn_8001196C(void);
+s32 fn_8001594C(s32 team);
+
+typedef struct {
+    u8 _pad0[2];
+    u8 bodyType;     /* 0x2 */
+    u8 _pad3[3];
+} CharacterBodyInfo; /* size: 0x6 */
+extern CharacterBodyInfo lbl_800E8558[];
 
 // .text:0x0006B4C8 size:0x110
 s32 fn_3_6B4C8(void) {
@@ -178,6 +189,27 @@ s32 fn_3_6BA64(void) {
 }
 
 // .text:0x0006BD6C size:0x138
-void fn_3_6BD6C(void) {
-    return;
+s32 fn_3_6BD6C(void) {
+    s32 team;
+    s32 i;
+
+    if (lbl_3_common_bss_32724.unk9B == 0) {
+        fn_8001196C();
+        lbl_3_common_bss_32724.unk9B = 1;
+        g_hugeAnimStruct.field186_0x2d77 = 0;
+        g_hugeAnimStruct.field190_0x2d7b = 0;
+        g_hugeAnimStruct.field191_0x2d7c = 0;
+        if (g_GameLogic.gameStatus == 9) {
+            g_hugeAnimStruct.field191_0x2d7c = 1;
+            for (team = 0; team < 2; team++) {
+                for (i = 0; i < 9; i++) {
+                    if (lbl_800E8558[inMemRoster[team][i].stats.CharID].bodyType == 0x19) {
+                        inMemRoster[team][i].stats.FieldingArm = 0;
+                        inMemRoster[team][i].stats.BattingStance = 1;
+                    }
+                }
+            }
+        }
+    }
+    return fn_8001594C(g_GameLogic.teamFielding) != 0;
 }
