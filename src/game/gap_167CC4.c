@@ -6,7 +6,7 @@
 #include "game/rep_3E58.h"
 #include "game/particle_spawn.h"
 
-extern s8 lbl_3_data_28558[23];
+extern u8 lbl_3_data_28558[23];
 
 // .text:0x00167CC4 size:0x88
 void fn_3_167CC4(void) {
@@ -38,7 +38,7 @@ void fn_3_167D4C(void) {
         return;
     }
     if (task->owner->animID == 0x1B || task->owner->animID == 0x1A) {
-        spawnCharacterParticles(task->owner, lbl_3_data_28558[(u32)rand() % 23]);
+        spawnCharacterParticles(task->owner, (s8)lbl_3_data_28558[(u32)rand() % 23]);
         task->state = 1;
     } else if (task->state != 0) {
         fn_800B0A14_removeQueue();
@@ -47,12 +47,44 @@ void fn_3_167D4C(void) {
 
 // .text:0x00167F14 size:0x1C0
 void fn_3_167F14(void) {
-    return;
+    EffectTask* task = (EffectTask*)lbl_803CC1B8;
+
+    if (g_d_GameSettings._55 != 0 || lbl_3_common_bss_35154.unk_479 != 0) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (g_GameLogic.gameStatus != 2) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (task->owner->animID == 0x26) {
+        spawnCharacterParticles(task->owner, (s8)lbl_3_data_28558[(u32)rand() % 23]);
+        task->state = 1;
+    } else if (task->state != 0) {
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x001680D4 size:0x1D8
 void fn_3_1680D4(void) {
-    return;
+    EffectTask* task = (EffectTask*)lbl_803CC1B8;
+    s16 anim;
+
+    if (g_d_GameSettings._55 != 0 || lbl_3_common_bss_35154.unk_479 != 0) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (g_GameLogic.gameStatus != 2) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    anim = task->owner->animID;
+    if (anim == 0x26 || (u16)(anim - 0x28) <= 3 || anim == 0x2C) {
+        spawnCharacterParticles(task->owner, (s8)lbl_3_data_28558[(u32)rand() % 23]);
+        task->state = 1;
+    } else if (task->state != 0) {
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x001682AC size:0x168
