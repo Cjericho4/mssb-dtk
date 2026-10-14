@@ -2131,7 +2131,11 @@ typedef struct Fielder {
     /* 0x054 */ f32 unk54;
     /* 0x058 */ u8 _pad_mid4[0x10]; 
     /* 0x068 */ f32 unk68;
-    /* 0x06C */ u8 _pad1[0x1A4 - 0x6C];
+    /* 0x06C */ u8 _pad1[0x70 - 0x6C];
+    /* 0x070 */ f32 unk70;
+    /* 0x074 */ u8 _pad74[0x17E - 0x74];
+    /* 0x17E */ s16 unk17E;
+    /* 0x180 */ u8 _pad180[0x1A4 - 0x180];
     /* 0x1A4 */ s16 unk1A4;
     /* 0x1A6 */ u8 _pad1a[0x1AC - 0x1A6];
     /* 0x1AC */ s16 unk1AC;
@@ -2145,7 +2149,9 @@ typedef struct Fielder {
     /* 0x1D4 */ u8 _pad3a;
     /* 0x1D5 */ u8 unk1D5;
     /* 0x1D6 */ u8 unk1D6;
-    /* 0x1D7 */ u8 _pad3b[0x1E3 - 0x1D7];
+    /* 0x1D7 */ u8 _pad3b[0x1DC - 0x1D7];
+    /* 0x1DC */ u8 unk1DC;
+    /* 0x1DD */ u8 _pad1DD[0x1E3 - 0x1DD];
     /* 0x1E3 */ u8 unk1E3;
     /* 0x1E4 */ u8 _pad3e[0x1EC - 0x1E4];
     /* 0x1EC */ u8 unk1EC;
