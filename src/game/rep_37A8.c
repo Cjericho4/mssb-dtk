@@ -1,6 +1,16 @@
 #include "game/rep_37A8.h"
 #include "game/UnknownHomes_Game.h"
 #include "header_rep_data.h"
+#include "Dolphin/os.h"
+
+typedef struct {
+    u8 _00[0x28];
+    u8 unk28;
+} Lbl80366158_37A8;
+extern Lbl80366158_37A8 lbl_80366158;
+extern s32 lbl_3_bss_B7E4;
+extern u8 lbl_3_bss_B800[0x20][2];
+extern s8 lbl_3_data_266A4;
 
 // .text:0x00141C44 size:0x48 mapped:0x80780CD8
 void fn_3_141C44(void) {
@@ -18,7 +28,29 @@ void fn_3_141C8C(void) {
 
 // .text:0x00141F30 size:0x100 mapped:0x80780FC4
 void fn_3_141F30(void) {
-    return;
+    s32 level;
+    s32 i;
+    u8* p;
+
+    lbl_3_bss_B7E4 += (lbl_80366158.unk28 == 0);
+    if (lbl_3_bss_B7E4 & 1) {
+        return;
+    }
+    level = lbl_3_bss_B800[0][0];
+    level += lbl_3_data_266A4 * 2;
+    p = lbl_3_bss_B800[0];
+    if (level > 0xFF) {
+        level = 0xFF;
+    } else if (level < 0) {
+        level = 0;
+    }
+    for (i = 0; i < 32; i += 2) {
+        p[i] = level;
+    }
+    DCFlushRange(lbl_3_bss_B800, 0x40);
+    if (level + lbl_3_data_266A4 * 2 > 0xFF || level + lbl_3_data_266A4 * 2 < 0) {
+        lbl_3_data_266A4 *= -1;
+    }
 }
 
 // .text:0x00142030 size:0x58 mapped:0x807810C4
