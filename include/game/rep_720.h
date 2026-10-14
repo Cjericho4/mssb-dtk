@@ -45,7 +45,7 @@ void fn_3_16058(void);
 void fn_3_161C0(void);
 void fn_3_16328(void);
 s32 fn_3_164A8(void);
-void fn_3_1650C(void);
+void fn_3_1650C(s32* outX, s32* outY, s32 mode, f32 x, f32 y);
 void fn_3_166F4(void);
 void fn_3_16900(void);
 void fn_3_16BA0(void);

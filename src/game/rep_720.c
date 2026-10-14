@@ -391,7 +391,7 @@ s32 fn_3_164A8(void) {
 }
 
 // .text:0x0001650C size:0x1E8 mapped:0x806555A0
-void fn_3_1650C(void) {
+void fn_3_1650C(s32* outX, s32* outY, s32 mode, f32 x, f32 y) {
     return;
 }
 

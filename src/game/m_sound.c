@@ -2,10 +2,50 @@
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "musyx/musyx.h"
+#include "musyx/seq.h"
+#include "game/rep_720.h"
 
+/* Per-sound-effect mix settings, indexed by (soundID - SFX_SETTINGS_BASE). */
+#define SFX_SETTINGS_BASE 0x151
+typedef struct {
+    u8 volume;
+    u8 pan;
+} SoundFXSettings;
+
+typedef struct {
+    u16 seqID;
+    u16 groupID;
+    u16 _4;
+} SongEntry; /* size: 0x6 */
+
+typedef struct {
+    u8 volume;
+    u8 _1;
+} SongSettings;
+
+/* Sound tables starting at .data 0x8148. */
+typedef struct {
+    u8 _pad0[0x1C4];
+    SongSettings songSettings[0x10];  /* 0x1C4 */
+    u8 _pad1E4[0x798 - 0x1E4];
+    SongEntry songs[19];              /* 0x798 */
+    u8 _pad80A[0x2];
+    SongEntry practiceSongs[1];       /* 0x80C */
+} SoundTables;
+
+extern SoundTables lbl_3_data_8148;
 extern u16 lbl_3_data_8168[];
-extern u8 lbl_3_data_8338[];
-extern u8 lbl_3_data_8530[];
+extern SoundFXSettings lbl_3_data_8338[];
+/* Per-voice mix settings for grouped sound effects. */
+typedef struct {
+    u8 volume[0x180];
+    u8 pan[0x180];
+    u8 _pad300[0x7C];
+} VoiceMixTable; /* size: 0x37C */
+extern VoiceMixTable lbl_3_data_8530;
+/* Loaded song arrangement (.arr) data, indexed by song. */
+struct SongArrangement;
+extern struct SongArrangement** lbl_3_bss_1774;
 
 extern void fn_3_8B094(void);
 extern u32 sndSeqGetValid(u32);
@@ -180,8 +220,26 @@ void fn_3_8FF18(void) {
 }
 
 // .text:0x0008FF5C size:0x108 mapped:0x806CEFF0
-void fn_3_8FF5C(void) {
-    return;
+u32 fn_3_8FF5C(s32 soundID, f32 x, f32 z) {
+    s32 screenX;
+    s32 screenY;
+    s32 pan;
+    SND_VOICEID vid;
+
+    pan = 0x3F;
+    if (lbl_800EF808.soundMode == 1) {
+        fn_3_1650C(&screenX, &screenY, 1, x, -z);
+        if (screenX < 0) {
+            pan = 0;
+        } else if (screenX > 640) {
+            pan = 0x7F;
+        } else {
+            pan = 127.0f * (screenX / 640.0f);
+        }
+    }
+    vid = sndFXStartEx(soundID, lbl_3_data_8338[soundID - SFX_SETTINGS_BASE].volume, pan, 0);
+    sndFXCtrl(vid, 0x5B, lbl_3_data_8338[soundID - SFX_SETTINGS_BASE].pan);
+    return vid;
 }
 
 // .text:0x00090064 size:0xEC mapped:0x806CF0F8
@@ -196,20 +254,17 @@ void fn_3_90150(void) {
 
 // .text:0x00090220 size:0x74 mapped:0x806CF2B4
 u32 fn_3_90220(s32 arg0, s32 arg1) {
-    u8* table = lbl_3_data_8530;
-    u8* entry = table + arg1;
-    u16 soundId = lbl_3_data_8168[arg0];
-    SND_VOICEID vid = sndFXStartEx((u16)(arg1 + soundId), table[arg1], 0x3F, 0);
+    u8 pan = lbl_3_data_8530.pan[arg1];
+    SND_VOICEID vid = sndFXStartEx(arg1 + lbl_3_data_8168[arg0], lbl_3_data_8530.volume[arg1], 0x3F, 0);
 
-    sndFXCtrl(vid, 0x5B, entry[0x180]);
+    sndFXCtrl(vid, 0x5B, pan);
     return vid;
 }
 
 // .text:0x00090294 size:0x64 mapped:0x806CF328
 SND_VOICEID playSoundEffect(int arg0) {
-    int off = arg0 * 2;
-    SND_VOICEID vid = sndFXStartEx((u16)arg0, ((u8*)&lbl_3_data_8338 + off)[-0x2a2], 0x3f, 0);
-    sndFXCtrl(vid, 0x5b, ((u8*)&lbl_3_data_8338 + off)[-0x2a1]);
+    SND_VOICEID vid = sndFXStartEx((u16)arg0, lbl_3_data_8338[arg0 - SFX_SETTINGS_BASE].volume, 0x3f, 0);
+    sndFXCtrl(vid, 0x5b, lbl_3_data_8338[arg0 - SFX_SETTINGS_BASE].pan);
     return vid;
 }
 
@@ -240,8 +295,29 @@ void fn_3_90434(void) {
 }
 
 // .text:0x0009056C size:0x108 mapped:0x806CF600
-void fn_3_9056C(void) {
-    return;
+s32 fn_3_9056C(s32 songIndex) {
+    SoundTables* tables = &lbl_3_data_8148;
+    SongEntry* song;
+    Struct34C58* state;
+    SND_SEQID seq;
+    u8 volume;
+
+    if (g_d_GameSettings.GameModeSelected != 2) {
+        song = &tables->songs[songIndex];
+    } else {
+        song = &tables->practiceSongs[songIndex];
+    }
+    state = &lbl_3_common_bss_34C58;
+    if (sndSeqGetValid(state->_08) != 0) {
+        sndSeqVolume(0, 0, state->_08, 1);
+        return 0;
+    }
+    seq = sndSeqPlayEx(song->seqID, song->groupID, lbl_3_bss_1774[songIndex], 0, 0);
+    volume = tables->songSettings[songIndex].volume;
+    state->_08 = seq;
+    lbl_800EF808.musicVolume = volume;
+    sndSeqVolume(volume, 0, seq, 0);
+    return 1;
 }
 
 // .text:0x00090674 size:0x88 mapped:0x806CF708

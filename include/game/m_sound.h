@@ -44,7 +44,7 @@ void fn_3_8F21C(void);
 void fn_3_8FC0C(void);
 void fn_3_8FC80(void);
 void fn_3_8FF18(void);
-void fn_3_8FF5C(void);
+u32 fn_3_8FF5C(s32 soundID, f32 x, f32 z);
 void fn_3_90064(void);
 void fn_3_90150(void);
 void sndRemoveListener(void* listener);
@@ -58,7 +58,7 @@ void fn_3_902FC(void);
 void fn_3_90328(void);
 void fn_3_903B8(void);
 void fn_3_90434(void);
-void fn_3_9056C(void);
+s32 fn_3_9056C(s32 songIndex);
 void fn_3_90674(void);
 void fn_3_906FC(void);
 

@@ -21,7 +21,11 @@ typedef struct {
     void* unk98;        /* 0x98 */
     void* ptrArray[8];       /* 0x9C */
     s32 unkBC;
-    u8 _padC0[0x398 - 0xC0];
+    u8 _padC0[0x391 - 0xC0];
+    u8 musicVolume;     /* 0x391 */
+    u8 _pad392[0x396 - 0x392];
+    u8 soundMode;       /* 0x396: 1 = positional panning */
+    u8 _pad397;
     u8 unk398;
     u8 _pad399[0x39C - 0x399];
 } Lbl800EF808; // size: 0x39C
