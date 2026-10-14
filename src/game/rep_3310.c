@@ -299,9 +299,39 @@ void fn_3_118358(void) {
     return;
 }
 
+typedef struct {
+    void (*func)(s32);
+    VecXYZ pos;
+    u8 _pad10[0x16];
+    u8 visible;
+    u8 _pad27;
+} Rep3310Entry2D94;
+
+typedef struct {
+    VecXYZ pos;
+    u8 _pad0C[0x24];
+} Rep3310Data21BC4;
+
+extern VecXYZ lbl_3_data_21B94[4];
+extern Rep3310Data21BC4 lbl_3_data_21BC4[];
+extern f32 lbl_3_data_226C4[4];
+extern f32 lbl_3_data_226DC;
+void fn_8001D110(s32 index, f32 a, f32 b, f32 c);
+
 // .text:0x001183FC size:0x10C mapped:0x80757490
 void fn_3_1183FC(void) {
-    return;
+    Rep3310Entry2D94* entry;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        entry = (Rep3310Entry2D94*)&g_hugeAnimStruct.entries_2D94[i + 0xF0];
+        entry->pos.x = lbl_3_data_21B94[i].x;
+        entry->pos.y = -lbl_3_data_21B94[i].y;
+        entry->pos.z = lbl_3_data_21B94[i].z;
+        entry->pos.y = 0.0f;
+        entry->pos.z -= lbl_3_data_226DC;
+        entry->visible = 1;
+    }
 }
 
 // .text:0x00118508 size:0x10C mapped:0x8075759C
@@ -332,23 +362,6 @@ void fn_3_11881C(s32 arg0) {
     entries[arg0].unk34->unk18->field_0->field_14->ptr08->ptr0C->field_0x20 = val;
 }
 
-typedef struct {
-    void (*func)(s32);
-    VecXYZ pos;
-    u8 _pad10[0x16];
-    u8 visible;
-    u8 _pad27;
-} Rep3310Entry2D94;
-
-typedef struct {
-    VecXYZ pos;
-    u8 _pad0C[0x24];
-} Rep3310Data21BC4;
-
-extern VecXYZ lbl_3_data_21B94[4];
-extern Rep3310Data21BC4 lbl_3_data_21BC4[];
-extern f32 lbl_3_data_226C4[4];
-void fn_8001D110(s32 index, f32 a, f32 b, f32 c);
 
 // .text:0x0011887C size:0x100 mapped:0x80757910
 void fn_3_11887C(void) {
