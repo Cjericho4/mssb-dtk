@@ -346,11 +346,12 @@ u32 fn_3_105C28(Struct_105C28* arg0, u32 arg1) {
 
 // .text:0x00105C84 size:0x58 mapped:0x80744D18
 void fn_3_105C84(Fixup_105C84* arg0) {
-    u32* ptr = &arg0->unk8;
-    s16 i = 0;
-    arg0->unk8 += (u32)arg0;
-    while (i < arg0->unk6) {
-        i++;
+    u32* table = &arg0->unk8;
+    u32* ptr = table;
+    s16 i;
+
+    *table += (u32)arg0;
+    for (i = 0; i < arg0->unk6; i++) {
         *++ptr += (u32)arg0;
     }
     lbl_3_common_bss_DE94->field_0x11C = (u32)arg0->unk4 << 16;
