@@ -3,10 +3,28 @@
 #include "game/rep_540.h"
 #include "game/rep_1038.h"
 #include "game/rep_E08.h"
+extern u8 lbl_803CBC3C;
+void fn_3_BF158(void);
+void fn_3_BF1AC(void);
+#include "musyx/musyx.h"
 
 // .text:0x000AC9F8 size:0x100 mapped:0x806EBA8C
 void fn_3_AC9F8(void) {
-    return;
+    if (lbl_3_common_bss_32724.unk_C3 != 0) {
+        return;
+    }
+    if (lbl_3_common_bss_34C90.field_0x06 & 0x200) {
+        lbl_3_common_bss_34C90.field_0x1D2 = 5;
+        sndFXStartEx(0x1B9, lbl_800EFBA4.alertVolume, 0x3F, 0);
+    } else if (g_d_GameSettings.GameModeSelected != 6) {
+        if ((lbl_3_common_bss_34C90.field_0x08 & 1) && lbl_3_common_bss_34C90.unk_221 != 0) {
+            lbl_3_common_bss_34C90.unk_221--;
+            sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+        } else if ((lbl_3_common_bss_34C90.field_0x08 & 2) && lbl_3_common_bss_34C90.unk_221 < lbl_3_common_bss_34C90.field_0x222 - 1) {
+            lbl_3_common_bss_34C90.unk_221++;
+            sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+        }
+    }
 }
 
 // .text:0x000ACAF8 size:0x240 mapped:0x806EBB8C
@@ -91,7 +109,36 @@ void fn_3_AF5A4(void) {
 
 // .text:0x000AFA64 size:0x100 mapped:0x806EEAF8
 void fn_3_AFA64(void) {
-    return;
+    if (lbl_3_common_bss_34C90.field_0x0C < 0x7FFE) {
+        lbl_3_common_bss_34C90.field_0x0C++;
+    } else {
+        lbl_3_common_bss_34C90.field_0x0C = 0x7FFF;
+    }
+    lbl_803CBC3C = 1;
+    if (lbl_3_common_bss_34C90.field_0x0C > 0x3C) {
+        if (lbl_3_common_bss_34C90.field_0x1D8 == 0) {
+            if (g_d_GameSettings.exhibitionMatchInd == 0) {
+                lbl_3_common_bss_34C90.field_0x1D0 = 2;
+            } else {
+                lbl_3_common_bss_34C90.field_0x1D0 = 0;
+            }
+        } else if (g_d_GameSettings.exhibitionMatchInd == 0) {
+            lbl_3_common_bss_34C90.field_0x1D0 = 3;
+        } else {
+            lbl_3_common_bss_34C90.field_0x1D0 = 1;
+        }
+        lbl_3_common_bss_34C90.field_0x1D1 = 1;
+        lbl_3_common_bss_34C90.field_0x1D2 = 0;
+        lbl_3_common_bss_34C90.field_0x0C = 0;
+        lbl_3_common_bss_34C90.field_0x0E = 0;
+        lbl_3_common_bss_34C90.field_0x10 = 0;
+        fn_3_5A6D4(0xB);
+        fn_3_BF1AC();
+        fn_3_BF158();
+    } else {
+        fn_3_31594();
+        fn_3_8A958();
+    }
 }
 
 // .text:0x000AFB64 size:0x1E4 mapped:0x806EEBF8

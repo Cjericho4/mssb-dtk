@@ -15,26 +15,29 @@
 typedef struct {
     u8 _pad0[0x04];      /* 0x00 */
     s16 field_0x04;      /* 0x04 */
-    s16 field_0x06;      /* 0x06 */
-    s16 field_0x08;      /* 0x08 */
+    u16 field_0x06;      /* 0x06 */
+    u16 field_0x08;      /* 0x08 */
     u8 _pad1[0x02];      /* 0x0A */
     s16 field_0x0C;      /* 0x0C */
     s16 field_0x0E;      /* 0x0E */
     s16 field_0x10;      /* 0x10 */
-    u8 _pad2[0x1BF];     /* 0x12 to 0x1D0 */
+    u8 _pad2[0x1BE];     /* 0x12 */
+    u8 field_0x1D0;      /* 0x1D0 */
     u8 field_0x1D1;      /* 0x1D1 */
     u8 field_0x1D2;      /* 0x1D2 */
     u8 _pad3[0x2];       /* 0x1D3-0x1D4 */
     u8 field_0x1D5;      /* 0x1D5 */
     u8 field_0x1D6;      /* 0x1D6 */
     u8 field_0x1D7;      /* 0x1D7 */
-    u8 _pad4[0x2];       /* 0x1D8-0x1D9 */
+    u8 field_0x1D8;      /* 0x1D8 */
+    u8 _pad1D9;          /* 0x1D9 */
     u8 field_0x1DA;      /* 0x1DA */
     u8 _pad5[0x2B];      /* 0x1DB-0x205 */
     s8 field_0x206;      /* 0x206 */
     u8 _pad207[0x1A];    /* 0x207 */
     u8 unk_221;          /* 0x221 */
-    u8 _pad222[0x42];    /* 0x222 */
+    u8 field_0x222;      /* 0x222 */
+    u8 _pad223[0x41];    /* 0x223 */
 } Bss34C90Item; // size: 0x264
 
 extern Bss34C90Item lbl_3_common_bss_34C90;

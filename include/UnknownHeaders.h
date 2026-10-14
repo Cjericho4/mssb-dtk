@@ -817,8 +817,11 @@ typedef struct CommonBss_32724 {
 extern CommonBss_32724 lbl_3_common_bss_32724;
 // Definition for the global structure at 0x800EFBA4
 typedef struct SoundConfig {
-u8 _pad[0x6];
-u8 volume; // Offset 0x6
+    u8 menuVolume;   /* 0x0 */
+    u8 _pad1;
+    u8 alertVolume;  /* 0x2 */
+    u8 _pad3[0x3];
+    u8 volume;       /* 0x6 */
 } SoundConfig;
 extern SoundConfig lbl_800EFBA4;
 s32 rand();                                         /* extern */
