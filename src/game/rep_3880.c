@@ -10,6 +10,15 @@ typedef struct {
     u8 _pad34[0x30];
 } Struct_26E9C;
 extern Struct_26E9C lbl_3_data_26E9C;
+typedef struct {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+} Struct_26BDC;
+extern Struct_26BDC lbl_3_data_26BDC;
+extern Struct_26BDC lbl_3_data_26BEC;
+f32 fn_3_119854(u32 index);
 struct Struct_800339F0_Result* fn_800337CC(u8* buf, s32 size, s32 arg2);
 
 
@@ -694,8 +703,27 @@ void fn_3_1536A8(void) {
 }
 
 // .text:0x00153E8C size:0x100 mapped:0x80792F20
-void fn_3_153E8C(void) {
-    return;
+void fn_3_153E8C(ListNode_14B9F0* node, VecXYZ* pos, u8 arg2, u8 arg3, u8 arg4) {
+    f32 height;
+
+    node->field_0x48 = (arg4 != 0) * lbl_3_data_26BEC.unkC + (arg4 * lbl_3_data_26BDC.unkC) / lbl_3_data_26BDC.unk0;
+    node->field_0x4D = (arg3 == 4);
+    node->field_0x4E = 0;
+    node->field_0x4F = arg2;
+    node->color[2] = 0xFF;
+    node->color[1] = 0xFF;
+    node->color[0] = 0xFF;
+    node->color[3] = lbl_3_data_26BDC.unk4;
+    node->pos.x = pos->x;
+    if (node->field_0x4D) {
+        height = fn_3_119854(2);
+    } else {
+        height = fn_3_119854(0);
+    }
+    node->pos.y = -pos->y - 0.1435f * height;
+    node->pos.z = pos->z;
+    node->field_0x45 = 0;
+    node->field_0x44 = 0;
 }
 
 // .text:0x00153F8C size:0x158 mapped:0x80793020
