@@ -1520,7 +1520,7 @@ typedef struct {
     s8 fieldA;   // +0
     u8 _1;       // +1
     s8 fieldB;   // +2
-    u8 _3;       // +3
+    s8 _3;       // +3
     u8 _4;       // +4
     u8 _5[2];    // +5..+6
     u8 _7;       // +7
@@ -1823,10 +1823,7 @@ typedef struct _MiniGameStruct {
     /*0x19CE*/ u8 _19CE;
     /*0x19CF*/ u8 _19CF;
     /*0x19D0*/ s16 _19D0;
-    /*0x19D2*/ s16 _19D2;
-    /*0x19D4*/ s16 _19D4;
-    /*0x19D6*/ s16 _19D6;
-    /*0x19D8*/ s16 _19D8;
+    /*0x19D2*/ s16 _19D2[4];
     /*0x19DA*/ u8 _19DA[4];
     /*0x19DE*/ u8 _19DE;
     /*0x19DF*/ u8 _19DF;
@@ -1841,14 +1838,8 @@ typedef struct _MiniGameStruct {
     /*0x1A0C*/ u8 _1A0C;
     /*0x1A0D*/ u8 _1A0D;
     /*0x1A0E*/ u8 _1A0E;
-    /*0x1A0F*/ u8 _1A0F;
-    /*0x1A10*/ u8 _1A10;
-    /*0x1A11*/ u8 _1A11;
-    /*0x1A12*/ u8 _1A12;
-    /*0x1A13*/ u8 _1A13;
-    /*0x1A14*/ u8 _1A14;
-    /*0x1A15*/ u8 _1A15;
-    /*0x1A16*/ u8 _1A16;
+    /*0x1A0F*/ s8 _1A0F[4];
+    /*0x1A13*/ u8 _1A13[4];
     /*0x1A17*/ u8 battingHandedness[9];
     /*0x1A20*/ u8 _1A20;
     /*0x1A21*/ u8 _1A21;
