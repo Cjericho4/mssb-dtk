@@ -4,7 +4,7 @@
 **Source of truth:** Always follow `queue.log`. If this file disagrees with `queue.log`, `queue.log` wins.
 **Strategy:** Work through functions listed in `queue.log` (plain entries at the bottom, after all COMPLETED/NONMATCHING lines)
 **Queue file:** `queue.log`
-**Next function to attempt:** fn_3_6B4C8 (line 204 of queue.log)
+**Next function to attempt:** see queue.log (next batch: Codex easy tier, .agent/categorize/functions.csv)
 
 To find the next function: look for the first plain entry (not prefixed with COMPLETED/NONMATCHING/SKIPPED) in `queue.log` that hasn't been committed yet.
 
@@ -44,6 +44,55 @@ To find the next function: look for the first plain entry (not prefixed with COM
 ## Almost Matched (do not retry)
 | Function | Issue |
 |---|---|
+| fn_3_105C28 | register allocation / scheduling (see git log) |
+| fn_3_E6798 | register allocation / scheduling (see git log) |
+| fn_3_11881C | register allocation / scheduling (see git log) |
+| fn_3_129370 | register allocation / scheduling (see git log) |
+| fn_3_135E38 | register allocation / scheduling (see git log) |
+| fn_3_14DC80 | register allocation / scheduling (see git log) |
+| fn_3_14F8D0 | register allocation / scheduling (see git log) |
+| fn_3_150010 | register allocation / scheduling (see git log) |
+| fn_3_1354BC | CW register allocation: uses f4 for diff1 and f1 for diff2, generating different fsubs destinations (f4/f1 vs f1/f2); li r3,0 placement also differs — unfixable |
+| fn_3_90AB0 | r0/r4 register swap in index base+offset computation, and lwz vs lwzu update form — both unfixable from C |
+| fn_3_10FB74 | beq+b double-branch vs bne/fallthrough — CW branch direction codegen, unfixable from C |
+| fn_3_112070 | CW sign-bit register allocation: target reuses srwi r5 from % 30 division as 3rd fn_3_155288 arg; add result goes to r0 in target but r5 in compile, causing ext |
+| fn_3_125850 | fn_80034E20 called with 2 args in target (no r5 setup), but global 3-arg declaration forces NULL→li r5,0 before call; local redecl rejected by -requireprotos |
+| fn_3_117588 | register allocation / scheduling (see git log) |
+| fn_3_24EA0 | register allocation / scheduling (see git log) |
+| fn_3_6BD6C | Register numbering of the 1/0 constants in the init block; loop matches. |
+| fn_3_DF6D4 | Scheduling of the player-index/zero setup before the AI-strength loop. |
+| fn_3_DFA20 | Model per-player arrays at 0x19D2/0x1A0F/0x1A13; register numbering differs. |
+| fn_3_D9868 | Fix MiniGameStruct layout at 0x192B (odd-offset s16) and add fieldOrder[4]; remaining differences are register allocation. |
+| fn_3_76A9C | Add BatterStatEntry runs/steals fields and a team[2] view of g_Scores; second loop's counter/pointer registers are swapped. |
+| fn_3_6B870 | Inlined empty-base runner loop; i/pointer register swap remains. |
+| fn_3_104B20 | Register swap only: x,y,z correctly map to pos.x/y/z but CW allocates them in f0,f2,f1 instead of f2,f1,f0; cannot be fixed from C |
+| fn_3_5A6D4 | Register swap only: CW uses r5 as struct base pointer (addi r5,r4,@l) and r4 as temp for old gameStatus; current generates addi r4,r4,@l instead |
+| fn_3_11897C | Register allocation mismatch: target uses lwzx+r8 for entries_68 array access, compiler generates add+lwz; register number differences (r8/r7 vs r0/r6) |
+| fn_3_135600 | register allocation / scheduling (see git log) |
+| fn_3_FF4C | Register swap only: Int1/Int2 loaded into r0/r3 instead of r3/r9; all arithmetic operations correct |
+| fn_3_20AE0 | register allocation / scheduling (see git log) |
+| fn_3_10F564 | Correct logic: (s8)_1A2C == -1 guard, lbl_3_data_228[0x10] != 0 check, store lbl_3_data_18910[GameMode_MiniGame] to _1A2C. 20/22 instructions match; only `li r3 |
+| fn_3_142030 | CW processes r3 before r4 regardless of expression order; instruction count and formula are correct but register scheduling differs. Co-Authored-By: Claude Sonn |
+| fn_3_909B0 | CW generates (stadiumID+0x27)*4 offset but struct field layout produces 0x9C+stadiumID*4 separately; matching requires treating lbl_800EF808 as flat void*[] fro |
+| fn_3_CB344 | Epilogue restore order swapped (lwz r0/r31 order): CW scheduling artifact Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com> |
+| fn_3_FCEB0 | register allocation / scheduling (see git log) |
+| fn_3_11741C | register allocation / scheduling (see git log) |
+| fn_3_6530 | register allocation / scheduling (see git log) |
+| fn_3_90B14 | One extra li: target reuses the zero register for loadingState and the third fn_800216F8 argument. |
+| fn_3_B27A4 | One scheduling swap (addi g_GameLogic vs li -1) in the prologue. |
+| fn_3_112450 | Add flat players overlay for MiniGameStruct 0x18CC; both functions differ only in register numbering. |
+| fn_3_58E50 | Add flat players overlay for MiniGameStruct 0x18CC; both functions differ only in register numbering. |
+| fn_3_9056C | register allocation / scheduling (see git log) |
+| fn_3_C0854 | Register numbering for the sound-id/-1 temporaries. |
+| fn_3_D2684 | r29/r30 swap between the id-list pointer and the g_hugeAnimStruct base. |
+| fn_3_E4658 | Register allocation of the 0.24f/0.0f constant loads before CTRLSetRotation. |
+| fn_3_105ACC | Quaternion-to-matrix; float register allocation and frame size differ. |
+| fn_3_14C3BC | Register numbering around the int-to-float conversion constants. |
+| fn_3_1CAC0 | One commutative fmul operand swap in the FOV expression. |
+| fn_3_88B18 | r7/r8 swap for the force-state variable. |
+| fn_3_A1F3C | r3/r4 swap for the runner index. |
+| fn_3_B97DC | ACTSetAnimation's time argument arrives in f2 in the target; the C3 prototype only has one float parameter. |
+| fn_3_16E1EC | Register allocation of the reset-condition terms and bss base pointer. |
 | fn_3_D8A10 | scheduling of score-table loads; unrolled _1918 loop uses const offsets vs running pointer |
 | fn_3_249E8 | register allocation of loop induction vars (r31/r30/r29) |
 | fn_3_BD6AC | bge+b+bl branch direction — CW codegen, unfixable |
