@@ -28,7 +28,7 @@ void sndUpdateListener(CommonBss32B20* listener, VecXYZ* pos, VecXYZ* vel, VecXY
 void fn_3_8B964(VecXYZ* pos, VecXYZ* vel, VecXYZ* orient);
 void fn_3_8B9BC(void);
 void fn_3_8BA60(void);
-void fn_3_8BBC4(void);
+void fn_3_8BBC4(s32 soundID, VecXYZ* pos, s32 arg2, s32 arg3);
 void fn_3_8BDF4(void);
 void fn_3_8BE8C(void);
 void fn_3_8C07C(void);

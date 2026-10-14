@@ -2,6 +2,10 @@
 #include "game/UnknownHomes_Game.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
+#include "stl/math.h"
+#include "game/m_sound.h"
+
+extern f32 lbl_3_data_11178[5];
 
 
 
@@ -10,8 +14,15 @@ static u8 lbl_3_bss_1902;
 static struct StadiumObject* lbl_3_bss_9940;
 
 // .text:0x000B7FC8 size:0x108 mapped:0x806F705C
-void fn_3_B7FC8(void) {
-    return;
+void fn_3_B7FC8(s32 soundID, s32 arg1) {
+    VecXYZ pos = {0.0f, 0.0f, 37.0f};
+    f32 angle;
+
+    angle = 0.017453292f * lbl_3_data_11178[rand() % 5];
+    pos.x += 100.0f * (f32)cos(angle);
+    pos.y += -30.0f;
+    pos.z += 100.0f * (f32)sin(angle);
+    fn_3_8BBC4(soundID, &pos, 0, arg1);
 }
 
 // .text:0x000B80D0 size:0xB4 mapped:0x806F7164

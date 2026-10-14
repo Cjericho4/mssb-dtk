@@ -66,7 +66,7 @@ void fn_3_8BA60(void) {
 }
 
 // .text:0x0008BBC4 size:0x230 mapped:0x806CAC58
-void fn_3_8BBC4(void) {
+void fn_3_8BBC4(s32 soundID, VecXYZ* pos, s32 arg2, s32 arg3) {
     return;
 }
 
