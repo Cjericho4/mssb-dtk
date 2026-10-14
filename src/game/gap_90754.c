@@ -78,8 +78,32 @@ void fn_3_90AB0(s32 charID) {
 }
 
 // .text:0x00090B14 size:0x100 mapped:0x806CFBA8
-void fn_3_90B14(void) {
-    return;
+s32 fn_3_90B14(u8 charID, s32 altCharID) {
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 index;
+
+    if (lbl_3_common_bss_34C58._2C == 0) {
+        lbl_3_common_bss_34C58._2C = 1;
+    }
+    if (lbl_3_common_bss_34C58._2C == 1 || lbl_3_common_bss_34C58._2C == 3) {
+        if (lbl_3_common_bss_34C58._2C == 1) {
+            lbl_3_common_bss_34C58._2D = charID;
+        } else {
+            if (altCharID < 0) {
+                return 1;
+            }
+            lbl_3_common_bss_34C58._2D = altCharID;
+        }
+        index = fn_800698F8(lbl_3_common_bss_34C58._2D);
+        scene->loadingState = 0;
+        fn_800216F8(index + 5, fn_3_90F48, 0);
+        lbl_3_common_bss_34C58._2C++;
+    } else if (scene->loadingState != 0) {
+        if (++lbl_3_common_bss_34C58._2C == 5) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 // .text:0x00090C14 size:0x9C mapped:0x806CFCA8
