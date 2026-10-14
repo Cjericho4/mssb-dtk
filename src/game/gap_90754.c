@@ -1,4 +1,5 @@
 #include "game/gap_90754.h"
+#include "game/gap_97144.h"
 
 // .text:0x00090754 size:0x10 mapped:0x806CF7E8
 void fn_3_90754(Gap90754Struct* arg0, u8 arg1, u8 arg2) {
@@ -147,6 +148,31 @@ void fn_3_910F4(void) {
 
 // .text:0x000911A8 size:0x10C mapped:0x806D023C
 void fn_3_911A8(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 count;
+    s32 i;
+    s32 state;
+
+    if (lbl_3_common_bss_32724.someStatusInd != 0 || g_GameLogic.gameStatus != 2) {
+        lbl_3_common_bss_32724._pad3a[0] = 0;
+        fn_80034CEC((u32)scene);
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    scene->unk18++;
+    count = g_Strikes.outs;
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        count = g_Minigame._190D - g_Minigame._1910;
+    }
+    for (i = 0; i < 2; i++) {
+        state = 3;
+        if (scene->eventID != count) {
+            if (count >= i + 1) {
+                state = 2;
+            }
+            fn_8003649C((s32)scene, i + 1, i + 1, 0x107, state);
+        }
+    }
+    scene->eventID = count;
 }
 
