@@ -17,9 +17,43 @@ void fn_3_A1DA0(void) {
     return;
 }
 
+typedef struct {
+    u8 _pad0[0xC];
+    s32 runnerIndex; /* 0x0C */
+    u8 _pad10[0x4];
+} Bss1808;
+extern Bss1808 lbl_3_bss_1808;
+extern s32 lbl_3_bss_1858[];
+
 // .text:0x000A1F3C size:0x10C mapped:0x806E0FD0
-void fn_3_A1F3C(void) {
-    return;
+s32 fn_3_A1F3C(void) {
+    s32 i;
+    s32 idx;
+
+    if (g_Ball.ballZoneAwayFromHome >= 3) {
+        return 0;
+    }
+    idx = lbl_3_bss_1808.runnerIndex;
+    if (idx < 0 || idx > 3) {
+        return 0;
+    }
+    if (lbl_3_bss_1858[idx] >= 7) {
+        return 0;
+    }
+    if (g_Runners[idx].tagUpInd != 0) {
+        return 0;
+    }
+    if (idx >= 1) {
+        for (i = idx - 1; i >= 0; i--) {
+            if (g_Runners[i].percentTowardsNextBase > 0.15f && g_Runners[i].percentTowardsNextBase < 0.85f) {
+                return 0;
+            }
+        }
+    }
+    if (fn_3_A46A0() != 0) {
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x000A2048 size:0x1E4 mapped:0x806E10DC
@@ -156,8 +190,8 @@ void fn_3_A41E8(void) {
 }
 
 // .text:0x000A46A0 size:0x370 mapped:0x806E3734
-void fn_3_A46A0(void) {
-    return;
+s32 fn_3_A46A0(void) {
+    return 0;
 }
 
 // .text:0x000A4A10 size:0x540 mapped:0x806E3AA4
