@@ -31,6 +31,15 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **The Problem**: Declaring them as `extern f32 lbl_3_rodata_XXXX` lets them alias memory, so MWCC schedules their loads later and the float registers/order mismatch (e.g. target loads the constant first into `f2`).
 *   **The Fix**: Look up the value with `grep -A1 "^\.obj lbl_3_rodata_XXXX," build/GYQE01/game/asm/game/*.s` and use the literal. Matched fn_3_13D5E8, fn_3_13DA20, fn_3_B8574, fn_3_A372C, fn_3_E45A8, fn_3_19770, fn_3_C0F8C.
 
+### Quick Fixes That Worked Repeatedly
+*   **Register swaps between locals**: change local *declaration order* (MWCC assigns saved registers by declaration order); brute-force permutations if needed. Also controls stack slot order (first declared = highest address).
+*   **Duplicated code in the target**: the original used a `static inline` helper (build flags are `-inline noauto`, so `inline` is required).
+*   **`frsp` right after `sin`/`cos`**: cast the call, `(f32)cos(x)`.
+*   **`mulli rX, rY, -1`**: write `x *= -1;` (not `x = -x` or `x = x * -1`).
+*   **One extra `mr` before a loop**: the original used two pointer variables (`p = base; q = p;`).
+*   **`lhz`/`lha` or `clrlwi`/`extsb` mismatches**: fix the field or parameter signedness/width in the header (check other users first).
+*   **Fields declared as scalars but indexed in asm** (e.g. `MiniGameStruct` wall-ball coins, `objects[40]`, `pendingPoints[4][10]`): the padding usually reveals the real array length; convert to arrays.
+
 ### Unprototyped Calls (`fn_80034E20`)
 `fn_80034E20` is declared without a prototype (`void fn_80034E20();`), so call it with the arguments the target actually passes. Most callers pass two (no `r5` setup); adding a third `&lbl_803CC1B8` argument was the cause of several "NONMATCHING: 2-arg call" notes.
 
