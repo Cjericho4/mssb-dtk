@@ -5,6 +5,11 @@
 #include "game/rep_E08.h"
 #include "header_rep_data.h"
 #include "stl/mem.h"
+#include "game/rep_1188.h"
+#include "game/rep_540.h"
+#include "game/rep_1200.h"
+void setBatterContactConstants(void);
+int someAnimationIndFunction(void);
 
 extern f32 shortAngleToRad(s16 ang);
 extern f32 lbl_3_rodata_3268;
@@ -183,9 +188,41 @@ void fn_3_112230(void) {
     return;
 }
 
+typedef struct {
+    u8 highLevelSimulationFlag;
+    u8 _1;
+    u8 _2;
+} HighLevelSimulation_31F0;
+extern HighLevelSimulation_31F0 lbl_803CBC3C;
+
 // .text:0x00112450 size:0x108 mapped:0x807514E4
 void fn_3_112450(void) {
-    return;
+    switch (g_GameLogic._125) {
+    case 0:
+        g_GameLogic.pre_PostMiniGameInd = 1;
+        g_Minigame.rosterID = g_Minigame.players.battingOrder[g_Minigame.turnNumberWithinRound];
+        g_Minigame.miniGameTurnCounter = 0;
+        g_Minigame.pointsTargetReachedInd = 0;
+        g_Minigame.bOD_HRStreak = 0;
+        fn_3_F578();
+        fn_3_753E8(0);
+        fn_3_6EBB4(-1);
+        setBatterContactConstants();
+        setInMemBatterConstants(g_Minigame.rosterID);
+        lbl_803CBC3C._2 = 0;
+        g_GameLogic._125++;
+        break;
+    case 1:
+        if (someAnimationIndFunction() != 0) {
+            lbl_3_common_bss_32234.unk1 = 1;
+            g_GameLogic._125++;
+        }
+        break;
+    default:
+        lbl_3_common_bss_32724.unk_B6 = 1;
+        fn_3_5A6D4(0);
+        break;
+    }
 }
 
 // .text:0x00112558 size:0x78 mapped:0x807515EC

@@ -1753,7 +1753,17 @@ typedef struct _MiniGameStruct {
             s16 latest;
         } minigamePointsPair[4];
     };
-    /*0x18CC*/ MiniGameControlStruct minigameControlStruct[2];
+    /*0x18CC*/ union {
+        MiniGameControlStruct minigameControlStruct[2];
+        struct {
+            s8 characterIndex[4];      /* 0x18CC */
+            u8 _18D0[8];               /* 0x18D0 */
+            u8 battingHandedness[4];   /* 0x18D8 */
+            u8 aIStrength[4];          /* 0x18DC */
+            u8 battingOrder[0x14];     /* 0x18E0, indexed by turnNumberWithinRound */
+            s8 fielderRosterIDs[4];    /* 0x18F4 */
+        } players;
+    };
     /*0x18F8*/ s8 minigameFielderIndex[4];
     /*0x18FC*/ u8 _18FC[4];
     /*0x1900*/ u8 _1900;
@@ -2167,7 +2177,8 @@ typedef struct Fielder {
     /* 0x1B6 */ s16 unk1B6;
     /* 0x1B8 */ u8 _pad2[0x1C7 - 0x1B8];
     /* 0x1C7 */ u8 unk1C7;
-    /* 0x1C8 */ u8 _pad3[0x1D3 - 0x1C8];
+    /* 0x1C8 */ u8 _pad3[0x1D2 - 0x1C8];
+    /* 0x1D2 */ u8 unk1D2;
     /* 0x1D3 */ u8 unk1D3;
     /* 0x1D4 */ u8 _pad3a;
     /* 0x1D5 */ u8 unk1D5;

@@ -1,6 +1,7 @@
 #include "game/rep_AC8.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
+#include "game/rep_1188.h"
 
 // .text:0x000251E4 size:0x1C0 mapped:0x80664278
 void fn_3_251E4(void) {
@@ -1184,9 +1185,28 @@ void fn_3_58870(void) {
     return;
 }
 
+extern u8 lbl_3_data_46F8[][9];
+
 // .text:0x00058E50 size:0x108 mapped:0x80697EE4
 void fn_3_58E50(void) {
-    return;
+    s32 i;
+    s32 fielderIndex;
+
+    g_GameLogic.rosterLoc_skippingCap = 0;
+    if (g_d_GameSettings.minigamesEnabled == 0) {
+        return;
+    }
+    for (i = 0; i < 4; i++) {
+        if (g_Minigame.players.fielderRosterIDs[i] >= 0) {
+            fielderIndex = (g_Minigame.players.fielderRosterIDs[i] == (s8)g_Minigame.minigamePlayerSelectedOrder) ? 0 : i + 2;
+            setFielderValues(g_Minigame.players.fielderRosterIDs[i], fielderIndex);
+            if (fielderIndex == 0) {
+                g_Fielders[fielderIndex].unk1D2 = lbl_3_data_46F8[g_Minigame.players.battingHandedness[i]][0];
+            } else {
+                g_Fielders[fielderIndex].unk1D2 = lbl_3_data_46F8[g_Minigame.players.battingHandedness[i]][7];
+            }
+        }
+    }
 }
 
 // .text:0x00058F58 size:0x254 mapped:0x80697FEC
