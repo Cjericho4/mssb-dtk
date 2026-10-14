@@ -308,8 +308,40 @@ void fn_3_105A10(void) {
 }
 
 // .text:0x00105ACC size:0x10C mapped:0x80744B60
-void fn_3_105ACC(void) {
-    return;
+void fn_3_105ACC(Quaternion* q, Mtx out) {
+    Mtx44 m;
+    f32 xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz;
+
+    xs = q->x + q->x;
+    ys = q->y + q->y;
+    zs = q->z + q->z;
+    wx = q->w * xs;
+    wy = q->w * ys;
+    wz = q->w * zs;
+    xx = q->x * xs;
+    xy = q->x * ys;
+    xz = q->x * zs;
+    yy = q->y * ys;
+    yz = q->y * zs;
+    zz = q->z * zs;
+
+    m[0][0] = 1.0f - (yy + zz);
+    m[0][1] = xy + wz;
+    m[0][2] = xz - wy;
+    m[0][3] = 0.0f;
+    m[1][0] = xy - wz;
+    m[1][1] = 1.0f - (xx + zz);
+    m[1][2] = yz + wx;
+    m[1][3] = 0.0f;
+    m[2][0] = xz + wy;
+    m[2][1] = yz - wx;
+    m[2][2] = 1.0f - (xx + yy);
+    m[2][3] = 0.0f;
+    m[3][0] = 0.0f;
+    m[3][1] = 0.0f;
+    m[3][2] = 0.0f;
+    m[3][3] = 1.0f;
+    memcpy(out, m, sizeof(Mtx));
 }
 
 // .text:0x00105BD8 size:0x50 mapped:0x80744C6C

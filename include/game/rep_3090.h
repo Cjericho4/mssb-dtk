@@ -99,7 +99,7 @@ typedef struct Struct_105BD8 {
 } Struct_105BD8; // Size: 0x88 (136 bytes)
 
 void fn_3_105A10(void);
-void fn_3_105ACC(void);
+void fn_3_105ACC(Quaternion* q, Mtx out);
 void fn_3_105BD8(Struct_105BD8* arg0);
 typedef struct {
     u16 key;
