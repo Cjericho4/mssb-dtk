@@ -7,6 +7,9 @@
 #include <string.h>
 
 extern Data1F090Entry lbl_3_data_1E434[];
+extern Data1F090Entry lbl_3_data_1D28[];
+extern u8* lbl_3_data_1F40[];
+int fn_3_9EE24(int max);
 void QueueCharacterAnimation(int character, int animation, u8 arg2, u8 arg3, s16 arg4, u8 flip, int arg6);
 
 // .text:0x000249E8 size:0xF4 mapped:0x80663A7C
@@ -164,8 +167,40 @@ void fn_3_24EA0(void) {
 void fn_3_24F20(void) {}
 
 // .text:0x00024F24 size:0x1D8 mapped:0x80663FB8
-void fn_3_24F24(void) {
-    return;
+void fn_3_24F24(s32 sceneID) {
+    u8* script = lbl_3_data_1F40[sceneID];
+    s32 random = 0;
+    s32 i;
+
+    for (i = 0; i < 13; i++) {
+        lbl_3_common_bss_1323C->unk240[i] = -1;
+    }
+    lbl_3_common_bss_1323C->unk25C = 1;
+    lbl_3_common_bss_1323C->unk23C = 0;
+    lbl_3_common_bss_1323C->unk27C = 0;
+    lbl_3_common_bss_1323C->unk25D = sceneID;
+    lbl_3_common_bss_1323C->unk25F = 1;
+    lbl_3_common_bss_1323C->unk27D = 0;
+    lbl_3_common_bss_1323C->unk27E = 0;
+    lbl_3_common_bss_1323C->unk25A = 0;
+    lbl_3_common_bss_1323C->unk280 = 1;
+    lbl_3_common_bss_1323C->unk23E = *script * 10;
+    if (*++script == 0xFD) {
+        random = 2;
+        script++;
+    }
+    lbl_3_common_bss_1323C->unk25E = *script++;
+    if (random != 0) {
+        lbl_3_common_bss_1323C->unk25E += fn_3_9EE24(random);
+    }
+    for (;;) {
+        u8 id = *script;
+        if (id == 0xFE) {
+            break;
+        }
+        script++;
+        lbl_3_common_bss_1323C->unk240[lbl_3_data_1D28[id].unk14] = id;
+    }
 }
 
 // .text:0x000250FC size:0xE8 mapped:0x80664190

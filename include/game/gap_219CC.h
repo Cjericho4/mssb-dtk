@@ -12,12 +12,12 @@ typedef struct {
 typedef struct {
     Bss1323CSubItem unk0[13]; // 0x000 - 13 x 0x2C = 0x23C bytes
     s16 unk23C;        // 0x23C
-    u8 _pad23E[0x2];
+    s16 unk23E;        // 0x23E
     s16 unk240[13];    // 0x240
     s16 unk25A;        // 0x25A
     u8 unk25C;         // 0x25C
     u8 unk25D;         // 0x25D
-    u8 _pad25E;
+    u8 unk25E;         // 0x25E
     u8 unk25F;         // 0x25F
     u8 _pad260;
     u8 unk261[13];     // 0x261
