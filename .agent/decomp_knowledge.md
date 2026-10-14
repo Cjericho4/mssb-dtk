@@ -38,6 +38,7 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **`mulli rX, rY, -1`**: write `x *= -1;` (not `x = -x` or `x = x * -1`).
 *   **One extra `mr` before a loop**: the original used two pointer variables (`p = base; q = p;`).
 *   **`lhz`/`lha` or `clrlwi`/`extsb` mismatches**: fix the field or parameter signedness/width in the header (check other users first).
+*   **Negative or large relocation addends** (e.g. `lbz r4, -0x2a2(rX)` on `lbl_3_data_8338`): this is array indexing with a shifted index (`table[soundID - 0x151].volume` with 2-byte entries), or a field of a larger struct. Model it with types; never reproduce it with `(u8*)` arithmetic.
 *   **Fields declared as scalars but indexed in asm** (e.g. `MiniGameStruct` wall-ball coins, `objects[40]`, `pendingPoints[4][10]`): the padding usually reveals the real array length; convert to arrays.
 
 ### Unprototyped Calls (`fn_80034E20`)
