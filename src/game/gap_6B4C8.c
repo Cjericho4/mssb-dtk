@@ -13,6 +13,8 @@ typedef struct {
 
 extern Lbl80353A90Struct6B lbl_80353A90;
 extern s32 fn_80016344(s8, s32, s32, s32);
+extern s32 fn_8001500C(s32 team, s32 rosterID, s32 slot);
+extern u8 lbl_3_data_FAA8[];
 
 // .text:0x0006B4C8 size:0x110
 void fn_3_6B4C8(void) {
@@ -47,8 +49,50 @@ void fn_3_6B870(void) {
 }
 
 // .text:0x0006BA64 size:0x308
-void fn_3_6BA64(void) {
-    return;
+s32 fn_3_6BA64(void) {
+    s32 runner;
+    s32 next;
+    u8 mode;
+
+    if (lbl_3_common_bss_32724.unk9A == 0) {
+        g_hugeAnimStruct.field189_0x2d7a = 0;
+        g_hugeAnimStruct.field186_0x2d77 = 0;
+        lbl_3_common_bss_32724.unk9A = 1;
+    }
+    do {
+        runner = 3 - g_hugeAnimStruct.field189_0x2d7a;
+        if (g_Runners[runner].rosterID >= 0) {
+            if (fn_8001500C(g_GameLogic.teamBatting, g_Runners[runner].rosterID, runner + 9) == 0) {
+                return 0;
+            }
+        }
+        g_hugeAnimStruct.field189_0x2d7a++;
+    } while (g_hugeAnimStruct.field189_0x2d7a < 4);
+
+    mode = g_d_GameSettings.GameModeSelected;
+    if (mode == 0 || (u8)(mode - 4) <= 1 || (mode == 2 && g_GameLogic.secondaryGameMode == 0x10)) {
+        lbl_3_common_bss_32724.unk9E = g_Runners[0].charID;
+    } else if (mode == 2 && g_GameLogic.secondaryGameMode == 0xF) {
+        lbl_3_common_bss_32724.unk9E = lbl_3_data_FAA8[g_Practice.rosterID];
+    }
+    if (mode == 0 || (u8)(mode - 4) <= 1 || (mode == 2 && g_GameLogic.secondaryGameMode == 0x10)) {
+        next = g_GameLogic.currentBatterPerTeam[g_GameLogic.homeTeamBattingInd_fieldingTeam] + 1;
+        if (next > 9) {
+            next = 1;
+        }
+        lbl_3_common_bss_32724.unkA0 = inMemRoster[g_GameLogic.teamBatting][g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.homeTeamBattingInd_fieldingTeam][next][0]].stats.CharID;
+    } else if (mode == 2 && g_GameLogic.secondaryGameMode == 0xF) {
+        next = g_GameLogic.currentBatterPerTeam[g_GameLogic.homeTeamBattingInd_fieldingTeam];
+        lbl_3_common_bss_32724.unkA0 = inMemRoster[g_GameLogic.teamBatting][g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.homeTeamBattingInd_fieldingTeam][next][0]].stats.CharID;
+    }
+    if (mode == 0 || mode == 5 || mode == 4) {
+        next = g_GameLogic.currentBatterPerTeam[g_GameLogic.homeTeamBattingInd_fieldingTeam] + 1;
+        if (next > 9) {
+            next = 1;
+        }
+        lbl_3_common_bss_32724.unkA2 = inMemRoster[g_GameLogic.teamBatting][g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.homeTeamBattingInd_fieldingTeam][next][0]].stats.CharID;
+    }
+    return 1;
 }
 
 // .text:0x0006BD6C size:0x138
