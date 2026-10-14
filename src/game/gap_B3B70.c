@@ -126,9 +126,40 @@ void fn_3_B5D78(void) {
     return;
 }
 
+extern u8 lbl_3_data_FAF4[][4];
+
 // .text:0x000B5E7C size:0x100 mapped:0x806F4F10
 void fn_3_B5E7C(void) {
-    return;
+    if (g_Practice.practiceType_2 == 4) {
+        return;
+    }
+    if (g_Pitcher.pitcherActionState != 4) {
+        return;
+    }
+    switch (g_Practice.practiceLevel) {
+    case 0:
+        g_Practice.guidedPracticeCounter++;
+        break;
+    case 1:
+        if (g_Pitcher.ChargePitchType >= 2) {
+            g_Practice.guidedPracticeCounter++;
+        }
+        break;
+    case 2:
+        if (g_Pitcher.TypeOfPitch == 2) {
+            g_Practice.guidedPracticeCounter++;
+        }
+        break;
+    case 3:
+        if (g_Pitcher.starPitchType != 0) {
+            g_Practice.guidedPracticeCounter++;
+        }
+        break;
+    }
+    if (g_Practice.guidedPracticeCounter >= lbl_3_data_FAF4[g_Practice.practiceType_2][g_Practice.practiceLevel]) {
+        g_Practice.guidedPracticeCompletionRelated = 1;
+    }
+    g_Practice.guidedPracticeCompletionRelated2 = 1;
 }
 
 // .text:0x000B5F7C size:0x174 mapped:0x806F5010
