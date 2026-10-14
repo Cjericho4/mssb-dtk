@@ -4,7 +4,7 @@
 **Source of truth:** Always follow `queue.log`. If this file disagrees with `queue.log`, `queue.log` wins.
 **Strategy:** Work through functions listed in `queue.log` (plain entries at the bottom, after all COMPLETED/NONMATCHING lines)
 **Queue file:** `queue.log`
-**Next function to attempt:** fn_3_6BA64 (line 232 of queue.log)
+**Next function to attempt:**  (line  of queue.log)
 
 To find the next function: look for the first plain entry (not prefixed with COMPLETED/NONMATCHING/SKIPPED) in `queue.log` that hasn't been committed yet.
 
@@ -16,6 +16,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_E19E8 | matched (inlined fn_3_E0668 loop) |
 | fn_3_24ADC | matched |
 | fn_3_6C938 | matched (inline button-check helper) |
+| fn_3_6BA64 | matched |
 | fn_3_DF00C | matched |
 | fn_3_DF3D8 | matched (FrameCountOfCurrentPitch → u16) |
 | fn_3_8FC0C | matched |
