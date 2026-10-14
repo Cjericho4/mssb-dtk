@@ -1,3 +1,4 @@
+#include "Dolphin/vec.h"
 #include <string.h>
 #include "game/sta_c2.h"
 #include "game/rep_1838.h"
@@ -379,8 +380,31 @@ void fn_3_D255C(void) {
 }
 
 // .text:0x000D2684 size:0x108 mapped:0x80711718
-void fn_3_D2684(void) {
-    return;
+VecXYZ* fn_3_D2684(StaC2Object* obj) {
+    Vec diff;
+    u8 idsA[9] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+    u8 idsB[9] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+    u8* list;
+    u8* ids;
+    u32 i;
+    AnimationStruct* anim;
+
+    if (obj->pos.x > 0.0f) {
+        list = idsA;
+    } else {
+        list = idsB;
+    }
+    ids = list;
+    for (i = 0; i < 4; i++, ids++) {
+        anim = g_hugeAnimStruct.AnimationStructPtrs[*ids];
+        if (anim != NULL) {
+            PSVECSubtract((Vec*)&obj->pos, (Vec*)&anim->unk34, &diff);
+            if (PSVECMag(&diff) <= 12.5f) {
+                return &anim->unk34;
+            }
+        }
+    }
+    return NULL;
 }
 
 // .text:0x000D278C size:0x280 mapped:0x80711820

@@ -97,7 +97,11 @@ void fn_3_D233C(void);
 int fn_3_D249C(Struct_800D249C_Arg0 *param_1);
 void fn_3_D24E8(StaC2D24E8Arg* arg0, s32 arg1);
 void fn_3_D255C(void);
-void fn_3_D2684(void);
+typedef struct {
+    u8 _pad0[0xA0];
+    VecXYZ pos; /* 0xA0 */
+} StaC2Object;
+VecXYZ* fn_3_D2684(StaC2Object* obj);
 void fn_3_D278C(void);
 void fn_3_D2A0C(void);
 void fn_3_D30D0(void);
