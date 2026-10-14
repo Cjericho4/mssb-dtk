@@ -63,7 +63,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_8A5A4 | persistent register swap: `g_Runners` base in `r5` and `-1` in `r6`, target wants `r6`/`r5` |
 | fn_3_7AEEC | CW running-pointer on bss struct (addi r6,r6,2 then +1) not reproducible from C struct field access |
 | fn_3_7AF68 | same pattern as fn_3_7AEEC |
-| fn_3_90220 | table-address shaping in `m_sound`: current code folds `lbl_3_data_8530 + arg1` too early and keeps `lhzx` result in `r0` instead of target `r3` |
+| fn_3_90220 | register allocation of the 8530/8168 table bases (now struct-typed, 7 diffs) |
 | fn_3_99C88 | single remaining `rlwimi` form mismatch: current code emits equivalent `rlwimi r4, r0, 0, 0, 23` / `stw r4` instead of target `rlwimi r0, r4, 0, 24, 31` / `stw r0` |
 | fn_3_FCE38 | branch-layout artifact in `rep_3090`: MWCC shortcuts the non-`bgt` path directly into the backward check instead of branching to the bottom `slwi` reset block first |
 | fn_3_10C7A4 | register-allocation artifact in `gap_106DFC`: target wants `r29 = &g_Minigame` and `r28 = loop index`, current code keeps swapping base/index through an extra temp |
