@@ -65,6 +65,10 @@ The toolchain consists of:
 - `python3 tools/score_functions.py [--module MODULE] [--max-size N] [--min-size N]` find the easiest unmatched functions to decompile, ranked by size.
 - `python3 tools/check_pointer_arithmetic.py <file_or_directory>` detect pointer arithmetic with casts that should be replaced with struct field access. Use `--strict` to fail on violations.
 - `python3 tools/find_matches.py report.json` list functions that are already 100% matched.
+- `python3 tools/try_function.py <src_file> <function> <candidate.c> [--keep]` swap one function's definition for a candidate, build, and diff; restores the file unless it matches.
+- `python3 tools/rodata_value.py <lbl_3_rodata_XXXX>...` print constant values so `extern` rodata floats can be written as literals.
+- `python3 tools/literalize_rodata.py` sweep unmatched game functions replacing extern rodata floats with literals, keeping only improvements (slow; runs ninja repeatedly).
+- `.agent/categorize/functions.csv` per-function category/difficulty for unmatched game functions (Codex-generated heuristic; use for picking batches).
 - **ADS Dashboard** (`python3 tools/aidecomp/server.py`, http://localhost:8000) — Web UI for decompilation, symbol lookup, and the **Symbols DB** browser.
 
 ## Code Quality Standards
