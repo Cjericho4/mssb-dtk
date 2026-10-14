@@ -103,15 +103,8 @@ s32 fn_3_A36BC(void) {
  * @address 000A372C
  */
 s32 fn_3_A372C(void) {
-    VecXYZ* ballPos = &g_Ball.AtBat_Contact_BallPos;
-    f32 x = ballPos->x;
-    f32 z = ballPos->z;
-    f32 c = lbl_3_rodata_1998;
-
-    if (z < (c + x)) {
-        if (z < (c - x)) {
-            return 1;
-        }
+    if (g_Ball.AtBat_Contact_BallPos.z < 40.0f + g_Ball.AtBat_Contact_BallPos.x && g_Ball.AtBat_Contact_BallPos.z < 40.0f - g_Ball.AtBat_Contact_BallPos.x) {
+        return 1;
     }
     return 0;
 }
