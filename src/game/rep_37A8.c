@@ -92,7 +92,16 @@ void fn_3_142C18(void) {
 
 // .text:0x00142CA8 size:0x10C mapped:0x80781D3C
 void fn_3_142CA8(void) {
-    return;
+    s32 i;
+    s32 j;
+
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 10; j++) {
+            g_Minigame.miniGameCurrentPoints[i] += g_Minigame.pendingPoints[i][j];
+            g_Minigame.pendingPoints[i][j] = 0;
+        }
+        g_Minigame._1B80[i] = 0;
+    }
 }
 
 // .text:0x00142DB4 size:0x31C mapped:0x80781E48
