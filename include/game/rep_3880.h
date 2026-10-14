@@ -9,7 +9,8 @@
 // Linked list node used by fn_3_14B9F0
 typedef struct ListNode_14B9F0 {
     struct ListNode_14B9F0* next;  // 0x00
-    u8 _pad4[0x18];                 // 0x04
+    VecXYZ offset;                  // 0x04
+    u8 _pad10[0xC];                 // 0x10
     VecXYZ pos;                     // 0x1C
     u8 _pad28[0x18];                // 0x28
     u8 color[4];                    // 0x40
@@ -133,7 +134,7 @@ void fn_3_14E810(void);
 void fn_3_14E894(void);
 void fn_3_14E920(s8 arg0);
 void fn_3_14E988(s8 arg0);
-void fn_3_14E9F0(void);
+void fn_3_14E9F0(ListNode_14B9F0* node);
 void fn_3_14EAF4(void);
 void fn_3_14ED24(void);
 void fn_3_14F3CC(void);

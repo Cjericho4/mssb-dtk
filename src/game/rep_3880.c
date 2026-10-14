@@ -19,6 +19,8 @@ typedef struct {
 extern Struct_26BDC lbl_3_data_26BDC;
 extern Struct_26BDC lbl_3_data_26BEC;
 f32 fn_3_119854(u32 index);
+extern u8 lbl_3_data_26CB8[23];
+s32 fn_8001B728(s32 index, u8 type, VecXYZ* out);
 struct Struct_800339F0_Result* fn_800337CC(u8* buf, s32 size, s32 arg2);
 
 
@@ -469,8 +471,28 @@ void fn_3_14E988(s8 arg0) {
 }
 
 // .text:0x0014E9F0 size:0x104 mapped:0x8078DA84
-void fn_3_14E9F0(void) {
-    return;
+void fn_3_14E9F0(ListNode_14B9F0* node) {
+    VecXYZ delta;
+    s32 r;
+    u8 type;
+
+    if (node->field_0x4C < 5) {
+        type = lbl_3_data_26CB8[(u32)rand() % 23];
+        delta.z = 0.0f;
+        delta.y = 0.0f;
+        delta.x = 0.0f;
+        if (fn_8001B728(node->field_0x4C - 1, type, &delta) == 0) {
+            memset(&delta, 0, sizeof(VecXYZ));
+            fn_8001B728(node->field_0x4C - 1, 4, &delta);
+        }
+    } else {
+        delta.x = g_Minigame._6E8;
+        delta.y = -g_Minigame._6EC;
+        delta.z = g_Minigame._6F0;
+    }
+    node->offset.x += delta.x;
+    node->offset.y += delta.y;
+    node->offset.z += delta.z;
 }
 
 // .text:0x0014EAF4 size:0x230 mapped:0x8078DB88
