@@ -17,7 +17,7 @@ struct StadiumObject* fn_3_B827C(void);
 void fn_3_B828C(struct StadiumObject*);
 void fn_3_B8298(void);
 void fn_3_B8414(f32* arg0, f32* arg1);
-void fn_3_B8464(void);
+void fn_3_B8464(Mtx m, struct StadiumModel* model);
 void fn_3_B8574(void);
 u32 fn_3_B85A8(s32 index, u32* outPtr);
 void fn_3_B85DC(s32 index, void* dest, void* src2, void* src);

@@ -46,7 +46,7 @@ void fn_3_B8414(f32* arg0, f32* arg1) {
 }
 
 // .text:0x000B8464 size:0x110 mapped:0x806F74F8
-void fn_3_B8464(void) {
+void fn_3_B8464(Mtx m, struct StadiumModel* model) {
     return;
 }
 

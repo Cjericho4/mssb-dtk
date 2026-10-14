@@ -107,7 +107,7 @@ s32 fn_3_F5F28(f32* a, f32* b);
 void fn_3_F5F4C(void);
 void fn_3_F6084(void);
 void fn_3_F6504(void);
-void fn_3_F65C8(void);
+void fn_3_F65C8(s32* count);
 void fn_3_F66C8(void);
 void fn_3_F6938(void);
 void fn_3_F6A94(void);

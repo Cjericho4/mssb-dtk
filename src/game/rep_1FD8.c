@@ -274,7 +274,7 @@ void fn_3_C805C(void) {
 }
 
 // .text:0x000C823C size:0x78 mapped:0x807072D0
-void* fn_3_C823C(s32 arg0, Mtx m) {
+struct StadiumModel* fn_3_C823C(s32 arg0, Mtx m) {
     StadiumObjectElem* obj;
 
     obj = &lbl_3_common_bss_350E4[0].src[arg0];

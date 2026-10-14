@@ -4,6 +4,7 @@
 #include "game/UnknownHomes_Game.h"
 #include "header_rep_data.h"
 #include "game/rep_1D58.h"
+#include "C3/control.h"
 
 // .text:0x000EE100 size:0x288 mapped:0x8072D194
 void fn_3_EE100(void) {
@@ -374,9 +375,33 @@ void fn_3_F6504(void) {
     return;
 }
 
+extern u8 lbl_3_bss_B21A;
+
+/* Local object control; the original local is 0x14 bytes larger than Control. */
+typedef struct {
+    Control control;
+    u8 _pad3C[0x14];
+} StaC5ObjControl;
+
 // .text:0x000F65C8 size:0x100 mapped:0x8073565C
-void fn_3_F65C8(void) {
-    return;
+void fn_3_F65C8(s32* count) {
+    StaC5ObjControl control;
+    Mtx m;
+    StadiumObjectElem* obj;
+    struct StadiumModel* model;
+    u16 start;
+
+    obj = &lbl_3_common_bss_350E4[0].src[lbl_3_bss_B21A];
+    start = lbl_3_common_bss_350E4[0].unk40[*count - 1] + lbl_3_common_bss_350E4[0].unk3C[*count - 1];
+    lbl_3_common_bss_350E4[0].unk40[*count] = start;
+    lbl_3_common_bss_350E4[0].unk44[start] = lbl_3_bss_B21A;
+    lbl_3_common_bss_350E4[0].unk3C[*count]++;
+    model = obj->unk_78;
+    control.control.type = 0;
+    CTRLBuildMatrix(&control.control, m);
+    fn_3_B8464(m, model);
+    fn_3_B8414(&lbl_3_common_bss_350E4[0].unk48[*count * 2].x, &lbl_3_common_bss_350E4[0].unk48[*count * 2 + 1].x);
+    (*count)++;
 }
 
 // .text:0x000F66C8 size:0x270 mapped:0x8073575C
