@@ -451,7 +451,7 @@ void fn_3_14F544(Struct_14F544_Arg* arg) {
     f32 val;
     arg->field_0x4A = (s16)lbl_3_data_26C94.field_0x1C;
     arg->field_0x43 = (u8)lbl_3_data_26C94.field_0x14;
-    val = (f32)lbl_3_data_26C94.field_0x8 / lbl_3_rodata_3930;
+    val = (f32)lbl_3_data_26C94.field_0x8 / 100000.0f;
     arg->field_0x3C = val;
     arg->field_0x38 = val;
 }

@@ -570,12 +570,12 @@ void fn_3_1BA18(void) {
 
 // .text:0x0001C0B0 size:0x80 mapped:0x8065B144
 void fn_3_1C0B0(void) {
-    f32 f1 = lbl_3_rodata_788;
+    f32 f1 = 0.0f;
     f32 f0;
 
 
     g_pCamera->unk_30 = f1;
-            f0 = lbl_3_rodata_798;
+            f0 = 1.0f;
 
     g_pCamera->unk_34 = f1;
     g_pCamera->unk_38 = f1;
@@ -592,11 +592,11 @@ void fn_3_1C0B0(void) {
 
 // .text:0x0001C130 size:0x80 mapped:0x8065B1C4
 void fn_3_1C130(void) {
-    f32 f1 = lbl_3_rodata_788;
+    f32 f1 = 0.0f;
     f32 f0;
 
     g_pCamera->unk_30 = f1;
-    f0 = lbl_3_rodata_798;
+    f0 = 1.0f;
     
     g_pCamera->unk_34 = f1;
     g_pCamera->unk_38 = f1;

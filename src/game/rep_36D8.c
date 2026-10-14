@@ -41,7 +41,7 @@ s32 fn_3_13DA20(unk_13d5e8_struct* a, unk_13d5e8_struct* b) {
 
 // .text:0x0013DA50 size:0x1F8 mapped:0x8077CAE4
 f32 fn_3_13DA50(s8 index, f32 targetPos, s8 *result) {
-    f32 zero = lbl_3_rodata_3734; // Load f0 early
+    f32 zero = 0.0f; // Load f0 early
     f32 wrappedTarget = targetPos; // fmr f3, f1
     InMemRunnerType *runner = &g_Runners[index];
     f32 fractionalBasesRan = runner->fractionalBasesRan; // lfs f4
@@ -51,47 +51,47 @@ f32 fn_3_13DA50(s8 index, f32 targetPos, s8 *result) {
 
     wrappedRunner = fractionalBasesRan; // fmr f2, f4
     if (fractionalBasesRan < zero) {
-        wrappedRunner = fractionalBasesRan + lbl_3_rodata_3738;
-    } else if (fractionalBasesRan >= lbl_3_rodata_3738) {
-        wrappedRunner = fractionalBasesRan - lbl_3_rodata_3738;
+        wrappedRunner = fractionalBasesRan + 4.0f;
+    } else if (fractionalBasesRan >= 4.0f) {
+        wrappedRunner = fractionalBasesRan - 4.0f;
     }
 
     if (targetPos < zero) {
-        wrappedTarget = targetPos + lbl_3_rodata_3738;
-    } else if (targetPos >= lbl_3_rodata_3738) {
-        wrappedTarget = targetPos - lbl_3_rodata_3738;
+        wrappedTarget = targetPos + 4.0f;
+    } else if (targetPos >= 4.0f) {
+        wrappedTarget = targetPos - 4.0f;
     }
 
     if (wrappedRunner > wrappedTarget) {
-        dist1 = (lbl_3_rodata_3738 + wrappedTarget) - wrappedRunner;
+        dist1 = (4.0f + wrappedTarget) - wrappedRunner;
     } else {
         dist1 = wrappedTarget - wrappedRunner;
     }
 
     if (runner->runningDirectionCode == 3) {
-        dist1 += lbl_3_rodata_373C;
+        dist1 += 0.15f;
     }
 
     if (fractionalBasesRan < zero) {
-        fractionalBasesRan += lbl_3_rodata_3738;
-    } else if (fractionalBasesRan >= lbl_3_rodata_3738) {
-        fractionalBasesRan -= lbl_3_rodata_3738;
+        fractionalBasesRan += 4.0f;
+    } else if (fractionalBasesRan >= 4.0f) {
+        fractionalBasesRan -= 4.0f;
     }
 
     if (targetPos < zero) {
-        targetPos += lbl_3_rodata_3738;
-    } else if (targetPos >= lbl_3_rodata_3738) {
-        targetPos -= lbl_3_rodata_3738;
+        targetPos += 4.0f;
+    } else if (targetPos >= 4.0f) {
+        targetPos -= 4.0f;
     }
 
     if (fractionalBasesRan < targetPos) {
-        dist2 = (lbl_3_rodata_3738 + fractionalBasesRan) - targetPos;
+        dist2 = (4.0f + fractionalBasesRan) - targetPos;
     } else {
         dist2 = fractionalBasesRan - targetPos;
     }
 
     if (runner->runningDirectionCode == 1) {
-        dist2 += lbl_3_rodata_373C;
+        dist2 += 0.15f;
     }
 
     if (dist1 < dist2) {

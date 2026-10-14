@@ -14,7 +14,7 @@ s32 fn_3_6F6CC(void) {
 
     s32 i;
     
-    limit = lbl_3_rodata_1250;
+    limit = 0.5f;
 
     runner = g_Runners;
     

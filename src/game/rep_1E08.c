@@ -37,12 +37,12 @@ void fn_3_BA7F4(void) {
 void fn_3_BB07C(BssTransRotData* arg0, f32 f1) {
     f32 sinVal;
     f32 cosVal;
-    f32 angle = lbl_3_rodata_1EC0 * f1;
+    f32 angle = 0.017453292f * f1;
     sinVal = (f32)sin((f64)angle);
     cosVal = (f32)cos((f64)angle);
-    arg0->rotX = sinVal * (f32)lbl_3_data_170D8.unk4 / lbl_3_rodata_1EC4;
-    arg0->rotY = cosVal * (f32)lbl_3_data_170D8.unk4 / lbl_3_rodata_1EC4;
-    arg0->rotZ = lbl_3_rodata_1E68;
+    arg0->rotX = sinVal * (f32)lbl_3_data_170D8.unk4 / 100000.0f;
+    arg0->rotY = cosVal * (f32)lbl_3_data_170D8.unk4 / 100000.0f;
+    arg0->rotZ = 0.0f;
 }
 
 // .text:0x000BB15C size:0x2F8 mapped:0x806FA1F0
@@ -304,9 +304,9 @@ void fn_3_BD80C(s32 arg0) {
         CTRLSetTranslation(&has->field28_0x70->ctrl,
             transRot->transX, transRot->transY, transRot->transZ);
         CTRLSetRotation(&has->field28_0x70->ctrl,
-            lbl_3_rodata_1F24 * transRot->rotX,
-            lbl_3_rodata_1F24 * transRot->rotY,
-            lbl_3_rodata_1F24 * transRot->rotZ);
+            57.295776f * transRot->rotX,
+            57.295776f * transRot->rotY,
+            57.295776f * transRot->rotZ);
         fn_800BD548(&has->field28_0x70->sub34, 4,
             has->field30_0xac,
             has->field31_0xb0,
@@ -370,9 +370,9 @@ void fn_3_BDE14(void) {
 
     i = 0;
     do {
-        f32 angle = lbl_3_rodata_1F38 * (f32)rand() / lbl_3_rodata_1EB0;
-        pair->x = (f32)(lbl_3_rodata_1F40 * cos((f64)angle));
-        pair->z = (f32)(lbl_3_rodata_1F40 * sin((f64)angle));
+        f32 angle = 6.2831855f * (f32)rand() / 32767.0f;
+        pair->x = (f32)(400.0 * cos((f64)angle));
+        pair->z = (f32)(400.0 * sin((f64)angle));
         i++;
         pair++;
     } while (i < 0x60);

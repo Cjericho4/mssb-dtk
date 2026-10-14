@@ -147,13 +147,13 @@ void fn_3_117494(void) {
             entry->field_0x2510 = -minigame->_CB4;
             temp2 = minigame->_CB8;
             entry->field_0x2514 = temp2;
-            fn_8001D0D0(0xED, lbl_3_rodata_33C0);
+            fn_8001D0D0(0xED, 2.5f);
             entry->field_0xFEE = 1;
-            temp3 = lbl_3_rodata_33C4;
+            temp3 = -0.05f;
             entry->field_0xFCC = temp1;
             entry->field_0xFD0 = temp3;
             entry->field_0xFD4 = temp2;
-            fn_8001D0D0(0x65, lbl_3_rodata_33C8, temp1);
+            fn_8001D0D0(0x65, 12.5f, temp1);
         }
     }
 }
@@ -174,8 +174,8 @@ void fn_3_117588(s32 index) {
     entry = (Rep3310Entry2D94Pos*)&g_hugeAnimStruct.entries_2D94[index];
     minigamePos = (Rep3310MiniPos*)&g_Minigame.unkBB0[index - 0xE9];
 
-    scale = lbl_3_rodata_33C0 *
-            (lbl_3_rodata_33E0 - ((-entry->field_0x08 * lbl_3_rodata_33E4) / lbl_3_data_21A64));
+    scale = 2.5f *
+            (1.0f - ((-entry->field_0x08 * 0.5f) / lbl_3_data_21A64));
 
     texCoords[0] = lbl_3_rodata_338C[0];
     texCoords[1] = lbl_3_rodata_338C[1];
@@ -207,18 +207,18 @@ void fn_3_117588(s32 index) {
 
     color = 0x9B;
 
-    vertices[0][0] = minigamePos->field_0x00 - ((lbl_3_rodata_33E8 * scale) * lbl_3_rodata_33E4);
-    vertices[0][1] = lbl_3_rodata_33EC;
-    vertices[0][2] = entry->field_0x0C + ((lbl_3_rodata_33C0 * scale) * lbl_3_rodata_33E4);
-    vertices[1][0] = minigamePos->field_0x00 + ((lbl_3_rodata_33E8 * scale) * lbl_3_rodata_33E4);
-    vertices[1][1] = lbl_3_rodata_33EC;
-    vertices[1][2] = entry->field_0x0C + ((lbl_3_rodata_33C0 * scale) * lbl_3_rodata_33E4);
-    vertices[2][0] = minigamePos->field_0x00 + ((lbl_3_rodata_33E8 * scale) * lbl_3_rodata_33E4);
-    vertices[2][1] = lbl_3_rodata_33EC;
-    vertices[2][2] = entry->field_0x0C - ((lbl_3_rodata_33C0 * scale) * lbl_3_rodata_33E4);
-    vertices[3][0] = minigamePos->field_0x00 - ((lbl_3_rodata_33E8 * scale) * lbl_3_rodata_33E4);
-    vertices[3][1] = lbl_3_rodata_33EC;
-    vertices[3][2] = entry->field_0x0C - ((lbl_3_rodata_33C0 * scale) * lbl_3_rodata_33E4);
+    vertices[0][0] = minigamePos->field_0x00 - ((2.8f * scale) * 0.5f);
+    vertices[0][1] = -0.060000002f;
+    vertices[0][2] = entry->field_0x0C + ((2.5f * scale) * 0.5f);
+    vertices[1][0] = minigamePos->field_0x00 + ((2.8f * scale) * 0.5f);
+    vertices[1][1] = -0.060000002f;
+    vertices[1][2] = entry->field_0x0C + ((2.5f * scale) * 0.5f);
+    vertices[2][0] = minigamePos->field_0x00 + ((2.8f * scale) * 0.5f);
+    vertices[2][1] = -0.060000002f;
+    vertices[2][2] = entry->field_0x0C - ((2.5f * scale) * 0.5f);
+    vertices[3][0] = minigamePos->field_0x00 - ((2.8f * scale) * 0.5f);
+    vertices[3][1] = -0.060000002f;
+    vertices[3][2] = entry->field_0x0C - ((2.5f * scale) * 0.5f);
 
     camera = fn_80052768(fn_8005268C());
     GXLoadPosMtxImm(camera->mtx, 0);
@@ -418,7 +418,7 @@ void fn_3_119C34(void) {
     entries[31].unk8D = temp_r4;
     entries[31].unk8E = temp_r4;
     entries[32].unk4 = new_var;
-    entries[31].unk88 = lbl_3_rodata_33E0;
+    entries[31].unk88 = 1.0f;
     entries[31].unk8E = 1;
     entries[32].unk0 = new_var;
     entries[31].unk8D = 1;
@@ -430,7 +430,7 @@ void fn_3_119CA8(s32 index) {
     ActRelatedEntry* entries = (ActRelatedEntry*)g_hugeAnimStruct.entries_68;
     ActRelatedSub* sub = &entries[index].sub;
     s32 unk74 = lbl_3_common_bss_32724.unk74;
-    f32 var1 = lbl_3_rodata_33AC;
+    f32 var1 = 0.0f;
     u32 temp_r4;
 
     sub->unk38_s32 = unk74;
@@ -444,7 +444,7 @@ void fn_3_119CA8(s32 index) {
     sub->flag59 = temp_r4;
     sub->flag5a = temp_r4;
     (sub + 1)->unk38_f32 = var1;
-    sub->float54 = lbl_3_rodata_33E0;
+    sub->float54 = 1.0f;
     sub->flag5a = 1;
     (sub + 1)->prevFloat = var1;
     sub->flag59 = 1;
@@ -506,7 +506,7 @@ void fn_3_11A38C(s32 index, s16 arg1) {
     ActRelatedEntry* entries = (ActRelatedEntry*)g_hugeAnimStruct.entries_68;
     ActRelatedSub* sub = &entries[index].sub;
     s32 unk70 = lbl_3_common_bss_32724.unk70;
-    f32 var1 = lbl_3_rodata_33AC;
+    f32 var1 = 0.0f;
     u32 temp_r4;
 
     sub->unk38_s32 = unk70;
@@ -520,7 +520,7 @@ void fn_3_11A38C(s32 index, s16 arg1) {
     sub->flag59 = temp_r4;
     sub->flag5a = temp_r4;
     (sub + 1)->unk38_f32 = var1;
-    sub->float54 = lbl_3_rodata_33E0;
+    sub->float54 = 1.0f;
     sub->flag5a = 1;
     (sub + 1)->prevFloat = var1;
     sub->flag59 = 1;

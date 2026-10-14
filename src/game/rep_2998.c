@@ -129,8 +129,8 @@ void fn_3_E45A8(castleThwompObj *param) {
 // .text:0x000E45F0 size:0x68 mapped:0x80723684
 void fn_3_E45F0(CastleRotObj *arg0) {
     RotTableEntry *entries = lbl_3_data_18ED0.entries;
-    CTRLSetRotation((Control*)arg0, lbl_3_rodata_2A5C,
-                    entries[arg0->rotIdx].rotValues[0], lbl_3_rodata_2A5C);
+    CTRLSetRotation((Control*)arg0, 0.0f,
+                    entries[arg0->rotIdx].rotValues[0], 0.0f);
     arg0->curRotation = entries[arg0->rotIdx].rotValues[0];
 }
 
