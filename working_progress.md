@@ -4,7 +4,7 @@
 **Source of truth:** Always follow `queue.log`. If this file disagrees with `queue.log`, `queue.log` wins.
 **Strategy:** Work through functions listed in `queue.log` (plain entries at the bottom, after all COMPLETED/NONMATCHING lines)
 **Queue file:** `queue.log`
-**Next function to attempt:**  (line  of queue.log)
+**Next function to attempt:** fn_3_6B4C8 (line 204 of queue.log)
 
 To find the next function: look for the first plain entry (not prefixed with COMPLETED/NONMATCHING/SKIPPED) in `queue.log` that hasn't been committed yet.
 
@@ -44,6 +44,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | Function | Issue |
 |---|---|
 | fn_3_D8A10 | scheduling of score-table loads; unrolled _1918 loop uses const offsets vs running pointer |
+| fn_3_249E8 | register allocation of loop induction vars (r31/r30/r29) |
 | fn_3_BD6AC | bge+b+bl branch direction — CW codegen, unfixable |
 | fn_3_BD80C | bss/transRot base register split (r5+r30 vs r30 only) |
 | fn_3_BB07C | sin/cos scheduler: lfsu cascade, +1 instruction |
