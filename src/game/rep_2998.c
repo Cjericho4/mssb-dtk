@@ -2,6 +2,7 @@
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "C3/control.h"
+#include "Dolphin/vec.h"
 #include "game/rep_1D58.h"
 
 
@@ -135,8 +136,18 @@ void fn_3_E45F0(CastleRotObj *arg0) {
 }
 
 // .text:0x000E4658 size:0x108 mapped:0x807236EC
-void fn_3_E4658(void) {
-    return;
+void fn_3_E4658(CastleRotObj* obj) {
+    RotTableEntry* entries;
+
+    obj->control.type = 0;
+    CTRLSetTranslation(&obj->control, lbl_3_data_18ED0.defs[obj->rotIdx].pos.x, 0.24f + lbl_3_data_18ED0.defs[obj->rotIdx].pos.y, lbl_3_data_18ED0.defs[obj->rotIdx].pos.z);
+    PSVECScale((Vec*)&lbl_3_data_18ED0.defs[obj->rotIdx].pos, 1.0f, (Vec*)&obj->pos);
+    obj->pos.y -= 0.24f;
+    entries = lbl_3_data_18ED0.entries;
+    CTRLSetRotation(&obj->control, 0.0f, entries[obj->rotIdx].rotValues[0], 0.0f);
+    obj->curRotation = entries[obj->rotIdx].rotValues[0];
+    CTRLSetScale(&obj->control, 0.2f, 0.2f, 0.2f);
+    obj->scale = 0.2f;
 }
 
 // .text:0x000E4760 size:0x170 mapped:0x807237F4
