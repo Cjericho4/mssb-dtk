@@ -2,6 +2,16 @@
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 
+typedef struct {
+    u8 _pad0[0x8];
+    s32 unk8;
+    u8 _padC[0x24];
+    s32 unk30;
+    u8 _pad34[0x30];
+} Struct_26E9C;
+extern Struct_26E9C lbl_3_data_26E9C;
+struct Struct_800339F0_Result* fn_800337CC(u8* buf, s32 size, s32 arg2);
+
 
 // .text:0x0014737C size:0x3FC mapped:0x80786410
 void fn_3_14737C(void) {
@@ -9,7 +19,7 @@ void fn_3_14737C(void) {
 }
 
 // .text:0x00147778 size:0x488 mapped:0x8078680C
-void fn_3_147778(void) {
+void fn_3_147778(struct Struct_800339F0_Result* obj, struct Rep3880Source* src) {
     return;
 }
 
@@ -19,8 +29,32 @@ void fn_3_147C00(void) {
 }
 
 // .text:0x00147CFC size:0x100 mapped:0x80786D90
-void fn_3_147CFC(void) {
-    return;
+void fn_3_147CFC(struct Rep3880Source* src) {
+    struct Struct_800339F0_Result* existing;
+    struct Struct_800339F0_Result* created;
+    ListNode_14B9F0* node;
+    u8 buf[0x60];
+
+    if (src == NULL) {
+        return;
+    }
+    existing = fn_800339F0(0, 0x26);
+    if (existing != NULL) {
+        created = fn_800337CC(buf, lbl_3_data_26E9C.unk8 + lbl_3_data_26E9C.unk30, 1);
+        if (created == NULL) {
+            return;
+        }
+        fn_3_147778(created, src);
+        for (node = existing->listHead; node->next != NULL; node = node->next) {
+        }
+        node->next = created->listHead;
+        existing->count += created->count;
+    } else {
+        created = (struct Struct_800339F0_Result*)fn_80033A24(fn_3_14737C, 0x80, 0, lbl_3_data_26E9C.unk8 + lbl_3_data_26E9C.unk30, 1, 0x26);
+        if (created != NULL) {
+            fn_3_147778(created, src);
+        }
+    }
 }
 
 // .text:0x00147DFC size:0x24 mapped:0x80786E90

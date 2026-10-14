@@ -23,6 +23,8 @@ struct Struct_800339F0_Result {
     u8 _pad[0x0C];                  // 0x00-0x0B
     ListNode_14B9F0* listHead;      // 0x0C
     s32 field_0x10;                 // 0x10
+    u16 flags : 4;                  // 0x14
+    u16 count : 12;
 };
 
 typedef struct {
@@ -63,9 +65,10 @@ extern Struct_26C3C lbl_3_data_26C3C;
 void pitchingMachinePitching(s32 param);
 
 void fn_3_14737C(void);
-void fn_3_147778(void);
+struct Rep3880Source;
+void fn_3_147778(struct Struct_800339F0_Result* obj, struct Rep3880Source* src);
 void fn_3_147C00(void);
-void fn_3_147CFC(void);
+void fn_3_147CFC(struct Rep3880Source* src);
 void fn_3_147DFC(void);
 void fn_3_147E20(void);
 void fn_3_147F94(void);
