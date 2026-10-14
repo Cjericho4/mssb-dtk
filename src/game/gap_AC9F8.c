@@ -429,7 +429,64 @@ void fn_3_B274C(void) {
 
 // .text:0x000B27A4 size:0x104 mapped:0x806F1838
 void fn_3_B27A4(void) {
-    return;
+    g_Practice.framesOnAllInstructions = 0;
+    g_Practice._164 = 0;
+    g_Practice.framesOnCurrInstruction = 0;
+    g_Practice.laukituTextChannelIndex = -1;
+    g_Practice.lakituTextIndex_stored = -1;
+    g_Practice.diagramTextChannelIndex = -1;
+    g_Practice.diagramTitleTextIndex_stored = -1;
+    g_Practice.cpuCommandDuration = 0;
+    g_Practice.instructionNumber = 0;
+    g_Practice.currentMessageDoneTyping = 0;
+    g_Practice.commandIndex = 0;
+    g_Practice.allInstructionsComplete = 0;
+    g_Practice.instructionComplete_readyToAdvance = 0;
+    g_Practice.allowPlayToEndIndicator = 0;
+    g_Practice._1C7 = 0;
+    g_Practice.guidedPracticeCompletionRelated = 0;
+    g_Practice.guidedPracticeCounter = 0;
+    g_Practice.maybeControlFlag1 = 0;
+    g_Practice.maybeControlFlag2 = 0;
+    g_Practice.practice_runner_countInputForMashing = 0;
+    g_Practice.practice_fielding_enableSprinting = 0;
+    g_Practice._1C6 = 0;
+    g_Practice.textRelatedIndicator = 0;
+    g_Practice.maybePreviousInput = 0;
+    g_Practice._17A = 0;
+    g_Practice.cpu_inputDuration = 0;
+    g_Practice._17E = 0;
+    g_Practice._186 = 0;
+    g_Practice.aIEnabled = 0;
+    g_Practice.practiceBatterHandedness = 0;
+    g_Practice.inputs[0].controlStickAngle = -1;
+    g_Practice.inputs[0].controlStickMagnitude = 0;
+    g_Practice.inputs[0].buttonInput = 0;
+    g_Practice.inputs[0].newButtonInput = 0;
+    g_Practice.inputs[0]._08 = 0;
+    g_Practice.inputs[0].right_left = 0;
+    g_Practice.inputs[0].up_down = 0;
+    g_Practice.inputs[0].rightTriggerDistance = 0;
+    g_Practice.inputs[0].leftTriggerDistance = 0;
+    g_Practice.inputs[1].controlStickAngle = -1;
+    g_Practice.inputs[1].controlStickMagnitude = 0;
+    g_Practice.inputs[1].buttonInput = 0;
+    g_Practice.inputs[1].newButtonInput = 0;
+    g_Practice.inputs[1]._08 = 0;
+    g_Practice.inputs[1].right_left = 0;
+    g_Practice.inputs[1].up_down = 0;
+    g_Practice.inputs[1].rightTriggerDistance = 0;
+    g_GameLogic.__0x142padding[4] = 0;
+    g_GameLogic.__0x142padding[3] = 0;
+    g_GameLogic.batterHandedness[1] = 0;
+    g_GameLogic.batterHandedness[0] = 0;
+    g_GameLogic.teamAIInd[1] = 0;
+    g_GameLogic.teamAIInd[0] = 0;
+    g_GameLogic.autoFielding[1] = 0;
+    g_GameLogic.autoFielding[0] = 0;
+    g_GameLogic.battingAIInd[1] = 0;
+    g_GameLogic.battingAIInd[0] = 0;
+    g_Practice.inputs[1].leftTriggerDistance = 0;
 }
 
 // .text:0x000B28A8 size:0x1F8 mapped:0x806F193C
