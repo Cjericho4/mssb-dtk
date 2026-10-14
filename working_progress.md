@@ -17,6 +17,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_24ADC | matched |
 | fn_3_6C938 | matched (inline button-check helper) |
 | fn_3_6BA64 | matched |
+| fn_3_A36BC, fn_3_BB07C, fn_3_E45F0, fn_3_14F544, fn_3_1C0B0, fn_3_1C130 | matched by replacing extern rodata floats with literals |
 | fn_3_DF00C | matched |
 | fn_3_DF3D8 | matched (FrameCountOfCurrentPitch → u16) |
 | fn_3_8FC0C | matched |
@@ -47,7 +48,6 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_249E8 | register allocation of loop induction vars (r31/r30/r29) |
 | fn_3_BD6AC | bge+b+bl branch direction — CW codegen, unfixable |
 | fn_3_BD80C | bss/transRot base register split (r5+r30 vs r30 only) |
-| fn_3_BB07C | sin/cos scheduler: lfsu cascade, +1 instruction |
 | fn_3_BF070 | stmw r27 vs 4 individual stw's |
 | fn_3_BDE14 | register allocation: r25-r28+stmw vs r29-r31 individual stw |
 | fn_3_BDCA4 | register allocation: CW assigns r6/r5 instead of r5/r4 → stfsx vs stfs |

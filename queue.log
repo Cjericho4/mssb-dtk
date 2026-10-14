@@ -52,7 +52,7 @@
     52→COMPLETED fn_3_135698
     53→NONMATCHING fn_3_135E38
     54→NONMATCHING fn_3_14DC80
-    55→NONMATCHING fn_3_14F544
+    55→COMPLETED fn_3_14F544
     56→COMPLETED fn_3_14F68
     57→NONMATCHING fn_3_14F8D0
     58→NONMATCHING fn_3_150010
@@ -137,7 +137,7 @@ COMPLETED fn_3_14E988
 COMPLETED fn_3_153F0
 COMPLETED fn_3_1581FC
 COMPLETED fn_3_675B8
-fn_3_E45F0                                  104    3.8% game       game/game/rep_2998        NONMATCHING
+fn_3_E45F0                                  104    3.8% game       game/game/rep_2998        COMPLETED
 fn_3_E59B4                                  104    3.8% game       game/game/sta_c6          COMPLETED
 fn_3_E5A1C                                  104    3.8% game       game/game/sta_c6          COMPLETED
 fn_3_114FC0                                 108    3.7% game       game/game/gap_114FC0      NONMATCHING
@@ -156,7 +156,7 @@ COMPLETED fn_3_13D578
 COMPLETED fn_3_157DB8
 COMPLETED fn_3_690FC
 COMPLETED fn_3_9538C
-NONMATCHING fn_3_A36BC
+COMPLETED fn_3_A36BC
 COMPLETED fn_3_C39C8
 COMPLETED fn_3_CE8E4
 fn_3_119C34    NON MATCHING
