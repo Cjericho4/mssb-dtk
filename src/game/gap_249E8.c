@@ -11,12 +11,14 @@ void QueueCharacterAnimation(int character, int animation, u8 arg2, u8 arg3, s16
 
 // .text:0x000249E8 size:0xF4 mapped:0x80663A7C
 void fn_3_249E8(s32 arg0) {
-    Data1F090Entry *entry = &lbl_3_data_1F090[arg0];
-    Fielder *fielder = g_Fielders;
+    Fielder *fielder;
+    Data1F090Entry *entry;
     f32 temp_f0;
     s32 i;
     u8 r26;
 
+    entry = &lbl_3_data_1F090[arg0];
+    fielder = g_Fielders;
     i = 0;
     r26 = entry->unk14;
     do {
