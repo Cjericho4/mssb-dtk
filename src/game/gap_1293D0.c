@@ -5,6 +5,7 @@
 #include "game/gap_11D3AC.h"
 #include "game/gap_EA340.h"
 #include "game/rep_3448.h"
+#include "game/gap_97144.h"
 #include "game/gap_AC9F8.h"
 
 // .text:0x001293D0 size:0x78 mapped:0x80768468
@@ -125,7 +126,24 @@ void fn_3_12C868(void) {
 
 // .text:0x0012C984 size:0x10C mapped:0x8076BA18
 void fn_3_12C984(void) {
-    return;
+    CommonBss_32724* state = &lbl_3_common_bss_32724;
+
+    if (state->unk_B6 != 0) {
+        memset(g_Minigame.targetPointsArray, 0, 0xE);
+        fn_800B0A5C_insertQueue(fn_3_121908, 2);
+        if (g_Minigame.multiPlayerInd != 0) {
+            fn_800B0A5C_insertQueue(fn_3_1243A4, 2);
+        }
+        fn_800B0A5C_insertQueue(fn_3_124738, 2);
+        fn_800B0A5C_insertQueue(fn_3_1226D4, 2);
+        fn_800B0A5C_insertQueue(fn_3_122334, 2);
+        fn_800B0A5C_insertQueue(fn_3_1235B8, 2);
+        fn_800B0A5C_insertQueue(fn_3_124CE0, 2);
+        fn_800B0A5C_insertQueue(fn_3_EB6E0, 2);
+        state->unk_B6 = lbl_3_common_bss_32724.unk_B7 = 0;
+        fn_800B0A5C_insertQueue(fn_3_125850, 2);
+    }
+    fn_3_97144();
 }
 
 // .text:0x0012CA90 size:0x764 mapped:0x8076BB24
