@@ -6,6 +6,9 @@
 
 #include <string.h>
 
+extern Data1F090Entry lbl_3_data_1E434[];
+void QueueCharacterAnimation(int character, int animation, u8 arg2, u8 arg3, s16 arg4, u8 flip, int arg6);
+
 // .text:0x000249E8 size:0xF4 mapped:0x80663A7C
 void fn_3_249E8(s32 arg0) {
     Data1F090Entry *entry = &lbl_3_data_1F090[arg0];
@@ -35,7 +38,90 @@ void fn_3_249E8(s32 arg0) {
 
 // .text:0x00024ADC size:0x2E0 mapped:0x80663B70
 void fn_3_24ADC(s32 arg0, s32 arg1) {
-    return;
+    Data1F090Entry* entry;
+    s32 idx;
+    s32 isQueued;
+    AnimationStruct* anim;
+    InMemRunnerType* runner;
+    f32 angle;
+    s32 flip;
+
+    entry = &lbl_3_data_1E434[arg0];
+    isQueued = arg1;
+    idx = entry->unk14;
+    lbl_3_common_bss_1323C->unk240[idx] = arg0;
+    if (idx <= 8) {
+        anim = g_hugeAnimStruct.AnimationStructPtrs[idx];
+        if (entry->unk19 == 0) {
+            memcpy(&g_Fielders[idx], entry, 0xC);
+            if (anim != NULL) {
+                memcpy(&anim->unk34, entry, 0xC);
+            }
+        }
+        angle = entry->unkC;
+        lbl_3_common_bss_1323C->unk0[idx].unkC = angle;
+        g_Fielders[idx].unk48 = angle;
+        if (anim != NULL) {
+            anim->unk44 = entry->unkC;
+            anim->unk_25D = 1;
+        }
+        if (entry->unk10 >= 0x69 && entry->unk10 < 0x75) {
+            flip = 0;
+        } else {
+            flip = g_Fielders[idx].unk1C7;
+        }
+        lbl_3_common_bss_1323C->unk261[idx] = 1;
+        lbl_3_common_bss_1323C->unk26E[idx] = 1;
+    } else if (idx <= 12) {
+        anim = g_hugeAnimStruct.AnimationStructPtrs[idx];
+        if (idx == 10) {
+            if (anim == NULL) {
+                return;
+            }
+        } else if (idx == 11) {
+            if (anim == NULL) {
+                return;
+            }
+        } else if (idx == 12) {
+            if (anim == NULL) {
+                return;
+            }
+        }
+        runner = &g_Runners[idx - 9];
+        if (entry->unk19 == 0) {
+            memcpy(runner, entry, 0xC);
+            if (anim != NULL) {
+                memcpy(&anim->unk34, entry, 0xC);
+            }
+        }
+        angle = entry->unkC;
+        lbl_3_common_bss_1323C->unk0[idx].unkC = angle;
+        runner->runningAngle = angle;
+        if (anim != NULL) {
+            anim->unk44 = entry->unkC;
+            anim->unk_25D = 1;
+        }
+        lbl_3_common_bss_1323C->unk261[idx] = 1;
+        lbl_3_common_bss_1323C->unk26E[idx] = 1;
+        if (idx == 9) {
+            if (lbl_3_common_bss_1323C->unk25D == 0 || lbl_3_common_bss_1323C->unk25D == 1) {
+                if (g_Batter.batterHand == 1) {
+                    flip = 0;
+                } else {
+                    flip = 1;
+                }
+            } else {
+                flip = 0;
+            }
+        } else {
+            flip = 0;
+        }
+    }
+    if (isQueued == 0) {
+        AnimateCharacter(idx, entry->unk10, entry->unk16, entry->unk17, entry->unk18, entry->unk12, flip, 0);
+    } else {
+        QueueCharacterAnimation(idx, entry->unk10, entry->unk16, entry->unk18, entry->unk12, flip, 0);
+    }
 }
 
 // .text:0x00024DBC size:0x80 mapped:0x80663E50

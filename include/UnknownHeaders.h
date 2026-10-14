@@ -74,7 +74,11 @@ typedef struct starAnimationRelated {
 /* AnimationStruct - 0x27C bytes, used in arrays within hugeAnimStruct.
  * Full field definitions available in in_game.h. */
 typedef struct AnimationStruct {
-    u8 _pad[0x5C];
+    u8 _pad[0x34];
+    VecXYZ unk34;       /* 0x34 */
+    u8 _pad40[0x4];
+    f32 unk44;          /* 0x44 */
+    u8 _pad48[0x14];
     void* funcPtr_0x5c; /* 0x5C - function pointer */
     u8 _rest[0x1FD];
     u8 unk_25D; /* 0x25D */
