@@ -4,7 +4,7 @@
 **Source of truth:** Always follow `queue.log`. If this file disagrees with `queue.log`, `queue.log` wins.
 **Strategy:** Work through functions listed in `queue.log` (plain entries at the bottom, after all COMPLETED/NONMATCHING lines)
 **Queue file:** `queue.log`
-**Next function to attempt:** fn_3_E19E8 (line 227 of queue.log)
+**Next function to attempt:** fn_3_D8A10 (line 228 of queue.log)
 
 To find the next function: look for the first plain entry (not prefixed with COMPLETED/NONMATCHING/SKIPPED) in `queue.log` that hasn't been committed yet.
 
@@ -13,6 +13,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 ## Recently Completed (from queue.log)
 | Function | Notes |
 |---|---|
+| fn_3_E19E8 | matched (inlined fn_3_E0668 loop) |
 | fn_3_DF00C | matched |
 | fn_3_DF3D8 | matched (FrameCountOfCurrentPitch → u16) |
 | fn_3_8FC0C | matched |
