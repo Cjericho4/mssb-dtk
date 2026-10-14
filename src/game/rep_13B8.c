@@ -347,7 +347,42 @@ void fn_3_889FC(void) {
 
 // .text:0x00088B18 size:0x10C mapped:0x806C7BAC
 void fn_3_88B18(void) {
-    return;
+    s32 state;
+    s32 i;
+    InMemRunnerType* runner;
+    s16 standing;
+
+    state = 0;
+    if (g_FieldingLogic._107 != 0 && g_FieldingLogic._107 != 4) {
+        state = 1;
+    }
+    runner = g_Runners;
+    for (i = 0; i < 4; i++, runner++) {
+        if (runner->forceOutCd == 2) {
+            state = 2;
+            continue;
+        }
+        runner->forceOutCd = 0;
+        if (g_Ball.AtBat_ContactResult < 0 || g_FieldingLogic._108 != 0) {
+            continue;
+        }
+        if (state != 0) {
+            if (runner->runnerOnFieldOrOutOrScored == 0) {
+                state = 1;
+            }
+            if (state == 2 && runner->startingBase_baseAchieved == runner->currentBase) {
+                runner->forceOutCd = -1;
+            }
+        } else if (runner->runnerOnFieldOrOutOrScored == 1) {
+            standing = runner->baseStandingOn;
+            if ((standing < 0 || standing != ((runner->startingBase_baseAchieved + 1) & 3))
+                && runner->startingBase_baseAchieved == runner->currentBase) {
+                runner->forceOutCd = 1;
+            }
+        } else {
+            state = 1;
+        }
+    }
 }
 
 // .text:0x00088C24 size:0x164 mapped:0x806C7CB8

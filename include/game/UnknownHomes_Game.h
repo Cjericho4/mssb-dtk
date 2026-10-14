@@ -558,7 +558,10 @@ typedef struct FieldingLogic {
     /* 0xC4 */ s16 unkC4;
     /* 0xC6 */ u8 _pad1b[0xF8 - 0xC6];
     /* 0xF8 */ u8 unk_F8[9];
-    /* 0x101 */ u8 _pad1e[0x10C - 0x101];
+    /* 0x101 */ u8 _pad1e[0x107 - 0x101];
+    /* 0x107 */ u8 _107;
+    /* 0x108 */ u8 _108;
+    /* 0x109 */ u8 _pad109[0x10C - 0x109];
     /* 0x10C */ u8 unk10C;
     /* 0x10D */ u8 unk10D;
     /* 0x10E */ u8 _pad1c[0x114 - 0x10E];
