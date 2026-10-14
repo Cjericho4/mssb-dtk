@@ -2,6 +2,8 @@
 #define __GAME_rep_1D58_H_
 
 #include "mssbTypes.h"
+#include "C3/actor.h"
+#include "C3/anim.h"
 #include "Dolphin/stl.h"
 #include "game/rep_D0.h"
 
@@ -40,7 +42,27 @@ void fn_3_B9524(void);
 void fn_3_B9534(void);
 void fn_3_B95EC(void);
 void fn_3_B97C8(struct StadiumObject*);
-extern void fn_3_B97DC(s32 arg0, s32 arg1);
+typedef struct ActorAnimState {
+    Actor* actor;        /* 0x00 */
+    ANIMBank* bank;      /* 0x04 */
+    u8 _pad08[0x6];
+    u16 seqNum;          /* 0x0E */
+    u8 _pad10[0x44];
+    f32 speed;           /* 0x54 */
+    u8 playAnim;         /* 0x58 */
+    u8 setTime;          /* 0x59 */
+    u8 setSpeed;         /* 0x5A */
+    u8 loopFlags;        /* 0x5B */
+    f32 time;            /* 0x5C */
+    f32 startTime;       /* 0x60 */
+    u8 _pad64[0x4];
+    s32 unk68;           /* 0x68 */
+} ActorAnimState;
+void fn_3_B97DC(ActorAnimState* state, ANIMBank* bank);
+void fn_800B4BC8(Actor* actor, s32 arg1);
+void fn_800B4C04(Actor* actor, f32 speed);
+void fn_800B4AFC(Actor* actor, s32 loop);
+void fn_800B4CA0(void* boneData, f32 val);
 void fn_3_B98E8(void);
 void fn_3_B99E4(void);
 void fn_3_B9BB4(void);

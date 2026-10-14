@@ -241,8 +241,40 @@ void fn_3_B97C8(struct StadiumObject* arg0) {
 }
 
 // .text:0x000B97DC size:0x10C mapped:0x806F8870
-void fn_3_B97DC(s32 arg0, s32 arg1) {
-    return;
+void fn_3_B97DC(ActorAnimState* state, ANIMBank* bank) {
+    s32 loop;
+
+    if (state == NULL || bank == NULL) {
+        return;
+    }
+    state->bank = bank;
+    state->seqNum = 0;
+    state->time = 0.0f;
+    state->playAnim = 1;
+    state->setTime = (bank != NULL);
+    state->setSpeed = (bank != NULL);
+    state->startTime = 0.0f;
+    state->loopFlags = 3;
+    state->time = 0.0f;
+    state->setTime = 1;
+    state->speed = 1.0f;
+    state->setSpeed = 1;
+    state->unk68 = 0;
+    state->playAnim = 1;
+    if (state->playAnim) {
+        ACTSetAnimation(state->actor, state->bank, NULL, state->seqNum, state->startTime);
+        fn_800B4BC8(state->actor, 1);
+    }
+    if (state->setTime) {
+        fn_800B4CA0(state->actor, state->time);
+    }
+    if (state->setSpeed) {
+        fn_800B4C04(state->actor, state->speed);
+    }
+    loop = state->loopFlags & 1;
+    if (loop) {
+        fn_800B4AFC(state->actor, loop);
+    }
 }
 
 // .text:0x000B98E8 size:0xFC mapped:0x806F897C

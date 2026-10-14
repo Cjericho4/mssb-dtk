@@ -116,7 +116,7 @@ void fn_3_E3B88(void) {
 // .text:0x000E4554 size:0x54 mapped:0x807235E8
 void fn_3_E4554(castleThwompObj *arg) {
     arg->unkAC = lbl_3_bss_AE18;
-    fn_3_B97DC((s32)arg->actPtr, arg->unkAC);
+    fn_3_B97DC((ActorAnimState*)arg->actPtr, (ANIMBank*)arg->unkAC);
     arg->rotation.y = arg->actPtr->unk5C;
     arg->field37_0xcb = 0;
 }

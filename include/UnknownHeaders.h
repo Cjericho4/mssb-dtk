@@ -568,10 +568,10 @@ typedef struct QueueEntry {
 QueueEntry* fn_800B0A5C_insertQueue(QueueCallback callback, s32 priority);
 typedef struct UnknownStruct_EF3D4 {
 u8 _pad0[0x74];
-s32 unk74;
+struct ActorAnimState* unk74;
 } UnknownStruct_EF3D4;
 /* The global is accessed as an array of 32-bit values (pointers or ints) */
-extern s32 lbl_3_bss_B154[];
+extern struct ANIMBank* lbl_3_bss_B154[];
 typedef struct {
     u8 pad[0x14];
     f32 unk14;
