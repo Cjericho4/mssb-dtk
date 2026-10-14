@@ -13,6 +13,12 @@ extern void fn_3_FBD70(void);
 extern void fn_8001D0D0();
 extern f32 lbl_3_data_18D98[];
 extern void fn_3_10C81C(void);
+extern s16 lbl_3_data_18C48[];
+void fn_3_754B8(void);
+void initializeInMemBatter(void);
+void fn_3_FBA8(void);
+void fn_3_595C4(void);
+void fn_3_1E328(void);
 extern u8 lbl_3_data_18980[];
 extern u8 lbl_3_data_18944[];
 extern u8 lbl_3_data_189A4[];
@@ -275,7 +281,43 @@ void fn_3_DF820(void) {
 
 // .text:0x000DF8D4 size:0x14C mapped:0x8071E968
 void fn_3_DF8D4(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        g_Minigame.miniGameCurrentPoints[i] = lbl_3_data_18C48[0];
+        g_Minigame.players._18E8[i] = 0;
+        g_Minigame.players.fielderRosterIDs[i] = -1;
+        g_Minigame.minigameFielderIndex[i] = -1;
+        g_Minigame._18FC[i] = -1;
+        g_Minigame.players.battingOrder[i] = -1;
+        g_Minigame.players.playerOrder[i] = i;
+        g_Minigame.playerResult[i][0] = 0xFF;
+    }
+    for (i = 0; i < 4; i++) {
+        g_Minigame._1914[i] = 0;
+    }
+    g_Minigame.turnNumberWithinRound = 0;
+    g_Minigame._1939 = 0;
+    g_Minigame._190D = 3;
+    g_Minigame._19A6 = 0;
+    g_Minigame.challenge_minigame_haven_tWonYetIndicator = 1;
+    g_Minigame._19A9 = 0;
+    g_Minigame._1911 = 0;
+    g_Minigame.toyField_pointMultiplier = 1;
+    g_Minigame.toyfield_waitFor_CoinsX2_AnimationToEnd = 0;
+    g_Minigame._19CD = 0;
+    g_Minigame._19CE = 0;
+    g_Minigame._19CF = 0;
+    g_Minigame.toyField_selectedTurns = lbl_3_data_189A4[g_Minigame._1A24[0]];
+    g_Minigame.toyField_turnNumber = 0;
+    if (g_d_GameSettings.exhibitionMatchInd == 0) {
+        g_Minigame.toyField_selectedTurns = lbl_3_data_189A4[5];
+    }
+    fn_3_754B8();
+    initializeInMemBatter();
+    fn_3_FBA8();
+    fn_3_595C4();
+    fn_3_1E328();
 }
 
 // .text:0x000DFA20 size:0x18C mapped:0x8071EAB4

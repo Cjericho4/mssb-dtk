@@ -1732,12 +1732,15 @@ typedef struct _MiniGameStruct {
             u8 _18D0[8];               /* 0x18D0 */
             u8 battingHandedness[4];   /* 0x18D8 */
             u8 aIStrength[4];          /* 0x18DC */
-            u8 battingOrder[0x14];     /* 0x18E0, indexed by turnNumberWithinRound */
+            s8 battingOrder[4];        /* 0x18E0, indexed by turnNumberWithinRound */
+            u8 playerOrder[4];         /* 0x18E4 */
+            u8 _18E8[4];               /* 0x18E8 */
+            u8 _18EC[8];               /* 0x18EC */
             s8 fielderRosterIDs[4];    /* 0x18F4 */
         } players;
     };
     /*0x18F8*/ s8 minigameFielderIndex[4];
-    /*0x18FC*/ u8 _18FC[4];
+    /*0x18FC*/ s8 _18FC[4];
     /*0x1900*/ u8 _1900;
     /*0x1901*/ u8 _1901;
     /*0x1902*/ u8 _1902;
@@ -1808,11 +1811,7 @@ typedef struct _MiniGameStruct {
     /*0x19B8*/ s16 TF_framesSinceHittingPanel;
     /*0x19BA*/ s16 _19BA;
     /*0x19BC*/ s16 _19BC;
-    /*0x19BE*/ u8 _19BE;
-    /*0x19BF*/ u8 _19BF;
-    /*0x19C0*/ s16 _19C0;
-    /*0x19C2*/ s16 _19C2;
-    /*0x19C4*/ s16 _19C4;
+    /*0x19BE*/ u8 playerResult[4][2];
     /*0x19C6*/ u8 _19C6;
     /*0x19C7*/ u8 _19C7;
     /*0x19C8*/ u8 maybeTFCollisionResultState;
