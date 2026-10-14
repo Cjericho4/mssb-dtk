@@ -124,6 +124,8 @@ typedef struct Camera {
     /* 0x2854 */ f32 unk2854;
     /* 0x2858 */ u8 _pad7[0x2878 - 0x2858];
     /* 0x2878 */ f32 unk2878;
+    /* 0x287C */ u8 _pad287C[0x2C];
+    /* 0x28A8 */ u8 unk28A8;
 } Camera;
 
 typedef struct Strikes {

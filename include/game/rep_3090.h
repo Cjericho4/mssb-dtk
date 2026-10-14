@@ -17,14 +17,17 @@ typedef struct Struct_DE94_Inner {
     /* 0x034 */ void *unk34;
     /* 0x038 */ u8 _pad2b[0x04];
     /* 0x03C */ s32 unk3C;
-    /* 0x040 */ u8 _pad2c[0xD8];
+    /* 0x040 */ u8 _pad2c[0x60];
+    /* 0x0A0 */ f32 fov;
+    /* 0x0A4 */ u8 _pad2d[0x74];
     /* 0x118 */ u32 field_0x118;   // 0x118
     /* 0x11C */ u32 field_0x11C;   // 0x11C (Replaced _pad3)
     /* 0x120 */ u8 _pad3[0x04];    // (Adjusted padding)
     /* 0x124 */ u32 field_0x124;
     /* 0x128 */ u8 _pad4[0x883];
     /* 0x9AB */ u8 field_0x9AB;
-    /* 0x9AC */ u8 _pad5[0x05];
+    /* 0x9AC */ u8 field_0x9AC;
+    /* 0x9AD */ u8 _pad5[0x04];
     /* 0x9B1 */ u8 field_0x9B1;    // 0x9B1 (Corrected from 0x9B6)
     /* 0x9B2 */ u8 _pad6[0x4];     // Remaining space to field_0x9B6
     /* 0x9B6 */ u8 field_0x9B6;

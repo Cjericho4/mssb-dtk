@@ -2,6 +2,7 @@
 #include "UnknownHeaders.h"
 #include "game/rep_3090.h"
 #include "header_rep_data.h"
+#include "stl/math.h"
 
 // .text:0x00014BB4 size:0x268 mapped:0x80653C48
 void fn_3_14BB4(void) {
@@ -636,9 +637,32 @@ void fn_3_1C8AC(void) {
     return;
 }
 
+typedef struct {
+    u8 _pad0[0x40];
+    Mtx mtx;         /* 0x40 */
+    VecXYZ eye;      /* 0x70 */
+    VecXYZ target;   /* 0x7C */
+    u8 _pad88[0x1C];
+    f32 unkA4;       /* 0xA4 */
+} CameraRenderObj;
+CameraRenderObj* fn_80052768(s32 arg0);
+
 // .text:0x0001CAC0 size:0x10C mapped:0x8065BB54
 void fn_3_1CAC0(void) {
-    return;
+    CameraRenderObj* obj;
+
+    obj = fn_80052768(g_pCamera->unk28A8);
+    obj->eye.x = g_pCamera->unk2840;
+    obj->eye.y = -g_pCamera->unk2844;
+    obj->eye.z = g_pCamera->unk2848;
+    obj->target.x = g_pCamera->unk284C;
+    obj->target.y = -g_pCamera->unk2850;
+    obj->target.z = g_pCamera->unk2854;
+    if (lbl_3_common_bss_DE94->field_0x9AC == 0) {
+        obj->unkA4 = g_pCamera->unk2878;
+    } else {
+        obj->unkA4 = ((36.0 / tan((57.29578f * lbl_3_common_bss_DE94->fov) / 114.59155f)) * 0.5) / 74.0;
+    }
 }
 
 // .text:0x0001CBCC size:0xFC mapped:0x8065BC60

@@ -97,7 +97,9 @@ typedef struct {
 typedef struct {
     u8 _pad0[0x40];
     Mtx mtx;         /* 0x40 */
-    u8 _pad1[0x34];
+    VecXYZ eye;      /* 0x70 */
+    VecXYZ target;   /* 0x7C */
+    u8 _pad88[0x1C];
     f32 unkA4;       /* 0xa4 */
 } Fn52768Result;
 
