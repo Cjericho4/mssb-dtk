@@ -22,6 +22,6 @@ extern struct {
 
 // fn_3_6C854 declared in UnknownHomes_Game.h
 s32 fn_3_6C938(s32 arg0, s32 arg1);
-void fn_3_6CC30(void);
+BOOL fn_3_6CC30(s32 port, s32 type, s32 mask);
 
 #endif // !__GAME_gap_6C854_H_

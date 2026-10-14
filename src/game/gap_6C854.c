@@ -82,6 +82,6 @@ s32 fn_3_6C938(s32 arg0, s32 arg1) {
 }
 
 // .text:0x0006CC30 size:0x158
-void fn_3_6CC30(void) {
-    return;
+BOOL fn_3_6CC30(s32 port, s32 type, s32 mask) {
+    return isButtonPressed(port, type, mask);
 }
