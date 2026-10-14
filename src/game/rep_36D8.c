@@ -1,3 +1,4 @@
+#include "Dolphin/vec.h"
 #include "game/rep_36D8.h"
 #include "UnknownHeaders.h"
 #include "game/rep_1838.h"
@@ -161,9 +162,34 @@ void fn_3_13E670(void) {
     fn_3_13E3A4(&g_Minigame._CB0);
 }
 
+typedef struct {
+    u8 _pad0[0x10];
+    f32 gravity;     /* 0x10 */
+    f32 bounceDamp;  /* 0x14 */
+    f32 bounceRest;  /* 0x18 */
+} WallBallCoinPhysics;
+extern WallBallCoinPhysics lbl_3_data_2188C;
+extern s16 lbl_3_data_218A8;
+
 // .text:0x0013E6D4 size:0x100 mapped:0x8077D768
 void fn_3_13E6D4(void) {
-    return;
+    u32 i;
+
+    for (i = 15; i < 35; i++) {
+        if (g_Minigame.wallBall_coinsVisibleInd) {
+            PSVECAdd((Vec*)&g_Minigame.wallBall_coinCoordinates[i], (Vec*)&g_Minigame.wallBall_coinVelocity[i], (Vec*)&g_Minigame.wallBall_coinCoordinates[i]);
+            g_Minigame.wallBall_coinVelocity[i].y += lbl_3_data_2188C.gravity;
+            if (g_Minigame.wallBall_coinCoordinates[i].y < 0.01) {
+                g_Minigame.wallBall_coinCoordinates[i].y = 0.01f;
+                g_Minigame.wallBall_coinVelocity[i].x *= lbl_3_data_2188C.bounceDamp;
+                g_Minigame.wallBall_coinVelocity[i].z *= lbl_3_data_2188C.bounceDamp;
+                g_Minigame.wallBall_coinVelocity[i].y *= -lbl_3_data_2188C.bounceRest;
+            }
+            if (++g_Minigame.wallBall_coinsVisibleFrameCounter[i] >= lbl_3_data_218A8) {
+                g_Minigame.wallBall_coinsVisibleInd[i] = 0;
+            }
+        }
+    }
 }
 
 // .text:0x0013E7D4 size:0x25C mapped:0x8077D868

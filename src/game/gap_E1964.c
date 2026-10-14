@@ -102,8 +102,8 @@ static inline void updateWallBallCoins(void) {
         entry = (GapE19E8Entry*)((u8*)g_hugeAnimStruct.entries_2D94 + r29);
         if (*(r28 + 0x193A) == 0) {
             entry->unk26 = 0;
-        } else if (g_Minigame.wallBall_coinsVisibleFrameCounter > lbl_3_data_18BB0[g_Minigame._199E].unk2
-                   && (g_Minigame.wallBall_coinsVisibleFrameCounter & 1)) {
+        } else if (g_Minigame.wallBall_coinsVisibleFrameCounter[0] > lbl_3_data_18BB0[g_Minigame._199E].unk2
+                   && (g_Minigame.wallBall_coinsVisibleFrameCounter[0] & 1)) {
             entry->unk26 = 0;
         } else {
             entry->unk26 = 1;
