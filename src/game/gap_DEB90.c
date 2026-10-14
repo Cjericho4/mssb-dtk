@@ -290,38 +290,24 @@ void fn_3_DFBAC(void) {
 
 // .text:0x000E0668 size:0xF0 mapped:0x8071F6FC
 void fn_3_E0668(void) {
-    s32 r29;
-    u8 *r28;
-    VecXYZ *r27;
-    GapDEB90E0668Entry *entry;
-    s32 r25;
+    GapDEB90E0668Entry* entry;
+    s32 i;
 
-    r28 = (u8*)&g_Minigame;
-    r25 = 0;
-    r27 = (VecXYZ*)&g_Minigame;
-    r29 = 0;
-
-    do {
-        entry = (GapDEB90E0668Entry*)((u8*)g_hugeAnimStruct.entries_2D94 + r29);
-
-        if (*(r28 + 0x193A) == 0) {
+    for (i = 0; i < 0x1E; i++) {
+        entry = (GapDEB90E0668Entry*)&g_hugeAnimStruct.entries_2D94[i];
+        if (g_Minigame.wallBall_coinsVisibleInd[i] == 0) {
             entry->unk26 = 0;
         } else if (g_Minigame.wallBall_coinsVisibleFrameCounter[0] > lbl_3_data_18BB0[g_Minigame._199E].unk2
                    && (g_Minigame.wallBall_coinsVisibleFrameCounter[0] & 1)) {
             entry->unk26 = 0;
         } else {
             entry->unk26 = 1;
-            entry->unk4 = ((VecXYZ*)((u8*)r27 + 0xCD0))->x;
-            entry->unk8 = -((VecXYZ*)((u8*)r27 + 0xCD0))->y;
-            entry->unkC = ((VecXYZ*)((u8*)r27 + 0xCD0))->z;
+            entry->unk4 = g_Minigame.wallBall_coinCoordinates[i].x;
+            entry->unk8 = -g_Minigame.wallBall_coinCoordinates[i].y;
+            entry->unkC = g_Minigame.wallBall_coinCoordinates[i].z;
             entry->unk14 = fn_3_9FEA8(entry->unk14 + lbl_3_data_18DD0);
         }
-
-        r25++;
-        r29 += 0x28;
-        r28++;
-        r27++;
-    } while (r25 < 0x1E);
+    }
 }
 
 // .text:0x000E0758 size:0x84 mapped:0x8071F7EC

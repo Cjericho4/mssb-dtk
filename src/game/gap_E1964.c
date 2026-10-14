@@ -86,37 +86,26 @@ void fn_3_E1964(void) {
     } while (i < 0x1E);
 }
 
-/* Inlined copy of fn_3_E0668. Offsets kept: field-address form changes codegen. */
+/* Inlined copy of fn_3_E0668. */
 static inline void updateWallBallCoins(void) {
-    VecXYZ* r27;
-    u8* r28;
-    s32 r29;
     GapE19E8Entry* entry;
-    s32 r25;
+    s32 i;
 
-    r25 = 0;
-    r29 = 0;
-    r28 = (u8*)&g_Minigame;
-    r27 = (VecXYZ*)&g_Minigame;
-    do {
-        entry = (GapE19E8Entry*)((u8*)g_hugeAnimStruct.entries_2D94 + r29);
-        if (*(r28 + 0x193A) == 0) {
+    for (i = 0; i < 0x1E; i++) {
+        entry = (GapE19E8Entry*)&g_hugeAnimStruct.entries_2D94[i];
+        if (g_Minigame.wallBall_coinsVisibleInd[i] == 0) {
             entry->unk26 = 0;
         } else if (g_Minigame.wallBall_coinsVisibleFrameCounter[0] > lbl_3_data_18BB0[g_Minigame._199E].unk2
                    && (g_Minigame.wallBall_coinsVisibleFrameCounter[0] & 1)) {
             entry->unk26 = 0;
         } else {
             entry->unk26 = 1;
-            entry->unk4 = ((VecXYZ*)((u8*)r27 + 0xCD0))->x;
-            entry->unk8 = -((VecXYZ*)((u8*)r27 + 0xCD0))->y;
-            entry->unkC = ((VecXYZ*)((u8*)r27 + 0xCD0))->z;
+            entry->unk4 = g_Minigame.wallBall_coinCoordinates[i].x;
+            entry->unk8 = -g_Minigame.wallBall_coinCoordinates[i].y;
+            entry->unkC = g_Minigame.wallBall_coinCoordinates[i].z;
             entry->unk14 = fn_3_9FEA8(entry->unk14 + lbl_3_data_18DD0);
         }
-        r25++;
-        r29 += 0x28;
-        r28++;
-        r27++;
-    } while (r25 < 0x1E);
+    }
 }
 
 // .text:0x000E19E8 size:0x278
