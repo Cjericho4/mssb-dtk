@@ -7,9 +7,54 @@ extern GXTexObj lbl_3_bss_9D20;
 extern u8 lbl_3_bss_9D40[0x40];
 extern const f32 lbl_3_rodata_1FA8;
 
+typedef struct {
+    u8 _pad0[0x20];
+    u8 active; /* 0x20 */
+} RepC0854Obj;
+
+typedef struct {
+    s16 charIndex;
+    u8 _pad2[0x1E];
+} RepC0854Slot; /* size: 0x20 */
+
+extern RepC0854Obj* lbl_3_data_174A0[2];
+extern RepC0854Slot lbl_3_data_17260[18];
+void fn_80027918(u8 id, f32 arg1);
+
 // .text:0x000C0854 size:0x108 mapped:0x806FF8E8
 void fn_3_C0854(void) {
-    return;
+    s32 i;
+    s32 j;
+    s16 id;
+    AnimationStruct* anim;
+    s32 sfx;
+
+    for (i = 0; i < 2; i++) {
+        if (lbl_3_data_174A0[i] != NULL) {
+            lbl_3_data_174A0[i]->active = 1;
+        }
+        id = lbl_3_data_17260[i].charIndex;
+        if (id >= 0) {
+            j = 1;
+            do {
+                if (id == lbl_3_data_17260[j].charIndex) {
+                    break;
+                }
+            } while (j-- != 0);
+            if (j >= 0) {
+                anim = g_hugeAnimStruct.AnimationStructPtrs[id];
+                if (anim != NULL) {
+                    anim->funcPtr_0x5c = NULL;
+                }
+                sfx = 0x18;
+                lbl_3_data_17260[j].charIndex = -1;
+                if (j != 0) {
+                    sfx = 0x17;
+                }
+                fn_80027918(sfx, 0.0f);
+            }
+        }
+    }
 }
 
 // .text:0x000C095C size:0x17C mapped:0x806FF9F0
