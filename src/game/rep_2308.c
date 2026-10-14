@@ -1,7 +1,7 @@
 #include "game/rep_2308.h"
 #include "game/rep_1F58.h"
 #include "game/UnknownHomes_Game.h"
-#include "static/UnknownHomes_static.h"
+#include "static/UnknownHomes_Static.h"
 #include "header_rep_data.h"
 
 // .text:0x000CABF0 size:0x210 mapped:0x80709C84
