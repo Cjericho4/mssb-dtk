@@ -1733,7 +1733,7 @@ typedef struct _MiniGameStruct {
             u8 battingHandedness[4];   /* 0x18D8 */
             u8 aIStrength[4];          /* 0x18DC */
             s8 battingOrder[4];        /* 0x18E0, indexed by turnNumberWithinRound */
-            u8 playerOrder[4];         /* 0x18E4 */
+            s8 playerOrder[4];         /* 0x18E4 */
             u8 _18E8[4];               /* 0x18E8 */
             u8 _18EC[8];               /* 0x18EC */
             s8 fielderRosterIDs[4];    /* 0x18F4 */

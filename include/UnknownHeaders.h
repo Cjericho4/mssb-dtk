@@ -817,7 +817,8 @@ typedef struct CommonBss_32724 {
     /* 0xCD */ u8 _pad6[0x05];   // Pad to 0xD3 (0xD3 - 0xCD = 0x06)
     /* 0xD3 */ u8 unk_D3;
     /* 0xD4 */ u8 someFlag;
-    /* 0xD5 */ u8 _padD5[3];
+    /* 0xD5 */ u8 unk_D5;
+    /* 0xD6 */ u8 _padD6[2];
     /* 0xD8 */ u8 unkD8;
 } CommonBss_32724;
 
@@ -921,7 +922,9 @@ typedef struct Scores {
     /* 0x9C */ s16 field_0x9C;
     u8 _pad2[0xAA - 0x9E];        // Pad to 0xAA
     /* 0xAA */ u8 threshold;     // Matches 'lbz r0, 0xaa(r4)'
-    /* 0xAB */ u8 _pad3[24];     // Padding to reach your original 0xC3
+    /* 0xAB */ u8 _padAB;
+    /* 0xAC */ u8 unkAC;
+    /* 0xAD */ u8 _pad3[22];
     /* 0xC3 */ u8 someFlag;
 } Scores;
 

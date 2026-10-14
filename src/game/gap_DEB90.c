@@ -161,7 +161,50 @@ void fn_3_DF00C(void) {
 
 // .text:0x000DF25C size:0x17C mapped:0x8071E2F0
 void fn_3_DF25C(void) {
-    return;
+    s32 i;
+    s32 j;
+    s32 remaining;
+    s32 pick;
+    s32 slot;
+
+    g_Scores.highscore++;
+    g_Scores.unkAC = fn_3_5C530(g_Scores.highscore);
+    g_Strikes.outs = 0;
+    g_Strikes.unk_C = 0;
+    lbl_3_common_bss_32724.unk_D5 = 1;
+    g_Minigame.turnNumberWithinRound = 0;
+    g_Minigame._190D = 3;
+    g_Minigame.panelHitInd = 0;
+    g_Minigame._19A5 = 1;
+    g_Minigame._190F = 0;
+    g_Minigame._1910 = 3;
+    g_Minigame._1911 = 0;
+    g_Minigame._1914[0] = 0;
+    g_Minigame._1914[1] = 0;
+    g_Minigame._1914[2] = 0;
+    g_Minigame._1914[3] = 0;
+    for (i = 0; i < g_Minigame.miniGameNumberOfParticipants; i++) {
+        g_Minigame.players.playerOrder[i] = i;
+    }
+    remaining = g_Minigame.miniGameNumberOfParticipants;
+    slot = 0;
+    for (i = 0; i < g_Minigame.miniGameNumberOfParticipants; i++) {
+        pick = fn_3_9EE24(remaining);
+        for (j = 0; j < g_Minigame.miniGameNumberOfParticipants; j++) {
+            if (g_Minigame.players.playerOrder[j] >= 0) {
+                if (pick == 0) {
+                    g_Minigame.players.battingOrder[slot] = j;
+                    remaining--;
+                    slot++;
+                    g_Minigame.players.playerOrder[j] = -1;
+                    break;
+                }
+                pick--;
+            }
+        }
+    }
+    changeScene(1, 6);
+    fn_3_5A6D4(3);
 }
 
 // .text:0x000DF3D8 size:0x230 mapped:0x8071E46C

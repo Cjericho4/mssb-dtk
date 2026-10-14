@@ -207,8 +207,8 @@ void fn_3_5C418(void) {
 }
 
 // .text:0x0005C530 size:0x98 mapped:0x8069B5C4
-void fn_3_5C530(void) {
-    return;
+u8 fn_3_5C530(s32 inning) {
+    return 0;
 }
 
 // .text:0x0005C5C8 size:0xD4 mapped:0x8069B65C
