@@ -815,6 +815,13 @@ typedef struct CommonBss_32724 {
 } CommonBss_32724;
 
 extern CommonBss_32724 lbl_3_common_bss_32724;
+
+typedef struct {
+    u8 _pad0[0xCF4E];
+    u8 practiceCompleted[4][4]; /* 0xCF4E */
+    u8 _padCF5E[0x6];
+} SaveData_80354768; /* size: 0xCF64 */
+extern SaveData_80354768 lbl_80354768;
 // Definition for the global structure at 0x800EFBA4
 typedef struct SoundConfig {
     u8 menuVolume;   /* 0x0 */

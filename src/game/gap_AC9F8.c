@@ -245,8 +245,28 @@ void fn_3_B03F0(void) {
 }
 
 // .text:0x000B0464 size:0x108 mapped:0x806EF4F8
-void fn_3_B0464(void) {
-    return;
+s32 fn_3_B0464(void) {
+    if (g_Practice.pauseMenuLoading != 0) {
+        return 0;
+    }
+    if (g_Practice.guidedPracticeCompletionRelated == 0) {
+        return 0;
+    }
+    if (g_UnkSound_32718._07 != 0) {
+        return 0;
+    }
+    if (++g_Practice._186 > 150) {
+        if (g_Practice.practiceCompleted[g_Practice.practiceType_2][g_Practice.practiceLevel] == 0) {
+            g_Practice.practiceCompletedChanged = 1;
+            g_Practice.practiceCompleted[g_Practice.practiceType_2][g_Practice.practiceLevel] = 1;
+            lbl_80354768.practiceCompleted[g_Practice.practiceType_2][g_Practice.practiceLevel] = 1;
+        }
+        g_Practice._1C7 = 1;
+        fn_3_B3A28();
+        fn_3_B1DA4(g_Practice.practiceLevel + 4, 1);
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x000B056C size:0x308 mapped:0x806EF600
@@ -351,8 +371,28 @@ void fn_3_B12F8(void) {
 }
 
 // .text:0x000B1470 size:0x108 mapped:0x806F0504
-void fn_3_B1470(void) {
-    return;
+s32 fn_3_B1470(void) {
+    if (g_Practice.pauseMenuLoading != 0) {
+        return 0;
+    }
+    if (g_Practice.guidedPracticeCompletionRelated == 0) {
+        return 0;
+    }
+    if (g_UnkSound_32718._07 != 0) {
+        return 0;
+    }
+    if (++g_Practice._186 > 150) {
+        if (g_Practice.practiceCompleted[g_Practice.practiceType_2][g_Practice.practiceLevel] == 0) {
+            g_Practice.practiceCompletedChanged = 1;
+            g_Practice.practiceCompleted[g_Practice.practiceType_2][g_Practice.practiceLevel] = 1;
+            lbl_80354768.practiceCompleted[g_Practice.practiceType_2][g_Practice.practiceLevel] = 1;
+        }
+        g_Practice._1C7 = 1;
+        fn_3_B3A28();
+        fn_3_B1DA4(g_Practice.practiceLevel + 8, 1);
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x000B1578 size:0x4B8 mapped:0x806F060C
@@ -387,7 +427,7 @@ void fn_3_B1CB0(void) {
 }
 
 // .text:0x000B1DA4 size:0x2C mapped:0x806F0E38
-void fn_3_B1DA4(u8 arg0, u8 arg1) {
+void fn_3_B1DA4(s32 arg0, u8 arg1) {
     g_Practice.loadingGuidedPractice = 1;
     g_Practice._1D5 = 0;
     g_Practice.practiceLevel_2 = arg0;
