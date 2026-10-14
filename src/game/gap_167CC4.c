@@ -38,6 +38,48 @@ void fn_3_1680D4(void) {
 }
 
 // .text:0x001682AC size:0x168
-void fn_3_1682AC(void) {
-    return;
+EffectTask* fn_3_1682AC(struct AnimationStruct* owner, s8 type) {
+    EffectTask* task = NULL;
+
+    if (owner != NULL) {
+        switch (type) {
+        case 1:
+            task = (EffectTask*)fn_800B0A5C_insertQueue(fn_3_1680D4, 0xFFFA);
+            break;
+        case 2:
+            task = (EffectTask*)fn_800B0A5C_insertQueue(fn_3_167F14, 0xFFFA);
+            break;
+        case 4:
+            task = (EffectTask*)fn_800B0A5C_insertQueue(fn_3_167CC4, 0xFFFA);
+            break;
+        case 3:
+            task = (EffectTask*)fn_800B0A5C_insertQueue(fn_3_167D4C, 0xFFFA);
+            break;
+        case 10:
+            task = (EffectTask*)fn_800B0A5C_insertQueue(fn_3_1678A8, 0xFFFA);
+            break;
+        case 8:
+            task = (EffectTask*)fn_800B0A5C_insertQueue(fn_3_1674D0, 0xFFFA);
+            break;
+        case 6:
+            task = (EffectTask*)fn_800B0A5C_insertQueue(fn_3_166FCC, 0xFFFA);
+            break;
+        case 12:
+            task = (EffectTask*)fn_800B0A5C_insertQueue(fn_3_167178, 0xFFFA);
+            break;
+        case 11:
+            task = (EffectTask*)fn_800B0A5C_insertQueue(fn_3_166E04, 0xFFFA);
+            break;
+        case 7:
+            task = (EffectTask*)fn_800B0A5C_insertQueue(fn_3_166D40, 0xFFFA);
+            break;
+        }
+        if (task != NULL) {
+            task->owner = owner;
+            task->timer = 0;
+            task->type = type;
+            task->state = 0;
+        }
+    }
+    return task;
 }
