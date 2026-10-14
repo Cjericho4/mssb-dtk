@@ -12,13 +12,41 @@ typedef struct {
 } Lbl80353A90Struct6B; // size: 0x108
 
 extern Lbl80353A90Struct6B lbl_80353A90;
-extern s32 fn_80016344(s8, s32, s32, s32);
+extern s32 fn_80016344(s32, s32, s32, s32);
 extern s32 fn_8001500C(s32 team, s32 rosterID, s32 slot);
 extern u8 lbl_3_data_FAA8[];
 
+/* Team selection data inside the 0x4C28-byte object at 0x8034E9A0. */
+typedef struct {
+    u8 _pad0[0x46E0];
+    s32 captainCharID[2];   /* 0x46E0 */
+    u8 _pad46E8[0x21];
+    u8 captainVariant[2];   /* 0x4709 */
+} TeamSelectData;
+extern TeamSelectData lbl_8034E9A0;
+void fn_80011A60(void);
+
 // .text:0x0006B4C8 size:0x110
-void fn_3_6B4C8(void) {
-    return;
+s32 fn_3_6B4C8(void) {
+    s32 i;
+
+    if (lbl_3_common_bss_32724.unk9A == 0) {
+        fn_80011A60();
+        g_hugeAnimStruct.field186_0x2d77 = 0;
+        lbl_3_common_bss_32724.unk9A = 1;
+    }
+    if (fn_80016344(lbl_8034E9A0.captainCharID[g_d_GameSettings.humanTeamNumber], 0xC, 1,
+                    lbl_8034E9A0.captainVariant[g_d_GameSettings.humanTeamNumber]) != 0) {
+        for (i = 0; i < 9; i++) {
+            if (g_hugeAnimStruct.AnimationStructPtrs[i]->unk252 == lbl_8034E9A0.captainCharID[g_d_GameSettings.humanTeamNumber]) {
+                g_hugeAnimStruct.AnimationStructPtrs[i] = &g_hugeAnimStruct.fielderStructs[12];
+                g_hugeAnimStruct.AnimationStructPtrs[12] = NULL;
+                break;
+            }
+        }
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x0006B5D8 size:0x9C
