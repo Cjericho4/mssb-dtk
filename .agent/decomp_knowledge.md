@@ -26,6 +26,14 @@ Floating-point constants (literals) are stored in the `.rodata` section in the *
 *   **The Problem**: If your code uses `1.0f` before `0.0f` but the original did the reverse, their labels (`lbl_3_rodata_...`) will mismatch.
 *   **The Fix**: Order your references (or dummy references) to match the assembly's order.
 
+### Float Constants: Use Literals, Not `extern lbl_3_rodata_*`
+Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `0.0` for a `.double`).
+*   **The Problem**: Declaring them as `extern f32 lbl_3_rodata_XXXX` lets them alias memory, so MWCC schedules their loads later and the float registers/order mismatch (e.g. target loads the constant first into `f2`).
+*   **The Fix**: Look up the value with `grep -A1 "^\.obj lbl_3_rodata_XXXX," build/GYQE01/game/asm/game/*.s` and use the literal. Matched fn_3_13D5E8, fn_3_13DA20, fn_3_B8574, fn_3_A372C, fn_3_E45A8, fn_3_19770, fn_3_C0F8C.
+
+### Unprototyped Calls (`fn_80034E20`)
+`fn_80034E20` is declared without a prototype (`void fn_80034E20();`), so call it with the arguments the target actually passes. Most callers pass two (no `r5` setup); adding a third `&lbl_803CC1B8` argument was the cause of several "NONMATCHING: 2-arg call" notes.
+
 ---
 
 ## 2. Tooling Ecosystem
