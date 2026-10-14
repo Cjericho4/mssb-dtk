@@ -1,6 +1,8 @@
 #include "game/rep_3880.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
+#include "game/rep_1838.h"
+#include "Dolphin/mtx.h"
 
 typedef struct {
     u8 _pad0[0x8];
@@ -253,9 +255,25 @@ void fn_3_14C398(void) {
     pitchingMachinePitching(0x21);
 }
 
+typedef struct {
+    u8 _pad0[0x14];
+    s32 unk14;
+    u8 _pad18[0x14];
+} Struct_26D5C;
+extern Vec lbl_3_data_26D50;
+extern Struct_26D5C lbl_3_data_26D5C;
+
 // .text:0x0014C3BC size:0x10C mapped:0x8078B450
-void fn_3_14C3BC(void) {
-    return;
+void fn_3_14C3BC(ListNode_14B9F0* node) {
+    Mtx m;
+    Vec v;
+
+    PSVECScale(&lbl_3_data_26D50, 0.75f, &v);
+    PSMTXRotRad(m, 'Y', shortAngleToRad(g_Minigame._1AF8));
+    PSMTXMultVec(m, &v, &v);
+    node->offset.x = (g_Minigame._1AE0 + v.x) + ((f32)lbl_3_data_26D5C.unk14 / 100000.0f) * 0.5f;
+    node->offset.y = v.y - (g_Minigame._1AE4 + ((f32)lbl_3_data_26D5C.unk14 / 100000.0f) * 0.5f);
+    node->offset.z = g_Minigame._1AE8 + v.z;
 }
 
 // .text:0x0014C4C8 size:0x2D4 mapped:0x8078B55C

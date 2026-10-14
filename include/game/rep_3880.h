@@ -107,7 +107,7 @@ void fn_3_14BCB0(void);
 void fn_3_14BECC(void* arg0, void* arg1);
 void fn_3_14C348(void* arg0, void* arg1);
 void fn_3_14C398(void);
-void fn_3_14C3BC(void);
+void fn_3_14C3BC(ListNode_14B9F0* node);
 void fn_3_14C4C8(void);
 void fn_3_14C79C(void);
 void fn_3_14C830(void);
