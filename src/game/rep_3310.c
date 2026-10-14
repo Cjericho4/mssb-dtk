@@ -5,6 +5,7 @@
 #include "Dolphin/GX/GXTev.h"
 #include "Dolphin/GX/GXTransform.h"
 #include "game/rep_3310.h"
+#include "game/rep_3448.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "game/rep_1E08.h"
@@ -336,7 +337,24 @@ void fn_3_1183FC(void) {
 
 // .text:0x00118508 size:0x10C mapped:0x8075759C
 void fn_3_118508(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 i;
+
+    if (g_GameLogic.gameStatus == 0xF) {
+        fn_80034CEC((u32)scene);
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    for (i = 0; i < 40; i++) {
+        if (g_Minigame.objects[i].active == 0) {
+            lbl_80371C30[scene->unkIndex + i].obj->flags &= ~2;
+        } else {
+            lbl_80371C30[scene->unkIndex + i].obj->flags |= 2;
+            lbl_80371C30[scene->unkIndex + i].obj->pos.x = g_Minigame.objects[i].pos.x;
+            lbl_80371C30[scene->unkIndex + i].obj->pos.y = -g_Minigame.objects[i].pos.y;
+            lbl_80371C30[scene->unkIndex + i].obj->pos.z = g_Minigame.objects[i].pos.z;
+        }
+    }
 }
 
 // .text:0x00118614 size:0x138 mapped:0x807576A8

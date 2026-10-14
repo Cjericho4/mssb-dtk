@@ -116,7 +116,7 @@ void fn_3_143714(void) {
 
     i = 0;
     do {
-        if (g_Minigame._CA[i]._4[0] != 0) {
+        if (g_Minigame.objects[i].active != 0) {
             fn_3_143358(i);
         }
         i += 1;

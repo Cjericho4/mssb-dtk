@@ -2,6 +2,7 @@
 #define __GAME_rep_3448_H_
 
 #include "mssbTypes.h"
+#include "game/UnknownHomes_Game.h"
 
 typedef struct {
     s8 _0;
@@ -10,10 +11,14 @@ typedef struct {
 extern ChainChompSprintEntry lbl_3_data_21884[4];
 
 typedef struct {
-    u8 _pad0[0x58];
+    u8 _pad0[0x48];
+    VecXYZ pos;      /* 0x48 */
+    u32 flags;       /* 0x54 */
     u32 field_0x58;
     u32 field_0x5C;
-    u8 _pad1[0x08];
+    u8 _pad60[0x4];
+    u16 unk64;       /* 0x64 */
+    u8 _pad66[0x2];
     u8 field_0x68;
     u8 field_0x69;
 } Struct_80371C30_Inner;

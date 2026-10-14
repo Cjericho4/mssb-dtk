@@ -1353,6 +1353,16 @@ extern f32 vecDotProduct(VecXYZ* a, VecXYZ* b);
 
 extern ChallengeTrackingStruct starMissionCompletionTracker[54];
 
+typedef struct {
+    /*0x00*/ VecXYZ pos;
+    /*0x0C*/ VecXYZ rot;
+    /*0x18*/ f32 _18;
+    /*0x1C*/ s32 _1C;
+    /*0x20*/ u8 _20[6];
+    /*0x26*/ u8 active;
+    /*0x27*/ u8 _27;
+} MinigameObject; // size: 0x28
+
 typedef struct _SomeStarDashStruct {
     /*0x000*/ s16 _0[2];
     /*0x004*/ u8 _4[6];
@@ -1524,50 +1534,7 @@ typedef struct MinigameProgressItem {
 
 typedef struct _MiniGameStruct {
     /*0x000*/ MinigameProgressItem progressItems[3];
-    /*0x0A8*/ f32 _A8;
-    /*0x0AC*/ f32 _AC;
-    /*0x0B0*/ f32 _B0;
-    /*0x0B4*/ f32 _B4;
-    /*0x0B8*/ f32 _B8;
-    /*0x0BC*/ f32 _BC;
-    /*0x0C0*/ f32 _C0;
-    /*0x0C4*/ s32 _C4;
-    /*0x0C8*/ u8 _padC8[2];
-    /*0x0CA*/ SomeStarDashStruct _CA[9]; // _CA[0].._CA[8], stride 0x28, ends at 0x232
-    /*0x232*/ s16 _232[2];
-    /*0x236*/ u8 _236[2];
-    /*0x238*/ UnkStarDashFloatStruct _238;
-    /*0x25A*/ SomeStarDashStruct _25A;
-    /*0x282*/ SomeStarDashStruct _282;
-    /*0x2AA*/ SomeStarDashStruct _2AA;
-    /*0x2D2*/ SomeStarDashStruct _2D2;
-    /*0x2FA*/ SomeStarDashStruct _2FA;
-    /*0x322*/ SomeStarDashStruct _322;
-    /*0x34A*/ u8 pad[2];
-    /*0x34E*/ u8 _34E[40];
-    /*0x376*/ u8 _376[40];
-    /*0x39E*/ u8 _39E[40];
-    /*0x3C6*/ u8 _3C6[40];
-    /*0x3EE*/ u8 _3EE[40];
-    /*0x416*/ u8 _416[40];
-    /*0x43E*/ u8 _43E[40];
-    /*0x466*/ u8 _466[40];
-    /*0x48E*/ u8 _48E[40];
-    /*0x4B6*/ u8 _4B6[40];
-    /*0x4DE*/ u8 _4DE[40];
-    /*0x506*/ u8 _506[40];
-    /*0x52E*/ u8 _52E[40];
-    /*0x556*/ u8 _556[40];
-    /*0x57E*/ u8 _57E[40];
-    /*0x5A6*/ u8 _5A6[40];
-    /*0x5CE*/ u8 _5CE[40];
-    /*0x5F6*/ u8 _5F6[40];
-    /*0x61E*/ u8 _61E[40];
-    /*0x646*/ u8 _646[40];
-    /*0x66E*/ u8 _66E[40];
-    /*0x696*/ u8 _696[40];
-    /*0x6BE*/ u8 _6BE[40];
-    /*0x6E6*/ u8 _6E6[2];
+    /*0x0A8*/ MinigameObject objects[40]; // stride 0x28, ends at 0x6E8
     /*0x6E8*/ f32 _6E8;
     /*0x6EC*/ f32 _6EC;
     /*0x6F0*/ f32 _6F0;
