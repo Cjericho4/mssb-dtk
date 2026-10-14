@@ -78,7 +78,9 @@ typedef struct AnimationStruct {
     void* funcPtr_0x5c; /* 0x5C - function pointer */
     u8 _rest[0x1F2];
     s8 unk252;          /* 0x252 */
-    u8 _rest253[0xA];
+    u8 _rest253;
+    s8 unk254;          /* 0x254 */
+    u8 _rest255[0x8];
     u8 unk_25D; /* 0x25D */
     u8 _rest2[0x1E];
 } AnimationStruct; /* size: 0x27C */

@@ -10,7 +10,7 @@ void fn_3_1666B0(void);
 void fn_3_16689C(void);
 void fn_3_16696C(void);
 void fn_3_16699C(void);
-void fn_3_166C30(void);
+void fn_3_166C30(struct AnimationStruct* anim, s8 type);
 void fn_3_166D40(void);
 void fn_3_166E04(void);
 void fn_3_166FCC(void);
