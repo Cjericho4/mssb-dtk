@@ -1,3 +1,4 @@
+#include <string.h>
 #include "game/sta_c2.h"
 #include "game/rep_1838.h"
 #include "game/rep_AC8.h"
@@ -432,9 +433,35 @@ void fn_3_D4E00(void) {
     return;
 }
 
+extern f32 lbl_3_data_188E0;
+
 // .text:0x000D501C size:0x100 mapped:0x807140B0
-void fn_3_D501C(void) {
-    return;
+void fn_3_D501C(StaC2D501CEntry* entries) {
+    StaC2D501CEntry* entry;
+    u32 i;
+
+    if (entries == NULL) {
+        return;
+    }
+    memset(entries, 0, 0x40);
+    entry = entries;
+    for (i = 0; i < 8; i++, entry++) {
+        if (i == 7) {
+            entry->unk0 = lbl_3_data_188E0;
+            entry->unk8 = 0.504375f;
+            entry->unk3C = 1;
+        } else {
+            if (i == 0) {
+                entry->unk3C = 1;
+            }
+            entry->unk0 = lbl_3_data_188E0;
+            entry->unk8 = 0.504375f;
+        }
+        entry->unk4 = 1.0f / entry->unk0;
+        memset(entry->unkC, 0, 0x18);
+        memset(entry->unk24, 0, 0xC);
+        memset(entry->unk30, 0, 0xC);
+    }
 }
 
 // .text:0x000D511C size:0x2A4 mapped:0x807141B0

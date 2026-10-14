@@ -108,7 +108,16 @@ void fn_3_D3F54(void);
 void fn_3_D4780(void);
 void fn_3_D4CA4(void);
 void fn_3_D4E00(void);
-void fn_3_D501C(void);
+typedef struct {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    u8 unkC[0x18];
+    u8 unk24[0xC];
+    u8 unk30[0xC];
+    s32 unk3C;
+} StaC2D501CEntry; // size: 0x40
+void fn_3_D501C(StaC2D501CEntry* entries);
 void fn_3_D511C(void);
 void fn_3_D53C0(void);
 
