@@ -205,9 +205,32 @@ BOOL fn_3_125480(Struct_125424_Arg* arg0) {
     return FALSE;
 }
 
+extern u8 lbl_3_data_23894[];
+extern u16 lbl_3_data_238F4[];
+
 // .text:0x001254F8 size:0x10C mapped:0x8076458C
 void fn_3_1254F8(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    if (g_GameLogic.gameStatus != 5) {
+        g_Minigame._1DFC[6] = 0;
+        fn_80034CEC((u32)scene);
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    switch (scene->eventID) {
+    case 0:
+        g_Minigame._1DFC[6] = 1;
+        fn_80034E20(scene, lbl_3_data_23894);
+        lbl_80371C30[scene->unkIndex].obj->unk64 = lbl_3_data_238F4[g_Minigame.GameMode_MiniGame];
+        if (g_Minigame._1A3C != 0 && g_Minigame.field_1E26[4] >= 6) {
+            lbl_80371C30[scene->unkIndex + 1].obj->flags |= 2;
+        }
+        scene->eventID = 1;
+        break;
+    case 1:
+        break;
+    }
 }
 
 // .text:0x00125604 size:0x24C mapped:0x80764698
