@@ -21,12 +21,11 @@ void fn_3_157E28(void) {
 extern int lbl_3_data_BD90;
 
 void fn_3_1580AC(void) {
-    DrawingSceneStruct *p = lbl_803CC1B8;
-    // NONMATCHING: fn_80034E20 is 3-arg but target assembly shows 2-arg call (no r5 setup)
-    fn_80034E20((void (*)(void))p, &lbl_3_data_BD90, (void **)&lbl_803CC1B8);
+    DrawingSceneStruct* p = lbl_803CC1B8;
+    fn_80034E20(p, &lbl_3_data_BD90);
     p->eventID = 0;
     p->fielderIndex = 0;
-    lbl_803CC1B8->aFunctionPointer = (void *)fn_3_157E28;
+    lbl_803CC1B8->aFunctionPointer = (void*)fn_3_157E28;
 }
 
 // .text:0x0015810C size:0xF0 mapped:0x807971A0
