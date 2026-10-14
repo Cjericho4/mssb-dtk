@@ -20,7 +20,7 @@ void fn_3_E12F8(void) {
 }
 
 // .text:0x000E1370 size:0x108 mapped:0x80720404
-void fn_3_E1370(void) {
+void fn_3_E1370(s32 arg0) {
     return;
 }
 

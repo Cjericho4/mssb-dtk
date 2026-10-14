@@ -16,7 +16,7 @@ extern void fn_3_10C81C(void);
 extern u8 lbl_3_data_18980[];
 extern u8 lbl_3_data_18944[];
 extern u8 lbl_3_data_189A4[];
-extern void fn_3_E8AC8(void);
+extern int fn_3_E8AC8(void);
 extern s32 fn_800203E0(s32, s32);
 extern s32 fn_80016F7C(void);
 extern s32 fn_3_6C938(s32, s32);
@@ -28,6 +28,25 @@ typedef struct {
     u8 _13;
 } Lbl8037169C;
 extern Lbl8037169C lbl_8037169C;
+
+typedef struct {
+    u8 highLevelSimulationFlag;
+    u8 _1;
+    u8 _2;
+} HighLevelSimulation;
+extern HighLevelSimulation lbl_803CBC3C;
+
+#include "game/rep_E08.h"
+#include "game/rep_2940.h"
+extern void fn_3_F578(void);
+extern void fn_3_753E8(s32 param_1);
+extern void setBatterContactConstants(void);
+extern void fn_3_58E50(void);
+extern void fn_3_2E87C(void);
+extern void fn_3_1E154(void);
+extern int someAnimationIndFunction(void);
+extern void fn_3_DE744(void);
+extern int fn_3_9EE24(int max);
 
 typedef struct GapDEB90Entry2D94 {
     u8 _pad0[0x14];
@@ -61,7 +80,73 @@ void fn_3_DEB90(void) {
 
 // .text:0x000DF00C size:0x250 mapped:0x8071E0A0
 void fn_3_DF00C(void) {
-    return;
+    MiniGameStruct* mg;
+
+    switch (g_GameLogic._125) {
+    case 0:
+        if (g_Minigame._19A6 == 1) {
+            if ((u8)fn_3_E8AC8() == 0) {
+                return;
+            }
+            g_Minigame._19A6 = 0;
+        }
+        if (g_Minigame._19A2 != 0) {
+            g_Minigame._19A2--;
+        }
+        g_Minigame.minigameFielderIndex[0] = -1;
+        g_Minigame.minigameFielderIndex[1] = -1;
+        g_Minigame.minigameFielderIndex[2] = -1;
+        g_Minigame.minigameFielderIndex[3] = -1;
+        fn_3_DEB90();
+        fn_3_F578();
+        fn_3_753E8(0);
+        setBatterContactConstants();
+        fn_3_58E50();
+        fn_3_2E87C();
+        fn_3_1E154();
+        fn_3_E1370(0);
+        lbl_3_common_bss_32234.unk1 = 1;
+        g_GameLogic.pre_PostMiniGameInd = 1;
+        g_GameLogic.minigameLastTurnSuccessInd = 1;
+        g_Strikes.strikes = 0;
+        g_Strikes.balls = 0;
+        lbl_803CBC3C._2 = 0;
+        g_GameLogic._125++;
+        break;
+    case 1:
+        if (g_Minigame._19C7 != 0) {
+            if (someAnimationIndFunction() == 0) {
+                return;
+            }
+            lbl_3_common_bss_32234.unk1 = 1;
+            g_GameLogic._125++;
+        } else {
+            g_GameLogic._125++;
+        }
+        break;
+    default:
+        fn_3_DE744();
+        if (++g_Minigame._190F == 1) {
+            g_Minigame._1911 = 1;
+        }
+        mg = &g_Minigame;
+        if (mg->toyField_turnNumber < 0x7FFE) {
+            mg->toyField_turnNumber++;
+        } else {
+            mg->toyField_turnNumber = 0x7FFF;
+        }
+        if (mg->toyField_turnNumber < g_Minigame.toyField_selectedTurns) {
+            if (mg->toyField_turnNumber % 10 == 1) {
+                g_Minigame.toyField_next_CoinsX2_TurnNumber = fn_3_9EE24(6) + 4 + mg->toyField_turnNumber;
+            }
+        }
+        if (g_Minigame.toyField_next_CoinsX2_TurnNumber == mg->toyField_turnNumber) {
+            g_Minigame.toyField_pointMultiplier = 2;
+        } else {
+            g_Minigame.toyField_pointMultiplier = 1;
+        }
+        break;
+    }
 }
 
 // .text:0x000DF25C size:0x17C mapped:0x8071E2F0
