@@ -115,7 +115,7 @@ void fn_3_DF3D8(void) {
     case 4:
         if (lbl_8037169C._12 == 0) return;
         if (g_GameLogic.FrameCountOfCurrentPitch < 0xF0) {
-            if (fn_3_FD9FC() == 0) return;
+            if ((s32)fn_3_FD9FC() == 0) return;
         }
         if (fn_3_6C938(1, 0x1300) == 0) return;
         g_GameLogic._125 = 7;

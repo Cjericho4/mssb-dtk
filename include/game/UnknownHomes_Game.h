@@ -1101,7 +1101,7 @@ typedef struct _GameControlsStruct {
     /*0x0E4*/ u32 runnerAIInd[2];
     /*0x0EC*/ u32 teams[2]; // vague name, unsure
     /*0x0F4*/ s32 Team_CaptainRosterLoc[2];
-    /*0x0FC*/ s16 FrameCountOfCurrentPitch;
+    /*0x0FC*/ u16 FrameCountOfCurrentPitch;
     /*0x0FE*/ s16 FrameCountOfCurrentAtBat_Copy;
     /*0x100*/ s16 CountdownUntilFade;
     /*0x102*/ s16 _102;
