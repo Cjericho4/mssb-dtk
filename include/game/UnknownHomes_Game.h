@@ -854,7 +854,7 @@ typedef struct _PracticeStruct {
     /*0x140*/ frame_t totalFrames;
     /*0x142*/ frame_t framesInCurrTransitionState;
     /*0x144*/ frame_t framesSincePracticeMenuDefaultTransition;
-    /*0x146*/ frame_t practiceMenu_framesOnCurrMenuScreen;
+    /*0x146*/ u16 practiceMenu_framesOnCurrMenuScreen;
     /*0x148*/ u16 frames_sinceMovedToFromMenu;
     /*0x14A*/ frame_t _14A;
     /*0x14C*/ frame_t frames_sinceTimeCalled;

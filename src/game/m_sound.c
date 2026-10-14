@@ -24,7 +24,7 @@ void fn_3_8B2E4(void) {
 }
 
 // .text:0x0008B318 size:0x400 mapped:0x806CA3AC
-void fn_3_8B318(void) {
+void fn_3_8B318(s32 arg0) {
     return;
 }
 

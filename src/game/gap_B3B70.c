@@ -121,9 +121,48 @@ void fn_3_B5D4C(u8 arg0) {
     g_Practice.framesInCurrTransitionState = 0;
 }
 
+void fn_80062A94(void);
+
 // .text:0x000B5D78 size:0x104 mapped:0x806F4E0C
 void fn_3_B5D78(void) {
-    return;
+    if (g_Practice.returnToPracticeMenuState != 0) {
+        switch (g_Practice.returnToPracticeMenuState) {
+        case 1:
+            fn_3_8B318(-1);
+            g_Practice.returnToPracticeMenuState = 2;
+            lbl_3_common_bss_34C58._2C = 0;
+            lbl_3_common_bss_34C58._2A = 1;
+            lbl_3_common_bss_34C58._24 = 1;
+        case 2:
+            g_Practice.returnToPracticeMenuState = 3;
+            break;
+        default:
+            fn_800B0A5C_insertQueue(fn_80062A94, 1);
+            g_Practice.returnToPracticeMenuState = 0;
+            break;
+        }
+        return;
+    }
+    if (g_Practice.practiceMenu_framesOnCurrMenuScreen < 0xFFFE) {
+        g_Practice.practiceMenu_framesOnCurrMenuScreen++;
+    } else {
+        g_Practice.practiceMenu_framesOnCurrMenuScreen = 0xFFFF;
+    }
+    switch (g_Practice.practiceType_1) {
+    case 0:
+        fn_3_B5818();
+        break;
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        fn_3_B51E4();
+        break;
+    case 6:
+        fn_3_B4C40();
+        break;
+    }
 }
 
 extern u8 lbl_3_data_FAF4[][4];
