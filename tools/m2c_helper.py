@@ -155,7 +155,8 @@ def main():
             s = line.strip()
             if s == 'extern "C" {' or s == 'extern "C"':
                 continue
-            final_context.append(line)
+            # m2c's parser doesn't know the MWCC builtin
+            final_context.append(line.replace("__builtin_va_list", "char*"))
         
         with open(ctx_path, 'w') as f:
             f.write("\n".join(final_context))
