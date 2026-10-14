@@ -1786,7 +1786,13 @@ typedef struct _MiniGameStruct {
     /*0x18AC*/ u8 pad12[12];
     /*0x18B8*/ s16 _18B8;
     /*0x18BA*/ s16 _18BA;
-    /*0x18BC*/ s32 minigamePoints_current_Latest[4];
+    /*0x18BC*/ union {
+        s32 minigamePoints_current_Latest[4];
+        struct {
+            s16 current;
+            s16 latest;
+        } minigamePointsPair[4];
+    };
     /*0x18CC*/ MiniGameControlStruct minigameControlStruct[2];
     /*0x18F8*/ s8 minigameFielderIndex[4];
     /*0x18FC*/ u8 _18FC[4];
@@ -1810,14 +1816,8 @@ typedef struct _MiniGameStruct {
     /*0x1911*/ u8 _1911;
     /*0x1912*/ u8 pointsTargetReachedInd;
     /*0x1913*/ u8 _1913;
-    /*0x1914*/ u8 _1914;
-    /*0x1915*/ u8 _1915;
-    /*0x1916*/ u8 _1916;
-    /*0x1917*/ u8 _1917;
-    /*0x1918*/ u8 _1918;
-    /*0x1919*/ u8 _1919;
-    /*0x191A*/ u8 _191A;
-    /*0x191B*/ u8 _191B;
+    /*0x1914*/ u8 _1914[4];
+    /*0x1918*/ u8 _1918[4];
     /*0x191C*/ u8 _191C;
     /*0x191D*/ u8 _191D;
     /*0x191E*/ u8 _191E;

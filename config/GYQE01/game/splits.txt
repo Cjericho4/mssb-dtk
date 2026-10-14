@@ -356,6 +356,9 @@ game/sta_c2.c:
 	.rodata     start:0x00002448 end:0x000028A8
 	.bss        start:0x0000A018 end:0x0000AE00
 
+game/gap_D8A10.c:
+	.text       start:0x000D8A10 end:0x000D9EA0
+
 game/rep_28A8.c:
 	.text       start:0x000D9EA0 end:0x000DEB90
 	.rodata     start:0x000028A8 end:0x00002940
