@@ -36,19 +36,7 @@ void fn_3_13D618(void) {
 // .text:0x0013DA20 size:0x30 mapped:0x8077CAB4
 // Same issue as fn_3_13D5E8.
 s32 fn_3_13DA20(unk_13d5e8_struct* a, unk_13d5e8_struct* b) {
-    f32 scale;
-    f32 valB;
-    f32 valA;
-    
-    // Step 1: Force scale load (lfs f2)
-    scale = lbl_3_rodata_3728; 
-    
-    // Step 2: Force argument loads in specific order (f0 then f1)
-    valB = b->value; 
-    valA = a->value; 
-
-    // Step 3: Fused multiply-subtract and conversion
-    return (s32)((scale * valA) - (scale * valB));
+    return (s32)((100.0f * a->value) - (100.0f * b->value));
 }
 
 // .text:0x0013DA50 size:0x1F8 mapped:0x8077CAE4
