@@ -171,9 +171,29 @@ void fn_3_5B368(void) {
     g_GameLogic.endGameStage = 0;
 }
 
+extern s32 fn_8004CA6C(s32 arg0);
+extern void fn_8004CC2C(void);
+
 // .text:0x0005B380 size:0x88 mapped:0x8069A414
-void fn_3_5B380(void) {
-    return;
+s32 fn_3_5B380(s32 arg0) {
+    s32 result;
+
+    if (g_GameLogic.frame_exitMenuShowing < 0x7FFE) {
+        g_GameLogic.frame_exitMenuShowing++;
+    } else {
+        g_GameLogic.frame_exitMenuShowing = 0x7FFF;
+    }
+    if (g_GameLogic.frame_exitMenuShowing > 20) {
+        result = fn_8004CA6C(arg0);
+        if (result == 1) {
+            return 1;
+        } else if (result == 2) {
+            fn_8004CC2C();
+        } else if (result == 4) {
+            return 2;
+        }
+    }
+    return 0;
 }
 
 // .text:0x0005B408 size:0x14 mapped:0x8069A49C
