@@ -302,7 +302,33 @@ void fn_3_B6C50(void) {
 
 // .text:0x000B6C9C size:0xE4 mapped:0x806F5D30
 void fn_3_B6C9C(void) {
-    return;
+    PracticeStruct* practice = &g_Practice;
+
+    if (practice->instructionNumber >= 0) {
+        if (practice->allowPlayToEndIndicator == 0) {
+            g_FieldingLogic.unkAE = 0;
+            return;
+        }
+    } else {
+        if (g_Runners[1].runnerOnFieldOrOutOrScored == 3) {
+            practice->guidedPracticeCompletionRelated = 1;
+        }
+        return;
+    }
+    if (g_FieldingLogic.unkAE < 0x7FFE) {
+        g_FieldingLogic.unkAE++;
+    } else {
+        g_FieldingLogic.unkAE = 0x7FFF;
+    }
+    if (g_FieldingLogic.unkAE >= 0x3C) {
+        practice->allowPlayToEndIndicator = 0;
+        g_GameLogic.pre_PostMiniGameInd = 1;
+        g_GameLogic.minigameLastTurnSuccessInd = 1;
+        fn_3_1DD48();
+        fn_3_5A6D4(7);
+    } else if (g_FieldingLogic.unkAE == 0x36) {
+        changeScene(3, 6);
+    }
 }
 
 // .text:0x000B6D80 size:0x118 mapped:0x806F5E14
