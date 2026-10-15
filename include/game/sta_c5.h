@@ -143,7 +143,7 @@ void fn_3_F466C(void);
 void fn_3_F469C(void);
 void fn_3_F46A0(void);
 void fn_3_F4BA0(StaC5DriftObj* obj);
-void fn_3_F4C4C(void);
+void fn_3_F4C4C(StaC5DriftObj* obj);
 void fn_3_F4D00(StaC5DriftObj* obj);
 void fn_3_F4DAC(void);
 void fn_3_F4FBC(void);

@@ -368,8 +368,19 @@ void fn_3_F4BA0(StaC5DriftObj* obj) {
 }
 
 // .text:0x000F4C4C size:0xB4 mapped:0x80733CE0
-void fn_3_F4C4C(void) {
-    return;
+void fn_3_F4C4C(StaC5DriftObj* obj) {
+    f32 rad;
+    f32 s;
+    f32 c;
+
+    rad = -obj->angle;
+    rad = 0.017453292f * rad;
+    s = sin(rad);
+    obj->vel.x = 3.0f * s;
+    obj->vel.y = 0.0f;
+    c = cos(rad);
+    obj->vel.z = 3.0f * -c;
+    PSVECScale(&obj->vel, -1.0f, &obj->vel);
 }
 
 // .text:0x000F4D00 size:0xAC mapped:0x80733D94
