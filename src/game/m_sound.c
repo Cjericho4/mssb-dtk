@@ -70,8 +70,18 @@ typedef struct {
 static SoundQueue* lbl_3_bss_1768;
 
 // .text:0x0008B258 size:0x8C mapped:0x806CA2EC
-void fn_3_8B258(void) {
-    return;
+BOOL fn_3_8B258(u8 arg1, u8 cmd, u8 arg2) {
+    u8 idx;
+    u8 next;
+
+    if (lbl_3_bss_1768 == NULL || lbl_3_bss_1768->readIdx == (next = ((idx = lbl_3_bss_1768->writeIdx) + 1) % 14)) {
+        return FALSE;
+    }
+    lbl_3_bss_1768->writeIdx = next;
+    lbl_3_bss_1768->commands[idx].cmd = cmd;
+    lbl_3_bss_1768->commands[idx].arg1 = arg1;
+    lbl_3_bss_1768->commands[idx].arg2 = arg2;
+    return TRUE;
 }
 
 // .text:0x0008B2E4 size:0x34 mapped:0x806CA378
