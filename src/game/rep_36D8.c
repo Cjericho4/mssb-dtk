@@ -8,6 +8,8 @@
 #include "game/rep_3448.h"
 #include "game/rep_F80.h"
 #include "musyx/musyx.h"
+#include "game/gap_157DB8.h"
+#include "game/m_sound.h"
 
 // .text:0x0013C7BC size:0xDBC mapped:0x8077B850
 void fn_3_13C7BC(void) {
@@ -182,7 +184,9 @@ void fn_3_13DFBC(void) {
 
 // .text:0x0013E174 size:0xA8 mapped:0x8077D208
 typedef struct {
-    u8 _pad0[0x30];
+    u8 _pad0[0xC];
+    f32 unkC;     /* 0x0C */
+    u8 _pad10[0x30 - 0x10];
     f32 unk30[2]; /* 0x30 */
     f32 unk38[2]; /* 0x38 */
     f32 unk40[2]; /* 0x40 */
@@ -312,8 +316,37 @@ void fn_3_140484(void) {
 }
 
 // .text:0x001405D8 size:0x11C mapped:0x8077F66C
+extern s16 lbl_3_data_21804[][9];
+
 void fn_3_1405D8(void) {
-    return;
+    MiniGameStruct* mg = &g_Minigame;
+    u8 idx;
+    s16 r;
+
+    if (mg->_1AFA <= 1) {
+        if (mg->multiPlayerInd != 0) {
+            idx = 4;
+        } else {
+            idx = mg->soloMinigameDifficulty;
+        }
+        r = RandomInt_Game_Range(0, 1000);
+        g_Minigame._1B06 = 0;
+        do {
+            r -= lbl_3_data_21804[idx][g_Minigame._1B06++];
+        } while (r > 0 && lbl_3_data_21804[idx][g_Minigame._1B06] >= 0);
+        g_Minigame._1B06 *= 0x78;
+        g_Minigame._1B06 -= 0x30;
+        fn_3_157DB8(g_Minigame._1B06);
+    } else {
+        mg->_1AF8 = 0xE00;
+        if (mg->_1AFA >= mg->_1B06) {
+            mg->_1B19 = 1;
+            mg->_1AFA = 0;
+            mg->_1AF0 = lbl_3_data_218BC.unkC;
+            fn_3_14C904();
+            fn_3_90064(0x2E0);
+        }
+    }
 }
 
 // .text:0x001406F4 size:0x2B8 mapped:0x8077F788

@@ -22,10 +22,10 @@ typedef struct {
     Fn157DB8SubStruct *unkC; /* 0x0C */
     u8 _pad10[0x08];
     s32 unk18;      /* 0x18 */
-    void *unk1C;    /* 0x1C */
+    s32 unk1C;      /* 0x1C */
 } Fn157DB8Struct;
 
-void fn_3_157DB8(void *arg0);
+void fn_3_157DB8(s32 arg0);
 void fn_3_157E28(void);
 void fn_3_1580AC(void);
 void fn_3_15810C(void);
