@@ -291,8 +291,21 @@ void fn_3_5C5C8(void) {
 }
 
 // .text:0x0005C69C size:0xB0 mapped:0x8069B730
-void fn_3_5C69C(void) {
-    return;
+void fn_3_5C69C(s32 arg0) {
+    g_Ball.framesSinceHit = 100;
+    g_Ball.framesSincePickOff = 0;
+    g_FieldingLogic._107 = arg0 + 1;
+    g_FieldingLogic.unk106 = 3;
+    fn_3_5A6D4(2);
+    g_FieldingLogic.unkAE = 0;
+    g_Pitcher.peachDaisyStarAnimationOn = 0;
+    fn_3_32090();
+    fn_3_8911C();
+    if (g_Strikes.balls >= 4) {
+        g_Runners[0].runnerOnFieldOrOutOrScored = 5;
+    } else {
+        g_Runners[0].runnerOnFieldOrOutOrScored = 4;
+    }
 }
 
 // .text:0x0005C74C size:0x5D8 mapped:0x8069B7E0

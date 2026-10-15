@@ -56,7 +56,7 @@ void fn_3_5BD40(void);
 void fn_3_5C418(void);
 u8 fn_3_5C530(s32 inning);
 void fn_3_5C5C8(void);
-void fn_3_5C69C(void);
+void fn_3_5C69C(s32 arg0);
 void fn_3_5C74C(s32 arg0);
 void fn_3_5CD24(void);
 void fn_3_5CDB4(void);
