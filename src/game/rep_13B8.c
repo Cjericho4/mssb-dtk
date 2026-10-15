@@ -10,9 +10,31 @@ void fn_3_7D79C(void) {
     return;
 }
 
+extern s16 lbl_3_data_21904[12];
+
 // .text:0x0007D920 size:0xBC mapped:0x806BC9B4
-void fn_3_7D920(void) {
-    return;
+void fn_3_7D920(s32 idx) {
+    InMemRunnerType* runner = &g_Runners[idx];
+    s8 slot = g_Minigame._18FC[idx];
+
+    if (g_Minigame._1B15[slot] == 2) {
+        if (g_Minigame._1B19 == 0) {
+            g_Minigame._1B15[slot] = 3;
+            runner->runningToDugoutFrameCounter = 0;
+        }
+        return;
+    }
+    if (runner->runningToDugoutFrameCounter < lbl_3_data_21904[1]) {
+        runner->position.x += runner->velocity.x;
+        runner->position.z += runner->velocity.z;
+    } else {
+        g_Minigame._1B15[slot] = 2;
+    }
+    if (runner->runningToDugoutFrameCounter < 0x7FFE) {
+        runner->runningToDugoutFrameCounter++;
+    } else {
+        runner->runningToDugoutFrameCounter = 0x7FFF;
+    }
 }
 
 // .text:0x0007D9DC size:0x154 mapped:0x806BCA70
