@@ -3,7 +3,11 @@
 #include "UnknownHeaders.h"
 #include "game/UnknownHomes_Game.h"
 #include "header_rep_data.h"
+#include "game/gap_106DFC.h"
 #include <math.h>
+
+extern void changeScene(s32, s32);
+extern u8 lbl_3_data_21278[2];
 
 // .text:0x00133200 size:0x120 mapped:0x80772294
 void fn_3_133200(void) {
@@ -499,7 +503,24 @@ void fn_3_13BB30(void) {
 
 // .text:0x0013BBF4 size:0xC4 mapped:0x8077AC88
 void fn_3_13BBF4(void) {
-    return;
+    GameControlsStruct* gl = &g_GameLogic;
+
+    switch (gl->_125) {
+    case 0:
+        fn_3_10F550(2, lbl_3_data_21278[0]);
+        changeScene(1, 6);
+        g_GameLogic.FrameCountOfCurrentAtBat_Copy = 0;
+        gl->_125 = 1;
+        break;
+    case 1:
+        if (gl->FrameCountOfCurrentAtBat_Copy > lbl_3_data_21278[0] + lbl_3_data_21278[1]) {
+            gl->_125 = 2;
+        }
+        break;
+    case 2:
+        fn_3_5A6D4(0);
+        break;
+    }
 }
 
 // .text:0x0013BCB8 size:0x7AC mapped:0x8077AD4C
