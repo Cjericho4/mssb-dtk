@@ -572,26 +572,21 @@ u32 fn_3_11A350(s32 index) {
 
 // .text:0x0011A38C size:0x7C mapped:0x80759420
 void fn_3_11A38C(s32 index, s16 arg1) {
-    ActRelatedEntry* entries = (ActRelatedEntry*)g_hugeAnimStruct.entries_68;
-    ActRelatedSub* sub = &entries[index].sub;
-    s32 unk70 = lbl_3_common_bss_32724.unk70;
-    f32 var1 = 0.0f;
-    u32 temp_r4;
+    s32 unk70;
+    ActRelatedSub* sub;
 
+    sub = &((ActRelatedEntry*)g_hugeAnimStruct.entries_68)[index].sub;
+    unk70 = lbl_3_common_bss_32724.unk70;
     sub->unk38_s32 = unk70;
     sub->unk42 = arg1;
-    
-    // (u32)(-unk70 | unk70) >> 31 generates: neg -> or -> srwi 31
-    temp_r4 = (u32)(-unk70 | unk70) >> 31;
-    
-    (sub + 1)->prevFloat = var1;
+    (sub + 1)->prevFloat = 0.0f;
     sub->unk8C = 1;
-    sub->flag59 = temp_r4;
-    sub->flag5a = temp_r4;
-    (sub + 1)->unk38_f32 = var1;
+    sub->flag59 = (unk70 != 0);
+    sub->flag5a = (unk70 != 0);
+    (sub + 1)->unk38_f32 = 0.0f;
     sub->float54 = 1.0f;
     sub->flag5a = 1;
-    (sub + 1)->prevFloat = var1;
+    (sub + 1)->prevFloat = 0.0f;
     sub->flag59 = 1;
     sub->flag5b = 2;
 }
