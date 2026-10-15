@@ -1,6 +1,7 @@
 #include "game/gap_97144.h"
 #include "UnknownHeaders.h"
 #include "game/gap_AC9F8.h"
+#include "game/rep_3448.h"
 
 // .text:0x00097144 size:0x15C mapped:0x806D61D8
 void fn_3_97144(void) {
@@ -71,8 +72,19 @@ void fn_3_98C20(void) {
 }
 
 // .text:0x00098DE0 size:0xC8 mapped:0x806D7E74
+extern int lbl_3_data_D7A8;
+
 void fn_3_98DE0(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    fn_80034E20(scene, &lbl_3_data_D7A8);
+    if (g_d_GameSettings.minigamesEnabled) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x67 = 5;
+    } else if (g_d_GameSettings.GameModeSelected == 2) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x67 = 6;
+    }
+    lbl_3_common_bss_32724.unk_AA = 1;
+    scene->eventID = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_3_98C20;
 }
 
 // .text:0x00098EA8 size:0x1BC mapped:0x806D7F3C
