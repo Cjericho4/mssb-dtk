@@ -42,12 +42,12 @@ void fn_3_A1DA0(void) {
 }
 
 typedef struct {
-    u8 _pad0[0xC];
-    s32 runnerIndex; /* 0x0C */
+    s32 runnerIndex[4]; /* 0x00 */
     u8 _pad10[0x4];
 } Bss1808;
 extern Bss1808 lbl_3_bss_1808;
 extern s32 lbl_3_bss_1858[];
+extern u32 lbl_3_bss_1800;
 
 // .text:0x000A1F3C size:0x10C mapped:0x806E0FD0
 s32 fn_3_A1F3C(void) {
@@ -57,7 +57,7 @@ s32 fn_3_A1F3C(void) {
     if (g_Ball.ballZoneAwayFromHome >= 3) {
         return 0;
     }
-    idx = lbl_3_bss_1808.runnerIndex;
+    idx = lbl_3_bss_1808.runnerIndex[3];
     if (idx < 0 || idx > 3) {
         return 0;
     }
@@ -211,7 +211,20 @@ void fn_3_A3B30(void) {
 
 // .text:0x000A3C00 size:0xC0 mapped:0x806E2C94
 void fn_3_A3C00(void) {
-    return;
+    s32 i;
+
+    lbl_3_bss_1800 = 0;
+    for (i = 0; i < 4; i++) {
+        if (lbl_3_bss_1808.runnerIndex[i] >= 0) {
+            if (g_Runners[lbl_3_bss_1808.runnerIndex[i]].runningDirectionCode == 1) {
+                lbl_3_bss_1800 |= 1 << (i * 4);
+            } else if (g_Runners[lbl_3_bss_1808.runnerIndex[i]].runningDirectionCode == 3) {
+                lbl_3_bss_1800 |= 2 << (i * 4);
+            } else if (g_Runners[lbl_3_bss_1808.runnerIndex[i]].runningDirectionCode == 2) {
+                lbl_3_bss_1800 |= 4 << (i * 4);
+            }
+        }
+    }
 }
 
 // .text:0x000A3CC0 size:0x498 mapped:0x806E2D54
