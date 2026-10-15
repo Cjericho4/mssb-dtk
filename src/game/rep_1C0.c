@@ -3,6 +3,7 @@
 #include "Dolphin/GX/GXFrameBuffer.h"
 #include "game/rep_D0.h"
 #include "game/game_batter.h"
+#include "Dolphin/gx.h"
 
 extern u32 fn_80009028(void);
 
@@ -60,7 +61,17 @@ void fn_3_42CC(void) {
 
 // .text:0x00004984 size:0xB4 mapped:0x80643A18
 void fn_3_4984(void) {
-    return;
+    Mtx mv;
+    Mtx44 proj;
+
+    GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
+    GXSetScissor(0, 0, 640, 448);
+    C_MTXOrtho(proj, 0.0f, 480.0f, 0.0f, 640.0f, 0.5f, 1.5f);
+    GXSetProjection(proj, GX_ORTHOGRAPHIC);
+    GXSetCullMode(GX_CULL_NONE);
+    PSMTXIdentity(mv);
+    GXLoadPosMtxImm(mv, GX_PNMTX0);
+    GXSetCurrentMtx(GX_PNMTX0);
 }
 
 // .text:0x00004A38 size:0x558 mapped:0x80643ACC
