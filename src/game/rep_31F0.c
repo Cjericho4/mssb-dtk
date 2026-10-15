@@ -34,8 +34,16 @@ void fn_3_110A04(void) {
 }
 
 // .text:0x00110A38 size:0x9C mapped:0x8074FACC
-void fn_3_110A38(void) {
-    return;
+s32 fn_3_110A38(void) {
+    if (g_Pitcher.starPitchInd != 0) {
+        switch (g_Pitcher.starPitchType) {
+        case 1:
+            return 20;
+        default:
+            return 20;
+        }
+    }
+    return 35.0f + -0.18867925f * ((f32)g_Minigame.minigamePitchSpeedAdjustment - 138.0f);
 }
 
 // .text:0x00110AD4 size:0x564 mapped:0x8074FB68
