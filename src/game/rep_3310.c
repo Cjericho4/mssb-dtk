@@ -33,7 +33,16 @@ typedef struct Rep3310Entry2D94Ext {
     f32 field_0xFD4;
     u8 _pad0[0xFEE - 0xFD8];
     u8 field_0xFEE;
-    u8 _pad1[0x2508 - 0xFEF];
+    u8 _pad1[0x2440 - 0xFEF];
+    void (*field_0x2440)(void);
+    f32 field_0x2444;
+    f32 field_0x2448;
+    f32 field_0x244C;
+    u8 _pad2450[0x2454 - 0x2450];
+    f32 field_0x2454;
+    u8 _pad2458[0x2466 - 0x2458];
+    u8 field_0x2466;
+    u8 _pad2467[0x2508 - 0x2467];
     void (*field_0x2508)(s32);
     f32 field_0x250C;
     f32 field_0x2510;
@@ -303,7 +312,23 @@ void fn_3_117B78(void) {
 
 // .text:0x00117FC8 size:0xDC mapped:0x8075705C
 void fn_3_117FC8(void) {
-    return;
+    Rep3310Entry2D94Ext* entry = (Rep3310Entry2D94Ext*)g_hugeAnimStruct.entries_2D94;
+
+    entry->field_0x2466 = 0;
+    ((Rep3310Entry2D94Ext*)g_hugeAnimStruct.entries_2D94)->field_0xFEE = 0;
+    if (g_Minigame._72A != 0) {
+        entry->field_0x2466 = 1;
+        entry->field_0x2444 = g_Minigame._6E8;
+        entry->field_0x2448 = -g_Minigame._6EC;
+        entry->field_0x244C = g_Minigame._6F0;
+        fn_8001D0D0(0xE8, 3.0f);
+        if (g_Minigame._724 == 0) {
+            entry->field_0x2454 = RandomF32_Game_Range(-3.1415927f, 3.1415927f);
+        } else {
+            entry->field_0x2454 = fn_3_9FEA8(0.1f + entry->field_0x2454);
+        }
+        entry->field_0x2440 = fn_3_117B78;
+    }
 }
 
 // .text:0x001180A4 size:0xC0 mapped:0x80757138
