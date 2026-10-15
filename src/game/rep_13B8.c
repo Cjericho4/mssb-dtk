@@ -76,12 +76,12 @@ void fn_3_7EA68(void) {
 }
 
 // .text:0x0007EBD4 size:0x128 mapped:0x806BDC68
-void fn_3_7EBD4(void) {
+void fn_3_7EBD4(s32 runnerIdx) {
     return;
 }
 
 // .text:0x0007ECFC size:0x5DC mapped:0x806BDD90
-void fn_3_7ECFC(void) {
+void fn_3_7ECFC(s32 runnerIdx) {
     return;
 }
 
@@ -91,13 +91,30 @@ void fn_3_7F2D8(void) {
 }
 
 // .text:0x0007F494 size:0x530 mapped:0x806BE528
-void fn_3_7F494(void) {
-    return;
+s32 fn_3_7F494(s32 runnerIdx) {
+    return 0;
 }
 
 // .text:0x0007F9C4 size:0xB4 mapped:0x806BEA58
-void fn_3_7F9C4(void) {
-    return;
+void fn_3_7F9C4(s32 runnerIdx) {
+    InMemRunnerType* runner = &g_Runners[runnerIdx];
+
+    if (runner->runningToDugoutInd != 0) {
+        runner->baseRoundingState = 0;
+        runner->actionCode = 0;
+        return;
+    }
+    fn_3_7ECFC(runnerIdx);
+    fn_3_7F494(runnerIdx);
+    if (g_GameLogic.secondaryGameMode == 6) {
+        return;
+    }
+    if (runnerIdx == 0 && runner->nextBase == 1) {
+        fn_3_7F2D8();
+    } else if (runner->baseRoundingState == 1) {
+        runner->baseRoundingState = 0;
+    }
+    fn_3_7EBD4(runnerIdx);
 }
 
 // .text:0x0007FA78 size:0x318 mapped:0x806BEB0C
