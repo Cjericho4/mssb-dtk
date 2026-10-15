@@ -420,13 +420,20 @@ void fn_3_361D8(void) {
 }
 
 // .text:0x000365D0 size:0xA8 mapped:0x80675664
-void fn_3_365D0(void) {
-    return;
+s32 fn_3_365D0(s32 arg0, s32 arg1, s32 arg2, f32 x, f32 z) {
+    s32 result = fn_3_36678(arg1, arg2, 1, x, z);
+    if (result == -1) {
+        return arg0;
+    }
+    if (g_FieldingLogic.unkB0 < 0) {
+        return fn_3_36678(arg0, result, 1, x, z);
+    }
+    return fn_3_36678(arg0, result, 0, x, z);
 }
 
 // .text:0x00036678 size:0xA9C mapped:0x8067570C
-void fn_3_36678(void) {
-    return;
+s32 fn_3_36678(s32 arg0, s32 arg1, s32 arg2, f32 x, f32 z) {
+    return 0;
 }
 
 // .text:0x00037114 size:0x2F8 mapped:0x806761A8
