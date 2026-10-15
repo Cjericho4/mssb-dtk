@@ -45,6 +45,8 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Flag computed into the wrong register**: write `(x != 0)` inline at the use site rather than through a temp (fn_3_11A38C, fn_3_119CA8).
 *   **Unrolled repetitive code**: try a plain `for` loop; MWCC unrolls it (fn_3_60768, fn_3_6AEE0).
 *   **Literal exception**: occasionally only the `extern` rodata form matches (fn_3_70AEC needed `extern f32 lbl_3_rodata_1250` for 0.5). Try both.
+*   **`lbz rX,off(rX); extsb rX,rX` straight into an arg register**: field is `s8` and callee param is `s32`. A `u8` field with an `(s8)` cast gives `lbz r0` + `extsb r3,r0` instead (fn_3_1158F8).
+*   **Search loop returning index then `OSPanic`**: `for (u32 i = count; i > 0; i--) if (e[i-1].id == x) return i-1;` — `while (count--)` does not match (fn_3_D53C0, fn_3_F5E78).
 *   **Parameter that seems unused**: it may be passed straight through to a callee in `r3` (fn_3_5B380 → `fn_8004CA6C`).
 
 ### Known Unfixable Patterns (don't spend attempts)
