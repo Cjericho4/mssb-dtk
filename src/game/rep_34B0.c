@@ -27,8 +27,18 @@ void fn_3_12EB10(void) {
 }
 
 // .text:0x0012ED80 size:0xE8 mapped:0x8076DE14
-void fn_3_12ED80(void) {
-    return;
+BOOL fn_3_12ED80(void) {
+    s32 i;
+
+    for (i = 1; i < 15; i += 3) {
+        if (g_Minigame.barrels[i].replacingBarrelInd != 0) {
+            return FALSE;
+        }
+        if (g_Minigame.barrels[i + 1].replacingBarrelInd != 0) {
+            return FALSE;
+        }
+    }
+    return TRUE;
 }
 
 // .text:0x0012EE68 size:0x13C mapped:0x8076DEFC
