@@ -63,8 +63,14 @@ void fn_3_22948(void) {
 }
 
 // .text:0x00022A20 size:0x9C mapped:0x80661AB4
-void fn_3_22A20(void) {
-    return;
+BOOL fn_3_22A20(void) {
+    BOOL ret;
+
+    if (g_Batter.aiControlledInd != 0) {
+        return g_Scores.team[g_GameLogic.homeTeamBattingInd_fieldingTeam].score >= g_Scores.team[g_GameLogic.awayTeamBattingInd_battingTeam].score;
+    }
+    ret = g_Scores.team[g_GameLogic.homeTeamBattingInd_fieldingTeam].score >= g_Scores.team[g_GameLogic.awayTeamBattingInd_battingTeam].score;
+    return ret == FALSE;
 }
 
 // .text:0x00022ABC size:0x154 mapped:0x80661B50

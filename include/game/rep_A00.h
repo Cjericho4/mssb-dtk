@@ -11,7 +11,7 @@ BOOL fn_3_2281C(s32 index);
 void fn_3_22850(void);
 void fn_3_22944(void);
 void fn_3_22948(void);
-void fn_3_22A20(void);
+BOOL fn_3_22A20(void);
 void fn_3_22ABC(void);
 void spinWait(void);
 void fn_3_22C20(void);
