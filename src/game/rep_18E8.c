@@ -334,8 +334,24 @@ void fn_3_A9984(void) {
 }
 
 // .text:0x000A9C74 size:0xAC mapped:0x806E8D08
-void fn_3_A9C74(void) {
-    return;
+typedef struct {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+} FielderThrowEntry;
+extern FielderThrowEntry lbl_3_data_4900[];
+
+void fn_3_A9C74(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    BOOL quick = checkFieldingStat(g_GameLogic.teamFielding, f->unk178, FIELDING_ABILITY_QUICK_THROW);
+    if (f->unk1F8 >= 3) {
+        f->unk215 = lbl_3_data_4900[quick].unk1;
+    } else {
+        f->unk215 = lbl_3_data_4900[quick].unk0;
+    }
+    if (quick && g_FieldingLogic.unkC4 >= 0) {
+        playSoundEffect(0x1a8);
+    }
 }
 
 // .text:0x000A9D20 size:0xD1C mapped:0x806E8DB4
