@@ -3,6 +3,9 @@
 #include "game/rep_F80.h"
 #include "header_rep_data.h"
 #include "game/rep_1D58.h"
+#include "game/gap_97144.h"
+#include "game/rep_EA0.h"
+#include "game/gap_674E0.h"
 
 // .text:0x0006BEA4 size:0x15C mapped:0x806AAF38
 void fn_3_6BEA4(void) {
@@ -38,7 +41,18 @@ void fn_3_6C13C(void) {
 
 // .text:0x0006C150 size:0x88 mapped:0x806AB1E4
 void fn_3_6C150(void) {
-    return;
+    lbl_3_common_bss_32724.unk9E = -1;
+    lbl_3_common_bss_32724.unkA0 = -1;
+    lbl_3_common_bss_32724.unkA2 = -1;
+    fn_3_6916C();
+    fn_3_674E0();
+    fn_3_97800();
+    if (g_d_GameSettings.minigamesEnabled) {
+        g_hugeAnimStruct.renderStadiumFlag = 0;
+    } else if (g_d_GameSettings.GameModeSelected != 2) {
+        g_hugeAnimStruct.field269_0x307a = 1;
+        g_hugeAnimStruct.renderStadiumFlag = 1;
+    }
 }
 
 // .text:0x0006C1D8 size:0x238 mapped:0x806AB26C
