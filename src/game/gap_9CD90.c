@@ -2,7 +2,32 @@
 
 // .text:0x0009CD90 size:0xE8 mapped:0x806DBE24
 void fn_3_9CD90(void) {
-    return;
+    CommonBss32A94* bss = &lbl_3_common_bss_32A94;
+    s32 i;
+
+    if (bss->unk2 != 0) {
+        return;
+    }
+    if (g_Strikes.unk_14 == 3) {
+        bss->unk0 = 0x10;
+        return;
+    }
+    if (g_Runners[0].runnerOnFieldOrOutOrScored == RUNNER_STATUS_OUT_DURING_PLAY) {
+        if (g_Ball.AtBat_ContactResult == 3 || g_FieldingLogic._108 == 2) {
+            if (g_Ball.Hit_VerticalAngle > 0xA0) {
+                bss->unk2 = 0x12;
+            } else {
+                bss->unk2 = 0x13;
+            }
+        } else {
+            bss->unk2 = 0x15;
+        }
+    }
+    for (i = 1; i < 4; i++) {
+        if (g_Runners[i].forceOutCd == 2) {
+            bss->unk2 = 0x15;
+        }
+    }
 }
 
 // .text:0x0009CE78 size:0x2C8 mapped:0x806DBF0C
