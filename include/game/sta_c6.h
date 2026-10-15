@@ -158,7 +158,18 @@ void fn_3_E7388(void);
 void fn_3_E7424(void);
 void fn_3_E751C(void);
 void fn_3_E763C(void);
-void fn_3_E7A2C(void);
+typedef void (*StaC6ObjFn)();
+typedef struct StaC6SetupObj {
+    u8 _pad0[0x7C];
+    StaC6ObjFn fn7C;    // 0x7C
+    StaC6ObjFn fn80;    // 0x80
+    StaC6ObjFn fn84;    // 0x84
+    StaC6ObjFn fn88;    // 0x88
+    u8 _pad8C[0xC1 - 0x8C];
+    u8 kind;            // 0xC1
+} StaC6SetupObj;
+extern u8 lbl_3_bss_AEAC;
+void fn_3_E7A2C(StaC6SetupObj* obj);
 u8 fn_3_E7B20(u32 arg0, u32 arg1);
 int fn_3_E8AC8(void);
 void fn_3_E8B24(void);

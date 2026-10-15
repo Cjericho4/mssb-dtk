@@ -268,8 +268,37 @@ void fn_3_E763C(void) {
 }
 
 // .text:0x000E7A2C size:0xF4 mapped:0x80726AC0
-void fn_3_E7A2C(void) {
-    return;
+void fn_3_E7A2C(StaC6SetupObj* obj) {
+    obj->fn7C = NULL;
+    obj->fn80 = NULL;
+    obj->fn84 = NULL;
+    obj->fn88 = NULL;
+    switch (obj->kind) {
+    case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+    case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15:
+        obj->fn80 = fn_3_E7364;
+        obj->fn84 = fn_3_E6D90;
+        lbl_3_bss_AEAC++;
+        break;
+    case 16: case 17: case 18: case 19: case 20: case 21: case 22:
+        obj->fn7C = fn_3_E698C;
+        obj->fn84 = fn_3_E68A8;
+        break;
+    case 23:
+        obj->fn84 = fn_3_E6798;
+        obj->fn88 = fn_3_E671C;
+        break;
+    case 24:
+        obj->fn84 = fn_3_E6684;
+        obj->fn88 = fn_3_E6638;
+        break;
+    case 26:
+        obj->fn7C = fn_3_E59B4;
+        break;
+    case 25:
+        obj->fn7C = fn_3_E5A1C;
+        break;
+    }
 }
 
 // .text:0x000E7B20 size:0xFA8 mapped:0x80726BB4
