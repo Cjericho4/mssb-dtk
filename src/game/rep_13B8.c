@@ -445,7 +445,20 @@ void fn_3_88408(void) {
 
 // .text:0x000889FC size:0x11C mapped:0x806C7A90
 void fn_3_889FC(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        if (g_Runners[i].runnerOnFieldOrOutOrScored == 1) {
+            if ((g_Ball.AtBat_ContactResult == 3 || g_FieldingLogic._108 == 2) &&
+                g_Ball.landingSpotZoneAwayFromHome <= 1) {
+                g_Runners[i].isEligibleToScore = 0;
+            } else if (g_Ball.ballZoneAwayFromHome <= 1 && g_Ball.ballState != 0 &&
+                       !(g_Ball.AtBat_ContactResult == 0 || g_Ball.AtBat_ContactResult == 1) && g_Runners[i].currentBase != 0 &&
+                       g_Runners[i].currentBase < 3) {
+                g_Runners[i].isEligibleToScore = 0;
+            }
+        }
+    }
 }
 
 // .text:0x00088B18 size:0x10C mapped:0x806C7BAC
