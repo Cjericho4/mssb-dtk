@@ -12,11 +12,14 @@
 #include "game/rep_1E08.h"
 void setDefaultInMemBatter(void);
 #include "game/rep_13B8.h"
+#include "game/gap_FBCD0.h"
 void setBatterContactConstants(void);
 int someAnimationIndFunction(void);
 
 extern f32 shortAngleToRad(s16 ang);
 extern f32 lbl_3_rodata_3268;
+extern s16 lbl_3_data_18C48[];
+s32 fn_3_6C938(s32 arg0, s32 arg1);
 extern void fn_8003A540(s32 arg0, GameControlsStruct* arg1);
 
 // .text:0x00110634 size:0x3D0 mapped:0x8074F6C8
@@ -135,7 +138,29 @@ void fn_3_111C5C(void) {
 
 // .text:0x00111F80 size:0xF0 mapped:0x80751014
 void fn_3_111F80(void) {
-    return;
+    switch (g_GameLogic._125) {
+    case 0:
+        changeScene(1, 6);
+        g_GameLogic._125 = 1;
+        break;
+    case 1:
+        if (g_GameLogic.FrameCountOfCurrentPitch >= lbl_3_data_18C48[2] ||
+            (g_GameLogic.FrameCountOfCurrentPitch >= lbl_3_data_18C48[1] && fn_3_6C938(1, 0x1100))) {
+            changeScene(3, 6);
+            g_GameLogic._125 = 2;
+        }
+        break;
+    case 2:
+        if (lbl_8037169C._13) {
+            fn_3_FBD70();
+            fn_3_FBD58();
+            g_GameLogic._125 = 3;
+        }
+        break;
+    case 3:
+        fn_3_5A6D4(7);
+        break;
+    }
 }
 
 // .text:0x00112070 size:0x70 mapped:0x80751104
