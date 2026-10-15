@@ -707,7 +707,10 @@ typedef struct DrawingSceneStruct {
         };
         DrawingSceneItem *unk14;
     };
-    u16 unk18;
+    union {
+        u16 unk18;
+        s16 timer18;
+    };
     s16 unk1a;
     union {
         s16 unk_1C;
