@@ -925,6 +925,7 @@ typedef struct SoundConfig {
     u8 alertVolume;  /* 0x2 */
     u8 _pad3[0x3];
     u8 volume;       /* 0x6 */
+    u8 unk7;         /* 0x7 */
 } SoundConfig;
 extern SoundConfig lbl_800EFBA4;
 s32 rand();                                         /* extern */

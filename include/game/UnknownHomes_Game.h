@@ -1739,7 +1739,7 @@ typedef struct _MiniGameStruct {
     /*0x1630*/ f32 _1630;
     /*0x1634*/ u8 pad10[396];
     /*0x17C0*/ s32 _17C0;
-    /*0x17C4*/ s32 _17C4;
+    /*0x17C4*/ u32 _17C4;
     /*0x17C8*/ s16 wallBall_coinsVisibleFrameCounter[100];
     /*0x1890*/ s16 miniGameCurrentPoints[4];
     /*0x1898*/ s16 miniGameLatestPoints[4];

@@ -4,6 +4,10 @@
 #include "game/rep_1838.h"
 #include "game/rep_13B8.h"
 #include "game/gap_5985C.h"
+#include "game/rep_3880.h"
+#include "game/rep_3448.h"
+#include "game/rep_F80.h"
+#include "musyx/musyx.h"
 
 // .text:0x0013C7BC size:0xDBC mapped:0x8077B850
 void fn_3_13C7BC(void) {
@@ -282,8 +286,39 @@ void fn_3_1409AC(void) {
 }
 
 // .text:0x00140BCC size:0x114 mapped:0x8077FC60
+extern s16 lbl_3_data_21904[];
+
 void fn_3_140BCC(void) {
-    return;
+    MiniGameStruct* mg = &g_Minigame;
+    GameControlsStruct* gl;
+
+    if (mg->turnOverStatus == 0) {
+        if (mg->_17C4 == 0) {
+            fn_3_10F550(3, 0);
+            sndFXStartEx(0x1BE, lbl_800EFBA4.unk7, 0x3F, 0);
+            fn_3_151798();
+            fn_3_11F480();
+            fn_80011578();
+            g_Minigame._CCE[0] = 0;
+            mg->turnOverStatus = 1;
+        }
+        return;
+    }
+    if (mg->turnOverStatus == 1) {
+        mg->turnOverStatus = 2;
+        g_GameLogic.CountdownUntilFade = lbl_3_data_21904[0];
+    }
+    if (g_Minigame._1B19 != 3) {
+        g_GameLogic.CountdownUntilFade--;
+    }
+    gl = &g_GameLogic;
+    if (gl->CountdownUntilFade == 7) {
+        changeScene(3, 6);
+        fn_3_1578F8();
+    }
+    if (gl->CountdownUntilFade <= 0) {
+        fn_3_1409AC();
+    }
 }
 
 // .text:0x00140CE0 size:0x410 mapped:0x8077FD74
