@@ -10,7 +10,7 @@ typedef void (*ViewDrawCallback)(Mtx viewMtx, s32 arg1, s32 arg2);
 
 /* Table of self-relative offsets that are converted to pointers in place. */
 typedef struct RelocTable {
-    s16 count; /* index of the last entry */
+    u16 count; /* index of the last entry */
     u8 _pad2[0x2];
     u32 entries[1]; /* 0x4 */
 } RelocTable;

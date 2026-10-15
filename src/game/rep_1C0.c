@@ -157,3 +157,17 @@ void fn_3_5E60(void) {
     fn_800BCDBC((u8*)sfh + sfh->field_0x0C);
     fn_800ACFB0(g_hugeAnimStruct.stadiumFileHeaderPointer);
 }
+
+// .text:0x00006424 size:0xB8 mapped:0x806454B8
+s16 fn_3_6424(RelocTable* table, u32** outEntries) {
+    s16 count = table->count;
+    u32* p;
+    s32 i;
+
+    p = *outEntries = table->entries;
+    for (i = count; i >= 0; i--) {
+        *p += (u32)table;
+        p++;
+    }
+    return count;
+}
