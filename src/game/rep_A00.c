@@ -2,6 +2,7 @@
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "game/gap_219CC.h"
+#include "game/gap_249E8.h"
 
 extern void changeScene(s32, s32);
 
@@ -59,7 +60,13 @@ void fn_3_22944(void) {
 
 // .text:0x00022948 size:0xD8 mapped:0x806619DC
 void fn_3_22948(void) {
-    return;
+    s32 i;
+    for (i = 0; i < 0x21; i++) {
+        lbl_3_data_2398[i].unk34 = 0;
+        lbl_3_data_2398[i].unk38 = 0;
+        lbl_3_data_2398[i].unk3C = 0;
+    }
+    lbl_3_common_bss_1323C->unk27B = 0;
 }
 
 // .text:0x00022A20 size:0x9C mapped:0x80661AB4
