@@ -207,6 +207,7 @@ typedef struct AnimLevel1 {
     /* 0x99 */ u8    _pad2[0xD2 - 0x99];
 } AnimLevel1; 
 AnimLevel1** fn_800111D8(AnimationStruct* anim);
+u8 LoadModel(AnimationStruct* anim);
 void fn_800B2C44(AnimLevel1* model, u16 bone, VecXYZ* out);
 
 typedef struct HugeAnimEntry2D94 {

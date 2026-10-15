@@ -142,7 +142,41 @@ u32 fn_3_FD9FC(void) {
 
 // .text:0x000FDA1C size:0x114 mapped:0x8073CAB0
 void fn_3_FDA1C(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    u16 idx;
+    AnimationStruct* anim;
+    Fielder* f;
+
+    switch (scene->drawingState) {
+    case 0:
+        scene->drawingState = 1;
+        break;
+    case 1:
+        idx = scene->fielderIndex;
+        f = &g_Fielders[idx];
+        anim = g_hugeAnimStruct.AnimationStructPtrs[idx];
+        if (f->unk218 == 0) {
+            if (idx < 9) {
+                scene->fielderIndex = idx + 1;
+                scene->drawingState = 0;
+            } else {
+                scene->drawingState = 2;
+            }
+        } else if (anim == NULL || LoadModel(anim)) {
+            if (scene->fielderIndex < 9) {
+                scene->fielderIndex++;
+                scene->drawingState = 0;
+            } else {
+                scene->drawingState = 2;
+            }
+        }
+        break;
+    case 2:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->drawingState = 0;
+        break;
+    }
 }
 
 // .text:0x000FDB30 size:0x24E8 mapped:0x8073CBC4
