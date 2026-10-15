@@ -65,7 +65,12 @@ BOOL fn_3_2281C(s32 index) {
 
 // .text:0x00022850 size:0xF4 mapped:0x806618E4
 void fn_3_22850(void) {
-    return;
+    s32 i;
+    for (i = 0; i < 0x21; i++) {
+        lbl_3_data_2398[i].unk38 = 0;
+        lbl_3_data_2398[i].unk3C = 0;
+    }
+    lbl_3_common_bss_1323C->unk27B = 0;
 }
 
 // .text:0x00022944 size:0x4 mapped:0x806619D8
