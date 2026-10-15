@@ -1049,6 +1049,13 @@ typedef struct {
     s16 unkE;
 } Data21A04; // size: 0x10
 extern Data21A04 lbl_3_data_21A04;
+/* Wall Ball minigame tuning parameters. */
+typedef struct {
+    u8 _00[0x2C];
+    f32 coinGravity; /* 0x2C */
+    u8 _30[0x1C];
+} Data219B8; // size: 0x4C
+extern Data219B8 lbl_3_data_219B8;
 extern VecXYZ lbl_3_data_21A48;
 extern f32 lbl_3_rodata_35D0;
 extern f32 lbl_3_rodata_35D8;
