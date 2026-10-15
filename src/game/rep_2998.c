@@ -58,8 +58,15 @@ void fn_3_E2324(void) {
 }
 
 // .text:0x000E25D0 size:0x9C mapped:0x80721664
-void fn_3_E25D0(void) {
-    return;
+void fn_3_E25D0(castleThwompObj* arg, u32 idx) {
+    arg->unkAC = lbl_3_bss_AE18[idx];
+    fn_3_B97DC((ActorAnimState*)arg->actPtr, (ANIMBank*)arg->unkAC);
+    if (idx != 0 && idx != 2 && idx != 3) {
+        ((ActorAnimState*)arg->actPtr)->loopFlags = 2;
+        fn_800B4AFC(((ActorAnimState*)arg->actPtr)->actor, ((ActorAnimState*)arg->actPtr)->loopFlags & 1);
+    }
+    arg->rotation.y = arg->actPtr->unk5C;
+    arg->field37_0xcb = idx;
 }
 
 // .text:0x000E266C size:0x270 mapped:0x80721700
@@ -124,7 +131,7 @@ void fn_3_E3B88(void) {
 
 // .text:0x000E4554 size:0x54 mapped:0x807235E8
 void fn_3_E4554(castleThwompObj *arg) {
-    arg->unkAC = lbl_3_bss_AE18;
+    arg->unkAC = lbl_3_bss_AE18[0];
     fn_3_B97DC((ActorAnimState*)arg->actPtr, (ANIMBank*)arg->unkAC);
     arg->rotation.y = arg->actPtr->unk5C;
     arg->field37_0xcb = 0;

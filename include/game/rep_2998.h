@@ -52,7 +52,7 @@ void fn_3_E2034(void);
 void fn_3_E2118(void);
 void fn_3_E22A4(Arg_E22A4 *arg0);
 void fn_3_E2324(void);
-void fn_3_E25D0(void);
+void fn_3_E25D0(castleThwompObj* arg, u32 idx);
 void fn_3_E266C(void);
 void fn_3_E28DC(void);
 void fn_3_E29B4(void);
@@ -66,7 +66,7 @@ void fn_3_E3764(void);
 void fn_3_E3914(void);
 void fn_3_E3B88(void);
 void fn_3_E4554(castleThwompObj *arg);
-extern s32 lbl_3_bss_AE18;
+extern s32 lbl_3_bss_AE18[];
 void fn_3_E45A8(castleThwompObj *param);
 typedef struct {
     f32 rotValues[7]; /* 0x00: 7 floats per entry, stride 0x1C */
