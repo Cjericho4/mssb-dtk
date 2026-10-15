@@ -129,8 +129,24 @@ void fn_3_EF800(StaC5PlacedObj* obj) {
 }
 
 // .text:0x000EF890 size:0xA0 mapped:0x8072E924
-void fn_3_EF890(void) {
-    return;
+static inline void fn_3_EF890_resetElems(OuterStruct_F13F8* arg0) {
+    InnerStruct_F13F8* p = arg0->unk74;
+    DeepStruct_F13F8* q = p->unk0;
+    u32 i;
+
+    for (i = 0; i < (u32)q->unk6; i++) {
+        ElemStruct_F13F8* elem = q->unk18[i];
+        elem->unk60 = 0;
+        elem->unkA4 = 0;
+    }
+    arg0->unk74->unk58 = 0;
+}
+
+void fn_3_EF890(OuterStruct_F13F8* arg0) {
+    fn_3_EF890_resetElems(arg0);
+    CTRLSetScale(&arg0->control, 2.0f, 0.1f, 2.0f);
+    arg0->unkC6 = 6;
+    arg0->unkC7 = 0x4B;
 }
 
 // .text:0x000EF930 size:0x224 mapped:0x8072E9C4

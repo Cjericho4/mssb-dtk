@@ -47,8 +47,12 @@ typedef struct {
 } InnerStruct_F13F8;
 
 typedef struct {
-    u8 _pad0[0x74];
-    InnerStruct_F13F8* unk74; // 0x74
+    /* 0x00 */ Control control;
+    /* 0x3C */ u8 _pad3C[0x74 - 0x3C];
+    /* 0x74 */ InnerStruct_F13F8* unk74;
+    /* 0x78 */ u8 _pad78[0xC6 - 0x78];
+    /* 0xC6 */ u8 unkC6;
+    /* 0xC7 */ u8 unkC7;
 } OuterStruct_F13F8;
 
 extern u8 lbl_3_bss_AEE8;
@@ -77,7 +81,7 @@ void fn_3_EF408(void);
 u8 fn_3_EF55C(EF55C_Arg* arg0);
 s32 fn_3_EF7B4(EF55C_Arg* arg0);
 void fn_3_EF800(StaC5PlacedObj* obj);
-void fn_3_EF890(void);
+void fn_3_EF890(OuterStruct_F13F8* arg0);
 void fn_3_EF930(void);
 void fn_3_EFB54(void);
 void fn_3_F0184(void);
