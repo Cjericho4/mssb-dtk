@@ -1,4 +1,6 @@
 #include "game/gap_1658F0.h"
+#include "UnknownHeaders.h"
+#include "game/rep_3310.h"
 
 // .text:0x001658F0 size:0x88 mapped:0x807A4984
 void fn_3_1658F0(void) {
@@ -27,6 +29,20 @@ void fn_3_165D24(void) {
 
 // .text:0x001663AC size:0x9C mapped:0x807A5440
 void fn_3_1663AC(void) {
-    return;
+    HugeAnimEntry2D94* entry;
+    s32 i;
+
+    if (g_GameLogic.secondaryGameMode == 0xA || g_GameLogic.secondaryGameMode == 0x12) {
+        if (g_hugeAnimStruct.field268_0x3078 != 0) {
+            for (i = 0; i < g_hugeAnimStruct.field268_0x3078; i++) {
+                entry = &g_hugeAnimStruct.entries_2D94[i];
+                if (entry != NULL) {
+                    entry->unk_26 = 0;
+                }
+            }
+        }
+    } else if (g_Practice.practiceLevel == 4) {
+        fn_3_11AB2C();
+    }
 }
 

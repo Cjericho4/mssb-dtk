@@ -512,7 +512,7 @@ typedef struct hugeAnimStruct {
     /* 0x2ED8 */ s32 field265_0x2ed8[102];
     /* 0x3070 */ void (*funcPtr)(s32);
     /* 0x3074 */ void (*funcPtr2)(s32);
-    /* 0x3078 */ s16 field268_0x3078;
+    /* 0x3078 */ u16 field268_0x3078;
     /* 0x307A */ u8 field269_0x307a;
     /* 0x307B */ u8 field270_0x307b;
     /* 0x307C */ u8 field271_0x307c;
