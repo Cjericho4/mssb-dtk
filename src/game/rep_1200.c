@@ -5,23 +5,21 @@
 #include "static/UnknownHomes_Static.h"
 
 extern f32 lbl_3_rodata_1250;
-extern void fn_3_5C69C(void*, InMemPitcherType*);
+extern void fn_3_5C69C(s32 arg0);
 
 // .text:0x0006F6CC size:0x7C mapped:0x806AE760
 s32 fn_3_6F6CC(void) {
-        f32 limit;
+    f32 limit;
     InMemRunnerType* runner;
-
     s32 i;
-    
-    limit = 0.5f;
 
+    limit = 0.5f;
     runner = g_Runners;
-    
+
     for (i = 1; i < 4; i++) {
         if (runner[i].runnerOnFieldOrOutOrScored == 1 && runner[i].percentTowardsNextBase > limit) {
             g_Pitcher.pickOffLoc = 4;
-            fn_3_5C69C(0, &g_Pitcher);
+            fn_3_5C69C(0);
             return 1;
         }
     }
