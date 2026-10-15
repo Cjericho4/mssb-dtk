@@ -7,6 +7,14 @@
 #include "Dolphin/mtxext.h"
 
 
+typedef struct DE94ArrayElement {
+    /* 0x00 */ VecXYZ pos;
+    /* 0x0C */ f32 unkC;
+    /* 0x10 */ f32 unk10;
+    /* 0x14 */ u8 _pad14[0x3C - 0x14];
+    /* 0x3C */ f32 value;
+} DE94ArrayElement; // size: 0x40
+
 typedef struct Struct_DE94_Inner {
     /* 0x000 */ u8 _pad0[0x14];
     /* 0x014 */ s32 field_0x14;
@@ -14,7 +22,7 @@ typedef struct Struct_DE94_Inner {
     /* 0x01C */ u8 _pad1[0x04];
     /* 0x020 */ u32 field_0x20;
     /* 0x024 */ u8 _pad2[0x10];
-    /* 0x034 */ void *unk34;
+    /* 0x034 */ DE94ArrayElement* unk34;
     /* 0x038 */ u8 _pad2b[0x04];
     /* 0x03C */ s32 unk3C;
     /* 0x040 */ u8 _pad2c[0x58];
@@ -57,13 +65,9 @@ s32 fn_3_FCE38(s32 arg0, f32 arg1);
 void fn_3_FCEAC(void);
 s32 fn_3_FCEB0(f32 arg0);
 
-typedef struct {
-    u8 _pad[0x3C];
-    f32 value; /* 0x3C */
-} DE94ArrayElement;
 void fn_3_FCF20(void);
 void fn_3_FCF24(void);
-void fn_3_FD408(void);
+void fn_3_FD408(u32 idx, VecXYZ* outPos, f32* outVals);
 void fn_3_FD4DC(void);
 void fn_3_FD51C(void);
 void fn_3_FD5A8(void);

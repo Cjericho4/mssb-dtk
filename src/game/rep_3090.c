@@ -87,8 +87,18 @@ void fn_3_FCF24(void) {
 }
 
 // .text:0x000FD408 size:0xD4 mapped:0x8073C49C
-void fn_3_FD408(void) {
-    return;
+void fn_3_FD408(u32 idx, VecXYZ* outPos, f32* outVals) {
+    Struct_DE94_Inner* p = lbl_3_common_bss_DE94;
+
+    if (p->unk3C > idx) {
+        memcpy(outPos, &p->unk34[idx].pos, sizeof(VecXYZ));
+        outVals[0] = p->unk34[idx].unkC;
+        outVals[1] = p->unk34[idx].unk10;
+    } else {
+        memcpy(outPos, &p->unk34[p->unk3C - 1].pos, sizeof(VecXYZ));
+        outVals[0] = p->unk34[p->unk3C - 1].unkC;
+        outVals[1] = p->unk34[p->unk3C - 1].unk10;
+    }
 }
 
 // .text:0x000FD4DC size:0x40 mapped:0x8073C570
