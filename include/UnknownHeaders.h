@@ -546,7 +546,9 @@ typedef struct StadiumObjectElem {
     u8 unk_A9;                        /* 0xA9 */
     u8 _pad_0xaa[0xC0 - 0xAA];       /* 0xAA */
     u8 unkC0;                         /* 0xC0 */
-    u8 _pad_0xc1[0xE8 - 0xC1];       /* 0xC1 */
+    u8 _pad_0xc1[0xC6 - 0xC1];       /* 0xC1 */
+    u8 unkC6;                         /* 0xC6 */
+    u8 _pad_0xc7[0xE8 - 0xC7];       /* 0xC7 */
 } StadiumObjectElem;
 
 typedef struct StadiumIdEntry {

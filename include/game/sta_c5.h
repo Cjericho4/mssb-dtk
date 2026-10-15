@@ -56,6 +56,16 @@ typedef struct {
 } OuterStruct_F13F8;
 
 extern u8 lbl_3_bss_AEE8;
+
+/* File-local bss block starting at 0xAEE0 (accessed via a single base). */
+typedef struct StaC5Bss_AEE0 {
+    /* 0x000 */ u8 _pad0[0x8];
+    /* 0x008 */ u8 unk8;
+    /* 0x009 */ u8 _pad9[0x33B - 0x9];
+    /* 0x33B */ u8 unk33B;
+    /* 0x33C */ u8 unk33C;
+} StaC5Bss_AEE0;
+extern StaC5Bss_AEE0 lbl_3_bss_AEE0;
 extern void* lbl_3_bss_B55C;
 extern u8 lbl_3_data_1BA5C[];
 extern u8 lbl_803CBBC0;
@@ -83,7 +93,7 @@ s32 fn_3_EF7B4(EF55C_Arg* arg0);
 void fn_3_EF800(StaC5PlacedObj* obj);
 void fn_3_EF890(OuterStruct_F13F8* arg0);
 void fn_3_EF930(void);
-void fn_3_EFB54(void);
+void fn_3_EFB54(StadiumObjectElem* obj);
 void fn_3_F0184(void);
 void fn_3_F0224(void);
 void fn_3_F082C(void);

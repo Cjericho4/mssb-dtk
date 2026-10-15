@@ -155,13 +155,26 @@ void fn_3_EF930(void) {
 }
 
 // .text:0x000EFB54 size:0x630 mapped:0x8072EBE8
-void fn_3_EFB54(void) {
+void fn_3_EFB54(StadiumObjectElem* obj) {
     return;
 }
 
 // .text:0x000F0184 size:0xA0 mapped:0x8072F218
 void fn_3_F0184(void) {
-    return;
+    u32 i;
+    StadiumObjectElem* obj;
+
+    if (lbl_3_bss_AEE0.unk8 != 0) {
+        fn_800B0A14_removeQueue();
+        lbl_3_bss_AEE0.unk8 = 0;
+    } else {
+        for (i = 0; i < lbl_3_bss_AEE0.unk33C; i++) {
+            obj = &lbl_3_common_bss_350E4[0].src[i + lbl_3_bss_AEE0.unk33B];
+            if (obj != NULL && obj->unkC6 == 3) {
+                fn_3_EFB54(obj);
+            }
+        }
+    }
 }
 
 // .text:0x000F0224 size:0x608 mapped:0x8072F2B8
