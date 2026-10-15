@@ -13,6 +13,8 @@
 #include "game/rep_1C0.h"
 #include "game/rep_1D58.h"
 #include "game/rep_1838.h"
+#include "game/m_sound.h"
+#include "game/gap_1293D0.h"
 
 typedef struct Rep3310Item {
     u8 _pad0[0x14];
@@ -607,8 +609,33 @@ f32 fn_3_119D28(void) {
 }
 
 // .text:0x00119D34 size:0xFC mapped:0x80758DC8
+static inline void rep3310_resetEntry(HugeAnimEntry68* entry, s32 val, s16 arg) {
+    entry->unk38 = val;
+    entry->unk42 = arg;
+    entry[1].unk0 = 0.0f;
+    entry->unk8C = 1;
+    entry->unk8D = (val != 0);
+    entry->unk8E = (val != 0);
+    entry[1].unk4 = 0.0f;
+}
+
 void fn_3_119D34(void) {
-    return;
+    HugeAnimEntry2D94* obj = &g_hugeAnimStruct.entries_2D94[31];
+    HugeAnimEntry68* entry;
+
+    obj->unk_26 = 1;
+    fn_3_11A92C(obj, 0x1F);
+    if (lbl_80366158._28 == 0 && g_GameLogic.gameStatus == 1 &&
+        g_Pitcher.pitchTotalTimeCounter == lbl_3_data_217A4[7]) {
+        entry = &g_hugeAnimStruct.entries_68[31];
+        rep3310_resetEntry(entry, lbl_3_common_bss_32724.unk74, 1);
+        entry->unk88 = 1.0f;
+        entry->unk8E = 1;
+        entry[1].unk0 = 0.0f;
+        entry->unk8D = 1;
+        entry->unk8F = 2;
+        fn_3_90064(0x2E6);
+    }
 }
 
 // .text:0x00119E30 size:0xB0 mapped:0x80758EC4
@@ -678,7 +705,7 @@ void fn_3_11A408(void) {
 }
 
 // .text:0x0011A92C size:0x200 mapped:0x807599C0
-void fn_3_11A92C(void) {
+void fn_3_11A92C(HugeAnimEntry2D94* entry, s32 idx) {
     return;
 }
 
