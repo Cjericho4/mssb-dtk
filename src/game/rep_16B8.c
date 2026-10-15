@@ -4,6 +4,7 @@
 #include "game/rep_3448.h"
 #include "game/gap_EA340.h"
 #include "game/rep_720.h"
+#include "game/gap_1658F0.h"
 
 // .text:0x00091520 size:0x540 mapped:0x806D05B4
 void fn_3_91520(void) {
@@ -180,7 +181,11 @@ void fn_3_94E68(void) {
 
 // .text:0x00095000 size:0x98 mapped:0x806D4094
 void fn_3_95000(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    fn_80034E20(scene, &lbl_3_data_E2F8);
+    lbl_80371C30[scene->unkIndex + 2].obj->field_0x5C = lbl_3_data_E200[lbl_3_common_bss_37400.unk46] << 16;
+    scene->unk_1C = lbl_3_common_bss_37400.unk46;
+    lbl_803CC1B8->aFunctionPointer = fn_3_94E68;
 }
 
 // .text:0x00095098 size:0x8C mapped:0x806D412C

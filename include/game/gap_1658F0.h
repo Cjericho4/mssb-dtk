@@ -6,7 +6,10 @@
 typedef struct {
     u8 _pad[0x40];
     s16 playerIndex;   /* 0x40 */
-    u8 _pad42[0x8];
+    u8 _pad42[0x4];
+    u8 unk46;          /* 0x46 */
+    u8 unk47;          /* 0x47 */
+    u8 _pad48[0x2];
     u8 field_0x4A;
 } Bss37400Item;
 
