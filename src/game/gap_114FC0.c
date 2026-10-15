@@ -130,7 +130,14 @@ void fn_3_11669C(void) {
 
 // .text:0x001166CC size:0xC0 mapped:0x80755760
 void fn_3_1166CC(void) {
-    return;
+    HugeAnimEntry2D94* entry;
+    int i;
+
+    for (i = 0; i < 40; i++) {
+        entry = &g_hugeAnimStruct.entries_2D94[i];
+        entry->unk_26 = 0;
+        entry->stadiumFileHeaderPointer = NULL;
+    }
 }
 
 typedef struct {
