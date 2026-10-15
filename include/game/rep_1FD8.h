@@ -30,7 +30,7 @@ void fn_3_C366C(void *arg0, u8 arg1);
 void fn_3_C39C8(void);
 void fn_3_C3A38(void);
 void fn_3_C3C2C(void);
-void fn_3_C3E94(void);
+void fn_3_C3E94(Vec* pos, s32 idx);
 void fn_3_C3F70(void);
 void fn_3_C4068(ActorObject* arg0);
 void fn_3_C40EC(ActorObject* arg0);

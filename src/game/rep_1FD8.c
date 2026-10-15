@@ -2,6 +2,7 @@
 #include "header_rep_data.h"
 #include "UnknownHeaders.h"
 #include "game/rep_1D58.h"
+#include "game/rep_3448.h"
 
 extern f32 lbl_3_rodata_21F0;
 extern u32 lbl_3_bss_9D84;
@@ -212,8 +213,28 @@ void fn_3_C3C2C(void) {
 }
 
 // .text:0x000C3E94 size:0xDC mapped:0x80702F28
-void fn_3_C3E94(void) {
-    return;
+typedef struct {
+    u8 _pad0[0x14];
+    u16 baseIdx; /* 0x14 */
+} Bss9E50Obj;
+
+typedef struct {
+    Bss9E50Obj* obj; /* 0x00 */
+    u8 _pad4[0xB8];
+} Bss9E50;
+
+extern Bss9E50 lbl_3_bss_9E50;
+extern void fn_800528C0(f32 x, f32 y, f32 z, s16* outX, s16* outY);
+
+// .text:0x000C3E94 size:0xDC mapped:0x80702F28
+void fn_3_C3E94(Vec* pos, s32 idx) {
+    s16 sx;
+    s16 sy;
+
+    fn_800528C0(pos->x, pos->y, pos->z, &sx, &sy);
+    lbl_80371C30[lbl_3_bss_9E50.obj->baseIdx + idx].obj->pos.x = sx;
+    lbl_80371C30[lbl_3_bss_9E50.obj->baseIdx + idx].obj->pos.y = sy;
+    lbl_80371C30[lbl_3_bss_9E50.obj->baseIdx + idx].obj->pos.z = 0.0f;
 }
 
 // .text:0x000C3F70 size:0xF8 mapped:0x80703004
