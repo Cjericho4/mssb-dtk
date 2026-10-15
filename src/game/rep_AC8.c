@@ -56,7 +56,13 @@ void fn_3_26A74(void) {
 
 // .text:0x00027648 size:0xF0 mapped:0x806666DC
 void fn_3_27648(void) {
-    return;
+    s32 i;
+    for (i = 0; i < 9; i++) {
+        if (g_Fielders[i].unk252) {
+            g_Fielders[i].unk_25B = 1;
+            g_Ball.catchAnimationTotalFrames = 0;
+        }
+    }
 }
 
 // .text:0x00027738 size:0x2C mapped:0x806667CC
