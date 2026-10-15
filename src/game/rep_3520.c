@@ -374,6 +374,23 @@ void fn_3_139700(void) {
     }
 }
 
+static inline void updateWallBallCoins(void) {
+    u32 i;
+
+    for (i = 0; i < 100; i++) {
+        if (g_Minigame.wallBall_coinsVisibleInd[i] == 3) {
+            g_Minigame.wallBall_coinsVisibleFrameCounter[i]++;
+            PSVECAdd((Vec*)&g_Minigame.wallBall_coinCoordinates[i], (Vec*)&g_Minigame.wallBall_coinVelocity[i],
+                     (Vec*)&g_Minigame.wallBall_coinCoordinates[i]);
+            g_Minigame.wallBall_coinVelocity[i].y += lbl_3_data_219B8.coinGravity;
+            if (g_Minigame.wallBall_coinVelocity[i].y < 0.0f) {
+                g_Minigame.wallBall_coinsVisibleInd[i] = 0;
+                g_Minigame._1D6C--;
+            }
+        }
+    }
+}
+
 // .text:0x0013974C size:0xBC mapped:0x807787E0
 void fn_3_13974C(void) {
     u32 i;
@@ -404,7 +421,9 @@ void fn_3_139CA0(void) {
 
 // .text:0x00139F84 size:0xC4 mapped:0x80779018
 void fn_3_139F84(void) {
-    return;
+    fn_3_139CA0();
+    fn_3_139808();
+    updateWallBallCoins();
 }
 
 // .text:0x0013A048 size:0x64 mapped:0x807790DC
