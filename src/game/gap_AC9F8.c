@@ -418,7 +418,25 @@ void fn_3_B1BCC(void) {
 
 // .text:0x000B1C14 size:0x9C mapped:0x806F0CA8
 void fn_3_B1C14(void) {
-    return;
+    switch (g_Practice.tutorialState) {
+    case 0:
+        fn_3_B1A30();
+        break;
+    case 1:
+        fn_3_B1578();
+        break;
+    case 2:
+        if (fn_3_B254C() == FALSE) {
+            fn_3_B1578();
+        } else {
+            fn_3_B1DA4(g_Practice.practiceLevel + 8, 0);
+            fn_3_5A6D4(7);
+        }
+        break;
+    case 3:
+        fn_3_B1578();
+        break;
+    }
 }
 
 // .text:0x000B1CB0 size:0xF4 mapped:0x806F0D44
@@ -442,8 +460,8 @@ void fn_3_B1DD0(void) {
 }
 
 // .text:0x000B254C size:0xE4 mapped:0x806F15E0
-void fn_3_B254C(void) {
-    return;
+BOOL fn_3_B254C(void) {
+    return FALSE;
 }
 
 // .text:0x000B2630 size:0x11C mapped:0x806F16C4

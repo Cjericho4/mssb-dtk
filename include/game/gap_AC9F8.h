@@ -102,7 +102,7 @@ void fn_3_B1C14(void);
 void fn_3_B1CB0(void);
 void fn_3_B1DA4(s32 arg0, u8 arg1);
 void fn_3_B1DD0(void);
-void fn_3_B254C(void);
+BOOL fn_3_B254C(void);
 void fn_3_B2630(void);
 void fn_3_B274C(void);
 void fn_3_B27A4(void);
