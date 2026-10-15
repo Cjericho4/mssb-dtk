@@ -3,6 +3,8 @@
 
 #include "mssbTypes.h"
 
+void changeScene(s32 arg0, s32 arg1);
+
 void fn_3_141C44(void);
 void fn_3_141C8C(void);
 void fn_3_141F30(void);

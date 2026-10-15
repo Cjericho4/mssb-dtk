@@ -1562,6 +1562,12 @@ typedef struct MinigameProgressItem {
     u8 _pad2B[0xD];     // 0x2B to 0x37
 } MinigameProgressItem; // Size: 0x38
 
+typedef struct MinigameRandomTarget {
+    s16 value;
+    u8 _2;
+    u8 active;
+} MinigameRandomTarget;
+
 typedef struct _MiniGameStruct {
     /*0x000*/ MinigameProgressItem progressItems[3];
     /*0x0A8*/ MinigameObject objects[40]; // stride 0x28, ends at 0x6E8
@@ -2117,7 +2123,8 @@ typedef struct _MiniGameStruct {
     /*0x1DC0*/ u8 field_1DC0[4];
     /*0x1DC4*/ u8 field_1DC4[4];
     /*0x1DC8*/ u8 player_states[4];
-    /* 0x1DCC */ u8 _pad_extension[0x1DEC - 0x1DCC];
+    /* 0x1DCC */ MinigameRandomTarget randomTargets[4];
+    /* 0x1DDC */ u8 _pad_extension[0x1DEC - 0x1DDC];
     /* 0x1DEC */ f32 unk1DEC;
     /* 0x1DF0 */ f32 unk1DF0;
     /*0x1DF4*/ s16 targetPointsArray[4];

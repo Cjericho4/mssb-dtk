@@ -2,6 +2,9 @@
 #include "game/UnknownHomes_Game.h"
 #include "header_rep_data.h"
 #include "Dolphin/os.h"
+#include "stl/mem.h"
+#include "game/rep_1838.h"
+#include "game/gap_5985C.h"
 
 typedef struct {
     u8 _00[0x28];
@@ -11,6 +14,29 @@ extern Lbl80366158_37A8 lbl_80366158;
 extern s32 lbl_3_bss_B7E4;
 extern u8 lbl_3_bss_B800[0x20][2];
 extern s8 lbl_3_data_266A4;
+
+typedef struct {
+    s16 min;
+    s16 max;
+} RandomRange_37A8;
+extern RandomRange_37A8 lbl_3_data_21EAC[4];
+
+static inline void setRandomTarget(MinigameRandomTarget* target, s32 strength) {
+    target->active = 1;
+    target->value = RandomInt_Game_Range(lbl_3_data_21EAC[(u8)strength].min, lbl_3_data_21EAC[(u8)strength].max);
+}
+
+static inline void initRandomTargets(void) {
+    MinigameRandomTarget* target = g_Minigame.randomTargets;
+    s8 i;
+
+    memset(g_Minigame._1D7C, 0, 0x78);
+    i = 0;
+    do {
+        setRandomTarget(target, g_Minigame.players.aIStrength[i]);
+        target++;
+    } while (++i < 4);
+}
 
 // .text:0x00141C44 size:0x48 mapped:0x80780CD8
 void fn_3_141C44(void) {
@@ -223,7 +249,9 @@ void fn_3_146408(void) {
 
 // .text:0x00146928 size:0xA4 mapped:0x807859BC
 void fn_3_146928(void) {
-    return;
+    initRandomTargets();
+    changeScene(1, 6);
+    fn_3_5A6D4(2);
 }
 
 // .text:0x001469CC size:0xC4 mapped:0x80785A60
