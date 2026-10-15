@@ -26,6 +26,24 @@ typedef struct {
     s32 z;
 } EF55C_Arg;
 
+/* Object that drifts toward a target point from lbl_3_data_1B884. */
+typedef struct StaC5DriftObj {
+    /* 0x00 */ Control control;
+    /* 0x3C */ u8 _pad3C[0x9C - 0x3C];
+    /* 0x9C */ u8 targetIdx;
+    /* 0x9D */ u8 _pad9D[0xA8 - 0x9D];
+    /* 0xA8 */ Vec pos;
+    /* 0xB4 */ Vec vel;
+    /* 0xC0 */ f32 angle;
+} StaC5DriftObj;
+
+typedef struct StaC5DriftTarget {
+    /* 0x00 */ Vec pos;
+    /* 0x0C */ u8 _padC[0x14 - 0xC];
+} StaC5DriftTarget; /* size: 0x14 */
+
+extern StaC5DriftTarget lbl_3_data_1B884[];
+
 typedef struct {
     u8 _pad0[0x60];
     u8 unk60;       // 0x60
@@ -124,7 +142,7 @@ void fn_3_F42A0(void);
 void fn_3_F466C(void);
 void fn_3_F469C(void);
 void fn_3_F46A0(void);
-void fn_3_F4BA0(void);
+void fn_3_F4BA0(StaC5DriftObj* obj);
 void fn_3_F4C4C(void);
 void fn_3_F4D00(void);
 void fn_3_F4DAC(void);
