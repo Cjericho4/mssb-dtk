@@ -441,17 +441,25 @@ void fn_3_3740C(void) {
 
 // .text:0x00037588 size:0x88 mapped:0x8067661C
 void fn_3_37588(void) {
-    return;
+    if (g_Ball.ballVelocity > 0.17f) {
+        fn_3_38790(fn_3_378B4(), 0);
+    } else if (g_Ball.AtBat_ContactResult == 0 && g_Ball.hitClassification1 != 0) {
+        fn_3_37610(g_Ball.framesUntilBallHitsGround);
+    } else if (g_Ball.AtBat_ContactResult == 0) {
+        fn_3_37610(30);
+    } else {
+        fn_3_37610(30);
+    }
 }
 
 // .text:0x00037610 size:0x2A4 mapped:0x806766A4
-void fn_3_37610(void) {
+void fn_3_37610(s32 arg0) {
     return;
 }
 
 // .text:0x000378B4 size:0x74C mapped:0x80676948
-void fn_3_378B4(void) {
-    return;
+s32 fn_3_378B4(void) {
+    return 0;
 }
 
 // .text:0x00038000 size:0x234 mapped:0x80677094
@@ -470,7 +478,7 @@ void fn_3_38304(void) {
 }
 
 // .text:0x00038790 size:0x580 mapped:0x80677824
-void fn_3_38790(void) {
+void fn_3_38790(s32 arg0, s32 arg1) {
     return;
 }
 
