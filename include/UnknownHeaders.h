@@ -549,10 +549,17 @@ typedef struct StadiumObjectElem {
     u8 _pad_0xc1[0xE8 - 0xC1];       /* 0xC1 */
 } StadiumObjectElem;
 
+typedef struct StadiumIdEntry {
+    /* 0x0 */ u32 unk0;
+    /* 0x4 */ s32 id;
+} StadiumIdEntry; /* size: 0x8 */
+
 typedef struct UnknownStruct_350E4 {
     /* 0x000 */ StadiumObjectElem* src;
     /* 0x004 */ void* dest;
-    /* 0x008 */ u8 _pad_0x8[0x28];
+    /* 0x008 */ u8 _pad_0x8[0xC];
+    /* 0x014 */ StadiumIdEntry* idEntries;
+    /* 0x018 */ u8 _pad_0x18[0x18];
     /* 0x030 */ u32 memcpyCount;
     /* 0x034 */ u32 unk34;
     /* 0x038 */ u32 unk38;

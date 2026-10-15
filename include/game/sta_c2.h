@@ -155,7 +155,7 @@ typedef struct {
 } StaC2D501CEntry; // size: 0x40
 void fn_3_D501C(StaC2D501CEntry* entries);
 void fn_3_D511C(void);
-void fn_3_D53C0(void);
+s32 fn_3_D53C0(u8 arg0);
 
 
 s32 fn_3_D5444(unknown_tri_compare* a, unknown_tri_compare* b);

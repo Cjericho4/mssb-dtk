@@ -8,6 +8,8 @@
 #include "game/rep_3448.h"
 
 extern f32 lbl_3_rodata_2664;
+extern char lbl_3_rodata_286C[];
+extern char lbl_3_rodata_2878[];
 extern u8 lbl_3_bss_A898[];
 extern DrawingSceneStruct* lbl_3_bss_A8A4;
 
@@ -516,8 +518,15 @@ void fn_3_D511C(void) {
 }
 
 // .text:0x000D53C0 size:0x84 mapped:0x80714454
-void fn_3_D53C0(void) {
-    return;
+s32 fn_3_D53C0(u8 arg0) {
+    u32 i;
+    for (i = lbl_3_common_bss_350E4[0].memcpyCount; i > 0; i--) {
+        if (lbl_3_common_bss_350E4[0].idEntries[i - 1].id == arg0) {
+            return i - 1;
+        }
+    }
+    OSPanic(lbl_3_rodata_286C, 0x863, lbl_3_rodata_2878);
+    return 0;
 }
 
 // .text:0x000D5444 size:0x2C mapped:0x807144D8
