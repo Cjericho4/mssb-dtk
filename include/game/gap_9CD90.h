@@ -34,6 +34,6 @@ void fn_3_9E368(void);
 s32 fn_3_9E5A0(u8* weights, s32 count);
 void fn_3_9E7D4(s32 arg0);
 void fn_3_9E834(void);
-void fn_3_9EA1C(void);
+BOOL fn_3_9EA1C(s32 team);
 
 #endif // !__GAME_gap_9CD90_H_

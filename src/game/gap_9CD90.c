@@ -125,7 +125,14 @@ void fn_3_9E834(void) {
 }
 
 // .text:0x0009EA1C size:0xC8 mapped:0x806DDAB0
-void fn_3_9EA1C(void) {
-    return;
+BOOL fn_3_9EA1C(s32 team) {
+    s32 i;
+
+    for (i = 1; i < 10; i++) {
+        if (g_GameLogic.battingOrderAndPositionMapping[team][i][1] % 10 == 9) {
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 
