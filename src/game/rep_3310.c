@@ -12,6 +12,7 @@
 #include "game/gap_90754.h"
 #include "game/rep_1C0.h"
 #include "game/rep_1D58.h"
+#include "game/rep_1838.h"
 
 typedef struct Rep3310Item {
     u8 _pad0[0x14];
@@ -58,7 +59,7 @@ typedef struct Rep3310MiniPos {
 
 static const f32 lbl_3_rodata_338C[8] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f };
 
-extern void fn_8001D0D0();
+void fn_8001D0D0(s32 index, f32 scale);
 extern s32 fn_8005268C(void);
 extern void fn_80033B58(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern f32 lbl_3_rodata_33C0;
@@ -154,7 +155,7 @@ void fn_3_117494(void) {
             entry->field_0xFCC = temp1;
             entry->field_0xFD0 = temp3;
             entry->field_0xFD4 = temp2;
-            fn_8001D0D0(0x65, 12.5f, temp1);
+            fn_8001D0D0(0x65, 12.5f);
         }
     }
 }
@@ -270,9 +271,29 @@ void fn_3_1179EC(void) {
     return;
 }
 
+typedef struct {
+    void (*func)(s32);
+    VecXYZ pos;
+    VecXYZ rot;
+    u8 _pad1C[0xA];
+    u8 visible;
+    u8 _pad27;
+} Rep3310Entry2D94;
+
+extern VecXYZ lbl_3_data_21A48;
+
 // .text:0x00117AE4 size:0x94 mapped:0x80756B78
 void fn_3_117AE4(void) {
-    return;
+    Rep3310Entry2D94* entry = (Rep3310Entry2D94*)&g_hugeAnimStruct.entries_2D94[0xE7];
+
+    entry->visible = 1;
+    entry->pos.x = lbl_3_data_21A48.x;
+    entry->pos.z = lbl_3_data_21A48.z;
+    entry->pos.y = 0.0f;
+    entry->rot.x = 0.0f;
+    entry->rot.z = 0.0f;
+    entry->rot.y = shortAngleToRad(0x1000 - g_Minigame._1D64);
+    fn_8001D0D0(0xE7, 3.0f);
 }
 
 // .text:0x00117B78 size:0x450 mapped:0x80756C0C
@@ -299,14 +320,6 @@ void fn_3_118164(void) {
 void fn_3_118358(void) {
     return;
 }
-
-typedef struct {
-    void (*func)(s32);
-    VecXYZ pos;
-    u8 _pad10[0x16];
-    u8 visible;
-    u8 _pad27;
-} Rep3310Entry2D94;
 
 typedef struct {
     VecXYZ pos;
