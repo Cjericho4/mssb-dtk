@@ -70,6 +70,14 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Per-element pointer declared inside the loop body** fixes register order (fn_3_B3BD0, fn_3_11874C).
 *   **CRC-style if/else sharing a shift**: separate `crc >>= 1; crc ^= 0x8408;` stops hoisting.
 *   **Two `Mtx`/adjacent locals in swapped stack slots**: swap declaration order. For register swaps, brute-force declaration orders with itertools + `try_function.py`.
+*   **Global byte read hoisted out of a loop**: read the global directly in the loop body, don't cache it in a local (fn_3_86DFC).
+*   **`clrlwi`+`cmplwi 1` kept inside a loop on an s16**: `!(x == 0 || x == 1)`; a `(u16)x > 1` cast gets hoisted (fn_3_889FC).
+*   **`addi rX,idx,5; slwi; add; lwz 4(r)` instead of folded displacement**: put the index in a local first (`slot = idx + 5; files[slot]`) (fn_3_90F48; may help fn_3_90AB0).
+*   **`srwi` not `srawi` on a u8 `>> 1`**: `x / 2` or `(u32)x >> 1`.
+*   **Float args loaded before pointer args**: the callee prototype has the floats first (fn_3_C3E94).
+*   **Shared tail block placed before `return FALSE`**: `if (c) { switch {... case 3: goto done;} } else { done: ...; return TRUE; } return FALSE;` (fn_3_B254C).
+*   **`slwi` without `clrlslwi` indexing by a u16**: `(&arr[idx])[1]` rather than `arr[idx + 1]` (fn_3_91B9C).
+*   **`try_function.py` candidates**: omit the `// .text:` comment line (it duplicates); don't `git checkout` a file mid-iteration (wipes added includes).
 *   **Parameter that seems unused**: it may be passed straight through to a callee in `r3` (fn_3_5B380 → `fn_8004CA6C`).
 
 ### Known Unfixable Patterns (don't spend attempts)
