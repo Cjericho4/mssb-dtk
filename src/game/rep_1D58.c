@@ -158,7 +158,13 @@ void fn_3_B902C(void) {
 
 // .text:0x000B908C size:0x98 mapped:0x806F8120
 void fn_3_B908C(void) {
-    return;
+    if (lbl_3_bss_1904 == NULL) {
+        UnknownStruct_350E4* bss = &lbl_3_common_bss_350E4[0];
+        lbl_3_bss_1904 = _OSAllocFromHeap(0x20, bss->memcpyCount * 0xE8);
+        memcpy(lbl_3_bss_1904, lbl_3_common_bss_350E4[0].src, bss->memcpyCount * 0xE8);
+    }
+    memcpy(lbl_3_common_bss_350E4[0].src, lbl_3_common_bss_350E4[0].dest, lbl_3_common_bss_350E4[0].memcpyCount * 0xE8);
+    lbl_3_common_bss_350E4[0].unk66 = lbl_3_common_bss_350E4[0].unk68;
 }
 
 // .text:0x000B9124 size:0x48 mapped:0x806F81B8
