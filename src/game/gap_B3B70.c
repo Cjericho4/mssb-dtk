@@ -4,6 +4,7 @@
 #include "game/m_sound.h"
 #include "game/rep_AC8.h"
 #include "game/rep_1188.h"
+#include "game/rep_13B8.h"
 
 // .text:0x000B3B70 size:0x60 mapped:0x806F2C04
 void fn_3_B3B70(void) {
@@ -301,17 +302,18 @@ void fn_3_B6C50(void) {
 }
 
 // .text:0x000B6C9C size:0xE4 mapped:0x806F5D30
-void fn_3_B6C9C(void) {
-    PracticeStruct* practice = &g_Practice;
+static inline void practicePlayEndUpdate(void) {
+    PracticeStruct* practice;
 
-    if (practice->instructionNumber >= 0) {
+    if (g_Practice.instructionNumber >= 0) {
+        practice = &g_Practice;
         if (practice->allowPlayToEndIndicator == 0) {
             g_FieldingLogic.unkAE = 0;
             return;
         }
     } else {
         if (g_Runners[1].runnerOnFieldOrOutOrScored == 3) {
-            practice->guidedPracticeCompletionRelated = 1;
+            g_Practice.guidedPracticeCompletionRelated = 1;
         }
         return;
     }
@@ -331,9 +333,19 @@ void fn_3_B6C9C(void) {
     }
 }
 
+void fn_3_B6C9C(void) {
+    practicePlayEndUpdate();
+}
+
 // .text:0x000B6D80 size:0x118 mapped:0x806F5E14
 void fn_3_B6D80(void) {
-    return;
+    PracticeStruct* practice = &g_Practice;
+
+    if (practice->instructionNumber < 0 && fn_3_B32B8() != 0) {
+        return;
+    }
+    fn_3_8A958();
+    practicePlayEndUpdate();
 }
 
 // .text:0x000B6E98 size:0xD4 mapped:0x806F5F2C
