@@ -6,6 +6,10 @@
 #include "game/rep_1D58.h"
 #include "C3/control.h"
 #include "game/sta_c2.h"
+#include "game/gap_16C410.h"
+#include "game/rep_540.h"
+#include "game/rep_AC8.h"
+#include "musyx/musyx.h"
 
 // .text:0x000EE100 size:0x288 mapped:0x8072D194
 void fn_3_EE100(void) {
@@ -225,7 +229,26 @@ void fn_3_F1518(void) {
 
 // .text:0x000F1674 size:0xDC mapped:0x80730708
 void fn_3_F1674(void) {
-    return;
+    s32 stadium = g_d_GameSettings.StadiumID;
+    u8 vol;
+    u8 pan;
+    SND_VOICEID vid;
+
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        vol = lbl_3_data_84B8[0][5].vol;
+    } else {
+        vol = lbl_3_data_8404[stadium][5].vol;
+    }
+    vid = sndFXStartEx(lbl_3_data_81DC[stadium] + 5, vol, 0x3F, 0);
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        pan = lbl_3_data_84B8[0][5].pan;
+    } else {
+        pan = lbl_3_data_8404[stadium][5].pan;
+    }
+    sndFXCtrl(vid, 0x5B, pan);
+    fn_3_65A8();
+    fn_3_27648();
+    g_FieldingLogic.unk_13B = 1;
 }
 
 // .text:0x000F1750 size:0x154 mapped:0x807307E4
