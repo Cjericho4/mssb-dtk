@@ -420,7 +420,23 @@ void fn_3_88D88(s32 arg0) {
 
 // .text:0x00088F98 size:0x90 mapped:0x806C802C
 void fn_3_88F98(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        if (i == 0) {
+            fn_3_85EF4(i, 1);
+        }
+        if (i == 0) {
+            g_Runners[i].unused_AIRelated = 1;
+        } else {
+            g_Runners[i].unused_AIRelated = 0;
+            if (g_Strikes.unk_C < 2) {
+                g_Runners[i].tagUpInd = 1;
+            } else {
+                g_Runners[i].tagUpInd = 0;
+            }
+        }
+    }
 }
 
 // .text:0x00089028 size:0xF4 mapped:0x806C80BC
