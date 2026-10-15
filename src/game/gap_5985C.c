@@ -84,7 +84,13 @@ s32 fn_3_59AE4(void) {
 
 // .text:0x00059B20 size:0xAC mapped:0x80698BB4
 void fn_3_59B20(void) {
-    return;
+    s32 i;
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        for (i = 0; i < 4; i++) {
+            AnimationStruct* anim = &g_hugeAnimStruct.fielderStructs[i];
+            fn_80022CB4(&lbl_800F1D78[anim->unk252 * 19 + 1], anim->field3_0xc, 0, 0, fn_3_59AC0, anim);
+        }
+    }
 }
 
 // .text:0x00059BCC size:0x60 mapped:0x80698C60

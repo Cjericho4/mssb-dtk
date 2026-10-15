@@ -17,6 +17,13 @@ void fn_8001AAA4(void);
 void possiblyTransitionBlackScreen(void);
 void fn_3_10FBE4(void);
 
+typedef struct Lbl800F1D78Entry {
+    u8 _pad[0x10];
+} Lbl800F1D78Entry;
+extern Lbl800F1D78Entry lbl_800F1D78[];
+void fn_80022CB4(Lbl800F1D78Entry* entry, struct AnimModelData* model, s32 arg2, s32 arg3,
+                 void (*callback)(s32, s32, s32), AnimationStruct* anim);
+
 void fn_3_5985C(s32 idx, s32 arg1);
 void fn_3_598D0(void);
 void fn_3_59918(s32 arg0, s32 arg1);
