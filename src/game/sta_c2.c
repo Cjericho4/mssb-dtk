@@ -130,8 +130,14 @@ void fn_3_CE954(void) {
 }
 
 // .text:0x000CEBBC size:0xDC mapped:0x8070DC50
-void fn_3_CEBBC(void) {
-    return;
+void fn_3_CEBBC(VecXYZ* pos, s32 idx) {
+    s16 x;
+    s16 y;
+
+    fn_800528C0(pos->x, pos->y, pos->z, &x, &y);
+    lbl_80371C30[lbl_3_bss_A8A4->unkIndex + idx].obj->pos.x = x;
+    lbl_80371C30[lbl_3_bss_A8A4->unkIndex + idx].obj->pos.y = y;
+    lbl_80371C30[lbl_3_bss_A8A4->unkIndex + idx].obj->pos.z = 0.0f;
 }
 
 // .text:0x000CEC98 size:0x98 mapped:0x8070DD2C
