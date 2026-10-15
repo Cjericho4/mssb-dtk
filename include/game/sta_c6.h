@@ -46,6 +46,12 @@ typedef struct BaseStruct_E6638 {
 } BaseStruct_E6638;
 
 typedef struct {
+    u8 _pad0[0xA8];
+    u32* unkA8;     // 0xA8
+    u32* unkAC;     // 0xAC
+} Struct_E6410;
+
+typedef struct {
     u8 _pad0[0xA4];
     u32 unkA4;      // 0xA4
     u8 _pad1[0xC];  // 0xA8..0xB3
@@ -84,7 +90,7 @@ void fn_3_E5CBC(void);
 int fn_3_E5E14(Arg0_E5E14* arg0);
 void fn_3_E5E70(void);
 void fn_3_E5FEC(void);
-void fn_3_E6410(void);
+void fn_3_E6410(Struct_E6410* arg0);
 u32* fn_3_E64A8(void);
 void fn_3_E6528(Struct_E6528* arg0);
 void fn_3_E6578(void);

@@ -65,8 +65,19 @@ void fn_3_E5FEC(void) {
 }
 
 // .text:0x000E6410 size:0x98 mapped:0x807254A4
-void fn_3_E6410(void) {
-    return;
+void fn_3_E6410(Struct_E6410* arg0) {
+    u32* choices[3];
+    u32** p = choices;
+    u32* q = lbl_3_data_19018;
+    int i;
+
+    for (i = 0; i < 3; i++) {
+        if (arg0->unkAC != q) {
+            *p++ = q;
+        }
+        q++;
+    }
+    arg0->unkA8 = choices[rand() % 2];
 }
 
 // .text:0x000E64A8 size:0x80 mapped:0x8072553C
