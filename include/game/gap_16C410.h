@@ -3,6 +3,15 @@
 
 #include "mssbTypes.h"
 
-void fn_3_16C410(void);
+typedef struct {
+    u8 vol;
+    u8 pan;
+} StadiumSfxVolPan;
+
+extern u16 lbl_3_data_81DC[];
+extern StadiumSfxVolPan lbl_3_data_8404[][15];
+extern StadiumSfxVolPan lbl_3_data_84B8[][15];
+
+void fn_3_16C410(u8 arg0);
 
 #endif // GAME_GAP_16C410_H
