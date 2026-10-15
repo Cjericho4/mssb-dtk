@@ -68,14 +68,12 @@ void fn_3_1158B0(void) {
 
 // .text:0x001158F8 size:0x80 mapped:0x8075498C
 void fn_3_1158F8(void) {
-    fn_3_6EBB4((s8)g_Minigame.minigamePlayerSelectedOrder);
+    fn_3_6EBB4(g_Minigame.minigamePlayerSelectedOrder);
     fn_3_F1DC();
     fn_3_751B4();
     fn_3_58870();
-    
     memset(g_Minigame._1D7C, 0, 0x78);
     Set_803cb848(1);
-    
     g_FieldingLogic.unkAE = 0;
     g_UnkSimulation_31AC0.unk5 = 0;
     g_UnkSimulation_31AC0.unk6 = 4;

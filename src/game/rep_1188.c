@@ -103,7 +103,7 @@ void setFielderValues(s8 rosterID, s32 fielderIndex) {
 }
 
 // .text:0x0006EBB4 size:0x368 mapped:0x806ADC48
-void fn_3_6EBB4(s8 arg0) {
+void fn_3_6EBB4(s32 arg0) {
     return;
 }
 
