@@ -201,7 +201,7 @@ void fn_3_52084(void);
 void fn_3_522E0(void);
 void fn_3_52560(void);
 void fn_3_526DC(void);
-void fn_3_52F4C(void);
+void fn_3_52F4C(s32 fielderIdx, f32 x, f32 z);
 void fn_3_530EC(int index);
 int fn_3_53130(s32 temp);
 void fn_3_5372C(void);

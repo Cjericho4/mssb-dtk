@@ -1,4 +1,5 @@
 #include "game/rep_18E8.h"
+#include "game/rep_AC8.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 
@@ -196,8 +197,14 @@ void fn_3_A3CC0(void) {
 }
 
 // .text:0x000A4158 size:0x90 mapped:0x806E31EC
-void fn_3_A4158(void) {
-    return;
+void fn_3_A4158(s32 runnerIdx) {
+    InMemRunnerType* r = &g_Runners[runnerIdx];
+    if (r->runningDirectionCode == 2) {
+        fn_3_52F4C(g_Ball.fielderWBallIndex, r->position.x, r->position.z);
+    } else {
+        fn_3_52F4C(g_Ball.fielderWBallIndex, r->position.x + 2.0f * (r->velocity.x * r->distanceFromBall),
+                   r->position.z + 2.0f * (r->velocity.y * r->distanceFromBall));
+    }
 }
 
 // .text:0x000A41E8 size:0x4B8 mapped:0x806E327C

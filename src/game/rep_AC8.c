@@ -1062,7 +1062,7 @@ void fn_3_526DC(void) {
 }
 
 // .text:0x00052F4C size:0x1A0 mapped:0x80691FE0
-void fn_3_52F4C(void) {
+void fn_3_52F4C(s32 fielderIdx, f32 x, f32 z) {
     return;
 }
 
