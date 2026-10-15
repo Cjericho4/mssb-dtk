@@ -58,6 +58,15 @@ void fn_3_908E8(void) {
 
 // .text:0x00090928 size:0x88 mapped:0x806CF9BC
 s32 fn_3_90928(void) {
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    if (lbl_3_common_bss_34C58._2C == 0) {
+        fn_800216F8(0x25, fn_8006285C);
+        scene->loadingState = 0;
+        lbl_3_common_bss_34C58._2C++;
+    } else if (scene->loadingState != 0) {
+        return 1;
+    }
     return 0;
 }
 
