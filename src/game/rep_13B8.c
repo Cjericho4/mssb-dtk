@@ -3,6 +3,7 @@
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "game/gap_9CD90.h"
+#include "game/rep_140.h"
 
 extern f32 lbl_3_rodata_1498;
 
@@ -147,8 +148,33 @@ void fn_3_7FEA8(s32 runnerIdx, s32 direction) {
 }
 
 // .text:0x0007FED4 size:0xFC mapped:0x806BEF68
-void fn_3_7FED4(void) {
-    return;
+extern VecXZ lbl_3_data_4A54[2][13];
+
+void fn_3_7FED4(VecXYZ* out, f32 dist, f32 t) {
+    VecXZ res;
+    s32 start;
+    s32 count;
+
+    if (dist < 1.0f) {
+        start = 0;
+        count = 4;
+    } else if (dist < 2.0f) {
+        start = 3;
+        count = 4;
+    } else if (dist < 3.0f) {
+        start = 6;
+        count = 4;
+    } else if (g_GameLogic.secondaryGameMode == 6) {
+        start = 9;
+        count = 4;
+    } else {
+        start = 9;
+        count = 3;
+    }
+    running_roundBasePosition(&res, &lbl_3_data_4A54[g_GameLogic.secondaryGameMode == 6][start], count, t);
+    out->x = res.x;
+    out->z = res.z;
+    out->y = 0.0f;
 }
 
 // .text:0x0007FFD0 size:0x58 mapped:0x806BF064

@@ -22,7 +22,7 @@ void fn_3_1B24(void) {
 }
 
 // .text:0x000025E0 size:0x304 mapped:0x80641674
-void running_roundBasePosition(void) {
+void running_roundBasePosition(struct _VecXZ* out, struct _VecXZ* points, s32 count, f32 t) {
     return;
 }
 
