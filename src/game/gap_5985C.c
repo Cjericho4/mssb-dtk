@@ -1,5 +1,6 @@
 #include "game/gap_5985C.h"
 #include "game/rep_1188.h"
+#include "game/rep_1C0.h"
 #include "game/rep_868.h"
 #include "game/rep_540.h"
 #include "game/game_batter.h"
@@ -428,7 +429,19 @@ void fn_3_5F930(void) {
 
 // .text:0x0005FE88 size:0x88 mapped:0x8069EF1C
 void fn_3_5FE88(void) {
-    return;
+    switch (g_GameLogic._125) {
+    case 0:
+        fn_800B0A5C_insertQueue(possiblyTransitionBlackScreen, 2);
+        g_GameLogic._125 = 1;
+        break;
+    case 1:
+        fn_800B0A5C_insertQueue(fn_3_5BAC, 4);
+        g_GameLogic._125 = 2;
+        break;
+    default:
+        fn_3_5A6D4(5);
+        break;
+    }
 }
 
 // .text:0x0005FF10 size:0x20C mapped:0x8069EFA4
