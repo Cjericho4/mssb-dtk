@@ -7,6 +7,8 @@
 #include "game/rep_AC8.h"
 #include "game/gap_106DFC.h"
 #include "game/gap_5985C.h"
+#include "game/rep_3310.h"
+
 
 // .text:0x00114FC0 size:0x6C mapped:0x80754054
 void fn_3_114FC0(void) {
@@ -58,14 +60,12 @@ void fn_3_1158B0(void) {
 
 // .text:0x001158F8 size:0x80 mapped:0x8075498C
 void fn_3_1158F8(void) {
-    fn_3_6EBB4((s8)g_Minigame.minigamePlayerSelectedOrder);
+    fn_3_6EBB4(g_Minigame.minigamePlayerSelectedOrder);
     fn_3_F1DC();
     fn_3_751B4();
     fn_3_58870();
-    
     memset(g_Minigame._1D7C, 0, 0x78);
     Set_803cb848(1);
-    
     g_FieldingLogic.unkAE = 0;
     g_UnkSimulation_31AC0.unk5 = 0;
     g_UnkSimulation_31AC0.unk6 = 4;
@@ -129,10 +129,40 @@ void fn_3_11669C(void) {
 
 // .text:0x001166CC size:0xC0 mapped:0x80755760
 void fn_3_1166CC(void) {
-    return;
+    HugeAnimEntry2D94* entry;
+    int i;
+
+    for (i = 0; i < 40; i++) {
+        entry = &g_hugeAnimStruct.entries_2D94[i];
+        entry->unk_26 = 0;
+        entry->stadiumFileHeaderPointer = NULL;
+    }
 }
+
+typedef struct {
+    VecXYZ pos;
+    u8 _pad0C[0x24];
+} Data21BC4Entry; // size: 0x30
+
+extern Data21BC4Entry lbl_3_data_21BC4[];
+extern f32 lbl_3_data_226C4[4];
+void fn_8001D110(s32 index, f32 a, f32 b, f32 c);
 
 // .text:0x0011678C size:0xB4 mapped:0x80755820
 void fn_3_11678C(void) {
-    return;
+    StadiumObjEntry* entry;
+    s32 i;
+
+    for (i = 0; i < 7; i++) {
+        entry = (StadiumObjEntry*)&g_hugeAnimStruct.entries_2D94[i + 0xE9];
+        entry->visible = 0;
+        if (i >= 4) {
+            entry->visible = 1;
+            entry->pos.x = lbl_3_data_21BC4[i - 4].pos.x;
+            entry->pos.y = -lbl_3_data_21BC4[i - 4].pos.y;
+            entry->pos.z = lbl_3_data_21BC4[i - 4].pos.z;
+            fn_8001D110(i + 0xE9, lbl_3_data_226C4[0], lbl_3_data_226C4[1], lbl_3_data_226C4[0]);
+            entry->func = fn_3_11881C;
+        }
+    }
 }
