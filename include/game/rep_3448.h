@@ -60,7 +60,7 @@ void fn_3_123EBC(void);
 void fn_3_1243A4(void);
 void fn_3_124738(void);
 void fn_3_124CE0(void);
-void fn_3_12536C(void);
+BOOL fn_3_12536C(void);
 BOOL fn_3_125424(Struct_125424_Arg* arg0, u32 arg1, u32 arg2);
 BOOL fn_3_125480(Struct_125424_Arg* arg0);
 void fn_3_1254F8(void);

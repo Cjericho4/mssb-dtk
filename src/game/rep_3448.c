@@ -1,6 +1,7 @@
 #include "game/rep_3448.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
+#include "game/gap_AC9F8.h"
 
 // .text:0x0011EC28 size:0x404 mapped:0x8075DCBC
 void fn_3_11EC28(void) {
@@ -163,8 +164,28 @@ void fn_3_124CE0(void) {
 }
 
 // .text:0x0012536C size:0xB8 mapped:0x80764400
-void fn_3_12536C(void) {
-    return;
+BOOL fn_3_12536C(void) {
+    u8 status;
+
+    if (lbl_3_common_bss_32724.someStatusInd != 0 || lbl_3_common_bss_32724.unk_B7 != 0) {
+        return TRUE;
+    }
+    status = g_GameLogic.gameStatus;
+    if (status == 0xF) {
+        return TRUE;
+    }
+    if (g_Minigame.pauseInd != 0) {
+        if (lbl_3_common_bss_34C90.field_0x1D2 == 7 || lbl_3_common_bss_34C90.field_0x1D2 == 9) {
+            return TRUE;
+        }
+        if (lbl_3_common_bss_34C90.field_0x1D2 == 0xD) {
+            return TRUE;
+        }
+    }
+    if (status == 0xE && g_GameLogic.FrameCountOfCurrentPitch == 0) {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x00125424 size:0x5C mapped:0x807644B8
