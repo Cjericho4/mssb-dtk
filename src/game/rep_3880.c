@@ -152,9 +152,21 @@ void fn_3_149BA8(void) {
     return;
 }
 
+extern s8 lbl_3_bss_B85C[4];
+
 // .text:0x0014A070 size:0xF4 mapped:0x80789104
-void fn_3_14A070(void) {
-    return;
+void fn_3_14A070(s32* arr, s32 count) {
+    u32 i;
+    lbl_3_bss_B85C[0] = -1;
+    lbl_3_bss_B85C[1] = -1;
+    lbl_3_bss_B85C[2] = -1;
+    lbl_3_bss_B85C[3] = -1;
+    if (count > 4 || count == 0 || arr == NULL) {
+        return;
+    }
+    for (i = 0; i < count; i++) {
+        lbl_3_bss_B85C[i] = arr[i];
+    }
 }
 
 // .text:0x0014A164 size:0x24 mapped:0x807891F8
