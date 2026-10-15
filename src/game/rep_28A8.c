@@ -80,7 +80,18 @@ void fn_3_DCED0(void) {
 
 // .text:0x000DCF44 size:0xBC mapped:0x8071BFD8
 void fn_3_DCF44(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < g_Minigame.miniGameNumberOfParticipants; i++) {
+        if (g_Minigame.players.characterIndex[i] >= 0 && g_Minigame.players.battingHandedness[i] == 0 &&
+            (g_Controls[g_Minigame.players.characterIndex[i]].newButtonInput & 0x1000)) {
+            lbl_3_common_bss_34C90.field_0x1D5 = 1;
+            lbl_3_common_bss_34C90.field_0x00 = g_Minigame.players.characterIndex[i];
+            fn_3_AFD80(0);
+            fn_3_59918(0xE, 0);
+            break;
+        }
+    }
 }
 
 // .text:0x000DD000 size:0x1A8 mapped:0x8071C094

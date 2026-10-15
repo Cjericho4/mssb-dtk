@@ -13,7 +13,7 @@
 #include "game/game_batter.h"
 
 typedef struct {
-    u8 _pad0[0x04];      /* 0x00 */
+    s32 field_0x00;      /* 0x00 */
     s16 field_0x04;      /* 0x04 */
     u16 field_0x06;      /* 0x06 */
     u16 field_0x08;      /* 0x08 */
