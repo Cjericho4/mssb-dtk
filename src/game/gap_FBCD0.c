@@ -1,10 +1,32 @@
 #include "game/gap_FBCD0.h"
+#include "UnknownHeaders.h"
+#include "game/rep_1D58.h"
 
 extern u32 lbl_3_data_20E0C[];
 
+typedef struct {
+    u8 _pad0[0x38];
+    Mtx mtx;               /* 0x38 */
+    u8 _pad68[0x6C - 0x68];
+} CameraSlot_1BE94;        /* size 0x6C */
+
+typedef struct {
+    u8 _pad0[0x40];
+    Mtx mtx; /* 0x40 */
+} CameraMtx_FBCD0;
+
+extern u8 lbl_803CBBC0;
+extern CameraSlot_1BE94 lbl_3_data_1BE94[];
+extern CameraMtx_FBCD0* fn_80052768(s32 arg0);
+extern void fn_800A7D4C(s32 arg0, CameraSlot_1BE94* slot);
+
 // .text:0x000FBCD0 size:0x88 mapped:0x8073AD64
 void fn_3_FBCD0(void) {
-    return;
+    fn_3_B939C();
+    if (g_GameLogic.bOD_framesInLiveBallScene >= 0) {
+        PSMTXCopy(fn_80052768(0)->mtx, lbl_3_data_1BE94[lbl_803CBBC0].mtx);
+        fn_800A7D4C(1, &lbl_3_data_1BE94[lbl_803CBBC0]);
+    }
 }
 
 // .text:0x000FBD58 size:0x18 mapped:0x8073ADEC
