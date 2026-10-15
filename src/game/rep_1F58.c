@@ -8,8 +8,11 @@ extern u8 lbl_3_bss_9D40[0x40];
 extern const f32 lbl_3_rodata_1FA8;
 
 typedef struct {
-    u8 _pad0[0x20];
-    u8 active; /* 0x20 */
+    u8 _pad0[0x14];
+    s32 unk14;     /* 0x14 */
+    s32 slot;      /* 0x18 */
+    s32 charIndex; /* 0x1C */
+    u8 active;     /* 0x20 */
 } RepC0854Obj;
 
 typedef struct {
@@ -68,8 +71,19 @@ void fn_3_C0AD8(void) {
 }
 
 // .text:0x000C0C4C size:0x9C mapped:0x806FFCE0
-void fn_3_C0C4C(void) {
-    return;
+void fn_3_C0C4C(s32 idx) {
+    RepC0854Obj* obj = (RepC0854Obj*)fn_800B0A5C_insertQueue(fn_3_C0AD8, 1);
+
+    obj->unk14 = 0;
+    obj->charIndex = lbl_3_data_17260[idx].charIndex;
+    obj->active = 0;
+    for (idx = 0; idx < 2; idx++) {
+        if (lbl_3_data_174A0[idx] == NULL) {
+            lbl_3_data_174A0[idx] = obj;
+            obj->slot = idx;
+            break;
+        }
+    }
 }
 
 // .text:0x000C0CE8 size:0x28 mapped:0x806FFD7C
