@@ -105,6 +105,19 @@ void fn_3_8B7DC(void) {
     sndRemoveListener(&lbl_3_common_bss_32B20);
 }
 
+static inline void removeAllEmitters(void) {
+    s32 i;
+
+    for (i = 0; i < SOUND_EMITTER_COUNT; i++) {
+        if (lbl_3_common_bss_32B20.emitterActive[i] != 0) {
+            if (sndCheckEmitter(&lbl_3_common_bss_32B20.emitters[i]) != 0) {
+                sndRemoveEmitter(&lbl_3_common_bss_32B20.emitters[i]);
+            }
+            lbl_3_common_bss_32B20.emitterActive[i] = 0;
+        }
+    }
+}
+
 // .text:0x0008B804 size:0x8C mapped:0x806CA898
 void fn_3_8B804(void) {
     s32 i;
@@ -159,8 +172,8 @@ void fn_3_8BBC4(s32 soundID, VecXYZ* pos, s32 arg2, s32 arg3) {
 
 // .text:0x0008BDF4 size:0x98 mapped:0x806CAE88
 void fn_3_8BDF4(void) {
-    return;
-
+    removeAllEmitters();
+    sndRemoveListener(&lbl_3_common_bss_32B20);
 }
 
 // .text:0x0008BE8C size:0x1F0 mapped:0x806CAF20
