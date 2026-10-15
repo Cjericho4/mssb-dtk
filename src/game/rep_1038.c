@@ -13,8 +13,47 @@ void fn_3_6BEA4(void) {
 }
 
 // .text:0x0006C000 size:0xE0 mapped:0x806AB094
+extern VecXYZ lbl_3_data_18DD4[4];
+
 void fn_3_6C000(void) {
-    return;
+    s32 i;
+    AnimationStruct* anim;
+
+    g_hugeAnimStruct.characterRelated = -1;
+    for (i = 0; i < 13; i++) {
+        if (g_hugeAnimStruct.AnimationStructPtrs[i] != NULL) {
+            g_hugeAnimStruct.AnimationStructPtrs[i]->unk_25D = 0;
+        }
+    }
+    if (g_Practice.practiceState == 6) {
+        return;
+    }
+    if (g_Practice.practiceState <= 1) {
+        return;
+    }
+    anim = g_hugeAnimStruct.AnimationStructPtrs[9];
+    if (anim == NULL) {
+        return;
+    }
+    if (g_Minigame._1A13[0] != 0) {
+        return;
+    }
+    if (g_Minigame.teamEntries[0].fieldB < 0) {
+        return;
+    }
+    if ((s8)g_Minigame.teamEntries[0]._7 == 0) {
+        return;
+    }
+    if ((s8)g_Minigame._19DA[0] < 0) {
+        return;
+    }
+    anim->unk_25D = 1;
+    anim->unk34.x = lbl_3_data_18DD4[0].x;
+    anim->unk34.y = -lbl_3_data_18DD4[0].y;
+    anim->unk34.z = lbl_3_data_18DD4[0].z;
+    anim->unk40.x = 0.0f;
+    anim->unk40.y = 0.0f;
+    anim->unk40.z = 0.0f;
 }
 
 // .text:0x0006C0E0 size:0x28 mapped:0x806AB174
