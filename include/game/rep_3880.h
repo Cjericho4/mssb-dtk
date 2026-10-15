@@ -101,7 +101,11 @@ void fn_3_1480E0(void);
 void fn_3_148254(void);
 bool fn_3_1483D4(void);
 void fn_3_14841C(void);
-void fn_3_148EF0(void);
+typedef struct Struct_148EF0_Arg {
+    u8 _pad0[0x10];
+    Vec unk10; // 0x10
+} Struct_148EF0_Arg;
+void fn_3_148EF0(Struct_148EF0_Arg* arg0, f32 angle);
 void fn_3_148FD0(void);
 void fn_3_149340(void);
 void fn_3_14975C(void);

@@ -111,9 +111,25 @@ void fn_3_14841C(void) {
     return;
 }
 
+typedef struct {
+    s32 unk0;
+    s32 unk4;
+    u8 _pad8[0x18];
+} Struct_26E7C;
+extern Struct_26E7C lbl_3_data_26E7C;
+
 // .text:0x00148EF0 size:0xE0 mapped:0x80787F84
-void fn_3_148EF0(void) {
-    return;
+void fn_3_148EF0(Struct_148EF0_Arg* arg0, f32 angle) {
+    f32 s;
+    f32 c;
+    f32 rad;
+
+    rad = 0.017453292f * angle;
+    s = (f32)sin(rad);
+    c = (f32)cos(rad);
+    arg0->unk10.x = (s * (f32)lbl_3_data_26E7C.unk4) / 100000.0f;
+    arg0->unk10.y = (c * (f32)lbl_3_data_26E7C.unk4) / 100000.0f;
+    arg0->unk10.z = 0.0f;
 }
 
 // .text:0x00148FD0 size:0x370 mapped:0x80788064
