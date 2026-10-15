@@ -60,6 +60,16 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **`bnelr` leaving r3 untouched**: the original had no return on that path (fn_3_109CE8).
 *   **Load scheduled from the global rather than a temp**: `global.field = table[x]; if (global.field ...)` (fn_3_10F5BC).
 *   **Statics accessed through one base symbol**: model as a struct overlay on that symbol (fn_3_F0184, `StaC5Bss_AEE0`).
+*   **Stubborn register/stack permutation**: try a `static inline` helper for the working pointer (out-param or getter) (fn_3_E698C, fn_3_E4BE8, fn_3_E67F4).
+*   **Same loop at two sites, different regalloc**: shared inline; in a short+long pair, inline only into the longer one and write it directly in the short one (fn_3_146928; fn_3_8B804/8BDF4).
+*   **`u8` field compared with `cmpwi`**: `(s32)field == 1` (fn_3_5CFD0).
+*   **Float `!= 0` with swapped `fcmpu` operands**: `if (PSVECMag(v))` (truthiness) instead of `!= 0.0f`.
+*   **Double `cntlzw`/`srwi`**: `return !!call();`.
+*   **Non-unrolled countdown (`cmpwi`/`subi`/`bne`)**: `i = N; do { ... } while (i-- != 0);`.
+*   **`addi`/`mr`/`stw` two-pointer prologue**: chained `p = *out = table->entries;` (fn_3_6424).
+*   **Per-element pointer declared inside the loop body** fixes register order (fn_3_B3BD0, fn_3_11874C).
+*   **CRC-style if/else sharing a shift**: separate `crc >>= 1; crc ^= 0x8408;` stops hoisting.
+*   **Two `Mtx`/adjacent locals in swapped stack slots**: swap declaration order. For register swaps, brute-force declaration orders with itertools + `try_function.py`.
 *   **Parameter that seems unused**: it may be passed straight through to a callee in `r3` (fn_3_5B380 → `fn_8004CA6C`).
 
 ### Known Unfixable Patterns (don't spend attempts)
