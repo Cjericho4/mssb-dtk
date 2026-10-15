@@ -2,8 +2,22 @@
 #include "header_rep_data.h"
 
 // .text:0x0006750C size:0xAC mapped:0x806A65A0
-void fn_3_6750C(void) {
-    return;
+void fn_3_6750C(Elem6750C* elems) {
+    s32 i;
+
+    for (i = 1; i < 12; i++) {
+        lbl_3_data_6880[i].ptr = &elems[lbl_3_data_6880[i].index].sub;
+        if (lbl_3_data_6880[i].unk8 == 0.0f) {
+            lbl_3_data_6880[i].unk8 = 1.0f;
+        } else {
+            lbl_3_data_6880[i].unk8 = lbl_3_data_6880[i].unk8 / lbl_3_data_6880[i].unk4;
+        }
+        lbl_3_data_6880[i].unkC = lbl_3_data_6880[i].unkC * 60 / 100;
+        if (lbl_3_data_6880[i].unkC < 2) {
+            lbl_3_data_6880[i].unkC = 2;
+        }
+    }
+    lbl_3_bss_169C = 0;
 }
 
 // .text:0x000675B8 size:0x68 mapped:0x806A664C
