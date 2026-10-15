@@ -141,7 +141,15 @@ void fn_3_14FC8(void) {
 
 // .text:0x00015004 size:0xBC mapped:0x80654098
 void fn_3_15004(void) {
-    return;
+    u32 i;
+
+    for (i = 0; i < 4; i++) {
+        if (g_Runners[i].runnerOnFieldOrOutOrScored == 3 && g_pCamera->unkAC0[i] == 0) {
+            g_pCamera->unkABF = i;
+            g_pCamera->unkAC0[i] = 1;
+            g_pCamera->unkA94 = g_Stats.unk24;
+        }
+    }
 }
 
 // .text:0x000150C0 size:0x84 mapped:0x80654154
