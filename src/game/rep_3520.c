@@ -73,13 +73,20 @@ void fn_3_13493C(void) {
 }
 
 // .text:0x00134C80 size:0xCC mapped:0x80773D14
-void fn_3_134C80(void) {
-    return;
+BOOL fn_3_134C80(u32 playerIdx, u32 a, u32 b, f32 x, f32 z) {
+    if (g_Minigame._1D72 != 0 && playerIdx != (s8)g_Minigame._1D6D) {
+        if (b == ((a + 1) & 3) || b == ((a + 2) & 3)) {
+            return TRUE;
+        }
+    }
+    return !!fn_3_134D4C(lbl_3_data_21A48.x, lbl_3_data_21A48.z, 4.5f,
+                         g_Fielders[g_Minigame.minigameFielderIndex[playerIdx]].pos[0],
+                         g_Fielders[g_Minigame.minigameFielderIndex[playerIdx]].pos[2], x, z);
 }
 
 // .text:0x00134D4C size:0x370 mapped:0x80773DE0
-void fn_3_134D4C(void) {
-    return;
+BOOL fn_3_134D4C(f32 ax, f32 az, f32 radius, f32 bx, f32 bz, f32 px, f32 pz) {
+    return 0;
 }
 
 // .text:0x001350BC size:0x400 mapped:0x80774150
