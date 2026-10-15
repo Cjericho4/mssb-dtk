@@ -96,8 +96,25 @@ void fn_3_8B318(s32 arg0) {
 }
 
 // .text:0x0008B718 size:0xC4 mapped:0x806CA7AC
-void fn_3_8B718(void) {
-    return;
+void fn_3_8B718(Vec* pos, Vec* vel, Vec* dir) {
+    SoundCameraView* cam = fn_80052734(0);
+
+    if (pos != NULL) {
+        pos->x = cam->pos.x;
+        pos->y = cam->pos.y;
+        pos->z = cam->pos.z;
+    }
+    if (vel != NULL) {
+        vel->x = 0.0f;
+        vel->y = 0.0f;
+        vel->z = 0.0f;
+    }
+    if (dir != NULL) {
+        PSVECSubtract(&cam->target, &cam->pos, dir);
+        if (PSVECMag(dir)) {
+            PSVECNormalize(dir, dir);
+        }
+    }
 }
 
 // .text:0x0008B7DC size:0x28 mapped:0x806CA870
