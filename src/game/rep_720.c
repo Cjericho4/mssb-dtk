@@ -192,7 +192,21 @@ void fn_3_1527C(s32 arg0) {
 
 // .text:0x000152E8 size:0x94 mapped:0x8065437C
 void fn_3_152E8(s32 arg0) {
-    return;
+    if (g_Ball.deadBallReason != 0) {
+        g_pCamera->unkAB8 = 1;
+        g_pCamera->unkAC6 = g_Ball.deadBallReason;
+    }
+    if (g_Ball.deadBallReason != 1) {
+        return;
+    }
+    if (arg0 == 0) {
+        g_pCamera->unkAB8 = 1;
+        g_pCamera->unkAC6 = g_Ball.deadBallReason;
+        return;
+    }
+    if (g_pCamera->unkA7E == 0) {
+        g_pCamera->unkA7E = g_Stats.unk24;
+    }
 }
 
 // .text:0x0001537C size:0x74 mapped:0x80654410
