@@ -72,8 +72,27 @@ void fn_3_62B50(void) {
 }
 
 // .text:0x00062CA8 size:0x9C mapped:0x806A1D3C
-void fn_3_62CA8(void) {
-    return;
+void fn_3_62CA8(s32 index) {
+    AnimationStruct_31EAC* anim = &g_UnkAnimation_31EAC[index];
+    Fielder* fielder = &g_Fielders[index];
+    AnimationStruct* animStruct = g_hugeAnimStruct.AnimationStructPtrs[index];
+    u8 type;
+
+    if (anim->unk4C == 0) {
+        type = fielder->unk252;
+        anim->unk4C = type;
+        anim->unk4A = fielder->unk24C;
+        if (fielder->unk252 == 1 || fielder->unk252 == 2) {
+            anim->unk4E = fielder->unk253;
+        }
+        if (anim->unk4C != 0) {
+            anim->unk4D = anim->unk4C;
+        }
+    }
+    if (animStruct != NULL && animStruct->animID == 0x24) {
+        anim->unk4C = 0;
+        anim->unk4F = 0;
+    }
 }
 
 // .text:0x00062D44 size:0xC0 mapped:0x806A1DD8

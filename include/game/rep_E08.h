@@ -37,7 +37,13 @@ typedef struct {
     u8 _pad0[0x38];
     s16 unk38; // Offset 0x38
     s16 unk3A; // Offset 0x3A
-    u8 _pad1[0x18]; // Total size 0x54
+    u8 _pad3C[0x4A - 0x3C];
+    s16 unk4A; // Offset 0x4A
+    u8 unk4C; // Offset 0x4C
+    u8 unk4D; // Offset 0x4D
+    u8 unk4E; // Offset 0x4E
+    u8 unk4F; // Offset 0x4F
+    u8 _pad50[0x54 - 0x50]; // Total size 0x54
 } AnimationStruct_31EAC;
 
 extern AnimationStruct_31EAC g_UnkAnimation_31EAC[];
@@ -53,7 +59,7 @@ void fn_3_61544(void);
 void fn_3_61B64(void);
 void fn_3_62904(void);
 void fn_3_62B50(void);
-void fn_3_62CA8(void);
+void fn_3_62CA8(s32 index);
 void fn_3_62D44(void);
 void fn_3_62E04(s32 index);
 void fn_3_62E28(void);
