@@ -1,6 +1,7 @@
 #include "game/rep_13B8.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
+#include "game/gap_9CD90.h"
 
 extern f32 lbl_3_rodata_1498;
 
@@ -440,8 +441,25 @@ void fn_3_898BC(s32 idx, s32 rosterIdx) {
 }
 
 // .text:0x00089914 size:0xA8 mapped:0x806C89A8
-void fn_3_89914(void) {
-    return;
+void fn_3_89914(s32 src, s32 dst) {
+    InMemRunnerType* from = &g_Runners[src];
+    InMemRunnerType* to = &g_Runners[dst];
+
+    if (src >= 0 && src <= 3) {
+        if (g_GameLogic.secondaryGameMode == 0xF && src == 0) {
+            to->rosterID = g_Practice.rosterID;
+        } else {
+            to->rosterID = from->rosterID;
+            to->battingHand = from->battingHand;
+            to->runnerDidntReachOnError = from->runnerDidntReachOnError;
+            to->pitcherWhoLetRunnerOnBase = from->pitcherWhoLetRunnerOnBase;
+        }
+        g_RunningLogic.runnerOnBase[src] = dst;
+    } else {
+        to->rosterID = -1;
+        to->runnerDidntReachOnError = 0;
+        to->pitcherWhoLetRunnerOnBase = -1;
+    }
 }
 
 // .text:0x000899BC size:0x81C mapped:0x806C8A50
