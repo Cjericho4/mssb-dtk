@@ -208,7 +208,19 @@ void fn_3_951B4(void) {
 
 // .text:0x000952DC size:0xB0 mapped:0x806D4370
 void fn_3_952DC(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    CommonBss_32724* state = &lbl_3_common_bss_32724;
+
+    if (state->unk_B5 != 0) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    fn_80034E20(scene, &lbl_3_data_E21C);
+    if (lbl_3_common_bss_37400.unk47 == 1) {
+        lbl_80371C30[scene->unkIndex].obj->unk64 = 0x5A;
+    }
+    state->unk_B5 = 1;
+    lbl_803CC1B8->aFunctionPointer = fn_3_951B4;
 }
 
 // .text:0x0009538C size:0x70 mapped:0x806D4420
