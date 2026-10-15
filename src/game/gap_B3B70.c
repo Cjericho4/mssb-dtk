@@ -269,7 +269,26 @@ void fn_3_B6B70(void) {
 
 // .text:0x000B6BA4 size:0xAC mapped:0x806F5C38
 void fn_3_B6BA4(void) {
-    return;
+    switch (g_Practice.tutorialState) {
+    case 0:
+        fn_3_B6994();
+        break;
+    case 1:
+        fn_3_B6440();
+        break;
+    case 2:
+        if (fn_3_B254C() == FALSE) {
+            fn_3_B6440();
+        } else {
+            fn_3_B1DA4(g_Practice.practiceLevel, 0);
+            fn_3_5A6D4(7);
+        }
+        break;
+    case 3:
+        fn_3_B6440();
+        break;
+    }
+    g_GameLogic.TeamStars[0] = g_GameLogic.TeamStars[1] = 5;
 }
 
 // .text:0x000B6C50 size:0x4C mapped:0x806F5CE4
