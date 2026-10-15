@@ -26,7 +26,8 @@ extern Data8D70 lbl_3_data_8D70;
 
 void sndUpdateListener(CommonBss32B20* listener, VecXYZ* pos, VecXYZ* vel, VecXYZ* orient, Data8D70* data, u32 unk7F, u32 unk0);
 void fn_3_8B964(VecXYZ* pos, VecXYZ* vel, VecXYZ* orient);
-void fn_3_8B9BC(void);
+BOOL sndAddListener(CommonBss32B20* listener, VecXYZ* pos, VecXYZ* dir, VecXYZ* heading, Data8D70* up, f32 frontSur, f32 backSur, f32 sideSur, u32 flags, u8 vol, struct SND_ROOM* room);
+void fn_3_8B9BC(VecXYZ* pos);
 void fn_3_8BA60(void);
 void fn_3_8BBC4(s32 soundID, VecXYZ* pos, s32 arg2, s32 arg3);
 void fn_3_8BDF4(void);

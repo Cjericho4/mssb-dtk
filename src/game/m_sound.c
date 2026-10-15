@@ -34,6 +34,7 @@ typedef struct {
 } SoundTables;
 
 extern SoundTables lbl_3_data_8148;
+extern f32 lbl_3_data_88AC[3];
 extern SongSettings lbl_3_data_830C[]; /* == lbl_3_data_8148.songSettings */
 extern SongEntry lbl_3_data_88E0[];    /* == lbl_3_data_8148.songs */
 extern u16 lbl_3_data_8168[];
@@ -122,8 +123,19 @@ void fn_3_8B964(VecXYZ* pos, VecXYZ* vel, VecXYZ* orient) {
 }
 
 // .text:0x0008B9BC size:0xA4 mapped:0x806CAA50
-void fn_3_8B9BC(void) {
-    return;
+void fn_3_8B9BC(VecXYZ* pos) {
+    VecXYZ heading;
+    VecXYZ dir;
+
+    heading.x = 0.0f;
+    heading.y = 0.0f;
+    heading.z = -1.0f;
+    dir.x = 0.0f;
+    dir.y = 0.0f;
+    dir.z = 0.0f;
+    sndRemoveListener(&lbl_3_common_bss_32B20);
+    sndAddListener(&lbl_3_common_bss_32B20, pos, &dir, &heading, &lbl_3_data_8D70,
+                   lbl_3_data_88AC[0], lbl_3_data_88AC[0], lbl_3_data_88AC[0], 1, 0x7F, NULL);
 }
 
 // .text:0x0008BA60 size:0x164 mapped:0x806CAAF4
