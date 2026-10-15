@@ -1070,8 +1070,8 @@ void fn_3_522E0(void) {
 }
 
 // .text:0x00052560 size:0x17C mapped:0x806915F4
-void fn_3_52560(void) {
-    return;
+s32 fn_3_52560(s32 fielderIdx, f32 x, f32 z) {
+    return 0;
 }
 
 // .text:0x000526DC size:0x870 mapped:0x80691770

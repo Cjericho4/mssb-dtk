@@ -47,7 +47,7 @@ void fn_3_85A70(void);
 void fn_3_85C44(s32 runnerIdx, s32 arg1);
 void fn_3_85CB0(void);
 void fn_3_85EF4(s32 runnerIdx, s32 arg1);
-void fn_3_8604C(void);
+s32 fn_3_8604C(s32* outFielder);
 void fn_3_86118(void);
 void fn_3_8679C(void);
 void fn_3_86DFC(void);

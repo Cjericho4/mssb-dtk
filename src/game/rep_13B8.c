@@ -1,4 +1,5 @@
 #include "game/rep_13B8.h"
+#include "game/rep_AC8.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "game/gap_9CD90.h"
@@ -306,8 +307,32 @@ void fn_3_85EF4(s32 runnerIdx, s32 arg1) {
 }
 
 // .text:0x0008604C size:0xCC mapped:0x806C50E0
-void fn_3_8604C(void) {
-    return;
+s32 fn_3_8604C(s32* outFielder) {
+    s32 i;
+    s32 frames;
+    s32 best = 9999;
+    s32 j;
+
+    for (i = 0; i < 9; i++) {
+        if (g_FieldingLogic.unk_F8[i] == 1 || g_FieldingLogic.unk_F8[i] == 10 || g_FieldingLogic.unk_F8[i] == 11) {
+            for (j = 1; j < 120; j += 5) {
+                frames = fn_3_52560(i, g_Ball.physicsSubstruct.futureCoordsAndDist[j].pos.x,
+                                    g_Ball.physicsSubstruct.futureCoordsAndDist[j].pos.z);
+                if (frames < j + 15) {
+                    break;
+                }
+            }
+            if (j >= 120) {
+                if (best >= 120) {
+                    best = 120;
+                }
+            } else if (best > frames) {
+                best = frames;
+                *outFielder = i;
+            }
+        }
+    }
+    return best;
 }
 
 // .text:0x00086118 size:0x684 mapped:0x806C51AC

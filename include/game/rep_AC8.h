@@ -199,7 +199,7 @@ void fn_3_51798(void);
 void fn_3_51DF0(void);
 void fn_3_52084(void);
 void fn_3_522E0(void);
-void fn_3_52560(void);
+s32 fn_3_52560(s32 fielderIdx, f32 x, f32 z);
 void fn_3_526DC(void);
 void fn_3_52F4C(s32 fielderIdx, f32 x, f32 z);
 void fn_3_530EC(int index);
