@@ -3,6 +3,7 @@
 #include "header_rep_data.h"
 #include "game/rep_3448.h"
 #include "game/gap_EA340.h"
+#include "game/rep_720.h"
 
 // .text:0x00091520 size:0x540 mapped:0x806D05B4
 void fn_3_91520(void) {
@@ -22,7 +23,18 @@ void fn_3_91A60(void) {
 
 // .text:0x00091AC8 size:0x88 mapped:0x806D0B5C
 void fn_3_91AC8(void) {
-    return;
+    u8 status = lbl_3_common_bss_32724.someStatusInd;
+    DrawingSceneStruct* drawingItem = lbl_803CC1B8;
+
+    if (status == 0 && g_Stats.unk36 == 0) {
+        u8 gs = g_GameLogic.gameStatus;
+        if (gs == 2 || gs == 1) {
+            return;
+        }
+    }
+    fn_80034CEC((u32)drawingItem);
+    fn_800B0A14_removeQueue();
+    lbl_3_common_bss_32724.unk_B2 = 0;
 }
 
 // .text:0x00091B50 size:0x4C mapped:0x806D0BE4
