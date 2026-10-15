@@ -2,6 +2,7 @@
 #include "game/UnknownHomes_Game.h"
 #include "header_rep_data.h"
 #include "Dolphin/os.h"
+#include "game/gap_5985C.h"
 #include "stl/mem.h"
 #include "game/rep_1838.h"
 #include "game/gap_5985C.h"
@@ -14,6 +15,12 @@ extern Lbl80366158_37A8 lbl_80366158;
 extern s32 lbl_3_bss_B7E4;
 extern u8 lbl_3_bss_B800[0x20][2];
 extern s8 lbl_3_data_266A4;
+
+typedef struct {
+    u8 unk0;
+    u8 unk1;
+} Lbl3Data21278;
+extern Lbl3Data21278 lbl_3_data_21278;
 
 typedef struct {
     s16 min;
@@ -256,7 +263,22 @@ void fn_3_146928(void) {
 
 // .text:0x001469CC size:0xC4 mapped:0x80785A60
 void fn_3_1469CC(void) {
-    return;
+    switch (g_GameLogic._125) {
+    case 0:
+        fn_3_10F550(2, lbl_3_data_21278.unk0);
+        changeScene(1, 6);
+        g_GameLogic.FrameCountOfCurrentAtBat_Copy = 0;
+        g_GameLogic._125 = 1;
+        break;
+    case 1:
+        if (g_GameLogic.FrameCountOfCurrentAtBat_Copy > lbl_3_data_21278.unk0 + lbl_3_data_21278.unk1) {
+            g_GameLogic._125 = 2;
+        }
+        break;
+    case 2:
+        fn_3_5A6D4(0);
+        break;
+    }
 }
 
 // .text:0x00146A90 size:0x730 mapped:0x80785B24
