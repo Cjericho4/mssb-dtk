@@ -37,7 +37,9 @@ struct Struct_800339F0_Result {
 };
 
 typedef struct {
-    u8 _pad0[0xC];
+    f32 x; // 0x0
+    f32 y; // 0x4
+    f32 z; // 0x8
 } Struct_B850_Entry; // size: 0xC
 
 typedef struct Struct_B850_Node {
@@ -227,7 +229,7 @@ void fn_3_156218(void);
 void fn_3_156548(void);
 void fn_3_156970(void);
 void fn_3_156D04(void);
-void fn_3_15730C(void);
+void fn_3_15730C(u32 index, f32 x, f32 y, f32 z);
 void fn_3_1573AC(void);
 void fn_3_157570(void);
 void fn_3_157588(s32 arg);

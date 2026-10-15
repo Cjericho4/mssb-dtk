@@ -931,9 +931,30 @@ void fn_3_156D04(void) {
     return;
 }
 
+static inline Struct_B850_Entry* fn_3_1575F0_inline(u32 index) {
+    Struct_B850_Node* node;
+
+    if (lbl_3_bss_B850 != NULL) {
+        node = lbl_3_bss_B850->head;
+        while (index >= 7) {
+            node = node->next;
+            index -= 7;
+        }
+        return &node->entries[index];
+    }
+    return NULL;
+}
+
 // .text:0x0015730C size:0xA0 mapped:0x807963A0
-void fn_3_15730C(void) {
-    return;
+void fn_3_15730C(u32 index, f32 x, f32 y, f32 z) {
+    Struct_B850_Entry* entry;
+
+    entry = fn_3_1575F0_inline(index);
+    if (entry != NULL) {
+        entry->x = x;
+        entry->y = y;
+        entry->z = z;
+    }
 }
 
 // .text:0x001573AC size:0x1C4 mapped:0x80796440
@@ -957,17 +978,7 @@ void fn_3_157588(s32 arg) {
 
 // .text:0x001575F0 size:0x8C mapped:0x80796684
 Struct_B850_Entry* fn_3_1575F0(u32 index) {
-    Struct_B850_Node* node;
-
-    if (lbl_3_bss_B850 != NULL) {
-        node = lbl_3_bss_B850->head;
-        while (index >= 7) {
-            node = node->next;
-            index -= 7;
-        }
-        return &node->entries[index];
-    }
-    return NULL;
+    return fn_3_1575F0_inline(index);
 }
 
 // .text:0x0015767C size:0x27C mapped:0x80796710
