@@ -17,7 +17,9 @@ typedef struct Struct_DE94_Inner {
     /* 0x034 */ void *unk34;
     /* 0x038 */ u8 _pad2b[0x04];
     /* 0x03C */ s32 unk3C;
-    /* 0x040 */ u8 _pad2c[0x60];
+    /* 0x040 */ u8 _pad2c[0x58];
+    /* 0x098 */ VecXYZ* field_0x98;
+    /* 0x09C */ u8 _pad2e[0x04];
     /* 0x0A0 */ f32 fov;
     /* 0x0A4 */ u8 _pad2d[0x74];
     /* 0x118 */ u32 field_0x118;   // 0x118

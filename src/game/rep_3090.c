@@ -61,6 +61,7 @@ void fn_3_FCEAC(void) {
 
 // .text:0x000FCEB0 size:0x70 mapped:0x8073BF44
 extern f64 lbl_3_rodata_3100;
+extern s16 lbl_3_bss_B67A[15];
 
 s32 fn_3_FCEB0(f32 arg0) {
     s32 i = 0;
@@ -406,7 +407,15 @@ void fn_3_106014(void) {
 
 // .text:0x001060D8 size:0xA4 mapped:0x8074516C
 void fn_3_1060D8(void) {
-    return;
+    s32 i;
+    VecXYZ* p;
+
+    p = lbl_3_common_bss_DE94->field_0x98;
+    lbl_3_bss_B67A[0] = 0;
+    for (i = 0; i < 1000; i++) {
+        p->x = p->y = p->z = -1000.0f;
+        p++;
+    }
 }
 
 // .text:0x0010617C size:0xF4 mapped:0x80745210
