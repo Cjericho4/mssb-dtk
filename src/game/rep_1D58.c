@@ -5,6 +5,8 @@
 #include "stl/math.h"
 #include "game/m_sound.h"
 #include "Dolphin/GX/GXTexture.h"
+#include "Dolphin/GX/GXTev.h"
+#include "Dolphin/GX/GXPixel.h"
 
 extern f32 lbl_3_data_11178[5];
 
@@ -29,7 +31,13 @@ void fn_3_B7FC8(s32 soundID, s32 arg1) {
 
 // .text:0x000B80D0 size:0xB4 mapped:0x806F7164
 void fn_3_B80D0(void) {
-    return;
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+    GXSetNumTevStages(1);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_RASC, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_TEXA, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
 }
 
 // .text:0x000B8184 size:0xF8 mapped:0x806F7218
