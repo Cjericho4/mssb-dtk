@@ -8,6 +8,7 @@
 #include "game/gap_106DFC.h"
 #include "game/gap_5985C.h"
 #include "game/rep_3310.h"
+#include "game/gap_FBCD0.h"
 
 
 static inline void advanceMinigameTurn(void) {
@@ -35,6 +36,8 @@ void fn_3_114FC0(void) {
 }
 
 extern s16 lbl_3_data_2167C;
+extern s16 lbl_3_data_18C48[];
+s32 fn_3_6C938(s32 arg0, s32 arg1);
 
 // .text:0x0011502C size:0xDC mapped:0x807540C0
 void fn_3_11502C(void) {
@@ -62,7 +65,29 @@ void fn_3_115540(void) {
 
 // .text:0x00115738 size:0xF0 mapped:0x807547CC
 void fn_3_115738(void) {
-    return;
+    switch (g_GameLogic._125) {
+    case 0:
+        changeScene(1, 6);
+        g_GameLogic._125 = 1;
+        break;
+    case 1:
+        if (g_GameLogic.FrameCountOfCurrentPitch >= lbl_3_data_18C48[2] ||
+            (g_GameLogic.FrameCountOfCurrentPitch >= lbl_3_data_18C48[1] && fn_3_6C938(1, 0x1100))) {
+            changeScene(3, 6);
+            g_GameLogic._125 = 2;
+        }
+        break;
+    case 2:
+        if (lbl_8037169C._13) {
+            fn_3_FBD70();
+            fn_3_FBD58();
+            g_GameLogic._125 = 3;
+        }
+        break;
+    case 3:
+        fn_3_5A6D4(7);
+        break;
+    }
 }
 
 // .text:0x00115828 size:0x88 mapped:0x807548BC

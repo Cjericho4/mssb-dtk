@@ -32,12 +32,6 @@ extern s32 fn_80016F7C(void);
 extern s32 fn_3_6C938(s32, s32);
 extern void changeScene(s32, s32);
 
-typedef struct {
-    u8 _pad[0x12];
-    u8 _12;
-    u8 _13;
-} Lbl8037169C;
-extern Lbl8037169C lbl_8037169C;
 
 typedef struct {
     u8 highLevelSimulationFlag;
