@@ -301,7 +301,16 @@ void fn_3_5D5E8(void) {
 
 // .text:0x0005D9F8 size:0xA4 mapped:0x8069CA8C
 void fn_3_5D9F8(void) {
-    return;
+    if (g_Stats.unk36 == 0) {
+        g_Pitcher._15C = 0;
+        if (g_d_GameSettings.GameModeSelected == 4 && g_Scores.unkAD == 0) {
+            g_GameLogic.framesOfExitingToMenu = 1;
+        } else if (g_GameLogic.EventTriggers_EndOfGame != 0) {
+            fn_3_5A6D4(9);
+        } else {
+            fn_3_5A6D4(3);
+        }
+    }
 }
 
 // .text:0x0005DA9C size:0x244 mapped:0x8069CB30
