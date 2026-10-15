@@ -7,7 +7,9 @@
 
 typedef struct StaC5PlacedObj {
     /* 0x00 */ Control control;
-    /* 0x3C */ u8 _pad3C[0x90 - 0x3C];
+    /* 0x3C */ u8 _pad3C[0x74 - 0x3C];
+    /* 0x74 */ struct ActorAnimState* animState;
+    /* 0x78 */ u8 _pad78[0x90 - 0x78];
     /* 0x90 */ u8 flag90_7 : 1;
     /* 0x90 */ u8 flag90_rest : 7;
     /* 0x91 */ u8 _pad91[0xA0 - 0x91];
@@ -87,7 +89,7 @@ void fn_3_F1448(void);
 void fn_3_F1518(void);
 void fn_3_F1674(void);
 void fn_3_F1750(void);
-void fn_3_F18A4(void);
+void fn_3_F18A4(StaC5PlacedObj* obj);
 void fn_3_F193C(void);
 void fn_3_F1E2C(void);
 void fn_3_F22FC(void);

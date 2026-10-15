@@ -58,6 +58,14 @@ typedef struct ActorAnimState {
     u8 _pad64[0x4];
     s32 unk68;           /* 0x68 */
 } ActorAnimState;
+typedef struct StadiumAnimEntry {
+    ActorAnimState anim; /* 0x00 */
+    u8 _pad6C[0x90 - 0x6C];
+} StadiumAnimEntry; /* size: 0x90 */
+typedef struct StadiumAnimTable {
+    u8 _pad0[0x34];
+    StadiumAnimEntry entries[1]; /* 0x34 */
+} StadiumAnimTable;
 void fn_3_B97DC(ActorAnimState* state, ANIMBank* bank);
 void fn_800B4BC8(Actor* actor, s32 arg1);
 void fn_800B4C04(Actor* actor, f32 speed);

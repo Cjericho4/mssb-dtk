@@ -5,6 +5,7 @@
 #include "header_rep_data.h"
 #include "game/rep_1D58.h"
 #include "C3/control.h"
+#include "game/sta_c2.h"
 
 // .text:0x000EE100 size:0x288 mapped:0x8072D194
 void fn_3_EE100(void) {
@@ -197,8 +198,16 @@ void fn_3_F1750(void) {
 }
 
 // .text:0x000F18A4 size:0x98 mapped:0x80730938
-void fn_3_F18A4(void) {
-    return;
+extern u8 lbl_3_bss_B218;
+
+void fn_3_F18A4(StaC5PlacedObj* obj) {
+    ActorAnimState* state = &g_hugeAnimStruct.animTable->entries[lbl_3_bss_B218].anim;
+    obj->animState = state;
+    state->time = 0.0f;
+    state->setTime = 1;
+    fn_800B4CA0(state->actor, state->time);
+    obj->rotY += 180.0;
+    AnimateActorBones(state->actor);
 }
 
 // .text:0x000F193C size:0x4F0 mapped:0x807309D0
