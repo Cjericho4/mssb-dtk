@@ -284,7 +284,7 @@ typedef struct hugeAnimStruct {
     /* 0x0054 */ s32 field21_0x54;
     /* 0x0058 */ s32 field22_0x58;
     /* 0x005C */ s32 field23_0x5c;
-    /* 0x0060 */ void* ctrlOrBonePtr;
+    /* 0x0060 */ HugeAnimEntry68* ctrlOrBonePtr;
     /* 0x0064 */ ActRelatedEntry* actRelatedPtr;
     /* 0x0068 */ HugeAnimEntry68* entries_68;
     /* 0x006C */ struct StadiumAnimTable* animTable;

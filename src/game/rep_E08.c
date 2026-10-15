@@ -2,9 +2,23 @@
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 
+static inline void repE08_resetEntry(HugeAnimEntry68* entry, s32 val, s16 arg) {
+    entry->unk38 = val;
+    entry->unk42 = arg;
+    (entry + 1)->unk0 = 0.0f;
+    entry->unk8C = 1;
+    entry->unk8D = (val != 0);
+    entry->unk8E = (val != 0);
+    (entry + 1)->unk4 = 0.0f;
+}
+
 // .text:0x00060768 size:0x9C mapped:0x8069F7FC
 void fn_3_60768(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        repE08_resetEntry(&g_hugeAnimStruct.ctrlOrBonePtr[i], 0, 0);
+    }
 }
 
 // .text:0x00060804 size:0x294 mapped:0x8069F898
