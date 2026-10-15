@@ -150,7 +150,7 @@ void fn_3_8B804(void) {
 }
 
 // .text:0x0008B890 size:0xD4 mapped:0x806CA924
-void fn_3_8B890(void) {
+void fn_3_8B890(s32 emitterIdx) {
     return;
 }
 
@@ -178,13 +178,13 @@ void fn_3_8B9BC(VecXYZ* pos) {
 }
 
 // .text:0x0008BA60 size:0x164 mapped:0x806CAAF4
-void fn_3_8BA60(void) {
+void fn_3_8BA60(s32 emitterIdx, VecXYZ* pos, VecXYZ* dir) {
     return;
 }
 
 // .text:0x0008BBC4 size:0x230 mapped:0x806CAC58
-void fn_3_8BBC4(s32 soundID, VecXYZ* pos, s32 arg2, s32 arg3) {
-    return;
+s32 fn_3_8BBC4(s32 soundID, VecXYZ* pos, s32 arg2, s32 arg3) {
+    return -1;
 }
 
 // .text:0x0008BDF4 size:0x98 mapped:0x806CAE88

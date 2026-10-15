@@ -10,7 +10,7 @@ void fn_3_8B318(s32 arg0);
 void fn_3_8B718(Vec* pos, Vec* vel, Vec* dir);
 void fn_3_8B7DC(void);
 void fn_3_8B804(void);
-void fn_3_8B890(void);
+void fn_3_8B890(s32 emitterIdx);
 /* Game-side 3D sound emitter slot (0x50 bytes in this MusyX build). */
 typedef struct SoundEmitterSlot {
     u8 data[0x50];
@@ -42,8 +42,8 @@ void sndUpdateListener(CommonBss32B20* listener, VecXYZ* pos, VecXYZ* vel, VecXY
 void fn_3_8B964(VecXYZ* pos, VecXYZ* vel, VecXYZ* orient);
 BOOL sndAddListener(CommonBss32B20* listener, VecXYZ* pos, VecXYZ* dir, VecXYZ* heading, Data8D70* up, f32 frontSur, f32 backSur, f32 sideSur, u32 flags, u8 vol, struct SND_ROOM* room);
 void fn_3_8B9BC(VecXYZ* pos);
-void fn_3_8BA60(void);
-void fn_3_8BBC4(s32 soundID, VecXYZ* pos, s32 arg2, s32 arg3);
+void fn_3_8BA60(s32 emitterIdx, VecXYZ* pos, VecXYZ* dir);
+s32 fn_3_8BBC4(s32 soundID, VecXYZ* pos, s32 arg2, s32 arg3);
 void fn_3_8BDF4(void);
 void fn_3_8BE8C(void);
 void fn_3_8C07C(void);

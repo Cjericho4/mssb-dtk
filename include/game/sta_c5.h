@@ -105,7 +105,12 @@ extern u8 lbl_3_bss_AEE8;
 typedef struct StaC5Bss_AEE0 {
     /* 0x000 */ u8 _pad0[0x8];
     /* 0x008 */ u8 unk8;
-    /* 0x009 */ u8 _pad9[0x33B - 0x9];
+    /* 0x009 */ u8 _pad9[0x18 - 0x9];
+    /* 0x018 */ s32 emitter18;
+    /* 0x01C */ s32 emitter1C;
+    /* 0x020 */ u8 _pad20[0x27C - 0x20];
+    /* 0x27C */ u8 emittersPaused;
+    /* 0x27D */ u8 _pad27D[0x33B - 0x27D];
     /* 0x33B */ u8 unk33B;
     /* 0x33C */ u8 unk33C;
 } StaC5Bss_AEE0;
@@ -149,6 +154,7 @@ extern u8 lbl_803CBBC0;
 void fn_800BDA24(void* arg0);
 void fn_800A7D4C(s32 arg0, void* elem);
 
+void fn_3_EDFAC(void);
 void fn_3_EE100(void);
 void fn_3_EE388(void);
 void fn_3_EE67C(struct DODisplayObj* dispObj, MtxPtr camera);

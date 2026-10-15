@@ -11,6 +11,32 @@
 #include "game/rep_AC8.h"
 #include "musyx/musyx.h"
 #include "Dolphin/GX/GXBump.h"
+#include "game/m_sound.h"
+
+// .text:0x000EDFAC size:0x110
+void fn_3_EDFAC(void) {
+    StaC5Bss_AEE0* bss = &lbl_3_bss_AEE0;
+    u8 status = g_GameLogic.gameStatus;
+
+    if (status == 0x21) {
+        return;
+    }
+    if (status == 0xB) {
+        if (bss->emittersPaused == 0) {
+            fn_3_8B890(bss->emitter1C);
+            fn_3_8B890(bss->emitter18);
+            bss->emittersPaused = 1;
+        }
+    } else if (bss->emittersPaused != 0) {
+        GameInitVariables* settings = &g_d_GameSettings;
+        bss->emitter1C = fn_3_8BBC4(lbl_3_data_81DC[settings->StadiumID] + 6, NULL, 0, 4);
+        bss->emitter18 = fn_3_8BBC4(lbl_3_data_81DC[settings->StadiumID] + 7, NULL, 0, 5);
+        bss->emittersPaused = 0;
+    } else {
+        fn_3_8BA60(bss->emitter1C, NULL, NULL);
+        fn_3_8BA60(bss->emitter18, NULL, NULL);
+    }
+}
 
 // .text:0x000EE100 size:0x288 mapped:0x8072D194
 void fn_3_EE100(void) {
