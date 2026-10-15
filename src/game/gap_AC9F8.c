@@ -504,12 +504,6 @@ void fn_3_B1DD0(void) {
 }
 
 // .text:0x000B254C size:0xE4 mapped:0x806F15E0
-typedef struct {
-    u8 _pad[0x12];
-    u8 _12;
-    u8 _13;
-} Lbl8037169C;
-extern Lbl8037169C lbl_8037169C;
 
 BOOL fn_3_B254C(void) {
     if (g_Practice.transitioningIndicator == 0) {

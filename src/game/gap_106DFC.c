@@ -69,12 +69,6 @@ void fn_3_10754C(void) {
 }
 
 // .text:0x0010768C size:0xF8 mapped:0x80746720
-typedef struct {
-    u8 _pad[0x12];
-    u8 _12;
-    u8 _13;
-} Lbl8037169C;
-extern Lbl8037169C lbl_8037169C;
 
 typedef struct {
     u8 _pad0[0x1A];
