@@ -89,10 +89,17 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **`u8 += 34.0` vs `u8 = u8 + 34.0`** differ in `fadd` operand order; try both (fn_3_CED40).
 *   **Field read scheduled before an earlier byte store through a global pointer**: read it into an `s32` local before the store (fn_3_160814).
 *   **`beq body; b exit` tail**: one `if (!a || b) return;` (fn_3_15810C).
+*   **Guard returns ending in `bne L; blr` / `bne L; b end`**: combine into one `if (a || b || c) return;`; separate ifs give `beqlr` (fn_3_14A070, fn_3_8B890).
+*   **Flipped `bgt`/`ble` or `beqlr`/`bnelr` around two returns**: swap which branch holds the side-effect body / which return comes first (fn_3_61148, fn_3_12E084).
+*   **Strided unrolled checks**: `for (i = 1; i < 15; i += 3) { a[i]; a[i+1]; }`, not `a[i*3+1]` (fn_3_12ED80).
+*   **rep_1838.c duplicates**: compose the same-file helpers, e.g. `getComponentsFromRad(shortAngleToRad_Capped(ang), x, y)` (fn_3_9F9C8).
+*   **Statement order changes regalloc even for independent globals** (fn_3_5C5C8).
+*   **`MiniGameStruct* mg = &g_Minigame;`** at top hoists `lis`/`addi`; placed after a call it anchors r30 (fn_3_12E084, fn_3_12C74C).
+*   **Scratch-register-only code**: declaration order does nothing; brute-force the order of initializing assignments (fn_3_60D80).
 *   **Parameter that seems unused**: it may be passed straight through to a callee in `r3` (fn_3_5B380 → `fn_8004CA6C`).
 
 ### Known Unfixable Patterns (don't spend attempts)
-*   **Adjacent-constant compares merged into a range check** (`== 9 || == 10` → `subi`/`cmplwi 1`) when the target keeps them separate (fn_3_B7CDC, fn_3_B7C2C).
+*   **Adjacent-constant compares merged into a range check** (`== 9 || == 10` → `subi`/`cmplwi 1`) when the target keeps them separate (fn_3_B7CDC, fn_3_B7C2C). **Possible workaround** (worked for fn_3_5C418): compare as unsigned, `(u32)x == 1 || (u32)x == 2`, and write intended ranges as `(u8)(x - 0x13) <= 3`. Retry B7CDC/B7C2C with this.
 *   **Field offset `0x34` folded into the index of an `lwzx`** instead of the base (rep_3310: fn_3_119EE0, fn_3_119E30, fn_3_11881C, fn_3_11897C, fn_3_1194AC).
 *   **Nested-struct field load folded** (`addi r3,r31,0x10; lwz r3,0xc(r3)` → `lwz 0x1c(r31)`) (fn_3_A32B8).
 *   **Same callee with differing arg counts in one file** (`fn_800216F8`: 2 args in fn_3_90860/90928/90A18, 3 in fn_3_90C14) — one prototype can't satisfy both.
