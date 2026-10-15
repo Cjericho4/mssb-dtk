@@ -358,9 +358,19 @@ void fn_3_F5C30(void) {
     return;
 }
 
+extern char lbl_3_rodata_2DB8[];
+extern char lbl_3_rodata_2F10[];
+
 // .text:0x000F5E78 size:0x84 mapped:0x80734F0C
-void fn_3_F5E78(void) {
-    return;
+s32 fn_3_F5E78(u8 arg0) {
+    u32 i;
+    for (i = lbl_3_common_bss_350E4[0].memcpyCount; i != 0; i--) {
+        if (lbl_3_common_bss_350E4[0].idEntries[i - 1].id == arg0) {
+            return i - 1;
+        }
+    }
+    OSPanic(lbl_3_rodata_2DB8, 0x637, lbl_3_rodata_2F10);
+    return 0;
 }
 
 // .text:0x000F5EFC size:0x2C mapped:0x80734F90

@@ -117,7 +117,7 @@ void fn_3_F4DAC(void);
 void fn_3_F4FBC(void);
 void fn_3_F56CC(void);
 void fn_3_F5C30(void);
-void fn_3_F5E78(void);
+s32 fn_3_F5E78(u8 arg0);
 s32 fn_3_F5EFC(unknown_tri_compare* a, unknown_tri_compare* b);
 s32 fn_3_F5F28(f32* a, f32* b);
 void fn_3_F5F4C(void);
