@@ -373,8 +373,18 @@ void fn_3_F4C4C(void) {
 }
 
 // .text:0x000F4D00 size:0xAC mapped:0x80733D94
-void fn_3_F4D00(void) {
-    return;
+void fn_3_F4D00(StaC5DriftObj* obj) {
+    Vec diff;
+    Vec target;
+
+    PSVECAdd(&obj->pos, &obj->vel, &obj->pos);
+    CTRLSetTranslation(&obj->control, obj->pos.x, -obj->pos.y, obj->pos.z);
+    target.x = lbl_3_data_1B884[obj->targetIdx].pos.x;
+    target.y = lbl_3_data_1B884[obj->targetIdx].pos.y;
+    target.z = lbl_3_data_1B884[obj->targetIdx].pos.z;
+    PSVECSubtract(&target, &obj->pos, &diff);
+    obj->vel.x = 0.2f * diff.x;
+    obj->vel.z = 0.2f * diff.z;
 }
 
 // .text:0x000F4DAC size:0x210 mapped:0x80733E40
