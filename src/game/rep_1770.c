@@ -59,8 +59,24 @@ void fn_3_99C88(void) {
 }
 
 // .text:0x00099CFC size:0x114 mapped:0x806D8D90
+extern int lbl_3_data_D4F8;
+
 void fn_3_99CFC(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    fn_80034E20(scene, &lbl_3_data_D4F8);
+    if (!(g_Batter.runnersOnBase & 1)) {
+        lbl_80371C30[scene->unkIndex + 3].obj->flags &= ~2;
+    }
+    if (!(g_Batter.runnersOnBase & 2)) {
+        lbl_80371C30[scene->unkIndex + 2].obj->flags &= ~2;
+    }
+    if (!(g_Batter.runnersOnBase & 4)) {
+        lbl_80371C30[scene->unkIndex + 1].obj->flags &= ~2;
+    }
+    if (g_Pitcher.nPitchesThisAB == 0 && g_Pitcher.nPickoffAttempts == 0) {
+        playSoundEffect(0x1AB);
+    }
+    lbl_803CC1B8->aFunctionPointer = fn_3_99C88;
 }
 
 // .text:0x00099E10 size:0xA94 mapped:0x806D8EA4
