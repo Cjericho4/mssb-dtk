@@ -32,8 +32,17 @@ void fn_3_1344BC(void) {
 }
 
 // .text:0x001345AC size:0xAC mapped:0x80773640
-void fn_3_1345AC(void) {
-    return;
+s16 fn_3_1345AC(s16 a, s16 b, s32 idx) {
+    s16 d;
+
+    if (a < 0 || b < 0) {
+        return b;
+    }
+    d = fn_3_9FCA4(b, a) / lbl_3_data_21B8C[idx];
+    if (d == 0 || __abs(d) > 1500) {
+        return b;
+    }
+    return fn_3_9FE6C_normalizeAngle(a + d);
 }
 
 // .text:0x00134658 size:0x2B0 mapped:0x807736EC
