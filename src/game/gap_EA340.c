@@ -129,7 +129,17 @@ void fn_3_ED574(void) {
 
 // .text:0x000ED6E0 size:0xA4 mapped:0x8072C774
 void fn_3_ED6E0(void) {
-    return;
+    DrawingSceneStruct *scene = lbl_803CC1B8;
+
+    if (lbl_3_common_bss_32724.someStatusInd != 0 ||
+        lbl_80371C30[scene->unkIndex].obj->field_0x69 == 2 ||
+        g_GameLogic.gameStatus == 8) {
+        if (g_Minigame._1921 != 0) {
+            fn_800B0A5C_insertQueue(fn_3_ED0F4, 2);
+        }
+        fn_80034CEC((u32)scene);
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x000ED784 size:0x94 mapped:0x8072C818
