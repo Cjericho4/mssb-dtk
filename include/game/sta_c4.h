@@ -24,6 +24,22 @@ typedef struct {
 } StaC4Obj;
 
 void fn_3_F8524(StaC4Obj* obj);
+
+struct ActorAnimState;
+typedef struct StaC4AnimObj {
+    /* 0x00 */ u8 _pad0[0x74];
+    /* 0x74 */ struct ActorAnimState* animState;
+    /* 0x78 */ s32 unk78;
+    /* 0x7C */ s32 unk7C;
+    /* 0x80 */ s32 unk80;
+    /* 0x84 */ u8 _pad84[0x90 - 0x84];
+    /* 0x90 */ u8 flag90_7 : 1;
+    /* 0x90 */ u8 flag90_6 : 1;
+    /* 0x90 */ u8 flag90_rest : 6;
+    /* 0x91 */ u8 _pad91[0x9C - 0x91];
+    /* 0x9C */ f32 animTime;
+    /* 0xA0 */ u8 slotId;
+} StaC4AnimObj;
 void fn_3_F85B0(void);
 void fn_3_F8878(void);
 void fn_3_F8ABC(void);
@@ -41,7 +57,7 @@ void fn_3_F963C(void);
 void fn_3_F976C(void);
 void fn_3_F99F0(void);
 void fn_3_F9B9C(void);
-void fn_3_F9D94(void);
+void fn_3_F9D94(StaC4AnimObj* obj);
 void fn_3_F9E78(void);
 void fn_3_FA3C0(void);
 void fn_3_FA58C(void);

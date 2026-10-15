@@ -8,6 +8,7 @@
 #include "game/m_sound.h"
 #include "game/gap_16C410.h"
 #include "game/rep_3448.h"
+#include "game/sta_c2.h"
 
 extern GXTexObj lbl_3_bss_B640;
 
@@ -169,8 +170,29 @@ void fn_3_F9B9C(void) {
 }
 
 // .text:0x000F9D94 size:0xE4 mapped:0x80738E28
-void fn_3_F9D94(void) {
-    return;
+extern u8 lbl_3_bss_B630[];
+
+void fn_3_F9D94(StaC4AnimObj* obj) {
+    ActorAnimState* state = obj->animState;
+    s32 i;
+
+    if (obj->animTime >= state->bank->animSequences->trackArray[state->seqNum].animTime) {
+        obj->flag90_7 = 0;
+        obj->animState = NULL;
+        obj->unk78 = 0;
+        obj->unk7C = 0;
+        obj->unk80 = 0;
+        obj->flag90_6 = 0;
+        for (i = 0; i < 9; i++) {
+            if (lbl_3_bss_B630[i] == obj->slotId) {
+                lbl_3_bss_B630[i] = 0xFF;
+                return;
+            }
+        }
+    } else {
+        AnimateActorBones(state->actor);
+        obj->animTime += 1.0f;
+    }
 }
 
 // .text:0x000F9E78 size:0x548 mapped:0x80738F0C
