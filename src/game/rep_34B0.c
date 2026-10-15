@@ -5,6 +5,16 @@
 #include "game/gap_106DFC.h"
 #include "game/gap_5985C.h"
 #include "game/UnknownHomes_Game.h"
+#include "stl/mem.h"
+#include "game/rep_1188.h"
+#include "game/rep_540.h"
+#include "game/rep_1200.h"
+#include "game/rep_13B8.h"
+#include "game/rep_AC8.h"
+
+extern void fn_3_BF158(void);
+extern void fn_3_BF1AC(void);
+extern void setDefaultInMemBatter(void);
 
 // .text:0x0012E8FC size:0x214 mapped:0x8076D990
 void fn_3_12E8FC(void) {
@@ -105,7 +115,18 @@ void fn_3_130C6C(void) {
 
 // .text:0x00131114 size:0x88 mapped:0x807701A8
 void fn_3_131114(void) {
-    return;
+    setInMemBatterConstants(g_Minigame.rosterID);
+    fn_3_F1DC();
+    fn_3_751B4();
+    setDefaultInMemBatter();
+    fn_3_8913C();
+    fn_3_58870();
+    memset(g_Minigame._1D7C, 0, 0x78);
+    fn_3_BF1AC();
+    fn_3_BF158();
+    g_FieldingLogic.unkAE = 0;
+    g_UnkSimulation_31AC0.unk5 = 0;
+    g_UnkSimulation_31AC0.unk6 = 4;
 }
 
 // .text:0x0013119C size:0xF0 mapped:0x80770230
