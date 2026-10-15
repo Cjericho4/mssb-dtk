@@ -7,14 +7,47 @@
 #include "Dolphin/stl.h"
 #include "game/rep_D0.h"
 
-typedef struct StadiumObject StadiumObject;
+typedef struct StadiumObject {
+    /* 0x00 */ Control control;
+} StadiumObject;
 
 extern u8 lbl_3_data_11168[16];
+
+typedef struct C2310Bone {
+    u8 _pad0[0x14];
+    struct DODisplayObj* dispObj; /* 0x14 */
+    u8 _pad18[0xEC - 0x18];
+    MtxPtr worldMtx;              /* 0xEC */
+    u8 _padF0[0x100 - 0xF0];
+    struct C2310Bone* next;       /* 0x100 */
+} C2310Bone;
+
+typedef struct C2310Actor {
+    u8 _pad0[0x14];
+    struct DODisplayObj* skinObject;  /* 0x14 */
+    u8 _pad18[0x64 - 0x18];
+    MtxPtr skinMtxArray;              /* 0x64 */
+    MtxPtr skinInvTransposeMtxArray;  /* 0x68 */
+    u8 _pad6C[0x74 - 0x6C];
+    C2310Bone* drawList;              /* 0x74 */
+    u8 _pad78[0x7C - 0x78];
+    u32 unk7C;                        /* 0x7C */
+} C2310Actor;
+
+typedef struct C2310Holder {
+    C2310Actor* actor; /* 0x00 */
+} C2310Holder;
+
+extern void DOVARenderSkin(struct DODisplayObj* dispObj, MtxPtr camera, MtxPtr mtxArray, MtxPtr invTransposeMtxArray,
+                           u8 numLights, struct DOVaList* list);
+extern void DOSetWorldMatrix(struct DODisplayObj* dispObj, MtxPtr m);
+extern void fn_8003A8A0(struct DODisplayObj* dispObj, MtxPtr camera, s32 arg2);
+
+void fn_3_B8184(C2310Holder* holder, MtxPtr camera);
 
 
 void fn_3_B7FC8(s32 soundID, s32 arg1);
 void fn_3_B80D0(void);
-void fn_3_B8184(void);
 struct StadiumObject* fn_3_B827C(void);
 void fn_3_B828C(struct StadiumObject*);
 void fn_3_B8298(void);

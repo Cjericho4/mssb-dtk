@@ -20,7 +20,6 @@ extern f32 lbl_3_data_18D98[];
 extern void fn_800BF058(void (*fn)(void));
 extern void fn_8003A548(void (*fn)(void));
 extern void fn_800BDF70(void** ptr);
-extern void fn_3_B8184(void);
 
 typedef struct {
     void* _0;
@@ -176,7 +175,7 @@ void fn_3_E1D00(void) {
     StadiumObjectElem* obj;
     s32 i;
 
-    fn_800BF058(fn_3_B8184);
+    fn_800BF058((void (*)(void))fn_3_B8184);
     fn_8003A548(fn_3_E1C60);
     i = 0;
     while (i < (s32)lbl_3_common_bss_350E4[0].memcpyCount) {

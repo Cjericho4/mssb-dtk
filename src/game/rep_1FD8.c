@@ -34,35 +34,7 @@ typedef struct {
 extern s32 lbl_3_bss_9D90;
 extern Control* lbl_3_bss_9D94;
 
-typedef struct C2310Bone {
-    u8 _pad0[0x14];
-    struct DODisplayObj* dispObj; /* 0x14 */
-    u8 _pad18[0xEC - 0x18];
-    MtxPtr worldMtx;              /* 0xEC */
-    u8 _padF0[0x100 - 0xF0];
-    struct C2310Bone* next;       /* 0x100 */
-} C2310Bone;
 
-typedef struct C2310Actor {
-    u8 _pad0[0x14];
-    struct DODisplayObj* skinObject;  /* 0x14 */
-    u8 _pad18[0x64 - 0x18];
-    MtxPtr skinMtxArray;              /* 0x64 */
-    MtxPtr skinInvTransposeMtxArray;  /* 0x68 */
-    u8 _pad6C[0x74 - 0x6C];
-    C2310Bone* drawList;              /* 0x74 */
-    u8 _pad78[0x7C - 0x78];
-    u32 unk7C;                        /* 0x7C */
-} C2310Actor;
-
-typedef struct C2310Holder {
-    C2310Actor* actor; /* 0x00 */
-} C2310Holder;
-
-extern void DOVARenderSkin(struct DODisplayObj* dispObj, MtxPtr camera, MtxPtr mtxArray, MtxPtr invTransposeMtxArray,
-                           u8 numLights, struct DOVaList* list);
-extern void DOSetWorldMatrix(struct DODisplayObj* dispObj, MtxPtr m);
-extern void fn_8003A8A0(struct DODisplayObj* dispObj, MtxPtr camera, s32 arg2);
 extern u8 lbl_803CBBC0;
 extern CameraSlot_17804 lbl_3_data_17804[];
 extern CameraMtx_52768* fn_80052768(s32 arg0);
@@ -137,7 +109,7 @@ void fn_3_C23E0(void) {
     StadiumObjectElem* obj;
     s32 i;
 
-    fn_800BF058(fn_3_B8184);
+    fn_800BF058((void (*)(void))fn_3_B8184);
     for (i = 0; i < (s32)lbl_3_common_bss_350E4[0].memcpyCount; i++) {
         obj = &lbl_3_common_bss_350E4[0].src[i];
         fn_3_B828C((StadiumObject*)obj);

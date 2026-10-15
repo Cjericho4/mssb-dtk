@@ -41,8 +41,33 @@ void fn_3_B80D0(void) {
 }
 
 // .text:0x000B8184 size:0xF8 mapped:0x806F7218
-void fn_3_B8184(void) {
-    return;
+void fn_3_B8184(C2310Holder* holder, MtxPtr camera) {
+    Mtx viewMtx;
+    Mtx ctrlMtx;
+    C2310Actor* actor;
+    C2310Bone* bone;
+
+    CTRLBuildMatrix(&lbl_3_bss_190C->control, ctrlMtx);
+    if (ctrlMtx[1][3] > 0.0f && g_d_GameSettings.StadiumID == 1) {
+        return;
+    }
+    PSMTXConcat(camera, ctrlMtx, viewMtx);
+    actor = holder->actor;
+    bone = actor->drawList;
+    if (actor->skinObject != NULL) {
+        if (actor->unk7C != 0) {
+            fn_8003A8A0(actor->skinObject, viewMtx, 1);
+        } else {
+            DOVARenderSkin(actor->skinObject, viewMtx, actor->skinMtxArray, actor->skinInvTransposeMtxArray, 0, NULL);
+        }
+    }
+    while (bone != NULL) {
+        if (bone->dispObj != NULL) {
+            DOSetWorldMatrix(bone->dispObj, bone->worldMtx);
+            fn_8003A8A0(bone->dispObj, viewMtx, 0);
+        }
+        bone = bone->next;
+    }
 }
 
 // .text:0x000B827C size:0x10 mapped:0x806F7310
