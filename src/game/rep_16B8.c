@@ -46,13 +46,27 @@ void fn_3_91B50(void) {
 
 // .text:0x00091B9C size:0xD4 mapped:0x806D0C30
 void fn_3_91B9C(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    if (lbl_3_common_bss_32724.someStatusInd == 0) {
+        if ((lbl_80371C30[scene->unkIndex].obj->field_0x5C >> 16) >= 0x4B) {
+            (&lbl_80371C30[scene->unkIndex])[1].obj->flags |= 2;
+        }
+        if ((g_Stats.unk36 != 0 || g_Stats.unk39 != 0) && g_GameLogic.gameStatus != 3 &&
+            g_GameLogic.gameStatus != 0xB && g_GameLogic.gameStatus != 0xE) {
+            return;
+        }
+    }
+    fn_80034CEC((u32)scene);
+    fn_800B0A14_removeQueue();
+    lbl_3_common_bss_32724.unk_B0 = 0;
+    lbl_3_common_bss_32724.unk_B1 = 0;
 }
 
 // .text:0x00091C70 size:0x5C mapped:0x806D0D04
 void fn_3_91C70(void) {
     fn_80034E20((void*)lbl_803CC1B8, (int*)&lbl_3_data_F390, (void**)&lbl_803CC1B8);
-    lbl_3_common_bss_32724._padAD[3] = 1;
+    lbl_3_common_bss_32724.unk_B0 = 1;
     lbl_803CC1B8->aFunctionPointer = (void*)fn_3_91B9C;
 }
 

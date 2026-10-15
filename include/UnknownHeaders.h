@@ -878,7 +878,9 @@ typedef struct CommonBss_32724 {
     /* 0xAA */ u8 unk_AA;
     /* 0xAB */ u8 _padAB;
     /* 0xAC */ u8 unk_AC;
-    /* 0xAD */ u8 _padAD[0x5];
+    /* 0xAD */ u8 _padAD[0x3];
+    /* 0xB0 */ u8 unk_B0;
+    /* 0xB1 */ u8 unk_B1;
     /* 0xB2 */ u8 unk_B2;
     /* 0xB3 */ u8 unk_B3;
     /* 0xB4 */ u8 unk_B4;
