@@ -48,6 +48,7 @@ typedef struct {
 extern Bss1808 lbl_3_bss_1808;
 extern s32 lbl_3_bss_1858[];
 extern u32 lbl_3_bss_1800;
+extern s32 lbl_3_bss_181C;
 
 // .text:0x000A1F3C size:0x10C mapped:0x806E0FD0
 s32 fn_3_A1F3C(void) {
@@ -206,7 +207,17 @@ void fn_3_A384C(void) {
 
 // .text:0x000A3B30 size:0xD0 mapped:0x806E2BC4
 void fn_3_A3B30(void) {
-    return;
+    s32 diff;
+    diff = g_Scores.team[g_GameLogic.homeTeamBattingInd_fieldingTeam].score -
+           g_Scores.team[g_GameLogic.awayTeamBattingInd_battingTeam].score;
+    lbl_3_bss_181C = 0;
+    if (g_Scores.highscore >= g_Scores.threshold && g_Scores.unkAD != 0 && diff == 0) {
+        lbl_3_bss_181C = 3;
+    } else if (g_Scores.highscore >= g_Scores.threshold - 1 && diff <= 1 && diff >= -1) {
+        lbl_3_bss_181C = 2;
+    } else if (g_Scores.highscore >= g_Scores.threshold - 4 && diff <= 1 && diff >= -3) {
+        lbl_3_bss_181C = 1;
+    }
 }
 
 // .text:0x000A3C00 size:0xC0 mapped:0x806E2C94
