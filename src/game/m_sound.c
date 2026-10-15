@@ -364,8 +364,24 @@ u32 fn_3_8FF5C(s32 soundID, f32 x, f32 z) {
 }
 
 // .text:0x00090064 size:0xEC mapped:0x806CF0F8
-void fn_3_90064(s32 param) {
-    return;
+extern u16 lbl_3_data_81FC[57];
+extern u8 lbl_3_data_84F4[57];
+
+void fn_3_90064(s32 soundID) {
+    s32 i;
+
+    if (g_d_GameSettings.GameModeSelected != GAME_TYPE_MINIGAMES) {
+        OSPanic("m_sound.c", 0x402, "no mini game");
+    }
+    for (i = 0; i < 57; i++) {
+        if (soundID == lbl_3_data_81FC[i]) {
+            break;
+        }
+    }
+    if (i == 57) {
+        OSPanic("m_sound.c", 0x40D, "no entry mini_se_no");
+    }
+    sndFXStartEx(soundID, lbl_3_data_84F4[i], 0x3F, 0);
 }
 
 // .text:0x00090150 size:0xD0 mapped:0x806CF1E4

@@ -62,7 +62,7 @@ void fn_3_8FC0C(void);
 void fn_3_8FC80(void);
 void fn_3_8FF18(void);
 u32 fn_3_8FF5C(s32 soundID, f32 x, f32 z);
-void fn_3_90064(s32 param);
+void fn_3_90064(s32 soundID);
 void fn_3_90150(void);
 void sndRemoveListener(void* listener);
 
