@@ -23,7 +23,7 @@ void fn_3_117B78(void);
 void fn_3_117FC8(void);
 void fn_3_1180A4(void);
 void fn_3_118164(void);
-void fn_3_118358(void);
+void fn_3_118358(s32 index, Vec* out);
 void fn_3_1183FC(void);
 void fn_3_118508(void);
 void fn_3_118614(void);

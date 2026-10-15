@@ -317,8 +317,18 @@ void fn_3_118164(void) {
 }
 
 // .text:0x00118358 size:0xA4 mapped:0x807573EC
-void fn_3_118358(void) {
-    return;
+void fn_3_118358(s32 index, Vec* out) {
+    s32 i = index + 0x82;
+    AnimObjMtxHolder* holder = ((ActRelatedEntry*)g_hugeAnimStruct.entries_68)[i].sub.obj->unk18->field_0x44;
+
+    if (index < 0 || index > 2) {
+        return;
+    }
+    if (out != NULL) {
+        memset(out, 0, sizeof(Vec));
+        PSMTXMultVec(holder->mtxEC, out, out);
+        out->y *= -1.0f;
+    }
 }
 
 typedef struct {

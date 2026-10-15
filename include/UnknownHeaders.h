@@ -135,10 +135,17 @@ typedef struct unkAnimSubstruct {
 
 struct AnimObj_field0;
 
+typedef struct AnimObjMtxHolder {
+    u8 _pad[0xEC];
+    MtxPtr mtxEC; // 0xEC
+} AnimObjMtxHolder;
+
 typedef struct AnimObject {
     struct AnimObj_field0* field_0; // 0x0
     u32 flags; // 0x4
-    u8 _pad[0x6C]; // 0x8-0x73
+    u8 _pad[0x3C]; // 0x8-0x43
+    AnimObjMtxHolder* field_0x44; // 0x44
+    u8 _pad48[0x2C]; // 0x48-0x73
     u32 field_0x74; // 0x74
 } AnimObject;
 
@@ -217,7 +224,10 @@ typedef struct HugeAnimEntry68 {
 } HugeAnimEntry68;
 
 typedef struct ActRelatedSub {
-    /* +0x00 */ f32 prevFloat;    // (sub+1)->prevFloat = r6+0x5c (next sub's first field)
+    union {
+        /* +0x00 */ f32 prevFloat;    // (sub+1)->prevFloat = r6+0x5c (next sub's first field)
+        /* +0x00 */ AnimLevel1* obj; // HugeAnimEntry68.unk34
+    };
     union {
         /* +0x04 */ s32 unk38_s32;
         /* +0x04 */ f32 unk38_f32;
