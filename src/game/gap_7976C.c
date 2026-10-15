@@ -9,7 +9,25 @@ void fn_3_7976C(void) {
 
 // .text:0x00079A00 size:0xCC mapped:0x806B8A94
 void fn_3_79A00(void) {
-    return;
+    if (lbl_3_common_bss_32A94.unk25 == -1) {
+        return;
+    }
+    if (lbl_3_common_bss_32A94.unk25 == 0 && g_Strikes.unk_18[0] >= 0) {
+        if (g_Runners[g_Strikes.unk_18[0]].forceOutCd == 2) {
+            lbl_3_common_bss_32A94.unk25 = 1;
+        } else {
+            lbl_3_common_bss_32A94.unk25 = -1;
+        }
+    }
+    if (lbl_3_common_bss_32A94.unk25 == 1 && g_Strikes.unk_18[1] >= 0) {
+        if (g_Runners[g_Strikes.unk_18[1]].forceOutCd == 2) {
+            lbl_3_common_bss_32A94.unk25 = 2;
+        } else if (g_Runners[g_Strikes.unk_18[1]].forceOutCd == -1) {
+            lbl_3_common_bss_32A94.unk25 = 3;
+        } else {
+            lbl_3_common_bss_32A94.unk25 = -1;
+        }
+    }
 }
 
 // .text:0x00079ACC size:0x308 mapped:0x806B8B60
