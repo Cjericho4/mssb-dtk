@@ -46,7 +46,18 @@ void fn_3_129C88(void) {
 
 // .text:0x00129F48 size:0xB0 mapped:0x80768FDC
 void fn_3_129F48(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    fn_80034E20(scene, &lbl_3_data_9FB4);
+    scene->unk_1C = 0;
+    if (lbl_3_common_bss_32724.unk_BF != 0) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0x160000;
+        scene->unk_1C = 2;
+    }
+    scene->unk18 = 0;
+    scene->unk1a = 0;
+    lbl_3_common_bss_32724.unk_BE = 1;
+    lbl_803CC1B8->aFunctionPointer = fn_3_129C88;
 }
 
 // .text:0x00129FF8 size:0x2C0 mapped:0x8076908C
