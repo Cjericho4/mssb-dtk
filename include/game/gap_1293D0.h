@@ -9,6 +9,8 @@ void fn_3_129458(void);
 void fn_3_12955C(void);
 void fn_3_129A18(void);
 extern s32 lbl_3_data_9FB4;
+extern s16 lbl_3_data_217A4[];
+void fn_3_1608F0(s32 type, s32 arg1, s32 arg2);
 void fn_3_129C88(void);
 void fn_3_129F48(void);
 void fn_3_129FF8(void);

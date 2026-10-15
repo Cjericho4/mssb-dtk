@@ -7,6 +7,7 @@
 #include "game/rep_3448.h"
 #include "game/gap_97144.h"
 #include "game/gap_AC9F8.h"
+#include "game/gap_1658F0.h"
 
 // .text:0x001293D0 size:0x78 mapped:0x80768468
 void fn_3_1293D0(void) {
@@ -219,6 +220,18 @@ void fn_3_12E808(void) {
 
 // .text:0x0012E83C size:0xC0 mapped:0x8076D8D0
 void fn_3_12E83C(void) {
-    return;
+    u8 hits = g_Minigame.barrelBatter_barrelsHit;
+    s32 points;
+
+    if (hits <= 1) {
+        points = lbl_3_data_217A4[5] * hits;
+    } else {
+        points = hits * ((hits - 1) * lbl_3_data_217A4[5]);
+    }
+    g_Minigame.miniGameCurrentPoints[g_Minigame.rosterID] += points;
+    g_Minigame.targetPointsArray[0] = points;
+    if (g_d_GameSettings.exhibitionMatchInd == 0 && g_Minigame.rosterID == lbl_3_common_bss_37400.playerIndex) {
+        fn_3_1608F0(2, points, g_Minigame.barrelBatter_barrelsHit);
+    }
 }
 
