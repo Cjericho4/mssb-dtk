@@ -102,8 +102,24 @@ void fn_3_E6528(Struct_E6528* arg0) {
 }
 
 // .text:0x000E6578 size:0xC0 mapped:0x8072560C
-void fn_3_E6578(void) {
-    return;
+void fn_3_E6578(Arg0_E6578* arg0) {
+    Material_E6578* mat;
+    TargetRef_E6578* ref;
+
+    if (arg0->unk9C != NULL) {
+        mat = arg0->unk9C->unk0->unk18[1]->unk14;
+        ref = mat->unk8;
+        if (mat->unk10->unk4->unk20 != 3) {
+            OSPanic("sta_c6.c", 0x713, "参照するディスプレイステートがTEV設定部分じゃないです\n");
+        }
+        if (arg0->unkC1 == 2) {
+            ref->unkC->unkA0 = 1;
+        } else if (arg0->unkC1 == 10) {
+            ref->unkC->unkA0 = 0;
+        } else {
+            ref->unkC->unkA0 = 4;
+        }
+    }
 }
 
 // .text:0x000E6638 size:0x4C mapped:0x807256CC

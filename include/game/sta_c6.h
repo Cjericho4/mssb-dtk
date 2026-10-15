@@ -46,6 +46,54 @@ typedef struct BaseStruct_E6638 {
 } BaseStruct_E6638;
 
 typedef struct {
+    u8 _pad0[0x20];
+    u8 unk20;       // 0x20: display state kind (3 = TEV setting)
+} DispState_E6578;
+
+typedef struct {
+    u8 _pad0[0x4];
+    DispState_E6578* unk4;  // 0x04
+} DispStateRef_E6578;
+
+typedef struct {
+    u8 _pad0[0xA0];
+    s16 unkA0;      // 0xA0
+} Target_E6578;
+
+typedef struct {
+    u8 _pad0[0xC];
+    Target_E6578* unkC;     // 0x0C
+} TargetRef_E6578;
+
+typedef struct {
+    u8 _pad0[0x8];
+    TargetRef_E6578* unk8;      // 0x08
+    u8 _pad1[0x4];
+    DispStateRef_E6578* unk10;  // 0x10
+} Material_E6578;
+
+typedef struct {
+    u8 _pad0[0x14];
+    Material_E6578* unk14;  // 0x14
+} Node_E6578;
+
+typedef struct {
+    u8 _pad0[0x18];
+    Node_E6578** unk18;     // 0x18
+} NodeList_E6578;
+
+typedef struct {
+    NodeList_E6578* unk0;   // 0x00
+} Model_E6578;
+
+typedef struct {
+    u8 _pad0[0x9C];
+    Model_E6578* unk9C;     // 0x9C
+    u8 _pad1[0xC1 - 0xA0];
+    u8 unkC1;               // 0xC1
+} Arg0_E6578;
+
+typedef struct {
     u8 _pad0[0xA8];
     u32* unkA8;     // 0xA8
     u32* unkAC;     // 0xAC
@@ -93,7 +141,7 @@ void fn_3_E5FEC(void);
 void fn_3_E6410(Struct_E6410* arg0);
 u32* fn_3_E64A8(void);
 void fn_3_E6528(Struct_E6528* arg0);
-void fn_3_E6578(void);
+void fn_3_E6578(Arg0_E6578* arg0);
 void fn_3_E6638(BaseStruct_E6638* arg0);
 void fn_3_E6684(BaseStruct_E6638* arg0);
 void fn_3_E671C(Arg0_E6798* arg0);
