@@ -90,8 +90,17 @@ void fn_3_E2B70(void) {
 }
 
 // .text:0x000E2E78 size:0xD4 mapped:0x80721F0C
-void fn_3_E2E78(void) {
-    return;
+void fn_3_E2E78(CastleRotObj* obj) {
+    if (obj->shrinkTimer == 0) {
+        obj->unkC8 = 0;
+        obj->unkC4 = 0;
+    } else {
+        obj->scale -= 1.0857142857142859 / obj->shrinkFrames;
+        obj->pos.y = -(1.2 * obj->scale);
+        CTRLSetTranslation(&obj->control, obj->pos.x, -obj->pos.y, obj->pos.z);
+        CTRLSetScale(&obj->control, obj->scale, obj->scale, obj->scale);
+        obj->shrinkTimer--;
+    }
 }
 
 // .text:0x000E2F4C size:0xF8 mapped:0x80721FE0

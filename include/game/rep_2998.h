@@ -57,7 +57,8 @@ void fn_3_E266C(void);
 void fn_3_E28DC(void);
 void fn_3_E29B4(void);
 void fn_3_E2B70(void);
-void fn_3_E2E78(void);
+struct CastleRotObj;
+void fn_3_E2E78(struct CastleRotObj* obj);
 void fn_3_E2F4C(void);
 void fn_3_E3044(void);
 void fn_3_E3284(void);
@@ -86,7 +87,7 @@ typedef union {
     };
 } CastleRotData;
 
-typedef struct {
+typedef struct CastleRotObj {
     Control control;     /* 0x00 */
     u8 _pad0[0x9C - 0x3C];
     u8 rotIdx;           /* 0x9C */
@@ -95,6 +96,12 @@ typedef struct {
     u8 _padAC[4];
     f32 curRotation;     /* 0xB0 */
     f32 scale;           /* 0xB4 */
+    u8 _padB8[0xC4 - 0xB8];
+    u8 unkC4;            /* 0xC4 */
+    u8 shrinkTimer;      /* 0xC5 */
+    u8 shrinkFrames;     /* 0xC6 */
+    u8 _padC7;
+    u8 unkC8;            /* 0xC8 */
 } CastleRotObj;
 
 extern CastleRotData lbl_3_data_18ED0;
