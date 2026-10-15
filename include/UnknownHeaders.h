@@ -13,6 +13,14 @@ void fn_800528AC(void (*callback)(void));
 void fn_80011604(s8 arg1, void (*func)(void));
 
 typedef struct {
+    u8 unk0;
+    u8 unk1;
+} Lbl3Data21278;
+extern Lbl3Data21278 lbl_3_data_21278;
+void changeScene(s32 arg0, s32 arg1);
+void fn_3_10F550(u8 arg0, s16 arg1);
+
+typedef struct {
     u8 _pad0[0x4];
     union {
         struct {

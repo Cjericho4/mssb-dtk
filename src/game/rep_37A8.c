@@ -5,7 +5,6 @@
 #include "game/gap_5985C.h"
 #include "stl/mem.h"
 #include "game/rep_1838.h"
-#include "game/gap_5985C.h"
 
 typedef struct {
     u8 _00[0x28];
@@ -16,11 +15,6 @@ extern s32 lbl_3_bss_B7E4;
 extern u8 lbl_3_bss_B800[0x20][2];
 extern s8 lbl_3_data_266A4;
 
-typedef struct {
-    u8 unk0;
-    u8 unk1;
-} Lbl3Data21278;
-extern Lbl3Data21278 lbl_3_data_21278;
 
 typedef struct {
     s16 min;

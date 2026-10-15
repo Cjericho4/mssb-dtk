@@ -2,6 +2,8 @@
 #include "game/rep_36D8.h"
 #include "UnknownHeaders.h"
 #include "game/rep_1838.h"
+#include "game/rep_13B8.h"
+#include "game/gap_5985C.h"
 
 // .text:0x0013C7BC size:0xDBC mapped:0x8077B850
 void fn_3_13C7BC(void) {
@@ -301,7 +303,23 @@ void fn_3_1412BC(void) {
 
 // .text:0x001413E4 size:0xC8 mapped:0x80780478
 void fn_3_1413E4(void) {
-    return;
+    fn_3_7DD6C();
+    switch (g_GameLogic._125) {
+    case 0:
+        fn_3_10F550(2, lbl_3_data_21278.unk0);
+        changeScene(1, 6);
+        g_GameLogic.FrameCountOfCurrentAtBat_Copy = 0;
+        g_GameLogic._125 = 1;
+        break;
+    case 1:
+        if (g_GameLogic.FrameCountOfCurrentAtBat_Copy > lbl_3_data_21278.unk0 + lbl_3_data_21278.unk1) {
+            g_GameLogic._125 = 2;
+        }
+        break;
+    case 2:
+        fn_3_5A6D4(0);
+        break;
+    }
 }
 
 // .text:0x001414AC size:0x580 mapped:0x80780540
