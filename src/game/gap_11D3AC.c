@@ -21,8 +21,26 @@ void fn_3_11DACC(void) {
 }
 
 // .text:0x0011DDC4 size:0xBC mapped:0x8075CE58
-void fn_3_11DDC4(void) {
-    return;
+u16 fn_3_11DDC4(u8* data, u32 size) {
+    u32 crc;
+    u32 byte;
+    u32 i;
+    s32 j;
+
+    crc = 0;
+    for (i = 0; i < size; i++) {
+        byte = data[i];
+        for (j = 0; j < 8; j++) {
+            if ((crc ^ byte) & 1) {
+                crc >>= 1;
+                crc ^= 0x8408;
+            } else {
+                crc >>= 1;
+            }
+            byte >>= 1;
+        }
+    }
+    return crc;
 }
 
 // .text:0x0011DE80 size:0x4C mapped:0x8075CF14
