@@ -358,6 +358,7 @@ extern VecXYZ lbl_3_data_21B94[4];
 extern Rep3310Data21BC4 lbl_3_data_21BC4[];
 extern f32 lbl_3_data_226C4[4];
 extern f32 lbl_3_data_226DC;
+extern f32 lbl_3_data_226D4[2];
 void fn_8001D110(s32 index, f32 a, f32 b, f32 c);
 
 // .text:0x001183FC size:0x10C mapped:0x80757490
@@ -405,7 +406,26 @@ void fn_3_118614(void) {
 
 // .text:0x0011874C size:0xD0 mapped:0x807577E0
 void fn_3_11874C(void) {
-    return;
+    Rep3310Entry2D94* entry;
+    VecXYZ* objPos;
+    s32 i;
+
+    if (g_GameLogic.secondaryGameMode == 8) {
+        return;
+    }
+    for (i = 0; i < 40; i++) {
+        entry = (Rep3310Entry2D94*)&g_hugeAnimStruct.entries_2D94[i];
+        objPos = &g_Minigame.objects[i].pos;
+        entry->visible = 0;
+        entry->func = NULL;
+        if (g_Minigame.objects[i].active != 0) {
+            entry->visible = 1;
+            entry->pos.x = objPos->x;
+            entry->pos.z = objPos->z;
+            entry->pos.y = -0.01f;
+            fn_8001D110(i, lbl_3_data_226D4[1], 1.0f, lbl_3_data_226D4[1]);
+        }
+    }
 }
 
 // .text:0x0011881C size:0x60 mapped:0x807578B0
