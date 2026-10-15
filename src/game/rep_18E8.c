@@ -9,8 +9,31 @@ void fn_3_A009C(void) {
 }
 
 // .text:0x000A1D04 size:0x9C mapped:0x806E0D98
-void fn_3_A1D04(void) {
-    return;
+s32 fn_3_A1D04(void) {
+    s32 prev;
+    s32 i;
+    f32 prevPos;
+    f32 pos;
+
+    prevPos = -10.0f;
+    for (i = 3; i >= 0; i--) {
+        if (g_Runners[i].runnerOnFieldOrOutOrScored == 1) {
+            pos = g_Runners[i].fractionalBasesRan;
+            prevPos = pos - prevPos;
+            if (prevPos < 0.0f) {
+                prevPos = -prevPos;
+            }
+            if (prevPos < 0.35f) {
+                if (g_Runners[prev].baseStandingOn < 0) {
+                    return prev;
+                }
+                return i;
+            }
+            prevPos = pos;
+            prev = i;
+        }
+    }
+    return -1;
 }
 
 // .text:0x000A1DA0 size:0x19C mapped:0x806E0E34
