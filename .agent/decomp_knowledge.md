@@ -40,6 +40,18 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **`lhz`/`lha` or `clrlwi`/`extsb` mismatches**: fix the field or parameter signedness/width in the header (check other users first).
 *   **Negative or large relocation addends** (e.g. `lbz r4, -0x2a2(rX)` on `lbl_3_data_8338`): this is array indexing with a shifted index (`table[soundID - 0x151].volume` with 2-byte entries), or a field of a larger struct. Model it with types; never reproduce it with `(u8*)` arithmetic.
 *   **Fields declared as scalars but indexed in asm** (e.g. `MiniGameStruct` wall-ball coins, `objects[40]`, `pendingPoints[4][10]`): the padding usually reveals the real array length; convert to arrays.
+*   **Inline `srawi`/`xor`/`subf` absolute value**: use `__abs(x)`.
+*   **`cntlzw` form flipped to the opposite compare**: `BOOL r = a >= b; return r == FALSE;` keeps the `cntlzw` instead of letting MWCC invert to `<`.
+*   **Flag computed into the wrong register**: write `(x != 0)` inline at the use site rather than through a temp (fn_3_11A38C, fn_3_119CA8).
+*   **Unrolled repetitive code**: try a plain `for` loop; MWCC unrolls it (fn_3_60768, fn_3_6AEE0).
+*   **Literal exception**: occasionally only the `extern` rodata form matches (fn_3_70AEC needed `extern f32 lbl_3_rodata_1250` for 0.5). Try both.
+*   **Parameter that seems unused**: it may be passed straight through to a callee in `r3` (fn_3_5B380 → `fn_8004CA6C`).
+
+### Known Unfixable Patterns (don't spend attempts)
+*   **Adjacent-constant compares merged into a range check** (`== 9 || == 10` → `subi`/`cmplwi 1`) when the target keeps them separate (fn_3_B7CDC, fn_3_B7C2C).
+*   **Field offset `0x34` folded into the index of an `lwzx`** instead of the base (rep_3310: fn_3_119EE0, fn_3_119E30, fn_3_11881C, fn_3_11897C, fn_3_1194AC).
+*   **Nested-struct field load folded** (`addi r3,r31,0x10; lwz r3,0xc(r3)` → `lwz 0x1c(r31)`) (fn_3_A32B8).
+*   **Same callee with differing arg counts in one file** (`fn_800216F8`: 2 args in fn_3_90860/90928/90A18, 3 in fn_3_90C14) — one prototype can't satisfy both.
 
 ### Unprototyped Calls (`fn_80034E20`)
 `fn_80034E20` is declared without a prototype (`void fn_80034E20();`), so call it with the arguments the target actually passes. Most callers pass two (no `r5` setup); adding a third `&lbl_803CC1B8` argument was the cause of several "NONMATCHING: 2-arg call" notes.

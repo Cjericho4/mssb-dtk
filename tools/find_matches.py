@@ -9,16 +9,11 @@ def find_matched_functions(report_path):
         units = data.get('units', [])
         for unit in units:
             unit_name = unit.get('name', 'unknown')
-            unit_measures = unit.get('measures', {})
-            unit_match = unit_measures.get('matched_code_percent', 0)
-            
             functions = unit.get('functions', [])
             for func in functions:
-                func_measures = func.get('measures', {})
-                func_match = func_measures.get('matched_code_percent', unit_match if not func_measures else 0)
-                
+                func_match = func.get('fuzzy_match_percent', 0)
                 size = int(func.get('size', 0))
-                if func_match == 100.0 and size > 32:
+                if func_match == 100.0:
                     print(f"Unit: {unit_name}, Function: {func.get('name')}, Size: {size}")
             
     except Exception as e:
