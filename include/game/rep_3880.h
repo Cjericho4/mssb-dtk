@@ -92,7 +92,7 @@ void fn_80033794(ListNode_14B9F0* list);
 void fn_3_14737C(void);
 struct Rep3880Source;
 void fn_3_147778(struct Struct_800339F0_Result* obj, struct Rep3880Source* src);
-void fn_3_147C00(void);
+void fn_3_147C00(struct Rep3880Source* src);
 void fn_3_147CFC(struct Rep3880Source* src);
 void fn_3_147DFC(void);
 void fn_3_147E20(void);

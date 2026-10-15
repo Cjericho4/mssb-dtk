@@ -37,8 +37,29 @@ void fn_3_147778(struct Struct_800339F0_Result* obj, struct Rep3880Source* src) 
 }
 
 // .text:0x00147C00 size:0xFC mapped:0x80786C94
-void fn_3_147C00(void) {
-    return;
+void fn_3_147C00(struct Rep3880Source* src) {
+    struct Struct_800339F0_Result* existing;
+    struct Struct_800339F0_Result* created;
+    ListNode_14B9F0* node;
+    u8 buf[0x60];
+
+    existing = fn_800339F0(0, 0x26);
+    if (existing != NULL) {
+        created = fn_800337CC(buf, lbl_3_data_26E9C.unk8 + lbl_3_data_26E9C.unk30, 1);
+        if (created == NULL) {
+            return;
+        }
+        fn_3_147778(created, src);
+        for (node = existing->listHead; node->next != NULL; node = node->next) {
+        }
+        node->next = created->listHead;
+        existing->count += created->count;
+    } else {
+        created = (struct Struct_800339F0_Result*)fn_80033A24(fn_3_14737C, 0x80, 0, lbl_3_data_26E9C.unk8 + lbl_3_data_26E9C.unk30, 1, 0x26);
+        if (created != NULL) {
+            fn_3_147778(created, src);
+        }
+    }
 }
 
 // .text:0x00147CFC size:0x100 mapped:0x80786D90
