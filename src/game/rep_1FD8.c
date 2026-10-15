@@ -15,6 +15,23 @@ typedef struct {
     u8 unk98; /* 0x98 */
 } C23E0Inner;
 
+typedef struct {
+    u8 _pad0[0x8];
+    Mtx mtx;                    /* 0x08 */
+    DrawingSceneStruct* scene;  /* 0x38 */
+} CameraSlot_17804;             /* size 0x3C */
+
+typedef struct {
+    u8 _pad0[0x40];
+    Mtx mtx; /* 0x40 */
+} CameraMtx_52768;
+
+extern s32 lbl_3_bss_9D90;
+extern u8 lbl_803CBBC0;
+extern CameraSlot_17804 lbl_3_data_17804[];
+extern CameraMtx_52768* fn_80052768(s32 arg0);
+extern void fn_800A7D4C(s32 arg0, CameraSlot_17804* slot);
+
 // .text:0x000C1964 size:0x10 mapped:0x807009F8
 void fn_3_C1964(void) {
     lbl_3_bss_9D9C = 1;
@@ -40,7 +57,16 @@ void fn_3_C1C18(void) {
 
 // .text:0x000C2244 size:0xCC mapped:0x807012D8
 void fn_3_C2244(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    if (lbl_3_bss_9D9C != 0) {
+        lbl_3_bss_9D90 = 0;
+        fn_800B0A14_removeQueue();
+    } else if (scene->field17_0x2a != 0) {
+        fn_800A7D4C(1, &lbl_3_data_17804[lbl_803CBBC0]);
+        PSMTXCopy(fn_80052768(0)->mtx, lbl_3_data_17804[lbl_803CBBC0].mtx);
+        lbl_3_data_17804[lbl_803CBBC0].scene = scene;
+    }
 }
 
 // .text:0x000C2310 size:0xD0 mapped:0x807013A4
