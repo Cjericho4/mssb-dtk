@@ -29,8 +29,18 @@ void fn_3_99818(void) {
 }
 
 // .text:0x00099BDC size:0xAC mapped:0x806D8C70
+extern int lbl_3_data_D258;
+
 void fn_3_99BDC(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    fn_80034E20(scene, &lbl_3_data_D258);
+    if (g_Minigame.GameMode_MiniGame == 2) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0x30000;
+    } else {
+        lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0x20000;
+    }
+    scene->unk_1C = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_3_99818;
 }
 
 // .text:0x00099C88 size:0x74 mapped:0x806D8D1C
