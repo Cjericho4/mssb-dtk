@@ -7,6 +7,7 @@
 #include "header_rep_data.h"
 #include "game/m_sound.h"
 #include "game/gap_16C410.h"
+#include "game/rep_3448.h"
 
 extern GXTexObj lbl_3_bss_B640;
 
@@ -113,8 +114,17 @@ void fn_3_F8E20(void) {
 }
 
 // .text:0x000F9088 size:0xDC mapped:0x8073811C
-void fn_3_F9088(void) {
-    return;
+extern DrawingSceneStruct* lbl_3_bss_B628;
+void fn_800528C0(f32 x, f32 y, f32 z, s16* outX, s16* outY);
+
+void fn_3_F9088(VecXYZ* pos, s32 idx) {
+    s16 screenX;
+    s16 screenY;
+
+    fn_800528C0(pos->x, pos->y, pos->z, &screenX, &screenY);
+    lbl_80371C30[lbl_3_bss_B628->unkIndex + idx].obj->pos.x = screenX;
+    lbl_80371C30[lbl_3_bss_B628->unkIndex + idx].obj->pos.y = screenY;
+    lbl_80371C30[lbl_3_bss_B628->unkIndex + idx].obj->pos.z = 0.0f;
 }
 
 // .text:0x000F9164 size:0x198 mapped:0x807381F8
