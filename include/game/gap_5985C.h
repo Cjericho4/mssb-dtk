@@ -15,6 +15,7 @@
 void fn_80017D28(s32 arg0);
 void fn_8001AAA4(void);
 void possiblyTransitionBlackScreen(void);
+void fn_3_10FBE4(void);
 
 void fn_3_5985C(s32 idx, s32 arg1);
 void fn_3_598D0(void);

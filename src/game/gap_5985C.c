@@ -1,5 +1,9 @@
 #include "game/gap_5985C.h"
 #include "game/rep_1188.h"
+#include "game/rep_1038.h"
+#include "game/gap_6D4A0.h"
+#include "game/m_sound.h"
+#include "game/gap_DEB90.h"
 #include "game/rep_1C0.h"
 #include "game/rep_868.h"
 #include "game/rep_540.h"
@@ -152,7 +156,19 @@ void fn_3_5ACA0(void) {
 
 // .text:0x0005AE0C size:0x90 mapped:0x80699EA0
 void fn_3_5AE0C(void) {
-    return;
+    fn_3_6D4A0();
+    g_UnkSimulation_31AC0.unk8 = 0;
+    g_UnkSimulation_31AC0.unk7 = 0;
+    fn_3_5A87C();
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        fn_3_DFA20();
+    } else if (g_d_GameSettings.GameModeSelected == 7) {
+        fn_3_10FBE4();
+    }
+    g_Minigame._19AB = 0;
+    fn_3_6C150();
+    fn_3_8F1C8();
+    lbl_803CC1B8->unk_00 = fn_3_5B0C4;
 }
 
 // .text:0x0005AE9C size:0x228 mapped:0x80699F30
