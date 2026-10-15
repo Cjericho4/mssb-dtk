@@ -618,7 +618,7 @@ typedef struct BssTransRotData {
 
 typedef struct CommonBss_35154 {
     /* 0x000 */ u32 firstMember;
-    /* 0x004 */ u8 _pad_1[4];
+    /* 0x004 */ s32 unk4;
     /* 0x008 */ void* field_0x8;
     /* 0x00C */ u8 _pad0[0x3AC - 0xC];
     /* 0x3AC */ u32 bitfield;
@@ -661,7 +661,11 @@ typedef struct CommonBss_35154 {
     /* 0x464 */ s16 unk_464;
     /* 0x466 */ u8 someFlag;
     /* 0x467 */ u8 unk_467;
-    /* 0x468 */ u8 _pad4[0x11];
+    /* 0x468 */ s32 unk_468;
+    /* 0x46C */ u8 _pad46C[0x470 - 0x46C];
+    /* 0x470 */ u8 unk_470;
+    /* 0x471 */ u8 unk_471;
+    /* 0x472 */ u8 _pad472[0x479 - 0x472];
     /* 0x479 */ u8 unk_479;
 } CommonBss_35154;
 
