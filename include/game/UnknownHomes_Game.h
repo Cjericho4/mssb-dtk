@@ -1364,7 +1364,24 @@ extern UnkSimulationRelatedStruct unkSimulationRelatedStruct;
 
 extern f32 vecDotProduct(VecXYZ* a, VecXYZ* b);
 
-extern ChallengeTrackingStruct starMissionCompletionTracker[54];
+// Whole 0x4508-byte block at 0x80361C50 (Ghidra splits it into several labels).
+typedef struct _ChallengeSaveData {
+    /*0x0000*/ ChallengeTrackingStruct missions[54];
+    /*0x0AF8*/ u8 _padAF8[0x4415 - 0xAF8];
+    /*0x4415*/ u8 challengeDifficulty;
+    /*0x4416*/ u8 _pad4416[0x441C - 0x4416];
+    /*0x441C*/ u8 challengeCaptain;
+    /*0x441D*/ u8 challengeCaptainID;
+    /*0x441E*/ u8 opponentCaptain;
+    /*0x441F*/ u8 opponentCaptainCharID;
+    /*0x4420*/ u8 _pad4420[0x4422 - 0x4420];
+    /*0x4422*/ u8 unk4422;
+    /*0x4423*/ u8 _pad4423[0x44EF - 0x4423];
+    /*0x44EF*/ u8 unk44EF;
+    /*0x44F0*/ u8 _pad44F0[0x4508 - 0x44F0];
+} ChallengeSaveData; // size: 0x4508
+
+extern ChallengeSaveData starMissionCompletionTracker;
 
 typedef struct {
     /*0x00*/ VecXYZ pos;

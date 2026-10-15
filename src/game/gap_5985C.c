@@ -6,6 +6,7 @@
 #include "game/gap_DEB90.h"
 #include "game/gap_157DB8.h"
 #include "game/gap_6B4C8.h"
+#include "game/gap_1658F0.h"
 
 typedef struct {
     u8 highLevelSimulationFlag;
@@ -336,7 +337,23 @@ void fn_3_5CDB4(void) {
 
 // .text:0x0005CFD0 size:0xC4 mapped:0x8069C064
 void fn_3_5CFD0(void) {
-    return;
+    s16 val;
+    ChallengeSaveData* tracker = &starMissionCompletionTracker;
+    s32 captain = tracker->challengeCaptain;
+    s32 opponent = tracker->opponentCaptain;
+
+    if (g_d_GameSettings.exhibitionMatchInd == 0) {
+        val = g_Scores.unkA4;
+        if (val <= 1) {
+            if (val ^ (g_GameLogic.homeTeamInd == lbl_3_common_bss_37400.playerIndex)) {
+                if ((tracker->unk4422 >= 4 && opponent == 5) ||
+                    (tracker->unk4422 >= 5 && (s32)tracker->unk44EF == 1 && captain == 5)) {
+                    g_GameLogic.playOverFadeOutStarted = 0;
+                }
+                starMissionRelated2();
+            }
+        }
+    }
 }
 
 // .text:0x0005D094 size:0x368 mapped:0x8069C128

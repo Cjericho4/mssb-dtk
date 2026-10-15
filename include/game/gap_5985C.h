@@ -16,6 +16,7 @@ void fn_80017D28(s32 arg0);
 void fn_8001AAA4(void);
 void possiblyTransitionBlackScreen(void);
 void fn_3_10FBE4(void);
+void starMissionRelated2(void);
 
 typedef struct Lbl800F1D78Entry {
     u8 _pad[0x10];

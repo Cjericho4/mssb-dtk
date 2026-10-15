@@ -21,7 +21,7 @@ void setInMemBatterConstants(int rosterID) {
     int batterID;
 
     CharacterStats* char_stats = &inMemRoster[g_GameLogic.teamBatting][rosterID];
-    ChallengeTrackingStruct* starMissions = starMissionCompletionTracker;
+    ChallengeTrackingStruct* starMissions = starMissionCompletionTracker.missions;
     g_Batter.easyBatting = 0;
 
     if (g_d_GameSettings.GameModeSelected == GAME_TYPE_PRACTICE) {
