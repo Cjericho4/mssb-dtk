@@ -1569,6 +1569,14 @@ typedef struct MinigameRandomTarget {
     u8 active;
 } MinigameRandomTarget;
 
+typedef struct MinigameTargetSpawn {
+    /* 0x0 */ s16 value;
+    /* 0x2 */ u8 _2[3];
+    /* 0x5 */ u8 unk5;
+    /* 0x6 */ s8 unk6;
+    /* 0x7 */ s8 unk7;
+} MinigameTargetSpawn; // size 0x8
+
 typedef struct _MiniGameStruct {
     /*0x000*/ MinigameProgressItem progressItems[3];
     /*0x0A8*/ MinigameObject objects[40]; // stride 0x28, ends at 0x6E8
@@ -2124,8 +2132,13 @@ typedef struct _MiniGameStruct {
     /*0x1DC0*/ u8 field_1DC0[4];
     /*0x1DC4*/ u8 field_1DC4[4];
     /*0x1DC8*/ u8 player_states[4];
-    /* 0x1DCC */ MinigameRandomTarget randomTargets[4];
-    /* 0x1DDC */ u8 _pad_extension[0x1DEC - 0x1DDC];
+    union {
+        struct {
+            /* 0x1DCC */ MinigameRandomTarget randomTargets[4];
+            /* 0x1DDC */ u8 _pad_extension[0x1DEC - 0x1DDC];
+        };
+        /* 0x1DCC */ MinigameTargetSpawn targetSpawns[4];
+    };
     /* 0x1DEC */ f32 unk1DEC;
     /* 0x1DF0 */ f32 unk1DF0;
     /*0x1DF4*/ s16 targetPointsArray[4];

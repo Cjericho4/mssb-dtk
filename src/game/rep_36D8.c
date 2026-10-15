@@ -130,8 +130,49 @@ void fn_3_13DDE0(void) {
 }
 
 // .text:0x0013DEA4 size:0x118 mapped:0x8077CF38
+typedef struct {
+    s16 min;
+    s16 max;
+} RangeS16_36D8;
+
+typedef struct {
+    s8 min;
+    s8 max;
+} RangeS8_36D8;
+
+extern RangeS8_36D8 lbl_3_data_21944[4];
+extern RangeS16_36D8 lbl_3_data_2194C[4];
+extern s8 lbl_3_data_2197C[4];
+extern s8 lbl_3_data_21980[4];
+
+static inline void setTargetSpawn(MinigameTargetSpawn* target, u8 strength) {
+    s8 minVal;
+
+    target->value = RandomInt_Game_Range(lbl_3_data_2194C[strength].min, lbl_3_data_2194C[strength].max);
+    if (RandomInt_Game(100) < lbl_3_data_2197C[strength]) {
+        minVal = lbl_3_data_21980[strength];
+        if (minVal < 8) {
+            target->unk6 = RandomInt_Game_Range(minVal, 8);
+        } else {
+            target->unk6 = 8;
+        }
+    } else {
+        target->unk6 = 0x7F;
+    }
+    target->unk5 = 2;
+    target->unk7 = RandomInt_Game_Range(lbl_3_data_21944[strength].min, lbl_3_data_21944[strength].max);
+}
+
 void fn_3_13DEA4(void) {
-    return;
+    MinigameTargetSpawn* spawns = g_Minigame.targetSpawns;
+    s8 i;
+
+    memset(g_Minigame._1D7C, 0, 0x78);
+    i = 0;
+    do {
+        MinigameTargetSpawn* target = &spawns[i];
+        setTargetSpawn(target, g_Minigame.players.aIStrength[i]);
+    } while (++i < 4);
 }
 
 // .text:0x0013DFBC size:0x1B8 mapped:0x8077D050
