@@ -326,8 +326,18 @@ void fn_3_AAA3C(void) {
 }
 
 // .text:0x000AABF8 size:0x8C mapped:0x806E9C8C
-void fn_3_AABF8(void) {
-    return;
+BOOL fn_3_AABF8(void) {
+    s16 idx = g_FieldingLogic.unkD8;
+    if (idx == -1) {
+        return FALSE;
+    }
+    if (g_FieldingLogic.unk105 != 1) {
+        return FALSE;
+    }
+    if (g_Fielders[idx].unk18C != 5) {
+        return FALSE;
+    }
+    return !(g_Fielders[g_Ball.fielderWBallIndex].unkB8 < 10.0f);
 }
 
 // .text:0x000AAC84 size:0x36C mapped:0x806E9D18

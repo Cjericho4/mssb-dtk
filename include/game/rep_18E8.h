@@ -59,7 +59,7 @@ void fn_3_A9984(void);
 void fn_3_A9C74(void);
 void fn_3_A9D20(void);
 void fn_3_AAA3C(void);
-void fn_3_AABF8(void);
+BOOL fn_3_AABF8(void);
 void fn_3_AAC84(void);
 void fn_3_AAFF0(void);
 void fn_3_AB554(void);
