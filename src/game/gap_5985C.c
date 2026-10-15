@@ -4,6 +4,15 @@
 #include "game/gap_6D4A0.h"
 #include "game/m_sound.h"
 #include "game/gap_DEB90.h"
+#include "game/gap_157DB8.h"
+#include "game/gap_6B4C8.h"
+
+typedef struct {
+    u8 highLevelSimulationFlag;
+    u8 _1;
+    u8 _2;
+} HighLevelSimulation_5985C;
+extern HighLevelSimulation_5985C lbl_803CBC3C;
 #include "game/rep_1C0.h"
 #include "game/rep_868.h"
 #include "game/rep_540.h"
@@ -287,7 +296,18 @@ void fn_3_5C74C(s32 arg0) {
 
 // .text:0x0005CD24 size:0x90 mapped:0x8069BDB8
 void fn_3_5CD24(void) {
-    return;
+    if (g_GameLogic._125 == 0) {
+        lbl_3_common_bss_32724.unk9A = 0;
+        fn_3_8A1D8();
+        fn_3_6C108();
+        fn_3_6B870();
+        g_GameLogic._125++;
+    } else if (g_GameLogic._125 == 1) {
+        if (fn_3_6BA64() != 0) {
+            lbl_803CBC3C._2 = 0;
+            fn_3_5A6D4(0);
+        }
+    }
 }
 
 // .text:0x0005CDB4 size:0x21C mapped:0x8069BE48
