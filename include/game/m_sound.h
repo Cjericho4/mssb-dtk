@@ -59,7 +59,7 @@ void fn_3_90328(void);
 void fn_3_903B8(void);
 void fn_3_90434(void);
 s32 fn_3_9056C(s32 songIndex);
-void fn_3_90674(void);
+void fn_3_90674(s32 songIndex);
 void fn_3_906FC(void);
 
 extern s32 lbl_3_bss_1780;

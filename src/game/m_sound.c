@@ -34,6 +34,8 @@ typedef struct {
 } SoundTables;
 
 extern SoundTables lbl_3_data_8148;
+extern SongSettings lbl_3_data_830C[]; /* == lbl_3_data_8148.songSettings */
+extern SongEntry lbl_3_data_88E0[];    /* == lbl_3_data_8148.songs */
 extern u16 lbl_3_data_8168[];
 extern SoundFXSettings lbl_3_data_8338[];
 /* Per-voice mix settings for grouped sound effects. */
@@ -348,8 +350,10 @@ s32 fn_3_9056C(s32 songIndex) {
 }
 
 // .text:0x00090674 size:0x88 mapped:0x806CF708
-void fn_3_90674(void) {
-    return;
+void fn_3_90674(s32 songIndex) {
+    SongEntry* song = &lbl_3_data_88E0[songIndex];
+    lbl_3_common_bss_34C58._04 = sndSeqPlayEx(song->seqID, song->groupID, lbl_3_bss_1774[songIndex], 0, 0);
+    sndSeqVolume(lbl_3_data_830C[songIndex].volume, 0, lbl_3_common_bss_34C58._04, 0);
 }
 
 // .text:0x000906FC size:0x58 mapped:0x806CF790
