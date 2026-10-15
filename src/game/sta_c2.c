@@ -14,6 +14,8 @@ extern char lbl_3_rodata_2878[];
 extern u8 lbl_3_bss_A898[];
 extern DrawingSceneStruct* lbl_3_bss_A8A4;
 extern f32 lbl_3_data_188E0;
+extern Vec lbl_3_rodata_24E8[];
+extern StaC2ChainParams lbl_3_bss_A8A8;
 
 // .text:0x000CB8A8 size:0x1F4 mapped:0x8070A93C
 void fn_3_CB8A8(void) {
@@ -39,8 +41,20 @@ void fn_3_CBA9C(ActorObject* arg0) {
 }
 
 // .text:0x000CBAFC size:0x11C mapped:0x8070AB90
-void fn_3_CBAFC(void) {
-    return;
+void fn_3_CBAFC(StaC2ChainObj* obj) {
+    StaC2D501CEntry* entries = obj->entries;
+    Mtx m;
+    Vec axis = {0.0f, 1.0f, 0.0f};
+    Vec zero = {0.0f, 0.0f, 0.0f};
+    Vec v;
+
+    PSMTXRotAxisRad(m, &axis, 0.017453292f * obj->angle);
+    PSMTXMultVec(m, &lbl_3_rodata_24E8[0], &v);
+    PSVECAdd(&v, &obj->pos, &v);
+    v.y += 4.5;
+    entries[3].unkC[0] = v;
+    entries[3].unkC[1] = entries[3].unkC[0];
+    fn_3_D1F2C(&lbl_3_bss_A8A8, obj->entries, 4, &zero, obj);
 }
 
 // .text:0x000CBC18 size:0x368 mapped:0x8070ACAC
@@ -389,7 +403,7 @@ void fn_3_D1B24(void) {
 }
 
 // .text:0x000D1F2C size:0x2F4 mapped:0x80710FC0
-void fn_3_D1F2C(void) {
+void fn_3_D1F2C(StaC2ChainParams* params, StaC2D501CEntry* entries, s32 count, Vec* force, StaC2ChainObj* obj) {
     return;
 }
 

@@ -88,7 +88,6 @@ typedef struct StaC2Effect {
 
 void fn_3_CB8A8(void);
 void fn_3_CBA9C(ActorObject* arg0);
-void fn_3_CBAFC(void);
 void fn_3_CBC18(void);
 void fn_3_CBF80(void);
 void fn_3_CC1D4(void);
@@ -142,7 +141,6 @@ void fn_3_D1848(void);
 void fn_3_D196C(void);
 void fn_3_D1AC4(ActorObject* arg0);
 void fn_3_D1B24(void);
-void fn_3_D1F2C(void);
 void fn_3_D2220(void);
 void fn_3_D233C(void);
 int fn_3_D249C(Struct_800D249C_Arg0 *param_1);
@@ -168,11 +166,29 @@ typedef struct {
     f32 unk0;
     f32 unk4;
     f32 unk8;
-    u8 unkC[0x18];
+    Vec unkC[2];
     u8 unk24[0xC];
     u8 unk30[0xC];
     s32 unk3C;
 } StaC2D501CEntry; // size: 0x40
+typedef struct StaC2ChainParams {
+    u8 _pad0[0x18];
+    f32 unk18; /* 0x18 */
+    f32 unk1C; /* 0x1C */
+    u8 _pad20[0x4];
+    f32 unk24; /* 0x24 */
+} StaC2ChainParams; // size: 0x28
+
+typedef struct StaC2ChainObj {
+    u8 _pad0[0xA0];
+    Vec pos;                    /* 0xA0 */
+    u8 _padAC[0xC0 - 0xAC];
+    f32 angle;                  /* 0xC0 */
+    StaC2D501CEntry* entries;   /* 0xC4 */
+} StaC2ChainObj;
+
+void fn_3_CBAFC(StaC2ChainObj* obj);
+void fn_3_D1F2C(StaC2ChainParams* params, StaC2D501CEntry* entries, s32 count, Vec* force, StaC2ChainObj* obj);
 void fn_3_CC354(StaC2D501CEntry* entries);
 void fn_3_D501C(StaC2D501CEntry* entries);
 void fn_3_D511C(void);
