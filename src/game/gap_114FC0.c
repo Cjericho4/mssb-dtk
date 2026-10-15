@@ -7,6 +7,7 @@
 #include "game/rep_AC8.h"
 #include "game/gap_106DFC.h"
 #include "game/gap_5985C.h"
+#include "game/rep_3310.h"
 
 extern void Set_803cb848(s32 arg0);
 
@@ -132,7 +133,30 @@ void fn_3_1166CC(void) {
     return;
 }
 
+typedef struct {
+    VecXYZ pos;
+    u8 _pad0C[0x24];
+} Data21BC4Entry; // size: 0x30
+
+extern Data21BC4Entry lbl_3_data_21BC4[];
+extern f32 lbl_3_data_226C4[4];
+void fn_8001D110(s32 index, f32 a, f32 b, f32 c);
+
 // .text:0x0011678C size:0xB4 mapped:0x80755820
 void fn_3_11678C(void) {
-    return;
+    StadiumObjEntry* entry;
+    s32 i;
+
+    for (i = 0; i < 7; i++) {
+        entry = (StadiumObjEntry*)&g_hugeAnimStruct.entries_2D94[i + 0xE9];
+        entry->visible = 0;
+        if (i >= 4) {
+            entry->visible = 1;
+            entry->pos.x = lbl_3_data_21BC4[i - 4].pos.x;
+            entry->pos.y = -lbl_3_data_21BC4[i - 4].pos.y;
+            entry->pos.z = lbl_3_data_21BC4[i - 4].pos.z;
+            fn_8001D110(i + 0xE9, lbl_3_data_226C4[0], lbl_3_data_226C4[1], lbl_3_data_226C4[0]);
+            entry->func = fn_3_11881C;
+        }
+    }
 }
