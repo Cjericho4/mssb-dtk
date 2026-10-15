@@ -281,8 +281,38 @@ void fn_3_10952C(void) {
 }
 
 // .text:0x00109CE8 size:0xA0 mapped:0x80748D7C
-void fn_3_109CE8(void) {
-    return;
+static inline MinigameModeData* fn_3_109CE8_getModeData(void) {
+    u8 mode;
+    if (g_Minigame._1A3C != 0) {
+        return &lbl_803616CC.modes[6];
+    }
+    mode = g_Minigame.GameMode_MiniGame;
+    if (mode != 0) {
+        return &lbl_803616CC.modes[mode - 1];
+    }
+    return &lbl_803616CC.base;
+}
+
+u32 fn_3_109CE8(MinigameScoreEntry* entry) {
+    MinigameModeData* data;
+    s32 score;
+    u32 i;
+
+    if (g_Minigame._1907 == 1) {
+        data = fn_3_109CE8_getModeData();
+        score = entry->score;
+        i = 0;
+        do {
+            if (score > data->entries[i].score) {
+                break;
+            }
+            if (score == data->entries[i].score && entry->sub > data->entries[i].sub) {
+                break;
+            }
+            i++;
+        } while (i < 5);
+        return i;
+    }
 }
 
 // .text:0x00109D88 size:0x58 mapped:0x80748E1C

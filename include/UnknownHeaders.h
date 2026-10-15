@@ -1051,8 +1051,14 @@ void fn_800B0A14_removeQueue(void);
 // Array of minigame mode data entries, indexed by MINI_GAME_ID.
 // base is the entry for MINI_GAME_ID_NONE; modes[0..6] map to IDs 1-7.
 typedef struct {
-    u8 _pad[0x28];
-} MinigameModeData;
+    s32 score;  /* 0x0 */
+    s16 sub;    /* 0x4 */
+    u8 _pad6[0x2];
+} MinigameScoreEntry; /* size: 0x8 */
+
+typedef struct {
+    MinigameScoreEntry entries[5];
+} MinigameModeData; /* size: 0x28 */
 
 typedef struct {
     MinigameModeData base;      /* 0x000 */
