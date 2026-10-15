@@ -4,6 +4,7 @@
 #include "game/UnknownHomes_Game.h"
 #include "header_rep_data.h"
 #include "game/gap_106DFC.h"
+#include "game/m_sound.h"
 #include <math.h>
 
 extern void changeScene(s32, s32);
@@ -360,8 +361,31 @@ void fn_3_137DE4(void) {
 }
 
 // .text:0x00137F14 size:0x118 mapped:0x80776FA8
-void fn_3_137F14(void) {
-    return;
+// .text:0x00137F14 size:0x118 mapped:0x80776FA8
+void fn_3_137F14(Rep3520Ball* ball) {
+    if (g_Minigame._72A != 0) {
+        ball->vel.y = lbl_3_data_21A64[5];
+        ball->state3D = 5;
+        ball->frames3A = 0;
+        return;
+    }
+    if (ball->flag3E != 0) {
+        ball->count3F++;
+        if (ball->count3F >= 10) {
+            fn_3_90064(0x303);
+            ball->flag3E = 0;
+        }
+    }
+    if (ball->frames3A < 0x7FFE) {
+        ball->frames3A++;
+    } else {
+        ball->frames3A = 0x7FFF;
+    }
+    if (fn_3_137B10(ball) == 0 && ball->frames3A >= lbl_3_data_21A64[6]) {
+        ball->vel.y = lbl_3_data_21A64[5];
+        ball->state3D = 5;
+        ball->frames3A = 0;
+    }
 }
 
 // .text:0x0013802C size:0x2B4 mapped:0x807770C0

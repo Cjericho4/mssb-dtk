@@ -353,7 +353,7 @@ u32 fn_3_8FF5C(s32 soundID, f32 x, f32 z) {
 }
 
 // .text:0x00090064 size:0xEC mapped:0x806CF0F8
-void fn_3_90064(void) {
+void fn_3_90064(s32 param) {
     return;
 }
 
