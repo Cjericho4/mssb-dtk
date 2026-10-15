@@ -209,8 +209,31 @@ void fn_3_B940(void) {
 }
 
 // .text:0x0000BBBC size:0x98 mapped:0x8064AC50
-void fn_3_BBBC(void) {
-    return;
+s32 fn_3_BBBC(VecXYZ* out, s32 count, s32 step, f32 x, f32 z) {
+    s32 i;
+    s32 best = -1;
+    f32 minDist = 100000000.0f;
+    f32 dist;
+    f32 dx;
+    f32 dz;
+
+    for (i = 0; i < count; i += step) {
+        dx = g_Ball.physicsSubstruct.futureCoordsAndDist[i].pos.x - x;
+        dz = g_Ball.physicsSubstruct.futureCoordsAndDist[i].pos.z - z;
+        dist = dx * dx + dz * dz;
+        if (!(dist < minDist)) {
+            break;
+        }
+        minDist = dist;
+        best = i;
+    }
+    if (best < 0) {
+        return -1;
+    }
+    out->x = g_Ball.physicsSubstruct.futureCoordsAndDist[best].pos.x;
+    out->y = g_Ball.physicsSubstruct.futureCoordsAndDist[best].pos.y;
+    out->z = g_Ball.physicsSubstruct.futureCoordsAndDist[best].pos.z;
+    return best;
 }
 
 // .text:0x0000BC54 size:0x124 mapped:0x8064ACE8
