@@ -935,8 +935,18 @@ void fn_3_157588(s32 arg) {
 }
 
 // .text:0x001575F0 size:0x8C mapped:0x80796684
-void fn_3_1575F0(void) {
-    return;
+Struct_B850_Entry* fn_3_1575F0(u32 index) {
+    Struct_B850_Node* node;
+
+    if (lbl_3_bss_B850 != NULL) {
+        node = lbl_3_bss_B850->head;
+        while (index >= 7) {
+            node = node->next;
+            index -= 7;
+        }
+        return &node->entries[index];
+    }
+    return NULL;
 }
 
 // .text:0x0015767C size:0x27C mapped:0x80796710

@@ -37,7 +37,18 @@ struct Struct_800339F0_Result {
 };
 
 typedef struct {
-    u8 _pad[0x18];
+    u8 _pad0[0xC];
+} Struct_B850_Entry; // size: 0xC
+
+typedef struct Struct_B850_Node {
+    struct Struct_B850_Node* next; // 0x00
+    Struct_B850_Entry entries[7];  // 0x04
+} Struct_B850_Node;
+
+typedef struct {
+    u8 _pad[0xC];
+    Struct_B850_Node* head; // 0x0C
+    u8 _pad10[0x8];
     u8 someFlag; // 0x18
 } UnknownStruct_B850;
 
@@ -220,7 +231,7 @@ void fn_3_15730C(void);
 void fn_3_1573AC(void);
 void fn_3_157570(void);
 void fn_3_157588(s32 arg);
-void fn_3_1575F0(void);
+Struct_B850_Entry* fn_3_1575F0(u32 index);
 void fn_3_15767C(void);
 void fn_3_1578F8(void);
 void fn_3_15791C(void);
