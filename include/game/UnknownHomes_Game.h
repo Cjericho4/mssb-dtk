@@ -2344,4 +2344,13 @@ extern BOOL getAnimRelatedCoordinates(int, int, VecXYZ*);
 extern void fn_3_6C854(int, int);
 extern u32 playSoundEffect(int);
 
+typedef struct UnkSimulation31AC0 {
+    u8 _pad0[0x5];
+    u8 unk5;
+    u8 unk6;
+    u8 _pad7[0x5];
+} UnkSimulation31AC0;
+
+extern UnkSimulation31AC0 g_UnkSimulation_31AC0;
+
 #endif // !__UNKNOWN_HOMES_H_

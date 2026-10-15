@@ -8,14 +8,6 @@
 #include "game/gap_106DFC.h"
 #include "game/gap_5985C.h"
 
-typedef struct {
-    u8 _pad0[0x5];
-    u8 unk5;
-    u8 unk6;
-    u8 _pad7[0x5];
-} UnkSimulation31AC0;
-
-extern UnkSimulation31AC0 g_UnkSimulation_31AC0;
 extern void Set_803cb848(s32 arg0);
 
 // .text:0x00114FC0 size:0x6C mapped:0x80754054

@@ -2,6 +2,16 @@
 #include "game/gap_AC9F8.h"
 #include "game/rep_AC8.h"
 #include "header_rep_data.h"
+#include "game/UnknownHomes_Game.h"
+#include "game/rep_1188.h"
+#include "game/rep_540.h"
+#include "game/rep_1200.h"
+#include "game/game_batter.h"
+#include "game/rep_868.h"
+
+extern void Set_803cb848(s32 arg0);
+extern void fn_3_BF158(void);
+extern void fn_3_BF1AC(void);
 
 extern u8 lbl_803CBC3C;
 
@@ -121,7 +131,19 @@ void fn_3_DDD60(void) {
 
 // .text:0x000DDF1C size:0x84 mapped:0x8071CFB0
 void fn_3_DDF1C(void) {
-    return;
+    fn_3_6EBB4(g_Minigame.minigamePlayerSelectedOrder);
+    fn_3_F1DC();
+    fn_3_751B4();
+    setDefaultInMemBatter();
+    fn_3_58870();
+    fn_3_1DEB8();
+    fn_3_BF1AC();
+    Set_803cb848(1);
+    fn_3_BF158();
+    g_FieldingLogic.unkAE = 0;
+    g_GameLogic.homeRunWordAnimationCompletedInd = 0;
+    g_UnkSimulation_31AC0.unk5 = 0;
+    g_UnkSimulation_31AC0.unk6 = 4;
 }
 
 // .text:0x000DDFA0 size:0x368 mapped:0x8071D034
