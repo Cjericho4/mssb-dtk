@@ -410,8 +410,23 @@ void fn_3_105E00(void) {
 }
 
 // .text:0x00106014 size:0xC4 mapped:0x807450A8
-void fn_3_106014(void) {
-    return;
+void fn_3_106014(f32 x, f32 y, f32 z) {
+    VecXYZ* p = lbl_3_common_bss_DE94->field_0x98;
+
+    if (lbl_3_bss_B67A[0] == 0) {
+        p[lbl_3_bss_B67A[0]].x = x;
+        p[lbl_3_bss_B67A[0]].y = y;
+        p[lbl_3_bss_B67A[0]].z = z;
+        lbl_3_bss_B67A[0]++;
+    } else if (x != p[lbl_3_bss_B67A[0] - 1].x && y != p[lbl_3_bss_B67A[0] - 1].y &&
+               z != p[lbl_3_bss_B67A[0] - 1].z) {
+        p[lbl_3_bss_B67A[0]].x = x;
+        p[lbl_3_bss_B67A[0]].y = y;
+        p[lbl_3_bss_B67A[0]].z = z;
+        if (lbl_3_bss_B67A[0] < 1000) {
+            lbl_3_bss_B67A[0]++;
+        }
+    }
 }
 
 // .text:0x001060D8 size:0xA4 mapped:0x8074516C
