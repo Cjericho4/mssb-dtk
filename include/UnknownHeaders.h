@@ -634,7 +634,15 @@ typedef struct QueueEntry {
     u8 _pad0[0x10];
     s16 unk10;     /* 0x10 */
     u8 _pad1[0x02];
-    VecXYZ vec;    /* 0x14 */
+    union {
+        VecXYZ vec;    /* 0x14 */
+        struct {
+            u8 unk14;  /* 0x14 */
+            u8 unk15;  /* 0x15 */
+            u8 unk16;  /* 0x16 */
+            u8 unk17;  /* 0x17 */
+        };
+    };
     s32 unk20;     /* 0x20 */
     u8* unk24;     /* 0x24 */
 } QueueEntry;
@@ -722,6 +730,8 @@ typedef struct CommonBss_35154 {
     /* 0x471 */ u8 unk_471;
     /* 0x472 */ u8 _pad472[0x479 - 0x472];
     /* 0x479 */ u8 unk_479;
+    /* 0x47A */ s16 unk_47A[2];
+    /* 0x47E */ u8 _pad47E[0x480 - 0x47E];
 } CommonBss_35154;
 
 extern CommonBss_35154 lbl_3_common_bss_35154;
