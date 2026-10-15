@@ -2104,7 +2104,8 @@ typedef struct _MiniGameStruct {
     /*0x1DF4*/ s16 targetPointsArray[4];
     /*0x1DFC*/ u8 _1DFC[0x8];
     /*0x1E04*/ QueueEntry* unk1E04;
-    /*0x1E08*/ u8 _1E08[0x1A];
+    /*0x1E08*/ u8 _1E08[0x14];
+    /*0x1E1C*/ u8 unk1E1C[6];
     /*0x1E22*/ u8 field_1E22[4];
     /*0x1E26*/ u8 field_1E26[6];
 } MiniGameStruct; // size: 0x1E2C

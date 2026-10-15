@@ -88,7 +88,7 @@ void fn_3_9DBE4(void) {
 }
 
 // .text:0x0009DC18 size:0x460 mapped:0x806DCCAC
-void fn_3_9DC18(void) {
+void fn_3_9DC18(u8* arr, u32 count, s32 arg2) {
     return;
 }
 

@@ -4,6 +4,7 @@
 #include "game/gap_5985C.h"
 #include "game/gap_90754.h"
 #include "game/rep_1D58.h"
+#include "game/gap_9CD90.h"
 
 extern void fn_800246D4(s32 (*compareFn)(u8*, u8*), u8* out, u8* in, u32 elemSize, u8 count);
 extern void fn_8001CA40(s32 arg0);
@@ -78,7 +79,19 @@ void fn_3_107784(void) {
 
 // .text:0x001078F8 size:0x90 mapped:0x8074698C
 void fn_3_1078F8(void) {
-    return;
+    u32 i;
+
+    memset(&g_Minigame.unk1E04, 0, 0x28);
+    g_Minigame._1A3D = 0;
+    g_Minigame._1A3F = 0;
+    g_hugeAnimStruct.renderStadiumFlag = 0;
+    i = 0;
+    do {
+        g_Minigame.unk1E1C[i] = i + 1;
+        i++;
+    } while (i < 6);
+    fn_3_9DC18(g_Minigame.unk1E1C, 6, 0);
+    fn_3_5A6D4(0x28);
 }
 
 // .text:0x00107988 size:0x40 mapped:0x80746A1C
