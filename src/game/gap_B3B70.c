@@ -108,8 +108,24 @@ void fn_3_B5818(void) {
 }
 
 // .text:0x000B5CB4 size:0x98 mapped:0x806F4D48
+void fn_80062A94(void);
+
 void fn_3_B5CB4(void) {
-    return;
+    switch (g_Practice.returnToPracticeMenuState) {
+    case 1:
+        fn_3_8B318(-1);
+        g_Practice.returnToPracticeMenuState = 2;
+        lbl_3_common_bss_34C58._2C = 0;
+        lbl_3_common_bss_34C58._2A = 1;
+        lbl_3_common_bss_34C58._24 = 1;
+    case 2:
+        g_Practice.returnToPracticeMenuState = 3;
+        break;
+    default:
+        fn_800B0A5C_insertQueue(fn_80062A94, 1);
+        g_Practice.returnToPracticeMenuState = 0;
+        break;
+    }
 }
 
 // .text:0x000B5D4C size:0x2C mapped:0x806F4DE0
@@ -121,7 +137,6 @@ void fn_3_B5D4C(u8 arg0) {
     g_Practice.framesInCurrTransitionState = 0;
 }
 
-void fn_80062A94(void);
 
 // .text:0x000B5D78 size:0x104 mapped:0x806F4E0C
 void fn_3_B5D78(void) {
