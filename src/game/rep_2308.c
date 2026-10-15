@@ -50,6 +50,15 @@ void fn_3_CB234(s32 arg0, s32 arg1) {
 
 // .text:0x000CB284 size:0xC0 mapped:0x8070A318
 void fn_3_CB284(s32 index, s32 arg1, f32 arg2) {
-    return;
+    if (g_d_GameSettings.GameModeSelected != GAME_TYPE_MINIGAMES ||
+        (g_Minigame.GameMode_MiniGame != 1 && g_Minigame.GameMode_MiniGame != 3)) {
+        if ((s8)lbl_3_common_bss_35154.unk_467 != 0 && arg1 == 0x23) {
+            lbl_3_common_bss_35154.unk_428.x = g_hugeAnimStruct.AnimationStructPtrs[index]->unk34.x;
+            lbl_3_common_bss_35154.unk_428.y = -g_hugeAnimStruct.AnimationStructPtrs[index]->unk34.y;
+            lbl_3_common_bss_35154.unk_428.z = g_hugeAnimStruct.AnimationStructPtrs[index]->unk34.z;
+            lbl_3_common_bss_35154.bitfield |= 0x10;
+        }
+        fn_3_C1344(index, arg1 == 30, 100.0f * arg2, 100.0f);
+    }
 }
 
