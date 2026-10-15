@@ -69,8 +69,43 @@ void fn_3_10754C(void) {
 }
 
 // .text:0x0010768C size:0xF8 mapped:0x80746720
+typedef struct {
+    u8 _pad[0x12];
+    u8 _12;
+    u8 _13;
+} Lbl8037169C;
+extern Lbl8037169C lbl_8037169C;
+
+typedef struct {
+    u8 _pad0[0x1A];
+    u16 unk1A; /* 0x1A */
+} MinigameQueueView;
+
 void fn_3_10768C(void) {
-    return;
+    switch (g_GameLogic._125) {
+    case 0:
+        g_Minigame.GameMode_MiniGame = g_Minigame.unk1E1C[g_Minigame.field_1E26[4]++];
+        changeScene(1, 6);
+        g_GameLogic._125 = 1;
+        break;
+    case 1:
+        if (((MinigameQueueView*)g_Minigame.unk1E04)->unk1A != 0) {
+            changeScene(3, 6);
+            g_GameLogic._125 = 2;
+        }
+        break;
+    case 2:
+        if (lbl_8037169C._13 != 0) {
+            g_GameLogic._125 = 3;
+        }
+        break;
+    case 3:
+        g_GameLogic._125 = 4;
+        break;
+    case 4:
+        fn_3_5A6D4(0x21);
+        break;
+    }
 }
 
 // .text:0x00107784 size:0x174 mapped:0x80746818
