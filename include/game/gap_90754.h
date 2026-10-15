@@ -29,7 +29,7 @@ void fn_800216F8(); // (u8 fileID, callback, ...)
 void fn_3_90C14(void);
 void fn_3_90CB0(void);
 void fn_3_90DD8(void);
-void fn_3_90F48(void);
+s32 fn_3_90F48(void);
 s32 fn_3_91064(void);
 s32 fn_3_910AC(void);
 void fn_3_910F4(s32 scene);

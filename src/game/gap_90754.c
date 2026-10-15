@@ -159,8 +159,29 @@ void fn_3_90DD8(void) {
 }
 
 // .text:0x00090F48 size:0x11C mapped:0x806CFFDC
-void fn_3_90F48(void) {
-    return;
+extern u8 lbl_3_data_8148[];
+
+extern u8 lbl_3_data_8148[];
+
+s32 fn_3_90F48(void) {
+    s32 charID;
+    s32 idx;
+    s32 slot;
+
+    if (g_d_GameSettings.GameModeSelected == 2) {
+        charID = lbl_3_common_bss_34C58._2D;
+    } else if (g_d_GameSettings.GameModeSelected == 7 || g_d_GameSettings.GameModeSelected == 6) {
+        charID = g_Minigame.players._18D0[(u32)lbl_3_common_bss_34C58._2C >> 1];
+    } else if (g_GameLogic.gameStatus == 0xE) {
+        charID = lbl_3_common_bss_34C58._2D;
+    } else {
+        slot = lbl_800EF808.unk39A;
+        charID = inMemRoster[slot / 9][slot % 9].stats.CharID;
+    }
+    idx = fn_800698F8(charID);
+    slot = idx + 5;
+    fn_80021518(lbl_3_data_8148[idx], (s32)lbl_800EF808.files[slot]);
+    return 0;
 }
 
 // .text:0x00091064 size:0x48 mapped:0x806D00F8

@@ -41,7 +41,9 @@ typedef struct {
     u8 soundMode;       /* 0x396: 1 = positional panning */
     u8 _pad397;
     u8 unk398;
-    u8 _pad399[0x39C - 0x399];
+    u8 _pad399;
+    u8 unk39A;          /* 0x39A */
+    u8 _pad39B;
 } Lbl800EF808; // size: 0x39C
 extern Lbl800EF808 lbl_800EF808;
 BOOL fn_80021518(s32 charID, s32 param_2);
