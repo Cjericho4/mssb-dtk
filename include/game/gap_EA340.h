@@ -7,6 +7,8 @@
 
 extern s32 lbl_3_data_8FCC;
 extern s32 lbl_3_data_8F24;
+extern s16 lbl_3_data_8E68[];
+extern s16 lbl_3_data_8EA8[];
 
 void fn_3_EA340(void);
 void fn_3_EA454(void);

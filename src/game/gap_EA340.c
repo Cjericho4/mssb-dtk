@@ -134,7 +134,22 @@ void fn_3_ED6E0(void) {
 
 // .text:0x000ED784 size:0x94 mapped:0x8072C818
 void fn_3_ED784(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    u8 result = g_Minigame.toyFieldBallStateResult2;
+    s32 script;
+
+    if (result == 11) {
+        scene->aFunctionPointer = fn_3_EC014;
+        return;
+    }
+    script = lbl_3_data_8EA8[result];
+    if (script < 0) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    lbl_3_data_8E68[1] = script;
+    fn_80034E20(scene, lbl_3_data_8E68);
+    lbl_803CC1B8->aFunctionPointer = fn_3_ED6E0;
 }
 
 // .text:0x000ED818 size:0x224 mapped:0x8072C8AC
