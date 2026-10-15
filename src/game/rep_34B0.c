@@ -142,11 +142,6 @@ void fn_3_131114(void) {
 
 extern s16 lbl_3_data_18C48[];
 extern s32 fn_3_6C938(s32, s32);
-typedef struct {
-    u8 _pad[0x13];
-    u8 _13;
-} Lbl8037169C;
-extern Lbl8037169C lbl_8037169C;
 
 // .text:0x0013119C size:0xF0 mapped:0x80770230
 void fn_3_13119C(void) {

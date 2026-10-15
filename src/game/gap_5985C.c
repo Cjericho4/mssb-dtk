@@ -265,11 +265,6 @@ typedef struct {
 } PadInput_803C77B8;
 extern PadInput_803C77B8 lbl_803C77B8[8];
 
-typedef struct {
-    u8 _pad[0x13];
-    u8 _13;
-} Lbl8037169C;
-extern Lbl8037169C lbl_8037169C;
 void fn_800A7568(void);
 
 // .text:0x0005C418 size:0x118 mapped:0x8069B4AC
