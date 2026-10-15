@@ -9,8 +9,18 @@ void fn_3_993A8(void) {
 }
 
 // .text:0x0009976C size:0xAC mapped:0x806D8800
+extern int lbl_3_data_D378;
+
 void fn_3_9976C(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    fn_80034E20(scene, &lbl_3_data_D378);
+    if (g_Batter.batterHand != 0) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0;
+    } else {
+        lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0x10000;
+    }
+    scene->unk_1C = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_3_993A8;
 }
 
 // .text:0x00099818 size:0x3C4 mapped:0x806D88AC
