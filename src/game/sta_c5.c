@@ -305,7 +305,7 @@ void fn_3_F3A04(OuterStruct_F13F8* arg0) {
 }
 
 // .text:0x000F3A5C size:0x84 mapped:0x80732AF0
-void fn_3_F3A5C(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY) {
+static inline void fn_3_F3A5C_inline(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY) {
     obj->pos.x = x;
     obj->pos.y = y;
     obj->pos.z = z;
@@ -315,9 +315,15 @@ void fn_3_F3A5C(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY) {
     CTRLSetRotation(&obj->control, 0.0f, rotY, 0.0f);
 }
 
+void fn_3_F3A5C(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY) {
+    fn_3_F3A5C_inline(obj, x, y, z, rotY);
+}
+
 // .text:0x000F3AE0 size:0xD0 mapped:0x80732B74
-void fn_3_F3AE0(void) {
-    return;
+void fn_3_F3AE0(StaC5PlacedObj* obj) {
+    obj->homeX = lbl_3_data_1B884[obj->targetIdx].pos.x;
+    obj->homeZ = lbl_3_data_1B884[obj->targetIdx].pos.z;
+    fn_3_F3A5C_inline(obj, obj->homeX, 10.0f, obj->homeZ, -lbl_3_data_1B884[obj->targetIdx].rot);
 }
 
 // .text:0x000F3BB0 size:0x120 mapped:0x80732C44

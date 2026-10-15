@@ -12,9 +12,12 @@ typedef struct StaC5PlacedObj {
     /* 0x78 */ u8 _pad78[0x90 - 0x78];
     /* 0x90 */ u8 flag90_7 : 1;
     /* 0x90 */ u8 flag90_rest : 7;
-    /* 0x91 */ u8 _pad91[0xA0 - 0x91];
+    /* 0x91 */ u8 _pad91[0x9C - 0x91];
+    /* 0x9C */ u8 targetIdx;
+    /* 0x9D */ u8 _pad9D[0xA0 - 0x9D];
     /* 0xA0 */ VecXYZ pos;
-    /* 0xAC */ u8 _padAC[0xB4 - 0xAC];
+    /* 0xAC */ f32 homeX;
+    /* 0xB0 */ f32 homeZ;
     /* 0xB4 */ f32 rotY;
     /* 0xB8 */ u8 _padB8[0xC7 - 0xB8];
     /* 0xC7 */ u8 blinkTimer;
@@ -39,7 +42,8 @@ typedef struct StaC5DriftObj {
 
 typedef struct StaC5DriftTarget {
     /* 0x00 */ Vec pos;
-    /* 0x0C */ u8 _padC[0x14 - 0xC];
+    /* 0x0C */ f32 rot;
+    /* 0x10 */ u8 _pad10[0x14 - 0x10];
 } StaC5DriftTarget; /* size: 0x14 */
 
 extern StaC5DriftTarget lbl_3_data_1B884[];
@@ -156,7 +160,7 @@ void fn_3_F37BC(void);
 void fn_3_F38D4(void);
 void fn_3_F3A04(OuterStruct_F13F8* arg0);
 void fn_3_F3A5C(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY);
-void fn_3_F3AE0(void);
+void fn_3_F3AE0(StaC5PlacedObj* obj);
 void fn_3_F3BB0(void);
 void fn_3_F3CD0(void);
 void fn_3_F3EFC(void);
