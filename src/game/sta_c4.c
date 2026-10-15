@@ -14,8 +14,23 @@ void fn_3_F8444(void) {
 }
 
 // .text:0x000F8524 size:0x8C mapped:0x807375B8
-void fn_3_F8524(void) {
-    return;
+void fn_3_F8524(StaC4Obj* obj) {
+    static const VecXYZ basePos = {0.0f, 0.5f, 60.0f};
+
+    if (obj->unk4F < 42) {
+        obj->unk14 = 0.123f;
+        obj->pos.x = basePos.x;
+        obj->pos.y = basePos.y - 2.0;
+        obj->pos.z = basePos.z;
+        obj->unk38 = 0.75f;
+        obj->unk3C = 4.0f;
+    }
+    obj->color[2] = 0xFF;
+    obj->color[1] = 0xFF;
+    obj->color[0] = 0xFF;
+    obj->color[3] = 0xFF;
+    obj->unk4A = 0x80;
+    obj->unk48 = 0;
 }
 
 // .text:0x000F85B0 size:0x2C8 mapped:0x80737644
