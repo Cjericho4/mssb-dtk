@@ -321,7 +321,22 @@ void fn_3_14C830(void) {
 
 // .text:0x0014C904 size:0xFC mapped:0x8078B998
 void fn_3_14C904(void) {
-    return;
+    Struct_14C79C_Arg* obj;
+    ListNode_14B9F0* node;
+
+    if (g_d_GameSettings.GameModeSelected == GAME_TYPE_MINIGAMES && g_Minigame.GameMode_MiniGame == 4) {
+        obj = (Struct_14C79C_Arg*)fn_80033A24(fn_3_14C4C8, 0x80, 0, lbl_3_data_26D5C.unk04, 1, 10);
+        if (obj != NULL) {
+            obj->unk10 = lbl_3_common_bss_32724.field6C;
+            node = obj->node;
+            node->field_0x4D = lbl_3_data_26D5C.unk00;
+            node->field_0x4E = 0;
+            node->field_0x4A = lbl_3_data_26D5C.unk08;
+            node->scaleX = node->scaleY = (f32)lbl_3_data_26D5C.unk10 / 100000.0f;
+            node->color[3] = lbl_3_data_26D5C.unk1C;
+            node->color[0] = node->color[1] = node->color[2] = 0xFF;
+        }
+    }
 }
 
 // .text:0x0014CA00 size:0x98 mapped:0x8078BA94
