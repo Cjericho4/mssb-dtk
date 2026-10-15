@@ -134,8 +134,30 @@ void fn_3_13DFBC(void) {
 }
 
 // .text:0x0013E174 size:0xA8 mapped:0x8077D208
-void fn_3_13E174(void) {
-    return;
+typedef struct {
+    u8 _pad0[0x30];
+    f32 unk30[2]; /* 0x30 */
+    f32 unk38[2]; /* 0x38 */
+    f32 unk40[2]; /* 0x40 */
+} Data218BC;
+extern Data218BC lbl_3_data_218BC;
+extern f32 lbl_3_bss_B794;
+extern s32 lbl_3_bss_B798;
+
+void fn_3_13E174(u8 mode) {
+    switch (mode) {
+    case 0:
+        lbl_3_bss_B798 = lbl_3_data_218BC.unk30[0];
+        lbl_3_bss_B794 = lbl_3_data_218BC.unk38[0];
+        break;
+    case 1:
+        lbl_3_bss_B798 = lbl_3_data_218BC.unk30[1];
+        lbl_3_bss_B794 = lbl_3_data_218BC.unk38[1];
+        break;
+    default:
+        return;
+    }
+    fn_800528AC(fn_3_13DFBC);
 }
 
 // .text:0x0013E21C size:0x188 mapped:0x8077D2B0

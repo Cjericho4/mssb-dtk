@@ -22,7 +22,7 @@ void fn_3_13DC48(void);
 void fn_3_13DDE0(void);
 void fn_3_13DEA4(void);
 void fn_3_13DFBC(void);
-void fn_3_13E174(void);
+void fn_3_13E174(u8 mode);
 void fn_3_13E21C(f32* arg0);
 void fn_3_13E3A4(f32* arg0);
 void fn_3_13E670(void);
