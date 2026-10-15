@@ -423,8 +423,20 @@ void fn_3_D1F2C(StaC2ChainParams* params, StaC2D501CEntry* entries, s32 count, V
 }
 
 // .text:0x000D2220 size:0x11C mapped:0x807112B4
-void fn_3_D2220(void) {
-    return;
+void fn_3_D2220(StaC2ChainObj* obj) {
+    StaC2D501CEntry* entries = obj->entries;
+    Mtx m;
+    Vec axis = {0.0f, 1.0f, 0.0f};
+    Vec zero = {0.0f, 0.0f, 0.0f};
+    Vec v;
+
+    PSMTXRotAxisRad(m, &axis, 0.017453292f * obj->angle);
+    PSMTXMultVec(m, &lbl_3_rodata_24E8[0], &v);
+    PSVECAdd(&v, &obj->pos, &v);
+    v.y += 4.5;
+    entries[7].unkC[0] = v;
+    entries[7].unkC[1] = entries[7].unkC[0];
+    fn_3_D1F2C(&lbl_3_bss_A8A8, obj->entries, 8, &zero, obj);
 }
 
 // .text:0x000D233C size:0x160 mapped:0x807113D0

@@ -140,7 +140,6 @@ void fn_3_D1848(void);
 void fn_3_D196C(void);
 void fn_3_D1AC4(ActorObject* arg0);
 void fn_3_D1B24(void);
-void fn_3_D2220(void);
 void fn_3_D233C(void);
 int fn_3_D249C(Struct_800D249C_Arg0 *param_1);
 void fn_3_D24E8(StaC2D24E8Arg* arg0, s32 arg1);
@@ -187,6 +186,7 @@ typedef struct StaC2ChainObj {
 } StaC2ChainObj;
 
 void fn_3_CBAFC(StaC2ChainObj* obj);
+void fn_3_D2220(StaC2ChainObj* obj);
 
 typedef struct StaC2Particle {
     u8 _pad0[0x4];
