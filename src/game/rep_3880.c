@@ -257,7 +257,7 @@ void fn_3_14C398(void) {
 
 typedef struct {
     s32 unk00;
-    u8 _pad4[0x4];
+    s32 unk04;
     s32 unk08;
     u8 _padC[0x4];
     s32 unk10;
@@ -303,7 +303,20 @@ void fn_3_14C79C(Struct_14C79C_Arg* arg0) {
 
 // .text:0x0014C830 size:0xD4 mapped:0x8078B8C4
 void fn_3_14C830(void) {
-    return;
+    Struct_14C79C_Arg* obj;
+    ListNode_14B9F0* node;
+
+    obj = (Struct_14C79C_Arg*)fn_80033A24(fn_3_14C4C8, 0x80, 0, lbl_3_data_26D5C.unk04, 1, 10);
+    if (obj != NULL) {
+        obj->unk10 = lbl_3_common_bss_32724.field6C;
+        node = obj->node;
+        node->field_0x4D = lbl_3_data_26D5C.unk00;
+        node->field_0x4E = 0;
+        node->field_0x4A = lbl_3_data_26D5C.unk08;
+        node->scaleX = node->scaleY = (f32)lbl_3_data_26D5C.unk10 / 100000.0f;
+        node->color[3] = lbl_3_data_26D5C.unk1C;
+        node->color[0] = node->color[1] = node->color[2] = 0xFF;
+    }
 }
 
 // .text:0x0014C904 size:0xFC mapped:0x8078B998
