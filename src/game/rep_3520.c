@@ -184,7 +184,12 @@ void fn_3_135E38(void) {
 
 // .text:0x00135E98 size:0xB4 mapped:0x80774F2C
 void fn_3_135E98(void) {
-    return;
+    g_Minigame._1D62++;
+    g_Minigame._1D48 = 1.0f - (f32)g_Minigame._1D62 / (f32)lbl_3_data_21A60;
+    fn_3_135C18();
+    if (g_Minigame._1D62 >= lbl_3_data_21A60) {
+        g_Minigame._1D72 = 0;
+    }
 }
 
 // .text:0x00135F4C size:0xA8 mapped:0x80774FE0
