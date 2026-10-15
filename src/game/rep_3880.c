@@ -848,8 +848,39 @@ void fn_3_154214(void) {
 }
 
 // .text:0x00154238 size:0xBC mapped:0x807932CC
-void fn_3_154238(void) {
-    return;
+void fn_3_154238(s16 arg0) {
+    struct Struct_800339F0_Result* result;
+    ListNode_14B9F0** link;
+    ListNode_14B9F0* node;
+    ListNode_14B9F0* head;
+    ListNode_14B9F0* tail;
+
+    result = fn_800339F0(0, 0x27);
+    if (result != NULL) {
+        node = result->listHead;
+        link = &result->listHead;
+        tail = NULL;
+        head = NULL;
+        do {
+            if (node->field_0x18 == arg0) {
+                *link = node->next;
+                if (tail != NULL) {
+                    tail->next = node;
+                } else {
+                    head = node;
+                }
+                node->next = NULL;
+                tail = node;
+                result->count--;
+            } else {
+                link = &node->next;
+            }
+            node = *link;
+        } while (node != NULL);
+        if (head != NULL) {
+            fn_80033794(head);
+        }
+    }
 }
 
 // .text:0x001542F4 size:0x6FC mapped:0x80793388

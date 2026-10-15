@@ -10,7 +10,9 @@
 typedef struct ListNode_14B9F0 {
     struct ListNode_14B9F0* next;  // 0x00
     VecXYZ offset;                  // 0x04
-    u8 _pad10[0xC];                 // 0x10
+    u8 _pad10[0x8];                 // 0x10
+    s16 field_0x18;                 // 0x18
+    u8 _pad1A[0x2];                 // 0x1A
     VecXYZ pos;                     // 0x1C
     u8 _pad28[0x10];                // 0x28
     f32 scaleX;                     // 0x38
@@ -85,6 +87,7 @@ typedef struct {
 extern Struct_26C3C lbl_3_data_26C3C;
 
 void pitchingMachinePitching(s32 param);
+void fn_80033794(ListNode_14B9F0* list);
 
 void fn_3_14737C(void);
 struct Rep3880Source;
@@ -214,7 +217,7 @@ void fn_3_153F8C(void);
 void fn_3_1540E4(void* arg0, void* arg1, void* arg2);
 void fn_3_1541C4(void* arg0, void* arg1, void* arg2);
 void fn_3_154214(void);
-void fn_3_154238(void);
+void fn_3_154238(s16 arg0);
 void fn_3_1542F4(void);
 void fn_3_1549F0(void);
 void fn_3_154C7C(u32 unknown);
