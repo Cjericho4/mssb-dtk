@@ -28,14 +28,6 @@ typedef struct CommonBss32B20 {
     u8 _pad2098[0x2138 - 0x2098];
 } CommonBss32B20;
 
-/* Camera view returned by fn_80052734. */
-typedef struct SoundCameraView {
-    u8 _pad0[0x70];
-    Vec pos;    /* 0x70 */
-    Vec target; /* 0x7C */
-} SoundCameraView;
-
-SoundCameraView* fn_80052734(s32 mode);
 u32 sndCheckEmitter(SoundEmitterSlot* em);
 u32 sndRemoveEmitter(SoundEmitterSlot* em);
 

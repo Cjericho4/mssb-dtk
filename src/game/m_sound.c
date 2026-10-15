@@ -97,7 +97,7 @@ void fn_3_8B318(s32 arg0) {
 
 // .text:0x0008B718 size:0xC4 mapped:0x806CA7AC
 void fn_3_8B718(Vec* pos, Vec* vel, Vec* dir) {
-    SoundCameraView* cam = fn_80052734(0);
+    CameraView* cam = fn_80052734(0);
 
     if (pos != NULL) {
         pos->x = cam->pos.x;
@@ -243,7 +243,7 @@ void fn_3_8CD74(void) {
 
 // .text:0x0008D9C0 size:0xC0 mapped:0x806CCA54
 void fn_3_8D9C0(void) {
-    SoundCameraView* cam;
+    CameraView* cam;
     Vec pos;
     Vec vel;
     Vec dir;

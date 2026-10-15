@@ -26,6 +26,20 @@ void fn_3_35F0(void) {
     }
 }
 
+// .text:0x00003818 size:0xD0 mapped:0x806428AC
+void fn_3_3818(void) {
+    s32 i;
+
+    if (lbl_3_data_A10[!lbl_803CBBC0] != NULL) {
+        i = fn_800527BC() - 1;
+        do {
+            fn_80052694(i);
+            lbl_3_data_A10[!lbl_803CBBC0](fn_80052734(i)->viewMtx, 0, 0);
+        } while (i-- != 0);
+        lbl_3_data_A10[!lbl_803CBBC0] = NULL;
+    }
+}
+
 extern CompressedDiskRead lbl_3_data_7EC[];
 
 // .text:0x000064DC size:0x54 mapped:0x80645570
@@ -35,7 +49,7 @@ void fn_3_64DC(void) {
 }
 
 // .text:0x000038E8 size:0x1C
-void fn_3_38E8(struct LBL_3_DATA_A10* arg0) {
+void fn_3_38E8(ViewDrawCallback arg0) {
     lbl_3_data_A10[lbl_803CBBC0] = arg0;
 }
 
@@ -108,7 +122,7 @@ void fn_3_5BAC(void) {
 
 void fn_3_5BCC(Fn3_5BCCArg* arg0) {
     Fn3_5BCCArg* s = arg0;
-    fn_80052694(s->unk_0x8);
+    fn_80052694(s->viewIdx);
 }
 
 // .text:0x00005BF0 size:0x78 mapped:0x80644C84

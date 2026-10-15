@@ -1049,6 +1049,14 @@ typedef struct {
     s16 unkE;
 } Data21A04; // size: 0x10
 extern Data21A04 lbl_3_data_21A04;
+/* Per-view camera data (0xA8 bytes each) returned by fn_80052734. */
+typedef struct CameraView {
+    u8 _pad0[0x40];
+    Mtx viewMtx; /* 0x40 */
+    Vec pos;     /* 0x70 */
+    Vec target;  /* 0x7C */
+} CameraView;
+CameraView* fn_80052734(s32 viewIdx);
 /* Wall Ball minigame tuning parameters. */
 typedef struct {
     u8 _00[0x2C];
