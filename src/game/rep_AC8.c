@@ -476,7 +476,23 @@ void fn_3_38000(void) {
 
 // .text:0x00038234 size:0xD0 mapped:0x806772C8
 void fn_3_38234(void) {
-    return;
+    if (g_Ball.hitClassification2 <= 4 || g_Ball.hitClassification2 == 7) {
+        fn_3_38000();
+    } else if (g_Ball.maxYOfHit > 7.0f) {
+        fn_3_38304();
+    } else if (g_Ball.maxYOfHit < 4.0f) {
+        fn_3_38000();
+    } else if (g_Ball.someYCoord > 5.0f) {
+        fn_3_38304();
+    } else if (g_Ball.ballDistanceFromHome < 60.0f) {
+        if (lbl_3_bss_170 >= 0x900 && lbl_3_bss_170 < 0xF00) {
+            fn_3_38304();
+        } else {
+            fn_3_38000();
+        }
+    } else {
+        fn_3_38304();
+    }
 }
 
 // .text:0x00038304 size:0x48C mapped:0x80677398
