@@ -4,6 +4,7 @@
 #include "game/rep_1038.h"
 #include "game/rep_E08.h"
 #include "game/rep_1B70.h"
+#include "game/rep_1188.h"
 extern u8 lbl_803CBC3C;
 void fn_3_BF158(void);
 void fn_3_BF1AC(void);
@@ -45,7 +46,30 @@ void fn_3_AD164(void) {
 
 // .text:0x000AD2A0 size:0x11C mapped:0x806EC334
 void fn_3_AD2A0(void) {
-    return;
+    s32 i;
+    s32 j;
+    s32 pitcher = g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][0][0];
+
+    for (i = 0; i < 9; i++) {
+        for (j = 1; j < 10; j++) {
+            if (i == g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][j][0]) {
+                if (g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][j][1] !=
+                    lbl_3_common_bss_34C90.field_0x242[i]) {
+                    lbl_3_common_bss_34C90.field_0x260 = 1;
+                }
+                g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][j][1] =
+                    lbl_3_common_bss_34C90.field_0x242[i];
+                if (lbl_3_common_bss_34C90.field_0x242[i] == 0) {
+                    g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][0][0] = i;
+                    if (pitcher != g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][0][0]) {
+                        g_GameLogic.playOverInd = 1;
+                    }
+                }
+            }
+        }
+    }
+    fn_3_596F8();
+    fn_3_6EBB4(g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][0][0]);
 }
 
 // .text:0x000AD3BC size:0x510 mapped:0x806EC450
