@@ -6,6 +6,7 @@
 
 extern long rand(void);
 extern u32 lbl_3_data_19018[3];
+extern u8 lbl_3_bss_AE80[8];
 
 // .text:0x000E59B4 size:0x68 mapped:0x80724A48
 void fn_3_E59B4(ActorObject *arg0) {
@@ -107,8 +108,18 @@ void fn_3_E6638(BaseStruct_E6638* arg0) {
 }
 
 // .text:0x000E6684 size:0x98 mapped:0x80725718
-void fn_3_E6684(void) {
-    return;
+void fn_3_E6684(BaseStruct_E6638* arg0) {
+    int i;
+    InnerStruct_E6638* e;
+
+    for (i = 0; i < 3; i++) {
+        e = arg0->field_0x74->field_0x00->array[i];
+        if (lbl_3_bss_AE80[i + 1] != 0) {
+            e->field_0x14 = e->field_0x18;
+        } else {
+            e->field_0x14 = 0;
+        }
+    }
 }
 
 // .text:0x000E671C size:0x7C mapped:0x807257B0
