@@ -51,7 +51,21 @@ extern void fn_3_8B094(void);
 extern u32 sndSeqGetValid(u32);
 extern void sndSeqVolume(u8 volume, u16 time, u32 seqId, u8 mode);
 
-static QueueEntry* lbl_3_bss_1768;
+/* Sound command ring buffer stored in the sound queue entry. */
+typedef struct {
+    u8 cmd;  /* 0x0 */
+    u8 arg1; /* 0x1 */
+    u8 arg2; /* 0x2 */
+} SoundCommand;
+
+typedef struct {
+    u8 _pad0[0x14];
+    u8 writeIdx;               /* 0x14 */
+    u8 readIdx;                /* 0x15 */
+    SoundCommand commands[14]; /* 0x16 */
+} SoundQueue;
+
+static SoundQueue* lbl_3_bss_1768;
 
 // .text:0x0008B258 size:0x8C mapped:0x806CA2EC
 void fn_3_8B258(void) {
@@ -60,7 +74,7 @@ void fn_3_8B258(void) {
 
 // .text:0x0008B2E4 size:0x34 mapped:0x806CA378
 void fn_3_8B2E4(void) {
-    lbl_3_bss_1768 = fn_800B0A5C_insertQueue(fn_3_8B094, 0);
+    lbl_3_bss_1768 = (SoundQueue*)fn_800B0A5C_insertQueue(fn_3_8B094, 0);
 }
 
 // .text:0x0008B318 size:0x400 mapped:0x806CA3AC
@@ -122,7 +136,20 @@ void fn_3_8BE8C(void) {
 
 // .text:0x0008C07C size:0x88 mapped:0x806CB110
 void fn_3_8C07C(void) {
-    return;
+    u8 idx;
+    u8 next;
+
+    if (lbl_3_bss_1768 == NULL) {
+        return;
+    }
+    idx = lbl_3_bss_1768->writeIdx;
+    if (lbl_3_bss_1768->readIdx == (next = (idx + 1) % 14)) {
+        return;
+    }
+    lbl_3_bss_1768->writeIdx = next;
+    lbl_3_bss_1768->commands[idx].cmd = 0;
+    lbl_3_bss_1768->commands[idx].arg1 = 4;
+    lbl_3_bss_1768->commands[idx].arg2 = 0;
 }
 
 // .text:0x0008C104 size:0x1D8 mapped:0x806CB198
@@ -166,7 +193,7 @@ void fn_3_8F1C8(void) {
     lbl_3_common_bss_34C58._22 = -1;
     lbl_3_common_bss_34C58._29 = 0;
     lbl_3_common_bss_34C58._2A = 0;
-    lbl_3_bss_1768 = fn_800B0A5C_insertQueue(fn_3_8B094, 0);
+    lbl_3_bss_1768 = (SoundQueue*)fn_800B0A5C_insertQueue(fn_3_8B094, 0);
 }
 
 // .text:0x0008F21C size:0x9F0 mapped:0x806CE2B0
