@@ -1,0 +1,184 @@
+# base: 3c7918c:src/game/m_sound.c
+--- /tmp/base.c	2026-10-15 08:23:59.131980455 -0600
++++ /home/plex/repos/mssb-dtk-w3/.scratch/m_sound_90150_attempt.c	2026-10-14 22:46:04.174327324 -0600
+@@ -23,11 +23,28 @@
+     u8 _1;
+ } SongSettings;
+ 
++/* Per-voice mix settings for grouped sound effects. */
++typedef struct {
++    u8 volume[0x180];
++    u8 pan[0x180];
++    f32 scale;     /* 0x300 */
++    u8 _pad304[0x78];
++} VoiceMixTable; /* size: 0x37C */
++extern VoiceMixTable lbl_3_data_8530;
++
++/* First sound ID of each sound group. */
++typedef struct {
++    u16 baseID[(0x1C4 - 0x20) / 2];
++} SoundGroupTable;
++
+ /* Sound tables starting at .data 0x8148. */
+ typedef struct {
+-    u8 _pad0[0x1C4];
++    u8 _pad0[0x20];
++    SoundGroupTable groups;           /* 0x20 */
+     SongSettings songSettings[0x10];  /* 0x1C4 */
+-    u8 _pad1E4[0x798 - 0x1E4];
++    u8 _pad1E4[0x3E8 - 0x1E4];
++    VoiceMixTable voiceMix;           /* 0x3E8 */
++    u8 _pad764[0x798 - 0x764];
+     SongEntry songs[19];              /* 0x798 */
+     u8 _pad80A[0x2];
+     SongEntry practiceSongs[1];       /* 0x80C */
+@@ -40,12 +57,6 @@
+ extern u16 lbl_3_data_8168[];
+ extern SoundFXSettings lbl_3_data_8338[];
+ /* Per-voice mix settings for grouped sound effects. */
+-typedef struct {
+-    u8 volume[0x180];
+-    u8 pan[0x180];
+-    u8 _pad300[0x7C];
+-} VoiceMixTable; /* size: 0x37C */
+-extern VoiceMixTable lbl_3_data_8530;
+ /* Loaded song arrangement (.arr) data, indexed by song. */
+ struct SongArrangement;
+ extern struct SongArrangement** lbl_3_bss_1774;
+@@ -96,8 +107,25 @@
+ }
+ 
+ // .text:0x0008B718 size:0xC4 mapped:0x806CA7AC
+-void fn_3_8B718(void) {
+-    return;
++void fn_3_8B718(Vec* pos, Vec* vel, Vec* dir) {
++    SoundCameraView* cam = fn_80052734(0);
++
++    if (pos != NULL) {
++        pos->x = cam->pos.x;
++        pos->y = cam->pos.y;
++        pos->z = cam->pos.z;
++    }
++    if (vel != NULL) {
++        vel->x = 0.0f;
++        vel->y = 0.0f;
++        vel->z = 0.0f;
++    }
++    if (dir != NULL) {
++        PSVECSubtract(&cam->target, &cam->pos, dir);
++        if (PSVECMag(dir)) {
++            PSVECNormalize(dir, dir);
++        }
++    }
+ }
+ 
+ // .text:0x0008B7DC size:0x28 mapped:0x806CA870
+@@ -105,9 +133,31 @@
+     sndRemoveListener(&lbl_3_common_bss_32B20);
+ }
+ 
++static inline void removeAllEmitters(void) {
++    s32 i;
++
++    for (i = 0; i < SOUND_EMITTER_COUNT; i++) {
++        if (lbl_3_common_bss_32B20.emitterActive[i] != 0) {
++            if (sndCheckEmitter(&lbl_3_common_bss_32B20.emitters[i]) != 0) {
++                sndRemoveEmitter(&lbl_3_common_bss_32B20.emitters[i]);
++            }
++            lbl_3_common_bss_32B20.emitterActive[i] = 0;
++        }
++    }
++}
++
+ // .text:0x0008B804 size:0x8C mapped:0x806CA898
+ void fn_3_8B804(void) {
+-    return;
++    s32 i;
++
++    for (i = 0; i < SOUND_EMITTER_COUNT; i++) {
++        if (lbl_3_common_bss_32B20.emitterActive[i] != 0) {
++            if (sndCheckEmitter(&lbl_3_common_bss_32B20.emitters[i]) != 0) {
++                sndRemoveEmitter(&lbl_3_common_bss_32B20.emitters[i]);
++            }
++            lbl_3_common_bss_32B20.emitterActive[i] = 0;
++        }
++    }
+ }
+ 
+ // .text:0x0008B890 size:0xD4 mapped:0x806CA924
+@@ -150,7 +200,8 @@
+ 
+ // .text:0x0008BDF4 size:0x98 mapped:0x806CAE88
+ void fn_3_8BDF4(void) {
+-    return;
++    removeAllEmitters();
++    sndRemoveListener(&lbl_3_common_bss_32B20);
+ }
+ 
+ // .text:0x0008BE8C size:0x1F0 mapped:0x806CAF20
+@@ -203,7 +254,26 @@
+ 
+ // .text:0x0008D9C0 size:0xC0 mapped:0x806CCA54
+ void fn_3_8D9C0(void) {
+-    return;
++    SoundCameraView* cam;
++    Vec pos;
++    Vec vel;
++    Vec dir;
++
++    fn_3_8CD74();
++    cam = fn_80052734(0);
++    pos.x = cam->pos.x;
++    pos.y = cam->pos.y;
++    pos.z = cam->pos.z;
++    vel.x = 0.0f;
++    vel.y = 0.0f;
++    vel.z = 0.0f;
++    PSVECSubtract(&cam->target, &cam->pos, &dir);
++    if (PSVECMag(&dir)) {
++        PSVECNormalize(&dir, &dir);
++    }
++    if (lbl_3_common_bss_32B20.field_0x8 != 0) {
++        sndUpdateListener(&lbl_3_common_bss_32B20, (VecXYZ*)&pos, (VecXYZ*)&vel, (VecXYZ*)&dir, &lbl_3_data_8D70, 0x7F, 0);
++    }
+ }
+ 
+ // .text:0x0008DA80 size:0x1748 mapped:0x806CCB14
+@@ -299,8 +369,15 @@
+ }
+ 
+ // .text:0x00090150 size:0xD0 mapped:0x806CF1E4
+-void fn_3_90150(void) {
+-    return;
++u32 fn_3_90150(s32 arg0, s32 arg1) {
++    SoundGroupTable* groups = &lbl_3_data_8148.groups;
++    VoiceMixTable* vm = &lbl_3_data_8148.voiceMix;
++    s32 vol = vm->volume[arg1] * vm->scale;
++    s32 pan = vm->pan[arg1] * vm->scale;
++    SND_VOICEID vid = sndFXStartEx(arg1 + groups->baseID[arg0], vol, 0x3F, 0);
++
++    sndFXCtrl(vid, 0x5B, pan);
++    return vid;
+ }
+ 
+ // .text:0x00090220 size:0x74 mapped:0x806CF2B4
+@@ -325,8 +402,17 @@
+ }
+ 
+ // .text:0x00090328 size:0x90 mapped:0x806CF3BC
+-void fn_3_90328(void) {
+-    return;
++void fn_3_90328(s32 time) {
++    if (time < 0) {
++        time = 3000;
++    }
++    if (sndSeqGetValid(lbl_3_common_bss_34C58._04) != 0) {
++        sndSeqVolume(0, time, lbl_3_common_bss_34C58._04, 1);
++    }
++
++    if (sndSeqGetValid(lbl_3_common_bss_34C58._08) != 0) {
++        sndSeqVolume(0, time, lbl_3_common_bss_34C58._08, 1);
++    }
+ }
+ 
+ // .text:0x000903B8 size:0x7C mapped:0x806CF44C

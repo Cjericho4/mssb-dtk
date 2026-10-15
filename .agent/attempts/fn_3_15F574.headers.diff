@@ -1,0 +1,45 @@
+diff --git a/include/UnknownHeaders.h b/include/UnknownHeaders.h
+index 4b47620..474f7c7 100644
+--- a/include/UnknownHeaders.h
++++ b/include/UnknownHeaders.h
+@@ -707,10 +707,16 @@ typedef struct CommonBss_35154 {
+     /* 0x434 */ f32 unk_434;
+     /* 0x438 */ f32 unk_438;
+     /* 0x43C */ f32 unk_43C;
+-    /* 0x440 */ f32 unk_440;
+-    /* 0x444 */ f32 unk_444;
+-    /* 0x448 */ f32 unk_448;
+-    /* 0x44C */ u8 _pad3[0x18];
++    union {
++        struct {
++            /* 0x440 */ f32 unk_440;
++            /* 0x444 */ f32 unk_444;
++            /* 0x448 */ f32 unk_448;
++        };
++        /* 0x440 */ Vec vec_440;
++    };
++    /* 0x44C */ Vec vec_44C;
++    /* 0x458 */ u8 _pad3[0xC];
+     /* 0x464 */ s16 unk_464;
+     /* 0x466 */ u8 someFlag;
+     /* 0x467 */ u8 unk_467;
+diff --git a/include/game/rep_3C28.h b/include/game/rep_3C28.h
+index 6c8f9ed..e4605a0 100644
+--- a/include/game/rep_3C28.h
++++ b/include/game/rep_3C28.h
+@@ -2,6 +2,15 @@
+ #define __GAME_rep_3C28_H_
+ 
+ #include "mssbTypes.h"
++#include "UnknownHeaders.h"
++
++typedef struct Data27C98Entry {
++    /* 0x00 */ s32 unk0;
++    /* 0x04 */ u8 _pad4[0x40 - 0x4];
++} Data27C98Entry; // size: 0x40
++
++extern Data27C98Entry lbl_3_data_27C98[3];
++void fn_8002C2D0(Vec* pos, Vec* dir);
+ 
+ void fn_3_15F574(void);
+ 

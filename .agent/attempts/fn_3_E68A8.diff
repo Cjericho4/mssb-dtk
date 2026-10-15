@@ -1,0 +1,79 @@
+diff --git a/include/game/sta_c6.h b/include/game/sta_c6.h
+index fc5c1b9..d3162cf 100644
+--- a/include/game/sta_c6.h
++++ b/include/game/sta_c6.h
+@@ -120,6 +120,30 @@ typedef struct {
+     Inner_E5E14* unk4;  // +0x04
+ } Arg0_E5E14;
+ 
++typedef struct SkinActor_E68A8 {
++    u8 _pad0[0x98];
++    u8 unk98;               // 0x98
++} SkinActor_E68A8;
++
++typedef struct SkinHolder_E68A8 {
++    SkinActor_E68A8* actor; // 0x00
++    u8 _pad4[0x10 - 0x4];
++    u8 ctrlCopy[0x44];      // 0x10
++} SkinHolder_E68A8;
++
++struct ActorAnimState;
++typedef struct Obj_E68A8 {
++    u8 _pad0[0x74];
++    struct ActorAnimState* animState; // 0x74
++    u8 _pad78[0x9C - 0x78];
++    SkinHolder_E68A8* skin;           // 0x9C
++} Obj_E68A8;
++
++s32 fn_8005268C(void);
++u8 fn_800B3C04(s32 arg0, SkinActor_E68A8* actor, MtxPtr viewMtx);
++void fn_800BDA24(void* arg0);
++void fn_800BDA94(SkinHolder_E68A8* skin, MtxPtr mtx);
++
+ extern u8 lbl_3_data_196B4[];
+ extern u8 lbl_3_data_19024;
+ extern u8 lbl_3_data_1963F;
+@@ -148,7 +172,7 @@ void fn_3_E6684(BaseStruct_E6638* arg0);
+ void fn_3_E671C(Arg0_E6798* arg0);
+ void fn_3_E6798(Arg0_E6798* arg0);
+ void fn_3_E67F4(void);
+-void fn_3_E68A8(void);
++void fn_3_E68A8(Obj_E68A8* obj);
+ void fn_3_E698C(ActorObject* arg0);
+ void fn_3_E6A48(void);
+ void fn_3_E6D90(void);
+diff --git a/src/game/sta_c6.c b/src/game/sta_c6.c
+index 470721b..b6a4738 100644
+--- a/src/game/sta_c6.c
++++ b/src/game/sta_c6.c
+@@ -4,6 +4,7 @@
+ #include "static/UnknownHomes_Static.h"
+ #include "stl/mem.h"
+ #include "header_rep_data.h"
++#include "game/rep_1E08.h"
+ 
+ extern long rand(void);
+ extern u32 lbl_3_data_19018[3];
+@@ -198,8 +199,20 @@ void fn_3_E67F4(void) {
+ }
+ 
+ // .text:0x000E68A8 size:0xE4 mapped:0x8072593C
+-void fn_3_E68A8(void) {
+-    return;
++void fn_3_E68A8(Obj_E68A8* obj) {
++    SkinActor_E68A8* actor = obj->skin->actor;
++    f32 time = fn_800B4C40(obj->animState->actor) - obj->animState->speed;
++
++    if (time < 0.0f) {
++        time = 0.0f;
++    }
++    if (obj->skin != NULL) {
++        memcpy(obj->skin->ctrlCopy, obj, sizeof(obj->skin->ctrlCopy));
++        fn_800B4CA0(actor, time);
++        fn_800BDA24(obj->skin);
++        obj->skin->actor->unk98 = fn_800B3C04(0, obj->skin->actor, fn_80052734(fn_8005268C())->viewMtx);
++        fn_800BDA94(obj->skin, fn_80052768(fn_8005268C())->mtx);
++    }
+ }
+ 
+ // .text:0x000E698C size:0xBC mapped:0x80725A20

@@ -68,6 +68,9 @@ The toolchain consists of:
 - `python3 tools/try_function.py <src_file> <function> <candidate.c> [--keep]` swap one function's definition for a candidate, build, and diff; restores the file unless it matches.
 - `python3 tools/rodata_value.py <lbl_3_rodata_XXXX>...` print constant values so `extern` rodata floats can be written as literals.
 - `python3 tools/literalize_rodata.py` sweep unmatched game functions replacing extern rodata floats with literals, keeping only improvements (slow; runs ninja repeatedly).
+- `python3 tools/sbs.py <function> [unit]` side-by-side target/current asm from the last build (best for register swaps).
+- `.agent/workflows/parallel_batch.md` how to run a 100-function batch with 4 parallel worktree agents and merge it.
+- `.agent/attempts/` best non-matching attempts (indexed in working_progress.md's Almost Matched table).
 - `.agent/categorize/functions.csv` per-function category/difficulty for unmatched game functions (Codex-generated heuristic; use for picking batches).
 - **ADS Dashboard** (`python3 tools/aidecomp/server.py`, http://localhost:8000) — Web UI for decompilation, symbol lookup, and the **Symbols DB** browser.
 

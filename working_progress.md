@@ -4,7 +4,7 @@
 **Source of truth:** Always follow `queue.log`. If this file disagrees with `queue.log`, `queue.log` wins.
 **Strategy:** Work through functions listed in `queue.log` (plain entries at the bottom, after all COMPLETED/NONMATCHING lines)
 **Queue file:** `queue.log`
-**Next function to attempt:** see queue.log (current batch: Codex medium tier, smallest 100; easy tier done 2026-10-14: 79 matched, 14 nonmatching)
+**Next function to attempt:** queue is empty. Next: queue the next 100 medium functions and run `.agent/workflows/parallel_batch.md` (~316 medium left). Done: easy tier 79/93, medium batch 1 93/100, batch 2 92/100 (2026-10-14/15; 824 game functions matched).
 
 To find the next function: look for the first plain entry (not prefixed with COMPLETED/NONMATCHING/SKIPPED) in `queue.log` that hasn't been committed yet.
 
@@ -68,6 +68,23 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_119EE0, fn_3_119E30 | 0x34 offset folded into lwzx index |
 | fn_3_8B094 | offset-indexed vs pointer form for table entry |
 | fn_3_9EE24 | regalloc (max/abs in r10/r3) |
+| fn_3_14E894 | zero init `li r30,0; mr r31,r30` vs separate `li r31,0` (2 lines) |
+| fn_3_A31E8 | nested-struct field load folded (same as fn_3_A32B8) |
+| fn_3_C0D10 | `base+1` kept in r31 across memcpy with `stbx`; no layout reproduces it |
+| fn_3_142C18 | r27-r29 order; loop shared with fn_3_146928 (matched via inline do-while) |
+| fn_3_E7388 | volatile r3/r5/r8 swapped + extra mr |
+| fn_3_90150 | int-to-float order / pan register (47 lines); attempt: .agent/attempts/fn_3_90150.* |
+| fn_3_20EEC | max loaded before min; division result register (10 lines) |
+| fn_3_E68A8 | obj/actor r31/r30 swapped, time via f1→fmr; attempt: .agent/attempts/fn_3_E68A8.diff |
+| fn_3_E7424 | lbl_3_bss_AE80 addressed off AE50 base (second base reg); attempt: .agent/attempts/fn_3_E7424.* |
+| fn_3_6A9B0 | compare scheduled before 100*chargeDown product; attempt: .agent/attempts/fn_3_6A9B0.c |
+| fn_3_8C4F0 | three saved regs in reverse order; needs Bss1760 overlay; attempt: .agent/attempts/fn_3_8C4F0.c |
+| fn_3_EA340 | `((unkIndex+i)+3)<<3; lwzx` add order (33 lines); attempt: .agent/attempts/fn_3_EA340.c |
+| fn_3_15F574 | `add`+`stw 0(rX)` vs our `stwx`; attempt: .agent/attempts/fn_3_15F574.* |
+| fn_3_10030 | add-chain reassociation (4 lines); attempt: .agent/attempts/fn_3_10030.c |
+| fn_3_219CC | split base+`idx*4+0xF4` lwzx and dead counter (45 lines); needs `s8 unk257` in AnimationStruct; attempt: .agent/attempts/fn_3_219CC.c |
+
+**Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
 | fn_3_24EA0 | register allocation / scheduling (see git log) |
 | fn_3_6BD6C | Register numbering of the 1/0 constants in the init block; loop matches. |
 | fn_3_DF6D4 | Scheduling of the player-index/zero setup before the AI-strength loop. |
