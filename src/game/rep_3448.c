@@ -275,9 +275,23 @@ void fn_3_128A38(void) {
     return;
 }
 
+typedef struct {
+    u16 first;
+    u16 second;
+} Rep3448U16Pair;
+
+extern u16 lbl_3_data_B0E0[];
+extern Rep3448U16Pair lbl_3_data_B140[];
+
 // .text:0x00128B90 size:0x88 mapped:0x80767C24
 void fn_3_128B90(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    lbl_3_data_B0E0[1] = lbl_3_data_B140[g_Minigame.GameMode_MiniGame].first;
+    lbl_3_data_B0E0[17] = lbl_3_data_B140[g_Minigame.GameMode_MiniGame].second;
+    fn_80034E20(scene, lbl_3_data_B0E0);
+    scene->eventID = 1;
+    lbl_803CC1B8->aFunctionPointer = fn_3_128A38;
 }
 
 // .text:0x00128C18 size:0x758 mapped:0x80767CAC
