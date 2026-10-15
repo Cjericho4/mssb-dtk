@@ -124,7 +124,15 @@ void fn_3_12C3F0(void) {
 
 // .text:0x0012C514 size:0xB8 mapped:0x8076B5A8
 void fn_3_12C514(void) {
-    return;
+    if (g_GameLogic.gameStatus == 0x1A && g_GameLogic._125 == 0) {
+        memset(g_Minigame.targetPointsArray, 0, 0xE);
+        fn_800B0A5C_insertQueue(fn_3_123990, 2);
+        fn_800B0A5C_insertQueue(fn_3_123EBC, 2);
+        fn_800B0A5C_insertQueue(fn_3_124CE0, 2);
+        fn_800B0A5C_insertQueue(fn_3_11E364, 2);
+        lbl_3_common_bss_32724.unk_B6 = lbl_3_common_bss_32724.unk_B7 = 0;
+        fn_800B0A5C_insertQueue(fn_3_125850, 2);
+    }
 }
 
 // .text:0x0012C5CC size:0xB8 mapped:0x8076B660
