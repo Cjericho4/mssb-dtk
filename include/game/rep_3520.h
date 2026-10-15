@@ -17,6 +17,21 @@ typedef struct {
 extern StarDashTimingEntry lbl_3_data_21A3C[2];
 extern s16 lbl_3_data_21A44;
 
+typedef struct Rep3520Ball {
+    Vec pos;            /* 0x00 */
+    Vec vel;            /* 0x0C */
+    u8 _pad18[0x20];
+    s16 timer38;        /* 0x38 */
+    s16 frames3A;       /* 0x3A */
+    u8 _pad3C;
+    u8 state3D;         /* 0x3D */
+    u8 flag3E;          /* 0x3E */
+    u8 count3F;         /* 0x3F */
+} Rep3520Ball;
+
+extern f32 lbl_3_data_21A64[9];
+extern s16 lbl_3_data_21A90[][4][2];
+
 void fn_3_133200(void);
 void fn_3_133320(void);
 void fn_3_13334C(void);
@@ -63,8 +78,8 @@ void fn_3_1371E8(void);
 void fn_3_137224(void);
 void fn_3_1373E0(void);
 void fn_3_1379A0(void);
-void fn_3_137B10(void);
-void fn_3_137CF8(void);
+u8 fn_3_137B10(Rep3520Ball* ball);
+void fn_3_137CF8(Rep3520Ball* ball);
 void fn_3_137DE4(void);
 void fn_3_137F14(void);
 void fn_3_13802C(void);

@@ -328,13 +328,30 @@ void fn_3_1379A0(void) {
 }
 
 // .text:0x00137B10 size:0x1E8 mapped:0x80776BA4
-void fn_3_137B10(void) {
-    return;
+u8 fn_3_137B10(Rep3520Ball* ball) {
+    return 0;
 }
 
 // .text:0x00137CF8 size:0xEC mapped:0x80776D8C
-void fn_3_137CF8(void) {
-    return;
+// .text:0x00137CF8 size:0xEC mapped:0x80776D8C
+// .text:0x00137CF8 size:0xEC mapped:0x80776D8C
+void fn_3_137CF8(Rep3520Ball* ball) {
+    u32 idx;
+    s32 base;
+    s32 r;
+
+    PSVECAdd(&ball->pos, &ball->vel, &ball->pos);
+    if (fn_3_137B10(ball) == 0 && ball->pos.y >= lbl_3_data_21A64[0]) {
+        idx = (u32)g_Minigame._17C0 / 60 / 20;
+        if (idx > 3) {
+            idx = 3;
+        }
+        ball->state3D = 0;
+        ball->frames3A = 0;
+        base = lbl_3_data_21A90[g_Minigame.soloMinigameDifficulty][idx][0];
+        r = fn_3_9EE24((lbl_3_data_21A90[g_Minigame.soloMinigameDifficulty][idx][1] - base) * 60);
+        ball->timer38 = base * 60 + r;
+    }
 }
 
 // .text:0x00137DE4 size:0x130 mapped:0x80776E78
