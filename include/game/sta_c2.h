@@ -92,7 +92,6 @@ void fn_3_CBAFC(void);
 void fn_3_CBC18(void);
 void fn_3_CBF80(void);
 void fn_3_CC1D4(void);
-void fn_3_CC354(void);
 void fn_3_CC438(void);
 void fn_3_CC5C4(void);
 void fn_3_CC81C(void);
@@ -174,6 +173,7 @@ typedef struct {
     u8 unk30[0xC];
     s32 unk3C;
 } StaC2D501CEntry; // size: 0x40
+void fn_3_CC354(StaC2D501CEntry* entries);
 void fn_3_D501C(StaC2D501CEntry* entries);
 void fn_3_D511C(void);
 s32 fn_3_D53C0(u8 arg0);

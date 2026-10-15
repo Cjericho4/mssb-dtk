@@ -13,6 +13,7 @@ extern char lbl_3_rodata_286C[];
 extern char lbl_3_rodata_2878[];
 extern u8 lbl_3_bss_A898[];
 extern DrawingSceneStruct* lbl_3_bss_A8A4;
+extern f32 lbl_3_data_188E0;
 
 // .text:0x000CB8A8 size:0x1F4 mapped:0x8070A93C
 void fn_3_CB8A8(void) {
@@ -58,8 +59,28 @@ void fn_3_CC1D4(void) {
 }
 
 // .text:0x000CC354 size:0xE4 mapped:0x8070B3E8
-void fn_3_CC354(void) {
-    return;
+void fn_3_CC354(StaC2D501CEntry* entries) {
+    StaC2D501CEntry* entry;
+    u32 i;
+
+    if (entries == NULL) {
+        return;
+    }
+    entry = entries;
+    for (i = 0; i < 4; i++, entry++) {
+        if (i == 3) {
+            entry->unk0 = lbl_3_data_188E0;
+            entry->unk8 = 0.504375f;
+            entry->unk3C = 1;
+        } else {
+            entry->unk0 = lbl_3_data_188E0;
+            entry->unk8 = 0.504375f;
+        }
+        entry->unk4 = 1.0f / entry->unk0;
+        memset(entry->unkC, 0, 0x18);
+        memset(entry->unk24, 0, 0xC);
+        memset(entry->unk30, 0, 0xC);
+    }
 }
 
 // .text:0x000CC438 size:0x18C mapped:0x8070B4CC
@@ -497,8 +518,6 @@ void fn_3_D4CA4(void) {
 void fn_3_D4E00(void) {
     return;
 }
-
-extern f32 lbl_3_data_188E0;
 
 // .text:0x000D501C size:0x100 mapped:0x807140B0
 void fn_3_D501C(StaC2D501CEntry* entries) {
