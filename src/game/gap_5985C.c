@@ -258,9 +258,50 @@ void fn_3_5BD40(void) {
     return;
 }
 
+typedef struct {
+    u16 _0;
+    u16 newButtons; /* 0x2 */
+    u8 _pad4[0xC];
+} PadInput_803C77B8;
+extern PadInput_803C77B8 lbl_803C77B8[8];
+
+typedef struct {
+    u8 _pad[0x13];
+    u8 _13;
+} Lbl8037169C;
+extern Lbl8037169C lbl_8037169C;
+void fn_800A7568(void);
+
 // .text:0x0005C418 size:0x118 mapped:0x8069B4AC
 void fn_3_5C418(void) {
-    return;
+    BOOL flag = FALSE;
+    u8 status = g_GameLogic.gameStatus;
+    UnkSimulation31AC0* sim;
+
+    if ((u32)status == 1 || (u32)status == 2 || (u8)(status - 0x13) <= 3 || status == 7) {
+        flag = TRUE;
+    }
+    if (g_UnkSimulation_31AC0.unk8 == 0) {
+        if (lbl_803C77B8[0].newButtons & 0x1000) {
+            g_UnkSimulation_31AC0.unk8 = 1;
+        }
+        return;
+    }
+    if (flag) {
+        changeScene(3, 6);
+    }
+    if (lbl_8037169C._13 != 0 && flag) {
+        if (lbl_803C6CF8.allowLoad == 1) {
+            lbl_3_common_bss_32724.someStatusInd = 1;
+            g_GameLogic.framesOfExitingToMenu = 1;
+        } else {
+            sim = &g_UnkSimulation_31AC0;
+            if (sim->unk9 == 0) {
+                fn_800A7568();
+                sim->unk9 = 1;
+            }
+        }
+    }
 }
 
 // .text:0x0005C530 size:0x98 mapped:0x8069B5C4

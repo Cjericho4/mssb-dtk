@@ -2417,7 +2417,8 @@ typedef struct UnkSimulation31AC0 {
     u8 unk6;
     u8 unk7;
     u8 unk8;
-    u8 _pad9[0x3];
+    u8 unk9;
+    u8 _padA[0x2];
 } UnkSimulation31AC0;
 
 extern UnkSimulation31AC0 g_UnkSimulation_31AC0;
