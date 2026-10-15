@@ -11,6 +11,7 @@
 #include "game/rep_1200.h"
 #include "game/rep_13B8.h"
 #include "game/rep_AC8.h"
+#include "game/gap_FBCD0.h"
 
 extern void fn_3_BF158(void);
 extern void fn_3_BF1AC(void);
@@ -139,9 +140,39 @@ void fn_3_131114(void) {
     g_UnkSimulation_31AC0.unk6 = 4;
 }
 
+extern s16 lbl_3_data_18C48[];
+extern s32 fn_3_6C938(s32, s32);
+typedef struct {
+    u8 _pad[0x13];
+    u8 _13;
+} Lbl8037169C;
+extern Lbl8037169C lbl_8037169C;
+
 // .text:0x0013119C size:0xF0 mapped:0x80770230
 void fn_3_13119C(void) {
-    return;
+    switch (g_GameLogic._125) {
+    case 0:
+        changeScene(1, 6);
+        g_GameLogic._125 = 1;
+        break;
+    case 1:
+        if (g_GameLogic.FrameCountOfCurrentPitch >= lbl_3_data_18C48[2] ||
+            (g_GameLogic.FrameCountOfCurrentPitch >= lbl_3_data_18C48[1] && fn_3_6C938(1, 0x1100))) {
+            changeScene(3, 6);
+            g_GameLogic._125 = 2;
+        }
+        break;
+    case 2:
+        if (lbl_8037169C._13 != 0) {
+            fn_3_FBD70();
+            fn_3_FBD58();
+            g_GameLogic._125 = 3;
+        }
+        break;
+    case 3:
+        fn_3_5A6D4(7);
+        break;
+    }
 }
 
 // .text:0x0013128C size:0x48 mapped:0x80770320
