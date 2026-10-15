@@ -931,7 +931,7 @@ typedef struct SoundConfig {
 } SoundConfig;
 extern SoundConfig lbl_800EFBA4;
 s32 rand();                                         /* extern */
-extern s16 lbl_3_bss_170;
+extern s16 lbl_3_bss_170[];
 void AnimateCharacter(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, u8 arg7, int arg8);
 extern f32 lbl_3_rodata_2B28;
 

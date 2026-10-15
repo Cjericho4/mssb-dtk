@@ -582,8 +582,11 @@ typedef struct FieldingLogic {
     
     /* 0x13C */ u8 _pad3[0x144 - 0x13C];
     /* 0x144 */ u8 unk144;
-    /* 0x145 */ u8 _pad145[0x14A - 0x145];
+    /* 0x145 */ u8 _pad145[0x148 - 0x145];
+    /* 0x148 */ u16 unk148;
     /* 0x14A */ u16 unk14A;           // lhz r0, 0x14a(r5)
+    /* 0x14C */ u16 unk14C;
+    /* 0x14E */ u8 _pad14E[0x150 - 0x14E];
 } FieldingLogic;
 
 extern FieldingLogic g_FieldingLogic;

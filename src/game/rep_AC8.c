@@ -335,7 +335,24 @@ void fn_3_313B0(void) {
 
 // .text:0x00031594 size:0xE4 mapped:0x80670628
 void fn_3_31594(void) {
-    return;
+    InputStruct* inputs;
+    s32 i;
+
+    inputs = &g_Controls[g_GameLogic.teams[g_GameLogic.teamFielding]];
+    for (i = 19; i > 0; i--) {
+        lbl_3_bss_170[i] = lbl_3_bss_170[i - 1];
+    }
+    if (ACTIVE_TUTORIAL) {
+        inputs = &g_Practice.inputs[g_GameLogic.teamFielding];
+    }
+    g_FieldingLogic.unk148 = inputs->buttonInput;
+    g_FieldingLogic.unk14A = inputs->newButtonInput;
+    g_FieldingLogic.unk14C = inputs->_08;
+    for (i = 0; i < 9; i++) {
+        fn_3_55EEC(i);
+    }
+    fn_3_30D74();
+    fn_3_313B0();
 }
 
 // .text:0x00031678 size:0x3C4 mapped:0x8067070C
@@ -501,7 +518,7 @@ void fn_3_38234(void) {
     } else if (g_Ball.someYCoord > 5.0f) {
         fn_3_38304();
     } else if (g_Ball.ballDistanceFromHome < 60.0f) {
-        if (lbl_3_bss_170 >= 0x900 && lbl_3_bss_170 < 0xF00) {
+        if (lbl_3_bss_170[0] >= 0x900 && lbl_3_bss_170[0] < 0xF00) {
             fn_3_38304();
         } else {
             fn_3_38000();
@@ -626,7 +643,7 @@ void fn_3_3B99C(void) {
 
     // Update target values
     g_FieldingLogic.unk8C->unk2 = 2;
-    g_FieldingLogic.unk8C->unk0 = lbl_3_bss_170;
+    g_FieldingLogic.unk8C->unk0 = lbl_3_bss_170[0];
 }
 
 // .text:0x0003B9E4 size:0x46C mapped:0x8067AA78
