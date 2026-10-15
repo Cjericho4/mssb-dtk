@@ -228,7 +228,25 @@ void fn_3_5C418(void) {
 
 // .text:0x0005C530 size:0x98 mapped:0x8069B5C4
 u8 fn_3_5C530(s32 inning) {
-    return 0;
+    if (inning > g_Scores.threshold) {
+        return 5;
+    }
+    if (g_Scores.threshold <= 3) {
+        if (g_Scores.threshold == inning && g_Scores.unkAD != 0) {
+            return 4;
+        }
+        return 0;
+    }
+    if (inning == g_Scores.threshold) {
+        return 4;
+    }
+    if ((g_Scores.threshold == 9 && inning >= 7) || (g_Scores.threshold == 7 && inning >= 6)) {
+        return 3;
+    }
+    if (inning >= 4) {
+        return 2;
+    }
+    return 1;
 }
 
 // .text:0x0005C5C8 size:0xD4 mapped:0x8069B65C
