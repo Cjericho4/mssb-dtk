@@ -103,7 +103,14 @@ typedef struct Struct_105BD8 {
     /* 0x44 */ u8 _pad4[0x44];
 } Struct_105BD8; // Size: 0x88 (136 bytes)
 
-void fn_3_105A10(void);
+// 16-byte vector local used by fn_3_105A10 (only xyz are copied)
+typedef struct VecXYZW {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+} VecXYZW;
+void fn_3_105A10(VecXYZ* out, VecXYZ* a, VecXYZ* b, f32 t);
 void fn_3_105ACC(Quaternion* q, Mtx out);
 void fn_3_105BD8(Struct_105BD8* arg0);
 typedef struct {

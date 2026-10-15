@@ -304,8 +304,17 @@ void fn_3_1054D0(void) {
 }
 
 // .text:0x00105A10 size:0xBC mapped:0x80744AA4
-void fn_3_105A10(void) {
-    return;
+void fn_3_105A10(VecXYZ* out, VecXYZ* a, VecXYZ* b, f32 t) {
+    VecXYZW result;
+    VecXYZW va;
+    VecXYZW vb;
+
+    memcpy(&va, a, sizeof(VecXYZ));
+    memcpy(&vb, b, sizeof(VecXYZ));
+    result.x = va.x * t + vb.x * (lbl_3_rodata_30FC - t);
+    result.y = va.y * t + vb.y * (lbl_3_rodata_30FC - t);
+    result.z = va.z * t + vb.z * (lbl_3_rodata_30FC - t);
+    memcpy(out, &result, sizeof(VecXYZ));
 }
 
 // .text:0x00105ACC size:0x10C mapped:0x80744B60
