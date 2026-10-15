@@ -755,22 +755,24 @@ typedef struct CommonBss32A94 {
     s16 unk0;           /* 0x00 */
     s16 unk2;
     s16 unk4;
-    u8 _pad6[0x44 - 0x06];
+    u8 _pad6[0x22 - 0x06];
+    s8 unk22;           /* 0x22 */
+    u8 _pad23[0x44 - 0x23];
     s16 unk44[2];  /* 0x44 */
     u8 _pad48[0x7D - 0x48];
     u8 unk7D;
-    u8 _pad7E;
+    u8 unk7E;
     u8 unk7F;
-    u8 _pad80;
+    u8 unk80;
     u8 unk81;
     u8 unk82;
-    u8 _pad83;
+    u8 unk83;
     u8 unk84;
     u8 unk85;
-    u8 _pad86;
+    u8 unk86;
     u8 unk87;
     u8 unk88;
-    u8 _pad89;
+    u8 unk89;
     u8 unk8A;
     u8 _pad8B;
 } CommonBss32A94; // size: 0x8C
@@ -956,7 +958,9 @@ typedef struct Scores {
     /* 0xAA */ u8 threshold;     // Matches 'lbz r0, 0xaa(r4)'
     /* 0xAB */ u8 _padAB;
     /* 0xAC */ u8 unkAC;
-    /* 0xAD */ u8 _pad3[22];
+    /* 0xAD */ u8 unkAD;
+    /* 0xAE */ u8 _padAE[0xC2 - 0xAE];
+    /* 0xC2 */ u8 unkC2;
     /* 0xC3 */ u8 someFlag;
 } Scores;
 
