@@ -971,12 +971,8 @@ typedef struct castleThwompObj {
     /* 0x98 */ u8 field15_0x98;
     /* 0x99 */ u8 hasBeenResetAfterLiveBallInd;
     /* 0x9A */ u8 field17_0x9a[2];
-    /* 0x9C */ VecXYZ position;       // Length 12 (Ends at 0xA8)
-
-    /* 0xA8 */ u8 id;
-    /* 0xA9 */ u8 starCollectedStatus;
-    /* 0xAA */ u8 field21_0xaa;
-    /* 0xAB */ u8 field22_0xab;
+    /* 0x9C */ u8 field18_0x9c[4];
+    /* 0xA0 */ VecXYZ position;       // Length 12 (Ends at 0xAC)
     /* 0xAC */ s32 unkAC;             // Length 4 (Ends at 0xB0)
 
     /* 0xB0 */ u8 state;

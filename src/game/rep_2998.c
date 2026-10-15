@@ -58,7 +58,7 @@ void fn_3_E2324(void) {
 }
 
 // .text:0x000E25D0 size:0x9C mapped:0x80721664
-void fn_3_E25D0(castleThwompObj* arg, u32 idx) {
+static inline void fn_3_E25D0_inline(castleThwompObj* arg, u32 idx) {
     arg->unkAC = lbl_3_bss_AE18[idx];
     fn_3_B97DC((ActorAnimState*)arg->actPtr, (ANIMBank*)arg->unkAC);
     if (idx != 0 && idx != 2 && idx != 3) {
@@ -69,14 +69,28 @@ void fn_3_E25D0(castleThwompObj* arg, u32 idx) {
     arg->field37_0xcb = idx;
 }
 
+void fn_3_E25D0(castleThwompObj* arg, u32 idx) {
+    fn_3_E25D0_inline(arg, idx);
+}
+
 // .text:0x000E266C size:0x270 mapped:0x80721700
 void fn_3_E266C(void) {
     return;
 }
 
 // .text:0x000E28DC size:0xD8 mapped:0x80721970
-void fn_3_E28DC(void) {
-    return;
+BOOL fn_3_E28DC(castleThwompObj* obj) {
+    VecXYZ pos;
+    Vec diff;
+
+    pos = obj->position;
+    PSVECSubtract((Vec*)&g_Ball.AtBat_Contact_BallPos, (Vec*)&pos, &diff);
+    diff.y = 0.0f;
+    if (2.5 >= PSVECMag(&diff)) {
+        fn_3_E25D0_inline(obj, 6);
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x000E29B4 size:0x1BC mapped:0x80721A48
