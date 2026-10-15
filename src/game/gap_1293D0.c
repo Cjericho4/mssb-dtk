@@ -150,7 +150,16 @@ void fn_3_12C5CC(void) {
 
 // .text:0x0012C684 size:0xC8 mapped:0x8076B718
 void fn_3_12C684(void) {
-    return;
+    if (g_GameLogic.gameStatus == 0x1A && g_GameLogic._125 == 0) {
+        memset(g_Minigame.targetPointsArray, 0, 0xE);
+        fn_800B0A5C_insertQueue(fn_3_123990, 2);
+        fn_800B0A5C_insertQueue(fn_3_123EBC, 2);
+        fn_800B0A5C_insertQueue(fn_3_11EC28, 2);
+        fn_800B0A5C_insertQueue(fn_3_124CE0, 2);
+        fn_800B0A5C_insertQueue(fn_3_11F02C, 2);
+        lbl_3_common_bss_32724.unk_B6 = lbl_3_common_bss_32724.unk_B7 = 0;
+        fn_800B0A5C_insertQueue(fn_3_125850, 2);
+    }
 }
 
 // .text:0x0012C74C size:0x11C mapped:0x8076B7E0
