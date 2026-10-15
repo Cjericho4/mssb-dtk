@@ -195,7 +195,10 @@ void fn_3_95098(void) {
 
 // .text:0x00095124 size:0x90 mapped:0x806D41B8
 void fn_3_95124(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    fn_80034E20(scene, &lbl_3_data_E278);
+    lbl_80371C30[scene->unkIndex + 2].obj->field_0x5C = lbl_3_data_E200[lbl_3_common_bss_37400.unk46] << 16;
+    lbl_803CC1B8->aFunctionPointer = fn_3_95098;
 }
 
 // .text:0x000951B4 size:0x128 mapped:0x806D4248
