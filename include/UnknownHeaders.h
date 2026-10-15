@@ -723,7 +723,9 @@ typedef struct UnknownBss_803C6CF8 {
 extern UnknownBss_803C6CF8 lbl_803C6CF8;
 
 typedef struct DrawingSceneItem {
-    u8 _pad[0x90];
+    u8 _pad[0x62];
+    s16 unk62;
+    u8 _pad64[0x90 - 0x64];
     u8 _b0 : 2;
     u8 b2 : 1;  // bit 5 from LSB (0x20)
     u8 _b3 : 5;
@@ -752,7 +754,13 @@ typedef struct DrawingSceneStruct {
         u16 unk18;
         s16 timer18;
     };
-    s16 unk1a;
+    union {
+        s16 unk1a;
+        struct {
+            u8 unk1a_hi;
+            u8 unk1b;
+        };
+    };
     union {
         s16 unk_1C;
         u16 eventID;

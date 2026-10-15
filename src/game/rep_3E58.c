@@ -35,7 +35,24 @@ void fn_3_166C30(struct AnimationStruct* anim, s8 type) {
 
 // .text:0x00166D40 size:0xC4 mapped:0x807A5DD4
 void fn_3_166D40(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    if (g_d_GameSettings._55 != 0 || lbl_3_common_bss_35154.unk_479 != 0) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (g_GameLogic.gameStatus != 2) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if ((scene->unk14->unk62 == 0x1B || scene->unk14->unk62 == 0x1A) && g_Ball.ballState == 0) {
+        fn_3_16699C();
+        scene->unk1b = 1;
+        return;
+    }
+    if (scene->unk1b != 0) {
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x00166E04 size:0x1C8 mapped:0x807A5E98
