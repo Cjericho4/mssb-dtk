@@ -252,7 +252,12 @@ void fn_3_D0284(void) {
 
 // .text:0x000D0490 size:0x98 mapped:0x8070F524
 void fn_3_D0490(void) {
-    return;
+    s32 idx = (g_Ball.inAirOrBefore2ndBounceOrLowBallEnergy != 0) + 2;
+
+    lbl_3_bss_A898[idx] = 1;
+    lbl_80371C30[lbl_3_bss_A8A4->unkIndex + idx].obj->pos.x = g_Ball.AtBat_Contact_BallPos.x;
+    lbl_80371C30[lbl_3_bss_A8A4->unkIndex + idx].obj->pos.y = -g_Ball.AtBat_Contact_BallPos.y;
+    lbl_80371C30[lbl_3_bss_A8A4->unkIndex + idx].obj->pos.z = g_Ball.AtBat_Contact_BallPos.z;
 }
 
 // .text:0x000D0528 size:0x4 mapped:0x8070F5BC
