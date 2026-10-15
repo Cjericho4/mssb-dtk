@@ -35,7 +35,12 @@ void fn_3_12DB54(void);
 void fn_3_12DB80(void);
 s32 fn_3_12DD88(void);
 void fn_3_12DDCC(void);
-void fn_3_12E084(void);
+typedef struct MinigameRankEntry {
+    s8 id;     // 0x0
+    s8 rank;   // 0x1
+    s16 score; // 0x2
+} MinigameRankEntry;
+s32 fn_3_12E084(MinigameRankEntry* a, MinigameRankEntry* b);
 void fn_3_12E17C(void);
 void fn_3_12E384(void);
 void fn_3_12E808(void);

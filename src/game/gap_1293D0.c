@@ -235,8 +235,28 @@ void fn_3_12DDCC(void) {
 }
 
 // .text:0x0012E084 size:0xF8 mapped:0x8076D118
-void fn_3_12E084(void) {
-    return;
+s32 fn_3_12E084(MinigameRankEntry* a, MinigameRankEntry* b) {
+    MiniGameStruct* mg = &g_Minigame;
+    s8 ra;
+    s8 rb;
+
+    if (a->score != b->score) {
+        return b->score - a->score;
+    }
+    if (a->rank != b->rank) {
+        if ((s8)mg->randomTargets[1]._2 != 0) {
+            return a->rank - b->rank;
+        }
+        return b->rank - a->rank;
+    }
+    ra = __abs(2 - a->id / 3);
+    rb = __abs(2 - b->id / 3);
+    if (ra != rb) {
+        return ra - rb;
+    }
+    ra = __abs(1 - a->id % 3);
+    rb = __abs(1 - b->id % 3);
+    return ra - rb;
 }
 
 // .text:0x0012E17C size:0x208 mapped:0x8076D210
