@@ -109,7 +109,6 @@ void fn_3_CED30(void);
 void fn_3_CED34(void);
 void fn_3_CED38(void);
 void fn_3_CED3C(void);
-void fn_3_CED40(void);
 void fn_3_CEE5C(void);
 void fn_3_CEFA8(void);
 void fn_3_CF278(void);
@@ -188,6 +187,23 @@ typedef struct StaC2ChainObj {
 } StaC2ChainObj;
 
 void fn_3_CBAFC(StaC2ChainObj* obj);
+
+typedef struct StaC2Particle {
+    u8 _pad0[0x4];
+    Vec pos;        /* 0x04 */
+    Vec vel;        /* 0x10 */
+    u8 _pad1C[0x38 - 0x1C];
+    f32 unk38;      /* 0x38 */
+    f32 unk3C;      /* 0x3C */
+    u8 _pad40[0x43 - 0x40];
+    u8 unk43;       /* 0x43 */
+    u8 _pad44[0x48 - 0x44];
+    s16 unk48;      /* 0x48 */
+} StaC2Particle;
+
+void fn_8003403C(f32 a, f32 b);
+void fn_80033CC8(StaC2Particle* obj, s32 arg1);
+void fn_3_CED40(StaC2Particle* obj, s32 arg1);
 void fn_3_D1F2C(StaC2ChainParams* params, StaC2D501CEntry* entries, s32 count, Vec* force, StaC2ChainObj* obj);
 void fn_3_CC354(StaC2D501CEntry* entries);
 void fn_3_D501C(StaC2D501CEntry* entries);

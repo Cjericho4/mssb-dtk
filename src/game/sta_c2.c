@@ -7,6 +7,7 @@
 #include "header_rep_data.h"
 #include "game/rep_3448.h"
 #include "game/gap_B7EF0.h"
+#include "game/gap_6C854.h"
 
 extern f32 lbl_3_rodata_2664;
 extern char lbl_3_rodata_286C[];
@@ -206,8 +207,22 @@ void fn_3_CED3C(void) {
 }
 
 // .text:0x000CED40 size:0x11C mapped:0x8070DDD4
-void fn_3_CED40(void) {
-    return;
+void fn_3_CED40(StaC2Particle* obj, s32 arg1) {
+    fn_8003403C(obj->unk38, obj->unk3C);
+    fn_80033CC8(obj, arg1);
+    if (lbl_80366158._28) {
+        return;
+    }
+    if (-obj->unk48 < 5) {
+        obj->unk38 += 0.38;
+        obj->unk3C += 0.38;
+        obj->unk43 += 34.0;
+    } else {
+        obj->unk43 -= 4;
+    }
+    obj->pos.x += obj->vel.x;
+    obj->pos.y += obj->vel.y;
+    obj->pos.z += obj->vel.z;
 }
 
 // .text:0x000CEE5C size:0x14C mapped:0x8070DEF0
