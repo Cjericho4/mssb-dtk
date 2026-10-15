@@ -30,6 +30,8 @@ typedef struct CommonBss32B20 {
 
 u32 sndCheckEmitter(SoundEmitterSlot* em);
 u32 sndRemoveEmitter(SoundEmitterSlot* em);
+struct SND_ROOM;
+u32 sndUpdateEmitter(SoundEmitterSlot* em, VecXYZ* pos, VecXYZ* dir, u8 maxVol, struct SND_ROOM* room);
 
 typedef struct Data8D70 {
     u8 data[0xC];

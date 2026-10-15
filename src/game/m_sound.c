@@ -150,8 +150,19 @@ void fn_3_8B804(void) {
 }
 
 // .text:0x0008B890 size:0xD4 mapped:0x806CA924
-void fn_3_8B890(s32 emitterIdx) {
-    return;
+void fn_3_8B890(s32 idx) {
+    SoundEmitterSlot* em;
+
+    if (idx < 0 || idx >= SOUND_EMITTER_COUNT || lbl_3_common_bss_32B20.emitterActive[idx] == 0) {
+        return;
+    }
+    em = &lbl_3_common_bss_32B20.emitters[idx];
+    if (sndCheckEmitter(em) != 0) {
+        VecXYZ pos = {0.0f, 0.0f, 0.0f};
+        VecXYZ dir = {0.0f, 0.0f, 1.0f};
+        sndUpdateEmitter(em, &pos, &dir, 0, NULL);
+        sndRemoveEmitter(em);
+    }
 }
 
 // .text:0x0008B964 size:0x58 mapped:0x806CA9F8
