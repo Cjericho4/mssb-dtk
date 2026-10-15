@@ -454,8 +454,27 @@ void fn_3_F6084(void) {
 }
 
 // .text:0x000F6504 size:0xC4 mapped:0x80735598
-void fn_3_F6504(void) {
-    return;
+struct StadiumModel* fn_3_F6504(s32 index, Mtx m) {
+    StadiumObjectElem* obj = &lbl_3_common_bss_350E4[0].src[index];
+
+    if (obj->unk9D == 2) {
+        if (obj->unkC6 < 3 && g_Ball.ballState != 1) {
+            CTRLBuildMatrix(&obj->control, m);
+        } else {
+            return NULL;
+        }
+    } else if (obj->unk9D == 0) {
+        if (obj->unkC1 == 2) {
+            return NULL;
+        }
+        if (g_Ball.AtBat_ContactResult >= 2) {
+            return NULL;
+        }
+        CTRLBuildMatrix(&obj->control, m);
+    } else {
+        CTRLBuildMatrix(&obj->control, m);
+    }
+    return lbl_3_common_bss_350E4[0].src[index].unk_78;
 }
 
 extern u8 lbl_3_bss_B21A;

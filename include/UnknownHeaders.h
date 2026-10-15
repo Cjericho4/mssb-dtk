@@ -535,18 +535,22 @@ void fn_800BD8C4(HugeAnimCtrlObj* obj, s32 arg);
 extern f32 lbl_3_rodata_1414;
 
 typedef struct StadiumObjectElem {
-    u8 _pad[0x74];                    /* 0x00 */
+    Control control;                  /* 0x00 */
+    u8 _pad3C[0x74 - 0x3C];           /* 0x3C */
     void** unk74;                     /* 0x74 */
     struct StadiumModel* unk_78;      /* 0x78 */
     u8 _pad_0x7c[0x80 - 0x7C];       /* 0x7C */
     BALL_COLLISION_TYPE (*fnPtr)(u32, BALL_COLLISION_TYPE, CollisionStruct*);  /* 0x80 */
     u8 _pad_0x84[0x93 - 0x84];       /* 0x84 */
     u8 unk93;                         /* 0x93 */
-    u8 _pad_0x94[0xA9 - 0x94];       /* 0x94 */
+    u8 _pad_0x94[0x9D - 0x94];       /* 0x94 */
+    u8 unk9D;                         /* 0x9D */
+    u8 _pad_0x9e[0xA9 - 0x9E];       /* 0x9E */
     u8 unk_A9;                        /* 0xA9 */
     u8 _pad_0xaa[0xC0 - 0xAA];       /* 0xAA */
     u8 unkC0;                         /* 0xC0 */
-    u8 _pad_0xc1[0xC6 - 0xC1];       /* 0xC1 */
+    u8 unkC1;                         /* 0xC1 */
+    u8 _pad_0xc2[0xC6 - 0xC2];       /* 0xC2 */
     u8 unkC6;                         /* 0xC6 */
     u8 _pad_0xc7[0xE8 - 0xC7];       /* 0xC7 */
 } StadiumObjectElem;

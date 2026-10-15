@@ -154,7 +154,7 @@ s32 fn_3_F5EFC(unknown_tri_compare* a, unknown_tri_compare* b);
 s32 fn_3_F5F28(f32* a, f32* b);
 void fn_3_F5F4C(void);
 void fn_3_F6084(void);
-void fn_3_F6504(void);
+struct StadiumModel* fn_3_F6504(s32 index, Mtx m);
 void fn_3_F65C8(s32* count);
 void fn_3_F66C8(void);
 void fn_3_F6938(void);
