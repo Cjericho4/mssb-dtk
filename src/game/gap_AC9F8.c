@@ -3,6 +3,7 @@
 #include "game/rep_540.h"
 #include "game/rep_1038.h"
 #include "game/rep_E08.h"
+#include "game/rep_1B70.h"
 extern u8 lbl_803CBC3C;
 void fn_3_BF158(void);
 void fn_3_BF1AC(void);
@@ -479,7 +480,41 @@ void fn_3_B1DD0(void) {
 }
 
 // .text:0x000B254C size:0xE4 mapped:0x806F15E0
+typedef struct {
+    u8 _pad[0x12];
+    u8 _12;
+    u8 _13;
+} Lbl8037169C;
+extern Lbl8037169C lbl_8037169C;
+
 BOOL fn_3_B254C(void) {
+    if (g_Practice.transitioningIndicator == 0) {
+        lbl_80366158._28 = 1;
+        switch (g_Practice.practiceState) {
+        case 0:
+            g_Practice.framesInCurrTransitionState = 0;
+            g_Practice.practiceState++;
+            break;
+        case 1:
+            if (g_Practice.framesInCurrTransitionState > 30) {
+                changeScene(3, 6);
+                g_Practice.practiceState++;
+            }
+            break;
+        case 2:
+            if (lbl_8037169C._13 != 0) {
+                g_Practice.practiceState++;
+            }
+            break;
+        case 3:
+            goto done;
+        }
+    } else {
+    done:
+        minigamesSetSomePointers();
+        fn_3_B3A4C();
+        return TRUE;
+    }
     return FALSE;
 }
 

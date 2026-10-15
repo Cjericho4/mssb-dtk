@@ -864,7 +864,7 @@ typedef struct _PracticeStruct {
     /*0x024*/ int homeAway;
     artificial_padding(0x24, 0x140, int);
     /*0x140*/ frame_t totalFrames;
-    /*0x142*/ frame_t framesInCurrTransitionState;
+    /*0x142*/ u16 framesInCurrTransitionState;
     /*0x144*/ frame_t framesSincePracticeMenuDefaultTransition;
     /*0x146*/ u16 practiceMenu_framesOnCurrMenuScreen;
     /*0x148*/ u16 frames_sinceMovedToFromMenu;
