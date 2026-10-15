@@ -29,6 +29,24 @@ typedef struct ActorObject {
     u8 field_0xca;              // Offset 0xca
 } ActorObject;
 
+typedef struct StaC2RangeEntry {
+    u8 _pad0[0x20];
+    f32 posMin;   /* 0x20 */
+    f32 posRange; /* 0x24 */
+    f32 negMin;   /* 0x28 */
+    f32 negRange; /* 0x2C */
+    u8 _pad30[0x4];
+} StaC2RangeEntry; /* size: 0x34 */
+
+extern StaC2RangeEntry lbl_3_data_18364[6];
+
+typedef struct StaC2RangeObj {
+    u8 _pad0[0x9C];
+    u8 entryIdx; /* 0x9C */
+    u8 _pad9D[0xD0 - 0x9D];
+    s8 dir;      /* 0xD0 */
+} StaC2RangeObj;
+
 typedef struct StaC2D24E8Arg {
     u8 _pad0[0xA0];
     Vec field_0xA0;
@@ -111,7 +129,7 @@ void fn_3_D0490(void);
 void fn_3_D0528(void);
 s32 fn_3_D052C(void);
 void fn_3_D0534(void);
-void fn_3_D0854(void);
+f32 fn_3_D0854(StaC2RangeObj* obj);
 void fn_3_D0918(void);
 void fn_3_D1004(void);
 void fn_3_D1110(void);
@@ -133,6 +151,7 @@ typedef struct {
     u8 _pad0[0xA0];
     VecXYZ pos; /* 0xA0 */
 } StaC2Object;
+
 VecXYZ* fn_3_D2684(StaC2Object* obj);
 void fn_3_D278C(void);
 void fn_3_D2A0C(void);

@@ -6,6 +6,7 @@
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "game/rep_3448.h"
+#include "game/gap_B7EF0.h"
 
 extern f32 lbl_3_rodata_2664;
 extern char lbl_3_rodata_286C[];
@@ -278,8 +279,18 @@ void fn_3_D0534(void) {
 }
 
 // .text:0x000D0854 size:0xC4 mapped:0x8070F8E8
-void fn_3_D0854(void) {
-    return;
+f32 fn_3_D0854(StaC2RangeObj* obj) {
+    f32 min;
+    f32 range;
+
+    if (obj->dir > 0) {
+        min = lbl_3_data_18364[obj->entryIdx].posMin;
+        range = lbl_3_data_18364[obj->entryIdx].posRange;
+    } else {
+        min = lbl_3_data_18364[obj->entryIdx].negMin;
+        range = lbl_3_data_18364[obj->entryIdx].negRange;
+    }
+    return min + range * (fn_3_B7F70(1000) / 1000.0);
 }
 
 // .text:0x000D0918 size:0x6EC mapped:0x8070F9AC
