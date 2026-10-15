@@ -35,7 +35,7 @@ extern s16 lbl_3_data_21A90[][4][2];
 void fn_3_133200(void);
 void fn_3_133320(void);
 void fn_3_13334C(void);
-void fn_3_1344BC(void);
+BOOL fn_3_1344BC(s32 a, s32 b);
 s16 fn_3_1345AC(s16 a, s16 b, s32 idx);
 void fn_3_134658(void);
 s32 fn_3_134908(UnknownObj_134908* a, UnknownObj_134908* b);

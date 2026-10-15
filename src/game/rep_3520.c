@@ -31,8 +31,14 @@ void fn_3_13334C(void) {
 }
 
 // .text:0x001344BC size:0xF0 mapped:0x80773550
-void fn_3_1344BC(void) {
-    return;
+// .text:0x001344BC size:0xF0 mapped:0x80773550
+BOOL fn_3_1344BC(s32 a, s32 b) {
+    f32 dxB = g_Fielders[g_Minigame.minigameFielderIndex[b]].pos[0] - lbl_3_data_21A48.x;
+    f32 dzB = g_Fielders[g_Minigame.minigameFielderIndex[b]].pos[2] - lbl_3_data_21A48.z;
+    f32 angA = atan2(g_Fielders[g_Minigame.minigameFielderIndex[a]].pos[2] - lbl_3_data_21A48.z,
+                     g_Fielders[g_Minigame.minigameFielderIndex[a]].pos[0] - lbl_3_data_21A48.x);
+
+    return fn_3_9FCA4(radToShortAngle(angA), radToShortAngle(atan2(dzB, dxB))) >= 0;
 }
 
 // .text:0x001345AC size:0xAC mapped:0x80773640
