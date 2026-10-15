@@ -1,6 +1,9 @@
 #include "game/rep_A00.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
+#include "game/gap_219CC.h"
+
+extern void changeScene(s32, s32);
 
 // .text:0x00021C90 size:0x154 mapped:0x80660D24
 void fn_3_21C90(void) {
@@ -107,7 +110,17 @@ void fn_3_240F8(void) {
 
 // .text:0x00024598 size:0x98 mapped:0x8066362C
 void fn_3_24598(void) {
-    return;
+    if (lbl_3_common_bss_1323C->unk23C < 0x7FFE) {
+        lbl_3_common_bss_1323C->unk23C++;
+    } else {
+        lbl_3_common_bss_1323C->unk23C = 0x7FFF;
+    }
+    if (lbl_3_common_bss_1323C->unk23C == lbl_3_common_bss_1323C->unk23E - 7) {
+        changeScene(3, 6);
+    }
+    if (lbl_3_common_bss_1323C->unk23C == lbl_3_common_bss_1323C->unk23E) {
+        g_GameLogic._125++;
+    }
 }
 
 // .text:0x00024630 size:0xD8 mapped:0x806636C4
