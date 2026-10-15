@@ -325,8 +325,23 @@ void fn_3_B97DC(ActorAnimState* state, ANIMBank* bank) {
 }
 
 // .text:0x000B98E8 size:0xFC mapped:0x806F897C
-void fn_3_B98E8(void) {
-    return;
+void fn_3_B98E8(C2310Holder* holder) {
+    u32 i;
+    C2310Bone* bone;
+
+    for (i = 0; i < holder->actor->totalBones; i++) {
+        bone = holder->actor->boneArray[i];
+        bone->info = _OSAllocFromHeap(0x20, sizeof(B98E8BoneInfo));
+        bone->info->unk0 = 0.0f;
+        bone->info->unk4 = 0.0f;
+        bone->info->unk8 = 1.0f;
+        bone->info->unkC = 0;
+        bone->info->unk10 = 0;
+        bone->info->unk16 = 0;
+        bone->info->unk17 = 1;
+        bone->info->unk18 = 1;
+        bone->info->unk14 = 0;
+    }
 }
 
 // .text:0x000B99E4 size:0x1D0 mapped:0x806F8A78

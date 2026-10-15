@@ -13,19 +13,36 @@ typedef struct StadiumObject {
 
 extern u8 lbl_3_data_11168[16];
 
+typedef struct B98E8BoneInfo {
+    /* 0x00 */ f32 unk0;
+    /* 0x04 */ f32 unk4;
+    /* 0x08 */ f32 unk8;
+    /* 0x0C */ s32 unkC;
+    /* 0x10 */ s32 unk10;
+    /* 0x14 */ s16 unk14;
+    /* 0x16 */ u8 unk16;
+    /* 0x17 */ u8 unk17;
+    /* 0x18 */ u8 unk18;
+    /* 0x19 */ u8 _pad19[0x1C - 0x19];
+} B98E8BoneInfo; // size: 0x1C
+
 typedef struct C2310Bone {
     u8 _pad0[0x14];
     struct DODisplayObj* dispObj; /* 0x14 */
-    u8 _pad18[0xEC - 0x18];
+    u8 _pad18[0xE8 - 0x18];
+    B98E8BoneInfo* info;          /* 0xE8 */
     MtxPtr worldMtx;              /* 0xEC */
     u8 _padF0[0x100 - 0xF0];
     struct C2310Bone* next;       /* 0x100 */
 } C2310Bone;
 
 typedef struct C2310Actor {
-    u8 _pad0[0x14];
+    u8 _pad0[0x6];
+    u16 totalBones;                   /* 0x06 */
+    u8 _pad8[0x14 - 0x8];
     struct DODisplayObj* skinObject;  /* 0x14 */
-    u8 _pad18[0x64 - 0x18];
+    C2310Bone** boneArray;            /* 0x18 */
+    u8 _pad1C[0x64 - 0x1C];
     MtxPtr skinMtxArray;              /* 0x64 */
     MtxPtr skinInvTransposeMtxArray;  /* 0x68 */
     u8 _pad6C[0x74 - 0x6C];
@@ -105,7 +122,7 @@ void fn_800B4BC8(Actor* actor, s32 arg1);
 void fn_800B4C04(Actor* actor, f32 speed);
 void fn_800B4AFC(Actor* actor, s32 loop);
 void fn_800B4CA0(void* boneData, f32 val);
-void fn_3_B98E8(void);
+void fn_3_B98E8(C2310Holder* holder);
 void fn_3_B99E4(void);
 void fn_3_B9BB4(void);
 void fn_3_B9D68(void);
