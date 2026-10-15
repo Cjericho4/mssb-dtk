@@ -5,8 +5,11 @@
 #include "game/rep_AC8.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
+#include "game/rep_3448.h"
 
 extern f32 lbl_3_rodata_2664;
+extern u8 lbl_3_bss_A898[];
+extern DrawingSceneStruct* lbl_3_bss_A8A4;
 
 // .text:0x000CB8A8 size:0x1F4 mapped:0x8070A93C
 void fn_3_CB8A8(void) {
@@ -130,7 +133,12 @@ void fn_3_CEBBC(void) {
 
 // .text:0x000CEC98 size:0x98 mapped:0x8070DD2C
 void fn_3_CEC98(void) {
-    return;
+    s32 idx = (g_Ball.inAirOrBefore2ndBounceOrLowBallEnergy != 0) + 8;
+
+    lbl_3_bss_A898[idx] = 1;
+    lbl_80371C30[lbl_3_bss_A8A4->unkIndex + idx].obj->pos.x = g_Ball.AtBat_Contact_BallPos.x;
+    lbl_80371C30[lbl_3_bss_A8A4->unkIndex + idx].obj->pos.y = -g_Ball.AtBat_Contact_BallPos.y;
+    lbl_80371C30[lbl_3_bss_A8A4->unkIndex + idx].obj->pos.z = g_Ball.AtBat_Contact_BallPos.z;
 }
 
 // .text:0x000CED30 size:0x4 mapped:0x8070DDC4
