@@ -50,6 +50,7 @@ void fn_3_96CA4(void);
 extern int lbl_3_data_BF6C;
 extern int lbl_3_data_E21C;
 extern int lbl_3_data_E278;
+extern int lbl_3_data_E160;
 extern int lbl_3_data_E2F8;
 extern u16 lbl_3_data_E200[];
 extern int lbl_3_data_F390;

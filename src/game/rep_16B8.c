@@ -242,7 +242,13 @@ void fn_3_9538C(void) {
 
 // .text:0x000953FC size:0xC8 mapped:0x806D4490
 void fn_3_953FC(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    fn_80034E20(scene, &lbl_3_data_E160);
+    lbl_80371C30[scene->unkIndex + 2].obj->field_0x5C = lbl_3_data_E200[lbl_3_common_bss_37400.unk46] << 16;
+    lbl_80371C30[scene->unkIndex + 3].obj->field_0x5C = lbl_3_data_E200[lbl_3_common_bss_37400.unk46] << 16;
+    lbl_3_common_bss_32724.unk_B4 = 0;
+    lbl_3_common_bss_32724.unk_B3 = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_3_9538C;
 }
 
 // .text:0x000954C4 size:0x58 mapped:0x806D4558
