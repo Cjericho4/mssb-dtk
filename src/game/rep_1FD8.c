@@ -5,6 +5,8 @@
 #include "game/rep_3448.h"
 #include "game/rep_AC8.h"
 #include "game/particle_spawn.h"
+#include "game/gap_16C410.h"
+#include "musyx/musyx.h"
 
 extern f32 lbl_3_rodata_21F0;
 extern u32 lbl_3_bss_9D84;
@@ -497,8 +499,37 @@ void fn_3_C7444(ActorObject* arg0) {
 }
 
 // .text:0x000C749C size:0x11C mapped:0x80706530
+extern VecXYZ lbl_3_bss_9DE8[8];
+extern u8 lbl_3_bss_9E48[8];
+
+static inline void storeBallSfxPos(s32 idx) {
+    lbl_3_bss_9E48[idx] = 1;
+    lbl_3_bss_9DE8[idx].x = g_Ball.AtBat_Contact_BallPos.x;
+    lbl_3_bss_9DE8[idx].y = -g_Ball.AtBat_Contact_BallPos.y;
+    lbl_3_bss_9DE8[idx].z = g_Ball.AtBat_Contact_BallPos.z;
+}
+
+// .text:0x000C749C size:0x11C mapped:0x80706530
 void fn_3_C749C(void) {
-    return;
+    u32 stadium;
+    u8 vol;
+    u8 pan;
+    SND_VOICEID vid;
+
+    storeBallSfxPos((g_Ball.inAirOrBefore2ndBounceOrLowBallEnergy != 0) + 2);
+    stadium = g_d_GameSettings.StadiumID;
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        vol = lbl_3_data_84B8[0][4].vol;
+    } else {
+        vol = lbl_3_data_8404[stadium][4].vol;
+    }
+    vid = sndFXStartEx(lbl_3_data_81DC[stadium] + 4, vol, 0x3F, 0);
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        pan = lbl_3_data_84B8[0][4].pan;
+    } else {
+        pan = lbl_3_data_8404[stadium][4].pan;
+    }
+    sndFXCtrl(vid, 0x5B, pan);
 }
 
 // .text:0x000C75B8 size:0x1F4 mapped:0x8070664C
