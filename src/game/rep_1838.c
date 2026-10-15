@@ -219,18 +219,7 @@ f32 fn_3_9FAA4(f32 x, f32 y) {
 
 // .text:0x0009F9C8 size:0xDC mapped:0x806DEA5C
 void fn_3_9F9C8(s16 ang, f32* x, f32* y) {
-    f32 v;
-    if (ang < 0) {
-        ang += SANG_ANG_360;
-    }
-    if (ang >= SANG_ANG_360) {
-        ang -= SANG_ANG_360;
-    }
-    v = (ang * 2) * PI / (f32)SANG_ANG_360;
-    if (v > PI) {
-        v = -(TAU - v);
-    }
-    getComponentsFromRad(v, x, y);
+    getComponentsFromRad(shortAngleToRad_Capped(ang), x, y);
 }
 
 // .text:0x0009F964 size:0x64 mapped:0x806DE9F8
