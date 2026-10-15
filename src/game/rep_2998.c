@@ -182,8 +182,28 @@ void fn_3_E4A38(void) {
 }
 
 // .text:0x000E4BE8 size:0xC8 mapped:0x80723C7C
-void fn_3_E4BE8(void) {
-    return;
+typedef struct E4BE8Actor {
+    u8 _pad0[0x18];
+    AnimObjMtxHolder** boneArray; /* 0x18 */
+} E4BE8Actor;
+
+static inline StadiumObjectElem* getStadiumObj(s32 index) {
+    return &lbl_3_common_bss_350E4[0].src[index];
+}
+
+struct StadiumModel* fn_3_E4BE8(s32 index, MtxPtr m) {
+    Mtx boneMtx;
+    StadiumObjectElem* obj = getStadiumObj(index);
+
+    CTRLBuildMatrix(&obj->control, m);
+    if (obj->unk9D == 0) {
+        if (obj->unkC8 == 0 || obj->unkC4 == 0 || obj->unkC4 == 5 || obj->unkC4 == 4) {
+            return NULL;
+        }
+        PSMTXCopy(((E4BE8Actor*)*obj->unk74)->boneArray[16]->mtxEC, boneMtx);
+        PSMTXConcat(m, boneMtx, m);
+    }
+    return lbl_3_common_bss_350E4[0].src[index].unk_78;
 }
 
 // .text:0x000E4CB0 size:0x244 mapped:0x80723D44

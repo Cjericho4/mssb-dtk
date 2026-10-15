@@ -563,9 +563,13 @@ typedef struct StadiumObjectElem {
     u8 _pad_0xaa[0xC0 - 0xAA];       /* 0xAA */
     u8 unkC0;                         /* 0xC0 */
     u8 unkC1;                         /* 0xC1 */
-    u8 _pad_0xc2[0xC6 - 0xC2];       /* 0xC2 */
+    u8 _pad_0xc2[0xC4 - 0xC2];       /* 0xC2 */
+    u8 unkC4;                         /* 0xC4 */
+    u8 _pad_0xc5;                     /* 0xC5 */
     u8 unkC6;                         /* 0xC6 */
-    u8 _pad_0xc7[0xE8 - 0xC7];       /* 0xC7 */
+    u8 _pad_0xc7;                     /* 0xC7 */
+    u8 unkC8;                         /* 0xC8 */
+    u8 _pad_0xc9[0xE8 - 0xC9];       /* 0xC9 */
 } StadiumObjectElem;
 
 typedef struct StadiumIdEntry {

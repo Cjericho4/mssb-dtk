@@ -105,7 +105,7 @@ void fn_3_E4658(CastleRotObj* obj);
 void fn_3_E4760(void);
 void fn_3_E48D0(void);
 void fn_3_E4A38(void);
-void fn_3_E4BE8(void);
+struct StadiumModel* fn_3_E4BE8(s32 index, MtxPtr m);
 void fn_3_E4CB0(void);
 void fn_3_E4EF4(void);
 void fn_3_E4FC4(void);
