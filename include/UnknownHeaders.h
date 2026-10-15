@@ -543,7 +543,10 @@ typedef struct StadiumObjectElem {
     struct StadiumModel* unk_78;      /* 0x78 */
     u8 _pad_0x7c[0x80 - 0x7C];       /* 0x7C */
     BALL_COLLISION_TYPE (*fnPtr)(u32, BALL_COLLISION_TYPE, CollisionStruct*);  /* 0x80 */
-    u8 _pad_0x84[0x93 - 0x84];       /* 0x84 */
+    u8 _pad_0x84[0x90 - 0x84];       /* 0x84 */
+    u8 flag90_80 : 1;                 /* 0x90 */
+    u8 flag90_rest : 7;
+    u8 _pad_0x91[0x93 - 0x91];       /* 0x91 */
     u8 unk93;                         /* 0x93 */
     u8 _pad_0x94[0x9D - 0x94];       /* 0x94 */
     u8 unk9D;                         /* 0x9D */

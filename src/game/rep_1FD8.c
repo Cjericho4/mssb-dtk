@@ -1,9 +1,19 @@
 #include "game/rep_1FD8.h"
 #include "header_rep_data.h"
 #include "UnknownHeaders.h"
+#include "game/rep_1D58.h"
 
 extern f32 lbl_3_rodata_21F0;
 extern u32 lbl_3_bss_9D84;
+
+extern void fn_800BF058(void (*fn)(void));
+extern void fn_800BDF70(void** ptr);
+
+typedef struct {
+    void* _0;
+    u8 _4[0x94];
+    u8 unk98; /* 0x98 */
+} C23E0Inner;
 
 // .text:0x000C1964 size:0x10 mapped:0x807009F8
 void fn_3_C1964(void) {
@@ -40,7 +50,18 @@ void fn_3_C2310(void) {
 
 // .text:0x000C23E0 size:0xC0 mapped:0x80701474
 void fn_3_C23E0(void) {
-    return;
+    StadiumObjectElem* obj;
+    s32 i;
+
+    fn_800BF058(fn_3_B8184);
+    for (i = 0; i < (s32)lbl_3_common_bss_350E4[0].memcpyCount; i++) {
+        obj = &lbl_3_common_bss_350E4[0].src[i];
+        fn_3_B828C((StadiumObject*)obj);
+        if (i >= 1 && i < 11 && obj->flag90_80 && obj->unk74 != NULL) {
+            ((C23E0Inner*)*obj->unk74)->unk98 = obj->unk93 | 6;
+            fn_800BDF70(obj->unk74);
+        }
+    }
 }
 
 // .text:0x000C24A0 size:0x1A4 mapped:0x80701534
