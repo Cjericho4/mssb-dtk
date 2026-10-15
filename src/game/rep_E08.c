@@ -32,8 +32,26 @@ void fn_3_60A98(void) {
 }
 
 // .text:0x00060D80 size:0x110 mapped:0x8069FE14
-void fn_3_60D80(void) {
-    return;
+BOOL fn_3_60D80(s32 index) {
+    AnimationStruct_31EAC* anim = &g_UnkAnimation_31EAC[index];
+    s32 charIdx = g_Minigame.players.fielderRosterIDs[index - 2];
+    s16 animID = g_hugeAnimStruct.AnimationStructPtrs[charIdx]->animID;
+    s16 timer = g_Minigame._1B34[charIdx];
+
+    if (timer < 0) {
+        if (animID == 0x1D || animID == 0x1F) {
+            AnimateCharacter(charIdx, 0, 1, 3, 0, 0, anim->unk40, -1);
+        }
+        return FALSE;
+    }
+    if (timer == 0) {
+        if ((s32)g_Minigame._1C92[charIdx] == 3) {
+            AnimateCharacter(charIdx, 0x1F, 0, 3, 0, 0, anim->unk40, -1);
+        } else {
+            AnimateCharacter(charIdx, 0x1D, 0, 3, 0, 0, anim->unk40, -1);
+        }
+    }
+    return TRUE;
 }
 
 // .text:0x00060E90 size:0x2B8 mapped:0x8069FF24
