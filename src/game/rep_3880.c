@@ -901,17 +901,36 @@ void fn_3_153E8C(ListNode_14B9F0* node, VecXYZ* pos, u8 arg2, u8 arg3, u8 arg4) 
 }
 
 // .text:0x00153F8C size:0x158 mapped:0x80793020
-void fn_3_153F8C(void) {
+void fn_3_153F8C(struct Struct_800339F0_Result* obj, s32 arg1, s32 arg2, Vec* arg3) {
     return;
 }
 
 // .text:0x001540E4 size:0xE0 mapped:0x80793178
-void fn_3_1540E4(void* arg0, void* arg1, void* arg2) {
-    return;
+void fn_3_1540E4(s32 arg0, s32 arg1, Vec* arg2) {
+    struct Struct_800339F0_Result* obj;
+    ListNode_14B9F0* node;
+
+    obj = fn_800339F0(0, 0x1C);
+    if (obj != NULL) {
+        fn_3_153F8C(obj, arg0, arg1, arg2);
+        return;
+    }
+    obj = (struct Struct_800339F0_Result*)fn_80033A24(fn_3_151F2C, 0x80, 0, lbl_3_data_26BDC.unk0 * 15, 1, 0x1C);
+    if (obj != NULL) {
+        node = obj->listHead;
+        do {
+            node->field_0x4A = 0;
+            node->field_0x4C = 0;
+            node->field_0x4F = 0xFF;
+            node = node->next;
+        } while (node != NULL);
+        fn_3_153F8C(obj, arg0, arg1, arg2);
+        memset(lbl_3_bss_B894, 0, 0xF);
+    }
 }
 
 // .text:0x001541C4 size:0x50 mapped:0x80793258
-void fn_3_1541C4(void* arg0, void* arg1, void* arg2) {
+void fn_3_1541C4(s32 arg0, s32 arg1, Vec* arg2) {
     if (g_d_GameSettings.GameModeSelected == GAME_TYPE_MINIGAMES &&
         g_Minigame.GameMode_MiniGame == 4 &&
         arg2 != NULL) {
