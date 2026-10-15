@@ -105,7 +105,7 @@ void fn_3_39EB0(void);
 void fn_3_3A1FC(s32 index);
 void fn_3_3A234(void);
 void fn_3_3A584(void);
-void fn_3_3AAF8(void);
+void fn_3_3AAF8(s32 fielderIdx);
 void fn_3_3ABF0(void);
 void fn_3_3ACC0(void);
 void fn_3_3AE34(void);

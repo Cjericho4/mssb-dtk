@@ -624,8 +624,32 @@ void fn_3_3A584(void) {
 }
 
 // .text:0x0003AAF8 size:0xF8 mapped:0x80679B8C
-void fn_3_3AAF8(void) {
-    return;
+void fn_3_3AAF8(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    s32 v = lbl_3_bss_170[0];
+
+    if (g_FieldingLogic.unk10E) {
+        v = -1;
+    }
+    f->unk19E = v;
+    if (!g_GameLogic.autoFielding[g_GameLogic.awayTeamBattingInd_battingTeam] && v >= 0 && f->unk1A0 > 10) {
+        g_FieldingLogic.unkCC = -1;
+    }
+    if (v < 0) {
+        return;
+    }
+    if (g_FieldingLogic.unk70->unk1A == 3) {
+        return;
+    }
+    if (g_FieldingLogic.unk70->unk1A == 4) {
+        return;
+    }
+    if (g_FieldingLogic.unk14A & 0x200) {
+        g_FieldingLogic.unk70->unkC = 0;
+    }
+    if (ACTIVE_TUTORIAL && g_Practice.practice_fielding_enableSprinting) {
+        g_FieldingLogic.unk70->unkC = 0;
+    }
 }
 
 // .text:0x0003ABF0 size:0xD0 mapped:0x80679C84

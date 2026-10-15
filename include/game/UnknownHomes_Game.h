@@ -548,7 +548,11 @@ typedef struct FieldingTarget {
     /* 0x03 */ u8  _pad3[3];
 } FieldingTarget; // size: 0x6
 typedef struct FieldingLogicEntry {
-    /* 0x00 */ u8 _pad0[0x1C];
+    /* 0x00 */ u8 _pad0[0xC];
+    /* 0x0C */ s16 unkC;
+    /* 0x0E */ u8 _padE[0x1A - 0xE];
+    /* 0x1A */ u8 unk1A;
+    /* 0x1B */ u8 _pad1B;
 } FieldingLogicEntry; // size: 0x1C
 typedef struct FieldingLogic {
     /* 0x00 */ FieldingLogicEntry entries[4];
@@ -563,7 +567,9 @@ typedef struct FieldingLogic {
     /* 0xBC */ s16 unkBC;
     /* 0xBE */ u8 _pad1aa[0xC4 - 0xBE];
     /* 0xC4 */ s16 unkC4;
-    /* 0xC6 */ u8 _pad1b[0xD8 - 0xC6];
+    /* 0xC6 */ u8 _pad1b[0xCC - 0xC6];
+    /* 0xCC */ s16 unkCC;
+    /* 0xCE */ u8 _padCE[0xD8 - 0xCE];
     /* 0xD8 */ s16 unkD8;
     /* 0xDA */ u8 _pad1bb[0xF8 - 0xDA];
     /* 0xF8 */ u8 unk_F8[9];
@@ -575,7 +581,8 @@ typedef struct FieldingLogic {
     /* 0x109 */ u8 _pad109[0x10C - 0x109];
     /* 0x10C */ u8 unk10C;
     /* 0x10D */ u8 unk10D;
-    /* 0x10E */ u8 _pad1c[0x110 - 0x10E];
+    /* 0x10E */ u8 unk10E;
+    /* 0x10F */ u8 _pad1c;
     /* 0x110 */ u8 unk110;
     /* 0x111 */ u8 _pad111[0x113 - 0x111];
     /* 0x113 */ u8 unk113;
@@ -2188,7 +2195,10 @@ typedef struct Fielder {
     /* 0x17E */ s16 unk17E;
     /* 0x180 */ u8 _pad180[0x18C - 0x180];
     /* 0x18C */ s16 unk18C;
-    /* 0x18E */ u8 _pad18E[0x1A4 - 0x18E];
+    /* 0x18E */ u8 _pad18E[0x19E - 0x18E];
+    /* 0x19E */ s16 unk19E;
+    /* 0x1A0 */ s16 unk1A0;
+    /* 0x1A2 */ u8 _pad1A2[0x1A4 - 0x1A2];
     /* 0x1A4 */ s16 unk1A4;
     /* 0x1A6 */ u8 _pad1a[0x1AC - 0x1A6];
     /* 0x1AC */ s16 unk1AC;
