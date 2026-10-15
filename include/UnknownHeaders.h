@@ -106,7 +106,9 @@ typedef struct AnimationStruct {
     void* funcPtr_0x5c; /* 0x5C - function pointer */
     u8 _rest60[0x2];
     s16 animID;         /* 0x62 */
-    u8 _rest64[0x1EE];
+    u8 _rest64[0x162 - 0x64];
+    u16 boneIndices[8]; /* 0x162 */
+    u8 _rest172[0x252 - 0x172];
     s8 unk252;          /* 0x252 */
     u8 _rest253;
     s8 unk254;          /* 0x254 */
@@ -204,6 +206,8 @@ typedef struct AnimLevel1 {
     /* 0x98 */ u8    animFlags;
     /* 0x99 */ u8    _pad2[0xD2 - 0x99];
 } AnimLevel1; 
+AnimLevel1** fn_800111D8(AnimationStruct* anim);
+void fn_800B2C44(AnimLevel1* model, u16 bone, VecXYZ* out);
 
 typedef struct HugeAnimEntry2D94 {
     // Not confident of these

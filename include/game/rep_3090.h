@@ -139,7 +139,7 @@ void fn_3_105CDC(void);
 void fn_3_105E00(void);
 void fn_3_106014(f32 x, f32 y, f32 z);
 void fn_3_1060D8(void);
-void fn_3_10617C(void);
+BOOL fn_3_10617C(s32 animIdx, s32 bone, VecXYZ* out);
 void fn_3_106270(void);
 u32 fn_3_10698C(u32* list);
 void* fn_3_1069B0(void* base, s32 index);

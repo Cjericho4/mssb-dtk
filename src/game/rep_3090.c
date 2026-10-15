@@ -453,8 +453,28 @@ void fn_3_1060D8(void) {
 }
 
 // .text:0x0010617C size:0xF4 mapped:0x80745210
-void fn_3_10617C(void) {
-    return;
+BOOL fn_3_10617C(s32 animIdx, s32 bone, VecXYZ* out) {
+    AnimationStruct* anim = g_hugeAnimStruct.AnimationStructPtrs[animIdx];
+    VecXYZ pos;
+
+    if (anim == NULL) {
+        return FALSE;
+    }
+    bone = anim->boneIndices[bone];
+    if (bone == 0xFFFF) {
+        out->x = 0.0f;
+        out->y = 0.0f;
+        out->z = 0.0f;
+        return FALSE;
+    }
+    fn_800B2C44(*fn_800111D8(anim), bone, &pos);
+    out->x = pos.x;
+    out->y = pos.y;
+    out->z = pos.z;
+    out->x += anim->unk34.x;
+    out->y += anim->unk34.y;
+    out->z += anim->unk34.z;
+    return TRUE;
 }
 
 // .text:0x00106270 size:0x71C mapped:0x80745304
