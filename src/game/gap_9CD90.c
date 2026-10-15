@@ -49,7 +49,19 @@ void fn_3_9D594(void) {
 
 // .text:0x0009D600 size:0xA4 mapped:0x806DC694
 void fn_3_9D600(void) {
-    return;
+    if (g_Pitcher.strikeOutOrWalk == 1) {
+        if (g_Batter.missedBuntStatus != 0) {
+            lbl_3_common_bss_32A94.unk2 = 0x26;
+        } else if (g_Batter.missSwingOrBunt != 0) {
+            lbl_3_common_bss_32A94.unk2 = 0x24;
+        } else {
+            lbl_3_common_bss_32A94.unk2 = 0x25;
+        }
+    } else if (g_Pitcher.strikeOutOrWalk == 2) {
+        lbl_3_common_bss_32A94.unk2 = 0x2A;
+    } else if (g_Pitcher.strikeOutOrWalk == 3) {
+        lbl_3_common_bss_32A94.unk0 = 0x2B;
+    }
 }
 
 // .text:0x0009D6A4 size:0x4B8 mapped:0x806DC738
