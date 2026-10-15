@@ -39,7 +39,8 @@ void fn_3_B93CC(void);
 void fn_3_B950C(void);
 void fn_3_B9510(int);
 void fn_3_B9524(void);
-void fn_3_B9534(void);
+struct _GXTexObj;
+u8* fn_3_B9534(s32 width, s32 height, struct _GXTexObj* texObj);
 void fn_3_B95EC(void);
 void fn_3_B97C8(struct StadiumObject*);
 typedef struct ActorAnimState {

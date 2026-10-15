@@ -4,6 +4,7 @@
 #include "header_rep_data.h"
 #include "stl/math.h"
 #include "game/m_sound.h"
+#include "Dolphin/GX/GXTexture.h"
 
 extern f32 lbl_3_data_11178[5];
 
@@ -11,6 +12,7 @@ extern f32 lbl_3_data_11178[5];
 
 static struct StadiumObject* lbl_3_bss_190C;
 static u8 lbl_3_bss_1902;
+static u8 lbl_3_bss_1940[0x8000];
 static struct StadiumObject* lbl_3_bss_9940;
 
 // .text:0x000B7FC8 size:0x108 mapped:0x806F705C
@@ -224,8 +226,14 @@ void fn_3_B9524(void) {
 }
 
 // .text:0x000B9534 size:0xB8 mapped:0x806F85C8
-void fn_3_B9534(void) {
-    return;
+u8* fn_3_B9534(s32 width, s32 height, GXTexObj* texObj) {
+    if (lbl_3_bss_1902 != 0 || texObj == NULL) {
+        return NULL;
+    }
+    lbl_3_bss_1902 = 1;
+    GXInitTexObj(texObj, lbl_3_bss_1940, width, height, GX_TF_IA8, GX_REPEAT, GX_REPEAT, GX_FALSE);
+    GXInitTexObjLOD(texObj, GX_LINEAR, GX_LINEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
+    return lbl_3_bss_1940;
 }
 
 // .text:0x000B95EC size:0x1DC mapped:0x806F8680
