@@ -3,6 +3,8 @@
 #include "UnknownHeaders.h"
 #include "game/rep_1D58.h"
 #include "game/rep_3448.h"
+#include "game/rep_AC8.h"
+#include "game/particle_spawn.h"
 
 extern f32 lbl_3_rodata_21F0;
 extern u32 lbl_3_bss_9D84;
@@ -399,8 +401,30 @@ void fn_3_C597C(void) {
 }
 
 // .text:0x000C5CE0 size:0xFC mapped:0x80704D74
-void fn_3_C5CE0(void) {
-    return;
+typedef struct C5CE0Arg {
+    u8 _pad0[0x9C];
+    Vec pos; /* 0x9C */
+} C5CE0Arg;
+
+// .text:0x000C5CE0 size:0xFC mapped:0x80704D74
+BOOL fn_3_C5CE0(C5CE0Arg* arg0) {
+    VecXYZ fpos = {0.0f, 0.0f, 0.0f};
+    Vec diff;
+    u32 i;
+
+    if (g_GameLogic.gameStatus == 2 && g_GameLogic.playOver != 0) {
+        return FALSE;
+    }
+    for (i = 0; i < 9; i++) {
+        memset(&fpos, 0, sizeof(fpos));
+        fn_8001B728(i, 4, &fpos);
+        PSVECSubtract((Vec*)&fpos, &arg0->pos, &diff);
+        if (PSVECMag(&diff) <= 2.6f) {
+            fn_3_25844(i, 1);
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 // .text:0x000C5DDC size:0x480 mapped:0x80704E70

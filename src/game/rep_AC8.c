@@ -19,7 +19,7 @@ void fn_3_25648(void) {
 }
 
 // .text:0x00025844 size:0x94 mapped:0x806648D8
-void fn_3_25844(void) {
+void fn_3_25844(s32 fielderIdx, s32 arg1) {
     return;
 }
 
