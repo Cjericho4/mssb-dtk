@@ -777,7 +777,38 @@ void fn_3_11CF84(void) {
 
 // .text:0x0011D1B0 size:0x118 mapped:0x8075C244
 void fn_3_11D1B0(void) {
-    return;
+    s32 i;
+
+    switch (g_Minigame.GameMode_MiniGame) {
+    case 1:
+        fn_3_11CD00();
+        break;
+    case 2:
+        fn_3_11C5F8();
+        break;
+    case 3:
+        fn_3_11C2CC();
+        break;
+    case 4:
+        fn_3_11C02C();
+        break;
+    case 6:
+        fn_3_11BBA4();
+        break;
+    case 5:
+        fn_3_11B75C();
+        break;
+    }
+    for (i = 0; i < g_hugeAnimStruct.field268_0x3078; i++) {
+        ((StadiumObjEntry*)g_hugeAnimStruct.entries_2D94)[i].pos.x = 0.0f;
+        ((StadiumObjEntry*)g_hugeAnimStruct.entries_2D94)[i].pos.y = 0.0f;
+        ((StadiumObjEntry*)g_hugeAnimStruct.entries_2D94)[i].pos.z = 0.0f;
+        ((StadiumObjEntry*)g_hugeAnimStruct.entries_2D94)[i].rot.x = 0.0f;
+        ((StadiumObjEntry*)g_hugeAnimStruct.entries_2D94)[i].rot.y = 0.0f;
+        ((StadiumObjEntry*)g_hugeAnimStruct.entries_2D94)[i].rot.z = 0.0f;
+        ((StadiumObjEntry*)g_hugeAnimStruct.entries_2D94)[i].visible = 0;
+        ((StadiumObjEntry*)g_hugeAnimStruct.entries_2D94)[i].func = NULL;
+    }
 }
 
 // .text:0x0011D2C8 size:0xE4 mapped:0x8075C35C
