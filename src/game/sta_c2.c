@@ -199,8 +199,17 @@ void fn_3_CFA8C(ActorObject* actor) {
 }
 
 // .text:0x000CFAB4 size:0x90 mapped:0x8070EB48
-void fn_3_CFAB4(void) {
-    return;
+void fn_3_CFAB4(StaC2Effect* effect, StaC2EffectParent* parent) {
+    StaC2EffectScaleSrc* src = parent->owner->scaleSrc;
+
+    effect->pos.x = effect->basePos.x;
+    effect->pos.y = effect->basePos.y;
+    effect->pos.z = effect->basePos.z;
+    effect->scaleX = effect->scaleY = 3.0 * src->scale;
+    effect->colorR = effect->colorG = effect->colorB = 0xFF;
+    effect->alpha = 255.0 * src->scale;
+    effect->duration = 30;
+    effect->timer = 0;
 }
 
 // .text:0x000CFB44 size:0x214 mapped:0x8070EBD8

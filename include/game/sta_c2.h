@@ -34,6 +34,38 @@ typedef struct StaC2D24E8Arg {
     Vec field_0xA0;
 } StaC2D24E8Arg;
 
+typedef struct StaC2EffectScaleSrc {
+    u8 _pad0[0xBC];
+    f32 scale; /* 0xBC */
+} StaC2EffectScaleSrc;
+
+typedef struct StaC2EffectOwner {
+    u8 _pad0[0xA4];
+    StaC2EffectScaleSrc* scaleSrc; /* 0xA4 */
+} StaC2EffectOwner;
+
+typedef struct StaC2EffectParent {
+    u8 _pad0[0x20];
+    StaC2EffectOwner* owner; /* 0x20 */
+} StaC2EffectParent;
+
+typedef struct StaC2Effect {
+    u8 _pad0[0x4];
+    Vec pos;           /* 0x04 */
+    u8 _pad10[0xC];
+    Vec basePos;       /* 0x1C */
+    u8 _pad28[0x10];
+    f32 scaleX;        /* 0x38 */
+    f32 scaleY;        /* 0x3C */
+    u8 colorR;         /* 0x40 */
+    u8 colorG;         /* 0x41 */
+    u8 colorB;         /* 0x42 */
+    u8 alpha;          /* 0x43 */
+    u8 _pad44[0x4];
+    s16 timer;         /* 0x48 */
+    s16 duration;      /* 0x4A */
+} StaC2Effect;
+
 void fn_3_CB8A8(void);
 void fn_3_CBA9C(ActorObject* arg0);
 void fn_3_CBAFC(void);
@@ -68,7 +100,7 @@ void fn_3_CF92C(void);
 void fn_3_CF930(void);
 void fn_3_CFA88(void);
 void fn_3_CFA8C(ActorObject* actor);
-void fn_3_CFAB4(void);
+void fn_3_CFAB4(StaC2Effect* effect, StaC2EffectParent* parent);
 void fn_3_CFB44(void);
 void fn_3_CFD58(void);
 void fn_3_D00CC(void);
