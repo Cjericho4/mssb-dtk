@@ -1,4 +1,8 @@
 #include "game/gap_5985C.h"
+#include "game/rep_1188.h"
+#include "game/rep_868.h"
+#include "game/rep_540.h"
+#include "game/game_batter.h"
 
 // .text:0x0005985C size:0x74 mapped:0x806988F0
 void fn_3_5985C(s32 idx, s32 arg1) {
@@ -398,7 +402,18 @@ void fn_3_5F3FC(void) {
 
 // .text:0x0005F720 size:0x88 mapped:0x8069E7B4
 void fn_3_5F720(void) {
-    return;
+    fn_3_F1DC();
+    fn_3_751B4();
+    setDefaultInMemBatter();
+    fn_3_8913C();
+    fn_3_58870();
+    fn_3_1DEB8();
+    Set_803cb848(1);
+    fn_3_6EBB4(g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][0][0]);
+    g_FieldingLogic.unkAE = 0;
+    g_GameLogic.homeRunWordAnimationCompletedInd = 0;
+    g_UnkSimulation_31AC0.unk5 = 0;
+    g_UnkSimulation_31AC0.unk6 = 4;
 }
 
 // .text:0x0005F7A8 size:0x188 mapped:0x8069E83C
