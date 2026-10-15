@@ -238,8 +238,69 @@ void fn_3_C3E94(Vec* pos, s32 idx) {
 }
 
 // .text:0x000C3F70 size:0xF8 mapped:0x80703004
-void fn_3_C3F70(void) {
-    return;
+typedef struct C3F70Elem {
+    u8 type;       /* 0x00 */
+    u8 _pad1[0x3];
+    u32 flags;     /* 0x04 */
+    u8 _pad8[0x8];
+} C3F70Elem;       /* size 0x10 */
+
+typedef struct C3F70List {
+    u8 _pad0[0x4];
+    C3F70Elem* elems; /* 0x04 */
+    u16 count;        /* 0x08 */
+} C3F70List;
+
+typedef struct C3F70Part {
+    u8 _pad0[0x10];
+    C3F70List* list; /* 0x10 */
+} C3F70Part;
+
+typedef struct C3F70Node {
+    u8 _pad0[0x14];
+    C3F70Part* part; /* 0x14 */
+} C3F70Node;
+
+typedef struct C3F70Model {
+    u8 _pad0[0x6];
+    u16 nodeCount;      /* 0x06 */
+    u8 _pad8[0x10];
+    C3F70Node** nodes;  /* 0x18 */
+} C3F70Model;
+
+extern u32 lbl_3_bss_9D88;
+extern u16 lbl_3_data_177F0;
+
+// .text:0x000C3F70 size:0xF8 mapped:0x80703004
+void fn_3_C3F70(ActorObject* arg0) {
+    C3F70Model* model = arg0->wrapper->boneData;
+    C3F70Part* part;
+    u32 i;
+    u32 j;
+    C3F70Elem* e;
+
+    if (lbl_3_bss_9D88++ > 4) {
+        lbl_3_data_177F0++;
+        if (lbl_3_data_177F0 > 0x13) {
+            lbl_3_data_177F0 = 4;
+        }
+        lbl_3_bss_9D88 = 0;
+    }
+    if (lbl_3_bss_9D88 == 0) {
+        for (i = 0; i < model->nodeCount; i++) {
+            part = model->nodes[i]->part;
+            if (part != NULL) {
+                e = part->list->elems;
+                for (j = 0; j < part->list->count; j++) {
+                    if (e->type == 1) {
+                        e->flags &= ~0x1FFF;
+                        e->flags |= lbl_3_data_177F0;
+                    }
+                    e++;
+                }
+            }
+        }
+    }
 }
 
 // .text:0x000C4068 size:0x84 mapped:0x807030FC
