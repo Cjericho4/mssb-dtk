@@ -650,7 +650,7 @@ typedef struct CommonBss_35154 {
     /* 0x41C */ f32 unk_41C;
     /* 0x420 */ f32 unk_420;
     /* 0x424 */ f32 unk_424;
-    /* 0x428 */ u8 _pad_end[0xC];
+    /* 0x428 */ VecXYZ unk_428;
     /* 0x434 */ f32 unk_434;
     /* 0x438 */ f32 unk_438;
     /* 0x43C */ f32 unk_43C;

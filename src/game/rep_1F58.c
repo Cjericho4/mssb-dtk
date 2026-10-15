@@ -111,7 +111,7 @@ void fn_3_C11CC(s32 arg0, s32 arg1) {
 }
 
 // .text:0x000C1344 size:0x42C mapped:0x807003D8
-void fn_3_C1344(void) {
+void fn_3_C1344(s32 arg0, BOOL arg1, f32 arg2, f32 arg3) {
     return;
 }
 

@@ -13,7 +13,7 @@ void fn_3_C0DD8(void);
 void fn_3_C0F8C(void);
 void fn_3_C1004(void);
 void fn_3_C11CC(s32 arg0, s32 arg1);
-void fn_3_C1344(void);
+void fn_3_C1344(s32 arg0, BOOL arg1, f32 arg2, f32 arg3);
 void fn_3_C1770(int arg0);
 
 #endif // !__GAME_rep_1F58_H_

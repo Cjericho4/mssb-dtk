@@ -1,4 +1,5 @@
 #include "game/rep_2308.h"
+#include "UnknownHeaders.h"
 #include "game/rep_1F58.h"
 #include "game/UnknownHomes_Game.h"
 #include "static/UnknownHomes_Static.h"
@@ -20,8 +21,23 @@ void fn_3_CAF9C(void) {
 }
 
 // .text:0x000CB1B0 size:0x84 mapped:0x8070A244
-void fn_3_CB1B0(void) {
-    return;
+void fn_3_CB1B0(s32 index, u8 arg1, s32 arg2) {
+    u32 mask;
+    AnimationStruct* anim;
+
+    if (g_d_GameSettings.GameModeSelected != GAME_TYPE_MINIGAMES ||
+        (g_Minigame.GameMode_MiniGame != 1 && g_Minigame.GameMode_MiniGame != 3)) {
+        if (arg2 == 0x23) {
+            lbl_3_common_bss_35154.unk_467 = arg1;
+            anim = g_hugeAnimStruct.AnimationStructPtrs[index];
+            mask = lbl_3_common_bss_35154.bitfield;
+            mask |= 0x10;
+            lbl_3_common_bss_35154.unk_428.x = anim->unk34.x;
+            lbl_3_common_bss_35154.unk_428.y = -anim->unk34.y;
+            lbl_3_common_bss_35154.unk_428.z = anim->unk34.z;
+            lbl_3_common_bss_35154.bitfield = mask;
+        }
+    }
 }
 
 // .text:0x000CB234 size:0x50 mapped:0x8070A2C8
@@ -33,7 +49,7 @@ void fn_3_CB234(s32 arg0, s32 arg1) {
 }
 
 // .text:0x000CB284 size:0xC0 mapped:0x8070A318
-void fn_3_CB284(void) {
+void fn_3_CB284(s32 index, s32 arg1, f32 arg2) {
     return;
 }
 

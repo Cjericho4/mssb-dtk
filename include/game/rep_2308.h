@@ -6,8 +6,8 @@
 void fn_3_CABF0(void);
 void fn_3_CAE00(void);
 void fn_3_CAF9C(void);
-void fn_3_CB1B0(void);
+void fn_3_CB1B0(s32 index, u8 arg1, s32 arg2);
 void fn_3_CB234(s32 arg0, s32 arg1);
-void fn_3_CB284(void);
+void fn_3_CB284(s32 index, s32 arg1, f32 arg2);
 
 #endif // !__GAME_rep_2308_H_
