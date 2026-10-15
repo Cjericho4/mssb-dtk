@@ -46,6 +46,8 @@ void fn_3_13583C(void);
 void fn_3_135924(void);
 void fn_3_135A64(void);
 void fn_3_135C18(void);
+extern s16 lbl_3_data_21A60;
+extern s16 lbl_3_data_21B8C[4];
 void fn_3_135E38(void);
 void fn_3_135E98(void);
 void fn_3_135F4C(void);
