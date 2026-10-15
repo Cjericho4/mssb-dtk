@@ -164,8 +164,23 @@ void fn_3_150C0(void) {
 }
 
 // .text:0x00015144 size:0xDC mapped:0x806541D8
-void fn_3_15144(void) {
-    return;
+void fn_3_15144(s32 arg0) {
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        if (g_Runners[i].runnerOnFieldOrOutOrScored != 1 && g_Runners[i].runnerOnFieldOrOutOrScored != 2 &&
+            g_Runners[i].runnerOnFieldOrOutOrScored != 4) {
+            return;
+        }
+        if (g_Runners[i].groundVelocity[0] > 0.0f &&
+            (s32)g_Runners[i].fractionalBasesRan > (s32)g_Runners[i].fractionalBasesRan_stored) {
+            if (arg0 == 0) {
+                g_pCamera->unkABB[i] = 1;
+            } else if (g_pCamera->unkABB[i] == 0) {
+                g_pCamera->unkA84[i] = g_Stats.unk24;
+            }
+        }
+    }
 }
 
 // .text:0x00015220 size:0x5C mapped:0x806542B4

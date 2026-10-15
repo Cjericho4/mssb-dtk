@@ -19,7 +19,7 @@ void fn_3_14F68(void);
 void fn_3_14FC8(void);
 void fn_3_15004(void);
 void fn_3_150C0(void);
-void fn_3_15144(void);
+void fn_3_15144(s32 arg0);
 void fn_3_15220(s32 arg0);
 void fn_3_1527C(s32 arg0);
 void fn_3_152E8(s32 arg0);
