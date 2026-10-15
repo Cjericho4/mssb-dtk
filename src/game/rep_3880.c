@@ -345,8 +345,29 @@ void fn_3_14CAB4(s8 arg0) {
 }
 
 // .text:0x0014CB28 size:0x8C mapped:0x8078BBBC
-void fn_3_14CB28(void) {
-    return;
+static inline void fn_3_14CB28_inline(s8 arg0) {
+    struct Struct_800339F0_Result* result;
+    UnknownStruct_14CA98* node;
+
+    result = fn_800339F0(0, 0x20);
+    if (result != NULL) {
+        node = (UnknownStruct_14CA98*)result->listHead;
+        do {
+            if (node->field_0x45 == arg0) {
+                node->field_0x44 = 0;
+                node->field_0x45 = 0xFF;
+                node->field_0x4A = 0;
+                node->field_0x4C = 0;
+            }
+            node = node->next;
+        } while (node != NULL);
+    }
+}
+void fn_3_14CB28(s8 arg0) {
+    if (arg0 >= 15 || arg0 < 0) {
+        return;
+    }
+    fn_3_14CB28_inline(arg0);
 }
 
 // .text:0x0014CBB4 size:0x18C mapped:0x8078BC48

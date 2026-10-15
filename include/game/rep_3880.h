@@ -122,7 +122,7 @@ void fn_3_14C904(void);
 void fn_3_14CA00(void);
 void fn_3_14CA98(UnknownStruct_14CA98* obj);
 void fn_3_14CAB4(s8 arg0);
-void fn_3_14CB28(void);
+void fn_3_14CB28(s8 arg0);
 void fn_3_14CBB4(void);
 void fn_3_14CD40(void);
 void fn_3_14CECC(void);
