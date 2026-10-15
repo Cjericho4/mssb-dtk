@@ -7,7 +7,6 @@
 #include <math.h>
 
 extern void changeScene(s32, s32);
-extern u8 lbl_3_data_21278[2];
 
 // .text:0x00133200 size:0x120 mapped:0x80772294
 void fn_3_133200(void) {
@@ -514,13 +513,13 @@ void fn_3_13BBF4(void) {
 
     switch (gl->_125) {
     case 0:
-        fn_3_10F550(2, lbl_3_data_21278[0]);
+        fn_3_10F550(2, lbl_3_data_21278.unk0);
         changeScene(1, 6);
         g_GameLogic.FrameCountOfCurrentAtBat_Copy = 0;
         gl->_125 = 1;
         break;
     case 1:
-        if (gl->FrameCountOfCurrentAtBat_Copy > lbl_3_data_21278[0] + lbl_3_data_21278[1]) {
+        if (gl->FrameCountOfCurrentAtBat_Copy > lbl_3_data_21278.unk0 + lbl_3_data_21278.unk1) {
             gl->_125 = 2;
         }
         break;
