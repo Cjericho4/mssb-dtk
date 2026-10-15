@@ -114,8 +114,17 @@ s32 fn_3_EF7B4(EF55C_Arg* arg0) {
 }
 
 // .text:0x000EF800 size:0x90 mapped:0x8072E894
-void fn_3_EF800(void) {
-    return;
+void fn_3_EF800(StaC5PlacedObj* obj) {
+    if (obj->blinkTimer == 0) {
+        CTRLSetTranslation(&obj->control, obj->pos.x, 100.0f, obj->pos.z);
+    } else {
+        if (obj->blinkTimer % 6 == 0) {
+            obj->flag90_7 = 0;
+        } else {
+            obj->flag90_7 = 1;
+        }
+        obj->blinkTimer--;
+    }
 }
 
 // .text:0x000EF890 size:0xA0 mapped:0x8072E924

@@ -5,6 +5,19 @@
 #include "game/UnknownHomes_Game.h"
 #include "C3/control.h"
 
+typedef struct StaC5PlacedObj {
+    /* 0x00 */ Control control;
+    /* 0x3C */ u8 _pad3C[0x90 - 0x3C];
+    /* 0x90 */ u8 flag90_7 : 1;
+    /* 0x90 */ u8 flag90_rest : 7;
+    /* 0x91 */ u8 _pad91[0xA0 - 0x91];
+    /* 0xA0 */ VecXYZ pos;
+    /* 0xAC */ u8 _padAC[0xB4 - 0xAC];
+    /* 0xB4 */ f32 rotY;
+    /* 0xB8 */ u8 _padB8[0xC7 - 0xB8];
+    /* 0xC7 */ u8 blinkTimer;
+} StaC5PlacedObj;
+
 typedef struct {
     s32 x;
     s32 y;
@@ -61,7 +74,7 @@ void fn_3_EF3D4(UnknownStruct_EF3D4* arg0, u32 index);
 void fn_3_EF408(void);
 u8 fn_3_EF55C(EF55C_Arg* arg0);
 s32 fn_3_EF7B4(EF55C_Arg* arg0);
-void fn_3_EF800(void);
+void fn_3_EF800(StaC5PlacedObj* obj);
 void fn_3_EF890(void);
 void fn_3_EF930(void);
 void fn_3_EFB54(void);
@@ -86,14 +99,6 @@ void fn_3_F31E0(void);
 void fn_3_F37BC(void);
 void fn_3_F38D4(void);
 void fn_3_F3A04(OuterStruct_F13F8* arg0);
-typedef struct StaC5PlacedObj {
-    /* 0x00 */ Control control;
-    /* 0x3C */ u8 _pad3C[0xA0 - 0x3C];
-    /* 0xA0 */ VecXYZ pos;
-    /* 0xAC */ u8 _padAC[0xB4 - 0xAC];
-    /* 0xB4 */ f32 rotY;
-} StaC5PlacedObj;
-
 void fn_3_F3A5C(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY);
 void fn_3_F3AE0(void);
 void fn_3_F3BB0(void);
