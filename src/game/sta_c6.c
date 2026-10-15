@@ -163,7 +163,7 @@ void fn_3_E671C(Arg0_E6798* arg0) {
 
 // .text:0x000E6798 size:0x5C mapped:0x8072582C
 void fn_3_E6798(Arg0_E6798* arg0) {
-    u8* flags = &lbl_3_data_196B4;
+    u8* flags = lbl_3_data_196B4;
     int i = 0;
     NodeArray_E6798* nodeArr = arg0->unk74->unk0;
     for (; i < 7; i++) {
@@ -187,8 +187,27 @@ void fn_3_E68A8(void) {
 }
 
 // .text:0x000E698C size:0xBC mapped:0x80725A20
-void fn_3_E698C(void) {
-    return;
+static inline f32 getBoneFrame(ActorObject* actor, void** outBoneData) {
+    void* boneData = actor->wrapper->boneData;
+    *outBoneData = boneData;
+    return fn_800B4C40(boneData);
+}
+
+void fn_3_E698C(ActorObject* arg0) {
+    void* boneData;
+    f32 frame;
+    u8 idx;
+
+    frame = getBoneFrame(arg0, &boneData);
+    idx = arg0->field_0xc1 - 0x10;
+
+    if (lbl_3_data_196B4[idx] == 0) {
+        fn_800B4CA0(boneData, lbl_3_rodata_2BA4);
+        AnimateActorBones(boneData);
+    }
+    if (lbl_3_data_196B4[idx] != 0 && frame <= lbl_3_rodata_2BA0) {
+        AnimateActorBones(boneData);
+    }
 }
 
 // .text:0x000E6A48 size:0x348 mapped:0x80725ADC

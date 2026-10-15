@@ -120,7 +120,7 @@ typedef struct {
     Inner_E5E14* unk4;  // +0x04
 } Arg0_E5E14;
 
-extern u8 lbl_3_data_196B4;
+extern u8 lbl_3_data_196B4[];
 extern u8 lbl_3_data_19024;
 extern u8 lbl_3_data_1963F;
 extern u8 lbl_3_data_19640;
@@ -129,6 +129,7 @@ extern f32 lbl_3_rodata_2B94;
 extern f32 lbl_3_rodata_2B98;
 extern f32 lbl_3_rodata_2B9C;
 extern f32 lbl_3_rodata_2BA0;
+extern f32 lbl_3_rodata_2BA4;
 f32 fn_800B4C40(void *boneData);
 void fn_800B4CA0(void *boneData, f32 val);
 void fn_3_E59B4(ActorObject *arg0);
@@ -148,7 +149,7 @@ void fn_3_E671C(Arg0_E6798* arg0);
 void fn_3_E6798(Arg0_E6798* arg0);
 void fn_3_E67F4(void);
 void fn_3_E68A8(void);
-void fn_3_E698C(void);
+void fn_3_E698C(ActorObject* arg0);
 void fn_3_E6A48(void);
 void fn_3_E6D90(void);
 void fn_3_E7350(void);
