@@ -276,8 +276,27 @@ void fn_3_750C4(s8 value) {
 }
 
 // .text:0x000750DC size:0xD8 mapped:0x806B4170
-void fn_3_750DC(void) {
-    return;
+typedef struct {
+    u8 highLevelSimulationFlag;
+    u8 _1;
+} HighLevelSimulation_1200;
+extern HighLevelSimulation_1200 lbl_803CBC3C;
+BOOL fn_8001C920(s16 charID);
+
+BOOL fn_3_750DC(void) {
+    s16 charID = inMemRoster[g_GameLogic.teamFielding][g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][0][0]].stats.CharID;
+
+    if (g_d_GameSettings.GameModeSelected == 2 && g_Practice.practiceType_2 != 4) {
+        charID = g_Pitcher.charID;
+    }
+    if (lbl_3_common_bss_32724.unk9C == 0) {
+        lbl_803CBC3C._1 = 0;
+        lbl_3_common_bss_32724.unk9C = 1;
+    }
+    if (lbl_3_common_bss_32724.unk9C == 1 && fn_8001C920(charID)) {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x000751B4 size:0x234 mapped:0x806B4248
