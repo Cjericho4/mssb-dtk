@@ -78,6 +78,17 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Shared tail block placed before `return FALSE`**: `if (c) { switch {... case 3: goto done;} } else { done: ...; return TRUE; } return FALSE;` (fn_3_B254C).
 *   **`slwi` without `clrlslwi` indexing by a u16**: `(&arr[idx])[1]` rather than `arr[idx + 1]` (fn_3_91B9C).
 *   **`try_function.py` candidates**: omit the `// .text:` comment line (it duplicates); don't `git checkout` a file mid-iteration (wipes added includes).
+*   **Block order from branch shape**: nest as `if (a >= 0) { if (!b) {...; return;} } else {...; return;}` instead of an if/else chain (fn_3_B6C9C); moving a local's declaration into the else block delays its initialiser (fn_3_E3668).
+*   **Load of `next` before a trailing call**: `bone = bone->next; GXSetTevDirect(..)` in the body, not in the `for` increment (fn_3_EEE3C).
+*   **Swapped `fcmpo` with `cror eq,gt,eq`**: `2.5 >= PSVECMag(&v)` instead of `PSVECMag(&v) <= 2.5` (fn_3_E28DC).
+*   **Switch case source order** flips `beq`/`b` block order even for identical bodies (fn_3_E7A2C).
+*   **Stray `extsh r3` before `bl`**: callee param is s16. `cmplwi` against 0 on an int field: field is u32. `li r0,-1` + `stb`: global is s8.
+*   **`addi`+`mr` before a loop**: index with a per-iteration `T* t = &arr[i]` instead of `t++` (fn_3_13DEA4).
+*   **`extsh` right after an s16-returning call**: store into an `s32` local, cast `(s16)` at use (fn_3_2B5C0).
+*   **Pointer loaded into a temp then `mr r31`**: assign inside the first call's args, `fn(scene = lbl_803CC1B8, &d)` (fn_3_158FE4).
+*   **`u8 += 34.0` vs `u8 = u8 + 34.0`** differ in `fadd` operand order; try both (fn_3_CED40).
+*   **Field read scheduled before an earlier byte store through a global pointer**: read it into an `s32` local before the store (fn_3_160814).
+*   **`beq body; b exit` tail**: one `if (!a || b) return;` (fn_3_15810C).
 *   **Parameter that seems unused**: it may be passed straight through to a callee in `r3` (fn_3_5B380 → `fn_8004CA6C`).
 
 ### Known Unfixable Patterns (don't spend attempts)
