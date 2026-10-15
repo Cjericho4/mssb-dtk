@@ -42,7 +42,8 @@ void fn_800214D0(void);
 typedef struct {
     u8 _data0[0xE];
     u16 unkE;           /* 0xE */
-    u8 _data1[0x1E - 0x10];
+    u16 unk10;          /* 0x10 */
+    u8 _data1[0x1E - 0x12];
 } StatTableEntry; // size: 0x1E
 
 typedef struct {

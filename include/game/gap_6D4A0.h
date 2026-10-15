@@ -4,6 +4,7 @@
 #include "mssbTypes.h"
 #include "game/UnknownHomes_Game.h"
 #include "static/UnknownHomes_Static.h"
+#include "UnknownHeaders.h"
 
 typedef struct {
     u8 _pad0[0x3B]; // 0x00
@@ -20,7 +21,7 @@ extern Struct_8034E9A0 lbl_8034E9A0[];
 extern Struct_5FC4 lbl_3_data_5FC4;
 
 void fn_3_6D4A0(void);
-void fn_3_6D564(void);
+u16 fn_3_6D564(s32 team, s32 slot, s32 delta);
 s32 fn_3_6D658(s32 arg0, s32 arg1, s32 arg2);
 
 #endif // !__GAME_gap_6D4A0_H_
