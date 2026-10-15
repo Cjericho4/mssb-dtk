@@ -313,7 +313,28 @@ void fn_3_14C904(void) {
 
 // .text:0x0014CA00 size:0x98 mapped:0x8078BA94
 void fn_3_14CA00(void) {
-    return;
+    u32 i = 0;
+    struct Struct_800339F0_Result* result;
+    UnknownStruct_14CA98* node;
+
+    do {
+        result = fn_800339F0(0, 0x20);
+        if (result != NULL) {
+            node = (UnknownStruct_14CA98*)result->listHead;
+            do {
+                if (node->field_0x45 == (s8)i) {
+                    node->field_0x44 = 0;
+                    node->field_0x45 = 0xFF;
+                    node->field_0x4A = 0;
+                    node->field_0x4C = 0;
+                }
+                node = node->next;
+            } while (node != NULL);
+        }
+        i++;
+    } while (i < 15);
+
+    pitchingMachinePitching(0x20);
 }
 
 // .text:0x0014CA98 size:0x1C mapped:0x8078BB2C
