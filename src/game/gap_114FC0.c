@@ -9,7 +9,6 @@
 #include "game/gap_5985C.h"
 #include "game/rep_3310.h"
 
-extern void Set_803cb848(s32 arg0);
 
 // .text:0x00114FC0 size:0x6C mapped:0x80754054
 void fn_3_114FC0(void) {

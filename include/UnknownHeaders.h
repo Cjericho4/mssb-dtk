@@ -1058,4 +1058,6 @@ extern GameControlsStruct g_GameLogic;
 
 extern Strikes g_Strikes;
 
+extern void Set_803cb848(s32 arg0);
+
 #endif

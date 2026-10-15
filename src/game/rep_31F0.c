@@ -8,6 +8,10 @@
 #include "game/rep_1188.h"
 #include "game/rep_540.h"
 #include "game/rep_1200.h"
+#include "game/rep_AC8.h"
+#include "game/rep_1E08.h"
+void setDefaultInMemBatter(void);
+#include "game/rep_13B8.h"
 void setBatterContactConstants(void);
 int someAnimationIndFunction(void);
 
@@ -185,7 +189,18 @@ void fn_3_112128(void) {
 
 // .text:0x001121A4 size:0x8C mapped:0x80751238
 void fn_3_1121A4(void) {
-    return;
+    setInMemBatterConstants(g_Minigame.rosterID);
+    fn_3_F1DC();
+    fn_3_751B4();
+    setDefaultInMemBatter();
+    fn_3_8913C();
+    fn_3_58870();
+    memset(g_Minigame._1D7C, 0, 0x78);
+    fn_3_BF1AC();
+    Set_803cb848(1);
+    g_FieldingLogic.unkAE = 0;
+    g_UnkSimulation_31AC0.unk5 = 0;
+    g_UnkSimulation_31AC0.unk6 = 4;
 }
 
 // .text:0x00112230 size:0x220 mapped:0x807512C4
