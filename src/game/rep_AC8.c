@@ -114,8 +114,18 @@ void fn_3_2A69C(void) {
 }
 
 // .text:0x0002ACD8 size:0x90 mapped:0x80669D6C
-void fn_3_2ACD8(void) {
-    return;
+BOOL fn_3_2ACD8(s32 fielderIdx, s32 frame) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    if (frame < 1) {
+        return FALSE;
+    }
+    if (fn_3_2BB04(fielderIdx)) {
+        return TRUE;
+    }
+    f->prevPos[0] = g_Ball.physicsSubstruct.futureCoordsAndDist[frame].pos.x;
+    f->prevPos[2] = g_Ball.physicsSubstruct.futureCoordsAndDist[frame].pos.z;
+    f->unk216 = 1;
+    return FALSE;
 }
 
 // .text:0x0002AD68 size:0x858 mapped:0x80669DFC
@@ -134,8 +144,8 @@ void fn_3_2B694(void) {
 }
 
 // .text:0x0002BB04 size:0x734 mapped:0x8066AB98
-void fn_3_2BB04(void) {
-    return;
+BOOL fn_3_2BB04(s32 fielderIdx) {
+    return FALSE;
 }
 
 // .text:0x0002C238 size:0xB8 mapped:0x8066B2CC
