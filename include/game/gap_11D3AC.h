@@ -7,7 +7,7 @@
 #include "game/sta_c6.h"
 
 void fn_3_11D3AC(void);
-void fn_3_11D6A0(void);
+BOOL fn_3_11D6A0(void);
 void fn_3_11D780(void);
 void fn_3_11DACC(void);
 u16 fn_3_11DDC4(u8* data, u32 size);

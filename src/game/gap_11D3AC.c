@@ -1,4 +1,7 @@
 #include "game/gap_11D3AC.h"
+#include "game/rep_1C0.h"
+
+extern CompressedDiskRead lbl_3_data_225F0[3];
 
 // .text:0x0011D3AC size:0x2F4 mapped:0x8075C440
 void fn_3_11D3AC(void) {
@@ -6,8 +9,27 @@ void fn_3_11D3AC(void) {
 }
 
 // .text:0x0011D6A0 size:0xE0 mapped:0x8075C734
-void fn_3_11D6A0(void) {
-    return;
+BOOL fn_3_11D6A0(void) {
+    switch (lbl_3_common_bss_32724.unkD8) {
+    case 0:
+        g_hugeAnimStruct.ActorPointer = ARAMTransfer(&lbl_3_data_225F0[1], NULL, 0, NULL);
+        lbl_3_common_bss_32724.unkD8++;
+        break;
+    case 1:
+        if (lbl_803C6CF8.allowLoad == 1) {
+            lbl_3_common_bss_32724.unkD8++;
+        }
+        break;
+    case 2:
+        if (g_d_GameSettings.GameModeSelected != 6) {
+            fn_3_11D3AC();
+        }
+        lbl_3_common_bss_32724.unkD8++;
+        break;
+    default:
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x0011D780 size:0x34C mapped:0x8075C814
