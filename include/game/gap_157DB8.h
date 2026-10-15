@@ -9,6 +9,8 @@
 extern s16 lbl_3_data_FC1C;
 extern int lbl_3_data_B3F4;
 extern s32 lbl_3_data_BD50;
+extern s32 lbl_3_data_B85C;
+void fn_800363D8(DrawingSceneStruct* scene, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 
 typedef struct {
     u8 _pad0[0x40];

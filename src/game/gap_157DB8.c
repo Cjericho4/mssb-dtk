@@ -1,4 +1,5 @@
 #include "game/gap_157DB8.h"
+#include "game/rep_3448.h"
 
 // .text:0x00157DB8 size:0x70 mapped:0x80796E4C
 void fn_3_157DB8(s32 arg0) {
@@ -69,7 +70,20 @@ void fn_3_158B64(void) {
 
 // .text:0x00158FE4 size:0xE4 mapped:0x80798078
 void fn_3_158FE4(void) {
-    return;
+    DrawingSceneStruct* scene;
+
+    fn_80034E20(scene = lbl_803CC1B8, &lbl_3_data_B85C);
+    lbl_80371C30[scene->unkIndex + 8].obj->flags &= ~2;
+    fn_800363D8(scene, 0xD, 1, 0xE, g_Practice.practiceLevel);
+    fn_800363D8(scene, 0xD, 2, 0xE, g_Practice.practiceLevel);
+    g_Practice.laukituTextChannelIndex = -1;
+    g_Practice.diagramTextChannelIndex = -1;
+    scene->unk18 = 0;
+    scene->unk1a = 0;
+    scene->unk_1C = 0;
+    scene->unk_1E = 0;
+    scene->unk_20 = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_3_158B64;
 }
 
 // .text:0x001590C8 size:0x4C mapped:0x8079815C
