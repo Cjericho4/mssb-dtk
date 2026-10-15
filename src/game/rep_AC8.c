@@ -186,8 +186,8 @@ void fn_3_2C698(void) {
 }
 
 // .text:0x0002CBE0 size:0x314 mapped:0x8066BC74
-void fn_3_2CBE0(void) {
-    return;
+BOOL fn_3_2CBE0(s32 idx) {
+    return FALSE;
 }
 
 // .text:0x0002CEF4 size:0x18C mapped:0x8066BF88
@@ -260,18 +260,38 @@ void fn_3_2EA24(void) {
 }
 
 // .text:0x0002EA88 size:0x43C mapped:0x8066DB1C
-void fn_3_2EA88(void) {
+void fn_3_2EA88(s32 idx) {
     return;
 }
 
 // .text:0x0002EEC4 size:0x5C0 mapped:0x8066DF58
-void fn_3_2EEC4(void) {
+void fn_3_2EEC4(s32 idx) {
     return;
 }
 
 // .text:0x0002F484 size:0xF0 mapped:0x8066E518
 void fn_3_2F484(void) {
-    return;
+    s32 i;
+
+    fn_3_58688();
+    for (i = 0; i < 4; i++) {
+        if (g_Minigame.minigameFielderIndex[i] < 0) {
+            continue;
+        }
+        g_FieldingLogic.unk70 = &g_FieldingLogic.entries[i];
+        g_FieldingLogic.unk8C = &g_FieldingLogic.targets[i];
+        if (g_d_GameSettings.GameModeSelected == 6 && g_Minigame._19BC != 0 &&
+            i == (s8)g_Minigame._19C6 && fn_3_2CBE0(i)) {
+            continue;
+        }
+        if (g_Minigame.players.battingHandedness[i] == 0) {
+            fn_3_2EEC4(i);
+        } else if (g_Minigame.GameMode_MiniGame == 6) {
+            fn_3_2EEC4(i);
+        } else {
+            fn_3_2EA88(i);
+        }
+    }
 }
 
 // .text:0x0002F574 size:0x260 mapped:0x8066E608

@@ -545,9 +545,15 @@ typedef struct _InMemPitcherType {
 typedef struct FieldingTarget {
     /* 0x00 */ s16 unk0; // sth r0, 0x0(r3)
     /* 0x02 */ u8  unk2; // stb r0, 0x2(r4)
-} FieldingTarget;
+    /* 0x03 */ u8  _pad3[3];
+} FieldingTarget; // size: 0x6
+typedef struct FieldingLogicEntry {
+    /* 0x00 */ u8 _pad0[0x1C];
+} FieldingLogicEntry; // size: 0x1C
 typedef struct FieldingLogic {
-    /* 0x00 */ u8 _pad0[0x8C];
+    /* 0x00 */ FieldingLogicEntry entries[4];
+    /* 0x70 */ FieldingLogicEntry* unk70;
+    /* 0x74 */ FieldingTarget targets[4];
     /* 0x8C */ FieldingTarget* unk8C; // lwz r4, 0x8c(r5)
     
     /* 0x90 */ u8 _pad1[0xAE - 0x90];
