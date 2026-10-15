@@ -22,7 +22,7 @@ void fn_3_60768(void) {
 }
 
 // .text:0x00060804 size:0x294 mapped:0x8069F898
-void fn_3_60804(void) {
+void fn_3_60804(s32 index, s32 arg1) {
     return;
 }
 
@@ -42,8 +42,31 @@ void fn_3_60E90(void) {
 }
 
 // .text:0x00061148 size:0xE0 mapped:0x806A01DC
-void fn_3_61148(void) {
-    return;
+BOOL fn_3_61148(s32 index) {
+    AnimationStruct_31EAC* anim = &g_UnkAnimation_31EAC[index];
+    s32 animIdx = index;
+    AnimationStruct* animStruct;
+
+    if (g_d_GameSettings.minigamesEnabled) {
+        if (index == 0) {
+            animIdx = g_Minigame.minigameControlStruct[0].characterIndex[g_Minigame.minigamePlayerSelectedOrder];
+        } else {
+            animIdx = g_Minigame.players.fielderRosterIDs[index - 2];
+        }
+    }
+    animStruct = g_hugeAnimStruct.AnimationStructPtrs[animIdx];
+    if (animStruct == NULL) {
+        return FALSE;
+    }
+    if (anim->unk43 != 0) {
+        if (animStruct->unk68 <= 0) {
+            anim->unk43 = 0;
+            fn_3_60804(index, 0);
+            return FALSE;
+        }
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x00061228 size:0x31C mapped:0x806A02BC

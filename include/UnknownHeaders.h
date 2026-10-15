@@ -106,7 +106,9 @@ typedef struct AnimationStruct {
     void* funcPtr_0x5c; /* 0x5C - function pointer */
     u8 _rest60[0x2];
     s16 animID;         /* 0x62 */
-    u8 _rest64[0x162 - 0x64];
+    u8 _rest64[0x4];
+    s16 unk68;          /* 0x68 */
+    u8 _rest6A[0x162 - 0x6A];
     u16 boneIndices[8]; /* 0x162 */
     u8 _rest172[0x252 - 0x172];
     s8 unk252;          /* 0x252 */
