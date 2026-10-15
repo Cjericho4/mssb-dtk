@@ -1,5 +1,6 @@
 #include "game/gap_157DB8.h"
 #include "game/rep_3448.h"
+#include "game/gap_AC9F8.h"
 
 // .text:0x00157DB8 size:0x70 mapped:0x80796E4C
 void fn_3_157DB8(s32 arg0) {
@@ -31,7 +32,27 @@ void fn_3_1580AC(void) {
 
 // .text:0x0015810C size:0xF0 mapped:0x807971A0
 void fn_3_15810C(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 limit;
+
+    if (lbl_3_common_bss_32724.someStatusInd == 0) {
+        limit = 0x96;
+        if (g_Practice.practiceType_2 == 0) {
+            limit = 0x5A;
+        }
+        if (g_Practice._186 < limit - 20) {
+            if ((lbl_80371C30[scene->unkIndex].obj->field_0x5C >> 16) >= 0x21) {
+                lbl_80371C30[scene->unkIndex].obj->field_0x68 = 0;
+            }
+        } else {
+            lbl_80371C30[scene->unkIndex].obj->field_0x68 = 1;
+        }
+        if (!g_Practice._1C7 || lbl_3_common_bss_34C90.field_0x1D2 != 0) {
+            return;
+        }
+    }
+    fn_80034CEC((u32)scene);
+    fn_800B0A14_removeQueue();
 }
 
 // .text:0x001581FC size:0x68 mapped:0x80797290
