@@ -25,13 +25,14 @@ void fn_3_FBD70(void) {
 
 // .text:0x000FBDAC size:0x78 mapped:0x8073AE40
 void fn_3_FBDAC(u32 arg0) {
-    lbl_3_common_bss_DE94->field_0x9AB = 1;
+    BssDE94Item* p = lbl_3_common_bss_DE94;
+    p->field_0x9AB = 1;
     lbl_3_common_bss_DE94->field_0x9AC = 1;
     lbl_3_common_bss_DE94->field_0x9AF = 1;
     lbl_3_common_bss_DE94->field_0x9B0 = 1;
-    lbl_3_common_bss_DE94->field_0x18 = 0;
-    lbl_3_common_bss_DE94->unk_08 = 0;
-    lbl_3_common_bss_DE94->unk_14 = 0;
+    p->field_0x18 = 0;
+    p->unk_08 = 0;
+    p->unk_14 = 0;
     lbl_3_common_bss_DE94->unk_92C = arg0;
     lbl_3_common_bss_DE94->unk_00 = lbl_3_data_20E0C[arg0];
     lbl_3_common_bss_DE94->field_0x9AE = 1;
