@@ -147,13 +147,9 @@ void fn_3_131EC4(void) {
 
 // .text:0x00131FFC size:0x80 mapped:0x80771090
 void fn_3_131FFC(void) {
-    u8 multiPlayerInd;
-
     g_Scores.highscore++;
-    multiPlayerInd = g_Minigame.multiPlayerInd;
     g_Minigame.turnNumberWithinRound = 0;
-
-    if (multiPlayerInd == 0) {
+    if (g_Minigame.multiPlayerInd == 0) {
         fn_3_5A6D4(7);
     } else {
         fn_3_10F550(4, 0);
