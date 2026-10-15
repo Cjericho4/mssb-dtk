@@ -308,7 +308,25 @@ void fn_3_117FC8(void) {
 
 // .text:0x001180A4 size:0xC0 mapped:0x80757138
 void fn_3_1180A4(void) {
-    return;
+    Rep3310Entry2D94* entries = (Rep3310Entry2D94*)g_hugeAnimStruct.entries_2D94;
+
+    entries[0x64].visible = 0;
+    entries[0xE6].visible = 0;
+    if (g_Minigame._B6C._40[0] == 1) {
+        entries[0xE6].visible = 1;
+        entries[0xE6].pos.x = g_Minigame._B6C._0.x;
+        entries[0xE6].pos.y = -g_Minigame._B6C._0.y;
+        entries[0xE6].pos.z = g_Minigame._B6C._0.z;
+        entries[0xE6].rot.x = 0.0f;
+        entries[0xE6].rot.y = 0.0f;
+        entries[0xE6].rot.z = 0.0f;
+        entries[0x64].visible = 1;
+        entries[0x64].func = NULL;
+        entries[0x64].pos.x = g_Minigame._B6C._0.x;
+        entries[0x64].pos.y = -0.05f;
+        entries[0x64].pos.z = g_Minigame._B6C._0.z;
+        fn_8001D0D0(0x64, 10.0f);
+    }
 }
 
 // .text:0x00118164 size:0x1F4 mapped:0x807571F8
