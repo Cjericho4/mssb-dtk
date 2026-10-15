@@ -1,5 +1,6 @@
 #include "game/rep_F80.h"
 #include "game/rep_1E08.h"
+#include "game/rep_E08.h"
 #include "header_rep_data.h"
 
 // .text:0x0006A2A4 size:0x5C mapped:0x806A9338
@@ -65,7 +66,22 @@ void fn_3_6A9B0(void) {
 
 // .text:0x0006AA98 size:0x98 mapped:0x806A9B2C
 void fn_3_6AA98(void) {
-    return;
+    u8 state;
+
+    if (g_Batter.charID == 2 || g_Batter.charID == 3 || g_Batter.charID == 6) {
+        return;
+    }
+    state = lbl_3_common_bss_32220.field_0x0a;
+    if (state == 0) {
+        return;
+    }
+    if (state == 3 || state == 4) {
+        fn_3_C07A0();
+    } else if (state == 9) {
+        fn_3_C0770();
+    } else if (lbl_3_common_bss_32220.field_0x02 == 2 && state == 2) {
+        fn_3_C07B0();
+    }
 }
 
 // .text:0x0006AB30 size:0x28 mapped:0x806A9BC4

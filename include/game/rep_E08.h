@@ -4,7 +4,8 @@
 #include "mssbTypes.h"
 
 typedef struct {
-    u8 _pad0[0x04];
+    u8 _pad0[0x02];
+    s16 field_0x02; // 0x02
     u16 field_0x04; // 0x04
     u8 _pad1[0x02];
     u8 field_0x08;  // 0x08
