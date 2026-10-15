@@ -1,5 +1,8 @@
 #include "game/rep_12D0.h"
 #include "header_rep_data.h"
+#include "UnknownHeaders.h"
+#include "game/UnknownHomes_Game.h"
+#include "static/UnknownHomes_Static.h"
 
 // .text:0x00077914 size:0xC60 mapped:0x806B69A8
 void fn_3_77914(void) {
@@ -28,7 +31,25 @@ void fn_3_79040(void) {
 
 // .text:0x00079338 size:0xDC mapped:0x806B83CC
 void fn_3_79338(void) {
-    return;
+    CommonBss32A94* bss;
+    s32 i;
+
+    if (g_Strikes.unk_C != 2 && g_Strikes.outs < 3) {
+        bss = &lbl_3_common_bss_32A94;
+        if (bss->unk24 == 0) {
+            if (g_Ball.AtBat_ContactResult == 3 || g_FieldingLogic.unk113 == 1) {
+                if (g_Ball.landingSpotZoneAwayFromHome >= 2) {
+                    bss->unk24 = 2;
+                }
+            }
+        } else if (bss->unk24 == 2 && g_Ball.AtBat_ContactResult == 3) {
+            for (i = 1; i < 4; i++) {
+                if (g_Runners[i].runnerOnFieldOrOutOrScored == 3) {
+                    bss->unk24 = 1;
+                }
+            }
+        }
+    }
 }
 
 // .text:0x00079414 size:0x194 mapped:0x806B84A8
