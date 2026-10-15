@@ -27,6 +27,37 @@ typedef struct {
 } CameraMtx_52768;
 
 extern s32 lbl_3_bss_9D90;
+extern Control* lbl_3_bss_9D94;
+
+typedef struct C2310Bone {
+    u8 _pad0[0x14];
+    struct DODisplayObj* dispObj; /* 0x14 */
+    u8 _pad18[0xEC - 0x18];
+    MtxPtr worldMtx;              /* 0xEC */
+    u8 _padF0[0x100 - 0xF0];
+    struct C2310Bone* next;       /* 0x100 */
+} C2310Bone;
+
+typedef struct C2310Actor {
+    u8 _pad0[0x14];
+    struct DODisplayObj* skinObject;  /* 0x14 */
+    u8 _pad18[0x64 - 0x18];
+    MtxPtr skinMtxArray;              /* 0x64 */
+    MtxPtr skinInvTransposeMtxArray;  /* 0x68 */
+    u8 _pad6C[0x74 - 0x6C];
+    C2310Bone* drawList;              /* 0x74 */
+    u8 _pad78[0x7C - 0x78];
+    u32 unk7C;                        /* 0x7C */
+} C2310Actor;
+
+typedef struct C2310Holder {
+    C2310Actor* actor; /* 0x00 */
+} C2310Holder;
+
+extern void DOVARenderSkin(struct DODisplayObj* dispObj, MtxPtr camera, MtxPtr mtxArray, MtxPtr invTransposeMtxArray,
+                           u8 numLights, struct DOVaList* list);
+extern void DOSetWorldMatrix(struct DODisplayObj* dispObj, MtxPtr m);
+extern void fn_8003A8A0(struct DODisplayObj* dispObj, MtxPtr camera, s32 arg2);
 extern u8 lbl_803CBBC0;
 extern CameraSlot_17804 lbl_3_data_17804[];
 extern CameraMtx_52768* fn_80052768(s32 arg0);
@@ -70,8 +101,30 @@ void fn_3_C2244(void) {
 }
 
 // .text:0x000C2310 size:0xD0 mapped:0x807013A4
-void fn_3_C2310(void) {
-    return;
+void fn_3_C2310(C2310Holder* holder, MtxPtr camera) {
+    Mtx viewMtx;
+    Mtx ctrlMtx;
+    C2310Actor* actor;
+    C2310Bone* bone;
+
+    CTRLBuildMatrix(lbl_3_bss_9D94, ctrlMtx);
+    PSMTXConcat(camera, ctrlMtx, viewMtx);
+    actor = holder->actor;
+    bone = actor->drawList;
+    if (actor->skinObject != NULL) {
+        if (actor->unk7C != 0) {
+            fn_8003A8A0(actor->skinObject, viewMtx, 1);
+        } else {
+            DOVARenderSkin(actor->skinObject, viewMtx, actor->skinMtxArray, actor->skinInvTransposeMtxArray, 0, NULL);
+        }
+    }
+    while (bone != NULL) {
+        if (bone->dispObj != NULL) {
+            DOSetWorldMatrix(bone->dispObj, bone->worldMtx);
+            fn_8003A8A0(bone->dispObj, viewMtx, 0);
+        }
+        bone = bone->next;
+    }
 }
 
 // .text:0x000C23E0 size:0xC0 mapped:0x80701474
