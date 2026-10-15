@@ -3,6 +3,7 @@
 #include "game/UnknownHomes_Game.h"
 #include "game/rep_1838.h"
 #include "game/gap_9CD90.h"
+#include "game/gap_AC9F8.h"
 
 extern u8 lbl_3_data_1AAC[4];
 extern u8 lbl_3_data_1AB0[4][3];
@@ -13,13 +14,29 @@ void fn_3_1E4B8(void) {
 }
 
 // .text:0x0001E724 size:0xD0 mapped:0x8065D7B8
-void fn_3_1E724(void) {
-    return;
+BOOL fn_3_1E724(void) {
+    if (g_GameLogic.secondaryGameMode == 13) {
+        return fn_3_B0CF4() != 0;
+    }
+    if (g_AiLogic.batterAIBuntInd != 1) {
+        return FALSE;
+    }
+    if (g_AiLogic.aISwingDecisionRelated_noSwingOverride != 0) {
+        return FALSE;
+    }
+    if (g_Ball.pitchHangtimeCounter <= 0) {
+        return TRUE;
+    }
+    if (g_Pitcher.framesUntilBallReachesBatterZ == g_AiLogic.batterAIZPosition && fn_3_1E7F4() == FALSE) {
+        g_AiLogic.aISwingDecisionRelated_noSwingOverride = 1;
+        return FALSE;
+    }
+    return TRUE;
 }
 
 // .text:0x0001E7F4 size:0x2B4 mapped:0x8065D888
-void fn_3_1E7F4(void) {
-    return;
+BOOL fn_3_1E7F4(void) {
+    return FALSE;
 }
 
 // .text:0x0001EAA8 size:0x53C mapped:0x8065DB3C
