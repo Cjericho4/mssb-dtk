@@ -3,6 +3,7 @@
 #include "UnknownHeaders.h"
 
 extern f32 lbl_3_rodata_21F0;
+extern u32 lbl_3_bss_9D84;
 
 // .text:0x000C1964 size:0x10 mapped:0x807009F8
 void fn_3_C1964(void) {
@@ -121,8 +122,20 @@ void fn_3_C3F70(void) {
 }
 
 // .text:0x000C4068 size:0x84 mapped:0x807030FC
-void fn_3_C4068(void) {
-    return;
+void fn_3_C4068(ActorObject* arg0) {
+    hugeAnimStruct* has = (hugeAnimStruct*)arg0->wrapper->boneData;
+    AnimObject* obj = has->entries_18->field_0x4->ptr14->ptr10->ptr04;
+    u16 frame = obj->flags & 0x1FFF;
+
+    if (lbl_3_bss_9D84++ > 4) {
+        frame++;
+        if (frame > 0x13) {
+            frame = 4;
+        }
+        lbl_3_bss_9D84 = 0;
+    }
+    obj->flags &= ~0x1FFF;
+    obj->flags |= frame;
 }
 
 // .text:0x000C40EC size:0x60 mapped:0x80703180
