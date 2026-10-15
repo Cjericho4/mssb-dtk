@@ -1,5 +1,11 @@
 #include "game/rep_8C8.h"
 #include "header_rep_data.h"
+#include "game/UnknownHomes_Game.h"
+#include "game/rep_1838.h"
+#include "game/gap_9CD90.h"
+
+extern u8 lbl_3_data_1AAC[4];
+extern u8 lbl_3_data_1AB0[4][3];
 
 // .text:0x0001E4B8 size:0x26C mapped:0x8065D54C
 void fn_3_1E4B8(void) {
@@ -63,7 +69,12 @@ void fn_3_20064(void) {
 
 // .text:0x00020188 size:0x9C mapped:0x8065F21C
 void fn_3_20188(void) {
-    return;
+    if (g_AiLogic.lastPitchType != 0xFF &&
+        RandomInt_Game(100) < lbl_3_data_1AAC[g_AiLogic.aIBatterDifficulty]) {
+        g_AiLogic.batterAIPitchGuessed = g_AiLogic.lastPitchType;
+    } else {
+        g_AiLogic.batterAIPitchGuessed = fn_3_9E5A0(lbl_3_data_1AB0[g_Pitcher.charClass], 3);
+    }
 }
 
 // .text:0x00020224 size:0x83C mapped:0x8065F2B8

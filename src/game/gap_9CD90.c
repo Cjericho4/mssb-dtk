@@ -91,8 +91,8 @@ void fn_3_9E368(void) {
 }
 
 // .text:0x0009E5A0 size:0x234 mapped:0x806DD634
-void fn_3_9E5A0(void) {
-    return;
+s32 fn_3_9E5A0(u8* weights, s32 count) {
+    return 0;
 }
 
 // .text:0x0009E7D4 size:0x60 mapped:0x806DD868
