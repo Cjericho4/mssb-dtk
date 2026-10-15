@@ -32,9 +32,15 @@ typedef struct {
     u8 field_0x1D8;      /* 0x1D8 */
     u8 _pad1D9;          /* 0x1D9 */
     u8 field_0x1DA;      /* 0x1DA */
-    u8 _pad5[0x2B];      /* 0x1DB-0x205 */
+    u8 _pad5[0x27];      /* 0x1DB-0x201 */
+    u8 field_0x202;      /* 0x202 */
+    u8 field_0x203;      /* 0x203 */
+    u8 _pad204[0x2];     /* 0x204 */
     s8 field_0x206;      /* 0x206 */
-    u8 _pad207[0x1A];    /* 0x207 */
+    u8 _pad207[0x15];    /* 0x207 */
+    u8 field_0x21C;      /* 0x21C */
+    u8 field_0x21D;      /* 0x21D */
+    u8 _pad21E[0x3];     /* 0x21E */
     u8 unk_221;          /* 0x221 */
     u8 field_0x222;      /* 0x222 */
     u8 _pad223[0x41];    /* 0x223 */
