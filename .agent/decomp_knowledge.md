@@ -47,6 +47,13 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Literal exception**: occasionally only the `extern` rodata form matches (fn_3_70AEC needed `extern f32 lbl_3_rodata_1250` for 0.5). Try both.
 *   **`lbz rX,off(rX); extsb rX,rX` straight into an arg register**: field is `s8` and callee param is `s32`. A `u8` field with an `(s8)` cast gives `lbz r0` + `extsb r3,r0` instead (fn_3_1158F8).
 *   **Search loop returning index then `OSPanic`**: `for (u32 i = count; i > 0; i--) if (e[i-1].id == x) return i-1;` — `while (count--)` does not match (fn_3_D53C0, fn_3_F5E78).
+*   **Extra loop-entry check (`cmpwi 0,N; bge`) missing**: loop counter must be `s32` (signed long), not `int`/`u32` (fn_3_1166CC).
+*   **`bge`+`b` early exit on an s8 arg**: `if (a >= 15 || a < 0) return;` — separate ifs give `blt` (fn_3_14CB28; may also fix fn_3_14DC80).
+*   **Locals 0x10 apart but only 12 bytes copied**: they are 16-byte structs (`VecXYZW`) (fn_3_105A10).
+*   **Float `bge` without `cror`**: `if (!(d < min)) break;` rather than `d >= min` (fn_3_BBBC).
+*   **Pointer param in r31 but target uses r29**: make the param `s32` and cast at use (fn_3_910F4).
+*   **Several strength-reduced array pointers in a loop**: declare per-iteration pointer locals at the loop top (fn_3_63A38).
+*   **`try_function.py` on MATCH prints an empty second-to-last line** — don't grep only its tail.
 *   **Parameter that seems unused**: it may be passed straight through to a callee in `r3` (fn_3_5B380 → `fn_8004CA6C`).
 
 ### Known Unfixable Patterns (don't spend attempts)
