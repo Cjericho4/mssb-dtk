@@ -1,4 +1,5 @@
 #include "game/sta_c6.h"
+#include "game/rep_1D58.h"
 #include "UnknownHeaders.h"
 #include "static/UnknownHomes_Static.h"
 #include "stl/mem.h"
@@ -177,8 +178,23 @@ void fn_3_E6798(Arg0_E6798* arg0) {
 }
 
 // .text:0x000E67F4 size:0xB4 mapped:0x80725888
+static inline void setAnimTime(ActorAnimState* state, f32 time) {
+    state->time = time;
+    state->setTime = 1;
+}
+
 void fn_3_E67F4(void) {
-    return;
+    f32 time = 20.0f;
+    u32 i;
+    Actor* actor;
+
+    for (i = 0; i < 7; i++) {
+        lbl_3_data_196B4[i] = 0;
+        actor = g_hugeAnimStruct.animTable->entries[i + 16].anim.actor;
+        setAnimTime(&g_hugeAnimStruct.animTable->entries[i + 16].anim, time);
+        fn_800B4CA0(actor, g_hugeAnimStruct.animTable->entries[i + 16].anim.time);
+        AnimateActorBones(actor);
+    }
 }
 
 // .text:0x000E68A8 size:0xE4 mapped:0x8072593C
