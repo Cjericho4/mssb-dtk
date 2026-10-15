@@ -54,6 +54,12 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Pointer param in r31 but target uses r29**: make the param `s32` and cast at use (fn_3_910F4).
 *   **Several strength-reduced array pointers in a loop**: declare per-iteration pointer locals at the loop top (fn_3_63A38).
 *   **`try_function.py` on MATCH prints an empty second-to-last line** — don't grep only its tail.
+*   **Stop MWCC unrolling a constant-count loop**: `i = 0; do { ... a->entries[i] ...; i++; } while (i < N);` — `for`/`while` get fully unrolled (fn_3_1078F8, fn_3_109CE8).
+*   **Saved register reused across a call**: reuse the parameter variable (loop counter = `idx` param in fn_3_C0C4C; `list` param reassigned with the result in fn_3_BA1A0).
+*   **Float reg order after `fneg`+`fmuls` or `sin`/`cos`**: split into successive assignments to one local; store `sin`/`cos` into f32 locals and negate after (fn_3_F4C4C).
+*   **`bnelr` leaving r3 untouched**: the original had no return on that path (fn_3_109CE8).
+*   **Load scheduled from the global rather than a temp**: `global.field = table[x]; if (global.field ...)` (fn_3_10F5BC).
+*   **Statics accessed through one base symbol**: model as a struct overlay on that symbol (fn_3_F0184, `StaC5Bss_AEE0`).
 *   **Parameter that seems unused**: it may be passed straight through to a callee in `r3` (fn_3_5B380 → `fn_8004CA6C`).
 
 ### Known Unfixable Patterns (don't spend attempts)
