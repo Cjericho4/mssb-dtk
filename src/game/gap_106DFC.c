@@ -5,6 +5,7 @@
 #include "game/gap_90754.h"
 #include "game/rep_1D58.h"
 #include "game/gap_9CD90.h"
+#include "game/gap_464.h"
 
 extern void fn_800246D4(s32 (*compareFn)(u8*, u8*), u8* out, u8* in, u32 elemSize, u8 count);
 extern void fn_8001CA40(s32 arg0);
@@ -450,7 +451,19 @@ s32 fn_3_10F564(void) {
 
 // .text:0x0010F5BC size:0xC8 mapped:0x8074E650
 void fn_3_10F5BC(void) {
-    return;
+    if ((s8)g_Minigame._1A2C >= 0) {
+        g_hugeAnimStruct.renderStadiumFlag = 0;
+        fn_3_B95EC();
+        fn_3_5E60();
+    }
+    g_Minigame._1A2C = -1;
+    lbl_3_data_228[0x10] = 0;
+    g_d_GameSettings.StadiumID = lbl_3_data_18910[g_Minigame.GameMode_MiniGame];
+    g_d_GameSettings.miniGameStadiumIndicator = 0;
+    if (g_d_GameSettings.StadiumID == 0 || g_d_GameSettings.StadiumID == 4 || g_d_GameSettings.StadiumID == 1 || g_d_GameSettings.StadiumID == 3) {
+        g_d_GameSettings.miniGameStadiumIndicator = 1;
+    }
+    fn_800B0A5C_insertQueue(manageStadiumLoading, 0);
 }
 
 // .text:0x0010F684 size:0x298 mapped:0x8074E718

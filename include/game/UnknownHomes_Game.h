@@ -1857,7 +1857,7 @@ typedef struct _MiniGameStruct {
     /*0x1A28*/ s16 someGraphicFrameCountdown;
     /*0x1A2A*/ E(u8, MINI_GAME_ID) GameMode_MiniGame;
     /*0x1A2B*/ E(u8, MINIGAME_DIFFICULTY) soloMinigameDifficulty;
-    /*0x1A2C*/ u8 _1A2C;
+    /*0x1A2C*/ s8 _1A2C;
     /*0x1A2D*/ u8 miniGameTurnCounter;
     /*0x1A2E*/ u8 bB_pitchesRemainingInTurn;
     /*0x1A2F*/ u8 bODRoundStartingNumPitches;
