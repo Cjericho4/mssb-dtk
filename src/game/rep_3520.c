@@ -172,8 +172,25 @@ void fn_3_1357A4(Vec* out, Vec* dir) {
 }
 
 // .text:0x0013583C size:0xE8 mapped:0x807748D0
-void fn_3_13583C(void) {
-    return;
+// .text:0x0013583C size:0xE8 mapped:0x807748D0
+void fn_3_13583C(Vec* pos) {
+    Vec center = {0.0f, 0.0f, 20.0f};
+    Vec diff;
+    Vec dir;
+
+    if (pos != NULL) {
+        PSVECSubtract(pos, &center, &diff);
+        diff.y = 0.0f;
+        if (PSVECMag(&diff) <= 3.5f) {
+            Vec center2 = {0.0f, 0.0f, 20.0f};
+            if (pos != NULL) {
+                PSVECNormalize(&diff, &dir);
+                PSVECScale(&dir, 3.5f, &dir);
+                pos->x = center2.x + dir.x;
+                pos->z = center2.z + dir.z;
+            }
+        }
+    }
 }
 
 // .text:0x00135924 size:0x140 mapped:0x807749B8
