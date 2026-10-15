@@ -84,10 +84,13 @@ typedef struct Camera {
     /* 0xA74 */ s16 unkA74;
     /* 0xA76 */ s16 unkA76;
     /* 0xA78 */ s16 unkA78;
-    /* 0xA7A */ u8 _pad1d[0xA80 - 0xA7A];
+    /* 0xA7A */ u8 _pad1d[0xA7E - 0xA7A];
+    /* 0xA7E */ s16 unkA7E;
     /* 0xA80 */ s16 unkA80;
     /* 0xA82 */ s16 unkA82;
-    /* 0xA84 */ u8 _pad1b[0xA96 - 0xA84];
+    /* 0xA84 */ u8 _pad1b[0xA8C - 0xA84];
+    /* 0xA8C */ s16 unkA8C[4];    // per-runner, used in fn_3_150C0
+    /* 0xA94 */ u8 _pad1e[0xA96 - 0xA94];
     /* 0xA96 */ s16 unkA96;       // used in fn_3_14FC8
     /* 0xA98 */ s16 unkA98;       // Offset 0xA98
     /* 0xA9A */ s16 unkA9A;
@@ -99,12 +102,15 @@ typedef struct Camera {
     /* 0xAB4 */ u8 unkAB4;
     /* 0xAB5 */ u8 _pad4c[1];
     /* 0xAB6 */ u8 unkAB6;
-    /* 0xAB7 */ u8 _pad4d[0xABA - 0xAB7];
+    /* 0xAB7 */ u8 unkAB7;
+    /* 0xAB8 */ u8 unkAB8;
+    /* 0xAB9 */ u8 unkAB9;
     /* 0xABA */ u8 unkABA;
     /* 0xABB */ u8 _pad4b[0xAC4 - 0xABB];
     /* 0xAC4 */ u8 unkAC4;
     /* 0xAC5 */ u8 cameraFlag;
-    /* 0xAC6 */ u8 _pad5[0xAD8 - 0xAC6];
+    /* 0xAC6 */ u8 unkAC6;
+    /* 0xAC7 */ u8 _pad5[0xAD8 - 0xAC7];
     /* 0xAD8 */ u8 cameraFlag2;
     /* 0xAD9 */ u8 _pad6[0x2828 - 0xAD9];
     /* 0x2828 */ f32 unk2828;

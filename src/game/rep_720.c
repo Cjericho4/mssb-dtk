@@ -146,7 +146,13 @@ void fn_3_15004(void) {
 
 // .text:0x000150C0 size:0x84 mapped:0x80654154
 void fn_3_150C0(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        if (g_Runners[i].baseStandingOn == 3) {
+            g_pCamera->unkA8C[i] = g_Stats.unk24;
+        }
+    }
 }
 
 // .text:0x00015144 size:0xDC mapped:0x806541D8
@@ -175,7 +181,7 @@ void fn_3_1527C(s32 arg0) {
         return;
     }
     if (arg0 == 0) {
-        g_pCamera->_pad4d[2] = 1;
+        g_pCamera->unkAB9 = 1;
         return;
     }
     if (g_pCamera->unkA80 == 0) {
@@ -185,7 +191,7 @@ void fn_3_1527C(s32 arg0) {
 }
 
 // .text:0x000152E8 size:0x94 mapped:0x8065437C
-void fn_3_152E8(void) {
+void fn_3_152E8(s32 arg0) {
     return;
 }
 
@@ -202,7 +208,7 @@ void fn_3_1537C(s32 arg0) {
         return;
     }
     if (arg0 == 0) {
-        g_pCamera->_pad4d[0] = 1;
+        g_pCamera->unkAB7 = 1;
         return;
     }
     temp_r4 = (s16*)&g_pCamera->_pad1d[0];
