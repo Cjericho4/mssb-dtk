@@ -155,8 +155,24 @@ s32 fn_3_A3768(void) {
 }
 
 // .text:0x000A37BC size:0x90 mapped:0x806E2850
-void fn_3_A37BC(void) {
-    return;
+BOOL fn_3_A37BC(void) {
+    sAng ang = g_Ball.ballAngleFromHome;
+    if (ang < 0x398) {
+        return FALSE;
+    }
+    if (g_Ball.ballDistanceFromBase[2] < 5.0f) {
+        return TRUE;
+    }
+    if (ang < 0x400) {
+        if (g_Ball.AtBat_Contact_BallPos.z + g_Ball.AtBat_Contact_BallPos.x > 40.0f) {
+            return TRUE;
+        }
+    } else {
+        if (g_Ball.AtBat_Contact_BallPos.z - g_Ball.AtBat_Contact_BallPos.x > 40.0f) {
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 // .text:0x000A384C size:0x2E4 mapped:0x806E28E0
