@@ -709,8 +709,28 @@ void fn_3_1CAC0(void) {
 }
 
 // .text:0x0001CBCC size:0xFC mapped:0x8065BC60
+extern s16 lbl_3_data_A38[2];
+
 void fn_3_1CBCC(void) {
-    return;
+    g_GameLogic.sceneID = 1;
+    if (g_d_GameSettings.GameModeSelected == 2 && g_Practice.instructionNumber >= 0) {
+        g_pCamera->unk28A7 = lbl_3_data_A38[1];
+    } else {
+        g_pCamera->unk28A7 = lbl_3_data_A38[0];
+    }
+    g_pCamera->unk118 = 0;
+    g_pCamera->unk11C = 0;
+    g_pCamera->unk_30 = 0.0f;
+    g_pCamera->unk_34 = 0.0f;
+    g_pCamera->unk_38 = 0.0f;
+    g_pCamera->unk_C0 = 0.0f;
+    g_pCamera->unk_D0 = 1.0f;
+    g_pCamera->unk_E2 = 0;
+    g_pCamera->unk_E0 = -1;
+    g_pCamera->unk_D4 = 0.0f;
+    g_pCamera->unk_D8 = 0.0f;
+    g_pCamera->unk_DC = 0.0f;
+    g_pCamera->unk_E3 = 0;
 }
 
 // .text:0x0001CCC8 size:0x1C8 mapped:0x8065BD5C
