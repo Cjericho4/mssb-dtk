@@ -348,8 +348,17 @@ void fn_3_902FC(void) {
 }
 
 // .text:0x00090328 size:0x90 mapped:0x806CF3BC
-void fn_3_90328(void) {
-    return;
+void fn_3_90328(s32 time) {
+    if (time < 0) {
+        time = 3000;
+    }
+    if (sndSeqGetValid(lbl_3_common_bss_34C58._04) != 0) {
+        sndSeqVolume(0, time, lbl_3_common_bss_34C58._04, 1);
+    }
+
+    if (sndSeqGetValid(lbl_3_common_bss_34C58._08) != 0) {
+        sndSeqVolume(0, time, lbl_3_common_bss_34C58._08, 1);
+    }
 }
 
 // .text:0x000903B8 size:0x7C mapped:0x806CF44C

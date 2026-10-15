@@ -78,7 +78,7 @@ void sndVolume(u8 volume, u16 time, u8 volGroup);
 u32 fn_3_90220(s32 arg0, s32 arg1);
 u32 playSoundEffect(int arg0);
 void fn_3_902FC(void);
-void fn_3_90328(void);
+void fn_3_90328(s32 time);
 void fn_3_903B8(void);
 void fn_3_90434(void);
 s32 fn_3_9056C(s32 songIndex);
