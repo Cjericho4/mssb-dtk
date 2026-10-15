@@ -23,8 +23,22 @@ void fn_3_21F14(void) {
 }
 
 // .text:0x0002273C size:0xE0 mapped:0x806617D0
-void fn_3_2273C(void) {
-    return;
+BOOL fn_3_2273C(void) {
+    Struct_3_2281C_Entry* ptr;
+    s32 i;
+
+    for (i = 0; i < 9; i++) {
+        if (g_Fielders[i].unk218 == 0) {
+            ptr = (Struct_3_2281C_Entry*)g_hugeAnimStruct.AnimationStructPtrs[i];
+            if (ptr == NULL) {
+                return TRUE;
+            }
+            if (ptr->field_0x68 == 0) {
+                return TRUE;
+            }
+        }
+    }
+    return FALSE;
 }
 
 // .text:0x0002281C size:0x34 mapped:0x806618B0
