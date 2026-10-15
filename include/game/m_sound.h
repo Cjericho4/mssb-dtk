@@ -11,11 +11,33 @@ void fn_3_8B718(void);
 void fn_3_8B7DC(void);
 void fn_3_8B804(void);
 void fn_3_8B890(void);
+/* Game-side 3D sound emitter slot (0x50 bytes in this MusyX build). */
+typedef struct SoundEmitterSlot {
+    u8 data[0x50];
+} SoundEmitterSlot;
+
+#define SOUND_EMITTER_COUNT 100
+
 typedef struct CommonBss32B20 {
     u8 _pad0[0x8];
-    u32 field_0x8;
-    u8 _pad1[0x2138 - 0xC];
+    u32 field_0x8;                                /* 0x8: listener room */
+    u8 _padC[0x90 - 0xC];
+    SoundEmitterSlot emitters[SOUND_EMITTER_COUNT]; /* 0x90 */
+    u8 _pad1FD0[0x2034 - 0x1FD0];
+    u8 emitterActive[SOUND_EMITTER_COUNT];        /* 0x2034 */
+    u8 _pad2098[0x2138 - 0x2098];
 } CommonBss32B20;
+
+/* Camera view returned by fn_80052734. */
+typedef struct SoundCameraView {
+    u8 _pad0[0x70];
+    Vec pos;    /* 0x70 */
+    Vec target; /* 0x7C */
+} SoundCameraView;
+
+SoundCameraView* fn_80052734(s32 mode);
+u32 sndCheckEmitter(SoundEmitterSlot* em);
+u32 sndRemoveEmitter(SoundEmitterSlot* em);
 
 typedef struct Data8D70 {
     u8 data[0xC];
