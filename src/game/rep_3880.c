@@ -256,9 +256,15 @@ void fn_3_14C398(void) {
 }
 
 typedef struct {
-    u8 _pad0[0x14];
+    s32 unk00;
+    u8 _pad4[0x4];
+    s32 unk08;
+    u8 _padC[0x4];
+    s32 unk10;
     s32 unk14;
-    u8 _pad18[0x14];
+    u8 _pad18[0x4];
+    s32 unk1C;
+    u8 _pad20[0xC];
 } Struct_26D5C;
 extern Vec lbl_3_data_26D50;
 extern Struct_26D5C lbl_3_data_26D5C;
@@ -282,8 +288,17 @@ void fn_3_14C4C8(void) {
 }
 
 // .text:0x0014C79C size:0x94 mapped:0x8078B830
-void fn_3_14C79C(void) {
-    return;
+void fn_3_14C79C(Struct_14C79C_Arg* arg0) {
+    ListNode_14B9F0* node;
+
+    arg0->unk10 = lbl_3_common_bss_32724.field6C;
+    node = arg0->node;
+    node->field_0x4D = lbl_3_data_26D5C.unk00;
+    node->field_0x4E = 0;
+    node->field_0x4A = lbl_3_data_26D5C.unk08;
+    node->scaleX = node->scaleY = (f32)lbl_3_data_26D5C.unk10 / 100000.0f;
+    node->color[3] = lbl_3_data_26D5C.unk1C;
+    node->color[0] = node->color[1] = node->color[2] = 0xFF;
 }
 
 // .text:0x0014C830 size:0xD4 mapped:0x8078B8C4

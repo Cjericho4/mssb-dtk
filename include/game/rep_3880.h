@@ -12,7 +12,9 @@ typedef struct ListNode_14B9F0 {
     VecXYZ offset;                  // 0x04
     u8 _pad10[0xC];                 // 0x10
     VecXYZ pos;                     // 0x1C
-    u8 _pad28[0x18];                // 0x28
+    u8 _pad28[0x10];                // 0x28
+    f32 scaleX;                     // 0x38
+    f32 scaleY;                     // 0x3C
     u8 color[4];                    // 0x40
     u8 field_0x44;                  // 0x44
     u8 field_0x45;                  // 0x45
@@ -109,7 +111,12 @@ void fn_3_14C348(void* arg0, void* arg1);
 void fn_3_14C398(void);
 void fn_3_14C3BC(ListNode_14B9F0* node);
 void fn_3_14C4C8(void);
-void fn_3_14C79C(void);
+typedef struct Struct_14C79C_Arg {
+    u8 _pad0[0xC];
+    ListNode_14B9F0* node;          // 0x0C
+    s32 unk10;                      // 0x10
+} Struct_14C79C_Arg;
+void fn_3_14C79C(Struct_14C79C_Arg* arg0);
 void fn_3_14C830(void);
 void fn_3_14C904(void);
 void fn_3_14CA00(void);
