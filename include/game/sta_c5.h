@@ -3,6 +3,7 @@
 
 #include "mssbTypes.h"
 #include "game/UnknownHomes_Game.h"
+#include "C3/control.h"
 
 typedef struct {
     s32 x;
@@ -85,7 +86,15 @@ void fn_3_F31E0(void);
 void fn_3_F37BC(void);
 void fn_3_F38D4(void);
 void fn_3_F3A04(OuterStruct_F13F8* arg0);
-void fn_3_F3A5C(void);
+typedef struct StaC5PlacedObj {
+    /* 0x00 */ Control control;
+    /* 0x3C */ u8 _pad3C[0xA0 - 0x3C];
+    /* 0xA0 */ VecXYZ pos;
+    /* 0xAC */ u8 _padAC[0xB4 - 0xAC];
+    /* 0xB4 */ f32 rotY;
+} StaC5PlacedObj;
+
+void fn_3_F3A5C(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY);
 void fn_3_F3AE0(void);
 void fn_3_F3BB0(void);
 void fn_3_F3CD0(void);

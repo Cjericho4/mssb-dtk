@@ -251,8 +251,14 @@ void fn_3_F3A04(OuterStruct_F13F8* arg0) {
 }
 
 // .text:0x000F3A5C size:0x84 mapped:0x80732AF0
-void fn_3_F3A5C(void) {
-    return;
+void fn_3_F3A5C(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY) {
+    obj->pos.x = x;
+    obj->pos.y = y;
+    obj->pos.z = z;
+    obj->rotY = rotY;
+    obj->control.type = 0;
+    CTRLSetTranslation(&obj->control, obj->pos.x, -obj->pos.y, obj->pos.z);
+    CTRLSetRotation(&obj->control, 0.0f, rotY, 0.0f);
 }
 
 // .text:0x000F3AE0 size:0xD0 mapped:0x80732B74
