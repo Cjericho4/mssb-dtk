@@ -11,7 +11,23 @@ void fn_3_1666B0(void) {
 
 // .text:0x0016689C size:0xD0 mapped:0x807A5930
 void fn_3_16689C(void) {
-    return;
+    if (g_d_GameSettings._55 != 0 || lbl_3_common_bss_35154.unk_479 != 0) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (g_GameLogic.gameStatus != 2 || g_GameLogic.framesOfExitingToMenu != 0 || g_Ball.fielderWBallIndex < 0) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (g_d_GameSettings.GameModeSelected == 6 && g_Minigame.TF_ballDespawnedInd) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (g_Ball.ballState != 1) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    fn_3_16699C();
 }
 
 // .text:0x0016696C size:0x30 mapped:0x807A5A00
