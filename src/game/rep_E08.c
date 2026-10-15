@@ -96,8 +96,20 @@ void fn_3_62CA8(s32 index) {
 }
 
 // .text:0x00062D44 size:0xC0 mapped:0x806A1DD8
-void fn_3_62D44(void) {
-    return;
+void fn_3_62D44(s32 index) {
+    Fielder* fielder = &g_Fielders[index];
+    AnimationStruct_31EAC* anim = &g_UnkAnimation_31EAC[index];
+
+    anim->unk41 = 0;
+    if (fielder->unk1E5 == 2) {
+        anim->unk41 = 1;
+    } else if (fielder->unk1E5 == 3) {
+        anim->unk41 = 2;
+    }
+    if (fielder->unk256 != 0 && g_Ball.AtBat_ContactResult == 0 && fielder->unk248 < fielder->unkE8 &&
+        g_Ball.framesUntilBallHitsGround < 120 && g_Ball.maxYOfHit > 5.0f && g_FieldingLogic.unk144 != 0) {
+        anim->unk45 = 1;
+    }
 }
 
 // .text:0x00062E04 size:0x24 mapped:0x806A1E98

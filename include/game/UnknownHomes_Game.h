@@ -576,7 +576,9 @@ typedef struct FieldingLogic {
     /* 0x134 */ u8 _pad2[0x13B - 0x134];
     /* 0x13B */ u8 unk_13B;           // Preserving your previous find
     
-    /* 0x13C */ u8 _pad3[0x14A - 0x13C];
+    /* 0x13C */ u8 _pad3[0x144 - 0x13C];
+    /* 0x144 */ u8 unk144;
+    /* 0x145 */ u8 _pad145[0x14A - 0x145];
     /* 0x14A */ u16 unk14A;           // lhz r0, 0x14a(r5)
 } FieldingLogic;
 
@@ -2125,7 +2127,9 @@ typedef struct Fielder {
     /* 0x070 */ f32 unk70;
     /* 0x074 */ u8 _pad74[0xB8 - 0x74];
     /* 0x0B8 */ f32 unkB8;
-    /* 0x0BC */ u8 _padBC[0x178 - 0xBC];
+    /* 0x0BC */ u8 _padBC[0xE8 - 0xBC];
+    /* 0x0E8 */ f32 unkE8;
+    /* 0x0EC */ u8 _padEC[0x178 - 0xEC];
     /* 0x178 */ s16 unk178;
     /* 0x17A */ u8 _pad17A[0x17E - 0x17A];
     /* 0x17E */ s16 unk17E;
@@ -2149,7 +2153,9 @@ typedef struct Fielder {
     /* 0x1DC */ u8 unk1DC;
     /* 0x1DD */ u8 _pad1DD[0x1E3 - 0x1DD];
     /* 0x1E3 */ u8 unk1E3;
-    /* 0x1E4 */ u8 _pad3e[0x1EC - 0x1E4];
+    /* 0x1E4 */ u8 _pad3e;
+    /* 0x1E5 */ u8 unk1E5;
+    /* 0x1E6 */ u8 _pad1E6[0x1EC - 0x1E6];
     /* 0x1EC */ u8 unk1EC;
     /* 0x1ED */ u8 _pad3f[0x1F8 - 0x1ED];
     /* 0x1F8 */ u8 unk1F8;
@@ -2160,12 +2166,15 @@ typedef struct Fielder {
     /* 0x216 */ u8 unk216;
     /* 0x217 */ u8 _pad217;
     /* 0x218 */ u8 unk218;
-    /* 0x219 */ u8 _pad3c2[0x24C - 0x219];
+    /* 0x219 */ u8 _pad3c2[0x248 - 0x219];
+    /* 0x248 */ f32 unk248;
     /* 0x24C */ s16 unk24C;
     /* 0x24E */ u8 _pad24E[0x252 - 0x24E];
     /* 0x252 */ u8 unk252;
     /* 0x253 */ u8 unk253;
-    /* 0x254 */ u8 _pad254[0x25B - 0x254];
+    /* 0x254 */ u8 _pad254[0x256 - 0x254];
+    /* 0x256 */ u8 unk256;
+    /* 0x257 */ u8 _pad257[0x25B - 0x257];
     /* 0x25B */ u8 unk_25B;
     /* 0x25C */ u8 _pad4[0x268 - 0x25C];
     } Fielder; // sizeof == 0x268

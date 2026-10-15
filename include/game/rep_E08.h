@@ -37,7 +37,11 @@ typedef struct {
     u8 _pad0[0x38];
     s16 unk38; // Offset 0x38
     s16 unk3A; // Offset 0x3A
-    u8 _pad3C[0x4A - 0x3C];
+    u8 _pad3C[0x41 - 0x3C];
+    u8 unk41; // Offset 0x41
+    u8 _pad42[0x45 - 0x42];
+    u8 unk45; // Offset 0x45
+    u8 _pad46[0x4A - 0x46];
     s16 unk4A; // Offset 0x4A
     u8 unk4C; // Offset 0x4C
     u8 unk4D; // Offset 0x4D
@@ -60,7 +64,7 @@ void fn_3_61B64(void);
 void fn_3_62904(void);
 void fn_3_62B50(void);
 void fn_3_62CA8(s32 index);
-void fn_3_62D44(void);
+void fn_3_62D44(s32 index);
 void fn_3_62E04(s32 index);
 void fn_3_62E28(void);
 void fn_3_62E70(void);
