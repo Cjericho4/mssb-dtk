@@ -4,7 +4,7 @@
 **Source of truth:** Always follow `queue.log`. If this file disagrees with `queue.log`, `queue.log` wins.
 **Strategy:** Work through functions listed in `queue.log` (plain entries at the bottom, after all COMPLETED/NONMATCHING lines)
 **Queue file:** `queue.log`
-**Next function to attempt:** see queue.log (next batch: Codex easy tier, .agent/categorize/functions.csv)
+**Next function to attempt:** see queue.log (current batch: Codex medium tier, smallest 100; easy tier done 2026-10-14: 79 matched, 14 nonmatching)
 
 To find the next function: look for the first plain entry (not prefixed with COMPLETED/NONMATCHING/SKIPPED) in `queue.log` that hasn't been committed yet.
 
@@ -58,6 +58,16 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_112070 | CW sign-bit register allocation: target reuses srwi r5 from % 30 division as 3rd fn_3_155288 arg; add result goes to r0 in target but r5 in compile, causing ext |
 | fn_3_125850 | fn_80034E20 called with 2 args in target (no r5 setup), but global 3-arg declaration forces NULL→li r5,0 before call; local redecl rejected by -requireprotos |
 | fn_3_117588 | register allocation / scheduling (see git log) |
+| fn_3_90C14 | fn_800216F8 called with 3 args here, 2 elsewhere in file; one prototype can't satisfy both |
+| fn_3_A32B8 | nested-struct field load folded to single lwz |
+| fn_3_B7CDC, fn_3_B7C2C | adjacent-constant compares merged into range check |
+| fn_3_B7E44 | int-to-double/0.06 constant load form shifts scheduling |
+| fn_3_141A30 | regalloc only; jump table lives in rep_36D8 .data (split fix needed) |
+| fn_3_ED058 | scene pointer loaded into temp then mr r3 |
+| fn_3_FF98 | regalloc only (0 diffs ignoring registers) |
+| fn_3_119EE0, fn_3_119E30 | 0x34 offset folded into lwzx index |
+| fn_3_8B094 | offset-indexed vs pointer form for table entry |
+| fn_3_9EE24 | regalloc (max/abs in r10/r3) |
 | fn_3_24EA0 | register allocation / scheduling (see git log) |
 | fn_3_6BD6C | Register numbering of the 1/0 constants in the init block; loop matches. |
 | fn_3_DF6D4 | Scheduling of the player-index/zero setup before the AI-strength loop. |
