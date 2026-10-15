@@ -4,11 +4,20 @@
 #include "C3/control.h"
 #include "Dolphin/vec.h"
 #include "game/rep_1D58.h"
+#include "game/sta_c2.h"
 
 
 // .text:0x000E1FA8 size:0x8C mapped:0x8072103C
-void fn_3_E1FA8(void) {
-    return;
+void fn_3_E1FA8(UnknownStruct_EF3D4* obj) {
+    ActorAnimState* state = obj->unk74;
+    Actor* actor = state->actor;
+    if (state->time + state->speed > 900.0f) {
+        state->time = 180.0f;
+        state->setTime = 1;
+        fn_800B4CA0(actor, state->time);
+    }
+    AnimateActorBones(actor);
+    state->time += state->speed;
 }
 
 // .text:0x000E2034 size:0xE4 mapped:0x807210C8

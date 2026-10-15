@@ -47,7 +47,7 @@ typedef struct Arg_E22A4 {
     u8 unk_C8;                /* 0xC8 */
 } Arg_E22A4;
 
-void fn_3_E1FA8(void);
+void fn_3_E1FA8(UnknownStruct_EF3D4* obj);
 void fn_3_E2034(void);
 void fn_3_E2118(void);
 void fn_3_E22A4(Arg_E22A4 *arg0);
