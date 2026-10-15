@@ -1,5 +1,11 @@
 #include "game/gap_1E154.h"
 #include "game/gap_AC9F8.h"
+#include "game/gap_9CD90.h"
+#include "game/rep_1838.h"
+#include "UnknownHeaders.h"
+
+/* Bunt chance by [character class][AI batter difficulty]. */
+extern u8 lbl_3_data_1C10[8][4];
 
 // .text:0x0001E154 size:0x24 mapped:0x8065D1E8
 void fn_3_1E154(void) {
@@ -32,6 +38,13 @@ void fn_3_1E328(void) {
 
 // .text:0x0001E3EC size:0xCC mapped:0x8065D480
 void fn_3_1E3EC(void) {
-    return;
+    g_AiLogic.batterAIBuntPossibility = 0;
+    g_AiLogic.batterAIBuntInd = 0;
+    if (g_Scores.unkA6 <= 2 && g_Scores.unkAC >= 2 && g_Strikes.outs <= 1 &&
+        (g_RunningLogic.basesOccupied == 0x11 || g_RunningLogic.basesOccupied == 0x111)) {
+        if (RandomInt_Game(100) < lbl_3_data_1C10[g_Batter.characterClass][g_AiLogic.aIBatterDifficulty]) {
+            g_AiLogic.batterAIBuntInd = 1;
+        }
+    }
 }
 

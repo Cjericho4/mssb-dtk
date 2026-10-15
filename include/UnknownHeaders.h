@@ -990,7 +990,9 @@ typedef struct Scores {
     /* 0x9C */ s16 field_0x9C;
     u8 _pad9E[0x2];
     /* 0xA0 */ s16 prevScore;
-    u8 _pad2[0xAA - 0xA2];        // Pad to 0xAA
+    u8 _pad2[0xA6 - 0xA2];
+    /* 0xA6 */ s16 unkA6;
+    u8 _padA8[0xAA - 0xA8];       // Pad to 0xAA
     /* 0xAA */ u8 threshold;     // Matches 'lbz r0, 0xaa(r4)'
     /* 0xAB */ u8 _padAB;
     /* 0xAC */ u8 unkAC;
