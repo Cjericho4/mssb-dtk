@@ -5,12 +5,32 @@
 #include "game/rep_1D58.h"
 #include "game/sta_c4.h"
 #include "header_rep_data.h"
+#include "game/m_sound.h"
+#include "game/gap_16C410.h"
 
 extern GXTexObj lbl_3_bss_B640;
 
 // .text:0x000F8444 size:0x10 mapped:0x807374D8
 void fn_3_F8444(void) {
     lbl_3_bss_B5D4 = TRUE;
+}
+
+// .text:0x000F8454 size:0xD0 mapped:0x807374E8
+extern s32 lbl_3_bss_B574[];
+extern u8 lbl_3_bss_B664;
+
+void fn_3_F8454(void) {
+    if (g_GameLogic.gameStatus == 0xB) {
+        if (lbl_3_bss_B664 == 0) {
+            fn_3_8B890(lbl_3_bss_B574[0]);
+            lbl_3_bss_B664 = 1;
+        }
+    } else if (lbl_3_bss_B664 != 0) {
+        lbl_3_bss_B574[0] = fn_3_8BBC4(lbl_3_data_81DC[g_d_GameSettings.StadiumID] + 3, NULL, 0, 2);
+        lbl_3_bss_B664 = 0;
+    } else {
+        fn_3_8BA60(lbl_3_bss_B574[0], NULL, NULL);
+    }
 }
 
 // .text:0x000F8524 size:0x8C mapped:0x807375B8
