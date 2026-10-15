@@ -115,7 +115,14 @@ void fn_3_709B4(void) {
 
 // .text:0x00070AEC size:0xA8 mapped:0x806AFB80
 void fn_3_70AEC(void) {
-    return;
+    f32 t;
+
+    if (g_Pitcher.cancelParabolicAdjustmentInd != 0) {
+        g_Pitcher.pitchX_parabolicAdjustment = 0.0f;
+        return;
+    }
+    t = (f32)g_Ball.pitchHangtimeCounter - (f32)g_Pitcher.frameWhenUnhittable * lbl_3_rodata_1250;
+    g_Pitcher.pitchX_parabolicAdjustment = g_Pitcher.horizontalOffsetParabolaMidpoint - (t * (g_Pitcher.horizontalGlobalParabolicVelo * t)) / 10000.0f;
 }
 
 // .text:0x00070B94 size:0x360 mapped:0x806AFC28
