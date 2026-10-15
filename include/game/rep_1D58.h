@@ -69,6 +69,22 @@ struct StadiumObject* fn_3_B827C(void);
 void fn_3_B828C(struct StadiumObject*);
 void fn_3_B8298(void);
 void fn_3_B8414(f32* arg0, f32* arg1);
+typedef struct StadiumPrimHdr {
+    /* 0x0 */ u8 unk0;
+    /* 0x1 */ u8 isStrip;
+    /* 0x2 */ u16 count;
+} StadiumPrimHdr;
+
+typedef struct StadiumVtx {
+    /* 0x0 */ Vec pos;
+    /* 0xC */ u8 _padC[0x4];
+} StadiumVtx; // size: 0x10
+
+typedef struct StadiumModel {
+    /* 0x0 */ u8 _pad0[0x8];
+    /* 0x8 */ StadiumPrimHdr* prims;
+} StadiumModel;
+
 void fn_3_B8464(Mtx m, struct StadiumModel* model);
 void fn_3_B8574(void);
 u32 fn_3_B85A8(s32 index, u32* outPtr);

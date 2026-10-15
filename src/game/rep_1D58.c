@@ -93,7 +93,41 @@ void fn_3_B8414(f32* arg0, f32* arg1) {
 
 // .text:0x000B8464 size:0x110 mapped:0x806F74F8
 void fn_3_B8464(Mtx m, struct StadiumModel* model) {
-    return;
+    u32 n;
+    StadiumPrimHdr* hdr = model->prims;
+    u16 count;
+    Vec v;
+
+    while (TRUE) {
+        count = hdr->count;
+        if (count == 0) {
+            break;
+        }
+        n = hdr->isStrip ? count + 2 : count * 3;
+        hdr++;
+        do {
+            PSMTXMultVec(m, &((StadiumVtx*)hdr)->pos, &v);
+            hdr = (StadiumPrimHdr*)((StadiumVtx*)hdr + 1);
+            if (lbl_3_bss_1910.unk0 > v.x) {
+                lbl_3_bss_1910.unk0 = v.x;
+            }
+            if (lbl_3_bss_1910.unk4 > v.y) {
+                lbl_3_bss_1910.unk4 = v.y;
+            }
+            if (lbl_3_bss_1910.unk8 > v.z) {
+                lbl_3_bss_1910.unk8 = v.z;
+            }
+            if (lbl_3_bss_1910.unkC < v.x) {
+                lbl_3_bss_1910.unkC = v.x;
+            }
+            if (lbl_3_bss_1910.unk10 < v.y) {
+                lbl_3_bss_1910.unk10 = v.y;
+            }
+            if (lbl_3_bss_1910.unk14 < v.z) {
+                lbl_3_bss_1910.unk14 = v.z;
+            }
+        } while (--n != 0);
+    }
 }
 
 // .text:0x000B8574 size:0x34 mapped:0x806F7608
