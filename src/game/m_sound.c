@@ -243,7 +243,26 @@ void fn_3_8CD74(void) {
 
 // .text:0x0008D9C0 size:0xC0 mapped:0x806CCA54
 void fn_3_8D9C0(void) {
-    return;
+    SoundCameraView* cam;
+    Vec pos;
+    Vec vel;
+    Vec dir;
+
+    fn_3_8CD74();
+    cam = fn_80052734(0);
+    pos.x = cam->pos.x;
+    pos.y = cam->pos.y;
+    pos.z = cam->pos.z;
+    vel.x = 0.0f;
+    vel.y = 0.0f;
+    vel.z = 0.0f;
+    PSVECSubtract(&cam->target, &cam->pos, &dir);
+    if (PSVECMag(&dir)) {
+        PSVECNormalize(&dir, &dir);
+    }
+    if (lbl_3_common_bss_32B20.field_0x8 != 0) {
+        sndUpdateListener(&lbl_3_common_bss_32B20, (VecXYZ*)&pos, (VecXYZ*)&vel, (VecXYZ*)&dir, &lbl_3_data_8D70, 0x7F, 0);
+    }
 }
 
 // .text:0x0008DA80 size:0x1748 mapped:0x806CCB14
