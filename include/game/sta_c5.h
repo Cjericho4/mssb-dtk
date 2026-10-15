@@ -44,6 +44,28 @@ typedef struct StaC5DriftTarget {
 
 extern StaC5DriftTarget lbl_3_data_1B884[];
 
+/* Object placed at an entry of lbl_3_data_1B9A4. */
+typedef struct StaC5SpotObj {
+    /* 0x00 */ Control control;
+    /* 0x3C */ u8 _pad3C[0x9C - 0x3C];
+    /* 0x9C */ u8 spotIdx;
+    /* 0x9D */ u8 _pad9D[0xA0 - 0x9D];
+    /* 0xA0 */ f32 x;
+    /* 0xA4 */ f32 y;
+    /* 0xA8 */ f32 z;
+    /* 0xAC */ f32 rot;
+} StaC5SpotObj;
+
+typedef struct StaC5Spot {
+    /* 0x00 */ f32 x;
+    /* 0x04 */ f32 y;
+    /* 0x08 */ f32 z;
+    /* 0x0C */ f32 rot;
+    /* 0x10 */ u8 _pad10[0x18 - 0x10];
+} StaC5Spot; /* size: 0x18 */
+
+extern StaC5Spot lbl_3_data_1B9A4[];
+
 typedef struct {
     u8 _pad0[0x60];
     u8 unk60;       // 0x60
@@ -117,7 +139,7 @@ void fn_3_F0224(void);
 void fn_3_F082C(void);
 void fn_3_F0FA4(void);
 void fn_3_F13F8(OuterStruct_F13F8* arg0);
-void fn_3_F1448(void);
+void fn_3_F1448(StaC5SpotObj* obj);
 void fn_3_F1518(void);
 void fn_3_F1674(void);
 void fn_3_F1750(void);

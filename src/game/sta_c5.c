@@ -207,8 +207,15 @@ void fn_3_F13F8(OuterStruct_F13F8* arg0) {
 }
 
 // .text:0x000F1448 size:0xD0 mapped:0x807304DC
-void fn_3_F1448(void) {
-    return;
+void fn_3_F1448(StaC5SpotObj* obj) {
+    obj->x = lbl_3_data_1B9A4[obj->spotIdx].x;
+    obj->y = lbl_3_data_1B9A4[obj->spotIdx].y;
+    obj->z = lbl_3_data_1B9A4[obj->spotIdx].z;
+    obj->rot = -lbl_3_data_1B9A4[obj->spotIdx].rot;
+    obj->control.type = 0;
+    CTRLSetTranslation(&obj->control, obj->x, -obj->y, obj->z);
+    CTRLSetRotation(&obj->control, 0.0f, obj->rot, 0.0f);
+    CTRLSetScale(&obj->control, 1.0f, 1.0f, 1.0f);
 }
 
 // .text:0x000F1518 size:0x15C mapped:0x807305AC
