@@ -21,7 +21,11 @@ typedef struct Data170D8 {
     s32 unk4;
 } Data170D8;
 extern Data170D8 lbl_3_data_170D8;
-extern u8 lbl_80366158; // Size and exact type unknown, accessing as byte array
+typedef struct Lbl80366158_1E08 {
+    u8 _00[0x28];
+    u8 _28; /* 0x28 */
+} Lbl80366158_1E08;
+extern Lbl80366158_1E08 lbl_80366158;
 extern f32 lbl_3_rodata_1EB0;
 extern f32 lbl_3_rodata_1F18;
 extern f32 lbl_3_rodata_1F1C;

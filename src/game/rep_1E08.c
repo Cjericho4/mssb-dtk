@@ -170,7 +170,7 @@ void fn_3_BD4F0(void) {
 // .text:0x000BD504 size:0x1A8 mapped:0x806FC598
 void fn_3_BD504(s32 flag, f32 f1, f32 f2, f32 f3) {
     // Check if lbl_80366158.unk28 == 0 (byte at offset 0x28)
-    if (((u8*)&lbl_80366158)[0x28] == 0) {
+    if (lbl_80366158._28 == 0) {
         // Copy 3 floats (12 bytes) from unk_440 to unk_464 area
         memcpy(&lbl_3_common_bss_35154.unk_464, &lbl_3_common_bss_35154.unk_440, 0xC);
 
@@ -233,7 +233,7 @@ void fn_3_BD504(s32 flag, f32 f1, f32 f2, f32 f3) {
     // else: someFlag is 0, do nothing else
 
     // If we took the first branch (lbl_80366158.unk28 == 0), increment unk_464
-    if (((u8*)&lbl_80366158)[0x28] == 0) {
+    if (lbl_80366158._28 == 0) {
         lbl_3_common_bss_35154.unk_464 += 1;
     }
 }
@@ -338,7 +338,7 @@ void fn_3_BDCA4(void) {
         return;
     }
 
-    val28 = ((u8*)&lbl_80366158)[0x28];
+    val28 = lbl_80366158._28;
     qEntry->unk20 -= (s32)(((u32)(2 - val28) | (u32)(val28 - 2)) >> 31);
 
     ((BdcArrayElement*)(qEntry->unk24))[lbl_803CBBC0].unk48 = lbl_3_rodata_1E84 / fn_80052768(0)->unkA4;

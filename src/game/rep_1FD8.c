@@ -164,7 +164,6 @@ void fn_3_C2974(void) {
     lbl_3_bss_9D82 = TRUE;
 }
 
-// .text:0x000C298C size:0x114 mapped:0x80701A20
 typedef struct C298CObj {
     u8 _pad0[0x8];
     u32 unk8; /* 0x08 */
@@ -245,7 +244,6 @@ void fn_3_C3C2C(void) {
     return;
 }
 
-// .text:0x000C3E94 size:0xDC mapped:0x80702F28
 typedef struct {
     u8 _pad0[0x14];
     u16 baseIdx; /* 0x14 */
@@ -270,7 +268,6 @@ void fn_3_C3E94(Vec* pos, s32 idx) {
     lbl_80371C30[lbl_3_bss_9E50.obj->baseIdx + idx].obj->pos.z = 0.0f;
 }
 
-// .text:0x000C3F70 size:0xF8 mapped:0x80703004
 typedef struct C3F70Elem {
     u8 type;       /* 0x00 */
     u8 _pad1[0x3];
@@ -431,7 +428,6 @@ void fn_3_C597C(void) {
     return;
 }
 
-// .text:0x000C5CE0 size:0xFC mapped:0x80704D74
 typedef struct C5CE0Arg {
     u8 _pad0[0x9C];
     Vec pos; /* 0x9C */
@@ -498,7 +494,6 @@ void fn_3_C7444(ActorObject* arg0) {
     return;
 }
 
-// .text:0x000C749C size:0x11C mapped:0x80706530
 extern VecXYZ lbl_3_bss_9DE8[8];
 extern u8 lbl_3_bss_9E48[8];
 

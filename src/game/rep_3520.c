@@ -9,6 +9,41 @@
 
 extern void changeScene(s32, s32);
 
+typedef struct {
+    u32 counter; /* 0x00 */
+    u8 _pad4[0x38];
+} Rep3520Bss_B704;
+
+extern Rep3520Bss_B704 lbl_3_bss_B704;
+extern u8 lbl_3_bss_B740[0x40];
+extern s8 lbl_3_data_26580;
+extern u32 fn_800247E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+
+// .text:0x001330E4 size:0x11C mapped:0x80772178
+void fn_3_1330E4(void) {
+    s32 v;
+    s32 i;
+
+    lbl_3_bss_B704.counter += (lbl_80366158._28 == 0);
+    if (lbl_3_bss_B704.counter & 1) {
+        return;
+    }
+    v = lbl_3_bss_B740[fn_800247E4(0, 0, 4, 4)];
+    v += lbl_3_data_26580 * 2;
+    if (v > 0xFF) {
+        v = 0xFF;
+    } else if (v < 0) {
+        v = 0;
+    }
+    for (i = 0; i < 32; i += 2) {
+        lbl_3_bss_B740[i] = v;
+    }
+    DCFlushRange(lbl_3_bss_B740, 0x40);
+    if (v + lbl_3_data_26580 * 2 > 0xFF || v + lbl_3_data_26580 * 2 < 0) {
+        lbl_3_data_26580 *= -1;
+    }
+}
+
 // .text:0x00133200 size:0x120 mapped:0x80772294
 void fn_3_133200(void) {
     return;
@@ -30,7 +65,6 @@ void fn_3_13334C(void) {
     return;
 }
 
-// .text:0x001344BC size:0xF0 mapped:0x80773550
 // .text:0x001344BC size:0xF0 mapped:0x80773550
 BOOL fn_3_1344BC(s32 a, s32 b) {
     f32 dxB = g_Fielders[g_Minigame.minigameFielderIndex[b]].pos[0] - lbl_3_data_21A48.x;
@@ -178,7 +212,6 @@ void fn_3_1357A4(Vec* out, Vec* dir) {
     out->z = base.z + ofs.z;
 }
 
-// .text:0x0013583C size:0xE8 mapped:0x807748D0
 // .text:0x0013583C size:0xE8 mapped:0x807748D0
 void fn_3_13583C(Vec* pos) {
     Vec center = {0.0f, 0.0f, 20.0f};
@@ -340,8 +373,6 @@ u8 fn_3_137B10(Rep3520Ball* ball) {
 }
 
 // .text:0x00137CF8 size:0xEC mapped:0x80776D8C
-// .text:0x00137CF8 size:0xEC mapped:0x80776D8C
-// .text:0x00137CF8 size:0xEC mapped:0x80776D8C
 void fn_3_137CF8(Rep3520Ball* ball) {
     u32 idx;
     s32 base;
@@ -366,7 +397,6 @@ void fn_3_137DE4(void) {
     return;
 }
 
-// .text:0x00137F14 size:0x118 mapped:0x80776FA8
 // .text:0x00137F14 size:0x118 mapped:0x80776FA8
 void fn_3_137F14(Rep3520Ball* ball) {
     if (g_Minigame._72A != 0) {
