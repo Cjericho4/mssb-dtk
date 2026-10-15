@@ -1,6 +1,13 @@
 #include "game/gap_90754.h"
 #include "game/gap_97144.h"
 
+static inline s32 getLoadStadiumID(void) {
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        return 6;
+    }
+    return g_d_GameSettings.StadiumID;
+}
+
 // .text:0x00090754 size:0x10 mapped:0x806CF7E8
 void fn_3_90754(Gap90754Struct* arg0, u8 arg1, u8 arg2) {
     arg0->field_0x11820 = arg1;
@@ -14,8 +21,10 @@ s32 fn_3_90764(void) {
 }
 
 // .text:0x00090798 size:0x84 mapped:0x806CF82C
-void fn_3_90798(void) {
-    return;
+s32 fn_3_90798(void) {
+    s32 idx = getLoadStadiumID() + 0x27;
+    fn_80021518(lbl_3_data_81D4[getLoadStadiumID()], (s32)lbl_800EF808.files[idx]);
+    return 0;
 }
 
 // .text:0x0009081C size:0x44 mapped:0x806CF8B0
@@ -27,8 +36,8 @@ void fn_3_9081C(void) {
 }
 
 // .text:0x00090860 size:0x88 mapped:0x806CF8F4
-void fn_3_90860(void) {
-    return;
+s32 fn_3_90860(void) {
+    return 0;
 }
 
 // .text:0x000908E8 size:0x40 mapped:0x806CF97C
@@ -39,8 +48,8 @@ void fn_3_908E8(void) {
 }
 
 // .text:0x00090928 size:0x88 mapped:0x806CF9BC
-void fn_3_90928(void) {
-    return;
+s32 fn_3_90928(void) {
+    return 0;
 }
 
 // .text:0x000909B0 size:0x68 mapped:0x806CFA44
@@ -59,8 +68,8 @@ void fn_3_909B0(void) {
 }
 
 // .text:0x00090A18 size:0x98 mapped:0x806CFAAC
-void fn_3_90A18(void) {
-    return;
+s32 fn_3_90A18(void) {
+    return 0;
 }
 
 // .text:0x00090AB0 size:0x64 mapped:0x806CFB44
@@ -97,7 +106,7 @@ s32 fn_3_90B14(u8 charID, s32 altCharID) {
         }
         index = fn_800698F8(lbl_3_common_bss_34C58._2D);
         scene->loadingState = 0;
-        fn_800216F8(index + 5, fn_3_90F48, 0);
+        fn_800216F8((u8)(index + 5), fn_3_90F48, 0);
         lbl_3_common_bss_34C58._2C++;
     } else if (scene->loadingState != 0) {
         if (++lbl_3_common_bss_34C58._2C == 5) {

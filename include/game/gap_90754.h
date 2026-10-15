@@ -4,6 +4,8 @@
 #include "mssbTypes.h"
 #include "UnknownHeaders.h"
 
+extern u8 lbl_3_data_81D4[];
+
 typedef struct {
     u8 _pad[0x11820];
     u8 field_0x11820;
@@ -12,17 +14,18 @@ typedef struct {
 
 void fn_3_90754(Gap90754Struct* arg0, u8 arg1, u8 arg2);
 s32 fn_3_90764(void);
-void fn_3_90798(void);
+s32 fn_3_90798(void);
 void fn_3_9081C(void);
-void fn_3_90860(void);
+s32 fn_3_90860(void);
 void fn_3_908E8(void);
-void fn_3_90928(void);
+s32 fn_3_90928(void);
+extern s32 fn_8006285C(void);
 void fn_3_909B0(void);
-void fn_3_90A18(void);
+s32 fn_3_90A18(void);
 void fn_3_90AB0(s32 charID);
 extern s32 fn_800698F8(s32 charID);
 s32 fn_3_90B14(u8 charID, s32 altCharID);
-void fn_800216F8(u8 arg0, void (*callback)(void), s32 arg2);
+void fn_800216F8(); // (u8 fileID, callback, ...)
 void fn_3_90C14(void);
 void fn_3_90CB0(void);
 void fn_3_90DD8(void);

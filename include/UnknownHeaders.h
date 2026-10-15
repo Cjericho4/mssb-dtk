@@ -13,14 +13,20 @@ void fn_800528AC(void (*callback)(void));
 void fn_80011604(s8 arg1, void (*func)(void));
 
 typedef struct {
-    u8 _pad0[0x8];
-    void* unk8;         /* 0x08 */
-    u8 _pad1a[0x10 - 0xC];
-    s32 unk10;          /* 0x10 */
-    u8 _pad1b[0x98 - 0x14];
-    void* unk98;        /* 0x98 */
-    void* ptrArray[8];       /* 0x9C */
-    s32 unkBC;
+    u8 _pad0[0x4];
+    union {
+        struct {
+            u8 _pad4[0x8 - 0x4];
+            void* unk8;         /* 0x08 */
+            u8 _pad1a[0x10 - 0xC];
+            s32 unk10;          /* 0x10 */
+            u8 _pad1b[0x98 - 0x14];
+            void* unk98;        /* 0x98 */
+            void* ptrArray[8];       /* 0x9C */
+            s32 unkBC;          /* 0xBC */
+        };
+        void* files[0x2F];      /* 0x04: indexed by file ID */
+    };
     u8 _padC0[0x391 - 0xC0];
     u8 musicVolume;     /* 0x391 */
     u8 _pad392[0x396 - 0x392];
