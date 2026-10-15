@@ -9,9 +9,20 @@
 #include "game/gap_AC9F8.h"
 #include "game/gap_1658F0.h"
 
+extern void fn_8004CC2C(void);
+extern void fn_8004D0F0(void);
+
 // .text:0x001293D0 size:0x78 mapped:0x80768468
 void fn_3_1293D0(void) {
-    return;
+    if (g_GameLogic._125 == 0) {
+        fn_800B0A5C_insertQueue(fn_3_129370, 2);
+    }
+    if (g_GameLogic._125 == 5 && g_GameLogic.FrameCountOfCurrentAtBat_Copy == 1) {
+        fn_800B0A5C_insertQueue(fn_8004D0F0, 2);
+    }
+    if (g_GameLogic._125 == 6) {
+        fn_8004CC2C();
+    }
 }
 
 // .text:0x00129458 size:0x104 mapped:0x807684EC

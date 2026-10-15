@@ -39,7 +39,7 @@ void fn_3_11DECC(void) {
 
 // .text:0x0011E308 size:0x5C mapped:0x8075D39C
 void fn_3_11E308(void) {
-    if (g_GameLogic._125 == 1 && *(u16*)&g_GameLogic.FrameCountOfCurrentAtBat_Copy == 0) {
+    if (g_GameLogic._125 == 1 && g_GameLogic.FrameCountOfCurrentAtBat_Copy == 0) {
         ((DrawingSceneStruct*)fn_800B0A5C_insertQueue(fn_3_E911C, 2))->unk18 = 1;
     }
 }
