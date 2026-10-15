@@ -5,6 +5,7 @@
 #include "Dolphin/vec.h"
 #include "game/rep_1D58.h"
 #include "game/sta_c2.h"
+#include "math.h"
 
 
 // .text:0x000E1FA8 size:0x8C mapped:0x8072103C
@@ -21,8 +22,21 @@ void fn_3_E1FA8(UnknownStruct_EF3D4* obj) {
 }
 
 // .text:0x000E2034 size:0xE4 mapped:0x807210C8
-void fn_3_E2034(void) {
-    return;
+void fn_3_E2034(CastleRotObj* obj) {
+    Vec diff;
+    Vec fwd = {0.0f, 0.0f, -1.0f};
+    f32 angle;
+
+    PSVECSubtract((Vec*)&g_Ball.AtBat_Contact_BallPos, (Vec*)&obj->pos, &diff);
+    diff.y = 0.0f;
+    PSVECNormalize(&diff, &diff);
+    PSVECNormalize(&fwd, &fwd);
+    angle = 57.29578f * (f32)acos(PSVECDotProduct(&diff, &fwd));
+    if (diff.x < 0.0f) {
+        angle = 360.0f - angle;
+    }
+    obj->curRotation = -angle;
+    CTRLSetRotation(&obj->control, 0.0f, obj->curRotation, 0.0f);
 }
 
 // .text:0x000E2118 size:0x18C mapped:0x807211AC

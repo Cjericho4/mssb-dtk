@@ -48,7 +48,8 @@ typedef struct Arg_E22A4 {
 } Arg_E22A4;
 
 void fn_3_E1FA8(UnknownStruct_EF3D4* obj);
-void fn_3_E2034(void);
+struct CastleRotObj;
+void fn_3_E2034(struct CastleRotObj* obj);
 void fn_3_E2118(void);
 void fn_3_E22A4(Arg_E22A4 *arg0);
 void fn_3_E2324(void);
@@ -57,7 +58,6 @@ void fn_3_E266C(void);
 BOOL fn_3_E28DC(castleThwompObj* obj);
 void fn_3_E29B4(void);
 void fn_3_E2B70(void);
-struct CastleRotObj;
 void fn_3_E2E78(struct CastleRotObj* obj);
 void fn_3_E2F4C(void);
 void fn_3_E3044(void);
