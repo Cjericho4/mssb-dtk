@@ -373,7 +373,19 @@ void fn_3_8679C(void) {
 
 // .text:0x00086DFC size:0xFC mapped:0x806C5E90
 void fn_3_86DFC(void) {
-    return;
+    InMemRunnerType* runner;
+    s32 i;
+
+    runner = g_Runners;
+    for (i = 0; i < 4; i++) {
+        if (runner->runnerOnFieldOrOutOrScored != 0) {
+            if (g_FieldingLogic._107 == 1 && runner->stealingStatus != 0 && runner->rosterID >= 0) {
+                runner->runningDirectionDesired = 1;
+            }
+            runner->stealingStatus = 0;
+        }
+        runner++;
+    }
 }
 
 // .text:0x00086EF8 size:0x1B4 mapped:0x806C5F8C
