@@ -919,7 +919,7 @@ typedef struct _PracticeStruct {
     /*0x1A3*/ u8 freePracticeInd_writeOnly;
     artificial_padding(0x1a3, 0x1aa, u8);
     /*0x1AA*/ u8 transitioningIndicator; // unsure
-    artificial_padding(0x1aa, 0x1af, u8);
+    /*0x1AB*/ u8 runnerActive[4];
     /*0x1AF*/ u8 returnToPracticeMenuState;
     /*0x1B0*/ u8 _1B0;
     /*0x1B1*/ u8 practiceCompletedChanged;

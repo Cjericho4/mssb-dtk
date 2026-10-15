@@ -3,6 +3,7 @@
 #include "game/gap_6AEC0.h"
 #include "game/m_sound.h"
 #include "game/rep_AC8.h"
+#include "game/rep_1188.h"
 
 // .text:0x000B3B70 size:0x60 mapped:0x806F2C04
 void fn_3_B3B70(void) {
@@ -18,7 +19,21 @@ void fn_3_B3B70(void) {
 
 // .text:0x000B3BD0 size:0x94 mapped:0x806F2C64
 void fn_3_B3BD0(void) {
-    return;
+    s32 i;
+    InMemRunnerType* runner;
+
+    for (i = 0; i < 4; i++) {
+        runner = &g_Runners[i];
+        if (g_Practice.runnerActive[i] != 0) {
+            if (g_GameLogic.secondaryGameMode == 0xE) {
+                fn_3_6D964(i - 1, i);
+            }
+            runner->runnerOnFieldOrOutOrScored = 1;
+        } else {
+            runner->runnerOnFieldOrOutOrScored = 0;
+            runner->rosterID = -1;
+        }
+    }
 }
 
 // .text:0x000B3C64 size:0x14 mapped:0x806F2CF8

@@ -10,7 +10,7 @@ void fn_3_6D6D4(void) {
 }
 
 // .text:0x0006D964 size:0x4FC mapped:0x806AC9F8
-void fn_3_6D964(void) {
+void fn_3_6D964(s32 rosterIdx, s32 runnerIdx) {
     return;
 }
 
