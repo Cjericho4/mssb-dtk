@@ -131,18 +131,49 @@ void fn_3_62E70(void) {
 }
 
 // .text:0x000631AC size:0x6C8 mapped:0x806A2240
-void fn_3_631AC(void) {
+void fn_3_631AC(s32 runnerIdx) {
     return;
 }
 
 // .text:0x00063874 size:0x1C4 mapped:0x806A2908
-void fn_3_63874(void) {
+void fn_3_63874(s32 runnerIdx) {
     return;
 }
 
 // .text:0x00063A38 size:0xC0 mapped:0x806A2ACC
+typedef struct {
+    f32 groundVelocity; // 0x00
+    u8 _pad04[0x17];
+    u8 state;           // 0x1B
+    u8 prevState;       // 0x1C
+    u8 directionCode;   // 0x1D
+    u8 _pad1E[0x2];
+} RunnerTrackEntry; // size: 0x20
+
+extern RunnerTrackEntry lbl_3_common_bss_321A0[4];
+
 void fn_3_63A38(void) {
-    return;
+    s32 i;
+    InMemRunnerType* runner;
+    RunnerTrackEntry* entry;
+
+    for (i = 0; i < 4; i++) {
+        runner = &g_Runners[i];
+        entry = &lbl_3_common_bss_321A0[i];
+        entry->prevState = entry->state;
+        if (g_d_GameSettings.minigamesEnabled && g_Minigame._18FC[i] < 0) {
+            continue;
+        }
+        if (runner->runnerOnFieldOrOutOrScored == 0) {
+            entry->state = 0;
+        } else {
+            entry->state = 3;
+            entry->groundVelocity = runner->groundVelocity[0];
+            entry->directionCode = runner->runningDirectionCode;
+            fn_3_63874(i);
+            fn_3_631AC(i);
+        }
+    }
 }
 
 // .text:0x00063AF8 size:0x10E4 mapped:0x806A2B8C
