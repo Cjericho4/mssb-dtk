@@ -813,11 +813,15 @@ typedef struct CommonBss_32724 {
     /* 0x9E */ s16 unk9E;
     /* 0xA0 */ s16 unkA0;
     /* 0xA2 */ s16 unkA2;
-    /* 0xA4 */ u8 _padA4[0x3];
+    /* 0xA4 */ u8 _padA4[0x1];
+    /* 0xA5 */ u8 unk_A5;
+    /* 0xA6 */ u8 unk_A6;
     /* 0xA7 */ u8 unk_A7;
-    /* 0xA8 */ u8 _pad3b[0x1];
+    /* 0xA8 */ u8 unk_A8;
     /* 0xA9 */ u8 unk_A9;
-    /* 0xAA */ u8 _pad4[0x0B];
+    /* 0xAA */ u8 _pad4[0x2];
+    /* 0xAC */ u8 unk_AC;
+    /* 0xAD */ u8 _padAD[0x8];
     /* 0xB5 */ u8 unk_B5;
     /* 0xB6 */ u8 unk_B6;
     /* 0xB7 */ u8 unk_B7;
