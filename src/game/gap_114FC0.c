@@ -10,8 +10,7 @@
 #include "game/rep_3310.h"
 
 
-// .text:0x00114FC0 size:0x6C mapped:0x80754054
-void fn_3_114FC0(void) {
+static inline void advanceMinigameTurn(void) {
     g_GameLogic.pre_PostMiniGameInd = 1;
     g_GameLogic.minigameLastTurnSuccessInd = 1;
     g_GameLogic.hudLoadingRelated = 1;
@@ -23,9 +22,32 @@ void fn_3_114FC0(void) {
     }
 }
 
+// .text:0x00114FC0 size:0x6C mapped:0x80754054
+void fn_3_114FC0(void) {
+    g_GameLogic.pre_PostMiniGameInd = 1;
+    g_GameLogic.minigameLastTurnSuccessInd = 1;
+    g_GameLogic.hudLoadingRelated = 1;
+    if (++g_Minigame.turnNumberWithinRound >= g_Minigame.miniGameNumberOfParticipants) {
+        fn_3_5A6D4(0x19);
+    } else {
+        fn_3_5A6D4(7);
+    }
+}
+
+extern s16 lbl_3_data_2167C;
+
 // .text:0x0011502C size:0xDC mapped:0x807540C0
 void fn_3_11502C(void) {
-    return;
+    if (g_Minigame.turnOverStatus == 1) {
+        g_Minigame.turnOverStatus = 2;
+        g_GameLogic.CountdownUntilFade = lbl_3_data_2167C;
+    }
+    if (--g_GameLogic.CountdownUntilFade == 7) {
+        changeScene(3, 6);
+    }
+    if (g_GameLogic.CountdownUntilFade <= 0) {
+        advanceMinigameTurn();
+    }
 }
 
 // .text:0x00115108 size:0x438 mapped:0x8075419C
