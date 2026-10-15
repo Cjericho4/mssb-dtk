@@ -139,8 +139,17 @@ void fn_3_1356F8(void) {
 }
 
 // .text:0x001357A4 size:0x98 mapped:0x80774838
-void fn_3_1357A4(void) {
-    return;
+void fn_3_1357A4(Vec* out, Vec* dir) {
+    Vec base = {0.0f, 0.0f, 20.0f};
+    Vec ofs;
+
+    if (out == NULL || dir == NULL) {
+        return;
+    }
+    PSVECNormalize(dir, &ofs);
+    PSVECScale(&ofs, 3.5f, &ofs);
+    out->x = base.x + ofs.x;
+    out->z = base.z + ofs.z;
 }
 
 // .text:0x0013583C size:0xE8 mapped:0x807748D0

@@ -3,6 +3,7 @@
 
 #include "mssbTypes.h"
 #include "game/UnknownHomes_Game.h"
+#include "Dolphin/vec.h"
 
 typedef struct UnknownObj_134908 {
     u8 _pad0[4];
@@ -40,7 +41,7 @@ typedef struct {
 
 s32 fn_3_135698(Struct_135698_Item* a, Struct_135698_Item* b);
 void fn_3_1356F8(void);
-void fn_3_1357A4(void);
+void fn_3_1357A4(Vec* out, Vec* dir);
 void fn_3_13583C(void);
 void fn_3_135924(void);
 void fn_3_135A64(void);
