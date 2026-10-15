@@ -11,7 +11,15 @@ void fn_3_15C5F4(void) {
 
 // .text:0x0015C638 size:0xAC mapped:0x8079B6CC
 void fn_3_15C638(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    fn_80034E20(scene, lbl_3_data_27C54);
+    if (lbl_80353A90.unk104 == 2) {
+        lbl_80371C30[scene->unkIndex].obj->unk64 = 0xD3;
+    } else if (lbl_80353A90.unk104 == 3) {
+        lbl_80371C30[scene->unkIndex].obj->unk64 = 0xC0;
+    }
+    lbl_803CC1B8->unk_00 = fn_3_15C5F4;
 }
 
 // .text:0x0015C6E4 size:0xAF4 mapped:0x8079B778
