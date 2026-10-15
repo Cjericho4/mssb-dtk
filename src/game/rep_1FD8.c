@@ -163,8 +163,37 @@ void fn_3_C2974(void) {
 }
 
 // .text:0x000C298C size:0x114 mapped:0x80701A20
+typedef struct C298CObj {
+    u8 _pad0[0x8];
+    u32 unk8; /* 0x08 */
+} C298CObj;
+
+typedef struct C298CScene {
+    u8 _pad0[0x14];
+    C298CObj* objs[6]; /* 0x14 */
+} C298CScene;
+
+// .text:0x000C298C size:0x114 mapped:0x80701A20
 void fn_3_C298C(void) {
-    return;
+    C298CScene* scene = (C298CScene*)lbl_803CC1B8;
+    u32 i;
+
+    if (g_d_GameSettings.GameModeSelected == 7) {
+        if ((g_GameLogic.gameStatus == 0xB || g_GameLogic.gameStatus >= 0x22) && g_Minigame._1A40 != 0 &&
+            g_Minigame._1A38 == 0) {
+            fn_800B0A14_removeQueue();
+        }
+    } else if (g_GameLogic._128 != 0 || g_d_GameSettings._13 != 0) {
+        fn_800B0A14_removeQueue();
+    }
+    for (i = 0; i < 6; i++) {
+        if (scene->objs[i] == NULL || scene->objs[i]->unk8 == 0) {
+            scene->objs[i] = (C298CObj*)fn_80033A24(fn_3_C30F0, 0x80, 0, 0x15, 1, 0);
+            if (scene->objs[i] != NULL) {
+                fn_3_C366C(scene->objs[i], i);
+            }
+        }
+    }
 }
 
 // .text:0x000C2AA0 size:0x1E0 mapped:0x80701B34
