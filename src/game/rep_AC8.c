@@ -2,6 +2,7 @@
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "game/rep_1188.h"
+#include "game/rep_1838.h"
 
 // .text:0x000251E4 size:0x1C0 mapped:0x80664278
 void fn_3_251E4(void) {
@@ -134,8 +135,23 @@ void fn_3_2AD68(void) {
 }
 
 // .text:0x0002B5C0 size:0xD4 mapped:0x8066A654
-void fn_3_2B5C0(void) {
-    return;
+void fn_3_2B5C0(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    s32 a;
+    s32 b;
+    s16 d;
+
+    f->unk261 = 0;
+    a = fn_3_9FB8C(g_Ball.AtBat_Contact_BallPos.x - f->pos[0], g_Ball.AtBat_Contact_BallPos.z - f->pos[2]);
+    b = fn_3_9FB8C(f->unk21C - f->pos[0], f->unk224 - f->pos[2]);
+    d = fn_3_9FCA4((s16)a, (s16)b);
+    if (d < -0x500 || d > 0x500) {
+        f->unk261 = 3;
+    } else if (d < -0x200) {
+        f->unk261 = 1;
+    } else if (d > 0x200) {
+        f->unk261 = 2;
+    }
 }
 
 // .text:0x0002B694 size:0x470 mapped:0x8066A728
