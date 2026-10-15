@@ -10,6 +10,7 @@
 #include "game/rep_540.h"
 #include "game/rep_AC8.h"
 #include "musyx/musyx.h"
+#include "Dolphin/GX/GXBump.h"
 
 // .text:0x000EE100 size:0x288 mapped:0x8072D194
 void fn_3_EE100(void) {
@@ -22,12 +23,12 @@ void fn_3_EE388(void) {
 }
 
 // .text:0x000EE67C size:0x2F0 mapped:0x8072D710
-void fn_3_EE67C(void) {
+void fn_3_EE67C(struct DODisplayObj* dispObj, MtxPtr camera) {
     return;
 }
 
 // .text:0x000EE96C size:0x228 mapped:0x8072DA00
-void fn_3_EE96C(void) {
+void fn_3_EE96C(Vec* pos) {
     return;
 }
 
@@ -43,7 +44,28 @@ void fn_3_EECF4(void) {
 
 // .text:0x000EEE3C size:0xE8 mapped:0x8072DED0
 void fn_3_EEE3C(void) {
-    return;
+    StaC5Actor* actor = lbl_3_bss_B55C->actor;
+    StaC5Bone* bone;
+    Vec pos;
+
+    lbl_803C5090.unk1D = 1;
+    fn_8003A144();
+    SetDisplayStateTexture(fn_80039AB4(), 0, 0);
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+    bone = actor->drawList;
+    while (bone != NULL) {
+        pos.x = bone->worldMtx[0][3];
+        pos.y = bone->worldMtx[1][3];
+        pos.z = bone->worldMtx[2][3];
+        fn_3_EE96C(&pos);
+        if (bone->dispObj != NULL) {
+            DOSetWorldMatrix(bone->dispObj, bone->worldMtx);
+            fn_3_EE67C(bone->dispObj, fn_80052734(fn_8005268C())->viewMtx);
+        }
+        bone = bone->next;
+        GXSetTevDirect(GX_TEVSTAGE0);
+    }
 }
 
 // .text:0x000EEF24 size:0x80 mapped:0x8072DFB8

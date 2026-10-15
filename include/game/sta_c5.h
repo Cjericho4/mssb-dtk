@@ -110,7 +110,39 @@ typedef struct StaC5Bss_AEE0 {
     /* 0x33C */ u8 unk33C;
 } StaC5Bss_AEE0;
 extern StaC5Bss_AEE0 lbl_3_bss_AEE0;
-extern void* lbl_3_bss_B55C;
+typedef struct StaC5Bone {
+    /* 0x000 */ u8 _pad0[0x14];
+    /* 0x014 */ struct DODisplayObj* dispObj;
+    /* 0x018 */ u8 _pad18[0xEC - 0x18];
+    /* 0x0EC */ MtxPtr worldMtx;
+    /* 0x0F0 */ u8 _padF0[0x100 - 0xF0];
+    /* 0x100 */ struct StaC5Bone* next;
+} StaC5Bone;
+
+typedef struct StaC5Actor {
+    /* 0x00 */ u8 _pad0[0x74];
+    /* 0x74 */ StaC5Bone* drawList;
+} StaC5Actor;
+
+typedef struct StaC5ActorHolder {
+    /* 0x00 */ StaC5Actor* actor;
+} StaC5ActorHolder;
+
+extern StaC5ActorHolder* lbl_3_bss_B55C;
+
+typedef struct Lbl803C5090 {
+    /* 0x00 */ u8 _pad0[0x1D];
+    /* 0x1D */ u8 unk1D;
+    /* 0x1E */ u8 _pad1E[0x20 - 0x1E];
+} Lbl803C5090;
+extern Lbl803C5090 lbl_803C5090;
+
+struct TextureHeader;
+void fn_8003A144(void);
+struct TextureHeader* fn_80039AB4(void);
+void SetDisplayStateTexture(struct TextureHeader* tex, s32 texMap, s32 tlutName);
+s32 fn_8005268C(void);
+void DOSetWorldMatrix(struct DODisplayObj* dispObj, MtxPtr m);
 extern u8 lbl_3_data_1BA5C[];
 extern u8 lbl_803CBBC0;
 
@@ -119,8 +151,8 @@ void fn_800A7D4C(s32 arg0, void* elem);
 
 void fn_3_EE100(void);
 void fn_3_EE388(void);
-void fn_3_EE67C(void);
-void fn_3_EE96C(void);
+void fn_3_EE67C(struct DODisplayObj* dispObj, MtxPtr camera);
+void fn_3_EE96C(Vec* pos);
 void fn_3_EEB94(void);
 void fn_3_EECF4(void);
 void fn_3_EEE3C(void);
