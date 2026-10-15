@@ -178,8 +178,25 @@ s32 fn_3_910AC(void) {
 }
 
 // .text:0x000910F4 size:0xB4 mapped:0x806D0188
-void fn_3_910F4(void) {
-    return;
+void fn_3_910F4(s32 scene) {
+    s32 i;
+    s32 count;
+    s32 state;
+
+    count = g_Strikes.outs;
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        count = g_Minigame._190D - g_Minigame._1910;
+    }
+    for (i = 0; i < 2; i++) {
+        state = 3;
+        if (((DrawingSceneStruct*)scene)->eventID != count) {
+            if (count >= i + 1) {
+                state = 2;
+            }
+            fn_8003649C(scene, i + 1, i + 1, 0x107, state);
+        }
+    }
+    ((DrawingSceneStruct*)scene)->eventID = count;
 }
 
 // .text:0x000911A8 size:0x10C mapped:0x806D023C
