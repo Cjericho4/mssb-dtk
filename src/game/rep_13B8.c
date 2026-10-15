@@ -414,7 +414,7 @@ void fn_3_88C24(void) {
 }
 
 // .text:0x00088D88 size:0x210 mapped:0x806C7E1C
-void fn_3_88D88(void) {
+void fn_3_88D88(s32 arg0) {
     return;
 }
 

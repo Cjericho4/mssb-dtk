@@ -568,7 +568,9 @@ typedef struct FieldingLogic {
     /* 0x109 */ u8 _pad109[0x10C - 0x109];
     /* 0x10C */ u8 unk10C;
     /* 0x10D */ u8 unk10D;
-    /* 0x10E */ u8 _pad1c[0x114 - 0x10E];
+    /* 0x10E */ u8 _pad1c[0x110 - 0x10E];
+    /* 0x110 */ u8 unk110;
+    /* 0x111 */ u8 _pad111[0x114 - 0x111];
     /* 0x114 */ u8 unk114;
     /* 0x115 */ u8 _pad1d[0x133 - 0x115];
     /* 0x133 */ u8 unk133;            // Preserving your previous find

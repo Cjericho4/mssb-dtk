@@ -161,7 +161,26 @@ void fn_3_A020(void) {
 
 // .text:0x0000A0F0 size:0xA8 mapped:0x80649184
 void fn_3_A0F0(void) {
-    return;
+    BOOL handled = FALSE;
+
+    g_Ball.AtBat_ContactResult = -1;
+    g_Ball.ballInitialHitDoneInd = 1;
+    if (g_FieldingLogic.unk110 == 1) {
+        return;
+    }
+    g_FieldingLogic.unk110 = 1;
+    if (++g_Strikes.strikes >= 3) {
+        if (g_Ball.maybeBuntInd != 0) {
+            g_Ball.maybebuntOn2Strikes = 1;
+            fn_3_88D88(0);
+            handled = TRUE;
+        } else {
+            g_Strikes.strikes = 2;
+        }
+    }
+    if (!handled) {
+        fn_3_59918(3, 0);
+    }
 }
 
 // .text:0x0000A198 size:0x6A4 mapped:0x8064922C
