@@ -164,7 +164,27 @@ void fn_3_12C684(void) {
 
 // .text:0x0012C74C size:0x11C mapped:0x8076B7E0
 void fn_3_12C74C(void) {
-    return;
+    CommonBss_32724* state = &lbl_3_common_bss_32724;
+    MiniGameStruct* mg;
+
+    if (state->unk_B6 != 0) {
+        memset(g_Minigame.targetPointsArray, 0, 0xE);
+        mg = &g_Minigame;
+        if (mg->multiPlayerInd == 0) {
+            fn_800B0A5C_insertQueue(fn_3_11F508, 2);
+        }
+        fn_800B0A5C_insertQueue(fn_3_11F778, 2);
+        fn_800B0A5C_insertQueue(fn_3_11FA58, 2);
+        fn_800B0A5C_insertQueue(fn_3_11FDB0, 2);
+        if (mg->multiPlayerInd != 0) {
+            fn_800B0A5C_insertQueue(fn_3_1243A4, 2);
+        }
+        fn_800B0A5C_insertQueue(fn_3_124738, 2);
+        fn_800B0A5C_insertQueue(fn_3_124CE0, 2);
+        fn_800B0A5C_insertQueue(fn_3_EB6E0, 2);
+        state->unk_B6 = lbl_3_common_bss_32724.unk_B7 = 0;
+        fn_800B0A5C_insertQueue(fn_3_125850, 2);
+    }
 }
 
 // .text:0x0012C868 size:0x11C mapped:0x8076B8FC
