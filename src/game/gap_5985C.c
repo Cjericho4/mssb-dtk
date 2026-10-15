@@ -288,7 +288,16 @@ u8 fn_3_5C530(s32 inning) {
 
 // .text:0x0005C5C8 size:0xD4 mapped:0x8069B65C
 void fn_3_5C5C8(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        if (g_Runners[i].runnerOnFieldOrOutOrScored == RUNNER_STATUS_ON_FIELD ||
+            g_Runners[i].runnerOnFieldOrOutOrScored == RUNNER_STATUS_SCORED_DURING_PLAY ||
+            g_Runners[i].runnerOnFieldOrOutOrScored == RUNNER_STATUS_SCORED_DEAD_BALL) {
+            g_Scores.field_0x9C++;
+            g_Runners[i].runnerOnFieldOrOutOrScored = RUNNER_STATUS_SCORED_DURING_PLAY;
+        }
+    }
 }
 
 // .text:0x0005C69C size:0xB0 mapped:0x8069B730
