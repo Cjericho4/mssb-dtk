@@ -184,8 +184,38 @@ BOOL fn_3_2BB04(s32 fielderIdx) {
 }
 
 // .text:0x0002C238 size:0xB8 mapped:0x8066B2CC
-void fn_3_2C238(void) {
-    return;
+void fn_3_2C238(s32 idx, s32 type, s32 frames, u8 arg3, u8 arg4) {
+    Fielder* f = &g_Fielders[idx];
+
+    f->unk24C = frames;
+    f->unk24E = 0;
+    f->unk252 = type;
+    f->unk253 = 0;
+    f->unk254 = 0;
+    f->unk255 = arg4;
+    f->unk_25B = arg3;
+    f->unk259 = 0;
+    f->unk25C = 0;
+    f->unk25D = 0;
+    f->unk25E = 0;
+    f->unk25F = 0;
+    f->unk264 = 0;
+    f->unk260 = 0;
+    if (type == 7) {
+        f->unk260 = 1;
+    }
+    if (frames < g_Ball.framesUntilBallHitsGround) {
+        f->unk264 = 1;
+    }
+    switch (type) {
+    case 3:
+        f->unk259 = 2;
+        break;
+    case 4:
+        f->unk259 = 3;
+        break;
+    }
+    g_Ball.catchAnimationTotalFrames = 0;
 }
 
 // .text:0x0002C2F0 size:0x3A8 mapped:0x8066B384

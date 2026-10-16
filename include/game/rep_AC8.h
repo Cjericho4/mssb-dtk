@@ -33,7 +33,7 @@ void fn_3_2AD68(void);
 void fn_3_2B5C0(s32 fielderIdx);
 void fn_3_2B694(void);
 BOOL fn_3_2BB04(s32 fielderIdx);
-void fn_3_2C238(void);
+void fn_3_2C238(s32 idx, s32 type, s32 frames, u8 arg3, u8 arg4);
 void fn_3_2C2F0(void);
 void fn_3_2C698(void);
 BOOL fn_3_2CBE0(s32 idx);

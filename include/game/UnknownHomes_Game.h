@@ -2312,16 +2312,26 @@ typedef struct Fielder {
     /* 0x228 */ u8 _pad228[0x248 - 0x228];
     /* 0x248 */ f32 unk248;
     /* 0x24C */ s16 unk24C;
-    /* 0x24E */ u8 _pad24E[0x252 - 0x24E];
+    /* 0x24E */ s16 unk24E;
+    /* 0x250 */ u8 _pad250[0x252 - 0x250];
     /* 0x252 */ u8 unk252;
     /* 0x253 */ u8 unk253;
-    /* 0x254 */ u8 _pad254[0x256 - 0x254];
+    /* 0x254 */ u8 unk254;
+    /* 0x255 */ u8 unk255;
     /* 0x256 */ u8 unk256;
-    /* 0x257 */ u8 _pad257[0x25B - 0x257];
+    /* 0x257 */ u8 _pad257[0x259 - 0x257];
+    /* 0x259 */ u8 unk259;
+    /* 0x25A */ u8 _pad25A;
     /* 0x25B */ u8 unk_25B;
-    /* 0x25C */ u8 _pad4[0x261 - 0x25C];
+    /* 0x25C */ u8 unk25C;
+    /* 0x25D */ u8 unk25D;
+    /* 0x25E */ u8 unk25E;
+    /* 0x25F */ u8 unk25F;
+    /* 0x260 */ u8 unk260;
     /* 0x261 */ u8 unk261;
-    /* 0x262 */ u8 _pad262[0x268 - 0x262];
+    /* 0x262 */ u8 _pad262[0x264 - 0x262];
+    /* 0x264 */ u8 unk264;
+    /* 0x265 */ u8 _pad265[0x268 - 0x265];
     } Fielder; // sizeof == 0x268
 
 extern Fielder g_Fielders[];
