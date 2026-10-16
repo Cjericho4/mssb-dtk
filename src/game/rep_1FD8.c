@@ -8,6 +8,9 @@
 #include "game/gap_16C410.h"
 #include "musyx/musyx.h"
 #include "game/sta_c5.h"
+#include "game/rep_3880.h"
+#include "Dolphin/gx.h"
+#include "game/game_batter.h"
 
 extern f32 lbl_3_rodata_21F0;
 extern u32 lbl_3_bss_9D84;
@@ -439,9 +442,48 @@ void fn_3_C444C(void) {
     return;
 }
 
+void fn_80033620(void);
+
 // .text:0x000C4724 size:0x1AC mapped:0x807037B8
-void fn_3_C4724(void) {
-    return;
+BOOL fn_3_C4724(struct Struct_800339F0_Result* obj) {
+    StaC2Particle* p;
+    u32 i;
+
+    i = 0;
+    p = (StaC2Particle*)obj->listHead;
+    fn_80033620();
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+    do {
+        if (p->unk48 != 0) {
+            p->unk48 -= (lbl_80366158._28 == 0);
+        } else {
+            if (p->unk4A == 0) {
+                goto next;
+            }
+            fn_8003403C(p->unk38, p->unk3C);
+            fn_80033CC8(p, obj->field_0x10);
+            if (lbl_80366158._28 == 0) {
+                p->pos.x += p->vel.x;
+                p->pos.y += p->vel.y;
+                p->pos.z += p->vel.z;
+                p->unk38 -= 0.275f;
+                p->unk3C -= 0.275f;
+                p->unk43 -= 15;
+                if (p->unk38 <= 0.0f || p->unk3C <= 0.0f) {
+                    p->unk4A = 0;
+                }
+            }
+        }
+        i++;
+    next:
+        p = p->next;
+    } while (p != NULL && i < obj->count);
+    obj->field_0x24 -= (lbl_80366158._28 == 0);
+    if (obj->field_0x24 == 0) {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x000C48D0 size:0x2B0 mapped:0x80703964

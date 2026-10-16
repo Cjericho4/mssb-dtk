@@ -50,6 +50,8 @@ struct Struct_800339F0_Result {
     s32 field_0x10;                 // 0x10
     u16 flags : 4;                  // 0x14
     u16 count : 12;
+    u8 _pad16[0xE];                 // 0x16
+    s32 field_0x24;                 // 0x24
 };
 
 typedef struct {

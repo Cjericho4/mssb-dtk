@@ -211,7 +211,7 @@ void fn_3_D4780(StaC2PlacedObj* obj);
 void fn_3_D4CA4(StaC2PlacedObj* obj);
 
 typedef struct StaC2Particle {
-    u8 _pad0[0x4];
+    struct StaC2Particle* next; /* 0x00 */
     Vec pos;        /* 0x04 */
     Vec vel;        /* 0x10 */
     u8 _pad1C[0x38 - 0x1C];
@@ -221,6 +221,7 @@ typedef struct StaC2Particle {
     u8 unk43;       /* 0x43 */
     u8 _pad44[0x48 - 0x44];
     s16 unk48;      /* 0x48 */
+    s16 unk4A;      /* 0x4A */
 } StaC2Particle;
 
 void fn_8003403C(f32 a, f32 b);
