@@ -19,9 +19,22 @@ void fn_3_25648(void) {
     return;
 }
 
+extern s16 lbl_3_data_49DC[44];
 // .text:0x00025844 size:0x94 mapped:0x806648D8
 void fn_3_25844(s32 fielderIdx, s32 arg1) {
-    return;
+    Fielder* f = &g_Fielders[fielderIdx];
+
+    if (f->unk20F == 0) {
+        f->unk1BC = radToShortAngle(f->unk48);
+        f->unk20F = 1;
+        f->unk1B8 = 0;
+        f->unk1BA = lbl_3_data_49DC[arg1 + 29];
+        f->unk252 = 0;
+        f->unk203 = 0;
+        f->unk205 = 0;
+        f->unk207 = 0;
+        f->unk1EE = 0;
+    }
 }
 
 // .text:0x000258D8 size:0x190 mapped:0x8066496C
