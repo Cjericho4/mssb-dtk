@@ -10,6 +10,7 @@ void fn_3_BF158(void);
 void fn_3_BF1AC(void);
 #include "musyx/musyx.h"
 #include "game/rep_1838.h"
+#include "game/rep_1C0.h"
 
 typedef struct {
     /* 0x0 */ s16 power;
@@ -766,9 +767,64 @@ void fn_3_B27A4(void) {
     g_Practice.inputs[1].leftTriggerDistance = 0;
 }
 
+extern CompressedDiskRead lbl_3_data_10598[];
+s32 fn_80035838(CompressedDiskRead* list, s32 count);
+void fn_80035B50(s32 arg0);
+
 // .text:0x000B28A8 size:0x1F8 mapped:0x806F193C
 void fn_3_B28A8(void) {
-    return;
+    InputStruct* in = &g_Controls[g_Practice.homeAway];
+
+    switch (lbl_3_common_bss_34C90.field_0x1D3) {
+    case 0:
+        lbl_3_common_bss_34C90.unk_221 = 1;
+        lbl_3_common_bss_34C90.field_0x222 = 3;
+        lbl_3_common_bss_34C90.field_0x1D9 = 1;
+        lbl_3_common_bss_34C90.field_0x1D3 = 1;
+        break;
+    case 1:
+        if (fn_80035838(&lbl_3_data_10598[2], 0x13) != 0) {
+            lbl_3_common_bss_34C90.field_0x1D3 = 2;
+        }
+        break;
+    case 2:
+        if (lbl_3_common_bss_34C90.field_0x1D9 == 3) {
+            lbl_3_common_bss_34C90.field_0x1D3 = 3;
+        }
+        break;
+    case 3:
+        lbl_3_common_bss_34C90.field_0x1D3 = 4;
+        break;
+    case 4:
+        if (lbl_3_common_bss_32724.unk_C3 == 0) {
+            lbl_3_common_bss_34C90.field_0x1D3 = 5;
+        }
+        break;
+    case 5:
+        if (lbl_3_common_bss_32724.unk_C3 != 0) {
+            break;
+        }
+        if (in->newButtonInput & 0x200) {
+            lbl_3_common_bss_34C90.field_0x1D3 = 6;
+            sndFXStartEx(0x1B9, lbl_800EFBA4.alertVolume, 0x3F, 0);
+        } else if ((in->_08 & 1) && lbl_3_common_bss_34C90.unk_221 != 0) {
+            lbl_3_common_bss_34C90.unk_221--;
+            sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+        } else if ((in->_08 & 2) && lbl_3_common_bss_34C90.unk_221 < lbl_3_common_bss_34C90.field_0x222 - 1) {
+            lbl_3_common_bss_34C90.unk_221++;
+            sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+        }
+        break;
+    case 6:
+        lbl_3_common_bss_34C90.field_0x1D3 = 7;
+        break;
+    case 7:
+        if (lbl_3_common_bss_32724.unk_C3 == 0) {
+            fn_80035B50(0x13);
+            lbl_3_common_bss_34C90.field_0x1D2 = 0;
+        }
+        break;
+    }
 }
 
 // .text:0x000B2AA0 size:0x380 mapped:0x806F1B34
