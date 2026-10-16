@@ -2219,7 +2219,9 @@ typedef struct Fielder {
     /* 0x1F8 */ u8 unk1F8;
     /* 0x1F9 */ u8 _pad1F9[0x1FF - 0x1F9];
     /* 0x1FF */ u8 unk1FF;
-    /* 0x200 */ u8 _pad3c[0x215 - 0x200];
+    /* 0x200 */ u8 _pad3c[0x210 - 0x200];
+    /* 0x210 */ u8 unk210;
+    /* 0x211 */ u8 _pad211[0x215 - 0x211];
     /* 0x215 */ u8 unk215;
     /* 0x216 */ u8 unk216;
     /* 0x217 */ u8 _pad217;

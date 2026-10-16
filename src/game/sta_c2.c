@@ -523,8 +523,29 @@ void fn_3_D2220(StaC2ChainObj* obj) {
 }
 
 // .text:0x000D233C size:0x160 mapped:0x807113D0
-void fn_3_D233C(void) {
-    return;
+InMemBallType* fn_3_D233C(StaC2ChainObj* obj) {
+    Mtx m;
+    Vec diff;
+    Vec dir;
+    Vec fwd = {1.0f, 0.0f, 0.0f};
+    Vec axis = {0.0f, 1.0f, 0.0f};
+    Vec pos = obj->pos;
+
+    if (g_Ball.AtBat_ContactResult >= 2) {
+        return NULL;
+    }
+    pos.y = 4.5f;
+    PSVECSubtract((Vec*)&g_Ball.AtBat_Contact_BallPos, &pos, &diff);
+    diff.y = 0.0f;
+    if (PSVECMag(&diff) < 23.0f) {
+        PSVECNormalize(&diff, &diff);
+        PSMTXRotAxisRad(m, &axis, 0.017453292f * obj->angle);
+        PSMTXMultVec(m, &fwd, &dir);
+        if (57.29578f * (f32)acos(PSVECDotProduct(&diff, &dir)) <= 60.0f) {
+            return &g_Ball;
+        }
+    }
+    return NULL;
 }
 
 // .text:0x000D249C size:0x4C mapped:0x80711530
@@ -561,8 +582,8 @@ void fn_3_D24E8(StaC2D24E8Arg* arg0, s32 arg1) {
 }
 
 // .text:0x000D255C size:0x128 mapped:0x807115F0
-void fn_3_D255C(void) {
-    return;
+s8 fn_3_D255C(StaC2ChainObj* obj) {
+    return 0;
 }
 
 // .text:0x000D2684 size:0x108 mapped:0x80711718
