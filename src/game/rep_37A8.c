@@ -218,9 +218,20 @@ void fn_3_1453BC(void) {
     return;
 }
 
+extern VecXYZ lbl_3_data_21D34[4][3];
 // .text:0x00145AD0 size:0xC8 mapped:0x80784B64
-void fn_3_145AD0(void) {
-    return;
+void fn_3_145AD0(s32 idx) {
+    s32 group = g_Minigame.wallBall_coinGroup[idx];
+    s32 i;
+
+    for (i = 0; i < 3; i++) {
+        if (g_Minigame.wallBall_coinGroupMembers[group][i] == idx) {
+            break;
+        }
+    }
+    g_Minigame.wallBall_coinCoordinates[idx].x = lbl_3_data_21D34[g_Minigame._1CAD[group]][i].x;
+    g_Minigame.wallBall_coinCoordinates[idx].y = lbl_3_data_21D34[g_Minigame._1CAD[group]][i].y;
+    g_Minigame.wallBall_coinCoordinates[idx].z = lbl_3_data_21D34[g_Minigame._1CAD[group]][i].z;
 }
 
 // .text:0x00145B98 size:0x320 mapped:0x80784C2C
