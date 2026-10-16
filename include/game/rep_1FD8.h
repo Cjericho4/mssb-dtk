@@ -34,7 +34,7 @@ void fn_3_C3E94(Vec* pos, s32 idx);
 void fn_3_C3F70(ActorObject* arg0);
 void fn_3_C4068(ActorObject* arg0);
 void fn_3_C40EC(ActorObject* arg0);
-void fn_3_C414C(void);
+void fn_3_C414C(s32 idx);
 void fn_3_C42A4(void);
 void fn_3_C444C(void);
 void fn_3_C4724(void);

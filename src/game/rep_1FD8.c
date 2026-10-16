@@ -341,8 +341,39 @@ void fn_3_C40EC(ActorObject* arg0) {
 }
 
 // .text:0x000C414C size:0x158 mapped:0x807031E0
-void fn_3_C414C(void) {
-    return;
+extern VecXYZ lbl_3_bss_9DE8[8];
+extern u8 lbl_3_bss_9E48[8];
+
+static inline void storeBallSfxPos(s32 idx) {
+    lbl_3_bss_9E48[idx] = 1;
+    lbl_3_bss_9DE8[idx].x = g_Ball.AtBat_Contact_BallPos.x;
+    lbl_3_bss_9DE8[idx].y = -g_Ball.AtBat_Contact_BallPos.y;
+    lbl_3_bss_9DE8[idx].z = g_Ball.AtBat_Contact_BallPos.z;
+}
+
+extern u8 lbl_800E8754[];
+void fn_3_CB7E8(f32 x, f32 y, f32 z);
+
+void fn_3_C414C(s32 idx) {
+    StadiumObjectElem* elem = &lbl_3_common_bss_350E4[0].src[idx];
+    Vec pos;
+    u8 hit = FALSE;
+
+    CTRLGetTranslation(&elem->control, &pos.x, &pos.y, &pos.z);
+    if (g_Ball.AtBat_ContactResult != 2) {
+        if (elem->unk_A9 == 5 && lbl_800E8754[4] != 0) {
+            fn_3_CB7E8(pos.x, pos.y - 5.0f, pos.z);
+            elem->unk_A9 = 6;
+            hit = TRUE;
+        } else if (elem->unk_A9 == 4 && lbl_800E8754[4] != 0) {
+            fn_3_CB7E8(pos.x, pos.y, pos.z - 5.0f);
+            elem->unk_A9 = 6;
+            hit = TRUE;
+        }
+    }
+    if (hit) {
+        storeBallSfxPos((g_Ball.inAirOrBefore2ndBounceOrLowBallEnergy != 0) + 6);
+    }
 }
 
 // .text:0x000C42A4 size:0x1A8 mapped:0x80703338
@@ -464,16 +495,6 @@ void fn_3_C7444(ActorObject* arg0) {
         return;
     }
     return;
-}
-
-extern VecXYZ lbl_3_bss_9DE8[8];
-extern u8 lbl_3_bss_9E48[8];
-
-static inline void storeBallSfxPos(s32 idx) {
-    lbl_3_bss_9E48[idx] = 1;
-    lbl_3_bss_9DE8[idx].x = g_Ball.AtBat_Contact_BallPos.x;
-    lbl_3_bss_9DE8[idx].y = -g_Ball.AtBat_Contact_BallPos.y;
-    lbl_3_bss_9DE8[idx].z = g_Ball.AtBat_Contact_BallPos.z;
 }
 
 // .text:0x000C749C size:0x11C mapped:0x80706530
