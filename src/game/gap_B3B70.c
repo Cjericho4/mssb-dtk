@@ -1,4 +1,5 @@
 #include "game/gap_B3B70.h"
+#include "game/rep_E08.h"
 #include "game/rep_1038.h"
 #include "game/gap_9CD90.h"
 #include "game/gap_AC9F8.h"
@@ -514,7 +515,36 @@ void fn_3_B6E98(void) {
 
 // .text:0x000B6F6C size:0x110 mapped:0x806F6000
 void fn_3_B6F6C(void) {
-    return;
+    fn_3_8A4E4();
+    fn_3_6C108();
+    g_Strikes.strikes = 0;
+    g_Strikes.balls = 0;
+    g_GameLogic._125 = 1;
+    g_GameLogic.pre_PostMiniGameInd = 1;
+    g_GameLogic.minigameLastTurnSuccessInd = 1;
+    fn_3_5F720();
+    g_Strikes.unk_C = g_Strikes.outs;
+    g_Strikes.unk_18[0] = -1;
+    g_Strikes.unk_18[1] = -1;
+    g_Strikes.unk_18[2] = -1;
+    g_Strikes.unk_20 = g_Strikes.balls + (g_Strikes.strikes * 0x10);
+    g_Strikes.unk_14 = 0;
+    g_Ball.totalFramesAtPlay = 0;
+    g_FieldingLogic.unk10E = 0;
+    g_FieldingLogic.unkEE = 0;
+    g_FieldingLogic.unk10F = 0;
+    g_FieldingLogic.unk110 = 0;
+    g_FieldingLogic.unk128 = 0;
+    g_FieldingLogic.unk129 = 0;
+    g_RunningLogic.unk13 = 0;
+    g_GameLogic.pre_PostMiniGameInd = 0;
+    g_GameLogic.minigameLastTurnSuccessInd = 0;
+    g_Practice._1EC = 0;
+    g_Practice._1ED = 0;
+    changeScene(1, 6);
+    fn_3_5A6D4(2);
+    fn_3_6C0E0();
+    fn_3_6714C(0);
 }
 
 // .text:0x000B707C size:0x108 mapped:0x806F6110
