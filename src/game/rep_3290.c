@@ -24,9 +24,31 @@ void fn_3_11391C(void) {
     memset(g_Minigame._1D7C, 0, 0x78);
 }
 
+extern f32 lbl_3_data_21634[5];
+extern s16 lbl_3_data_2167C[6];
+
 // .text:0x00113950 size:0xF8 mapped:0x807529E4
 void fn_3_113950(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 100; i++) {
+        if (g_Minigame.wallBall_coinsVisibleInd[i] != 0) {
+            g_Minigame.wallBall_coinsVisibleFrameCounter[i]++;
+            g_Minigame.wallBall_coinCoordinates[i].x += g_Minigame.wallBall_coinVelocity[i].x;
+            g_Minigame.wallBall_coinCoordinates[i].y += g_Minigame.wallBall_coinVelocity[i].y;
+            g_Minigame.wallBall_coinCoordinates[i].z += g_Minigame.wallBall_coinVelocity[i].z;
+            g_Minigame.wallBall_coinVelocity[i].y -= lbl_3_data_21634[2];
+            if (g_Minigame.wallBall_coinCoordinates[i].y < lbl_3_data_219B8.unk38) {
+                g_Minigame.wallBall_coinCoordinates[i].y = lbl_3_data_219B8.unk38;
+                g_Minigame.wallBall_coinVelocity[i].y = -g_Minigame.wallBall_coinVelocity[i].y * lbl_3_data_21634[3];
+                g_Minigame.wallBall_coinVelocity[i].x *= lbl_3_data_21634[4];
+                g_Minigame.wallBall_coinVelocity[i].z *= lbl_3_data_21634[4];
+            }
+            if (g_Minigame.wallBall_coinsVisibleFrameCounter[i] > lbl_3_data_2167C[4]) {
+                g_Minigame.wallBall_coinsVisibleInd[i] = 0;
+            }
+        }
+    }
 }
 
 // .text:0x00113A48 size:0x2D8 mapped:0x80752ADC
