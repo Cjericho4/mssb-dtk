@@ -726,7 +726,26 @@ void fn_3_88F98(void) {
 
 // .text:0x00089028 size:0xF4 mapped:0x806C80BC
 void fn_3_89028(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        g_Runners[i].leadOffStatus = 0;
+    }
+    for (i = 1; i < 4; i++) {
+        g_Runners[i].unused_AIRelated = 0;
+        g_Runners[i].tagUpInd = 0;
+        if (g_Runners[i].runnerOnFieldOrOutOrScored == 1) {
+            fn_3_85EF4(i, 1);
+        }
+    }
+    if (g_Strikes.balls >= 4) {
+        g_Runners[0].runnerOnFieldOrOutOrScored = 5;
+    } else if (g_FieldingLogic._107 == 4) {
+        g_Runners[0].runnerOnFieldOrOutOrScored = 1;
+        fn_3_85EF4(0, 1);
+    } else {
+        g_Runners[0].runnerOnFieldOrOutOrScored = 4;
+    }
 }
 
 // .text:0x0008911C size:0x20 mapped:0x806C81B0
