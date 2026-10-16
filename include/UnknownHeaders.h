@@ -931,10 +931,14 @@ typedef struct CameraStruct {
     void* unkAB0;   // 0xAB0 - allocated buffer
     u8 _padAB4[0x9B8];
     void* unk146C;  // 0x146C - allocated buffer
-    u8 _pad1470[0x2818 - 0x1470];
+    u8 _pad1470[0x2812 - 0x1470];
+    s16 unk2812;    // 0x2812
+    s16 unk2814;    // 0x2814
+    s16 unk2816;    // 0x2816
     u8 unk2818;     // 0x2818
     u8 unk2819;     // 0x2819
-    u8 _pad281A[0x28B0 - 0x281A];
+    u8 unk281A;     // 0x281A
+    u8 _pad281B[0x28B0 - 0x281B];
 } CameraStruct;
 
 typedef struct CameraSub13C {

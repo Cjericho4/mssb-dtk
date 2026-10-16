@@ -714,9 +714,25 @@ void fn_3_1731C(void) {
     return;
 }
 
+extern s16 lbl_3_data_16C0;
 // .text:0x00017760 size:0xA4 mapped:0x806567F4
 void fn_3_17760(void) {
-    return;
+    if (g_Camera.unk2819 == 1) {
+        g_Camera.unk2819 = 0;
+        g_Camera.unk2816 = lbl_3_data_16C0;
+        g_Camera.unk2818 = 1;
+        g_Camera.unk281A = 0;
+        g_Camera.unk2812 = 0;
+        g_Camera.unk2814 = 0;
+    } else if (g_Camera.unk2819 == 2) {
+        g_Camera.unk2819 = 0;
+        g_Camera.unk2816 = lbl_3_data_16C0;
+        g_Camera.unk281A = 2;
+        g_Camera.unk2814 = 0;
+    }
+    if (g_Camera.unk2818 != 0) {
+        fn_3_1731C();
+    }
 }
 
 // .text:0x00017804 size:0x58 mapped:0x80656898
