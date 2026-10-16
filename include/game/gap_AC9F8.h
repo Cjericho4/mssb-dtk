@@ -22,7 +22,11 @@ typedef struct {
     s16 field_0x0E;      /* 0x0E */
     s16 field_0x10;      /* 0x10 */
     s16 field_0x12;      /* 0x12 */
-    u8 _pad2[0x1BC];     /* 0x14 */
+    struct {
+        s16 cur;
+        s16 orig;
+    } battingOrder[2][10][2]; /* 0x14 */
+    u8 _pad2[0x1D0 - 0xB4]; /* 0xB4 */
     u8 field_0x1D0;      /* 0x1D0 */
     u8 field_0x1D1;      /* 0x1D1 */
     u8 field_0x1D2;      /* 0x1D2 */
