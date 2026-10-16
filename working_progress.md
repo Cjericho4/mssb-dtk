@@ -236,7 +236,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_11897C | Register allocation mismatch: target uses lwzx+r8 for entries_68 array access, compiler generates add+lwz; register number differences (r8/r7 vs r0/r6) |
 | fn_3_135600 | register allocation / scheduling (see git log) |
 | fn_3_FF4C | Register swap only: Int1/Int2 loaded into r0/r3 instead of r3/r9; all arithmetic operations correct |
-| fn_3_20AE0 | first rodata float address materialized via addi, load deferred; all literal/extern/helper/decl-order forms tried. Its constants (rodata 0x930-0x93C) live in rep_8C8.c's rodata, so gap_20A60 is likely a mis-split tail of rep_8C8.c; retry after merging the split |
+| fn_3_20AE0 | first rodata float address materialized via addi, load deferred. gap_20A60 merged into rep_8C8.c (2026-10-16) so constants are now same-TU literals; still mismatches in every literal/decl-order/helper form |
 | fn_3_10F564 | Correct logic: (s8)_1A2C == -1 guard, lbl_3_data_228[0x10] != 0 check, store lbl_3_data_18910[GameMode_MiniGame] to _1A2C. 20/22 instructions match; only `li r3 |
 | fn_3_142030 | CW processes r3 before r4 regardless of expression order; instruction count and formula are correct but register scheduling differs. Co-Authored-By: Claude Sonn |
 | fn_3_909B0 | CW generates (stadiumID+0x27)*4 offset but struct field layout produces 0x9C+stadiumID*4 separately; matching requires treating lbl_800EF808 as flat void*[] fro |

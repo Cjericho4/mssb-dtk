@@ -3,7 +3,7 @@
 
 #include "mssbTypes.h"
 #include "game/rep_940.h"
-#include "game/gap_20A60.h"
+#include "game/rep_8C8.h"
 
 void fn_3_1E154(void);
 void fn_3_1E178(void);

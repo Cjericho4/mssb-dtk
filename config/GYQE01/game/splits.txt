@@ -71,11 +71,8 @@ game/gap_1E154.c:
 	.text       start:0x0001E154 end:0x0001E4B8
 
 game/rep_8C8.c:
-	.text       start:0x0001E4B8 end:0x00020A60
+	.text       start:0x0001E4B8 end:0x00020CEC
 	.rodata     start:0x000008C8 end:0x00000940
-
-game/gap_20A60.c:
-	.text       start:0x00020A60 end:0x00020CEC
 
 game/rep_940.c:
 	.text       start:0x00020CEC end:0x000219CC
