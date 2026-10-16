@@ -167,14 +167,72 @@ void fn_3_12BFE8(void) {
     lbl_803CC1B8->aFunctionPointer = fn_3_12BB64;
 }
 
+typedef struct {
+    /* 0x00 */ u8 _pad0[0x26];
+    /* 0x26 */ u8 unk26;
+    /* 0x27 */ u8 _pad27[0x28 - 0x27];
+} Lbl8034E978; /* size: 0x28 */
+extern Lbl8034E978 lbl_8034E978;
+extern u16 lbl_3_data_92C8[];
+
 // .text:0x0012C1AC size:0x244 mapped:0x8076B240
 void fn_3_12C1AC(void) {
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    u16 eventID;
+    u8 status;
+
+    if (lbl_3_common_bss_32724.someStatusInd != 0) {
+        goto remove;
+    }
+    if (g_d_GameSettings.GameModeSelected == 7 || g_d_GameSettings.GameModeSelected == 6) {
+        status = g_GameLogic.gameStatus;
+        if (status == 5) {
+            goto remove;
+        }
+        if (status == 0x28 || status == 0x21) {
+            eventID = lbl_3_data_92C8[2];
+        } else if (status == 0x1B || status == 0x1C || status == 0x1D) {
+            eventID = lbl_3_data_92C8[0];
+        } else {
+            eventID = lbl_3_data_92C8[1];
+        }
+    } else {
+        if (g_GameLogic.secondaryGameMode != 0xA) {
+            goto remove;
+        }
+        if (g_Practice.practiceType_1 == 6) {
+            eventID = lbl_3_data_92C8[4];
+        } else {
+            eventID = lbl_3_data_92C8[3];
+        }
+    }
+    if (scene->eventID != eventID) {
+        scene->eventID = eventID;
+        scene->fielderIndex = 1;
+        lbl_80371C30[scene->unkIndex + 2].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + 2].obj->field_0x68 = 1;
+        lbl_80371C30[scene->unkIndex + 2].obj->field_0x5C = 0;
+        lbl_80371C30[scene->unkIndex + 3].obj->unk64 = eventID;
+        lbl_80371C30[scene->unkIndex].obj->field_0x68 = 4;
+    } else if (scene->fielderIndex != 0) {
+        if ((lbl_80371C30[scene->unkIndex].obj->field_0x5C >> 16) == 0) {
+            (&lbl_80371C30[scene->unkIndex])[2].obj->flags &= ~2;
+            lbl_80371C30[scene->unkIndex + 1].obj->unk64 = scene->eventID;
+            lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0x280000;
+            lbl_80371C30[scene->unkIndex].obj->field_0x68 = 0;
+            scene->fielderIndex = 0;
+        }
+    }
     return;
+remove:
+    fn_80034CEC((u32)scene);
+    fn_800B0A14_removeQueue();
+    lbl_3_common_bss_32724.unkD9 = 0;
+    lbl_8034E978.unk26 = 1;
 }
 
 // .text:0x0012C3F0 size:0x124 mapped:0x8076B484
 extern s32 lbl_3_data_9208;
-extern u16 lbl_3_data_92C8[];
 
 void fn_3_12C3F0(void) {
     DrawingSceneStruct* scene = lbl_803CC1B8;
