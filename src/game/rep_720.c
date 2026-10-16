@@ -3,6 +3,7 @@
 #include "game/rep_3090.h"
 #include "header_rep_data.h"
 #include "stl/math.h"
+#include "Dolphin/GX/GXTransform.h"
 
 // .text:0x00014BB4 size:0x268 mapped:0x80653C48
 void fn_3_14BB4(void) {
@@ -544,9 +545,50 @@ s32 fn_3_164A8(void) {
     }
 }
 
+typedef struct {
+    u8 _pad0[0x40];
+    Mtx mtx;         /* 0x40 */
+    VecXYZ eye;      /* 0x70 */
+    VecXYZ target;   /* 0x7C */
+    u8 _pad88[0x1C];
+    f32 unkA4;       /* 0xA4 */
+} CameraRenderObj;
+CameraRenderObj* fn_80052768(s32 arg0);
+
+void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+
 // .text:0x0001650C size:0x1E8 mapped:0x806555A0
-void fn_3_1650C(s32* outX, s32* outY, s32 mode, f32 x, f32 y) {
-    return;
+s32 fn_3_1650C(s32* outX, s32* outY, s32 mode, f32 x, f32 y, f32 z) {
+    Mtx44 m;
+    f32 proj[7];
+    f32 viewport[6];
+    Vec v;
+    f32 sx;
+    f32 sy;
+    f32 sz;
+    f32 scale;
+
+    scale = 1.0f / fn_80052768(0)->unkA4;
+    v.x = x;
+    v.y = y;
+    v.z = z;
+    PSMTXMultVec(fn_80052768(0)->mtx, &v, &v);
+    if (v.z >= 0.0f && mode == 0) {
+        return 0;
+    }
+    C_MTXFrustum(m, -0.175f * scale, 0.175f * scale, 0.25f * scale, -0.25f * scale, 1.0f, 512.0f);
+    proj[0] = 0.0f;
+    proj[1] = m[0][0];
+    proj[2] = m[2][0];
+    proj[3] = m[1][1];
+    proj[4] = m[2][1];
+    proj[5] = m[2][2];
+    proj[6] = m[3][2];
+    GXGetViewportv(viewport);
+    GXProject(x, y, z, fn_80052768(0)->mtx, proj, viewport, &sx, &sy, &sz);
+    *outX = sx;
+    *outY = sy;
+    return 1;
 }
 
 // .text:0x000166F4 size:0x20C mapped:0x80655788
@@ -824,15 +866,6 @@ void fn_3_1C8AC(void) {
     return;
 }
 
-typedef struct {
-    u8 _pad0[0x40];
-    Mtx mtx;         /* 0x40 */
-    VecXYZ eye;      /* 0x70 */
-    VecXYZ target;   /* 0x7C */
-    u8 _pad88[0x1C];
-    f32 unkA4;       /* 0xA4 */
-} CameraRenderObj;
-CameraRenderObj* fn_80052768(s32 arg0);
 
 // .text:0x0001CAC0 size:0x10C mapped:0x8065BB54
 void fn_3_1CAC0(void) {

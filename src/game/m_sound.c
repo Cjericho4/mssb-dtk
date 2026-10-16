@@ -375,7 +375,7 @@ void fn_3_8FF18(void) {
 }
 
 // .text:0x0008FF5C size:0x108 mapped:0x806CEFF0
-u32 fn_3_8FF5C(s32 soundID, f32 x, f32 z) {
+u32 fn_3_8FF5C(s32 soundID, f32 x, f32 y, f32 z) {
     s32 screenX;
     s32 screenY;
     s32 pan;
@@ -383,7 +383,7 @@ u32 fn_3_8FF5C(s32 soundID, f32 x, f32 z) {
 
     pan = 0x3F;
     if (lbl_800EF808.soundMode == 1) {
-        fn_3_1650C(&screenX, &screenY, 1, x, -z);
+        fn_3_1650C(&screenX, &screenY, 1, x, -y, z);
         if (screenX < 0) {
             pan = 0;
         } else if (screenX > 640) {
