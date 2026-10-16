@@ -92,7 +92,13 @@ extern Struct_26E24 lbl_3_data_26E24;
 typedef struct {
     u8 _pad0[0x4];    // 0x00
     s32 unk_04;        // 0x04
-    u8 _pad1[0x1C];   // 0x08
+    s32 unk_08;        // 0x08
+    u8 _padC[0x4];    // 0x0C
+    s32 unk_10;        // 0x10
+    u8 _pad14[0x4];   // 0x14
+    s32 unk_18;        // 0x18
+    s32 unk_1C;        // 0x1C
+    u8 _pad20[0x4];   // 0x20
     s32 unk_24;        // 0x24
     u8 _pad2[0x30];   // 0x28
 } Struct_26C3C;
@@ -216,7 +222,12 @@ void fn_3_150120(void);
 void fn_3_1504EC(void);
 void fn_3_150940(void);
 void fn_3_150D84(void);
-void fn_3_151068(void);
+struct C2310Holder;
+typedef struct {
+    u8 _pad0[0x18];
+    struct C2310Holder* holder; // 0x18
+} Struct_151068_Arg;
+void fn_3_151068(Struct_151068_Arg* obj, ListNode_14B9F0* node);
 void fn_3_151204(void* obj, void* arg1, void* arg2);
 void fn_3_151694(void* arg0, void* arg1);
 void fn_3_151710(void* arg0, void* arg1);

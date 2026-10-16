@@ -11,6 +11,7 @@
 #include "Dolphin/GX/GXTransform.h"
 #include "Dolphin/gx.h"
 #include "C3/control.h"
+#include "game/rep_1D58.h"
 
 extern f32 lbl_3_data_21770[6];
 extern Vec lbl_3_bss_B860[4];
@@ -973,8 +974,26 @@ void fn_3_150D84(void) {
 }
 
 // .text:0x00151068 size:0x19C mapped:0x807900FC
-void fn_3_151068(void) {
-    return;
+void fn_3_151068(Struct_151068_Arg* obj, ListNode_14B9F0* node) {
+    Mtx m;
+    C2310Bone* bone;
+    f32 x;
+    f32 y;
+    f32 z;
+
+    node->field_0x4A = lbl_3_data_26C3C.unk_18;
+    bone = obj->holder->actor->boneArray[lbl_3_data_26C3C.unk_1C];
+    PSMTXIdentity(m);
+    x = bone->worldMtx[0][3];
+    y = bone->worldMtx[1][3];
+    z = bone->worldMtx[2][3];
+    x += (rand() % 100 - 50) / 100.0;
+    y += (rand() % 150 - 75) / 100.0;
+    node->offset.x = x;
+    node->offset.y = y;
+    node->offset.z = z;
+    node->scaleY = node->scaleX = (f32)lbl_3_data_26C3C.unk_08;
+    node->color[3] = lbl_3_data_26C3C.unk_10;
 }
 
 // .text:0x00151204 size:0x490 mapped:0x80790298
