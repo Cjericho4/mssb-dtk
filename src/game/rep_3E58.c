@@ -3,6 +3,9 @@
 #include "UnknownHeaders.h"
 #include "stl/mem.h"
 #include "game/particle_spawn.h"
+#include "game/gap_167CC4.h"
+
+extern u8 lbl_3_data_28558[23];
 
 // .text:0x001666B0 size:0x1EC mapped:0x807A5744
 void fn_3_1666B0(void) {
@@ -78,7 +81,23 @@ void fn_3_166E04(void) {
 
 // .text:0x00166FCC size:0x1AC mapped:0x807A6060
 void fn_3_166FCC(void) {
-    return;
+    EffectTask* task = (EffectTask*)lbl_803CC1B8;
+    s8 type;
+
+    if (g_d_GameSettings._55 != 0 || lbl_3_common_bss_35154.unk_479 != 0) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (g_GameLogic.gameStatus != 2) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (task->owner->animID == 0x26 || task->owner->animID == 0x27) {
+        type = lbl_3_data_28558[(u32)rand() % 23];
+        spawnCharacterParticles(task->owner, type);
+        return;
+    }
+    fn_800B0A14_removeQueue();
 }
 
 // .text:0x00167178 size:0x358 mapped:0x807A620C
