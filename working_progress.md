@@ -13,6 +13,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 ## Recently Completed (from queue.log)
 | Function | Notes |
 |---|---|
+| fn_3_115828 | matched |
 | fn_3_75434 | matched (smallest never-attempted hard fn) |
 | fn_3_E19E8 | matched (inlined fn_3_E0668 loop) |
 | fn_3_24ADC | matched |
