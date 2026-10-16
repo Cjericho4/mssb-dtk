@@ -133,7 +133,19 @@ void fn_3_115978(void) {
 
 // .text:0x00115AB4 size:0xA8 mapped:0x80754B48
 void fn_3_115AB4(void) {
-    return;
+    g_Minigame.minigamePlayerSelectedOrder = g_Minigame.players.battingOrder[g_Minigame.turnNumberWithinRound];
+    g_GameLogic.pre_PostMiniGameInd = 1;
+    g_Minigame.miniGameLatestPoints[0] = 0;
+    g_Minigame.miniGameLatestPoints[1] = 0;
+    g_Minigame.miniGameLatestPoints[2] = 0;
+    g_Minigame.miniGameLatestPoints[3] = 0;
+    fn_3_F578();
+    fn_3_753E8(0);
+    fn_3_6EBB4(g_Minigame.minigamePlayerSelectedOrder);
+    g_Batter.batPosition2.x = maybeInitialBatPos.x;
+    g_Batter.batPosition2.y = maybeInitialBatPos.y;
+    g_Batter.batPosition2.z = maybeInitialBatPos.z;
+    fn_3_5A6D4(0);
 }
 
 // .text:0x00115B5C size:0x80 mapped:0x80754BF0
