@@ -13,6 +13,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 ## Recently Completed (from queue.log)
 | Function | Notes |
 |---|---|
+| fn_3_30564 | matched |
 | fn_3_2C238 | matched |
 | fn_3_14A4 | matched (cubic spline eval) |
 | fn_3_483CC | matched |
