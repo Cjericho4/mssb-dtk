@@ -685,8 +685,57 @@ void fn_3_3ABF0(void) {
 }
 
 // .text:0x0003ACC0 size:0x174 mapped:0x80679D54
-void fn_3_3ACC0(void) {
+typedef struct Data484C {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+} Data484C;
+extern Data484C lbl_3_data_484C;
+extern s16 lbl_3_bss_16C;
+
+void fn_3_3ACC0(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    if (g_Ball.fielderWithBallIndexStored >= 0) {
+        goto set;
+    }
+    if (idx != g_FieldingLogic.unkB0) {
+        return;
+    }
+    if (g_FieldingLogic.unk139 != 0) {
+        return;
+    }
+    if (g_Ball.framesSinceHit < lbl_3_data_484C.unk0) {
+        return;
+    }
+    if (g_Ball.framesSinceHit >= lbl_3_data_484C.unk2) {
+        goto set;
+    }
+    if (lbl_3_bss_170[0] >= 0 && (g_FieldingLogic.unk148 & 0x200)) {
+        goto set;
+    }
+    if (ACTIVE_TUTORIAL && g_Practice.practice_fielding_enableSprinting != 0) {
+        goto set;
+    }
+    if (f->unk201 != 0 && idx >= 6 && idx <= 8 && g_Ball.ballZoneAwayFromHome == 0) {
+        return;
+    }
+    if (lbl_3_bss_16C < 0) {
+        return;
+    }
+    if (f->unk19A < 0) {
+        if (g_Ball.framesSinceHit > f->unk1D2 + 3) {
+            goto set;
+        }
+    } else {
+        if (fn_3_9FCF8(lbl_3_bss_16C, f->unk19A) < lbl_3_data_484C.unk4) {
+            goto set;
+        }
+    }
     return;
+set:
+    f->unk1FF = 2;
+    f->unk201 = 0;
 }
 
 // .text:0x0003AE34 size:0x53C mapped:0x80679EC8
