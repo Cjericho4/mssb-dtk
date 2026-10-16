@@ -48,6 +48,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 ## Almost Matched (do not retry)
 | Function | Issue |
 |---|---|
+| fn_3_FD51C | CW coalesces camera elem base and &elem->unk13C into one reg (target keeps separate r5/r7 and schedules stw 0x144 after addi), register/scheduling only |
 | fn_3_105C28 | register allocation / scheduling (see git log) |
 | fn_3_E6798 | register allocation / scheduling (see git log) |
 | fn_3_11881C | register allocation / scheduling (see git log) |
