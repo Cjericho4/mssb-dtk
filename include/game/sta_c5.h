@@ -21,11 +21,14 @@ typedef struct StaC5PlacedObj {
     /* 0xAC */ f32 homeX;
     /* 0xB0 */ f32 homeZ;
     /* 0xB4 */ f32 rotY;
-    /* 0xB8 */ u8 _padB8[0xC1 - 0xB8];
+    /* 0xB8 */ f32 unkB8;
+    /* 0xBC */ f32 unkBC;
+    /* 0xC0 */ u8 _padC0[0xC1 - 0xC0];
     /* 0xC1 */ s8 unkC1;
     /* 0xC2 */ u8 _padC2[0xC4 - 0xC2];
     /* 0xC4 */ u8 unkC4;
-    /* 0xC5 */ u8 _padC5[0xC7 - 0xC5];
+    /* 0xC5 */ u8 _padC5[0xC6 - 0xC5];
+    /* 0xC6 */ u8 unkC6;
     /* 0xC7 */ u8 blinkTimer;
 } StaC5PlacedObj;
 
@@ -206,7 +209,7 @@ u8 fn_3_EF55C(EF55C_Arg* arg0);
 s32 fn_3_EF7B4(EF55C_Arg* arg0);
 void fn_3_EF800(StaC5PlacedObj* obj);
 void fn_3_EF890(OuterStruct_F13F8* arg0);
-void fn_3_EF930(void);
+void fn_3_EF930(StaC5PlacedObj* obj);
 void fn_3_EFB54(StadiumObjectElem* obj);
 void fn_3_F0184(void);
 void fn_3_F0224(void);

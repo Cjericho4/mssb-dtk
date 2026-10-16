@@ -281,8 +281,44 @@ void fn_3_EF890(OuterStruct_F13F8* arg0) {
 }
 
 // .text:0x000EF930 size:0x224 mapped:0x8072E9C4
-void fn_3_EF930(void) {
-    return;
+void fn_3_EF930(StaC5PlacedObj* obj) {
+    Quaternion q2;
+    Quaternion q1;
+    Vec cross;
+    Vec delta;
+    Vec dir;
+    Vec axis = {0.0f, -1.0f, 0.0f};
+    f32 ang;
+
+    delta.x = 0.3 * (f32)cos(obj->unkB8);
+    delta.y = obj->unkBC;
+    delta.z = 0.3 * (f32)sin(obj->unkB8);
+    PSVECAdd((Vec*)&obj->pos, &delta, (Vec*)&obj->pos);
+    if (obj->unkBC < 0.0f && obj->pos.y - 1.0f < 0.0f) {
+        obj->pos.x -= delta.x;
+        obj->pos.y = 1.0f;
+        obj->pos.z -= delta.z;
+        obj->unkC6 = 6;
+        obj->blinkTimer = 0x4B;
+    } else {
+        obj->unkBC -= 0.044;
+    }
+    C_QUATRotAxisRad(&q1, &axis, -(0.017453292f * obj->homeX));
+    delta.y = -delta.y;
+    dir.x = -delta.x;
+    dir.y = -0.5f;
+    dir.z = -delta.z;
+    PSVECNormalize(&delta, &delta);
+    PSVECNormalize(&dir, &dir);
+    PSVECCrossProduct(&dir, &delta, &cross);
+    ang = acos(PSVECDotProduct(&delta, &dir));
+    if (ang != 1.0f && ang != -1.0f) {
+        C_QUATRotAxisRad(&q2, &cross, ang);
+        PSQUATMultiply(&q2, &q1, &q2);
+        PSQUATNormalize(&q2, &q2);
+        CTRLSetQuat(&obj->control, q2.x, q2.y, q2.z, q2.w);
+    }
+    CTRLSetTranslation(&obj->control, obj->pos.x, -obj->pos.y, obj->pos.z);
 }
 
 // .text:0x000EFB54 size:0x630 mapped:0x8072EBE8
