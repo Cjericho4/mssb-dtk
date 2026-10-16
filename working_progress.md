@@ -56,6 +56,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 ## Almost Matched (do not retry)
 | Function | Issue |
 |---|---|
+| fn_3_1356F8 | r26/r27 swap between strength-reduced aIStrength[i] pointer and targetSpeeds pointer; decl-order permutations exhausted |
 | fn_3_49EA8 | &unk_F8[idx] base: target reuses one reg (add r6; addi r6,r6,0xf8), CW allocates a separate temp; register-only |
 | fn_3_FD51C | CW coalesces camera elem base and &elem->unk13C into one reg (target keeps separate r5/r7 and schedules stw 0x144 after addi), register/scheduling only |
 | fn_3_105C28 | register allocation / scheduling (see git log) |
