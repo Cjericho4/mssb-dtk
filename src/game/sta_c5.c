@@ -357,18 +357,26 @@ static inline void fn_3_F3A5C_inline(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f
     CTRLSetRotation(&obj->control, 0.0f, rotY, 0.0f);
 }
 
+static inline void fn_3_F3AE0_inline(StaC5PlacedObj* obj) {
+    obj->homeX = lbl_3_data_1B884[obj->targetIdx].pos.x;
+    obj->homeZ = lbl_3_data_1B884[obj->targetIdx].pos.z;
+    fn_3_F3A5C_inline(obj, obj->homeX, 10.0f, obj->homeZ, -lbl_3_data_1B884[obj->targetIdx].rot);
+}
+
+static inline void fn_3_F3BB0_inline(StaC5PlacedObj* obj) {
+    fn_3_F3AE0_inline(obj);
+    obj->unkC1 = 0;
+    obj->flag90_7 = 1;
+    obj->animState = &g_hugeAnimStruct.animTable->entries[lbl_3_bss_B219 + obj->targetIdx].anim;
+    obj->unkC4 = 0;
+    obj->unk99 = 1;
+}
+
 void fn_3_F1750(StaC5PlacedObj* obj, struct hugeAnimStruct* anim) {
     ActorAnimState* state = obj->animState;
 
     if (!fn_800B4A94((AnimLevel1*)state->actor, anim)) {
-        obj->homeX = lbl_3_data_1B884[obj->targetIdx].pos.x;
-        obj->homeZ = lbl_3_data_1B884[obj->targetIdx].pos.z;
-        fn_3_F3A5C_inline(obj, obj->homeX, 10.0f, obj->homeZ, -lbl_3_data_1B884[obj->targetIdx].rot);
-        obj->unkC1 = 0;
-        obj->flag90_7 = 1;
-        obj->animState = &g_hugeAnimStruct.animTable->entries[lbl_3_bss_B219 + obj->targetIdx].anim;
-        obj->unkC4 = 0;
-        obj->unk99 = 1;
+        fn_3_F3BB0_inline(obj);
     } else {
         AnimateActorBones(state->actor);
     }
@@ -474,14 +482,12 @@ void fn_3_F3A5C(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY) {
 
 // .text:0x000F3AE0 size:0xD0 mapped:0x80732B74
 void fn_3_F3AE0(StaC5PlacedObj* obj) {
-    obj->homeX = lbl_3_data_1B884[obj->targetIdx].pos.x;
-    obj->homeZ = lbl_3_data_1B884[obj->targetIdx].pos.z;
-    fn_3_F3A5C_inline(obj, obj->homeX, 10.0f, obj->homeZ, -lbl_3_data_1B884[obj->targetIdx].rot);
+    fn_3_F3AE0_inline(obj);
 }
 
 // .text:0x000F3BB0 size:0x120 mapped:0x80732C44
-void fn_3_F3BB0(void) {
-    return;
+void fn_3_F3BB0(StaC5PlacedObj* obj) {
+    fn_3_F3BB0_inline(obj);
 }
 
 // .text:0x000F3CD0 size:0x22C mapped:0x80732D64

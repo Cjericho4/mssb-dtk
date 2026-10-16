@@ -224,7 +224,7 @@ void fn_3_F38D4(void);
 void fn_3_F3A04(OuterStruct_F13F8* arg0);
 void fn_3_F3A5C(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY);
 void fn_3_F3AE0(StaC5PlacedObj* obj);
-void fn_3_F3BB0(void);
+void fn_3_F3BB0(StaC5PlacedObj* obj);
 void fn_3_F3CD0(void);
 void fn_3_F3EFC(void);
 void fn_3_F42A0(void);
