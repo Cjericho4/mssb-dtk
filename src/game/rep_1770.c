@@ -91,8 +91,25 @@ void fn_3_9A8A4(void) {
 }
 
 // .text:0x0009B108 size:0x218 mapped:0x806DA19C
-void fn_3_9B108(void) {
-    return;
+void fn_3_9B108(s32 arg) {
+    if (g_Scores.ScoreTeam0 >= 10) {
+        fn_3_972A0(arg, 0xB, 4, g_Scores.ScoreTeam0 % 10);
+        fn_3_972A0(arg, 0xC, 3, g_Scores.ScoreTeam0 / 10);
+        fn_3_972A0(arg, 0xB, 0xA, g_Scores.ScoreTeam0 % 10);
+        fn_3_972A0(arg, 0xC, 9, g_Scores.ScoreTeam0 / 10);
+    } else {
+        fn_3_972A0(arg, 0xA, 1, g_Scores.ScoreTeam0);
+        fn_3_972A0(arg, 0xA, 7, g_Scores.ScoreTeam0);
+    }
+    if (g_Scores.ScoreTeam1 >= 10) {
+        fn_3_972A0(arg, 0xE, 6, g_Scores.ScoreTeam1 % 10);
+        fn_3_972A0(arg, 0xF, 5, g_Scores.ScoreTeam1 / 10);
+        fn_3_972A0(arg, 0xE, 0xC, g_Scores.ScoreTeam1 % 10);
+        fn_3_972A0(arg, 0xF, 0xB, g_Scores.ScoreTeam1 / 10);
+    } else {
+        fn_3_972A0(arg, 0xD, 2, g_Scores.ScoreTeam1);
+        fn_3_972A0(arg, 0xD, 8, g_Scores.ScoreTeam1);
+    }
 }
 
 // .text:0x0009B320 size:0x4D4 mapped:0x806DA3B4

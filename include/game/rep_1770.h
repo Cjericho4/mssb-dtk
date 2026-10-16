@@ -11,7 +11,7 @@ void fn_3_99C88(void);
 void fn_3_99CFC(void);
 void fn_3_99E10(void);
 void fn_3_9A8A4(void);
-void fn_3_9B108(void);
+void fn_3_9B108(s32 arg);
 void fn_3_9B320(void);
 void fn_3_9B7F4(void);
 struct DrawingSceneStruct;
