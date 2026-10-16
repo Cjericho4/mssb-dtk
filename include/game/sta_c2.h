@@ -228,7 +228,7 @@ VecXYZ* fn_3_D2684(StaC2Object* obj);
 void fn_3_D278C(void);
 void fn_3_D2A0C(void);
 void fn_3_D30D0(void);
-void fn_3_D36B0(void);
+void fn_3_D36B0(struct StaC2ChainObj* obj);
 void fn_3_D3880(void);
 void fn_3_D3CDC(void);
 void fn_3_D3F54(void);
@@ -265,11 +265,21 @@ typedef struct StaC2ChainParams {
 } StaC2ChainParams; // size: 0x28
 
 typedef struct StaC2ChainObj {
-    u8 _pad0[0xA0];
+    Control control;            /* 0x00 */
+    u8 _pad3C[0x8C - 0x3C];
+    struct StadiumActorAnim* anim; /* 0x8C */
+    u8 _pad90[0x99 - 0x90];
+    u8 unk99;                   /* 0x99 */
+    u8 _pad9A[0xA0 - 0x9A];
     Vec pos;                    /* 0xA0 */
-    u8 _padAC[0xC0 - 0xAC];
+    u8 _padAC[0xB0 - 0xAC];
+    f32 velY;                   /* 0xB0 */
+    u8 _padB4[0xC0 - 0xB4];
     f32 angle;                  /* 0xC0 */
     StaC2D501CEntry* entries;   /* 0xC4 */
+    u8 _padC8[0xCA - 0xC8];
+    u8 unkCA;                   /* 0xCA */
+    u8 unkCB;                   /* 0xCB */
 } StaC2ChainObj;
 
 void fn_3_CBAFC(StaC2ChainObj* obj);

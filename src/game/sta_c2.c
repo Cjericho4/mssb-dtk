@@ -20,6 +20,7 @@ void fn_3_CB7E8(f32 x, f32 y, f32 z);
 extern f32 lbl_3_rodata_2664;
 extern u8 lbl_800E8754[];
 void fn_80033620(void);
+void fn_8004C094(Vec* pos);
 extern StadiumActorAnim lbl_3_bss_A034[];
 extern char lbl_3_rodata_286C[];
 extern char lbl_3_rodata_2878[];
@@ -842,6 +843,22 @@ void fn_3_D1F2C(StaC2ChainParams* params, StaC2D501CEntry* entries, s32 count, V
     return;
 }
 
+static inline void staC2UpdateChain8(StaC2ChainObj* obj) {
+    StaC2D501CEntry* entries = obj->entries;
+    Mtx m;
+    Vec axis = {0.0f, 1.0f, 0.0f};
+    Vec zero = {0.0f, 0.0f, 0.0f};
+    Vec v;
+
+    PSMTXRotAxisRad(m, &axis, 0.017453292f * obj->angle);
+    PSMTXMultVec(m, &lbl_3_rodata_24E8[0], &v);
+    PSVECAdd(&v, &obj->pos, &v);
+    v.y += 4.5;
+    entries[7].unkC[0] = v;
+    entries[7].unkC[1] = entries[7].unkC[0];
+    fn_3_D1F2C(&lbl_3_bss_A8A8, obj->entries, 8, &zero, obj);
+}
+
 // .text:0x000D2220 size:0x11C mapped:0x807112B4
 void fn_3_D2220(StaC2ChainObj* obj) {
     StaC2D501CEntry* entries = obj->entries;
@@ -990,8 +1007,22 @@ void fn_3_D30D0(void) {
 }
 
 // .text:0x000D36B0 size:0x1D0 mapped:0x80712744
-void fn_3_D36B0(void) {
-    return;
+void fn_3_D36B0(StaC2ChainObj* obj) {
+    obj->pos.y += obj->velY;
+    obj->velY -= 0.04f;
+    if (obj->pos.y < 0.0f) {
+        obj->pos.y = 0.0f;
+        if (!(obj->unk99 & 4)) {
+            obj->unkCB = obj->unkCA;
+            obj->unkCA = 1;
+            fn_80025EEC(obj->anim, 0, 1);
+        }
+        obj->unk99 &= 0xFB;
+        fn_8004C094(&obj->pos);
+    }
+    staC2UpdateChain8(obj);
+    CTRLSetRotation(&obj->control, 0.0f, obj->angle, 0.0f);
+    CTRLSetTranslation(&obj->control, obj->pos.x, -obj->pos.y, obj->pos.z);
 }
 
 // .text:0x000D3880 size:0x45C mapped:0x80712914
