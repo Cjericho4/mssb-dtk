@@ -771,9 +771,26 @@ void fn_3_8A4C8(void) {
     g_Runners[0].position.z = g_Batter.batterPos.z;
 }
 
+extern VecXZ lbl_3_data_4A34[4];
 // .text:0x0008A4E4 size:0xC0 mapped:0x806C9578
 void fn_3_8A4E4(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        InMemRunnerType* r = &g_Runners[i];
+
+        r->position.x = lbl_3_data_4A34[i].x;
+        r->position.z = lbl_3_data_4A34[i].z;
+        r->velocity.x = 0.0f;
+        r->velocity.y = 0.0f;
+        r->velocity.z = 0.0f;
+        r->startingBase_baseAchieved = i;
+        r->currentBase = i;
+        r->nextBase = (i + 1) & 3;
+        r->baseStandingOn = i;
+        r->baseRunningTowards = 0xFF;
+        r->leadOffStatus = 0;
+    }
 }
 
 // .text:0x0008A5A4 size:0x74 mapped:0x806C9638
