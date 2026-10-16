@@ -26,9 +26,55 @@ extern StaC2ChainParams lbl_3_bss_A8A8;
 extern StaC2D501CEntry lbl_3_bss_A8D0[4];
 extern const Vec lbl_3_rodata_25F8;
 
+static inline void staC2PlaceTrio(void) {
+    Mtx m;
+    Vec v;
+    f32 ang;
+    StadiumObjectElem* e;
+    u32 i;
+    u32 j;
+    ActorAnimState* state;
+
+    ang = shortAngleToRad(g_Minigame._1AF8);
+    PSMTXRotRad(m, 'Y', 0.017453292f * -ang);
+    v.x = 4.5f;
+    v.y = 9.0f;
+    v.z = 0.0f;
+    PSMTXMultVec(m, &v, &v);
+    for (i = 0; i < lbl_3_common_bss_350E4[0].memcpyCount; i++) {
+        if (lbl_3_common_bss_350E4[0].src[i].unk9D == 1) {
+            break;
+        }
+    }
+    for (j = i; j < i + 3; j++) {
+        e = &lbl_3_common_bss_350E4[0].src[j];
+        CTRLSetTranslation(&e->control, g_Minigame._1AE0 + v.x, g_Minigame._1AE4 - v.y, g_Minigame._1AE8 + v.z);
+        state = (ActorAnimState*)e->unk74;
+        e->unkAC_u8 = (j % 3) * 30;
+        e->unkA0 = 0.0f;
+        state->time = e->unkA0;
+        state->setTime = 1;
+        fn_800B4CA0(state->actor, state->time);
+    }
+}
+
 // .text:0x000CB8A8 size:0x1F4 mapped:0x8070A93C
-void fn_3_CB8A8(void) {
-    return;
+void fn_3_CB8A8(StadiumObjectElem* e) {
+    switch (e->unkCA) {
+    case 0:
+        fn_80025EEC(e->unk8C, 0, 2);
+        staC2PlaceTrio();
+        break;
+    case 3:
+        fn_80025EEC(e->unk8C, 0, 4);
+        break;
+    case 1:
+        fn_80025EEC(e->unk8C, 0, 3);
+        break;
+    default:
+        fn_80025EEC(e->unk8C, 0, 1);
+        break;
+    }
 }
 
 // .text:0x000CBA9C size:0x60 mapped:0x8070AB30

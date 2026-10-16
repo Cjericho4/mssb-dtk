@@ -95,7 +95,7 @@ typedef struct StaC2Effect {
     s16 duration;      /* 0x4A */
 } StaC2Effect;
 
-void fn_3_CB8A8(void);
+void fn_3_CB8A8(struct StadiumObjectElem* e);
 void fn_3_CBA9C(ActorObject* arg0);
 void fn_3_CBC18(void);
 void fn_3_CBF80(void);
