@@ -919,7 +919,7 @@ typedef struct CommonBss32A94 {
     s16 unk4;
     u8 _pad6[0x22 - 0x06];
     s8 unk22;           /* 0x22 */
-    u8 _pad23;
+    s8 unk23;           /* 0x23 */
     u8 unk24;           /* 0x24 */
     s8 unk25;           /* 0x25 */
     u8 _pad26[0x44 - 0x26];

@@ -59,6 +59,57 @@ void fn_3_79414(void) {
 
 // .text:0x000795A8 size:0x1C4 mapped:0x806B863C
 void fn_3_795A8(void) {
-    return;
+    CommonBss32A94* bss = &lbl_3_common_bss_32A94;
+    u8 cur;
+    s32 v;
+
+    if (bss->unk23 > 0) {
+        return;
+    }
+    if (g_Ball.deadBallReason == 1) {
+        bss->unk23 = bss->unk22 = 4;
+        return;
+    }
+    if (g_Ball.deadBallReason == 3) {
+        bss->unk23 = bss->unk22 = 2;
+        return;
+    }
+    if (g_Runners[0].runnerOnFieldOrOutOrScored == 3) {
+        bss->unk23 = bss->unk22 = 4;
+        return;
+    }
+    if (g_Ball.ballZoneAwayFromHome <= 1 && g_Ball.ballState != 0) {
+        cur = g_Runners[0].currentBase;
+        if (cur == 0) {
+            v = 1;
+        } else if (g_Runners[0].percentTowardsNextBase < 0.3f) {
+            if (g_Runners[0].runnerOnFieldOrOutOrScored == 2 && 0.0f == g_Runners[0].percentTowardsNextBase) {
+                v = cur - 1;
+            } else {
+                v = cur;
+            }
+        } else {
+            v = g_Runners[0].nextBase;
+        }
+        bss->unk23 = -v;
+    }
+    if (g_Runners[0].currentBase == -bss->unk23 && bss->unk23 != 0) {
+        bss->unk23 *= -1;
+        if ((s8)g_Runners[0].baseOfFailedBodyCheck == bss->unk23) {
+            bss->unk23--;
+        }
+        lbl_3_common_bss_32A94.unk22 = bss->unk23;
+        return;
+    }
+    if (g_Runners[0].currentBase - 1 == -bss->unk23 && bss->unk23 != 0) {
+        if ((s8)g_Runners[0].baseOfFailedBodyCheck == (1 - bss->unk23) % 4) {
+            bss->unk23 *= -1;
+            lbl_3_common_bss_32A94.unk22 = bss->unk23;
+            return;
+        }
+    }
+    if (g_Runners[0].currentBase != 0) {
+        lbl_3_common_bss_32A94.unk22 = g_Runners[0].currentBase;
+    }
 }
 
