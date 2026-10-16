@@ -501,7 +501,24 @@ void fn_3_10AD48(void) {
 
 // .text:0x0010AE18 size:0xD8 mapped:0x80749EAC
 void fn_3_10AE18(void) {
-    return;
+    s32 order[4];
+    s32 i;
+
+    order[0] = -1;
+    order[1] = -1;
+    order[2] = -1;
+    order[3] = -1;
+    for (i = 0; i < 4; i++) {
+        if (g_Minigame.players.characterIndex[i] >= 0) {
+            order[i] = i;
+        }
+    }
+    fn_3_9E078(order, g_Minigame.miniGameNumberOfParticipants, 0);
+    g_Minigame.players.battingOrder[0] = order[0];
+    g_Minigame.players.battingOrder[1] = order[1];
+    g_Minigame.players.battingOrder[2] = order[2];
+    g_Minigame.players.battingOrder[3] = order[3];
+    fn_3_5A6D4(0x1A);
 }
 
 // .text:0x0010AEF0 size:0x310 mapped:0x80749F84
