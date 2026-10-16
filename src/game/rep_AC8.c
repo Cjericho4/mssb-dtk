@@ -1370,13 +1370,56 @@ void fn_3_57488(void) {
 }
 
 // .text:0x000576B4 size:0x360 mapped:0x80696748
-void fn_3_576B4(void) {
+void fn_3_576B4(s16 idx) {
     return;
 }
 
 // .text:0x00057A14 size:0x1A0 mapped:0x80696AA8
 void fn_3_57A14(void) {
-    return;
+    f32 best;
+    f32 second;
+    s32 bestIdx;
+    s32 secondIdx;
+    s32 i;
+
+    if (g_Ball.fielderWBallIndex >= 0) {
+        g_FieldingLogic.unkB0 = g_Ball.fielderWBallIndex;
+        return;
+    }
+    if (g_Ball.ballState == 2) {
+        g_FieldingLogic.unkB0 = g_Ball.fielderBeingThrownTo;
+        return;
+    }
+    second = 999.9f;
+    secondIdx = -1;
+    best = second;
+    bestIdx = -1;
+    for (i = 1; i < 9; i++) {
+        if (g_Fielders[i].unk1D3 == 2 || g_Fielders[i].unk1D3 == 3) {
+            if (g_Fielders[i].unk7C < second) {
+                if (g_Fielders[i].unk7C < best) {
+                    second = best;
+                    secondIdx = bestIdx;
+                    best = g_Fielders[i].unk7C;
+                    bestIdx = i;
+                } else {
+                    second = g_Fielders[i].unk7C;
+                    secondIdx = i;
+                }
+            }
+        }
+    }
+    if (bestIdx >= 0) {
+        g_FieldingLogic.unkB0 = bestIdx;
+    } else if (g_Fielders[0].unk1D3 == 2 || g_Fielders[0].unk1D3 == 3 || g_Fielders[0].unk1D3 == 4) {
+        g_FieldingLogic.unkB0 = 0;
+    }
+    if (secondIdx >= 0) {
+        g_FieldingLogic.unkB2 = secondIdx;
+    }
+    if (g_FieldingLogic.unkB0 >= 0) {
+        fn_3_576B4(g_FieldingLogic.unkB0);
+    }
 }
 
 // .text:0x00057BB4 size:0x804 mapped:0x80696C48

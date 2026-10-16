@@ -224,7 +224,7 @@ void fn_3_55CC4(void);
 void fn_3_55EEC(s32 fielderIdx);
 void fn_3_57144(void);
 void fn_3_57488(void);
-void fn_3_576B4(void);
+void fn_3_576B4(s16 idx);
 void fn_3_57A14(void);
 void fn_3_57BB4(void);
 void fn_3_583B8(void);
