@@ -1060,9 +1060,12 @@ typedef struct Scores {
     /* 0xAB */ u8 _padAB;
     /* 0xAC */ u8 unkAC;
     /* 0xAD */ u8 unkAD;
-    /* 0xAE */ u8 _padAE[0xC2 - 0xAE];
+    /* 0xAE */ u8 _padAE[0xC1 - 0xAE];
+    /* 0xC1 */ u8 unkC1;
     /* 0xC2 */ u8 unkC2;
     /* 0xC3 */ u8 someFlag;
+    /* 0xC4 */ u8 _padC4[0xC6 - 0xC4];
+    /* 0xC6 */ u8 unkC6;
 } Scores;
 
 extern Scores g_Scores;

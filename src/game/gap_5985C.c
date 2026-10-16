@@ -31,6 +31,7 @@ void fn_8003BF54(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32
 #include "game/rep_540.h"
 #include "game/game_batter.h"
 #include "game/gap_E1964.h"
+#include "game/gap_9CD90.h"
 
 // .text:0x0005985C size:0x74 mapped:0x806988F0
 void fn_3_5985C(s32 idx, s32 arg1) {
@@ -481,8 +482,44 @@ void fn_3_5D094(s32 arg0) {
 }
 
 // .text:0x0005D3FC size:0x120 mapped:0x8069C490
+static inline u8 fn_3_5D3FC_inningType(s32 inning) {
+    if (inning > g_Scores.threshold) {
+        return 5;
+    }
+    if (g_Scores.threshold <= 3) {
+        if (g_Scores.threshold == inning && g_Scores.unkAD != 0) {
+            return 4;
+        }
+        return 0;
+    }
+    if (inning == g_Scores.threshold) {
+        return 4;
+    }
+    if ((g_Scores.threshold == 9 && inning >= 7) || (g_Scores.threshold == 7 && inning >= 6)) {
+        return 3;
+    }
+    if (inning >= 4) {
+        return 2;
+    }
+    return 1;
+}
+
 void fn_3_5D3FC(void) {
-    return;
+    GameInitVariables* settings = &g_d_GameSettings;
+
+    g_GameLogic._135 = 0;
+    g_GameLogic._136 = 0;
+    g_RunningLogic.unk11 = 0;
+    g_RunningLogic.unk13 = 0;
+    g_RunningLogic.basesOccupied = 0;
+    g_Scores.unkAC = fn_3_5D3FC_inningType(g_Scores.highscore);
+    g_Scores.unkC1 = 0;
+    g_Scores.unkC6 = 0;
+    lbl_3_common_bss_37400.unk48 = 0;
+    fn_3_6C13C();
+    if (settings->exhibitionMatchInd == 0) {
+        fn_3_16598C();
+    }
 }
 
 // .text:0x0005D51C size:0xCC mapped:0x8069C5B0

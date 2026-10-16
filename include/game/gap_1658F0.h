@@ -9,7 +9,8 @@ typedef struct {
     u8 _pad42[0x4];
     u8 unk46;          /* 0x46 */
     u8 unk47;          /* 0x47 */
-    u8 _pad48[0x2];
+    u8 unk48;          /* 0x48 */
+    u8 _pad49;
     u8 field_0x4A;
 } Bss37400Item;
 
