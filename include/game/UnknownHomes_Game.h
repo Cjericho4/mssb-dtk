@@ -577,7 +577,8 @@ typedef struct FieldingLogic {
     /* 0xB2 */ s16 unkB2;
     /* 0xB4 */ u8 _pad1a[0xBC - 0xB4];
     /* 0xBC */ s16 unkBC;
-    /* 0xBE */ u8 _pad1aa[0xC4 - 0xBE];
+    /* 0xBE */ s16 unkBE;
+    /* 0xC0 */ u8 _pad1aa[0xC4 - 0xC0];
     /* 0xC4 */ s16 unkC4;
     /* 0xC6 */ u8 _pad1b[0xCC - 0xC6];
     /* 0xCC */ s16 unkCC;
@@ -2268,7 +2269,8 @@ typedef struct Fielder {
     /* 0x1D4 */ u8 _pad3a;
     /* 0x1D5 */ u8 unk1D5;
     /* 0x1D6 */ u8 unk1D6;
-    /* 0x1D7 */ u8 _pad3b[0x1DC - 0x1D7];
+    /* 0x1D7 */ u8 unk1D7;
+    /* 0x1D8 */ u8 _pad3b[0x1DC - 0x1D8];
     /* 0x1DC */ u8 unk1DC;
     /* 0x1DD */ u8 _pad1DD[0x1E3 - 0x1DD];
     /* 0x1E3 */ u8 unk1E3;

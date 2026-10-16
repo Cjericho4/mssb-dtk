@@ -889,8 +889,8 @@ void fn_3_3D6AC(void) {
 }
 
 // .text:0x0003D7D4 size:0x3A4 mapped:0x8067C868
-void fn_3_3D7D4(void) {
-    return;
+s16 fn_3_3D7D4(s32 idx) {
+    return 0;
 }
 
 // .text:0x0003DB78 size:0x7D4 mapped:0x8067CC0C
@@ -1105,8 +1105,24 @@ void fn_3_480B8(void) {
 }
 
 // .text:0x000483CC size:0xB4 mapped:0x80687460
-void fn_3_483CC(void) {
-    return;
+void fn_3_483CC(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    f->unk18C = fn_3_3D7D4(idx);
+    f->unk1D7 = 2;
+    if (idx != -1) {
+        f->unk1D3 = 0xE;
+        if (lbl_3_data_3C40.unk70 >= 0) {
+            g_FieldingLogic.unk_F8[idx] = lbl_3_data_3C40.unk70;
+        }
+        f->unk1D5 = 0;
+        f->unk1D6 = 0;
+        f->unk1A4 = 0;
+        f->unk1AC = 0;
+        f->unk1FF = 0;
+    }
+    f->unk1D6 = 0;
+    g_FieldingLogic.unkBE = -1;
 }
 
 // .text:0x00048480 size:0x5D4 mapped:0x80687514
