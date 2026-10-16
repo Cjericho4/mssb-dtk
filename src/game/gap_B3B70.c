@@ -1,4 +1,6 @@
 #include "game/gap_B3B70.h"
+#include "game/rep_1038.h"
+#include "game/gap_9CD90.h"
 #include "game/gap_AC9F8.h"
 #include "game/gap_6AEC0.h"
 #include "game/m_sound.h"
@@ -355,7 +357,27 @@ void fn_3_B5F7C(void) {
 
 // .text:0x000B60F0 size:0xD0 mapped:0x806F5184
 void fn_3_B60F0(void) {
-    return;
+    fn_3_5F720();
+    g_Strikes.unk_C = g_Strikes.outs;
+    g_Strikes.unk_18[0] = -1;
+    g_Strikes.unk_18[1] = -1;
+    g_Strikes.unk_18[2] = -1;
+    g_Strikes.unk_20 = g_Strikes.balls + g_Strikes.strikes * 16;
+    g_Strikes.unk_14 = 0;
+    g_Ball.totalFramesAtPlay = 0;
+    g_FieldingLogic.unk10E = 0;
+    g_FieldingLogic.unkEE = 0;
+    g_FieldingLogic.unk10F = 0;
+    g_FieldingLogic.unk110 = 0;
+    g_FieldingLogic.unk128 = 0;
+    g_FieldingLogic.unk129 = 0;
+    g_RunningLogic.unk13 = 0;
+    g_GameLogic.pre_PostMiniGameInd = 0;
+    g_GameLogic.minigameLastTurnSuccessInd = 0;
+    g_Practice.guidedPracticeCompletionRelated2 = 0;
+    changeScene(1, 6);
+    fn_3_5A6D4(1);
+    fn_3_6C0E0();
 }
 
 // .text:0x000B61C0 size:0x160 mapped:0x806F5254
