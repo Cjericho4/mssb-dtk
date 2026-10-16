@@ -57,7 +57,7 @@ void fn_3_E2324(void);
 void fn_3_E25D0(castleThwompObj* arg, u32 idx);
 void fn_3_E266C(void);
 BOOL fn_3_E28DC(castleThwompObj* obj);
-void fn_3_E29B4(void);
+BOOL fn_3_E29B4(castleThwompObj* obj);
 u8 fn_3_E2B70(struct CastleRotObj* obj);
 void fn_3_E2E78(struct CastleRotObj* obj);
 void fn_3_E2F4C(void);

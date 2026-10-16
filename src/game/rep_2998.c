@@ -11,6 +11,7 @@
 #include "game/rep_540.h"
 #include "game/rep_AC8.h"
 #include "game/m_sound.h"
+#include "game/gap_B7EF0.h"
 
 // .text:0x000E1DB8 size:0x1F0 mapped:0x80720E4C
 void fn_3_E1DB8(void) {
@@ -183,8 +184,32 @@ BOOL fn_3_E28DC(castleThwompObj* obj) {
 }
 
 // .text:0x000E29B4 size:0x1BC mapped:0x80721A48
-void fn_3_E29B4(void) {
-    return;
+BOOL fn_3_E29B4(castleThwompObj* obj) {
+    static const f32 sSpeeds[3] = {0.8f, 1.0f, 1.2f};
+    VecXYZ pos;
+    Vec diff;
+
+    pos = obj->position;
+    PSVECSubtract((Vec*)&g_Ball.AtBat_Contact_BallPos, (Vec*)&pos, &diff);
+    diff.y = 0.0f;
+    if (5.5 * obj->rotation.x > PSVECMag(&diff)) {
+        if (g_Ball.AtBat_Contact_BallPos.y >= 1.5 * obj->rotation.x && g_Ball.AtBat_Contact_BallPos.y <= 8.5 * obj->rotation.x) {
+            if (g_Ball.AtBat_Contact_BallPos.y < 5.0 * obj->rotation.x) {
+                fn_3_E25D0_inline(obj, 4);
+            } else {
+                fn_3_E25D0_inline(obj, 5);
+            }
+            {
+                s16 i = fn_3_B7F70(3);
+                ActorAnimState* st = (ActorAnimState*)obj->actPtr;
+                st->speed = sSpeeds[i];
+                st->setSpeed = 1;
+            }
+            fn_800B4C04(((ActorAnimState*)obj->actPtr)->actor, ((ActorAnimState*)obj->actPtr)->speed);
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 // .text:0x000E2B70 size:0x308 mapped:0x80721C04
