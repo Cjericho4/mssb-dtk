@@ -47,9 +47,31 @@ s32 fn_3_20CEC(f32 rate) {
     return 0;
 }
 
+extern f32 lbl_3_data_4474[4];
 // .text:0x00020E50 size:0x9C mapped:0x8065FEE4
 void fn_3_20E50(void) {
-    return;
+    f32 diff;
+
+    if (g_Pitcher.currentStateFrameCounter < 30) {
+        return;
+    }
+    if (g_AiLogic.aIMoundLocationX == g_Pitcher.pitcher.x) {
+        return;
+    }
+    diff = g_AiLogic.aIMoundLocationX - g_Pitcher.pitcher.x;
+    if (diff > 0.0f) {
+        if (diff <= lbl_3_data_4474[2]) {
+            g_Pitcher.pitcher.x = g_AiLogic.aIMoundLocationX;
+        } else {
+            g_Pitcher.pitcher.x += lbl_3_data_4474[2];
+        }
+    } else {
+        if (diff >= -lbl_3_data_4474[2]) {
+            g_Pitcher.pitcher.x = g_AiLogic.aIMoundLocationX;
+        } else {
+            g_Pitcher.pitcher.x -= lbl_3_data_4474[2];
+        }
+    }
 }
 
 // .text:0x00020EEC size:0xC4 mapped:0x8065FF80
