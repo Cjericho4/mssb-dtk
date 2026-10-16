@@ -188,9 +188,43 @@ void fn_3_8B9BC(VecXYZ* pos) {
                    lbl_3_data_88AC[0], lbl_3_data_88AC[0], lbl_3_data_88AC[0], 1, 0x7F, NULL);
 }
 
+typedef struct SoundEmitterDef {
+    /* 0x00 */ s32 x;
+    /* 0x04 */ s32 y;
+    /* 0x08 */ s32 z;
+    /* 0x0C */ u8 _padC[0x14 - 0xC];
+    /* 0x14 */ s32 maxVol;
+    /* 0x18 */ u8 _pad18[0x3C - 0x18];
+} SoundEmitterDef; /* size: 0x3C */
+
+extern SoundEmitterDef lbl_3_data_8974[];
+extern VecXYZ lbl_3_data_8D7C;
+
 // .text:0x0008BA60 size:0x164 mapped:0x806CAAF4
 void fn_3_8BA60(s32 emitterIdx, VecXYZ* pos, VecXYZ* dir) {
-    return;
+    VecXYZ tmp;
+    SoundEmitterSlot* em;
+    u8 sfx;
+
+    if (emitterIdx < 0 || emitterIdx >= SOUND_EMITTER_COUNT || lbl_3_common_bss_32B20.emitterActive[emitterIdx] == 0) {
+        return;
+    }
+    em = &lbl_3_common_bss_32B20.emitters[emitterIdx];
+    if (sndCheckEmitter(em) == 0) {
+        lbl_3_common_bss_32B20.emitterActive[emitterIdx] = 0;
+        return;
+    }
+    sfx = lbl_3_common_bss_32B20.emitterSfx[emitterIdx];
+    if (pos == NULL) {
+        pos = &tmp;
+        tmp.x = lbl_3_data_8974[sfx].x / 100000.0f;
+        tmp.y = lbl_3_data_8974[sfx].y / 100000.0f;
+        tmp.z = lbl_3_data_8974[sfx].z / 100000.0f;
+    }
+    if (dir == NULL) {
+        dir = &lbl_3_data_8D7C;
+    }
+    sndUpdateEmitter(em, pos, dir, lbl_3_data_8974[sfx].maxVol, NULL);
 }
 
 // .text:0x0008BBC4 size:0x230 mapped:0x806CAC58

@@ -23,7 +23,7 @@ typedef struct CommonBss32B20 {
     u32 field_0x8;                                /* 0x8: listener room */
     u8 _padC[0x90 - 0xC];
     SoundEmitterSlot emitters[SOUND_EMITTER_COUNT]; /* 0x90 */
-    u8 _pad1FD0[0x2034 - 0x1FD0];
+    u8 emitterSfx[SOUND_EMITTER_COUNT];           /* 0x1FD0 */
     u8 emitterActive[SOUND_EMITTER_COUNT];        /* 0x2034 */
     u8 _pad2098[0x2138 - 0x2098];
 } CommonBss32B20;
