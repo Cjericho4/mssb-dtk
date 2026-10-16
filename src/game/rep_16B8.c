@@ -7,6 +7,7 @@
 #include "game/gap_1658F0.h"
 
 extern int lbl_3_data_EC1C;
+extern int lbl_3_data_E75C;
 extern int lbl_3_data_F224;
 extern u16 lbl_3_data_F344[6];
 void fn_800363D8(DrawingSceneStruct* scene, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
@@ -195,8 +196,21 @@ void fn_3_94708(void) {
 }
 
 // .text:0x00094760 size:0x158 mapped:0x806D37F4
+static inline s32 teamThing(s32 t) {
+    return g_GameLogic.teams[t] + g_GameLogic._13E[t] * 4;
+}
+
 void fn_3_94760(void) {
-    return;
+    DrawingSceneStruct* scene;
+
+    fn_80034E20(scene = lbl_803CC1B8, &lbl_3_data_E75C);
+    lbl_80371C30[scene->unkIndex + 3].obj->unk64 = lbl_3_data_F430[g_GameLogic.logo[0].captain][0];
+    lbl_80371C30[scene->unkIndex + 4].obj->unk64 = lbl_3_data_F430[g_GameLogic.logo[1].captain][0];
+    lbl_80371C30[scene->unkIndex + 3].obj->field_0x5C = g_GameLogic.logo[0].variationID << 16;
+    lbl_80371C30[scene->unkIndex + 4].obj->field_0x5C = g_GameLogic.logo[1].variationID << 16;
+    fn_800363D8(scene, 5, 1, 0x25, teamThing(g_GameLogic.homeTeamInd));
+    fn_800363D8(scene, 6, 1, 0x25, teamThing(g_GameLogic.homeTeamInd ^ 1));
+    lbl_803CC1B8->aFunctionPointer = fn_3_94708;
 }
 
 // .text:0x000948B8 size:0x78 mapped:0x806D394C
