@@ -124,7 +124,51 @@ void fn_3_DCF44(void) {
 
 // .text:0x000DD000 size:0x1A8 mapped:0x8071C094
 void fn_3_DD000(void) {
-    return;
+    GameControlsStruct* gl = &g_GameLogic;
+
+    switch (gl->_125) {
+    case 0:
+        changeScene(1, 6);
+        gl->_125 = 1;
+        break;
+    case 1:
+        if (gl->FrameCountOfCurrentPitch > 1800) {
+            gl->_125 = 2;
+            gl->FrameCountOfCurrentAtBat_Copy = 0;
+        } else if (gl->FrameCountOfCurrentPitch > 300 && fn_3_6C938(1, 0x1100) != 0) {
+            gl->_125 = 2;
+            g_GameLogic.FrameCountOfCurrentAtBat_Copy = 0;
+        }
+        break;
+    case 2:
+        if (gl->FrameCountOfCurrentAtBat_Copy > 30) {
+            if (g_Minigame._190A != 0) {
+                gl->_125 = 4;
+            } else {
+                gl->_125 = 3;
+            }
+        }
+        break;
+    case 3:
+        lbl_3_common_bss_34C90.field_0x1D1 = 0;
+        lbl_3_common_bss_34C90.field_0x1D2 = 0;
+        fn_3_5A6D4(0x22);
+        break;
+    case 4:
+        changeScene(4, 6);
+        if (lbl_8037169C._13 != 0) {
+            gl->_125 = 10;
+        }
+        break;
+    case 5:
+        if (g_Minigame.challenge_minigame_haven_tWonYetIndicator != 0) {
+            g_d_GameSettings._38 = 0;
+        } else {
+            g_d_GameSettings._38 = g_Minigame.players._18E8[g_d_GameSettings._35];
+        }
+        g_GameLogic.framesOfExitingToMenu = 1;
+        break;
+    }
 }
 
 // .text:0x000DD1A8 size:0x1D4 mapped:0x8071C23C
