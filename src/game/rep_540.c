@@ -1,4 +1,5 @@
 #include "game/rep_540.h"
+#include "game/gap_9CD90.h"
 #include "header_rep_data.h"
 
 #include "game/UnknownHomes_Game.h"
@@ -133,7 +134,35 @@ void fn_3_9E18(void) {
 
 // .text:0x00009E84 size:0x120 mapped:0x80648F18
 void fn_3_9E84(void) {
-    return;
+    if (g_Ball.deadBallReason == 0) {
+        if (g_FieldingLogic._107 != 0) {
+            if (g_Ball.deadBallReason != 4) {
+                g_Ball.deadballLastLoc.x = g_Ball.AtBat_Contact_BallPos.x;
+                g_Ball.deadballLastLoc.y = g_Ball.AtBat_Contact_BallPos.y;
+                g_Ball.deadballLastLoc.z = g_Ball.AtBat_Contact_BallPos.z;
+                g_Ball.deadBallReason = 4;
+                if (g_RunningLogic.unk0 != 0) {
+                    fn_3_59918(0x14, 0);
+                }
+            }
+        } else if ((g_Ball.numFieldersWhoHandledBallDuringPlay != 0) && (g_Ball.numberOfThrowsDuringPlay != 0)) {
+            if (g_Ball.deadBallReason != 4) {
+                g_Ball.deadballLastLoc.x = g_Ball.AtBat_Contact_BallPos.x;
+                g_Ball.deadballLastLoc.y = g_Ball.AtBat_Contact_BallPos.y;
+                g_Ball.deadballLastLoc.z = g_Ball.AtBat_Contact_BallPos.z;
+                g_Ball.deadBallReason = 4;
+                if (g_RunningLogic.unk0 != 0) {
+                    fn_3_59918(0x14, 0);
+                }
+            }
+        } else {
+            g_Ball.deadBallReason = 3;
+            g_Ball.deadballLastLoc.x = g_Ball.AtBat_Contact_BallPos.x;
+            g_Ball.deadballLastLoc.y = g_Ball.AtBat_Contact_BallPos.y;
+            g_Ball.deadballLastLoc.z = g_Ball.AtBat_Contact_BallPos.z;
+            fn_3_59918(7, 0);
+        }
+    }
 }
 
 // .text:0x00009FA4 size:0x7C mapped:0x80649038
