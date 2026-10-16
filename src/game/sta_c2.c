@@ -14,9 +14,11 @@
 #include "game/gap_16C410.h"
 void fn_3_CB7E8(f32 x, f32 y, f32 z);
 #include "musyx/musyx.h"
+#include "Dolphin/gx.h"
 
 extern f32 lbl_3_rodata_2664;
 extern u8 lbl_800E8754[];
+void fn_80033620(void);
 extern StadiumActorAnim lbl_3_bss_A034[];
 extern char lbl_3_rodata_286C[];
 extern char lbl_3_rodata_2878[];
@@ -476,9 +478,57 @@ void fn_3_CFAB4(StaC2Effect* effect, StaC2EffectParent* parent) {
 }
 
 // .text:0x000CFB44 size:0x214 mapped:0x8070EBD8
-void fn_3_CFB44(void) {
-    return;
+BOOL fn_3_CFB44(StaC2Emitter* em) {
+    StaC2Particle* p = em->particles;
+    StaC2D00D0Obj* owner = em->owner;
+    s32 a;
+
+    fn_80033620();
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+    do {
+        if (p->unk48 <= 0 && p->unk4A != 0) {
+            fn_8003403C(p->unk38, p->unk3C);
+            fn_80033CC8(p, em->unk10);
+            p->unk38 += 0.1;
+            if (p->unk38 < 0.0f) {
+                p->unk38 = 0.0f;
+            }
+            p->unk3C += 0.1;
+            if (p->unk3C < 0.0f) {
+                p->unk3C = 0.0f;
+            }
+            a = p->unk43;
+            a -= 8;
+            if (a < 0) {
+                a = 0;
+            }
+            p->unk43 = a;
+            p->pos.x += p->vel.x;
+            p->pos.y -= p->vel.y;
+            p->pos.z += p->vel.z;
+            p->unk4A--;
+        }
+        p->unk48--;
+        if (p->unk4A == 0) {
+            StaC2D00D0Src* f = em->owner->followSrc;
+            p->pos.x = p->origin.x;
+            p->pos.y = p->origin.y;
+            p->pos.z = p->origin.z;
+            p->unk38 = p->unk3C = 3.0 * f->unkBC;
+            p->unk40[0] = p->unk40[1] = p->unk40[2] = 0xFF;
+            p->unk43 = 255.0 * f->unkBC;
+            p->unk4A = 30;
+            p->unk48 = 0;
+        }
+    } while ((p = p->next) != NULL);
+    if (owner->src->state == 0) {
+        owner->handle = 0;
+        return TRUE;
+    }
+    return FALSE;
 }
+
 
 // .text:0x000CFD58 size:0x374 mapped:0x8070EDEC
 void fn_3_CFD58(StaC2D00D0Obj* obj) {
@@ -513,7 +563,7 @@ void fn_3_D00D0(Control* ctrl) {
             obj->flag90 = 1;
         }
         if (obj->handle == 0) {
-            obj->handle = fn_80033A24(fn_3_CFB44, 0x80, 0, 0x1E, 0, 1);
+            obj->handle = fn_80033A24((void (*)(void))fn_3_CFB44, 0x80, 0, 0x1E, 0, 1);
             if (obj->handle != 0) {
                 fn_3_CFD58(obj);
             }

@@ -166,11 +166,14 @@ typedef struct StaC2D00D0Obj {
     u8 alpha;                   /* 0x92 */
     u8 _pad93[0xA0 - 0x93];
     StaC2D00D0Src* src;         /* 0xA0 */
-    Control* follow;            /* 0xA4 */
+    union {
+        Control* follow;            /* 0xA4 */
+        StaC2D00D0Src* followSrc;   /* 0xA4 */
+    };
     u32 handle;                 /* 0xA8 */
 } StaC2D00D0Obj;
 
-void fn_3_CFB44(void);
+BOOL fn_3_CFB44(struct StaC2Emitter* em);
 void fn_3_CFD58(StaC2D00D0Obj* obj);
 void fn_80033964(u32 handle);
 void fn_3_D00CC(void);
@@ -289,9 +292,14 @@ typedef struct StaC2Particle {
     struct StaC2Particle* next; /* 0x00 */
     Vec pos;        /* 0x04 */
     Vec vel;        /* 0x10 */
-    f32 unk1C;      /* 0x1C */
-    f32 unk20;      /* 0x20 */
-    f32 unk24;      /* 0x24 */
+    union {
+        struct {
+            f32 unk1C;  /* 0x1C */
+            f32 unk20;  /* 0x20 */
+            f32 unk24;  /* 0x24 */
+        };
+        Vec origin;     /* 0x1C */
+    };
     f32 unk28;      /* 0x28 */
     f32 unk2C;      /* 0x2C */
     u8 _pad30[0x38 - 0x30];
@@ -308,6 +316,14 @@ typedef struct StaC2Particle {
     u8 unk4F;       /* 0x4F */
     u8 unk50;       /* 0x50 */
 } StaC2Particle;
+
+typedef struct StaC2Emitter {
+    u8 _pad0[0xC];
+    StaC2Particle* particles; /* 0x0C */
+    s32 unk10;                /* 0x10 */
+    u8 _pad14[0x20 - 0x14];
+    StaC2D00D0Obj* owner;     /* 0x20 */
+} StaC2Emitter;
 
 void fn_8003403C(f32 a, f32 b);
 void fn_80033CC8(StaC2Particle* obj, s32 arg1);
