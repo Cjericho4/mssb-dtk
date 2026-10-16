@@ -348,7 +348,7 @@ u8 fn_3_107DB4(s8 arg0) {
 }
 
 // .text:0x00107DF8 size:0x44 mapped:0x80746E8C
-u8 fn_3_107DF8(s8 arg0) {
+u32 fn_3_107DF8(s8 arg0) {
     if (g_d_GameSettings.GameModeSelected == GAME_TYPE_MINIGAMES && arg0 >= 0 && arg0 < 4) {
         return g_Minigame.field_1DC0[arg0];
     }

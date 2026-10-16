@@ -7,6 +7,7 @@
 #include "game/rep_18E8.h"
 #include "game/rep_1838.h"
 #include "game/gap_5985C.h"
+#include "game/gap_106DFC.h"
 
 extern f32 lbl_3_rodata_1498;
 
@@ -48,8 +49,60 @@ void fn_3_7D9DC(void) {
 }
 
 // .text:0x0007DB30 size:0x1F4 mapped:0x806BCBC4
-void fn_3_7DB30(s32 unk){
-    return;
+void fn_3_7DB30(s32 idx) {
+    InMemRunnerType* runner;
+    InputStruct* in;
+
+    in = &g_Controls[g_Minigame._18FC[idx]];
+    runner = &g_Runners[idx];
+
+    if (fn_3_107DF8(g_Minigame._18FC[idx])) {
+        in = &g_Minigame._1D7C[g_Minigame._18FC[idx]];
+    }
+    if (runner->runningDirectionCode == 3) {
+        if (runner->nextDirectionBeingProcessed == 2 || runner->nextDirectionBeingProcessed == 1) {
+            if (in->newButtonInput & 0x400) {
+                if (runner->rosterID >= 0) {
+                    runner->runningDirectionDesired = 3;
+                }
+            } else if (in->newButtonInput & 0x800) {
+                if (runner->rosterID >= 0) {
+                    runner->runningDirectionDesired = 1;
+                }
+            }
+        } else if (in->newButtonInput & 0x800) {
+            if (runner->rosterID >= 0) {
+                runner->runningDirectionDesired = 2;
+            }
+        }
+    } else if (runner->runningDirectionCode == 1) {
+        if (runner->nextDirectionBeingProcessed == 2 || runner->nextDirectionBeingProcessed == 3) {
+            if (in->newButtonInput & 0x400) {
+                if (runner->rosterID >= 0) {
+                    runner->runningDirectionDesired = 3;
+                }
+            } else if (in->newButtonInput & 0x800) {
+                if (runner->rosterID >= 0) {
+                    runner->runningDirectionDesired = 1;
+                }
+            }
+        } else if (in->newButtonInput & 0x400) {
+            if (runner->rosterID >= 0) {
+                runner->runningDirectionDesired = 2;
+            }
+        }
+    } else if (in->buttonInput & 0x800) {
+        if (runner->rosterID >= 0) {
+            runner->runningDirectionDesired = 1;
+        }
+    } else if (in->buttonInput & 0x400) {
+        if (runner->rosterID >= 0) {
+            runner->runningDirectionDesired = 3;
+        }
+    }
+    if (in->newButtonInput & 0xF00) {
+        runner->newButtonThisFrame_forMashPurposes = 1;
+    }
 }
 
 // .text:0x0007DD24 size:0x48 mapped:0x806BCDB8
