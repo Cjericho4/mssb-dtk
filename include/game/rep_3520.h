@@ -74,7 +74,15 @@ void fn_3_136048(void);
 void fn_3_1360BC(void);
 void fn_3_136220(void);
 void fn_3_13688C(void);
-void fn_3_136CF4(void);
+typedef struct Rep3520Obj136CF4 {
+    /* 0x00 */ Vec pos;
+    /* 0x0C */ Vec vel;
+    /* 0x18 */ u8 _pad18[0x1C - 0x18];
+    /* 0x1C */ s16 timer;
+    /* 0x1E */ u8 state;
+} Rep3520Obj136CF4;
+
+void fn_3_136CF4(Rep3520Obj136CF4* obj);
 void fn_3_136EA4(void);
 void fn_3_1370A0(void);
 void fn_3_1371E8(void);

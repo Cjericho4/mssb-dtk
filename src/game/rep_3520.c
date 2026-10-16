@@ -380,9 +380,43 @@ void fn_3_13688C(void) {
     return;
 }
 
+extern void fn_800115C8(s8 id);
+extern Vec lbl_3_data_219AC;
+extern f32 lbl_3_data_21AF8[2];
+extern s16 lbl_3_data_21B10[];
+extern u8 lbl_3_data_21B16;
+
 // .text:0x00136CF4 size:0x1B0 mapped:0x80775D88
-void fn_3_136CF4(void) {
-    return;
+void fn_3_136CF4(Rep3520Obj136CF4* obj) {
+    s8 id;
+    f32 angle;
+
+    id = g_Minigame.playerIDWithPowerup[0];
+    if (id != -1) {
+        if (--g_Minigame._1D58 <= 0) {
+            if ((s8)g_Minigame._1D6D != id) {
+                fn_800115C8(id);
+            }
+            g_Minigame.playerIDWithPowerup[0] = -1;
+        }
+        return;
+    }
+    obj->timer--;
+    if (obj->timer <= 0) {
+        if ((s8)(rand() % 100 - lbl_3_data_21B16) < 0) {
+            obj->state = 1;
+        } else {
+            obj->state = 2;
+        }
+        obj->pos.x = lbl_3_data_219AC.x;
+        obj->pos.y = lbl_3_data_219AC.y;
+        obj->pos.z = lbl_3_data_219AC.z;
+        obj->vel.y = lbl_3_data_21AF8[0];
+        angle = 0.017453292f * (360.0f * ((f32)rand() / 32767.0f));
+        obj->vel.x = lbl_3_data_21AF8[1] * (f32)cos(angle);
+        obj->vel.z = lbl_3_data_21AF8[1] * (f32)sin(angle);
+        obj->timer = lbl_3_data_21B10[1];
+    }
 }
 
 // .text:0x00136EA4 size:0x1FC mapped:0x80775F38
