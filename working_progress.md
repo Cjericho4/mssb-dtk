@@ -286,7 +286,6 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_117494 | `rep_3310` setup/order mismatch: MWCC keeps `g_Minigame` live in `r3` too long, delays `r30 = &g_Minigame`, and lowers the `_CCC` guard through the wrong even/odd test shape |
 | fn_3_E0758 | CW assigns rand-mod temp to r4 instead of r0, causing slwi/srwi register swap and preventing in-place rotlwi — unfixable from C |
 | fn_3_E1964 | Same modulo register swap as E0758 + prologue counter/global init order mismatch (mr vs li) — CW scheduler artifacts |
-| fn_3_E5924 | CW assigns loop counter to r5 instead of r4 in unrolled lbzu scan — volatile register swap |
 | fn_3_6B5D8 | CW uses lbz r0 instead of destructive lbz r3 for lbl_80353A90 field load — volatile register swap |
 | fn_3_DF608 | r4/r5 swap for g_d_GameSettings vs g_Minigame@ha init — cascades through whole function |
 
