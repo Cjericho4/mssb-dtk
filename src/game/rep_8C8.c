@@ -7,6 +7,10 @@
 
 extern u8 lbl_3_data_1AAC[4];
 extern u8 lbl_3_data_1AB0[4][3];
+extern f32 lbl_3_data_19DC[5][2];
+extern u8 lbl_3_data_1A24[4];
+extern u8 lbl_3_data_1A28[4][5];
+extern u8 lbl_3_data_1A3C[4];
 
 // .text:0x0001E4B8 size:0x26C mapped:0x8065D54C
 void fn_3_1E4B8(void) {
@@ -56,7 +60,24 @@ void fn_3_1F1CC(void) {
 
 // .text:0x0001F350 size:0x128 mapped:0x8065E3E4
 void fn_3_1F350(void) {
-    return;
+    if (g_Pitcher.windupCountdownUntilBallReleased != lbl_3_data_1A3C[g_AiLogic.aIBatterDifficulty]) {
+        return;
+    }
+    if (g_AiLogic.lastPitchBallLocZone != 0xFF &&
+        RandomInt_Game(100) < lbl_3_data_1A24[g_Batter.characterClass]) {
+        g_AiLogic.batterAI_GuessedPitchLocZone = g_AiLogic.lastPitchBallLocZone;
+        if (g_AiLogic.batterAI_GuessedPitchLocZone == 0) {
+            g_AiLogic.batterAI_GuessedPitchLocZone = 1;
+        } else if (g_AiLogic.batterAI_GuessedPitchLocZone == 4) {
+            g_AiLogic.batterAI_GuessedPitchLocZone = 3;
+        }
+    } else {
+        g_AiLogic.batterAI_GuessedPitchLocZone = fn_3_9E5A0(lbl_3_data_1A28[g_Batter.characterClass], 5);
+    }
+    g_AiLogic.batterAIDesiredXPosInBox =
+        RandomF32_Game_Range(lbl_3_data_19DC[g_AiLogic.batterAI_GuessedPitchLocZone][0],
+                             lbl_3_data_19DC[g_AiLogic.batterAI_GuessedPitchLocZone][1]);
+    g_AiLogic.batterAIInd10_relatedToBoxPosPrePitch = 1;
 }
 
 // .text:0x0001F478 size:0x520 mapped:0x8065E50C
