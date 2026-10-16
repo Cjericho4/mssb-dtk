@@ -6,6 +6,7 @@
 #include "game/rep_140.h"
 #include "game/rep_18E8.h"
 #include "game/rep_1838.h"
+#include "game/gap_5985C.h"
 
 extern f32 lbl_3_rodata_1498;
 
@@ -563,8 +564,55 @@ void fn_3_88C24(void) {
 }
 
 // .text:0x00088D88 size:0x210 mapped:0x806C7E1C
-void fn_3_88D88(s32 arg0) {
-    return;
+void fn_3_88D88(s32 idx) {
+    Strikes* strikes = &g_Strikes;
+    InMemRunnerType* runner = &g_Runners[idx];
+    GameControlsStruct* logic;
+    s32 i;
+
+    if (strikes->outs >= 3) {
+        return;
+    }
+    logic = &g_GameLogic;
+    if (logic->EventTriggers_EndOfGame != 0) {
+        return;
+    }
+    if (runner->runnerOnFieldOrOutOrScored != 1) {
+        return;
+    }
+    if (logic->freeFieldingPracticeInd == 0) {
+        strikes->outs++;
+    } else if ((g_Practice.practiceType_2 == 2 && g_Practice.practiceLevel == 1) || g_Practice.practiceLevel == 7 ||
+               g_Practice.practiceLevel == 6) {
+        strikes->outs++;
+    }
+    if (g_Ball.maybeBuntInd != 0 && g_Strikes.strikes >= 3) {
+        fn_3_59918(0x16, 0);
+    } else if (runner->fractionalBasesRan >= 3.8f && g_Ball.baseBallAndFielderAreOn == 0) {
+        fn_3_59918(1, 1);
+    } else {
+        fn_3_59918(1, 0);
+    }
+    for (i = 0; i < 3; i++) {
+        if (g_Strikes.unk_18[i] == -1) {
+            g_Strikes.unk_18[i] = idx;
+            break;
+        }
+    }
+    if (strikes->outs == 3) {
+        if (runner->forceOutCd == 1) {
+            g_Strikes.unk_10 = 1;
+        } else {
+            fn_3_5C74C(1);
+        }
+        fn_3_5D094(0);
+        if (logic->EventTriggers_EndOfGame != 0) {
+            fn_3_59918(0xD, 0);
+        } else {
+            fn_3_59918(5, 0);
+        }
+    }
+    runner->runnerOnFieldOrOutOrScored = 2;
 }
 
 // .text:0x00088F98 size:0x90 mapped:0x806C802C
