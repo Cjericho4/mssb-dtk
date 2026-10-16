@@ -56,7 +56,20 @@ void fn_3_F9088(VecXYZ* pos, s32 idx);
 void fn_3_F9164(void);
 void fn_3_F92FC(void);
 void fn_3_F934C(void);
-void fn_3_F963C(void);
+typedef struct StaC4QueueObj {
+    /* 0x00 */ u8 _pad0[0x14];
+    /* 0x14 */ Vec vel;
+    /* 0x20 */ Vec unk20;
+    /* 0x2C */ s32 elemIdx;
+    /* 0x30 */ u8 unk30;
+} StaC4QueueObj;
+
+typedef struct StaC4LaunchSrc {
+    /* 0x00 */ u8 _pad0[0xC];
+    /* 0x0C */ Vec vel;
+} StaC4LaunchSrc;
+
+void fn_3_F963C(s32 elemIdx, StaC4LaunchSrc* src);
 void fn_3_F976C(void);
 void fn_3_F99F0(void);
 void fn_3_F9B9C(void);

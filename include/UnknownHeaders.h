@@ -572,7 +572,8 @@ typedef struct StadiumObjectElem {
     u8 _pad_0x84[0x8C - 0x84];       /* 0x84 */
     struct StadiumActorAnim* unk8C;   /* 0x8C */
     u8 flag90_80 : 1;                 /* 0x90 */
-    u8 flag90_rest : 7;
+    u8 flag90_40 : 1;
+    u8 flag90_rest : 6;
     u8 _pad_0x91[0x93 - 0x91];       /* 0x91 */
     u8 unk93;                         /* 0x93 */
     u8 _pad_0x94[0x99 - 0x94];       /* 0x94 */
@@ -617,10 +618,13 @@ typedef struct UnknownStruct_350E4 {
     /* 0x040 */ u16* unk40;
     /* 0x044 */ u32* unk44;
     /* 0x048 */ VecXYZ* unk48;
-    /* 0x04C */ u8 _pad_0x4c[0x1A];
+    /* 0x04C */ VecXYZ ballPos;
+    /* 0x058 */ VecXYZ ballVel;
+    /* 0x064 */ u8 _pad_0x64[0x2];
     /* 0x066 */ s16 unk66;
     /* 0x068 */ s16 unk68;
-    /* 0x06A */ u8 _pad_0x6a[0x2];
+    /* 0x06A */ u8 _pad_0x6a;
+    /* 0x06B */ u8 unk6B;
     /* 0x06C */ u8 unk6C;
     /* 0x06D */ u8 _pad_0x6d[0x78 - 0x6D];
     /* 0x078 */ struct StadiumModel* unk_78;

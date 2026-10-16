@@ -222,8 +222,22 @@ void fn_3_F934C(void) {
 }
 
 // .text:0x000F963C size:0x130 mapped:0x807386D0
-void fn_3_F963C(void) {
-    return;
+void fn_3_F963C(s32 elemIdx, StaC4LaunchSrc* src) {
+    StaC4QueueObj* q;
+
+    lbl_3_common_bss_350E4[0].unk6B = 1;
+    q = (StaC4QueueObj*)fn_800B0A5C_insertQueue(fn_3_F934C, (u16)(lbl_803CC1B8->priority + 1));
+    memcpy(&lbl_3_common_bss_350E4[0].ballPos, &g_Ball.AtBat_Contact_BallPos, sizeof(VecXYZ));
+    memcpy(&lbl_3_common_bss_350E4[0].ballVel, &g_Ball.physicsSubstruct.velocity, sizeof(VecXYZ));
+    lbl_3_common_bss_350E4[0].ballPos.y = -lbl_3_common_bss_350E4[0].ballPos.y;
+    lbl_3_common_bss_350E4[0].ballVel.y = -lbl_3_common_bss_350E4[0].ballVel.y;
+    if (src != NULL) {
+        PSVECScale(&src->vel, -1.0f, &q->vel);
+    }
+    memset(&q->unk20, 0, sizeof(Vec));
+    q->elemIdx = elemIdx;
+    q->unk30 = 0;
+    lbl_3_common_bss_350E4[0].src[q->elemIdx].flag90_40 = 0;
 }
 
 // .text:0x000F976C size:0x284 mapped:0x80738800
