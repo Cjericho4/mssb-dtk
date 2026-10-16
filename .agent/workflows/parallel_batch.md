@@ -53,6 +53,8 @@ git cherry-pick $(git merge-base main queue-wN)..queue-wN
 ```
 - Resolve conflicts **hunk by hunk** (keep both sides' fields). Never `git checkout --theirs`
   a whole `.c` file: it silently reverted three matched functions once.
+- Re-resolving with `git checkout -m <file>` writes `<<<<<<< ours`/`>>>>>>> theirs` markers (not `HEAD`); always
+  `git grep -c '^<<<<<<<' -- src include` before `cherry-pick --continue`. `checkout --ours` drops the commit's other hunks too.
 - After the last commit: `ninja`, then
   `python3 tools/find_matches.py build/GYQE01/report.json | grep -c fn_3_` must rise by exactly
   the worker's match count. A clean cherry-pick can still fail to build (duplicate typedefs from

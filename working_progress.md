@@ -90,6 +90,9 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_A2C9C | same as fn_3_A2B6C (.agent/attempts/fn_3_A2C9C.c) |
 | fn_3_1412BC | identical insns, saved-reg permutation only (i wants r26); decl order/loop forms tried (.agent/attempts/fn_3_1412BC.c) |
 | fn_3_90CB0 | target strength-reduces both inner loops to incrementing byte ptrs with mg copy in r29; MWCC emits add/lbzx (.agent/attempts/fn_3_90CB0.c) |
+| fn_3_21C90 | dead double `b` after 2-case switch dispatch — known unfixable (.agent/attempts/fn_3_21C90.c + .headers.diff) |
+| fn_3_21DE4 | same as fn_3_21C90 (.agent/attempts/fn_3_21DE4.c) |
+| fn_3_16943C | target `lwzu` on lbl_3_bss_BA00+0x8 counter; struct/union/ptr forms all give lis/addi+lwz (.agent/attempts/fn_3_16943C.c + .diff) |
 
 **Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
 | fn_3_24EA0 | register allocation / scheduling (see git log) |

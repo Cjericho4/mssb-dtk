@@ -127,7 +127,18 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **`slwi`/`add`/`mulli 0xb` for `(x/2)*22 + (x%2)*11`**: write `(x % 2 + (x / 2) * 2) * 11` (fn_3_53E0).
 *   **Re-added `lbzx` index**: index the global array directly, no cached row pointer (fn_3_B5090).
 
+*   **Range merge of `==1||==2||==3` on a field**: read the s16 global field at every compare instead of caching in an s32 local (fn_3_62B50). Retry fn_3_B7CDC/B7C2C this way.
+*   **Keep `+5` out of the displacement**: `lbl_80371C30[i + (scene->unkIndex + 5)]` (fn_3_91D1C).
+*   **`li` arg setup scheduling**: `static inline` helper for an arg expression repeated across two calls (fn_3_94760).
+*   **`lbz; extsb.; extsb`**: the field is `s8`; casting a `u8` field to `(s8)` reuses one extsb (fn_3_65FE0).
+*   **Float-constant load order**: `f32 half = 0.5f;` local fixed it where literal and extern both failed (fn_3_14D318).
+*   **Base held in r3 throughout**: `Scores* s = &g_Scores;` at top (fn_3_22ABC). **Anchor in r31**: assign after the first store, `x = 1; settings = &g;` (fn_3_972C8).
+*   **Stray `b` before a shared tail**: `else if (id != 3 || cond) return;` (fn_3_128A38).
+*   **rep_3310 "0x34 folded" family — possible fix**: take `&entries[i].unk34` as a sub-object pointer (cast or call arg) to get `addi rX,idx*0x90,0x34; add` (fn_3_1189C8, fn_3_11AB2C). Retry 119EE0/119E30/11881C/11897C/1194AC.
+
 ### Known Unfixable Patterns (don't spend attempts)
+*   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.
+*   **`lwzu` on a global counter** (`lis; lwzu r3,sym+0x8@l(r4); stw r3,0(r4)`): no struct/union/pointer form reproduces it; likely a separate static in the original (fn_3_16943C).
 *   **File-static bss block off one base with array members** (rep_18E8 lbl_3_bss_17F8..1900): overlay struct works for scalars (sta_c0 9F38) but array sub-bases get folded; real `static` defs don't help under `-pool off` (fn_3_A2B6C, fn_3_A2C9C; also fn_3_EECF4, fn_3_1048E0).
 *   **Same-file static data off one base register** (`addi r4,r31,0x4f44` from `&lbl_3_data_1C0A8`): extern symbols reload `lis`/`addi` per use (fn_3_1048E0).
 *   **Adjacent-constant compares merged into a range check** (`== 9 || == 10` → `subi`/`cmplwi 1`) when the target keeps them separate (fn_3_B7CDC, fn_3_B7C2C). **Possible workaround** (worked for fn_3_5C418): compare as unsigned, `(u32)x == 1 || (u32)x == 2`, and write intended ranges as `(u8)(x - 0x13) <= 3`. Retry B7CDC/B7C2C with this.

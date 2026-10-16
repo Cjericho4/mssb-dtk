@@ -1,0 +1,51 @@
+diff --git a/include/UnknownHeaders.h b/include/UnknownHeaders.h
+index 3afbc97..39faa66 100644
+--- a/include/UnknownHeaders.h
++++ b/include/UnknownHeaders.h
+@@ -798,6 +798,7 @@ typedef struct DrawingSceneStruct {
+     union {
+         s16 unk_20;
+         s16 unk20;
++        u16 unk20_u16;
+     };
+     short drawingState;
+     u8 field14_0x24[4];
+diff --git a/include/game/sta_c5.h b/include/game/sta_c5.h
+index ebb8aa3..296c2be 100644
+--- a/include/game/sta_c5.h
++++ b/include/game/sta_c5.h
+@@ -136,7 +136,16 @@ typedef struct StaC5ActorHolder {
+ extern StaC5ActorHolder* lbl_3_bss_B55C;
+ 
+ typedef struct Lbl803C5090 {
+-    /* 0x00 */ u8 _pad0[0x1D];
++    /* 0x00 */ f32 unk0;
++    /* 0x04 */ u8 _pad4[0x14 - 0x4];
++    /* 0x14 */ u16 unk14;
++    /* 0x16 */ u8 _pad16;
++    /* 0x17 */ u8 unk17;
++    /* 0x18 */ u8 unk18;
++    /* 0x19 */ u8 unk19;
++    /* 0x1A */ u8 unk1A;
++    /* 0x1B */ u8 unk1B;
++    /* 0x1C */ u8 unk1C;
+     /* 0x1D */ u8 unk1D;
+     /* 0x1E */ u8 _pad1E[0x20 - 0x1E];
+ } Lbl803C5090;
+diff --git a/include/static/UnknownHomes_Static.h b/include/static/UnknownHomes_Static.h
+index a0aef3f..cf9c169 100644
+--- a/include/static/UnknownHomes_Static.h
++++ b/include/static/UnknownHomes_Static.h
+@@ -100,7 +100,11 @@ typedef struct Camera {
+     /* 0xA9E */ u8 _pad3[0xAA4 - 0xA9E];
+     /* 0xAA4 */ s16 unkAA4;       // used in fn_3_14E84
+     /* 0xAA6 */ s16 unkAA6;       // used in fn_3_14EE8
+-    /* 0xAA8 */ u8 _pad4[0xAB4 - 0xAA8];
++    /* 0xAA8 */ u16 unkAA8;
++    /* 0xAAA */ u16 unkAAA;
++    /* 0xAAC */ u16 unkAAC;
++    /* 0xAAE */ u16 unkAAE;
++    /* 0xAB0 */ u8 _pad4[0xAB4 - 0xAB0];
+     /* 0xAB4 */ u8 unkAB4;
+     /* 0xAB5 */ u8 _pad4c[1];
+     /* 0xAB6 */ u8 unkAB6;
