@@ -130,7 +130,7 @@ void fn_3_CBC18(void) {
 }
 
 // .text:0x000CBF80 size:0x254 mapped:0x8070B014
-void fn_3_CBF80(void) {
+void fn_3_CBF80(struct StaC2ChainObj* obj) {
     return;
 }
 
@@ -236,8 +236,22 @@ void fn_3_CC438(void) {
 }
 
 // .text:0x000CC5C4 size:0x258 mapped:0x8070B658
-void fn_3_CC5C4(void) {
-    return;
+void fn_3_CC5C4(StaC2ChainObj* obj) {
+    obj->unkCA = g_Minigame._1B19;
+    fn_80025EEC(obj->anim, 0, 2);
+    obj->unkCB = obj->unkCA;
+    obj->flag90 = 1;
+    obj->control.type = 0;
+    CTRLSetScale(&obj->control, 0.75f, 0.75f, 0.75f);
+    obj->pos.x = g_Minigame._1AE0;
+    obj->pos.y = g_Minigame._1AE4;
+    obj->pos.z = g_Minigame._1AE8;
+    obj->angle = shortAngleToRad(g_Minigame._1AF8);
+    CTRLSetRotation(&obj->control, 0.0f, obj->angle, 0.0f);
+    CTRLSetTranslation(&obj->control, obj->pos.x, -obj->pos.y, obj->pos.z);
+    staC2InitChainParams(&lbl_3_bss_A8A8, 1.755f, 0.5f, 300.0f, 20.0f, 1.5f, 0.001f, 8);
+    staC2InitEntries4(lbl_3_bss_A8D0);
+    fn_3_CBF80(obj);
 }
 
 // .text:0x000CC81C size:0x408 mapped:0x8070B8B0

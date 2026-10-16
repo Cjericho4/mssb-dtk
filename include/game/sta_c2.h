@@ -98,10 +98,10 @@ typedef struct StaC2Effect {
 void fn_3_CB8A8(struct StadiumObjectElem* e);
 void fn_3_CBA9C(ActorObject* arg0);
 void fn_3_CBC18(void);
-void fn_3_CBF80(void);
+void fn_3_CBF80(struct StaC2ChainObj* obj);
 void fn_3_CC1D4(void);
 void fn_3_CC438(void);
-void fn_3_CC5C4(void);
+void fn_3_CC5C4(struct StaC2ChainObj* obj);
 void fn_3_CC81C(void);
 void fn_3_CCC24(void);
 void fn_3_CD958(void);
@@ -268,7 +268,9 @@ typedef struct StaC2ChainObj {
     Control control;            /* 0x00 */
     u8 _pad3C[0x8C - 0x3C];
     struct StadiumActorAnim* anim; /* 0x8C */
-    u8 _pad90[0x99 - 0x90];
+    u8 flag90 : 1;              /* 0x90 */
+    u8 flag90_rest : 7;
+    u8 _pad91[0x99 - 0x91];
     u8 unk99;                   /* 0x99 */
     u8 _pad9A[0xA0 - 0x9A];
     Vec pos;                    /* 0xA0 */
