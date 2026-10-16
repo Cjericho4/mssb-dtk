@@ -11,6 +11,7 @@ extern f32 lbl_3_data_19DC[5][2];
 extern u8 lbl_3_data_1A24[4];
 extern u8 lbl_3_data_1A28[4][5];
 extern u8 lbl_3_data_1A3C[4];
+extern u8 lbl_3_data_1ABC[2][4][4];
 
 // .text:0x0001E4B8 size:0x26C mapped:0x8065D54C
 void fn_3_1E4B8(void) {
@@ -102,7 +103,32 @@ void fn_3_1FF48(void) {
 
 // .text:0x00020064 size:0x124 mapped:0x8065F0F8
 void fn_3_20064(void) {
-    return;
+    u8 pitchType;
+
+    g_AiLogic.batterAITrackBallPoorlyOffset = 0.0f;
+    if (g_Pitcher.starPitchType != 0) {
+        return;
+    }
+    pitchType = g_Pitcher.TypeOfPitch;
+    if (pitchType == 0) {
+        g_AiLogic.batterAISwingEarly1OrLate2 = 0;
+    } else if (g_AiLogic.batterAIPitchGuessed != pitchType) {
+        if (pitchType == 1) {
+            if (RandomInt_Game(100) < lbl_3_data_1ABC[0][g_Batter.characterClass][g_AiLogic.aIBatterDifficulty]) {
+                g_AiLogic.batterAISwingEarly1OrLate2 = 0;
+            } else {
+                g_AiLogic.batterAISwingEarly1OrLate2 = 1;
+            }
+        } else {
+            if (RandomInt_Game(100) < lbl_3_data_1ABC[1][g_Batter.characterClass][g_AiLogic.aIBatterDifficulty]) {
+                g_AiLogic.batterAISwingEarly1OrLate2 = 0;
+            } else {
+                g_AiLogic.batterAISwingEarly1OrLate2 = 2;
+            }
+        }
+    } else {
+        g_AiLogic.batterAISwingEarly1OrLate2 = 0;
+    }
 }
 
 // .text:0x00020188 size:0x9C mapped:0x8065F21C
