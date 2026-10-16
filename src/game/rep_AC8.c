@@ -441,11 +441,31 @@ void fn_3_33088(void) {
 
 // .text:0x00033458 size:0x94 mapped:0x806724EC
 void fn_3_33458(void) {
-    return;
+    Fielder* f;
+    s32 idx;
+
+    fn_3_334EC(1);
+    fn_3_33088();
+    idx = g_FieldingLogic.unkB2;
+    f = &g_Fielders[idx];
+    if (idx != -1) {
+        f->unk1D3 = 0x16;
+        if (lbl_3_data_3C40.unkB0 >= 0) {
+            g_FieldingLogic.unk_F8[idx] = lbl_3_data_3C40.unkB0;
+        }
+        f->unk1D5 = 0;
+        f->unk1D6 = 0;
+        f->unk1A4 = 0;
+        f->unk1AC = 0;
+        f->unk1FF = 0;
+    }
+    fn_3_4C9C8();
+    fn_3_47778();
+    fn_3_4A124();
 }
 
 // .text:0x000334EC size:0x8B0 mapped:0x80672580
-void fn_3_334EC(void) {
+void fn_3_334EC(s32 arg0) {
     return;
 }
 
