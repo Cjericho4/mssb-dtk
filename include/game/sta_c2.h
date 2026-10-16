@@ -277,7 +277,12 @@ typedef struct StaC2Particle {
     struct StaC2Particle* next; /* 0x00 */
     Vec pos;        /* 0x04 */
     Vec vel;        /* 0x10 */
-    u8 _pad1C[0x38 - 0x1C];
+    f32 unk1C;      /* 0x1C */
+    f32 unk20;      /* 0x20 */
+    f32 unk24;      /* 0x24 */
+    f32 unk28;      /* 0x28 */
+    f32 unk2C;      /* 0x2C */
+    u8 _pad30[0x38 - 0x30];
     f32 unk38;      /* 0x38 */
     f32 unk3C;      /* 0x3C */
     u8 _pad40[0x43 - 0x40];
@@ -285,6 +290,8 @@ typedef struct StaC2Particle {
     u8 _pad44[0x48 - 0x44];
     s16 unk48;      /* 0x48 */
     s16 unk4A;      /* 0x4A */
+    u8 _pad4C[0x4F - 0x4C];
+    u8 unk4F;       /* 0x4F */
 } StaC2Particle;
 
 void fn_8003403C(f32 a, f32 b);

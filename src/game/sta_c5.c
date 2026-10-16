@@ -12,6 +12,7 @@
 #include "musyx/musyx.h"
 #include "Dolphin/GX/GXBump.h"
 #include "game/m_sound.h"
+#include "game/rep_3880.h"
 
 // .text:0x000EDFAC size:0x110
 void fn_3_EDFAC(void) {
@@ -580,8 +581,45 @@ void fn_3_F3BB0(StaC5PlacedObj* obj) {
 }
 
 // .text:0x000F3CD0 size:0x22C mapped:0x80732D64
-void fn_3_F3CD0(void) {
-    return;
+void fn_80033620(void);
+void fn_80033F64(f32 a, f32 b, f32 c);
+
+BOOL fn_3_F3CD0(struct Struct_800339F0_Result* obj) {
+    StaC2Particle* p;
+    s32 count;
+
+    count = 0;
+    p = (StaC2Particle*)obj->listHead;
+    fn_80033620();
+    do {
+        if (p->unk48 <= 0 && p->unk4A != 0) {
+            fn_80033F64(p->unk38, p->unk3C, p->unk20);
+            fn_80033CC8(p, obj->field_0x10);
+            if (-p->unk48 < 5) {
+                p->unk38 = p->unk38 + (p->unk28 - 10.0) / 5.0;
+                p->unk3C = p->unk38;
+                p->unk43 += 12.0;
+            } else {
+                p->unk38 = p->unk38 + (p->unk2C - p->unk28) / 495.0f;
+                p->unk3C = p->unk38;
+                p->unk43 = p->unk43 + -60.0 / (0x1EF - p->unk4F);
+                if (p->unk43 >= 0x3C) {
+                    p->unk43 = 0;
+                }
+            }
+            p->pos.x += p->vel.x;
+            p->pos.y += p->vel.y;
+            p->pos.z += p->vel.z;
+            p->unk20 = p->unk1C * p->unk24 + p->unk20;
+            p->unk4A--;
+        }
+        p->unk48--;
+        if (p->unk4A != 0) {
+            count++;
+        }
+        p = p->next;
+    } while (p != NULL);
+    return count == 0;
 }
 
 // .text:0x000F3EFC size:0x3A4 mapped:0x80732F90
