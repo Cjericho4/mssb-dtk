@@ -100,7 +100,59 @@ void fn_3_9894C(void) {
 
 // .text:0x00098C20 size:0x1C0 mapped:0x806D7CB4
 void fn_3_98C20(void) {
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    if (lbl_3_common_bss_32724.someStatusInd != 0) {
+        goto remove;
+    }
+    if (scene->eventID == 0) {
+        scene->eventID = 1;
+        return;
+    }
+    if (scene->eventID == 1) {
+        if (g_d_GameSettings.GameModeSelected == 2) {
+            if (g_Practice._19F == 0) {
+                goto remove;
+            }
+            if (lbl_3_common_bss_34C90.field_0x1D2 == 4) {
+                scene->eventID = 2;
+            }
+            return;
+        }
+        if (g_d_GameSettings.minigamesEnabled) {
+            if (g_GameLogic.gameStatus == 0xB && lbl_3_common_bss_34C90.field_0x1D2 == 4) {
+                scene->eventID = 2;
+            }
+            if (g_d_GameSettings.GameModeSelected == 7) {
+                if (lbl_3_common_bss_34C90.field_0x1D2 == 4) {
+                    scene->eventID = 2;
+                }
+                if (lbl_3_common_bss_34C90.field_0x1D2 == 7 || lbl_3_common_bss_34C90.field_0x1D2 == 0xD) {
+                    goto remove;
+                }
+            }
+            return;
+        }
+        if ((lbl_3_common_bss_34C90.field_0x1D1 == 2 || lbl_3_common_bss_34C90.field_0x1D1 == 9) &&
+            lbl_3_common_bss_34C90.field_0x1D2 == 4) {
+            goto remove;
+        }
+        if (lbl_3_common_bss_34C90.field_0x1D9 == 2) {
+            goto remove;
+        }
+        return;
+    }
+    if (scene->eventID == 2) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x68 = 4;
+        if ((lbl_80371C30[scene->unkIndex].obj->field_0x5C >> 16) == 0) {
+            goto remove;
+        }
+    }
     return;
+remove:
+    fn_80034CEC((u32)scene);
+    fn_800B0A14_removeQueue();
+    lbl_3_common_bss_32724.unk_AA = 0;
 }
 
 // .text:0x00098DE0 size:0xC8 mapped:0x806D7E74
