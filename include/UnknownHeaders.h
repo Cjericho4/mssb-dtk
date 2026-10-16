@@ -1137,7 +1137,7 @@ typedef struct {
 extern Data21A04 lbl_3_data_21A04;
 /* Per-view camera data (0xA8 bytes each) returned by fn_80052734. */
 typedef struct CameraView {
-    u8 _pad0[0x40];
+    Mtx44 projMtx; /* 0x00 */
     Mtx viewMtx; /* 0x40 */
     Vec pos;     /* 0x70 */
     Vec target;  /* 0x7C */
