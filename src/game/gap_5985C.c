@@ -45,6 +45,18 @@ void fn_3_BC224(void);
 void fn_8001E474(void);
 void fn_8001F228(void);
 void fn_3_BBF94(void);
+
+typedef struct {
+    /* 0x00 */ s16 coins[3];
+    /* 0x06 */ s16 winMarginPct;
+    /* 0x08 */ s16 loseMarginPct;
+    /* 0x0A */ s16 starPct;
+    /* 0x0C */ s16 _0C[3];
+    /* 0x12 */ s16 bjCoins[3];
+    /* 0x18 */ s16 bjOther[3];
+    /* 0x1E */ s16 _1E;
+} Data607C_5985C; /* size: 0x20 */
+extern Data607C_5985C lbl_3_data_607C;
 void fn_3_B482C(void);
 void fn_3_10FDC8(void);
 
@@ -464,7 +476,27 @@ void fn_3_5B408(void) {
 
 // .text:0x0005B41C size:0x184 mapped:0x8069A4B0
 void fn_3_5B41C(void) {
-    return;
+    s32 result = 2;
+    s32 diff;
+
+    if (g_Scores.unkA4 == 2) {
+        result = 1;
+    } else if (g_Scores.unkA4 == g_GameLogic.homeTeamInd) {
+        result = 0;
+    }
+    if (g_d_GameSettings.bJMatchInd == 0) {
+        g_d_GameSettings.challengeMinigame_baseCoinsEarned += lbl_3_data_607C.coins[result];
+        diff = __abs(g_Scores.team[g_GameLogic.homeTeamInd].score - g_Scores.team[g_GameLogic.homeTeamInd ^ 1].score);
+        if (result == 0) {
+            g_d_GameSettings.challengeMinigame_baseCoinsEarned += (diff * lbl_3_data_607C.winMarginPct) / 100;
+        } else if (result == 2) {
+            g_d_GameSettings.challengeMinigame_baseCoinsEarned += (diff * lbl_3_data_607C.loseMarginPct) / 100;
+        }
+        g_d_GameSettings.challengeMinigame_baseCoinsEarned += (g_GameLogic.TeamStars[0] * lbl_3_data_607C.starPct) / 100;
+    } else {
+        g_d_GameSettings.challengeMinigame_baseCoinsEarned += lbl_3_data_607C.bjCoins[result];
+        g_d_GameSettings.bJMatchRelated += lbl_3_data_607C.bjOther[result];
+    }
 }
 
 // .text:0x0005B5A0 size:0x48C mapped:0x8069A634
