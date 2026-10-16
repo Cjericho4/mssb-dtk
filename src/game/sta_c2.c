@@ -772,8 +772,33 @@ s32 fn_3_D5470(f32* a, f32* b) {
 }
 
 // .text:0x000D5494 size:0x158 mapped:0x80714528
-void fn_3_D5494(void) {
-    return;
+void fn_3_D5494(Mtx m) {
+    Vec pos;
+    StadiumIdEntry* entry;
+    u32 i;
+    u8 type;
+    f32 lim;
+
+    memcpy(&pos, &g_Ball.AtBat_Contact_BallPos, sizeof(Vec));
+    PSMTXMultVec(m, &pos, &pos);
+    for (i = 0; i < lbl_3_common_bss_350E4[0].memcpyCount; i++) {
+        entry = &lbl_3_common_bss_350E4[0].idEntries[i];
+        if (lbl_3_common_bss_350E4[0].src[entry->id].flag90_80) {
+            type = lbl_3_common_bss_350E4[0].src[entry->id].unk9D;
+            if (type == 0 || (u8)(type - 4) <= 1 || (type > 7 && type < 11)) {
+                entry->unk0 = 1.0f;
+            } else {
+                lim = 2.0f + pos.z;
+                if (entry->unk0 < lim) {
+                    entry->unk0 = 1.0f;
+                } else if (entry->unk0 > 10.0f + pos.z) {
+                    entry->unk0 = 0.25f;
+                } else {
+                    entry->unk0 = 1.0 - 0.75f * ((entry->unk0 - lim) / 8.0f);
+                }
+            }
+        }
+    }
 }
 
 // .text:0x000D55EC size:0x580 mapped:0x80714680

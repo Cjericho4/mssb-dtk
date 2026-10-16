@@ -299,7 +299,7 @@ s32 fn_3_D53C0(u8 arg0);
 
 s32 fn_3_D5444(unknown_tri_compare* a, unknown_tri_compare* b);
 s32 fn_3_D5470(f32* a, f32* b);
-void fn_3_D5494(void);
+void fn_3_D5494(Mtx m);
 void fn_3_D55EC(void);
 void fn_3_D5B6C(void);
 void fn_3_D5C8C(void);

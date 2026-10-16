@@ -598,7 +598,7 @@ typedef struct StadiumObjectElem {
 } StadiumObjectElem;
 
 typedef struct StadiumIdEntry {
-    /* 0x0 */ u32 unk0;
+    /* 0x0 */ f32 unk0;
     /* 0x4 */ s32 id;
 } StadiumIdEntry; /* size: 0x8 */
 
