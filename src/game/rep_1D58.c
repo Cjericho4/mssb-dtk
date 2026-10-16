@@ -471,8 +471,40 @@ void fn_3_B99E4(void) {
 }
 
 // .text:0x000B9BB4 size:0x1B4 mapped:0x806F8C48
-void fn_3_B9BB4(void) {
-    return;
+extern CompressedDiskRead lbl_3_data_10ACC[7];
+
+s32 fn_3_B9BB4(u32 idx) {
+    if (lbl_803C6CF8.allowLoad == 1) {
+        switch (idx) {
+        case 0:
+            g_hugeAnimStruct.stadiumObjectLoadingPtr = ARAMTransfer(&lbl_3_data_10ACC[0], NULL, 0, NULL);
+            break;
+        case 1:
+            g_hugeAnimStruct.stadiumObjectLoadingPtr = ARAMTransfer(&lbl_3_data_10ACC[1], NULL, 0, NULL);
+            break;
+        case 2:
+            g_hugeAnimStruct.stadiumObjectLoadingPtr = ARAMTransfer(&lbl_3_data_10ACC[2], NULL, 0, NULL);
+            break;
+        case 3:
+            g_hugeAnimStruct.stadiumObjectLoadingPtr = ARAMTransfer(&lbl_3_data_10ACC[3], NULL, 0, NULL);
+            break;
+        case 4:
+            g_hugeAnimStruct.stadiumObjectLoadingPtr = ARAMTransfer(&lbl_3_data_10ACC[4], NULL, 0, NULL);
+            break;
+        case 5:
+            g_hugeAnimStruct.stadiumObjectLoadingPtr = ARAMTransfer(&lbl_3_data_10ACC[5], NULL, 0, NULL);
+            break;
+        case 6:
+            g_hugeAnimStruct.stadiumObjectLoadingPtr = ARAMTransfer(&lbl_3_data_10ACC[6], NULL, 0, NULL);
+            break;
+        default:
+            return -1;
+        }
+        fn_800B0A5C_insertQueue(fn_3_B99E4, 0);
+        lbl_3_common_bss_350E4[0].unk6A = 1;
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x000B9D68 size:0x250 mapped:0x806F8DFC

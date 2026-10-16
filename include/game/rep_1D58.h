@@ -140,7 +140,7 @@ void fn_800B4AFC(Actor* actor, s32 loop);
 void fn_800B4CA0(void* boneData, f32 val);
 void fn_3_B98E8(C2310Holder* holder);
 void fn_3_B99E4(void);
-void fn_3_B9BB4(void);
+s32 fn_3_B9BB4(u32 idx);
 void fn_3_B9D68(void);
 void fn_3_B9FB8(void);
 
