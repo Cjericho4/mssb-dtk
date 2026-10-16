@@ -2,6 +2,9 @@
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "game/gap_AC9F8.h"
+#include "musyx/musyx.h"
+#include "game/m_sound.h"
+#include "game/gap_157DB8.h"
 
 // .text:0x0011EC28 size:0x404 mapped:0x8075DCBC
 void fn_3_11EC28(void) {
@@ -254,9 +257,60 @@ void fn_3_1254F8(void) {
     }
 }
 
+extern u16 lbl_3_data_91FC[];
+void fn_800362F0(DrawingSceneStruct* scene, s32 arg1);
+
 // .text:0x00125604 size:0x24C mapped:0x80764698
 void fn_3_125604(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    if (g_Minigame._1A40 == 0) {
+        if (scene->unk18 < 0xFFFE) {
+            scene->unk18++;
+        } else {
+            scene->unk18 = 0xFFFF;
+        }
+        if (scene->eventID == 0) {
+            if (g_Minigame._1A41 != 0) {
+                if (--g_Minigame.someGraphicFrameCountdown <= 0) {
+                    lbl_80371C30[scene->unkIndex].obj->unk64 = lbl_3_data_91FC[g_Minigame._1A41];
+                    lbl_80371C30[scene->unkIndex].obj->flags |= 2;
+                    lbl_80371C30[scene->unkIndex].obj->field_0x68 = 1;
+                    lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0;
+                    if (g_Minigame._1A41 == 4) {
+                        fn_800363D8(scene, 0, 1, 0x13C, g_Scores.highscore - 1);
+                        fn_3_90064(0x2F8);
+                    }
+                    scene->eventID = g_Minigame._1A41;
+                    scene->unk18 = 0;
+                    g_Minigame.bODRelated = 1;
+                    g_Minigame._1A41 = 0;
+                }
+            }
+        } else {
+            if (lbl_80371C30[scene->unkIndex].obj->field_0x69 == 2) {
+                if (scene->eventID == 4) {
+                    fn_800362F0(scene, 0);
+                }
+                lbl_80371C30[scene->unkIndex].obj->flags &= ~2;
+                g_Minigame.bODRelated = 0;
+                g_Minigame._1A41 = 0;
+                scene->eventID = 0;
+            }
+            if (scene->eventID == 2) {
+                if (scene->unk18 == 0x46) {
+                    sndFXStartEx(0x1BD, lbl_800EFBA4.volume, 0x3F, 0);
+                }
+            } else if (scene->eventID == 1) {
+                if (scene->unk18 == 1 && lbl_800EF808.unk398 == 1) {
+                    fn_3_90064(0x2EE);
+                }
+            }
+        }
+    } else {
+        fn_80034CEC((u32)scene);
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x00125850 size:0x70 mapped:0x807648E4
