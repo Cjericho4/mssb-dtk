@@ -8,11 +8,15 @@
 #include "game/rep_3448.h"
 #include "game/gap_B7EF0.h"
 #include "game/gap_6C854.h"
+#include "game/m_sound.h"
+#include "game/rep_540.h"
 
 extern f32 lbl_3_rodata_2664;
 extern char lbl_3_rodata_286C[];
 extern char lbl_3_rodata_2878[];
 extern u8 lbl_3_bss_A898[];
+extern VecXYZ lbl_3_bss_A820[10];
+extern u16 lbl_3_data_81DC[];
 extern DrawingSceneStruct* lbl_3_bss_A8A4;
 extern f32 lbl_3_data_188E0;
 extern Vec lbl_3_rodata_24E8[];
@@ -444,8 +448,33 @@ void fn_3_D1848(StaC2D1848Obj* obj) {
 }
 
 // .text:0x000D196C size:0x158 mapped:0x80710A00
-void fn_3_D196C(void) {
-    return;
+void fn_3_D196C(s32 idx) {
+    StadiumObjectElem* e = &lbl_3_common_bss_350E4[0].src[idx];
+    VecXYZ pos;
+    s32 i;
+
+    if (g_Ball.ballState == 1) {
+        return;
+    }
+    if (e->unkCA == 0) {
+        e->unk99 &= 0xFB;
+        e->unkCC = 5;
+        e->unkCB = e->unkCA;
+        e->unkCA = 2;
+        e->unkB0 = 0.5f;
+        fn_80025EEC(e->unk8C, 0, 3);
+    }
+    memcpy(&pos, &g_Ball.AtBat_Contact_BallPos, sizeof(VecXYZ));
+    pos.y *= -1.0f;
+    fn_3_8BBC4(lbl_3_data_81DC[g_d_GameSettings.StadiumID] + 5, &pos, 0, 13);
+    i = g_Ball.inAirOrBefore2ndBounceOrLowBallEnergy != 0;
+    lbl_3_bss_A898[i] = 1;
+    lbl_3_bss_A820[i].x = g_Ball.AtBat_Contact_BallPos.x;
+    lbl_3_bss_A820[i].y = -g_Ball.AtBat_Contact_BallPos.y;
+    lbl_3_bss_A820[i].z = g_Ball.AtBat_Contact_BallPos.z;
+    fn_3_65A8();
+    fn_3_27648();
+    g_FieldingLogic.unk_13B = 1;
 }
 
 // .text:0x000D1AC4 size:0x60 mapped:0x80710B58

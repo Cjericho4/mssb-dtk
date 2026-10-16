@@ -567,16 +567,21 @@ typedef struct StadiumObjectElem {
     struct StadiumModel* unk_78;      /* 0x78 */
     u8 _pad_0x7c[0x80 - 0x7C];       /* 0x7C */
     BALL_COLLISION_TYPE (*fnPtr)(u32, BALL_COLLISION_TYPE, CollisionStruct*);  /* 0x80 */
-    u8 _pad_0x84[0x90 - 0x84];       /* 0x84 */
+    u8 _pad_0x84[0x8C - 0x84];       /* 0x84 */
+    struct StadiumActorAnim* unk8C;   /* 0x8C */
     u8 flag90_80 : 1;                 /* 0x90 */
     u8 flag90_rest : 7;
     u8 _pad_0x91[0x93 - 0x91];       /* 0x91 */
     u8 unk93;                         /* 0x93 */
-    u8 _pad_0x94[0x9D - 0x94];       /* 0x94 */
+    u8 _pad_0x94[0x99 - 0x94];       /* 0x94 */
+    u8 unk99;                         /* 0x99 */
+    u8 _pad_0x9a[0x9D - 0x9A];       /* 0x9A */
     u8 unk9D;                         /* 0x9D */
     u8 _pad_0x9e[0xA9 - 0x9E];       /* 0x9E */
     u8 unk_A9;                        /* 0xA9 */
-    u8 _pad_0xaa[0xC0 - 0xAA];       /* 0xAA */
+    u8 _pad_0xaa[0xB0 - 0xAA];       /* 0xAA */
+    f32 unkB0;                        /* 0xB0 */
+    u8 _pad_0xb4[0xC0 - 0xB4];       /* 0xB4 */
     u8 unkC0;                         /* 0xC0 */
     u8 unkC1;                         /* 0xC1 */
     u8 _pad_0xc2[0xC4 - 0xC2];       /* 0xC2 */
@@ -585,7 +590,11 @@ typedef struct StadiumObjectElem {
     u8 unkC6;                         /* 0xC6 */
     u8 _pad_0xc7;                     /* 0xC7 */
     u8 unkC8;                         /* 0xC8 */
-    u8 _pad_0xc9[0xE8 - 0xC9];       /* 0xC9 */
+    u8 _pad_0xc9;                     /* 0xC9 */
+    u8 unkCA;                         /* 0xCA */
+    u8 unkCB;                         /* 0xCB */
+    u8 unkCC;                         /* 0xCC */
+    u8 _pad_0xcd[0xE8 - 0xCD];       /* 0xCD */
 } StadiumObjectElem;
 
 typedef struct StadiumIdEntry {
