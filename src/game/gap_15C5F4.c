@@ -48,8 +48,27 @@ void fn_3_15F088(void) {
 }
 
 // .text:0x0015F220 size:0x160 mapped:0x8079E2B4
+extern s32 lbl_3_data_27420;
+
 void fn_3_15F220(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    fn_80034E20(scene, &lbl_3_data_27420);
+    if (!g_d_GameSettings.exhibitionMatchInd) {
+        (&lbl_80371C30[scene->unkIndex])[1].obj->unk64 = 0xE;
+    }
+    if (lbl_80353A90.unk104 == 3) {
+        (&lbl_80371C30[scene->unkIndex])[3].obj->unk64 = 0xCC;
+        (&lbl_80371C30[scene->unkIndex])[4].obj->unk64 = 0xD0;
+    } else if (lbl_80353A90.unk104 == 2) {
+        (&lbl_80371C30[scene->unkIndex])[3].obj->unk64 = 0xCD;
+        (&lbl_80371C30[scene->unkIndex])[4].obj->unk64 = 0xD1;
+    }
+    if (!g_d_GameSettings.exhibitionMatchInd && (s8)g_GameLogic.playOverFadeOutStarted >= 0) {
+        (&lbl_80371C30[scene->unkIndex])[1].obj->unk64 = 0x10;
+    }
+    scene->unk1a = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_3_15F088;
 }
 
 // .text:0x0015F380 size:0x44 mapped:0x8079E414
