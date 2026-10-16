@@ -9,6 +9,8 @@ extern void fn_3_5C69C(s32 arg0);
 void fn_3_89864(s32 idx, s32 delta);
 void fn_3_155288(void);
 BOOL fn_3_6F4E8(void);
+/* rep_1200 callers test the full r3 (cmplwi, no clrlwi): declared here as u32. */
+u32 fn_3_107DB4(s8 arg0);
 void fn_3_7CE90(void);
 f32 RandomF32_Game_Range(f32 a, f32 b);
 extern f32 lbl_3_data_4474[4];
@@ -400,7 +402,42 @@ void fn_3_74128(void) {
 
 // .text:0x00074AC4 size:0x248 mapped:0x806B3B58
 void fn_3_74AC4(void) {
-    return;
+    InputStruct* in = &g_Controls[g_GameLogic.teams[g_GameLogic.teamFielding]];
+    f32 delta = 0.0f;
+
+    if (ACTIVE_TUTORIAL) {
+        in = &g_Practice.inputs[g_GameLogic.teamFielding];
+    } else if (fn_3_107DB4(g_Minigame.players.characterIndex[g_Minigame.minigamePlayerSelectedOrder])) {
+        in = &g_Minigame._1D7C[g_Minigame.players.characterIndex[g_Minigame.minigamePlayerSelectedOrder]];
+    } else if (g_d_GameSettings.minigamesEnabled) {
+        in = &g_Controls[g_Minigame.players.characterIndex[g_Minigame.minigamePlayerSelectedOrder]];
+    }
+    if (in->buttonInput & 0x40) {
+        g_Pitcher.pitcherOffCenter = 1;
+    }
+    if (g_Pitcher.pitcherOffCenter) {
+        if (g_Pitcher.pitcher.x >= -lbl_3_data_4474[3] && g_Pitcher.pitcher.x <= lbl_3_data_4474[3]) {
+            g_Pitcher.pitcherOffCenter = 0;
+            g_Pitcher.pitcher.x = 0.0f;
+        } else if (g_Pitcher.pitcher.x < 0.0f) {
+            g_Pitcher.pitcher.x += lbl_3_data_4474[3];
+        } else {
+            g_Pitcher.pitcher.x -= lbl_3_data_4474[3];
+        }
+    } else {
+        if (in->buttonInput & 1) {
+            delta = -lbl_3_data_4474[2];
+        } else if (in->buttonInput & 2) {
+            delta = lbl_3_data_4474[2];
+        }
+        g_Pitcher.pitcher.x += delta;
+        if (g_Pitcher.pitcher.x < lbl_3_data_4474[0]) {
+            g_Pitcher.pitcher.x = lbl_3_data_4474[0];
+        }
+        if (g_Pitcher.pitcher.x > lbl_3_data_4474[1]) {
+            g_Pitcher.pitcher.x = lbl_3_data_4474[1];
+        }
+    }
 }
 
 // .text:0x00074D0C size:0x384 mapped:0x806B3DA0
