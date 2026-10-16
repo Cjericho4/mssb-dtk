@@ -349,9 +349,43 @@ void fn_3_8C104(s32 arg) {
     }
 }
 
+extern f32 lbl_3_bss_1764;
+extern f32 lbl_3_bss_176C;
+u16 fn_800A8864(void);
+
 // .text:0x0008C2DC size:0x214 mapped:0x806CB370
-void fn_3_8C2DC(void) {
-    return;
+BOOL fn_3_8C2DC(u32 div, s32 thresh) {
+    u16 v;
+    f32 hi;
+
+    v = fn_800A8864();
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        thresh = lbl_800E88A4[9][(u8)thresh];
+    } else if (lbl_3_common_bss_34C58._20 == 0x16) {
+        thresh = lbl_800E88A4[6][(u8)thresh];
+    } else if (g_GameLogic.gameStatus == 0xE) {
+        thresh = lbl_800E88A4[7][(u8)thresh];
+    } else if (g_GameLogic.gameStatus == 0x17) {
+        thresh = lbl_800E88A4[8][(u8)thresh];
+    } else {
+        thresh = lbl_800E88A4[g_d_GameSettings.StadiumID][(u8)thresh];
+    }
+    hi = (s32)(u8)(v >> 8);
+    if (hi > lbl_3_bss_1764) {
+        lbl_3_bss_1764 = hi;
+    }
+    if (lbl_3_common_bss_34C58._2F == 0) {
+        lbl_3_bss_176C = (f32)(u8)thresh / (f32)div;
+        lbl_3_common_bss_34C58._2F = 1;
+        lbl_3_bss_1764 = hi;
+    }
+    lbl_3_bss_1764 += lbl_3_bss_176C;
+    fn_800A8878(lbl_3_bss_1764, lbl_3_bss_1764);
+    if (lbl_3_bss_1764 >= (u8)thresh) {
+        lbl_3_common_bss_34C58._2F = 0;
+        return FALSE;
+    }
+    return TRUE;
 }
 
 // .text:0x0008C4F0 size:0xD8 mapped:0x806CB584
