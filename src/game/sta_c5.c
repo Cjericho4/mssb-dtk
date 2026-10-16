@@ -428,6 +428,16 @@ void fn_3_F31E0(void) {
 }
 
 // .text:0x000F37BC size:0x118 mapped:0x80732850
+static inline u32 binomial(u32 n, u32 k) {
+    u32 result = 1;
+    u32 i;
+
+    for (i = 1; i <= k; i++) {
+        result = result * (n - i + 1) / i;
+    }
+    return result;
+}
+
 u32 fn_3_F37BC(u32 n, u32 k) {
     u32 result = 1;
     u32 i;
@@ -439,8 +449,14 @@ u32 fn_3_F37BC(u32 n, u32 k) {
 }
 
 // .text:0x000F38D4 size:0x130 mapped:0x80732968
+extern u32 lbl_3_bss_B244[7];
+
 void fn_3_F38D4(void) {
-    return;
+    u32 i;
+
+    for (i = 0; i < 7; i++) {
+        lbl_3_bss_B244[i] = binomial(6, i);
+    }
 }
 
 // .text:0x000F3A04 size:0x58 mapped:0x80732A98
