@@ -1253,9 +1253,14 @@ typedef struct _starMissionTrackingPair {
     /*0x001*/ u8 shownOnPauseMenu;
 } starMissionTrackingPair;
 
+typedef struct _ScoutFlagTable {
+    /*0x000*/ u8 _0[4];
+    /*0x004*/ s8 flags[4][6]; // [difficulty][challengeCaptain]
+} ScoutFlagTable;
+
 // This is pack disabled in ghidra.
 typedef struct _ChallengeTrackingStruct {
-    /*0x000*/ void* scoutFlagPointer;
+    /*0x000*/ ScoutFlagTable* scoutFlagPointer;
     /*0x004*/ E(u8, CHALLENGE_CAPTAIN) challengeCaptain; // Created by retype action
     /*0x005*/ E(s8, CHARACTER_VARIANT_CLASSIFICATION) variantClassification;
     /*0x006*/ u8 scoutFlagsAchieved;

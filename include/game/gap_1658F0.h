@@ -4,7 +4,13 @@
 #include "mssbTypes.h"
 
 typedef struct {
-    u8 _pad[0x40];
+    s8 oldFlags;
+    s8 newFlags;
+} ScoutFlagPair;
+
+typedef struct {
+    ScoutFlagPair scoutFlags[9]; /* 0x00 */
+    u8 _pad12[0x40 - 0x12];
     s16 playerIndex;   /* 0x40 */
     u8 _pad42[0x4];
     u8 unk46;          /* 0x46 */
