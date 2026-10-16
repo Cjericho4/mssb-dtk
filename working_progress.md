@@ -61,6 +61,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 ## Almost Matched (do not retry)
 | Function | Issue |
 |---|---|
+| fn_3_7D2E0 | CW hoists g_Stats.unk40 load above replay-frame stores (target reloads after); inline-helper and indexing variants didn't block it |
 | fn_3_119878 | r5/r6 swap between minigame base and entries_2D94 pointer; decl/assign order and nested-if variants tried |
 | fn_3_1356F8 | r26/r27 swap between strength-reduced aIStrength[i] pointer and targetSpeeds pointer; decl-order permutations exhausted |
 | fn_3_49EA8 | &unk_F8[idx] base: target reuses one reg (add r6; addi r6,r6,0xf8), CW allocates a separate temp; register-only |
