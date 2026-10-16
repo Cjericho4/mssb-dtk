@@ -2231,7 +2231,9 @@ typedef struct Fielder {
     /* 0x180 */ s16 unk180;
     /* 0x182 */ u8 _pad182[0x18C - 0x182];
     /* 0x18C */ s16 unk18C;
-    /* 0x18E */ u8 _pad18E[0x19A - 0x18E];
+    /* 0x18E */ u8 _pad18E[0x190 - 0x18E];
+    /* 0x190 */ s16 unk190;
+    /* 0x192 */ u8 _pad192[0x19A - 0x192];
     /* 0x19A */ s16 unk19A;
     /* 0x19C */ u8 _pad19C[0x19E - 0x19C];
     /* 0x19E */ s16 unk19E;

@@ -1135,8 +1135,28 @@ void fn_3_49C18(void) {
 }
 
 // .text:0x00049EA8 size:0x94 mapped:0x80688F3C
-void fn_3_49EA8(void) {
-    return;
+void fn_3_49EA8(s32 idx) {
+    u8* p = &g_FieldingLogic.unk_F8[idx];
+    Fielder* f;
+
+    if (g_FieldingLogic.unk_F8[idx] == 9) {
+        return;
+    }
+    f = &g_Fielders[idx];
+    f->unk18C = 7;
+    if (idx != -1) {
+        f->unk1D3 = 0xE;
+        if (lbl_3_data_3C40.unk70 >= 0) {
+            *p = lbl_3_data_3C40.unk70;
+        }
+        f->unk1D5 = 0;
+        f->unk1D6 = 0;
+        f->unk1A4 = 0;
+        f->unk1AC = 0;
+        f->unk1FF = 0;
+    }
+    g_Fielders[idx].unk1D6 = 0;
+    g_Fielders[idx].unk190 = -1;
 }
 
 // .text:0x00049F3C size:0x4 mapped:0x80688FD0
