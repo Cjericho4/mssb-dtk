@@ -43,6 +43,35 @@ void fn_3_B80D0(void) {
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
 }
 
+static inline void fn_3_B8184_inline(C2310Holder* holder, MtxPtr camera) {
+    Mtx viewMtx;
+    Mtx ctrlMtx;
+    C2310Actor* actor;
+    C2310Bone* bone;
+
+    CTRLBuildMatrix(&lbl_3_bss_190C->control, ctrlMtx);
+    if (ctrlMtx[1][3] > 0.0f && g_d_GameSettings.StadiumID == 1) {
+        return;
+    }
+    PSMTXConcat(camera, ctrlMtx, viewMtx);
+    actor = holder->actor;
+    bone = actor->drawList;
+    if (actor->skinObject != NULL) {
+        if (actor->unk7C != 0) {
+            fn_8003A8A0(actor->skinObject, viewMtx, 1);
+        } else {
+            DOVARenderSkin(actor->skinObject, viewMtx, actor->skinMtxArray, actor->skinInvTransposeMtxArray, 0, NULL);
+        }
+    }
+    while (bone != NULL) {
+        if (bone->dispObj != NULL) {
+            DOSetWorldMatrix(bone->dispObj, bone->worldMtx);
+            fn_8003A8A0(bone->dispObj, viewMtx, 0);
+        }
+        bone = bone->next;
+    }
+}
+
 // .text:0x000B8184 size:0xF8 mapped:0x806F7218
 void fn_3_B8184(C2310Holder* holder, MtxPtr camera) {
     Mtx viewMtx;
@@ -84,8 +113,36 @@ void fn_3_B828C(struct StadiumObject* arg0) {
 }
 
 // .text:0x000B8298 size:0x17C mapped:0x806F732C
+typedef struct B8298View {
+    u8 _pad0[0x40];
+    Mtx mtx; /* 0x40 */
+} B8298View;
+
+typedef struct B8298Camera {
+    u8 _pad0[0x14];
+    B8298View* view; /* 0x14 */
+} B8298Camera;
+
+extern void fn_8003A548(void (*fn)(void));
+B8298Camera* fn_800BF068(void);
+
 void fn_3_B8298(void) {
-    return;
+    u32 i;
+    StadiumObjectElem* e;
+
+    switch (g_d_GameSettings.StadiumID) {
+    case 3:
+        fn_8003A548(fn_3_B80D0);
+        break;
+    }
+    for (i = 0; i < lbl_3_common_bss_350E4[0].memcpyCount; i++) {
+        e = &lbl_3_common_bss_350E4[0].src[i];
+        if (e->flag90_80 && e->unk74 != NULL && e->unk9A != 0) {
+            lbl_3_bss_190C = (StadiumObject*)e;
+            fn_3_B8184_inline((C2310Holder*)e->unk74, fn_800BF068()->view->mtx);
+        }
+    }
+    fn_8003A548(NULL);
 }
 
 // .text:0x000B8414 size:0x50 mapped:0x806F74A8
