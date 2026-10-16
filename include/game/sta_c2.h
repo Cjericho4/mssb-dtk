@@ -181,8 +181,8 @@ void fn_3_D0918(void);
 void fn_3_D1004(void);
 void fn_3_D1110(struct StaC2D00D0Src* obj);
 void fn_3_D127C(void);
-void fn_3_D1280(void);
-void fn_3_D141C(void);
+void fn_3_D1280(struct StaC2D1280Obj* obj);
+void fn_3_D141C(struct StaC2D1280Obj* obj);
 void fn_3_D173C(void);
 void fn_3_D196C(s32 idx);
 void fn_80025EEC(struct StadiumActorAnim* anim, s32 arg1, s32 arg2);
@@ -213,6 +213,15 @@ typedef struct {
     u8 unk30[0xC];
     s32 unk3C;
 } StaC2D501CEntry; // size: 0x40
+
+typedef struct StaC2D1280Obj {
+    Control control;            /* 0x00 */
+    u8 _pad3C[0xA0 - 0x3C];
+    Vec pos;                    /* 0xA0 */
+    StaC2D501CEntry* endA;      /* 0xAC */
+    StaC2D501CEntry* endB;      /* 0xB0 */
+    u8 timer;                   /* 0xB4 */
+} StaC2D1280Obj;
 typedef struct StaC2ChainParams {
     f32 unk0;  /* 0x00 */
     f32 unk4;  /* 0x04 */

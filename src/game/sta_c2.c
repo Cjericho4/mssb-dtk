@@ -532,12 +532,40 @@ void fn_3_D127C(void) {
 }
 
 // .text:0x000D1280 size:0x19C mapped:0x80710314
-void fn_3_D1280(void) {
-    return;
+void fn_3_D1280(StaC2D1280Obj* obj) {
+    Vec mid;
+    Vec diff;
+    VecXYZ sndPos;
+    f32 dist;
+    s32 t;
+
+    if (g_GameLogic.gameStatus == 1 || g_GameLogic.gameStatus == 0) {
+        obj->control.type = 0;
+    }
+    fn_3_D141C(obj);
+    PSVECAdd(&obj->endB->unkC[0], &obj->endA->unkC[0], &mid);
+    PSVECScale(&mid, 0.5f, &mid);
+    if (g_GameLogic.gameStatus == 2 && g_GameLogic.bOD_framesInLiveBallScene >= 0) {
+        PSVECSubtract(&mid, &obj->pos, &diff);
+        dist = PSVECMag(&diff);
+        t = obj->timer + 1;
+        if (t < 0x100) {
+            obj->timer = t;
+        }
+        if (dist >= 0.3f && obj->timer > 10) {
+            memcpy(&sndPos, &obj->pos, sizeof(Vec));
+            sndPos.y *= -1.0f;
+            fn_3_8BBC4(lbl_3_data_81DC[g_d_GameSettings.StadiumID] + 6, &sndPos, 0, 14);
+            obj->timer = 0;
+        }
+    }
+    PSVECScale(&mid, 1.0f, &obj->pos);
+    CTRLSetTranslation(&obj->control, obj->pos.x, -obj->pos.y, obj->pos.z);
+    CTRLSetScale(&obj->control, 0.75f, 0.75f, 0.75f);
 }
 
 // .text:0x000D141C size:0x320 mapped:0x807104B0
-void fn_3_D141C(void) {
+void fn_3_D141C(StaC2D1280Obj* obj) {
     return;
 }
 
