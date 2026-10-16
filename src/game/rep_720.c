@@ -482,7 +482,26 @@ void fn_3_16058(void) {
 
 // .text:0x000161C0 size:0x168 mapped:0x80655254
 void fn_3_161C0(void) {
-    return;
+    s32 idx;
+    u32 result;
+    if (g_GameLogic.FrameCountOfCurrentPitch == 0) {
+        if (g_d_GameSettings.GameModeSelected == 7) {
+            idx = miniGameIdx_16058();
+            result = fn_3_9EE24(0);
+            result += idx;
+            fn_3_FBDAC(result + 0x2B);
+        } else if (g_d_GameSettings.GameModeSelected == 6) {
+            idx = miniGameIdx_16058();
+            result = fn_3_9EE24(0);
+            result += idx;
+            fn_3_FBDAC(result + 0x2B);
+        } else {
+            result = fn_3_9EE24(0);
+            result += g_d_GameSettings.StadiumID;
+            fn_3_FBDAC(result + 0xF);
+        }
+    }
+    fn_3_FD670();
 }
 
 // .text:0x00016328 size:0x180 mapped:0x806553BC
