@@ -60,8 +60,20 @@ void fn_3_168A6C(void) {
 }
 
 // .text:0x00168CD8 size:0x124 mapped:0x807A7D6C
-void fn_3_168CD8(void) {
-    return;
+void fn_3_168CD8(AnimationStruct* anim, s16 arg1, f32 frame) {
+    Rep3F60QueueObj* q;
+    s32 idx = anim->unk254;
+
+    if (frame == lbl_3_data_28680[14] / 100000.0f && anim != NULL) {
+        q = (Rep3F60QueueObj*)fn_800B0A5C_insertQueue(fn_3_168DFC, (u16)(lbl_803CC1B8->priority + 1));
+        q->animIdx = idx;
+        q->unk24 = 0;
+        q->unk20 = lbl_3_data_28680[15] / 100000.0f;
+        getAnimRelatedCoordinates(idx, lbl_3_data_28920, &q->pos);
+        q->unk2A = 2;
+        q->unk28 = 4;
+        q->unk2B = 7;
+    }
 }
 
 // .text:0x00168DFC size:0x1A4 mapped:0x807A7E90

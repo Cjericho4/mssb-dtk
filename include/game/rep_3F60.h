@@ -10,7 +10,7 @@ void fn_3_168414(void);
 void fn_3_168704(void);
 void fn_3_16892C(struct AnimationStruct* anim, s16 arg1, f32 frame);
 void fn_3_168A6C(void);
-void fn_3_168CD8(void);
+void fn_3_168CD8(struct AnimationStruct* anim, s16 arg1, f32 frame);
 void fn_3_168DFC(void);
 void fn_3_168FA0(void);
 
