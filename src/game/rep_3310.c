@@ -115,7 +115,17 @@ void fn_3_116840(void) {
 
 // .text:0x001169D0 size:0x168 mapped:0x80755A64
 void fn_3_1169D0(void) {
-    return;
+    s32 i;
+
+    g_hugeAnimStruct.entries_2D94[251].unk_26 = 0;
+    for (i = 0; i < 7; i++) {
+        g_hugeAnimStruct.entries_2D94[i + 230].unk_26 = 0;
+        g_hugeAnimStruct.entries_2D94[i + 237].unk_26 = 0;
+        g_hugeAnimStruct.entries_2D94[i + 244].unk_26 = 0;
+        g_hugeAnimStruct.entries_2D94[i + 252].unk_26 = 0;
+        g_hugeAnimStruct.entries_2D94[i + 259].unk_26 = 0;
+        g_hugeAnimStruct.entries_2D94[i + 266].unk_26 = 0;
+    }
 }
 
 // .text:0x00116B38 size:0x3C mapped:0x80755BCC
