@@ -97,8 +97,17 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **`MiniGameStruct* mg = &g_Minigame;`** at top hoists `lis`/`addi`; placed after a call it anchors r30 (fn_3_12E084, fn_3_12C74C).
 *   **Scratch-register-only code**: declaration order does nothing; brute-force the order of initializing assignments (fn_3_60D80).
 *   **Parameter that seems unused**: it may be passed straight through to a callee in `r3` (fn_3_5B380 → `fn_8004CA6C`).
+*   **Float association**: `0.75f * ((d - lim) / 8.0f)` matched where every `* 0.125f` form swapped fregs (fn_3_D5494).
+*   **`u8* p = bss->texData; p += off;`** as two statements gives `addi base,0x40; add off`; `&texData[off]` folds 0x40 into the index (fn_3_133200).
+*   **Chained `a = b = K`** stores `b` first; use it to steer store order (fn_3_133200).
+*   **Small int array of constants**: `for (i=0;i<4;i++) ids[i]=i+1;` matched; an initializer makes a rodata copy (fn_3_15AE34).
+*   **Inlined sibling body**: `static inline` copy of the sibling plus a local `&g_d_GameSettings` used after it (fn_3_5D3FC); nested inlines each with their own `Vec center = {...}` reproduce duplicated rodata Vec copies (fn_3_135924).
+*   **Debug no-ops like `if (i == N) i = N;` survive** into the binary (fn_3_105CDC).
+*   **`u8 &= 0xFB`** gives `andi.`; `&= ~4` gives `rlwinm` (fn_3_D196C).
+*   **u8 passed to several calls and compared with a u16**: declare the local `s32` (fn_3_158264).
 
 ### Known Unfixable Patterns (don't spend attempts)
+*   **Same-file static data off one base register** (`addi r4,r31,0x4f44` from `&lbl_3_data_1C0A8`): extern symbols reload `lis`/`addi` per use (fn_3_1048E0).
 *   **Adjacent-constant compares merged into a range check** (`== 9 || == 10` → `subi`/`cmplwi 1`) when the target keeps them separate (fn_3_B7CDC, fn_3_B7C2C). **Possible workaround** (worked for fn_3_5C418): compare as unsigned, `(u32)x == 1 || (u32)x == 2`, and write intended ranges as `(u8)(x - 0x13) <= 3`. Retry B7CDC/B7C2C with this.
 *   **Field offset `0x34` folded into the index of an `lwzx`** instead of the base (rep_3310: fn_3_119EE0, fn_3_119E30, fn_3_11881C, fn_3_11897C, fn_3_1194AC).
 *   **Nested-struct field load folded** (`addi r3,r31,0x10; lwz r3,0xc(r3)` → `lwz 0x1c(r31)`) (fn_3_A32B8).
