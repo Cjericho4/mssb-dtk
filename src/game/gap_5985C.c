@@ -14,10 +14,22 @@ typedef struct {
     u8 _2;
 } HighLevelSimulation_5985C;
 extern HighLevelSimulation_5985C lbl_803CBC3C;
+
+typedef struct {
+    s32 frameCount;   /* 0x00 */
+    s32 tickCount;    /* 0x04 */
+    s32 randomInt1;   /* 0x08 */
+    s32 randomInt2;   /* 0x0C */
+    u8 unk10;         /* 0x10 */
+} Data228_5985C; /* size: 0x14 */
+extern Data228_5985C lbl_3_data_228;
+void fn_3_1CE90(void);
+BOOL fn_3_10007C(void);
 #include "game/rep_1C0.h"
 #include "game/rep_868.h"
 #include "game/rep_540.h"
 #include "game/game_batter.h"
+#include "game/gap_E1964.h"
 
 // .text:0x0005985C size:0x74 mapped:0x806988F0
 void fn_3_5985C(s32 idx, s32 arg1) {
@@ -194,7 +206,44 @@ void fn_3_5AE9C(void) {
 
 // .text:0x0005B0C4 size:0x15C mapped:0x8069A158
 void fn_3_5B0C4(void) {
-    return;
+    g_d_GameSettings.FrameCountWhileNotAtMainMenu++;
+    lbl_80366158._28 = 0;
+    lbl_80366158._28 = 0;
+    fn_3_10007C();
+    if (g_UnkSimulation_31AC0.unk5 != 0) {
+        if (g_UnkSimulation_31AC0.unk6 == 0) {
+            g_UnkSimulation_31AC0.unk5 = 0;
+        } else {
+            g_UnkSimulation_31AC0.unk6--;
+            lbl_803CBC3C.highLevelSimulationFlag = 1;
+            goto end;
+        }
+    }
+    if (g_GameLogic.PauseSimulationFrameCount != 0) {
+        if (--g_GameLogic.PauseSimulationFrameCount != 0) {
+            lbl_80366158._28 = 1;
+        } else {
+            lbl_80366158._28 = 0;
+        }
+    }
+    if (lbl_80366158._28 == 0) {
+        lbl_3_data_228.frameCount++;
+        fn_3_5ACA0();
+    }
+end:
+    if (g_d_GameSettings.minigamesEnabled) {
+        fn_3_E19E8();
+    } else {
+        fn_3_6C1D8();
+        if (g_d_GameSettings.GameModeSelected == 2) {
+            fn_3_1663AC();
+        }
+    }
+    fn_3_1CE90();
+    fn_3_8DA80();
+    lbl_3_data_228.randomInt1 = g_Ball.StaticRandomInt1;
+    lbl_3_data_228.randomInt2 = g_Ball.StaticRandomInt2;
+    lbl_3_data_228.tickCount++;
 }
 
 // .text:0x0005B220 size:0x148 mapped:0x8069A2B4
