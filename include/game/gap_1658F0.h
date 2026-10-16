@@ -9,8 +9,17 @@ typedef struct {
 } ScoutFlagPair;
 
 typedef struct {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+    u8 unk4;
+} Bss37400Sub; // size: 0x5
+
+typedef struct {
     ScoutFlagPair scoutFlags[9]; /* 0x00 */
-    u8 _pad12[0x40 - 0x12];
+    Bss37400Sub unk12[9];        /* 0x12 */
+    u8 _pad3F;
     s16 playerIndex;   /* 0x40 */
     s16 unk42;         /* 0x42 */
     u8 _pad44[0x2];

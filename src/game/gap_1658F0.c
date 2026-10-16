@@ -4,7 +4,18 @@
 
 // .text:0x001658F0 size:0x88 mapped:0x807A4984
 void fn_3_1658F0(void) {
-    return;
+    Bss37400Item* p = &lbl_3_common_bss_37400;
+    s32 i;
+
+    for (i = 0; i < 9; i++) {
+        p->unk12[i].unk1 = 0;
+        p->unk12[i].unk0 = 0;
+        p->unk12[i].unk2 = 0;
+        p->unk12[i].unk3 = 0;
+        p->unk12[i].unk4 = 0;
+        p->scoutFlags[i].oldFlags = 0;
+        p->scoutFlags[i].newFlags = 0;
+    }
 }
 
 // .text:0x00165978 size:0x14 mapped:0x807A4A0C
