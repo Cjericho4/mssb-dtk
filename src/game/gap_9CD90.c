@@ -41,8 +41,53 @@ void fn_3_9D140(void) {
 }
 
 // .text:0x0009D374 size:0x1DC mapped:0x806DC408
-void fn_3_9D374(void) {
-    return;
+BOOL fn_3_9D374(void) {
+    s32 runs;
+    BOOL flag = FALSE;
+
+    if (g_Strikes.unk_14 == 1) {
+        runs = g_Scores.team[g_GameLogic.homeTeamBattingInd_fieldingTeam].score - g_Scores.prevScore;
+        if (runs == 1 && g_Runners[0].runnerOnFieldOrOutOrScored == 3) {
+            flag = TRUE;
+        }
+        if (g_Runners[0].baseNumberEarned_NotIncludingFieldersChoice == 0 && g_Runners[0].runnerOnFieldOrOutOrScored == 3) {
+            lbl_3_common_bss_32A94.unk0 = 5;
+        } else if (g_Runners[0].baseNumberEarned_NotIncludingFieldersChoice == 3) {
+            if (runs != 0 && !flag) {
+                lbl_3_common_bss_32A94.unk0 = 6;
+            } else {
+                lbl_3_common_bss_32A94.unk2 = 0xB;
+            }
+        } else if (g_Runners[0].baseNumberEarned_NotIncludingFieldersChoice == 2) {
+            if (runs != 0 && !flag) {
+                lbl_3_common_bss_32A94.unk0 = 7;
+            } else {
+                lbl_3_common_bss_32A94.unk2 = 0xC;
+            }
+        } else if (g_Runners[0].baseNumberEarned_NotIncludingFieldersChoice == 1) {
+            if (g_Ball.ballZoneWhenCaught_s8 >= 0 && g_Ball.ballZoneWhenCaught_s8 <= 1) {
+                if (runs != 0 && !flag) {
+                    lbl_3_common_bss_32A94.unk0 = 9;
+                } else {
+                    lbl_3_common_bss_32A94.unk2 = 0xE;
+                }
+            } else {
+                if (runs != 0 && !flag) {
+                    lbl_3_common_bss_32A94.unk0 = 8;
+                } else {
+                    lbl_3_common_bss_32A94.unk2 = 0xD;
+                }
+            }
+        } else {
+            if (runs != 0 && !flag) {
+                lbl_3_common_bss_32A94.unk2 = 0xA;
+            } else {
+                lbl_3_common_bss_32A94.unk2 = 0xF;
+            }
+        }
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x0009D550 size:0x44 mapped:0x806DC5E4
