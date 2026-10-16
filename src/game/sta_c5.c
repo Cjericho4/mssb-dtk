@@ -127,9 +127,62 @@ void fn_3_EF218(void) {
     return;
 }
 
+/* lbl_3_data_1B820 overlay (data addressed off this one base). */
+typedef struct StaC5Data1B820 {
+    /* 0x000 */ u8 _pad0[0x154];
+    /* 0x154 */ s32 emitPeriod[3];
+    /* 0x160 */ f32 emitScale[3];
+    /* 0x16C */ u8 _pad16C[0x174 - 0x16C];
+    /* 0x174 */ f32 emitArg174;
+} StaC5Data1B820;
+extern StaC5Data1B820 lbl_3_data_1B820;
+u8 fn_800527C4(Vec* pos);
+void fn_80064430(Vec* pos, s32 type, f32 a, f32 b);
+
 // .text:0x000EF21C size:0x1B8 mapped:0x8072E2B0
-void fn_3_EF21C(void) {
-    return;
+void fn_3_EF21C(StaC5SpotObj* obj) {
+    StaC5Data1B820* d = &lbl_3_data_1B820;
+    s32 stadium;
+    u8 vol;
+    u8 pan;
+    SND_VOICEID vid;
+
+    if (g_GameLogic.gameStatus != 2) {
+        return;
+    }
+    if (!fn_800527C4((Vec*)&obj->x)) {
+        return;
+    }
+    switch (obj->unkC6) {
+    case 0:
+        if (obj->unkC7 % d->emitPeriod[0] == 0) {
+            fn_80064430((Vec*)&obj->x, 0, d->emitScale[0], 0.0f);
+        }
+        break;
+    case 1:
+        if (obj->unkC7 % d->emitPeriod[1] == 0) {
+            fn_80064430((Vec*)&obj->x, 0, d->emitScale[1], 0.0f);
+        }
+        break;
+    case 2:
+        if (obj->unkC7 % d->emitPeriod[2] == 0) {
+            fn_80064430((Vec*)&obj->x, 1, d->emitScale[2], d->emitArg174);
+            stadium = g_d_GameSettings.StadiumID;
+            if (g_d_GameSettings.GameModeSelected == 6) {
+                vol = lbl_3_data_84B8[0][8].vol;
+            } else {
+                vol = lbl_3_data_8404[stadium][8].vol;
+            }
+            vid = sndFXStartEx(lbl_3_data_81DC[stadium] + 8, vol, 0x3F, 0);
+            if (g_d_GameSettings.GameModeSelected == 6) {
+                pan = lbl_3_data_84B8[0][8].pan;
+            } else {
+                pan = lbl_3_data_8404[stadium][8].pan;
+            }
+            sndFXCtrl(vid, 0x5B, pan);
+        }
+        break;
+    }
 }
 
 // .text:0x000EF3D4 size:0x34 mapped:0x8072E468

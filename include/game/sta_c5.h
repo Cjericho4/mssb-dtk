@@ -199,7 +199,7 @@ void fn_3_EEFA4(void);
 void fn_3_EEFD0(void);
 void fn_3_EEFD4(void);
 void fn_3_EF218(void);
-void fn_3_EF21C(void);
+void fn_3_EF21C(StaC5SpotObj* obj);
 void fn_3_EF3D4(UnknownStruct_EF3D4* arg0, u32 index);
 void fn_3_EF408(StaC5SpotObj* obj);
 u8 fn_3_EF55C(EF55C_Arg* arg0);
