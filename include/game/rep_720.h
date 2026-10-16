@@ -102,10 +102,24 @@ extern f32 lbl_3_rodata_798;
 
 extern s32 lbl_3_bss_44;
 typedef struct Stats {
-    u8 _pad[0x24];
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 _pad22[0x24 - 0x22];
     u32 unk24;
     s16 unk28;
-    u8 _pad2[0x36 - 0x2A];
+    s16 unk2A;
+    s16 unk2C;
+    s16 unk2E;
+    s16 unk30;
+    u8 _pad2[0x36 - 0x32];
     u8 unk36;
     u8 unk37;
     u8 unk38;
