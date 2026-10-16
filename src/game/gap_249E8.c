@@ -14,31 +14,27 @@ void QueueCharacterAnimation(int character, int animation, u8 arg2, u8 arg3, s16
 
 // .text:0x000249E8 size:0xF4 mapped:0x80663A7C
 void fn_3_249E8(s32 arg0) {
-    Fielder *fielder;
-    Data1F090Entry *entry;
-    f32 temp_f0;
+    Data1F090Entry* entry;
+    f32 val;
     s32 i;
-    u8 r26;
+    u8 slot;
 
     entry = &lbl_3_data_1F090[arg0];
-    fielder = g_Fielders;
-    i = 0;
-    r26 = entry->unk14;
-    do {
-        if (r26 == fielder->unk218) {
-            lbl_3_common_bss_1323C->unk240[i] = (s16)arg0;
+    slot = entry->unk14;
+
+    for (i = 0; i < 9; i++) {
+        if (slot == g_Fielders[i].unk218) {
+            lbl_3_common_bss_1323C->unk240[i] = arg0;
             if (entry->unk19 == 0) {
-                memcpy(fielder, entry, 0xC);
+                memcpy(&g_Fielders[i], entry, 0xC);
             }
-            temp_f0 = entry->unkC;
-            lbl_3_common_bss_1323C->unk0[i].unkC = temp_f0;
-            fielder->unk48 = temp_f0;
+            val = entry->unkC;
+            lbl_3_common_bss_1323C->unk0[i].unkC = val;
+            g_Fielders[i].unk48 = val;
             lbl_3_common_bss_1323C->unk261[i] = 1;
             AnimateCharacter(i, entry->unk10, entry->unk16, entry->unk17, entry->unk18, entry->unk12, 0, 0);
         }
-        i++;
-        fielder++;
-    } while (i < 9);
+    }
 }
 
 // .text:0x00024ADC size:0x2E0 mapped:0x80663B70
