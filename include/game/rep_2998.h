@@ -50,7 +50,7 @@ typedef struct Arg_E22A4 {
 void fn_3_E1FA8(UnknownStruct_EF3D4* obj);
 struct CastleRotObj;
 void fn_3_E2034(struct CastleRotObj* obj);
-void fn_3_E2118(void);
+void fn_3_E2118(s32 idx);
 void fn_3_E22A4(Arg_E22A4 *arg0);
 void fn_3_E2324(void);
 void fn_3_E25D0(castleThwompObj* arg, u32 idx);

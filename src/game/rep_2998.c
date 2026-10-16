@@ -6,6 +6,10 @@
 #include "game/rep_1D58.h"
 #include "game/sta_c2.h"
 #include "math.h"
+#include "game/gap_16C410.h"
+#include "musyx/musyx.h"
+#include "game/rep_540.h"
+#include "game/rep_AC8.h"
 
 
 // .text:0x000E1FA8 size:0x8C mapped:0x8072103C
@@ -40,8 +44,45 @@ void fn_3_E2034(CastleRotObj* obj) {
 }
 
 // .text:0x000E2118 size:0x18C mapped:0x807211AC
-void fn_3_E2118(void) {
-    return;
+void fn_3_E2118(s32 idx) {
+    StadiumObjectElem* obj = &lbl_3_common_bss_350E4[0].src[idx];
+    u32 stadium;
+    u8 vol;
+    u8 pan;
+    SND_VOICEID vid;
+
+    if (obj->unkC4 == 0 || obj->unkC4 == 5) {
+        return;
+    }
+    if (obj->unkC8 != 0 && obj->unkC4 != 4) {
+        if (g_Ball.AtBat_ContactResult > 1) {
+            return;
+        }
+        obj->unkC9 = 1;
+        obj->unkC4 = 4;
+        obj->unkAC = lbl_3_bss_AE18[8];
+        fn_3_B97DC((ActorAnimState*)obj->unk74, (ANIMBank*)obj->unkAC);
+        ((ActorAnimState*)obj->unk74)->loopFlags = 2;
+        fn_800B4AFC(((ActorAnimState*)obj->unk74)->actor, ((ActorAnimState*)obj->unk74)->loopFlags & 1);
+        obj->unkB8 = ((ActorAnimState*)obj->unk74)->time;
+        obj->unkCB = 8;
+        stadium = g_d_GameSettings.StadiumID;
+        if (g_d_GameSettings.GameModeSelected == 6) {
+            vol = lbl_3_data_84B8[0][2].vol;
+        } else {
+            vol = lbl_3_data_8404[stadium][2].vol;
+        }
+        vid = sndFXStartEx(lbl_3_data_81DC[stadium] + 2, vol, 0x3F, 0);
+        if (g_d_GameSettings.GameModeSelected == 6) {
+            pan = lbl_3_data_84B8[0][2].pan;
+        } else {
+            pan = lbl_3_data_8404[stadium][2].pan;
+        }
+        sndFXCtrl(vid, 0x5B, pan);
+    }
+    fn_3_65A8();
+    fn_3_27648();
+    g_FieldingLogic.unk_13B = 1;
 }
 
 // .text:0x000E22A4 size:0x80 mapped:0x80721338
