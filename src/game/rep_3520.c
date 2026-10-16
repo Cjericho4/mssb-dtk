@@ -226,8 +226,41 @@ s32 fn_3_1354BC(s32 idx, f32 f1, f32 f2) {
 }
 
 // .text:0x00135520 size:0xE0 mapped:0x807745B4
-void fn_3_135520(void) {
-    return;
+s32 fn_3_135520(f32 x, f32 z, f32 limit) {
+    if (x >= 0.0f) {
+        if (z >= 0.0f) {
+            if (z <= limit) {
+                return 1;
+            }
+            if (x <= limit) {
+                return 2;
+            }
+        } else {
+            if (x <= limit) {
+                return 1;
+            }
+            if (z >= -limit) {
+                return 2;
+            }
+        }
+    } else {
+        if (z >= 0.0f) {
+            if (x >= -limit) {
+                return 1;
+            }
+            if (z <= limit) {
+                return 2;
+            }
+        } else {
+            if (z >= -limit) {
+                return 1;
+            }
+            if (x >= -limit) {
+                return 2;
+            }
+        }
+    }
+    return 0;
 }
 
 // .text:0x00135600 size:0x4C mapped:0x80774694

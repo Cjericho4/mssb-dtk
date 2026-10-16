@@ -49,7 +49,7 @@ BOOL fn_3_134C80(u32 playerIdx, u32 a, u32 b, f32 x, f32 z);
 BOOL fn_3_134D4C(f32 ax, f32 az, f32 radius, f32 bx, f32 bz, f32 px, f32 pz);
 void fn_3_1350BC(void);
 s32 fn_3_1354BC(s32 idx, f32 f1, f32 f2);
-void fn_3_135520(void);
+s32 fn_3_135520(f32 x, f32 z, f32 limit);
 void fn_3_135600(f32 x, f32 z, f32 *outX, f32 *outZ);
 s32 fn_3_13564C(f32 val1, f32 val2);
 typedef struct {
