@@ -123,6 +123,10 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_C1004 | reg numbering: target keeps (&lbl_3_bss_9D40 + 1) and j*16 in saved regs (6), MWCC folds to displacements (5) (.agent/attempts/fn_3_C1004.c is a git diff) |
 | fn_3_C1770 | skipped: same-file static data off one base (&lbl_3_data_17248 +0x18/+0x64/+0xA4), like fn_3_C11CC (.agent/attempts/fn_3_C1770.c note) |
 | fn_3_16D5E4 | greg alloc only: idx r30, (u8)(idx-1) r29, fielder ptr r31 vs ours r31/r30/r29; decl+stmt order brute-forced (.agent/attempts/fn_3_16D5E4.c + .headers.diff) |
+| fn_3_14BCB0 | 12 lines float-const load scheduling (0.5 before 2.0f, 2.0f must be a variable); 15+ forms tried (.agent/attempts/fn_3_14BCB0.c) |
+| fn_3_1573AC | same-file static data off one base (&lbl_3_data_266A8 in r31 across calls) — known unfixable (.agent/attempts/fn_3_1573AC.c + .headers.diff) |
+| fn_3_169600 | 9 lines: target keeps non-propagated copy `mr r30,r29` of outer loop counter for first nested loop; all forms copy-propagated (.agent/attempts/fn_3_169600.c + .headers.diff) |
+| fn_3_15F648 | same base-reg pattern as fn_3_1573AC (addi r3,r30,0x148; lwz 4(r3)) plus colour build clrlslwi/rlwimi diffs (.agent/attempts/fn_3_15F648.c + .headers.diff) |
 
 **Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
 | fn_3_24EA0 | register allocation / scheduling (see git log) |

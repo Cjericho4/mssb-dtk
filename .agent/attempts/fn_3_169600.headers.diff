@@ -1,0 +1,23 @@
+diff --git a/include/game/kinoko.h b/include/game/kinoko.h
+index 17bfddf..4379684 100644
+--- a/include/game/kinoko.h
++++ b/include/game/kinoko.h
+@@ -8,7 +8,17 @@
+ typedef struct KinokoState {
+     u8 *ptr0;        // 0x00
+     u8 *ptr4;        // 0x04
+-    u8 _unk08[0xD8]; // 0x08
++    union {
++        u8 _unk08[0xD8]; // 0x08
++        struct {
++            s32 counter;      // 0x08
++            GXTexObj tex0C;   // 0x0C
++            GXTexObj tex2C;   // 0x2C
++            u8 _pad4C[0x14];  // 0x4C
++            u8 buf60[0x40];   // 0x60
++            u8 bufA0[0x40];   // 0xA0
++        };
++    };
+ } KinokoState;       // 0xE0 bytes
+ 
+ typedef struct KinokoData {

@@ -95,7 +95,7 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **rep_1838.c duplicates**: compose the same-file helpers, e.g. `getComponentsFromRad(shortAngleToRad_Capped(ang), x, y)` (fn_3_9F9C8).
 *   **Statement order changes regalloc even for independent globals** (fn_3_5C5C8).
 *   **`MiniGameStruct* mg = &g_Minigame;`** at top hoists `lis`/`addi`; placed after a call it anchors r30 (fn_3_12E084, fn_3_12C74C).
-*   **Scratch-register-only code**: declaration order does nothing; brute-force the order of initializing assignments (fn_3_60D80).
+*   **Scratch-register-only code**: brute-force the order of initializing assignments (fn_3_60D80). Declaration order *can* still matter: swapping `s32 row;`/`s32 sub;` took fn_3_8C104 from 76 to 7 diffs.
 *   **Parameter that seems unused**: it may be passed straight through to a callee in `r3` (fn_3_5B380 → `fn_8004CA6C`).
 *   **Float association**: `0.75f * ((d - lim) / 8.0f)` matched where every `* 0.125f` form swapped fregs (fn_3_D5494).
 *   **`u8* p = bss->texData; p += off;`** as two statements gives `addi base,0x40; add off`; `&texData[off]` folds 0x40 into the index (fn_3_133200).
@@ -200,6 +200,16 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Callee reads an f3 the caller never sets**: the caller's own 3rd float param is passed through; check its callers for the real signature (fn_3_8FF5C / fn_3_1650C).
 *   **GX enums**: blend dst 1 is GX_BL_ONE; ChanCtrl amb src 1 is GX_SRC_VTX — check the `li` values.
 *   **Permutation brute force**: try_function.py builds in ~0.5 s; permute lines between `//PERM_BEGIN`/`//PERM_END` markers with `tools/brute.py <src> <fn> <template.c>` (matched fn_3_7AB78 in seconds). Don't wait on it with `pgrep -f <name>` (matches the loop itself).
+
+*   **Global's `addi` lands in r4 not r3 before a `bl`**: the callee takes a parameter, e.g. `fn_80033620(arg)` (fn_3_14A188).
+*   **fmuls operand order / early constant load before an array-initializer copy**: initialise scalars in their declarations before the array (`f32 half = 0.5f; f32 w = node->scaleX * half;`) (fn_3_1517D0).
+*   **`x % 3 != 0` merged with an earlier `x % 3 != 2`**: write bare `if (x % 3)` (fn_3_12F424).
+*   **`clrlwi`/`stb`/`extsb.` order around an increment**: `g.f++; if ((s8)g.f >= n)` not `(s8)++g.f >= n` (fn_3_B3448).
+*   **Mixed `bne L` then `beq L` guards**: two separate `if (...) return;`, not one `||` (fn_3_11A92C).
+*   **Args/stores scheduled wrong around calls**: hoist nested calls into a local (`cam = fn_80052734(fn_8005268C());`); store a call result via a temp so the target ptr is re-read (fn_3_E5A84).
+*   **Store order across calls**: a struct-field store may need to move past a later call (fn_3_14EAF4); statement-permutation brute force (tools/brute.py) solved fn_3_8C2DC, fn_3_11A92C, fn_3_151BAC.
+*   **`lwzu` on a global's first field** can come out naturally (`(f32)g.unk0` then other `g.` reads, fn_3_1534C0) — try once before calling it unfixable.
+*   **`(f32)` of a u8 with signed `xoris` conversion**: `(s32)(u8)(v >> 8)`; plain u8 gives the unsigned magic constant (fn_3_8C2DC).
 
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
