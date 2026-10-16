@@ -237,10 +237,10 @@ void fn_3_1537C(s32 arg0) {
     s16* temp_r4;
 
     if (g_Batter.hitTrajectory != 0) {
-        temp_r4 = (s16*)&g_pCamera->_pad1d[2];
+        temp_r4 = &g_pCamera->unkA7C;
         *temp_r4 = *temp_r4 + 1;
     }
-    temp_r4 = (s16*)&g_pCamera->_pad1d[2];
+    temp_r4 = &g_pCamera->unkA7C;
     if (*temp_r4 <= 0x28) {
         return;
     }
@@ -248,7 +248,7 @@ void fn_3_1537C(s32 arg0) {
         g_pCamera->unkAB7 = 1;
         return;
     }
-    temp_r4 = (s16*)&g_pCamera->_pad1d[0];
+    temp_r4 = &g_pCamera->unkA7A;
     if (*temp_r4 == 0) {
         *temp_r4 = g_Stats.unk24;
     }
@@ -276,7 +276,7 @@ void fn_3_15458(s32 arg0) {
         return;
     }
     if (arg0 == 0) {
-        g_pCamera->_pad4c[0] = 1;
+        g_pCamera->unkAB5 = 1;
         return;
     }
     if (g_Stats.unk36 == 0) {
@@ -338,7 +338,46 @@ void fn_3_15D7C(u8 value) {
 
 // .text:0x00015D90 size:0x188 mapped:0x80654E24
 void fn_3_15D90(void) {
-    return;
+    s32 i;
+    g_pCamera->unkAC8 = 0;
+    g_pCamera->unkA74 = 0;
+    g_pCamera->unkA76 = 0;
+    g_pCamera->unkA78 = 0;
+    g_pCamera->unkA7A = 0;
+    g_pCamera->unkA7C = 0;
+    g_pCamera->unkA7E = 0;
+    g_pCamera->unkA80 = 0;
+    g_pCamera->unkA82 = 0;
+    for (i = 0; i < 4; i++) {
+        g_pCamera->unkA84[i] = 0;
+    }
+    g_pCamera->unkAA6 = -1;
+    g_pCamera->unk_A50 = -1;
+    g_pCamera->unkAB5 = 0;
+    g_pCamera->unkAB6 = 0;
+    g_pCamera->unkAB7 = 0;
+    g_pCamera->unkAB8 = 0;
+    g_pCamera->unkAC6 = 0;
+    g_pCamera->unkAB9 = 0;
+    g_pCamera->unkABA = 0;
+    g_pCamera->unkAC4 = 0;
+    g_pCamera->unkACA = 0;
+    for (i = 0; i < 4; i++) {
+        g_pCamera->unkABB[i] = 0;
+        g_pCamera->unkA8C[i] = 0;
+        g_pCamera->unkAC0[i] = 0;
+    }
+    g_pCamera->unkA9E = -1;
+    g_pCamera->unkAA0 = -1;
+    g_pCamera->unkAA2 = -1;
+    g_pCamera->cameraFlag2 = 0;
+    g_pCamera->unkA94 = 0;
+    g_pCamera->unkABF = 0;
+    g_pCamera->unkA96 = 0;
+    g_pCamera->unkA98 = 0;
+    g_pCamera->unkA9C = 0;
+    g_pCamera->unkAA4 = 0;
+    g_pCamera->unkA9A = -1;
 }
 
 // .text:0x00015F18 size:0x20 mapped:0x80654FAC
