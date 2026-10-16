@@ -488,7 +488,28 @@ void fn_3_B6D80(void) {
 
 // .text:0x000B6E98 size:0xD4 mapped:0x806F5F2C
 void fn_3_B6E98(void) {
-    return;
+    fn_3_5F720();
+    g_Strikes.unk_C = g_Strikes.outs;
+    g_Strikes.unk_18[0] = -1;
+    g_Strikes.unk_18[1] = -1;
+    g_Strikes.unk_18[2] = -1;
+    g_Strikes.unk_20 = g_Strikes.balls + g_Strikes.strikes * 16;
+    g_Strikes.unk_14 = 0;
+    g_Ball.totalFramesAtPlay = 0;
+    g_FieldingLogic.unk10E = 0;
+    g_FieldingLogic.unkEE = 0;
+    g_FieldingLogic.unk10F = 0;
+    g_FieldingLogic.unk110 = 0;
+    g_FieldingLogic.unk128 = 0;
+    g_FieldingLogic.unk129 = 0;
+    g_RunningLogic.unk13 = 0;
+    g_GameLogic.pre_PostMiniGameInd = 0;
+    g_GameLogic.minigameLastTurnSuccessInd = 0;
+    g_Practice._1EC = 0;
+    g_Practice._1ED = 0;
+    changeScene(1, 6);
+    fn_3_5A6D4(2);
+    fn_3_6C0E0();
 }
 
 // .text:0x000B6F6C size:0x110 mapped:0x806F6000
@@ -533,17 +554,17 @@ void fn_3_B7620(void) {
 
 // .text:0x000B777C size:0x18 mapped:0x806F6810
 void fn_3_B777C(u8 arg0) {
-    g_Practice.__0x1eepadding[1] = arg0;
+    g_Practice._1E4[1] = arg0;
     g_Practice.maybeCommandData[2] = 0;
 }
 
 // .text:0x000B7794 size:0x48 mapped:0x806F6828
 void fn_3_B7794(void) {
-    g_Practice.__0x1eepadding[4] = 1;
-    g_Practice.__0x1eepadding[5] = 1;
-    g_Practice.__0x1eepadding[6] = 0;
-    g_Practice.__0x1eepadding[7] = 0;
-    g_Practice.__0x1eepadding[3] = 0;
+    g_Practice._1E4[4] = 1;
+    g_Practice._1E4[5] = 1;
+    g_Practice._1E4[6] = 0;
+    g_Practice._1E4[7] = 0;
+    g_Practice._1E4[3] = 0;
     fn_3_B3C78(0);
 }
 
