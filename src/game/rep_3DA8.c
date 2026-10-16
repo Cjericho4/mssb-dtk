@@ -57,3 +57,40 @@ BOOL fn_3_163948(void) {
     }
     return ret;
 }
+
+// .text:0x00163A7C size:0x158 mapped:0x807A2B10
+BOOL fn_3_163A7C(void) {
+    s16 ids[9];
+    ChallengeSaveData* tracker;
+    Bss37400Item* bss;
+    InMemBatterType* batter;
+    InMemPitcherType* pitcher;
+    u8 captain;
+    u8 difficulty;
+    s32 i;
+    s32 charID;
+    BOOL ret;
+    s32 j;
+    tracker = &starMissionCompletionTracker;
+    bss = &lbl_3_common_bss_37400;
+    batter = &g_Batter;
+    pitcher = &g_Pitcher;
+    captain = tracker->challengeCaptain;
+    difficulty = tracker->challengeDifficulty;
+    for (i = 0; i < 9; i++) {
+        ids[i] = inMemRoster[1][i].stats.CharID;
+    }
+    if (bss->unk46 == 2) {
+        charID = pitcher->charID;
+    } else if (bss->unk46 == 1) {
+        charID = batter->charID;
+    }
+    for (j = 0; j < 9; j++) {
+        if (charID == ids[j]) {
+            if (tracker->missions[ids[j]].scoutFlagPointer->flags[difficulty][captain] != 0) {
+                ret = TRUE;
+            }
+        }
+    }
+    return ret;
+}
