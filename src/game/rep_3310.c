@@ -768,9 +768,58 @@ void fn_3_11A408(void) {
     return;
 }
 
+extern Vec lbl_3_data_22620;
+extern Vec lbl_3_data_21380;
+extern f32 lbl_3_bss_B6BC;
+void fn_80062C24(Vec* pos);
+void fn_3_14B9A0(s32 arg0, Vec* arg1);
+void fn_3_14A90C(Vec* pos);
+
 // .text:0x0011A92C size:0x200 mapped:0x807599C0
 void fn_3_11A92C(HugeAnimEntry2D94* entry, s32 idx) {
-    return;
+    Vec v;
+
+    entry->pos.x = lbl_3_data_22620.x;
+    entry->pos.y = lbl_3_data_22620.y;
+    entry->pos.z = lbl_3_data_22620.z;
+    entry->vel.x = 0.0f;
+    entry->vel.y = 0.0f;
+    entry->vel.z = 0.0f;
+    fn_8001D0D0(idx, lbl_3_data_2262C);
+    if (g_Minigame.pauseInd != 0) {
+        return;
+    }
+    if (g_d_GameSettings.GameModeSelected == 2) {
+        return;
+    }
+    if (g_Minigame.GameMode_MiniGame == 1) {
+        if (g_Pitcher.pitcherActionState < 3) {
+            return;
+        }
+        if (g_Pitcher.currentStateFrameCounter == 1 && g_Pitcher.pitcherActionState == 3) {
+            lbl_3_bss_B6BC = 3.0f;
+            v.x = lbl_3_data_21380.x;
+            v.y = -lbl_3_data_21380.y;
+            v.z = lbl_3_data_21380.z - 0.5f;
+            fn_80062C24(&v);
+            fn_3_90064(0x2D6);
+        }
+        entry->pos.z += lbl_3_bss_B6BC;
+        lbl_3_bss_B6BC -= 0.2 * (entry->pos.z - lbl_3_data_22620.z);
+    } else if (g_Minigame.GameMode_MiniGame == 3) {
+        if (g_Pitcher.currentStateFrameCounter != 1) {
+            return;
+        }
+        if (g_Pitcher.pitcherActionState == 1) {
+            fn_3_14B9A0(lbl_3_data_217A4[6] + lbl_3_data_217A4[7], &lbl_3_data_22620);
+            fn_3_90064(0x30E);
+        } else if (g_Pitcher.pitcherActionState == 3) {
+            v.x = lbl_3_data_21380.x;
+            v.y = 0.4f + lbl_3_data_21380.y;
+            v.z = lbl_3_data_21380.z - 0.5f;
+            fn_3_14A90C(&v);
+        }
+    }
 }
 
 // .text:0x0011AB2C size:0x140 mapped:0x80759BC0

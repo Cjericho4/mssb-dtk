@@ -233,8 +233,16 @@ void fn_800B2C44(AnimLevel1* model, u16 bone, VecXYZ* out);
 typedef struct HugeAnimEntry2D94 {
     // Not confident of these
     /* 0x00 */ void* stadiumFileHeaderPointer;
-    /* 0x04 */ void* stadiumObjectLoadingPtr;
-    /* 0x08 */ s32 unk08[7]; // 0x08 through 0x23
+    union {
+        struct {
+            /* 0x04 */ void* stadiumObjectLoadingPtr;
+            /* 0x08 */ s32 unk08[7]; // 0x08 through 0x23
+        };
+        struct {
+            /* 0x04 */ Vec pos;
+            /* 0x10 */ Vec vel;
+        };
+    };
     /* 0x24 */ u8 _pad24[2]; // 0x24-0x25
     /* 0x26 */ u8 unk_26;
     /* 0x27 */ u8 _pad27;
