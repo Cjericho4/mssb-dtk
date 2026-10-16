@@ -55,7 +55,7 @@ void fn_3_C63D0(void);
 void fn_3_C71CC(void);
 void fn_3_C7444(ActorObject* arg0);
 void fn_3_C749C(void);
-void fn_3_C75B8(void);
+BOOL fn_3_C75B8(struct Struct_800339F0_Result* obj);
 void fn_3_C77AC(void);
 void fn_3_C7A0C(void);
 void fn_3_C805C(void);

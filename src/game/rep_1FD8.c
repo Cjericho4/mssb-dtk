@@ -783,8 +783,40 @@ void fn_3_C749C(void) {
 }
 
 // .text:0x000C75B8 size:0x1F4 mapped:0x8070664C
-void fn_3_C75B8(void) {
-    return;
+BOOL fn_3_C75B8(struct Struct_800339F0_Result* obj) {
+    StaC2Particle* p;
+    s32 t = -obj->field_0x24;
+
+    fn_80033620();
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+    p = (StaC2Particle*)obj->listHead;
+    do {
+        if (p->unk48 != 0) {
+            p->unk48 -= (lbl_80366158._28 == 0);
+        } else if (p->unk4A != 0) {
+            fn_8003403C(p->unk38, p->unk3C);
+            fn_80033CC8(p, obj->field_0x10);
+            if (lbl_80366158._28 == 0) {
+                if (p->unk38 < p->unk1C) {
+                    p->unk38 += p->unk1C / 12.0f;
+                    p->unk3C += p->unk1C / 12.0f;
+                }
+                p->pos.x += p->vel.x;
+                p->pos.z += p->vel.z;
+                p->pos.y = (p->vel.y + obj->field_0x18->y) - 5.0 * pow(2.0, t);
+                if (30 - obj->field_0x24 >= 16) {
+                    p->unk43 -= 10.928572f;
+                }
+            }
+        }
+        p = p->next;
+    } while (p != NULL);
+    obj->field_0x24 -= (lbl_80366158._28 == 0);
+    if (obj->field_0x24 == 0) {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x000C77AC size:0x260 mapped:0x80706840
