@@ -83,8 +83,60 @@ s32 fn_3_A1F3C(void) {
 }
 
 // .text:0x000A2048 size:0x1E4 mapped:0x806E10DC
-void fn_3_A2048(void) {
-    return;
+s32 fn_3_A2048(void) {
+    s32 i;
+    s32 flags;
+    s16 ang;
+
+    flags = 0;
+    for (i = 0; i < 4; i++) {
+        if (g_Runners[i].runnerOnFieldOrOutOrScored == 1) {
+            if (g_Runners[i].fractionalBasesRan < 1.7f) {
+                flags |= 0x10;
+            } else if (g_Runners[i].fractionalBasesRan < 2.2f) {
+                flags |= 0x100;
+            } else if (g_Runners[i].fractionalBasesRan <= 3.0f) {
+                flags |= 0x1000;
+            }
+        }
+    }
+    ang = g_Ball.ballAngleFromHome;
+    if (ang > 0x500) {
+        if (flags & 0x1000) {
+            fn_3_A41E8(3);
+            return 1;
+        }
+        if (flags & 0x100) {
+            fn_3_A41E8(3);
+            return 1;
+        }
+        if (flags & 0x10) {
+            fn_3_A41E8(2);
+            return 1;
+        }
+        return 0;
+    }
+    if (ang > 0x400) {
+        if (flags & 0x1000) {
+            fn_3_A41E8(3);
+            return 1;
+        }
+        if ((flags & 0x100) && !(flags & 0x1000)) {
+            fn_3_A41E8(2);
+            return 1;
+        }
+        return 0;
+    }
+    if (flags & 0x1000) {
+        if (!(flags & 0x10) || (flags & 0x100)) {
+            fn_3_A41E8(0);
+            return 1;
+        }
+    } else if (flags & 0x100) {
+        fn_3_A41E8(3);
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x000A222C size:0x1D8 mapped:0x806E12C0
@@ -256,7 +308,7 @@ void fn_3_A4158(s32 runnerIdx) {
 }
 
 // .text:0x000A41E8 size:0x4B8 mapped:0x806E327C
-void fn_3_A41E8(void) {
+void fn_3_A41E8(s32 arg0) {
     return;
 }
 
