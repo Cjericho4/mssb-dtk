@@ -506,7 +506,29 @@ void fn_3_161C0(void) {
 
 // .text:0x00016328 size:0x180 mapped:0x806553BC
 void fn_3_16328(void) {
-    return;
+    GameInitVariables* settings = &g_d_GameSettings;
+    s32 idx;
+    u32 result;
+    if (g_GameLogic.FrameCountOfCurrentPitch <= 1) {
+        if (settings->GameModeSelected == 5) {
+            fn_3_FBDAC(settings->StadiumID + 0x39);
+        } else if (settings->GameModeSelected == 7) {
+            idx = miniGameIdx_16058();
+            result = fn_3_9EE24(0);
+            result += idx;
+            fn_3_FBDAC(result + 0x24);
+        } else if (settings->GameModeSelected == 6) {
+            idx = miniGameIdx_16058();
+            result = fn_3_9EE24(0);
+            result += idx;
+            fn_3_FBDAC(result + 0x24);
+        } else {
+            result = fn_3_9EE24(0);
+            result += settings->StadiumID;
+            fn_3_FBDAC(result + 0x8);
+        }
+    }
+    fn_3_FD670();
 }
 
 // .text:0x000164A8 size:0x64 mapped:0x8065553C
