@@ -89,8 +89,36 @@ void fn_3_27738(s32 fielderIndex) {
 }
 
 // .text:0x00027764 size:0xFC mapped:0x806667F8
-void fn_3_27764(void) {
-    return;
+void fn_3_27764(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    if (g_d_GameSettings.GameModeSelected != 6 && idx != g_FieldingLogic.unkB0 && idx != -1) {
+        f->unk1D3 = 0xC;
+        if (lbl_3_data_3C40.unk60 >= 0) {
+            g_FieldingLogic.unk_F8[idx] = lbl_3_data_3C40.unk60;
+        }
+        f->unk1D5 = 0;
+        f->unk1D6 = 0;
+        f->unk1A4 = 0;
+        f->unk1AC = 0;
+        f->unk1FF = 0;
+    }
+    f->unk252 = 0;
+    f->unk50 = 0.0f;
+    f->unk194 = 0;
+    f->unk1E9 = 0;
+    f->unk1DF = 0;
+    f->unk205 = 0;
+    f->unk25E = 0;
+    if (f->unk1E8 != 0) {
+        f->unk1E8 = 2;
+    }
+    if (g_Ball.fielderWBallIndex >= 0 && g_Ball.catchAnimationTotalFrames != 0) {
+        g_Ball.catchAnimationTotalFrames = 0;
+        g_Ball.AtBat_Contact_BallPos.x = g_Ball.fielderActionCatchCoords.x;
+        g_Ball.AtBat_Contact_BallPos.y = g_Ball.fielderActionCatchCoords.y;
+        g_Ball.AtBat_Contact_BallPos.z = g_Ball.fielderActionCatchCoords.z;
+    }
 }
 
 // .text:0x00027860 size:0x508 mapped:0x806668F4
