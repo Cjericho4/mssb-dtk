@@ -13,6 +13,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 ## Recently Completed (from queue.log)
 | Function | Notes |
 |---|---|
+| fn_3_13DDE0 | matched |
 | fn_3_13BB30 | matched (inlined target-speed init) |
 | fn_3_CB7E8 | matched |
 | fn_3_8A4E4 | matched |
