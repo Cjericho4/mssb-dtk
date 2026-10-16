@@ -110,6 +110,9 @@ typedef struct Stats {
     u8 unk37;
     u8 unk38;
     u8 unk39;
+    u8 _pad3A[0x3F - 0x3A];
+    u8 unk3F;
+    u8 unk40;
 } Stats;
 extern Stats g_Stats;
 // No local headers needed.
