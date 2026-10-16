@@ -47,6 +47,7 @@ typedef struct Arg_E22A4 {
     u8 unk_C8;                /* 0xC8 */
 } Arg_E22A4;
 
+void fn_3_E1DB8(void);
 void fn_3_E1FA8(UnknownStruct_EF3D4* obj);
 struct CastleRotObj;
 void fn_3_E2034(struct CastleRotObj* obj);
@@ -128,6 +129,18 @@ typedef struct E4A38Model {
 } E4A38Model;
 
 extern u8 lbl_3_bss_AE01;
+
+/* Overlay of the file-static bss block at lbl_3_bss_AE00 (ambient sound timers). */
+typedef struct Rep2998Bss {
+    u8 unk0;        /* 0x00 */
+    u8 unk1;        /* 0x01 (lbl_3_bss_AE01) */
+    u8 _pad2[2];
+    s32 handle;     /* 0x04 */
+    s32 timer8;     /* 0x08 */
+    s32 timerC;     /* 0x0C */
+    u8 active;      /* 0x10 */
+} Rep2998Bss;
+extern Rep2998Bss lbl_3_bss_AE00;
 void fn_3_E4A38(MtxPtr mtx, E4A38Model* model);
 struct StadiumModel* fn_3_E4BE8(s32 index, MtxPtr m);
 void fn_3_E4CB0(void);

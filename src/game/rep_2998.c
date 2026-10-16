@@ -10,7 +10,41 @@
 #include "musyx/musyx.h"
 #include "game/rep_540.h"
 #include "game/rep_AC8.h"
+#include "game/m_sound.h"
 
+// .text:0x000E1DB8 size:0x1F0 mapped:0x80720E4C
+void fn_3_E1DB8(void) {
+    Rep2998Bss* bss = &lbl_3_bss_AE00;
+
+    if (g_GameLogic.gameStatus == 0x21) {
+        return;
+    }
+    if (g_GameLogic.gameStatus == 0xB) {
+        if (bss->active) {
+            fn_3_8B890(bss->handle);
+            bss->active = 0;
+        }
+        return;
+    }
+    if (!bss->active) {
+        bss->handle = fn_3_8BBC4(lbl_3_data_81DC[g_d_GameSettings.StadiumID] + 5, NULL, 0, 6);
+        bss->active = 1;
+        bss->timerC = rand() % 900 + 100;
+        bss->timer8 = rand() % 900 + 100;
+    }
+    if (bss->timerC <= 0) {
+        fn_3_B7FC8(lbl_3_data_81DC[g_d_GameSettings.StadiumID] + 6, 7);
+        bss->timerC = rand() % 900 + 100;
+    } else {
+        bss->timerC--;
+    }
+    if (bss->timer8 <= 0) {
+        fn_3_B7FC8(lbl_3_data_81DC[g_d_GameSettings.StadiumID] + 7, 7);
+        bss->timer8 = rand() % 900 + 100;
+    } else {
+        bss->timer8--;
+    }
+}
 
 // .text:0x000E1FA8 size:0x8C mapped:0x8072103C
 void fn_3_E1FA8(UnknownStruct_EF3D4* obj) {
