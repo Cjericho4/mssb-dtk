@@ -53,7 +53,12 @@ typedef struct {
     u8 field_0x23F[2];   /* 0x23F */
     u8 _pad241;          /* 0x241 */
     s16 field_0x242[9];  /* 0x242 */
-    u8 _pad254[0xC];     /* 0x254 */
+    s16 unk254;          /* 0x254 */
+    s16 unk256;          /* 0x256 */
+    s16 unk258;          /* 0x258 */
+    s16 unk25A;          /* 0x25A */
+    s16 unk25C;          /* 0x25C */
+    s16 unk25E;          /* 0x25E */
     u8 field_0x260;      /* 0x260 */
     u8 _pad261[0x3];     /* 0x261 */
 } Bss34C90Item; // size: 0x264

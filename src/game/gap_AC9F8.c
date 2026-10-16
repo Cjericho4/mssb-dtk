@@ -1,4 +1,5 @@
 #include "game/gap_AC9F8.h"
+#include "game/gap_B3B70.h"
 #include "game/gap_1E154.h"
 #include "game/rep_540.h"
 #include "game/rep_1038.h"
@@ -173,7 +174,20 @@ void fn_3_AEC50(void) {
 
 // .text:0x000AEFF8 size:0x114 mapped:0x806EE08C
 void fn_3_AEFF8(void) {
-    return;
+    s32 i;
+
+    lbl_3_common_bss_34C90.unk254 = -1;
+    lbl_3_common_bss_34C90.unk258 = -1;
+    lbl_3_common_bss_34C90.unk256 = -1;
+    lbl_3_common_bss_34C90.unk25A = -1;
+    for (i = 0; i < 9; i++) {
+        if (lbl_80354720[lbl_3_common_bss_34C90.field_0x00][i].unk2 == 0) {
+            lbl_3_common_bss_34C90.unk25C = i;
+        }
+        if (lbl_80354720[lbl_3_common_bss_34C90.field_0x00][i].unk2 == 1) {
+            lbl_3_common_bss_34C90.unk25E = i;
+        }
+    }
 }
 
 // .text:0x000AF10C size:0x31C mapped:0x806EE1A0
