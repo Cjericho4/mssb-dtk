@@ -2,6 +2,14 @@
 
 s32 fn_3_6C938(s32, s32);
 
+typedef struct Bss32A38Entry {
+    u8 unk0;
+    u8 unk1;
+    u8 _pad2[3];
+} Bss32A38Entry; // size: 0x5
+
+extern Bss32A38Entry lbl_3_common_bss_32A38[2][9];
+
 // .text:0x0007976C size:0x294 mapped:0x806B8800
 void fn_3_7976C(void) {
     return;
@@ -37,7 +45,31 @@ void fn_3_79ACC(void) {
 
 // .text:0x00079DD4 size:0x120 mapped:0x806B8E68
 void fn_3_79DD4(void) {
-    return;
+    s32 diff;
+    s32 n;
+    s32 slot;
+    s32 i;
+
+    diff = g_Scores.team[g_GameLogic.awayTeamBattingInd_battingTeam].score - g_Scores.team[g_GameLogic.homeTeamBattingInd_fieldingTeam].score;
+    g_Scores.unkB7[g_GameLogic.awayTeamBattingInd_battingTeam] = -1;
+    if (diff <= 0) {
+        return;
+    }
+    if (g_Scores.highscore + 2 >= g_Scores.threshold && (g_Scores.highscore + 2 != g_Scores.threshold || g_Strikes.outs != 0) &&
+        (diff > 3 || (g_Scores.highscore >= g_Scores.threshold && (g_Scores.highscore < g_Scores.threshold || g_Strikes.outs != 0)))) {
+        n = 0;
+        for (i = 1; i < 4; i++) {
+            if (g_Runners[i].runnerOnFieldOrOutOrScored == 1) {
+                n++;
+            }
+        }
+        if (diff > n + 2) {
+            return;
+        }
+    }
+    slot = g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][0][0];
+    g_Scores.unkB7[g_GameLogic.awayTeamBattingInd_battingTeam] = slot;
+    lbl_3_common_bss_32A38[g_GameLogic.teamFielding][slot].unk1 = 1;
 }
 
 // .text:0x00079EF4 size:0x260 mapped:0x806B8F88

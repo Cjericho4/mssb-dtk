@@ -1088,7 +1088,9 @@ typedef struct Scores {
     /* 0xAB */ u8 _padAB;
     /* 0xAC */ u8 unkAC;
     /* 0xAD */ u8 unkAD;
-    /* 0xAE */ u8 _padAE[0xC1 - 0xAE];
+    /* 0xAE */ u8 _padAE[0xB7 - 0xAE];
+    /* 0xB7 */ s8 unkB7[2];
+    /* 0xB9 */ u8 _padB9[0xC1 - 0xB9];
     /* 0xC1 */ u8 unkC1;
     /* 0xC2 */ u8 unkC2;
     /* 0xC3 */ u8 someFlag;
