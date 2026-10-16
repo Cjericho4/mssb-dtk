@@ -12,6 +12,7 @@
 #include "C3/unktypes.h"
 
 extern GXTexObj lbl_3_bss_B640;
+extern BALL_COLLISION_TYPE (*lbl_3_data_1BA88[])(u32, BALL_COLLISION_TYPE, CollisionStruct*);
 
 // .text:0x000F8444 size:0x10 mapped:0x807374D8
 void fn_3_F8444(void) {
@@ -251,8 +252,44 @@ void fn_3_F99F0(void) {
 }
 
 // .text:0x000F9B9C size:0x1F8 mapped:0x80738C30
-void fn_3_F9B9C(void) {
-    return;
+void fn_3_F9B9C(u32 idx, BALL_COLLISION_TYPE type, CollisionStruct* col) {
+    StadiumObjectElem* elem = &lbl_3_common_bss_350E4[0].src[idx];
+    StaC4QueueObj* q;
+    DrawingSceneStruct* q2;
+    u8 flag;
+
+    elem->unkA1 = elem->unkA2;
+    if (elem->unkA1 == 0) {
+        fn_3_F9E78(idx, type, col);
+        return;
+    }
+    if (elem->unkA1 == 2) {
+        lbl_3_common_bss_350E4[0].unk6B = 1;
+        q = (StaC4QueueObj*)fn_800B0A5C_insertQueue(fn_3_F934C, (u16)(lbl_803CC1B8->priority + 1));
+        memcpy(&lbl_3_common_bss_350E4[0].ballPos, &g_Ball.AtBat_Contact_BallPos, sizeof(VecXYZ));
+        memcpy(&lbl_3_common_bss_350E4[0].ballVel, &g_Ball.physicsSubstruct.velocity, sizeof(VecXYZ));
+        lbl_3_common_bss_350E4[0].ballPos.y = -lbl_3_common_bss_350E4[0].ballPos.y;
+        lbl_3_common_bss_350E4[0].ballVel.y = -lbl_3_common_bss_350E4[0].ballVel.y;
+        if (col != NULL) {
+            PSVECScale(&col->normal, -1.0f, &q->vel);
+        }
+        memset(&q->unk20, 0, sizeof(Vec));
+        q->elemIdx = idx;
+        q->unk30 = 0;
+        lbl_3_common_bss_350E4[0].src[q->elemIdx].flag90_40 = 0;
+    }
+    elem->unk74 = (void**)&g_hugeAnimStruct.animTable->entries[elem->unkA2];
+    elem->fnPtr = lbl_3_data_1BA88[elem->unkA2];
+    flag = 0;
+    if (elem->flag90_80 && elem->unk_78 != NULL) {
+        flag = 1;
+    }
+    elem->flag90_40 = flag;
+    elem->fnPtr(idx, type, col);
+    elem->flag90_20 = 0;
+    q2 = (DrawingSceneStruct*)fn_800B0A5C_insertQueue(fn_3_F92FC, 0);
+    q2->loadingState = 0x5A;
+    q2->unk14 = (DrawingSceneItem*)elem;
 }
 
 // .text:0x000F9D94 size:0xE4 mapped:0x80738E28
@@ -282,7 +319,7 @@ void fn_3_F9D94(StaC4AnimObj* obj) {
 }
 
 // .text:0x000F9E78 size:0x548 mapped:0x80738F0C
-void fn_3_F9E78(void) {
+void fn_3_F9E78(u32 idx, BALL_COLLISION_TYPE type, CollisionStruct* col) {
     return;
 }
 

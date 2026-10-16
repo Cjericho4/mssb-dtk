@@ -582,7 +582,8 @@ typedef struct StadiumObjectElem {
     struct StadiumActorAnim* unk8C;   /* 0x8C */
     u8 flag90_80 : 1;                 /* 0x90 */
     u8 flag90_40 : 1;
-    u8 flag90_rest : 6;
+    u8 flag90_20 : 1;
+    u8 flag90_rest : 5;
     u8 _pad_0x91[0x93 - 0x91];       /* 0x91 */
     u8 unk93;                         /* 0x93 */
     u8 _pad_0x94[0x99 - 0x94];       /* 0x94 */
@@ -591,7 +592,15 @@ typedef struct StadiumObjectElem {
     u8 _pad_0x9b[0x9D - 0x9B];       /* 0x9B */
     u8 unk9D;                         /* 0x9D */
     u8 _pad_0x9e[0xA0 - 0x9E];       /* 0x9E */
-    f32 unkA0;                        /* 0xA0 */
+    union {
+        f32 unkA0;                    /* 0xA0 */
+        struct {
+            u8 unkA0_u8;              /* 0xA0 */
+            u8 unkA1;                 /* 0xA1 */
+            u8 unkA2;                 /* 0xA2 */
+            u8 unkA3;                 /* 0xA3 */
+        };
+    };
     u8 _pad_0xa4[0xA8 - 0xA4];       /* 0xA4 */
     u8 unk_A8;                        /* 0xA8 */
     u8 unk_A9;                        /* 0xA9 */

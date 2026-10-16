@@ -72,9 +72,9 @@ typedef struct StaC4LaunchSrc {
 void fn_3_F963C(s32 elemIdx, StaC4LaunchSrc* src);
 void fn_3_F976C(void);
 void fn_3_F99F0(void);
-void fn_3_F9B9C(void);
+void fn_3_F9B9C(u32 idx, BALL_COLLISION_TYPE type, CollisionStruct* col);
 void fn_3_F9D94(StaC4AnimObj* obj);
-void fn_3_F9E78(void);
+void fn_3_F9E78(u32 idx, BALL_COLLISION_TYPE type, CollisionStruct* col);
 void fn_3_FA3C0(void);
 void fn_3_FA58C(void);
 void fn_3_FB3D8(void);
