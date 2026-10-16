@@ -3,6 +3,7 @@
 #include "game/gap_16C410.h"
 #include "musyx/musyx.h"
 #include "game/gap_157DB8.h"
+#include "game/gap_AC9F8.h"
 
 // .text:0x000EA340 size:0x114 mapped:0x807293D4
 void fn_3_EA340(void) {
@@ -246,8 +247,61 @@ void fn_3_ED784(void) {
 }
 
 // .text:0x000ED818 size:0x224 mapped:0x8072C8AC
+void fn_3_9C28C(void);
+void fn_3_9894C(void);
+void fn_3_98DE0(void);
+
 void fn_3_ED818(void) {
-    return;
+    CommonBss_32724* a;
+    CommonBss_32724* b;
+    CommonBss_32724* c;
+
+    if (g_GameLogic.hudElementLoadingInd != 0) {
+        c = &lbl_3_common_bss_32724;
+        if (c->unk_A5 == 0) {
+            c->unk_A5 = 1;
+            c->unk_A6 = 0;
+            c->unk_A7 = 0xFF;
+            fn_800B0A5C_insertQueue(fn_3_9C28C, 2);
+            fn_800B0A5C_insertQueue(fn_3_EA8FC, 2)->unk18 = 0;
+            fn_800B0A5C_insertQueue(fn_3_EB6E0, 2);
+        }
+    }
+    if (g_Ball.totalFramesAtPlay == 0xF && g_Minigame.toyfield_waitFor_CoinsX2_AnimationToEnd == 0 &&
+        g_Minigame.toyField_pointMultiplier > 1 && g_Pitcher.nPitchesThisAB == 0) {
+        fn_800B0A5C_insertQueue(fn_3_ED490, 2);
+    }
+    a = &lbl_3_common_bss_32724;
+    if (a->unk_A5 != 0 && a->unk_A6 < 0xFF) {
+        if (a->unk_A6 < 0xF0) {
+            a->unk_A6 += 0x10;
+        } else {
+            a->unk_A6 = 0xFF;
+        }
+    }
+    b = &lbl_3_common_bss_32724;
+    if (b->unk_A7 != 0 && b->unk_A7 < 0xFF) {
+        if (b->unk_A7 <= 0x10) {
+            b->unk_A7 = 0;
+            a->unk_A5 = 0;
+        } else {
+            b->unk_A7 -= 0x10;
+        }
+    } else if (a->unk_A5 != 0) {
+        if (g_GameLogic.gameStatus == 8) {
+            b->unk_A7 = 0;
+            a->unk_A5 = 0;
+        } else if (g_GameLogic.gameStatus != 1 && g_GameLogic.gameStatus != 0 && g_GameLogic.gameStatus != 0xB &&
+                   g_GameLogic.gameStatus != 0xD) {
+            b->unk_A7 = 0xF0;
+        }
+    }
+    if (g_GameLogic.gameStatus == 0xB && lbl_3_common_bss_34C90.field_0x1D2 == 1) {
+        fn_800B0A5C_insertQueue(fn_3_9894C, 2);
+        if (lbl_3_common_bss_32724.unk_AA == 0) {
+            fn_800B0A5C_insertQueue(fn_3_98DE0, 2);
+        }
+    }
 }
 
 // .text:0x000EDA3C size:0x2D4 mapped:0x8072CAD0

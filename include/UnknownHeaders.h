@@ -700,6 +700,7 @@ typedef struct QueueEntry {
             u8 unk15;  /* 0x15 */
             u8 unk16;  /* 0x16 */
             u8 unk17;  /* 0x17 */
+            s16 unk18; /* 0x18 */
         };
     };
     s32 unk20;     /* 0x20 */
