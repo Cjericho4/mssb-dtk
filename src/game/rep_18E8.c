@@ -1,5 +1,6 @@
 #include "game/rep_18E8.h"
 #include "game/rep_AC8.h"
+#include "game/rep_1838.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 
@@ -631,8 +632,47 @@ void fn_3_A9D20(void) {
 }
 
 // .text:0x000AAA3C size:0x1BC mapped:0x806E9AD0
-void fn_3_AAA3C(void) {
-    return;
+void fn_3_AAA3C(s32 fielderIdx) {
+    FieldingLogic* fl = &g_FieldingLogic;
+    Fielder* f = &g_Fielders[fielderIdx];
+    s16 a;
+    s16 base;
+    s16 r;
+
+    a = fl->unkCE;
+    if (a < 0) {
+        return;
+    }
+    base = fl->unkC4;
+    if (base < 0 || base > 3) {
+        return;
+    }
+    if (f->unkA8[base] > 10.0f && fl->unkDC < 0) {
+        return;
+    }
+    if (base == a) {
+        r = g_FieldingLogic.unkE0;
+        if (r >= 0 && r <= 3) {
+            if (g_FieldingLogic.unkDC == g_Runners[r].nextBase || g_FieldingLogic.unkDC == g_Runners[r].currentBase) {
+                g_FieldingLogic.unk119 = 1;
+            }
+        }
+    }
+    if (fl->unkCE == 9) {
+        r = g_FieldingLogic.unkE0;
+        if (r >= 0 && r <= 3 && g_Runners[r].runnerOnFieldOrOutOrScored == 1 &&
+            fl->unkC4 == g_Runners[r].baseRunningTowards) {
+            g_FieldingLogic.unk119 = 1;
+        }
+    }
+    if (g_FieldingLogic.unk119 != 0) {
+        base = fl->unkC4;
+        if (base >= 0 && base <= 3) {
+            if (fn_3_9FC1C(game_atan2(lbl_3_data_4444[base].x - f->pos[0], lbl_3_data_4444[base].z - f->pos[2]), f->unk48) > 0x40) {
+                g_FieldingLogic.unk119 = 0;
+            }
+        }
+    }
 }
 
 // .text:0x000AABF8 size:0x8C mapped:0x806E9C8C
