@@ -143,7 +143,31 @@ void fn_3_9D6A4(void) {
 
 // .text:0x0009DB5C size:0x88 mapped:0x806DCBF0
 void fn_3_9DB5C(void) {
-    return;
+    s32 i;
+
+    for (i = 4; i > 0; i--) {
+        lbl_3_common_bss_32A94.unk6[i] = lbl_3_common_bss_32A94.unk6[i - 1];
+    }
+    lbl_3_common_bss_32A94.unk6[0] = lbl_3_common_bss_32A94.unk0;
+    lbl_3_common_bss_32A94.unk0 = 0;
+    lbl_3_common_bss_32A94.unk2 = 0;
+    lbl_3_common_bss_32A94.unk4 = 0;
+    lbl_3_common_bss_32A94.unk10[0] = -1;
+    lbl_3_common_bss_32A94.unk10[1] = -1;
+    lbl_3_common_bss_32A94.unk10[2] = -1;
+    lbl_3_common_bss_32A94.unk10[3] = -1;
+    lbl_3_common_bss_32A94.unk10[4] = -1;
+    lbl_3_common_bss_32A94.unk10[5] = -1;
+    lbl_3_common_bss_32A94.unk10[6] = -1;
+    lbl_3_common_bss_32A94.unk10[7] = -1;
+    lbl_3_common_bss_32A94.unk10[8] = -1;
+    lbl_3_common_bss_32A94.unk10[9] = -1;
+    lbl_3_common_bss_32A94.unk10[10] = -1;
+    lbl_3_common_bss_32A94.unk10[11] = -1;
+    lbl_3_common_bss_32A94.unk10[12] = -1;
+    lbl_3_common_bss_32A94.unk10[13] = -1;
+    lbl_3_common_bss_32A94.unk10[14] = -1;
+    lbl_3_common_bss_32A94.unk10[15] = -1;
 }
 
 // .text:0x0009DBE4 size:0x34 mapped:0x806DCC78

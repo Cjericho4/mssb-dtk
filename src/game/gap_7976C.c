@@ -166,23 +166,23 @@ void fn_3_7AEE8(void) {
 void fn_3_7AEEC(void) {
     InMemRunnerType *pRunners = g_Runners;
     CommonBss32A94 *pBss = &lbl_3_common_bss_32A94;
-    pBss->_pad6[0x1C] = (u8)-1;
-    pBss->_pad6[0x21] = 0;
+    pBss->unk22 = (u8)-1;
+    pBss->unk27 = 0;
     if (pRunners[1].runnerOnFieldOrOutOrScored != 0) {
-        pBss->_pad6[0x22] = 1;
+        pBss->unk28 = 1;
     } else {
-        pBss->_pad6[0x22] = 0;
+        pBss->unk28 = 0;
     }
     pRunners += 2;
     if (pRunners[0].runnerOnFieldOrOutOrScored != 0) {
-        pBss->_pad6[0x23] = 1;
+        pBss->unk29 = 1;
     } else {
-        pBss->_pad6[0x23] = 0;
+        pBss->unk29 = 0;
     }
     if (pRunners[1].runnerOnFieldOrOutOrScored != 0) {
-        pBss->_pad6[0x24] = 1;
+        pBss->unk2A = 1;
     } else {
-        pBss->_pad6[0x24] = 0;
+        pBss->unk2A = 0;
     }
 }
 
@@ -190,23 +190,23 @@ void fn_3_7AEEC(void) {
 void fn_3_7AF68(void) {
     InMemRunnerType *pRunners = g_Runners;
     CommonBss32A94 *pBss = &lbl_3_common_bss_32A94;
-    pBss->_pad6[0x1C] = (u8)-1;
-    pBss->_pad6[0x21] = 0;
+    pBss->unk22 = (u8)-1;
+    pBss->unk27 = 0;
     if (pRunners[1].runnerOnFieldOrOutOrScored != 0) {
-        pBss->_pad6[0x22] = 1;
+        pBss->unk28 = 1;
     } else {
-        pBss->_pad6[0x22] = 0;
+        pBss->unk28 = 0;
     }
     pRunners += 2;
     if (pRunners[0].runnerOnFieldOrOutOrScored != 0) {
-        pBss->_pad6[0x23] = 1;
+        pBss->unk29 = 1;
     } else {
-        pBss->_pad6[0x23] = 0;
+        pBss->unk29 = 0;
     }
     if (pRunners[1].runnerOnFieldOrOutOrScored != 0) {
-        pBss->_pad6[0x24] = 1;
+        pBss->unk2A = 1;
     } else {
-        pBss->_pad6[0x24] = 0;
+        pBss->unk2A = 0;
     }
 }
 
