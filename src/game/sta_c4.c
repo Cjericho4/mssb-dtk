@@ -302,6 +302,20 @@ void fn_3_FB3D8(void) {
 }
 
 // .text:0x000FBBA0 size:0x130 mapped:0x8073AC34
-void fn_3_FBBA0(void) {
-    return;
+void fn_3_FBBA0(StaC4TexDesc* desc) {
+    GXTlutObj tlut;
+    GXTexObj tex;
+
+    if (desc->tlut != NULL) {
+        GXInitTexObjCI(&tex, desc->image, desc->width, desc->height, desc->format, desc->wrapS, desc->wrapT,
+                       desc->minLOD != desc->maxLOD, 0);
+        GXInitTlutObj(&tlut, desc->tlut, desc->tlutFormat, desc->tlutEntries);
+        GXLoadTlut(&tlut, 0);
+    } else {
+        GXInitTexObj(&tex, desc->image, desc->width, desc->height, desc->format, desc->wrapS, desc->wrapT,
+                     desc->minLOD != desc->maxLOD);
+    }
+    GXInitTexObjLOD(&tex, desc->minFilter, desc->magFilter, desc->minLOD, desc->maxLOD, desc->lodBias, GX_FALSE,
+                    GX_FALSE, GX_ANISO_1);
+    GXLoadTexObj(&tex, GX_TEXMAP0);
 }
