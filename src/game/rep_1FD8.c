@@ -583,9 +583,37 @@ void fn_3_C4F00(void) {
     return;
 }
 
+typedef struct C5CE0Arg {
+    u8 _pad0[0x9C];
+    Vec pos; /* 0x9C */
+} C5CE0Arg;
+
 // .text:0x000C5304 size:0x1CC mapped:0x80704398
-void fn_3_C5304(void) {
-    return;
+void fn_3_C5304(struct Struct_800339F0_Result* obj, C5CE0Arg* src) {
+    StaC2Particle* p = (StaC2Particle*)obj->listHead;
+    s16 delay = 0;
+
+    obj->field_0x18 = &src->pos;
+    obj->field_0x20 = src;
+    for (; p != NULL; p = p->next) {
+        p->unk3C = 0.0f;
+        p->unk38 = 0.0f;
+        p->unk48 = delay;
+        delay += 4;
+        p->unk4D = 0x15;
+        p->unk4E = 0;
+        p->unk40[0] = p->unk40[1] = p->unk40[2] = 0xFF;
+        p->unk43 = 0;
+        p->unk4A = 1;
+        p->unk4F = 0;
+        if (p->unk48 == 0) {
+            p->pos.x = obj->field_0x18->x + (f32)(15 - rand() % 31) / 10.0f;
+            p->pos.y = 2.5f + obj->field_0x18->y;
+            p->pos.z = obj->field_0x18->z + (f32)(15 - rand() % 31) / 10.0f;
+        } else {
+            p->pos.x = p->pos.y = p->pos.z = 0.0f;
+        }
+    }
 }
 
 // .text:0x000C54D0 size:0x218 mapped:0x80704564
@@ -637,11 +665,6 @@ void fn_3_C56E8(void) {
 void fn_3_C597C(void) {
     return;
 }
-
-typedef struct C5CE0Arg {
-    u8 _pad0[0x9C];
-    Vec pos; /* 0x9C */
-} C5CE0Arg;
 
 // .text:0x000C5CE0 size:0xFC mapped:0x80704D74
 BOOL fn_3_C5CE0(C5CE0Arg* arg0) {

@@ -50,7 +50,10 @@ struct Struct_800339F0_Result {
     s32 field_0x10;                 // 0x10
     u16 flags : 4;                  // 0x14
     u16 count : 12;
-    u8 _pad16[0xE];                 // 0x16
+    u8 _pad16[0x18 - 0x16];         // 0x16
+    Vec* field_0x18;                // 0x18
+    u8 _pad1C[0x20 - 0x1C];         // 0x1C
+    struct C5CE0Arg* field_0x20;    // 0x20
     s32 field_0x24;                 // 0x24
 };
 

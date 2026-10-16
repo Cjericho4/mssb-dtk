@@ -43,7 +43,7 @@ void fn_3_C48D0(void);
 void fn_3_C4B80(void);
 void fn_3_C4CF4(struct Struct_800339F0_Result* obj, u8 id);
 void fn_3_C4F00(void);
-void fn_3_C5304(void);
+void fn_3_C5304(struct Struct_800339F0_Result* obj, struct C5CE0Arg* src);
 void fn_3_C54D0(StadiumObjectElem* elem);
 void fn_3_C56E8(void);
 void fn_3_C597C(void);

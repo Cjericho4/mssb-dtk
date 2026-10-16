@@ -285,12 +285,14 @@ typedef struct StaC2Particle {
     u8 _pad30[0x38 - 0x30];
     f32 unk38;      /* 0x38 */
     f32 unk3C;      /* 0x3C */
-    u8 _pad40[0x43 - 0x40];
+    u8 unk40[0x43 - 0x40]; /* 0x40 */
     u8 unk43;       /* 0x43 */
     u8 _pad44[0x48 - 0x44];
     s16 unk48;      /* 0x48 */
     s16 unk4A;      /* 0x4A */
-    u8 _pad4C[0x4F - 0x4C];
+    u8 _pad4C;
+    u8 unk4D;       /* 0x4D */
+    u8 unk4E;       /* 0x4E */
     u8 unk4F;       /* 0x4F */
     u8 unk50;       /* 0x50 */
 } StaC2Particle;
