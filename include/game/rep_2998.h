@@ -60,7 +60,7 @@ BOOL fn_3_E28DC(castleThwompObj* obj);
 BOOL fn_3_E29B4(castleThwompObj* obj);
 u8 fn_3_E2B70(struct CastleRotObj* obj);
 void fn_3_E2E78(struct CastleRotObj* obj);
-void fn_3_E2F4C(void);
+void fn_3_E2F4C(struct CastleRotObj* obj);
 void fn_3_E3044(void);
 u8 fn_3_E3284(struct CastleRotObj* obj);
 void fn_3_E3668(struct CastleRotObj* obj);
@@ -90,14 +90,17 @@ typedef union {
 
 typedef struct CastleRotObj {
     Control control;     /* 0x00 */
-    u8 _pad0[0x9C - 0x3C];
+    u8 _pad0[0x74 - 0x3C];
+    struct ActorAnimState* anim; /* 0x74 */
+    u8 _pad78[0x9C - 0x78];
     u8 rotIdx;           /* 0x9C */
     u8 _pad9D[3];
     VecXYZ pos;          /* 0xA0 */
     u8 _padAC[4];
     f32 curRotation;     /* 0xB0 */
     f32 scale;           /* 0xB4 */
-    u8 _padB8[0xC4 - 0xB8];
+    f32 animTime;        /* 0xB8 */
+    u8 _padBC[0xC4 - 0xBC];
     u8 unkC4;            /* 0xC4 */
     u8 shrinkTimer;      /* 0xC5 */
     u8 shrinkFrames;     /* 0xC6 */

@@ -1,4 +1,5 @@
 #include "game/rep_2998.h"
+#include "game/rep_23E8.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "C3/control.h"
@@ -231,9 +232,22 @@ void fn_3_E2E78(CastleRotObj* obj) {
     }
 }
 
+extern u8 lbl_800E8754[];
+
 // .text:0x000E2F4C size:0xF8 mapped:0x80721FE0
-void fn_3_E2F4C(void) {
-    return;
+void fn_3_E2F4C(CastleRotObj* obj) {
+    f32 angle;
+    f32 x;
+
+    f32 time = obj->animTime;
+    f32 speed = obj->anim->speed;
+
+    if (time >= 20.0 && time - speed < 20.0 && lbl_800E8754[4] != 0) {
+        angle = -obj->curRotation;
+        angle = 0.017453292f * angle;
+        x = obj->scale * (5.0 * sinf_kludge(angle)) + obj->pos.x;
+        fn_3_CB7E8(x, -2.0 * obj->scale, obj->scale * (-5.0 * cosf_kludge(angle)) + obj->pos.z);
+    }
 }
 
 // .text:0x000E3044 size:0x240 mapped:0x807220D8
