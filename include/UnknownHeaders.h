@@ -969,7 +969,7 @@ extern SaveData_80354768 lbl_80354768;
 // Definition for the global structure at 0x800EFBA4
 typedef struct SoundConfig {
     u8 menuVolume;   /* 0x0 */
-    u8 _pad1;
+    u8 confirmVolume; /* 0x1 */
     u8 alertVolume;  /* 0x2 */
     u8 _pad3[0x3];
     u8 volume;       /* 0x6 */

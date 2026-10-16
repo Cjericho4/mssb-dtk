@@ -2,6 +2,7 @@
 #include "game/gap_AC9F8.h"
 #include "game/gap_6AEC0.h"
 #include "game/m_sound.h"
+#include "musyx/musyx.h"
 #include "game/rep_AC8.h"
 #include "game/rep_1188.h"
 #include "game/rep_13B8.h"
@@ -104,8 +105,37 @@ void fn_3_B4C40(void) {
 }
 
 // .text:0x000B5090 size:0x154 mapped:0x806F4124
+typedef struct {
+    u8 count;
+    u8 levels[4];
+} PracticeLevelTable; // size: 0x5
+extern PracticeLevelTable lbl_3_data_FACC[];
+
 void fn_3_B5090(void) {
-    return;
+    PracticeStruct* practice = &g_Practice;
+    InputStruct* input = &g_Controls[practice->homeAway];
+    s32 count = lbl_3_data_FACC[practice->practiceType_2].count;
+
+    if (input->newButtonInput & INPUT_BUTTON_A) {
+        practice->practiceLevel = lbl_3_data_FACC[practice->practiceType_2].levels[practice->subMenuCursor];
+        sndFXStartEx(0x1B8, lbl_800EFBA4.confirmVolume, 0x3F, 0);
+        fn_3_B3C94(3);
+    } else if (input->newButtonInput & INPUT_BUTTON_B) {
+        fn_3_B3C94(5);
+        sndFXStartEx(0x1B9, lbl_800EFBA4.alertVolume, 0x3F, 0);
+    } else if (input->_08 & 8) {
+        if (practice->subMenuCursor != 0) {
+            practice->subMenuCursor--;
+        } else {
+            practice->subMenuCursor = count - 1;
+        }
+        sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+    } else if (input->_08 & 4) {
+        if (++practice->subMenuCursor >= count) {
+            practice->subMenuCursor = 0;
+        }
+        sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+    }
 }
 
 // .text:0x000B51E4 size:0x4B0 mapped:0x806F4278
