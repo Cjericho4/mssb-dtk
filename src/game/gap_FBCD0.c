@@ -68,7 +68,21 @@ void fn_3_FBE24(void) {
 }
 
 // .text:0x000FC2FC size:0x14C mapped:0x8073B390
-void fn_3_FC2FC(void) {
-    return;
+Vec fn_3_FC2FC(Vec* pos, Vec* anchor, Vec* anchorVel, f32 dt, f32 stiffness, f32 damping, f32 restLen) {
+    Vec dir;
+    Vec scaled;
+    Vec rel;
+    f32 dist;
+    f32 force;
+
+    PSVECSubtract(pos, anchor, &dir);
+    dist = PSVECDistance(pos, anchor);
+    PSVECSubtract(anchorVel, anchor, &rel);
+    PSVECScale(&rel, dt, &scaled);
+    force = stiffness * (restLen - dist) + damping * (PSVECDotProduct(&scaled, &dir) / dist);
+    PSVECNormalize(&dir, &dir);
+    PSVECScale(&dir, force * dt, &dir);
+    PSVECAdd(pos, &dir, pos);
+    return *pos;
 }
 

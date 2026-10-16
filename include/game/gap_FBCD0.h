@@ -34,6 +34,6 @@ void fn_3_FBD58(void);
 void fn_3_FBD70(void);
 void fn_3_FBDAC(u32 arg0);
 void fn_3_FBE24(void);
-void fn_3_FC2FC(void);
+struct Vec fn_3_FC2FC(struct Vec* pos, struct Vec* anchor, struct Vec* anchorVel, f32 dt, f32 stiffness, f32 damping, f32 restLen);
 
 #endif // !__GAME_gap_FBCD0_H_
