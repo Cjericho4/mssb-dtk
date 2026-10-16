@@ -7,6 +7,9 @@
 extern f32 lbl_3_rodata_1250;
 extern void fn_3_5C69C(s32 arg0);
 void fn_3_89864(s32 idx, s32 delta);
+void fn_3_155288(void);
+BOOL fn_3_6F4E8(void);
+void fn_3_7CE90(void);
 
 // .text:0x0006F6CC size:0x7C mapped:0x806AE760
 s32 fn_3_6F6CC(void) {
@@ -261,7 +264,34 @@ void fn_3_738A8(void) {
 
 // .text:0x00073DE8 size:0x144 mapped:0x806B2E7C
 void fn_3_73DE8(void) {
-    return;
+    if (g_Pitcher.pitchTotalTimeCounter < 0x7FFE) {
+        g_Pitcher.pitchTotalTimeCounter++;
+    } else {
+        g_Pitcher.pitchTotalTimeCounter = 0x7FFF;
+    }
+    if (g_Ball.postPitchResultCounter < 0x7FFE) {
+        g_Ball.postPitchResultCounter++;
+    } else {
+        g_Ball.postPitchResultCounter = 0x7FFF;
+    }
+    if (g_d_GameSettings.GameModeSelected == 7 &&
+        (g_Minigame.GameMode_MiniGame == 1 || g_Minigame.GameMode_MiniGame == 2 || g_Minigame.GameMode_MiniGame == 3)) {
+        g_Pitcher.miniGameRelated = 1;
+        if (g_Minigame.GameMode_MiniGame == 1) {
+            fn_3_155288();
+        }
+    } else if (g_Pitcher.miniGameRelated == 0) {
+        fn_3_703EC();
+        return;
+    }
+    if (fn_3_6F4E8() == 0) {
+        if ((g_d_GameSettings.GameModeSelected != 2 || g_Practice.guidedPracticeCompletionRelated == 0) &&
+            g_Pitcher.currentStateFrameCounter > 0x4B) {
+            g_GameLogic.playBatterWalkupAnimation = 0;
+            fn_3_5A6D4(0);
+        }
+        fn_3_7CE90();
+    }
 }
 
 // .text:0x00073F2C size:0x80 mapped:0x806B2FC0
