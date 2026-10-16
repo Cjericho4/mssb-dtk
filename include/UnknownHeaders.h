@@ -685,7 +685,7 @@ typedef struct UnknownStruct_350E4 {
     /* 0x048 */ VecXYZ* unk48;
     /* 0x04C */ VecXYZ ballPos;
     /* 0x058 */ VecXYZ ballVel;
-    /* 0x064 */ u8 _pad_0x64[0x2];
+    /* 0x064 */ s16 unk64;
     /* 0x066 */ s16 unk66;
     /* 0x068 */ s16 unk68;
     /* 0x06A */ u8 unk6A;

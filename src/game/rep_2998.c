@@ -434,13 +434,28 @@ struct StadiumModel* fn_3_E4BE8(s32 index, MtxPtr m) {
 }
 
 // .text:0x000E4CB0 size:0x244 mapped:0x80723D44
-void fn_3_E4CB0(void) {
+void fn_3_E4CB0(s32* arg0, s32* arg1) {
     return;
 }
 
 // .text:0x000E4EF4 size:0xD0 mapped:0x80723F88
 void fn_3_E4EF4(void) {
-    return;
+    UnknownStruct_350E4* p = lbl_3_common_bss_350E4;
+    u32 size = p->memcpyCount * 24 + p->memcpyCount * 4 + p->memcpyCount * 4 + p->memcpyCount * 2;
+    s32 a;
+    s32 b;
+
+    if (p->unk48 == NULL) {
+        p->unk48 = _OSAllocFromHeap(4, size);
+        lbl_3_common_bss_350E4[0].unk3C = (u32*)&p->unk48[p->memcpyCount * 2];
+        lbl_3_common_bss_350E4[0].unk44 = lbl_3_common_bss_350E4[0].unk3C + p->memcpyCount;
+        lbl_3_common_bss_350E4[0].unk40 = (u16*)(lbl_3_common_bss_350E4[0].unk44 + p->memcpyCount);
+    }
+    memset(p->unk48, 0, size);
+    a = 0;
+    b = 0;
+    fn_3_E4CB0(&a, &b);
+    lbl_3_common_bss_350E4[0].unk64 = a;
 }
 
 // .text:0x000E4FC4 size:0x8B8 mapped:0x80724058
