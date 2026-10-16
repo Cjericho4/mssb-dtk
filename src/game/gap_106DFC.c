@@ -631,8 +631,69 @@ void fn_3_10EFAC(void) {
 }
 
 // .text:0x0010F1D4 size:0x204 mapped:0x8074E268
+extern void fn_8004CC18(void);
+
 void fn_3_10F1D4(void) {
-    return;
+    GameControlsStruct* gl = &g_GameLogic;
+
+    switch (gl->_125) {
+    case 0:
+        changeScene(6, 6);
+        gl->_125++;
+        g_GameLogic.FrameCountOfCurrentAtBat_Copy = 0;
+        g_hugeAnimStruct.renderStadiumFlag = 0;
+        g_Minigame._19E4_u8 = 0;
+        break;
+    case 1:
+        if (gl->FrameCountOfCurrentAtBat_Copy > 0x14) {
+            gl->_125++;
+        }
+        break;
+    case 2:
+        fn_3_10EFAC();
+        g_GameLogic.FrameCountOfCurrentAtBat_Copy = 0;
+        break;
+    case 3:
+        if (lbl_3_common_bss_32724.unk_BB == 0) {
+            gl->_125++;
+        }
+        break;
+    case 4:
+        if (g_Minigame.GameMode_MiniGame >= 1 && g_Minigame.GameMode_MiniGame <= 6) {
+            if (g_Minigame._190A != 0) {
+                g_Minigame._19E4_u8 = 0;
+            } else {
+                g_Minigame._19E4_u8 = g_d_GameSettings.miniGameLevels[g_Minigame.GameMode_MiniGame];
+            }
+        }
+        fn_3_5A6D4(0x1E);
+        break;
+    case 5:
+        switch (fn_3_5B380(g_Controls[lbl_80366158._27].newButtonInput)) {
+        case 1:
+            g_GameLogic.FrameCountOfCurrentAtBat_Copy = 0;
+            gl->_125++;
+            break;
+        case 2:
+            gl->_125 = 2;
+            break;
+        }
+        break;
+    case 6:
+        if (gl->FrameCountOfCurrentAtBat_Copy > 0x2D) {
+            changeScene(4, 6);
+        }
+        if (lbl_8037169C._13 != 0) {
+            fn_80062A74();
+            g_Minigame.battingHandedness[5] = 0;
+            gl->_125++;
+        }
+        break;
+    case 7:
+        fn_8004CC18();
+        g_GameLogic.framesOfExitingToMenu = 1;
+        break;
+    }
 }
 
 extern CompressedDiskRead lbl_3_data_21EC8[];
