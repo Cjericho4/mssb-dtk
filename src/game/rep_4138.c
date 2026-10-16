@@ -52,7 +52,12 @@ void fn_3_16DB6C(u8 idx) {
 
 // .text:0x0016DFC4 size:0x1DC mapped:0x807AD058
 void fn_3_16DFC4(void) {
-    return;
+    u32 i;
+
+    setupGX_16D9B0();
+    for (i = 0; i < 6; i++) {
+        fn_3_16DB6C(i);
+    }
 }
 
 // .text:0x0016E1A0 size:0x4C mapped:0x807AD234
