@@ -10,6 +10,7 @@
 #include "game/gap_6C854.h"
 #include "game/m_sound.h"
 #include "game/rep_540.h"
+#include "game/rep_1D58.h"
 
 extern f32 lbl_3_rodata_2664;
 extern char lbl_3_rodata_286C[];
@@ -17,6 +18,7 @@ extern char lbl_3_rodata_2878[];
 extern u8 lbl_3_bss_A898[];
 extern VecXYZ lbl_3_bss_A820[10];
 extern u16 lbl_3_data_81DC[];
+extern u8 lbl_3_bss_A020;
 extern DrawingSceneStruct* lbl_3_bss_A8A4;
 extern f32 lbl_3_data_188E0;
 extern Vec lbl_3_rodata_24E8[];
@@ -807,8 +809,22 @@ void fn_3_D55EC(void) {
 }
 
 // .text:0x000D5B6C size:0x120 mapped:0x80714C00
-void fn_3_D5B6C(void) {
-    return;
+void fn_3_D5B6C(s32* count) {
+    StaC2ControlExt control;
+    Mtx m;
+    StadiumObjectElem* obj;
+    u16 start;
+
+    start = lbl_3_common_bss_350E4[0].unk40[*count - 1] + lbl_3_common_bss_350E4[0].unk3C[*count - 1];
+    lbl_3_common_bss_350E4[0].unk40[*count] = start;
+    lbl_3_common_bss_350E4[0].unk44[start] = lbl_3_bss_A020;
+    lbl_3_common_bss_350E4[0].unk3C[*count]++;
+    obj = &lbl_3_common_bss_350E4[0].src[lbl_3_bss_A020];
+    control = *(StaC2ControlExt*)&obj->control;
+    CTRLBuildMatrix(&control.control, m);
+    fn_3_B8464(m, obj->unk_78);
+    fn_3_B8414(&lbl_3_common_bss_350E4[0].unk48[*count * 2].x, &lbl_3_common_bss_350E4[0].unk48[*count * 2 + 1].x);
+    (*count)++;
 }
 
 // .text:0x000D5C8C size:0x1F4 mapped:0x80714D20
