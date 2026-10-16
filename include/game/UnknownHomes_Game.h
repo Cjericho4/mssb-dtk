@@ -563,7 +563,10 @@ typedef struct FieldingLogic {
     /* 0x74 */ FieldingTarget targets[4];
     /* 0x8C */ FieldingTarget* unk8C; // lwz r4, 0x8c(r5)
     
-    /* 0x90 */ u8 _pad1[0xAE - 0x90];
+    /* 0x90 */ f32 unk90;
+    /* 0x94 */ f32 unk94;
+    /* 0x98 */ f32 unk98;
+    /* 0x9C */ u8 _pad1[0xAE - 0x9C];
     /* 0xAE */ s16 unkAE;
     /* 0xB0 */ s16 unkB0;
     /* 0xB2 */ s16 unkB2;
@@ -581,7 +584,9 @@ typedef struct FieldingLogic {
     /* 0xDE */ s16 unkDE;
     /* 0xE0 */ s16 unkE0;
     /* 0xE2 */ s16 unkE2;
-    /* 0xE4 */ u8 _pad1bb[0xEE - 0xE4];
+    /* 0xE4 */ u8 _pad1bb[0xE8 - 0xE4];
+    /* 0xE8 */ s16 unkE8;
+    /* 0xEA */ u8 _padEA[0xEE - 0xEA];
     /* 0xEE */ s16 unkEE;
     /* 0xF0 */ u8 _padF0[0xF8 - 0xF0];
     /* 0xF8 */ u8 unk_F8[9];
@@ -598,7 +603,8 @@ typedef struct FieldingLogic {
     /* 0x10E */ u8 unk10E;
     /* 0x10F */ u8 _pad1c;
     /* 0x110 */ u8 unk110;
-    /* 0x111 */ u8 _pad111[0x113 - 0x111];
+    /* 0x111 */ u8 unk111;
+    /* 0x112 */ u8 _pad111;
     /* 0x113 */ u8 unk113;
     /* 0x114 */ u8 unk114;
     /* 0x115 */ u8 _pad1d[0x119 - 0x115];
@@ -609,7 +615,9 @@ typedef struct FieldingLogic {
     /* 0x130 */ u8 _pad130[0x133 - 0x130];
     /* 0x133 */ u8 unk133;            // Preserving your previous find
     
-    /* 0x134 */ u8 _pad2[0x139 - 0x134];
+    /* 0x134 */ u8 _pad2;
+    /* 0x135 */ u8 unk135;
+    /* 0x136 */ u8 _pad136[0x139 - 0x136];
     /* 0x139 */ u8 unk139;
     /* 0x13A */ u8 _pad13A;
     /* 0x13B */ u8 unk_13B;           // Preserving your previous find
@@ -2230,7 +2238,8 @@ typedef struct Fielder {
     /* 0x1A0 */ s16 unk1A0;
     /* 0x1A2 */ u8 _pad1A2[0x1A4 - 0x1A2];
     /* 0x1A4 */ s16 unk1A4;
-    /* 0x1A6 */ u8 _pad1a[0x1AC - 0x1A6];
+    /* 0x1A6 */ u8 _pad1a[0x1AA - 0x1A6];
+    /* 0x1AA */ s16 unk1AA;
     /* 0x1AC */ s16 unk1AC;
     /* 0x1AE */ u8 _pad1b[0x1B6 - 0x1AE];
     /* 0x1B6 */ s16 unk1B6;
@@ -2262,7 +2271,8 @@ typedef struct Fielder {
     /* 0x201 */ u8 unk201;
     /* 0x202 */ u8 _pad3c[0x210 - 0x202];
     /* 0x210 */ u8 unk210;
-    /* 0x211 */ u8 _pad211[0x215 - 0x211];
+    /* 0x211 */ u8 unk211;
+    /* 0x212 */ u8 _pad211[0x215 - 0x212];
     /* 0x215 */ u8 unk215;
     /* 0x216 */ u8 unk216;
     /* 0x217 */ u8 _pad217;
@@ -2470,7 +2480,9 @@ typedef struct UnkThrowing31ACC {
     /* 0x00 */ VecXYZ throwDest;
     /* 0x0C */ u8 _padC[0x2];
     /* 0x0E */ u8 throwType;
-    /* 0x0F */ u8 _padF[0x3E0 - 0xF];
+    /* 0x0F */ u8 _padF;
+    /* 0x10 */ u8 unk10;
+    /* 0x11 */ u8 _pad11[0x3E0 - 0x11];
 } UnkThrowing31ACC; // size: 0x3E0
 
 extern UnkThrowing31ACC g_UnkThrowing_31ACC;

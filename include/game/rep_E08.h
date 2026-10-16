@@ -53,7 +53,9 @@ typedef struct {
     u8 unk4D; // Offset 0x4D
     u8 unk4E; // Offset 0x4E
     u8 unk4F; // Offset 0x4F
-    u8 _pad50[0x54 - 0x50]; // Total size 0x54
+    u8 _pad50;
+    u8 unk51; // Offset 0x51
+    u8 _pad52[0x54 - 0x52]; // Total size 0x54
 } AnimationStruct_31EAC;
 
 extern AnimationStruct_31EAC g_UnkAnimation_31EAC[];

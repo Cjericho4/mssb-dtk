@@ -1,6 +1,7 @@
 #include "game/rep_E08.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
+#include "game/rep_1838.h"
 
 void QueueCharacterAnimation(int character, int animation, u8 arg2, u8 arg3, s16 arg4, u8 flip, int arg6);
 
@@ -105,8 +106,74 @@ void fn_3_61B64(void) {
 }
 
 // .text:0x00062904 size:0x24C mapped:0x806A1998
+static inline void repE08_checkFielder(s32 i) {
+    if (g_Fielders[i].unk211 != 0 && g_UnkAnimation_31EAC[i].unk51 != 8 && g_UnkAnimation_31EAC[i].unk51 != 9) {
+        g_UnkAnimation_31EAC[i].unk51 = 8;
+    }
+}
+
 void fn_3_62904(void) {
-    return;
+    s32 i;
+    s16 idx;
+    s16 runner;
+    AnimationStruct_31EAC* anim;
+    Fielder* fielder;
+    u8 type;
+    s32 ang;
+    s32 cur;
+
+    if (g_d_GameSettings.minigamesEnabled != 0) {
+        return;
+    }
+    for (i = 0; i < 9; i++) {
+        if (g_Fielders[i].unk211 != 0) {
+            repE08_checkFielder(i);
+            break;
+        }
+    }
+    idx = g_Ball.fielderWBallIndex;
+    if (idx < 0 || g_FieldingLogic.unk111 == 0) {
+        return;
+    }
+    fielder = &g_Fielders[idx];
+    anim = &g_UnkAnimation_31EAC[idx];
+    if (g_FieldingLogic.unk135 != 0) {
+        fielder->unk1AA = 0;
+    }
+    g_UnkThrowing_31ACC.unk10 = g_FieldingLogic.unk135;
+    if (g_FieldingLogic.unk111 == 1) {
+        type = 1;
+        if (g_FieldingLogic.unkE8 >= 0) {
+            s16 diff;
+            ang = fn_3_9FB8C(g_FieldingLogic.unk90 - fielder->pos[0], g_FieldingLogic.unk98 - fielder->pos[2]);
+            cur = radToShortAngle(fielder->unk48);
+            diff = fn_3_9FCA4((s16)ang, (s16)cur);
+            if (diff < -0x280) {
+                type = 2;
+            } else if (diff > 0x280) {
+                type = 3;
+            }
+        }
+        anim->unk51 = type;
+    } else if (g_FieldingLogic.unk111 == 2) {
+        anim->unk51 = 4;
+    } else if (g_FieldingLogic.unk111 == 5) {
+        type = 5;
+        runner = g_FieldingLogic.unkE8;
+        if (runner >= 0) {
+            InMemRunnerType* r = &g_Runners[runner];
+            s16 diff;
+            ang = fn_3_9FB8C(r->position.x - fielder->pos[0], r->position.z - fielder->pos[2]);
+            cur = radToShortAngle(fielder->unk48);
+            diff = fn_3_9FCA4((s16)ang, (s16)cur);
+            if (diff < -0x1C0) {
+                type = 7;
+            } else if (diff > 0x1C0) {
+                type = 6;
+            }
+        }
+        anim->unk51 = type;
+    }
 }
 
 // .text:0x00062B50 size:0x158 mapped:0x806A1BE4
