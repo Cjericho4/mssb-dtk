@@ -115,9 +115,14 @@ typedef struct AnimationStruct {
     s8 unk252;          /* 0x252 */
     u8 _rest253;
     s8 unk254;          /* 0x254 */
-    u8 _rest255[0x8];
+    u8 _rest255[0x25A - 0x255];
+    u8 unk25A;          /* 0x25A */
+    u8 _rest25B[0x25D - 0x25B];
     u8 unk_25D; /* 0x25D */
-    u8 _rest2[0x279 - 0x25E];
+    u8 _rest2[0x275 - 0x25E];
+    u8 unk275;          /* 0x275 */
+    u8 unk276;          /* 0x276 */
+    u8 _rest277[0x279 - 0x277];
     u8 unk279;          /* 0x279 */
     u8 _rest27A[0x27C - 0x27A];
 } AnimationStruct; /* size: 0x27C */

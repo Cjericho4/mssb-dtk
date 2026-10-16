@@ -117,8 +117,47 @@ void fn_3_BC850(s32 dummy, s32 index) {
 }
 
 // .text:0x000BC888 size:0x198 mapped:0x806FB91C
+void fn_8003A550(s32 idx, VecXYZ* pos, Vec* dir, s32 flag);
+extern f32 lbl_3_bss_9964;
+extern f32 lbl_3_data_12CB4;
+
 void fn_3_BC888(void) {
-    return;
+    Mtx m;
+    VecXYZ pos;
+    Vec dir;
+    AnimationStruct* anim;
+    s32 i;
+    s32 bits;
+
+    for (i = 0; i < 13; i++) {
+        anim = g_hugeAnimStruct.AnimationStructPtrs[i];
+        if (anim == NULL) {
+            continue;
+        }
+        if (anim->unk_25D == 0) {
+            anim->unk279 = 0;
+            continue;
+        }
+        PSMTXRotRad(m, 'Y', anim->unk40.y);
+        dir.x = lbl_3_bss_9964;
+        dir.y = 0.0f;
+        dir.z = lbl_3_data_12CB4;
+        PSMTXMultVec(m, &dir, &dir);
+        bits = anim->unk276 & 0x14;
+        if (bits == 0x10 && (anim->unk275 & 0x7F) == 6) {
+            getAnimRelatedCoordinates(i, 0x22, &pos);
+            pos.y = 0.0f;
+            fn_8003A550(i, &pos, &dir, !anim->unk25A);
+        }
+        anim->unk279 = (bits == 4);
+        bits = anim->unk276 & 0xA;
+        if (bits == 8 && (anim->unk275 & 0x7F) == 6) {
+            getAnimRelatedCoordinates(i, 0x1E, &pos);
+            pos.y = 0.0f;
+            fn_8003A550(i, &pos, &dir, anim->unk25A);
+        }
+        anim->unk279 |= (bits == 2) << 1;
+    }
 }
 
 // .text:0x000BCA20 size:0x7B4 mapped:0x806FBAB4
