@@ -30,6 +30,12 @@ typedef struct ListNode_14B9F0 {
 } ListNode_14B9F0;
 
 // Return type from fn_800339F0
+typedef struct {
+    u8 _pad0[0x40];
+    u32 frontColor; // 0x40
+    u32 backColor;  // 0x44
+} Rep3880QuadColors;
+
 struct Struct_800339F0_Result {
     u8 _pad[0x0C];                  // 0x00-0x0B
     ListNode_14B9F0* listHead;      // 0x0C
@@ -97,7 +103,7 @@ void fn_3_147CFC(struct Rep3880Source* src);
 void fn_3_147DFC(void);
 void fn_3_147E20(void);
 void fn_3_147F94(void);
-void fn_3_1480E0(void);
+void fn_3_1480E0(Rep3880QuadColors* obj);
 void fn_3_148254(void);
 bool fn_3_1483D4(void);
 void fn_3_14841C(void);

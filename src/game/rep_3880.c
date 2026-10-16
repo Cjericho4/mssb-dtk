@@ -9,8 +9,10 @@
 #include "Dolphin/mtx.h"
 #include "game/rep_1E08.h"
 #include "Dolphin/GX/GXTransform.h"
+#include "Dolphin/gx.h"
 
 extern f32 lbl_3_data_21770[6];
+extern Vec lbl_3_bss_B860[4];
 
 typedef struct {
     u8 _pad0[0x8];
@@ -150,8 +152,21 @@ void fn_3_147F94(void) {
 }
 
 // .text:0x001480E0 size:0x174 mapped:0x80787174
-void fn_3_1480E0(void) {
-    return;
+void fn_3_1480E0(Rep3880QuadColors* obj) {
+    s32 i;
+
+    GXSetCullMode(GX_CULL_BACK);
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+    for (i = 0; i < 4; i++) {
+        GXPosition3f32(lbl_3_bss_B860[i].x, lbl_3_bss_B860[i].y, lbl_3_bss_B860[i].z);
+        GXColor1u32(obj->frontColor);
+    }
+    GXSetCullMode(GX_CULL_FRONT);
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+    for (i = 0; i < 4; i++) {
+        GXPosition3f32(lbl_3_bss_B860[i].x, lbl_3_bss_B860[i].y, lbl_3_bss_B860[i].z);
+        GXColor1u32(obj->backColor);
+    }
 }
 
 // .text:0x00148254 size:0x180 mapped:0x807872E8
