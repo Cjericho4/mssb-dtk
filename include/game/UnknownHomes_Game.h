@@ -440,8 +440,13 @@ typedef struct _InMemPitcherType {
     /*0x074*/ VecXZ centerOfStrikeZone;
     /*0x07C*/ f32 strikeZoneLeft;
     /*0x080*/ f32 strikeZoneRight;
-    /*0x084*/ f32 beginningOfStrikeCheckZ; // 1.05
-    /*0x088*/ f32 endingOfStrikeCheckZ;    // 0.5
+    union {
+        struct {
+            /*0x084*/ f32 beginningOfStrikeCheckZ; // 1.05
+            /*0x088*/ f32 endingOfStrikeCheckZ;    // 0.5
+        };
+        /*0x084*/ f32 strikeCheckZ[2];
+    };
     /*0x08C*/ VecXZ pitcher;
     /*0x094*/ VecXYZ pitchRelease;
     /*0x0A0*/ f32 pitchLinearInterpolateX;

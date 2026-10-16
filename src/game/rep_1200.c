@@ -148,8 +148,27 @@ s32 fn_3_70680(f32 value) {
 }
 
 // .text:0x000706B8 size:0xB0 mapped:0x806AF74C
-void fn_3_706B8(void) {
-    return;
+void fn_3_706B8(s32 idx) {
+    f32 t;
+    f32 x;
+    BOOL inZone;
+
+    if (g_Minigame.GameMode_MiniGame == 2) {
+        return;
+    }
+    t = (g_Pitcher.strikeCheckZ[idx] - g_Pitcher.ballCurrentPosition.z) / (g_Pitcher.ballLastPosition.z - g_Pitcher.ballCurrentPosition.z);
+    x = t * (g_Pitcher.ballLastPosition.x - g_Pitcher.ballCurrentPosition.x) + g_Pitcher.ballCurrentPosition.x;
+    g_Pitcher.estimatedEndingPos.x = x;
+    g_Pitcher.estimatedEndingPos.z = t * (g_Pitcher.ballLastPosition.y - g_Pitcher.ballCurrentPosition.y) + g_Pitcher.ballCurrentPosition.y;
+    if (x >= g_Pitcher.strikeZoneLeft && x <= g_Pitcher.strikeZoneRight) {
+        inZone = TRUE;
+    } else {
+        inZone = FALSE;
+    }
+    if (inZone) {
+        g_Pitcher.calledStrikeInd = 1;
+        g_Pitcher.strikeInd = 1;
+    }
 }
 
 // .text:0x00070768 size:0xD0 mapped:0x806AF7FC
