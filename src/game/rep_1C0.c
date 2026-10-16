@@ -89,7 +89,7 @@ void fn_3_4984(void) {
 }
 
 // .text:0x00004A38 size:0x558 mapped:0x80643ACC
-void fn_3_4A38(void) {
+void fn_3_4A38(s32 stadiumID) {
     return;
 }
 
@@ -127,7 +127,27 @@ void fn_3_53E0(u16* code, s16* x, s16* y, s16* w, s16* h, s16* page) {
 
 // .text:0x00005518 size:0x164 mapped:0x806445AC
 void fn_3_5518(void) {
-    return;
+    Mtx44 proj;
+    Mtx mv;
+    s16 table[7] = {0x49, 0x95, 0x1DB, 0x121, 0x1B2, 0xFB, 0};
+    StadiumTexEntry* e = &g_UNK_StadiumDetails._00[table[g_d_GameSettings.StadiumID]];
+    void* buf;
+
+    GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
+    GXSetScissor(0, 0, 640, 448);
+    C_MTXOrtho(proj, 0.0f, 480.0f, 0.0f, 640.0f, 0.5f, 1.5f);
+    GXSetProjection(proj, GX_ORTHOGRAPHIC);
+    GXSetCullMode(GX_CULL_NONE);
+    PSMTXIdentity(mv);
+    GXLoadPosMtxImm(mv, GX_PNMTX0);
+    GXSetCurrentMtx(GX_PNMTX0);
+    GXSetTexCopySrc(0, 0, 512, 480);
+    GXSetTexCopyDst(512, 480, GX_CTF_R4, GX_FALSE);
+    fn_3_4A38(g_d_GameSettings.StadiumID);
+    buf = e->texBuf;
+    GXDrawDone();
+    GXCopyTex(buf, GX_TRUE);
+    GXPixModeSync();
 }
 
 // .text:0x0000567C size:0x530 mapped:0x80644710

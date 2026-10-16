@@ -23,8 +23,13 @@ typedef struct _CollisionBox {
     AABB_Box* boundingBox;
 } CollisionBox;
 
+typedef struct _StadiumTexEntry {
+    /*0x00*/ void* texBuf;
+    /*0x04*/ u8 _04[0x20 - 0x4];
+} StadiumTexEntry; // size: 0x20
+
 typedef struct _UNK_StadiumCollision {
-    void* _00;
+    StadiumTexEntry* _00;
     artificial_padding(0, 0x714, void*);
     union {
         u32 unk_714;         // 0x714
