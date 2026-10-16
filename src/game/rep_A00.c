@@ -101,8 +101,40 @@ BOOL fn_3_22A20(void) {
 }
 
 // .text:0x00022ABC size:0x154 mapped:0x80661B50
-void fn_3_22ABC(void) {
-    return;
+s32 fn_3_22ABC(void) {
+    Scores* scores = &g_Scores;
+    BOOL result = FALSE;
+    s32 n;
+
+    n = 0;
+    if (g_Runners[1].rosterID != -1) {
+        n = 1;
+    }
+    if (g_Runners[2].rosterID != -1) {
+        n++;
+    }
+    if (g_Runners[3].rosterID != -1) {
+        n++;
+    }
+    if (__abs(scores->unkA6) <= 4 && n == 3 &&
+        scores->team[g_GameLogic.homeTeamBattingInd_fieldingTeam].score <= scores->team[g_GameLogic.awayTeamBattingInd_battingTeam].score) {
+        result = TRUE;
+    }
+    n = 0;
+    if (g_Runners[2].rosterID != -1) {
+        n = 1;
+    }
+    if (g_Runners[3].rosterID != -1) {
+        n++;
+    }
+    if (__abs(scores->unkA6) <= n && n > 0 &&
+        scores->team[g_GameLogic.homeTeamBattingInd_fieldingTeam].score <= scores->team[g_GameLogic.awayTeamBattingInd_battingTeam].score) {
+        result = TRUE;
+    }
+    if (result) {
+        return g_Batter.aiControlledInd ? 1 : 2;
+    }
+    return -1;
 }
 
 // .text:0x00022C10 size:0x10 mapped:0x80661CA4
