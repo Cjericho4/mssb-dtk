@@ -5,8 +5,46 @@
 static const f32 lbl_3_rodata_990 = 0.0f;
 
 // .text:0x00020CEC size:0x164 mapped:0x8065FD80
-void fn_3_20CEC(void) {
-    return;
+s32 fn_3_20CEC(f32 rate) {
+    f32 dx;
+    s32 frames;
+
+    if (g_Ball.pitchHangtimeCounter <= 1) {
+        return 0;
+    }
+    if (lbl_3_rodata_990 == rate) {
+        return 0;
+    }
+    dx = g_AiLogic.aiPitchCurveEndingX - g_Pitcher.pitchXPosition2;
+    if (g_AiLogic.pitchAIDelayCurveStart != 0) {
+        frames = g_Pitcher.frameWhenUnhittable - g_Ball.pitchHangtimeCounter;
+        if (frames <= 0) {
+            return 0;
+        }
+        rate *= frames / 2 * frames;
+        if (dx < lbl_3_rodata_990) {
+            if (-dx < rate) {
+                return 0;
+            }
+        } else if (dx < rate) {
+            return 0;
+        }
+        g_AiLogic.pitchAIDelayCurveStart = 0;
+    }
+    if (dx > 0.03f) {
+        if (g_AiLogic.aiPitchDirectionInput == -1) {
+            return 0;
+        }
+        g_AiLogic.aiPitchDirectionInput = 1;
+        return 1;
+    } else if (dx < -0.03f) {
+        if (g_AiLogic.aiPitchDirectionInput == 1) {
+            return 0;
+        }
+        g_AiLogic.aiPitchDirectionInput = -1;
+        return -1;
+    }
+    return 0;
 }
 
 // .text:0x00020E50 size:0x9C mapped:0x8065FEE4
