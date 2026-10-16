@@ -2,6 +2,8 @@
 #include "game/rep_1E08.h"
 #include "header_rep_data.h"
 #include "Dolphin/GX/GXTexture.h"
+#include "Dolphin/gx.h"
+#include <string.h>
 
 extern GXTexObj lbl_3_bss_9D20;
 extern u8 lbl_3_bss_9D40[0x40];
@@ -41,6 +43,7 @@ void fn_800B4CA0(AnimLevel1* anim, f32 val);
 void fn_800B4C04(AnimLevel1* anim, f32 val);
 void fn_800BDA24(AnimLevel1** anim);
 void fn_800BDA94(AnimLevel1** anim, Mtx mtx);
+AnimationStruct* fn_80011570(s32 arg0);
 
 // .text:0x000C0854 size:0x108 mapped:0x806FF8E8
 void fn_3_C0854(void) {
@@ -169,8 +172,36 @@ void fn_3_C0D10(void) {
 }
 
 // .text:0x000C0DD8 size:0x1B4 mapped:0x806FFE6C
-void fn_3_C0DD8(void) {
-    return;
+void fn_3_C0DD8(s32 arg0, GXTevStageID* stage, GXTexCoordID* coord, GXTexMapID* map, u8* arg4, u8* arg5) {
+    s32 j;
+    s32 id;
+    Mtx m;
+
+    id = fn_80011570(arg0)->unk254;
+    j = 1;
+    do {
+        if (id == lbl_3_data_17260[j].charIndex) {
+            break;
+        }
+    } while (j-- != 0);
+    if (j < 0) {
+        return;
+    }
+    GXLoadTexObj(&lbl_3_bss_9D20, *map);
+    memset(m, 0, sizeof(Mtx));
+    m[0][3] = 0.0f;
+    m[1][3] = j;
+    GXLoadTexMtxImm(m, *map * 3 + GX_TEXMTX0, GX_MTX2x4);
+    GXSetTexCoordGen2(*coord, GX_TG_MTX3X4, GX_TG_TEX0, *map * 3 + GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
+    GXSetTevOrder(*stage, *coord, *map, GX_COLOR0A0);
+    GXSetTevColorIn(*stage, GX_CC_ZERO, GX_CC_TEXC, GX_CC_TEXA, GX_CC_CPREV);
+    GXSetTevColorOp(*stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaIn(*stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevAlphaOp(*stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    (*stage)++;
+    (*map)++;
+    (*arg5)++;
+    (*arg4)++;
 }
 
 // .text:0x000C0F8C size:0x78 mapped:0x80700020
