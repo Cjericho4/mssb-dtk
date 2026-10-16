@@ -1167,8 +1167,17 @@ void fn_3_4D20C(void) {
 }
 
 // .text:0x0004DB84 size:0x90 mapped:0x8068CC18
-void fn_3_4DB84(void) {
-    return;
+BOOL fn_3_4DB84(s32 i) {
+    Fielder* f = &g_Fielders[i];
+
+    if (g_Ball.ballVelocityPercent.x == 0.0f && g_Ball.ballVelocityPercent.z == 0.0f) {
+        return FALSE;
+    }
+    if (-(g_Ball.ballVelocityPercent.x * g_Ball.AtBat_Contact_BallPos.x) - g_Ball.ballVelocityPercent.z * g_Ball.AtBat_Contact_BallPos.z +
+            (g_Ball.ballVelocityPercent.x * f->pos[0] + g_Ball.ballVelocityPercent.z * f->pos[2]) > 0.0f) {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x0004DC14 size:0x5A8 mapped:0x8068CCA8
