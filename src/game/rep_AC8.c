@@ -708,8 +708,41 @@ void fn_3_39858(void) {
 }
 
 // .text:0x00039DC4 size:0xEC mapped:0x80678E58
+static inline void clearFielderAction(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    if (idx != -1) {
+        f->unk1D3 = 0;
+        if (lbl_3_data_3C40.unk0 >= 0) {
+            g_FieldingLogic.unk_F8[idx] = lbl_3_data_3C40.unk0;
+        }
+        f->unk1D5 = 0;
+        f->unk1D6 = 0;
+        f->unk1A4 = 0;
+        f->unk1AC = 0;
+        f->unk1FF = 0;
+    }
+}
+
 void fn_3_39DC4(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 9; i++) {
+        g_FieldingLogic.unk_F8[i] = 0;
+        clearFielderAction(i);
+        g_Fielders[i].unk20 = 10000.0f;
+        g_Fielders[i].unk24 = 0.0f;
+    }
+    g_FieldingLogic.unkB0 = -1;
+    g_FieldingLogic.unkB2 = -1;
+    g_FieldingLogic.unkB4 = -1;
+    g_FieldingLogic.unkBE = -1;
+    g_FieldingLogic.unk139 = 0;
+    for (i = 0; i < 4; i++) {
+        g_FieldingLogic.unkD0[i] = -1;
+        g_FieldingLogic.unk101[i] = 0;
+    }
+    fn_3_37610(120);
 }
 
 // .text:0x00039EB0 size:0x34C mapped:0x80678F44

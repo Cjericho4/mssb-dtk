@@ -206,7 +206,8 @@ void fn_3_530EC(int index);
 int fn_3_53130(s32 temp);
 void fn_3_5372C(void);
 typedef struct {
-    u8 _pad[0x70];
+    s32 unk0;
+    u8 _pad4[0x70 - 0x4];
     s32 unk70;
     u8 _pad74[0x98 - 0x74];
     s32 unk98;
