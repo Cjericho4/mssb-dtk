@@ -311,8 +311,40 @@ void fn_3_1320BC(void) {
 }
 
 // .text:0x001323CC size:0x11C mapped:0x80771460
+static inline void barrelSettle(s32 idx) {
+    BB_barrelStruct* b = &g_Minigame.barrels[idx];
+    VecXYZ pos;
+    f32 desiredY;
+
+    g_Minigame.barrels[idx].currentPos.y += lbl_3_data_21770[1];
+    if (g_Minigame.barrels[idx].currentPos.y < (desiredY = g_Minigame.barrels[idx].desiredPos.y)) {
+        b->currentPos.y = desiredY;
+        if (b->posAtStartOfTurn.y != b->desiredPos.y) {
+            pos.x = b->currentPos.x;
+            pos.y = b->currentPos.y;
+            pos.z = b->currentPos.z;
+            pos.y = -pos.y;
+            pos.z -= 1.0f;
+            if (b->currentPos.y <= 0.0f) {
+                fn_8004C108(&pos, 1);
+                fn_3_90064(0x2E4);
+            } else {
+                fn_8004C108(&pos, 0);
+                fn_3_90064(0x2E5);
+            }
+        }
+        b->barrelState = 2;
+    }
+}
+
 void fn_3_1323CC(void) {
-    return;
+    u32 i;
+
+    for (i = 0; i < 15; i++) {
+        if (g_Minigame.barrels[i].barrelState == 1) {
+            barrelSettle(i);
+        }
+    }
 }
 
 // .text:0x001324E8 size:0x9F4 mapped:0x8077157C
