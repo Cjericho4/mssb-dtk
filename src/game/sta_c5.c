@@ -13,6 +13,7 @@
 #include "Dolphin/GX/GXBump.h"
 #include "game/m_sound.h"
 #include "game/rep_3880.h"
+#include "game/gap_B7EF0.h"
 
 // .text:0x000EDFAC size:0x110
 void fn_3_EDFAC(void) {
@@ -698,8 +699,47 @@ void fn_3_F4D00(StaC5DriftObj* obj) {
 }
 
 // .text:0x000F4DAC size:0x210 mapped:0x80733E40
+extern u8 lbl_3_bss_B21F;
+extern u8 lbl_3_bss_B220;
+
 void fn_3_F4DAC(void) {
-    return;
+    Vec v;
+    Vec n;
+    Vec ref = {0.0f, 0.0f, 1.0f};
+    u8 step = 100 / lbl_3_bss_B220;
+    u8 i = 0;
+    f32 mag;
+    f32 ang;
+    f32 t;
+    u8 r;
+    StadiumObjectElem* obj;
+
+    v.x = g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x;
+    v.y = 0.0f;
+    v.z = g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z;
+    PSVECNormalize(&v, &n);
+    mag = PSVECMag(&v);
+    ang = 57.29578f * (f32)acos(PSVECDotProduct(&n, &ref));
+    if (ang < 18.0f) {
+        r = fn_3_B7F70(100);
+        while (r / step) {
+            step += 100 / lbl_3_bss_B220;
+            i++;
+        }
+        obj = &lbl_3_common_bss_350E4[0].src[i + lbl_3_bss_B21F];
+    } else if (n.x < 0.0f) {
+        obj = &lbl_3_common_bss_350E4[0].src[lbl_3_bss_B21F];
+    } else {
+        obj = &lbl_3_common_bss_350E4[0].src[lbl_3_bss_B21F + 1];
+    }
+    t = ang / 45.0f;
+    if (!(mag > 90.0 * (1.0 - t) + 73.0f * t)) {
+        if (mag > 52.0f) {
+            obj->unkC4 = 1;
+        } else {
+            obj->unkC4 = 2;
+        }
+    }
 }
 
 // .text:0x000F4FBC size:0x710 mapped:0x80734050
