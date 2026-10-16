@@ -114,9 +114,42 @@ void fn_3_12A3F0(void) {
     return;
 }
 
+extern s32 lbl_3_data_9D94;
+extern u8 lbl_3_data_9EBC[][8];
+
 // .text:0x0012A6C4 size:0x24C mapped:0x80769758
 void fn_3_12A6C4(void) {
-    return;
+    DrawingSceneStruct* scene;
+    MiniGameStruct* mg;
+    s32 i;
+
+    (scene = lbl_803CC1B8)->fielderIndex = 0;
+    fn_80034E20(scene, &lbl_3_data_9D94);
+    if (g_d_GameSettings.GameModeSelected == 7) {
+        scene->fielderIndex = 1;
+        lbl_80371C30[scene->unkIndex + 1].obj->unk64 = 0x30;
+        lbl_80371C30[scene->unkIndex + 7].obj->flags &= ~2;
+    }
+    i = 0;
+    lbl_80371C30[(s32)(scene->unkIndex + 4)].obj->unk72 = lbl_3_data_9EBC[scene->fielderIndex][0];
+    mg = &g_Minigame;
+    lbl_80371C30[(s32)(scene->unkIndex + 5)].obj->unk72 = lbl_3_data_9EBC[scene->fielderIndex][1];
+    lbl_80371C30[(s32)(scene->unkIndex + 6)].obj->unk72 = lbl_3_data_9EBC[scene->fielderIndex][2];
+    lbl_80371C30[(s32)(scene->unkIndex + 7)].obj->unk72 = lbl_3_data_9EBC[scene->fielderIndex][3];
+    lbl_80371C30[scene->unkIndex + 3].obj->unk72 = lbl_3_data_9EBC[scene->fielderIndex][4 + (s8)mg->_19E3];
+    for (; i < 4; i++) {
+        fn_800363D8(scene, i + 4, 1, 0x32, i + 4);
+        if (i > mg->_1A0E || i < mg->_1A0D) {
+            lbl_80371C30[i + (scene->unkIndex + 4)].obj->field_0x5C = 0x60000;
+        } else {
+            lbl_80371C30[i + (scene->unkIndex + 4)].obj->field_0x5C = 0;
+        }
+    }
+    fn_8003649C((s32)scene, 2, 1, 0x35, 1);
+    scene->unk18 = 0;
+    scene->unk1a = 0;
+    scene->unk_1C = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_3_12A3F0;
 }
 
 // .text:0x0012A910 size:0xE90 mapped:0x807699A4

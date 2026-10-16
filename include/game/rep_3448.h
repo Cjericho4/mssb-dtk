@@ -22,6 +22,8 @@ typedef struct {
     u8 field_0x67;   /* 0x67 */
     u8 field_0x68;
     u8 field_0x69;
+    u8 _pad6A[0x72 - 0x6A];
+    u16 unk72;       /* 0x72 */
 } Struct_80371C30_Inner;
 
 typedef struct {
