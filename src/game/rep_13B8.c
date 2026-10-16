@@ -5,6 +5,7 @@
 #include "game/gap_9CD90.h"
 #include "game/rep_140.h"
 #include "game/rep_18E8.h"
+#include "game/rep_1838.h"
 
 extern f32 lbl_3_rodata_1498;
 
@@ -257,9 +258,40 @@ void fn_3_833EC(void) {
     return;
 }
 
+typedef struct AiMashEntry {
+    /* 0x0 */ s16 minFrames;
+    /* 0x2 */ s16 unk2;
+    /* 0x4 */ s16 delay;
+    /* 0x6 */ s16 chance;
+} AiMashEntry; /* size: 0x8 */
+
+extern AiMashEntry lbl_3_data_1C58[];
+
 // .text:0x000835B0 size:0x164 mapped:0x806C2644
 void fn_3_835B0(void) {
-    return;
+    if (g_GameLogic._13E[g_GameLogic.homeTeamBattingInd_fieldingTeam] == 0) {
+        InputStruct* in = &g_Controls[g_GameLogic.teams[g_GameLogic.teamBatting]];
+        if (in->newButtonInput & 0xF00) {
+            g_Runners[0].newButtonThisFrame_forMashPurposes = 1;
+            g_Runners[1].newButtonThisFrame_forMashPurposes = 1;
+            g_Runners[2].newButtonThisFrame_forMashPurposes = 1;
+            g_Runners[3].newButtonThisFrame_forMashPurposes = 1;
+        }
+    } else if (g_AiLogic._44 > 0 &&
+               g_Ball.framesSinceHit >= lbl_3_data_1C58[g_GameLogic.AIDifficulty0Special3Weak[g_GameLogic.homeTeamBattingInd_fieldingTeam]].minFrames) {
+        if (g_AiLogic._77 != 0) {
+            g_AiLogic._77--;
+            return;
+        }
+        if (RandomInt_Game(100) < lbl_3_data_1C58[g_GameLogic.AIDifficulty0Special3Weak[g_GameLogic.homeTeamBattingInd_fieldingTeam]].chance) {
+            g_Runners[0].newButtonThisFrame_forMashPurposes = 1;
+            g_Runners[1].newButtonThisFrame_forMashPurposes = 1;
+            g_Runners[2].newButtonThisFrame_forMashPurposes = 1;
+            g_Runners[3].newButtonThisFrame_forMashPurposes = 1;
+            g_AiLogic._44--;
+        }
+        g_AiLogic._77 = lbl_3_data_1C58[g_GameLogic.AIDifficulty0Special3Weak[g_GameLogic.homeTeamBattingInd_fieldingTeam]].delay;
+    }
 }
 
 // .text:0x00083714 size:0xAAC mapped:0x806C27A8
