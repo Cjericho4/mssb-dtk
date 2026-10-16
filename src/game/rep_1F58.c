@@ -9,7 +9,7 @@ extern const f32 lbl_3_rodata_1FA8;
 
 typedef struct {
     u8 _pad0[0x14];
-    s32 unk14;     /* 0x14 */
+    u32 unk14;     /* 0x14 */
     s32 slot;      /* 0x18 */
     s32 charIndex; /* 0x1C */
     u8 active;     /* 0x20 */
@@ -113,7 +113,26 @@ void fn_3_C095C(RepC095CEntry* entry) {
 
 // .text:0x000C0AD8 size:0x174 mapped:0x806FFB6C
 void fn_3_C0AD8(void) {
-    return;
+    RepC0854Obj* obj = (RepC0854Obj*)lbl_803CC1B8;
+    AnimationStruct* anim = g_hugeAnimStruct.AnimationStructPtrs[obj->charIndex];
+
+    if (obj->active == 0 && anim != NULL) {
+        fn_800A7D4C(0, (BdcArrayElement*)&lbl_3_data_174A8[obj->slot][lbl_803CBBC0]);
+        lbl_3_data_174A8[obj->slot][lbl_803CBBC0].frames = obj->unk14;
+        lbl_3_data_174A8[obj->slot][lbl_803CBBC0].x = anim->unk34.x;
+        lbl_3_data_174A8[obj->slot][lbl_803CBBC0].y = anim->unk34.y;
+        lbl_3_data_174A8[obj->slot][lbl_803CBBC0].z = anim->unk34.z;
+        if (lbl_80366158._28 == 0) {
+            obj->unk14++;
+        }
+    } else {
+        lbl_3_data_174A0[obj->slot] = NULL;
+        fn_800B0A14_removeQueue();
+    }
+    if (obj->unk14 >= lbl_3_common_bss_35154.timer20.unk18) {
+        lbl_3_data_174A0[obj->slot] = NULL;
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x000C0C4C size:0x9C mapped:0x806FFCE0
