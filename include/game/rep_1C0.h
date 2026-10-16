@@ -51,7 +51,7 @@ void fn_3_42CC(void);
 void fn_3_4984(void);
 void fn_3_4A38(void);
 void fn_3_4F90(void);
-void fn_3_53E0(void);
+void fn_3_53E0(u16* code, s16* x, s16* y, s16* w, s16* h, s16* page);
 void fn_3_5518(void);
 void fn_3_567C(void);
 void fn_3_5BAC(void);

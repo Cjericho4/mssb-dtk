@@ -99,8 +99,30 @@ void fn_3_4F90(void) {
 }
 
 // .text:0x000053E0 size:0x138 mapped:0x80644474
-void fn_3_53E0(void) {
-    return;
+void fn_3_53E0(u16* code, s16* x, s16* y, s16* w, s16* h, s16* page) {
+    s32 v = *code;
+
+    if (v & 0x4000) {
+        return;
+    }
+    if (v & 0x8000) {
+        u16 rem;
+        v &= 0x7FFF;
+        *page = v / 2116;
+        rem = v % 2116;
+        *x = rem % 46;
+        *y = (rem / 46) * 22;
+        *x = *x * 22;
+        *w = 22;
+        *h = 22;
+    } else {
+        *x = v % 92;
+        *y = (v / 92) * 22;
+        *x = (*x % 2 + (*x / 2) * 2) * 11;
+        *w = 11;
+        *h = 22;
+        *page = 0;
+    }
 }
 
 // .text:0x00005518 size:0x164 mapped:0x806445AC
