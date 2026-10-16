@@ -1,4 +1,5 @@
 #include "game/rep_1200.h"
+#include "game/rep_1188.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "game/UnknownHomes_Game.h"
@@ -526,7 +527,17 @@ void fn_3_753E8(s32 param_1) {
 
 // .text:0x00075434 size:0x84 mapped:0x806B44C8
 void fn_3_75434(void) {
-    return;
+    fn_3_6EBB4(g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][0][0]);
+    g_Pitcher.pitcherActionState = 0;
+    g_Pitcher.currentStateFrameCounter = 0;
+    g_Pitcher.nPitchesThisAB = 0;
+    g_Pitcher.nPickoffAttempts = 0;
+    g_Pitcher.pitcher.x = lbl_3_data_446C.x;
+    g_Pitcher.pitcher.z = lbl_3_data_446C.z;
+    g_Pitcher.pitchDeliveryAnimationPlaying = 0;
+    if (g_Scores.highscore == 1) {
+        g_Pitcher.playStartOfGameAnimation = 1;
+    }
 }
 
 // .text:0x000754B8 size:0xA8 mapped:0x806B454C
