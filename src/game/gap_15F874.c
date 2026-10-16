@@ -70,7 +70,17 @@ void fn_3_15F9C0(void) {
 }
 
 // .text:0x0015FA58 size:0x12C mapped:0x8079EAEC
-void fn_3_15FA58(void) {
-    return;
+void fn_3_15FA58(s32 count, s32* values) {
+    QueueEntry* entry = fn_800B0A5C_insertQueue(fn_3_15F9C0, lbl_803CC1B8->priority);
+
+    lbl_3_common_bss_35154.unk_470 = 1;
+    lbl_3_common_bss_35154.unk_471 = 0;
+    lbl_3_common_bss_35154.unk_468 = 0;
+    lbl_3_common_bss_35154.unk_472 = 0;
+    while (count != 0) {
+        lbl_3_common_bss_35154.unk_473[lbl_3_common_bss_35154.unk_472++] = *values++;
+        count--;
+    }
+    entry->unk10 = lbl_3_data_27F10[1];
 }
 

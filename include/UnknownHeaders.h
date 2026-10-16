@@ -745,7 +745,8 @@ typedef struct CommonBss_35154 {
     /* 0x46C */ u8 _pad46C[0x470 - 0x46C];
     /* 0x470 */ u8 unk_470;
     /* 0x471 */ u8 unk_471;
-    /* 0x472 */ u8 _pad472[0x479 - 0x472];
+    /* 0x472 */ u8 unk_472;
+    /* 0x473 */ u8 unk_473[0x479 - 0x473];
     /* 0x479 */ u8 unk_479;
     /* 0x47A */ s16 unk_47A[2];
     /* 0x47E */ u8 _pad47E[0x480 - 0x47E];
