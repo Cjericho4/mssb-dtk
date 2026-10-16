@@ -86,6 +86,10 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_1048E0 | same-file static data addressed off one base reg (r31+0x4f44...); externs reload lis/addi — unfixable until data moves into the .c (.agent/attempts/fn_3_1048E0.c) |
 | fn_3_EECF4 | bss base kept in r30 for whole fn, mtx[0][0] via r30 and rest via &indMtx; separate statics sharing a compiler base — struct overlay can't reproduce (.agent/attempts/fn_3_EECF4.c) |
 | fn_3_F22FC | r29/r30 swap between `s8 idx` and `&g_Fielders[idx]`; all decl orders + inline tried (.agent/attempts/fn_3_F22FC.c + .headers.diff) |
+| fn_3_A2B6C | rep_18E8 file-static bss off one base reg, array sub-bases unfolded in target; overlay struct folds them (.agent/attempts/fn_3_A2B6C.c) |
+| fn_3_A2C9C | same as fn_3_A2B6C (.agent/attempts/fn_3_A2C9C.c) |
+| fn_3_1412BC | identical insns, saved-reg permutation only (i wants r26); decl order/loop forms tried (.agent/attempts/fn_3_1412BC.c) |
+| fn_3_90CB0 | target strength-reduces both inner loops to incrementing byte ptrs with mg copy in r29; MWCC emits add/lbzx (.agent/attempts/fn_3_90CB0.c) |
 
 **Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
 | fn_3_24EA0 | register allocation / scheduling (see git log) |

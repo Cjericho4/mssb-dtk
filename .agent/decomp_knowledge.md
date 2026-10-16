@@ -115,7 +115,20 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **PSVECScale**: header prototype is `(src, f32, dst)`; call as `PSVECScale(src, k, dst)` for the real `(src, dst, scale)` registers.
 *   **Callee reads an r4 the caller never sets**: pass the caller's own 2nd param through (fn_3_F1750 → fn_800B4A94).
 
+*   **Matrix locals**: element-wise `m[0][0] = 0.5f; ...` gives `stfs` runs; a brace initializer emits rodata + word copies (fn_3_C9C94).
+*   **`lbzx` into dest then `extsb rX,r0`**: wrap the read in a `static inline s8` getter (fn_3_C9B5C).
+*   **Unroll-by-4 with `srwi.`/`andi.` remainder**: `s32` count, `while (count != 0) { *p++; count--; }`; a `u32` count unrolls by 8 with `cmplwi` (fn_3_15FA58).
+*   **Only `li` regs swapped behind independent global stores**: brute-force the store order (fn_3_15FA58).
+*   **`lwzx rX,rX,rY` against an early-loaded table**: `T* e = &base[table[idx]];` at the declaration (fn_3_5518).
+*   **`clrlwi.` after a byte store then a test**: store to the global and re-read it (`g.f = x; if (g.f == 0)`) (fn_3_1F350, fn_3_DC5A4).
+*   **Shared else-body placed last**: `else if (a != b) { if (c) ... else ... } else { shared }` (fn_3_20064).
+*   **Two sequential loops**: separate counters `i`/`j` + decl-order brute force (fn_3_1637EC). `u8` locals compared with `cmpw` → `s32` (fn_3_163A7C).
+*   **Per-branch pointer on the first line of the branch** avoids strength reduction and an extra saved reg (fn_3_6BEA4).
+*   **`slwi`/`add`/`mulli 0xb` for `(x/2)*22 + (x%2)*11`**: write `(x % 2 + (x / 2) * 2) * 11` (fn_3_53E0).
+*   **Re-added `lbzx` index**: index the global array directly, no cached row pointer (fn_3_B5090).
+
 ### Known Unfixable Patterns (don't spend attempts)
+*   **File-static bss block off one base with array members** (rep_18E8 lbl_3_bss_17F8..1900): overlay struct works for scalars (sta_c0 9F38) but array sub-bases get folded; real `static` defs don't help under `-pool off` (fn_3_A2B6C, fn_3_A2C9C; also fn_3_EECF4, fn_3_1048E0).
 *   **Same-file static data off one base register** (`addi r4,r31,0x4f44` from `&lbl_3_data_1C0A8`): extern symbols reload `lis`/`addi` per use (fn_3_1048E0).
 *   **Adjacent-constant compares merged into a range check** (`== 9 || == 10` → `subi`/`cmplwi 1`) when the target keeps them separate (fn_3_B7CDC, fn_3_B7C2C). **Possible workaround** (worked for fn_3_5C418): compare as unsigned, `(u32)x == 1 || (u32)x == 2`, and write intended ranges as `(u8)(x - 0x13) <= 3`. Retry B7CDC/B7C2C with this.
 *   **Field offset `0x34` folded into the index of an `lwzx`** instead of the base (rep_3310: fn_3_119EE0, fn_3_119E30, fn_3_11881C, fn_3_11897C, fn_3_1194AC).
