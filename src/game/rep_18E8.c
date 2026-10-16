@@ -49,6 +49,7 @@ extern Bss1808 lbl_3_bss_1808;
 extern s32 lbl_3_bss_1858[];
 extern u32 lbl_3_bss_1800;
 extern s32 lbl_3_bss_181C;
+extern u32 lbl_3_bss_1824;
 
 // .text:0x000A1F3C size:0x10C mapped:0x806E0FD0
 s32 fn_3_A1F3C(void) {
@@ -312,7 +313,23 @@ void fn_3_A6ABC(void) {
 
 // .text:0x000A6D48 size:0x150 mapped:0x806E5DDC
 void fn_3_A6D48(void) {
-    return;
+    s32 i;
+    s32 base;
+
+    lbl_3_bss_1824 = 0;
+    for (i = 0; i < 4; i++) {
+        lbl_3_bss_1808.runnerIndex[i] = -1;
+    }
+    for (i = 3; i >= 0; i--) {
+        if (g_Runners[i].runnerOnFieldOrOutOrScored == 1) {
+            base = g_Runners[i].currentBase;
+            lbl_3_bss_1824 |= 1 << ((s32)g_Runners[i].fractionalBasesRan * 4);
+            if (lbl_3_bss_1808.runnerIndex[base] < 0 ||
+                g_Runners[lbl_3_bss_1808.runnerIndex[base]].baseStandingOn >= 0) {
+                lbl_3_bss_1808.runnerIndex[base] = i;
+            }
+        }
+    }
 }
 
 // .text:0x000A6E98 size:0x1A8 mapped:0x806E5F2C
