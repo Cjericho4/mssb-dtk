@@ -48,7 +48,42 @@ void fn_3_15EE2C(void) {
 
 // .text:0x0015F088 size:0x198 mapped:0x8079E11C
 void fn_3_15F088(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    Entry_80371C30* entries;
+    Struct_80371C30_Inner* obj;
+
+    if (g_GameLogic._125 != 10) {
+        if ((s8)lbl_3_common_bss_34C90.field_0x1DA == 0) {
+            lbl_80371C30[scene->unkIndex + 1].obj->field_0x68 = 1;
+            entries = &lbl_80371C30[2];
+            entries[scene->unkIndex].obj->field_0x68 = 4;
+            obj = entries[scene->unkIndex].obj;
+            if ((obj->field_0x5C >> 16) > 10) {
+                obj->field_0x5C = 0xA0000;
+            }
+        } else {
+            entries = &lbl_80371C30[1];
+            entries[scene->unkIndex].obj->field_0x68 = 4;
+            obj = entries[scene->unkIndex].obj;
+            if ((obj->field_0x5C >> 16) > 10) {
+                obj->field_0x5C = 0xA0000;
+            }
+            lbl_80371C30[scene->unkIndex + 2].obj->field_0x68 = 1;
+        }
+        if (lbl_3_common_bss_32724.unk_CE != 0) {
+            lbl_80371C30[scene->unkIndex].obj->field_0x68 = 4;
+            lbl_80371C30[scene->unkIndex + 3].obj->field_0x68 = 4;
+            lbl_80371C30[scene->unkIndex + 4].obj->flags &= ~2;
+            scene->unk1a_u16++;
+            if (scene->unk1a_u16 >= 0x2D) {
+                goto remove;
+            }
+        }
+        return;
+    }
+remove:
+    fn_80034CEC((u32)scene);
+    fn_800B0A14_removeQueue();
 }
 
 // .text:0x0015F220 size:0x160 mapped:0x8079E2B4
