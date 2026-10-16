@@ -358,13 +358,41 @@ void fn_3_A7EF8(void) {
 }
 
 // .text:0x000A8074 size:0x2C4 mapped:0x806E7108
-void fn_3_A8074(void) {
+void fn_3_A8074(s32 fielderIdx) {
     return;
 }
 
 // .text:0x000A8338 size:0x140 mapped:0x806E73CC
-void fn_3_A8338(void) {
-    return;
+void fn_3_A8338(s32 fielderIdx) {
+    FieldingLogic* fl = &g_FieldingLogic;
+    Fielder* fielder = &g_Fielders[fielderIdx];
+    s16 base = fl->unkCC;
+    s16 runner;
+
+    if (base >= 0 && base <= 3 && fielder->unk1F5 == base) {
+        fl->unkCC = -1;
+        return;
+    }
+    if (g_FieldingLogic.unkE2 == -1) {
+        runner = g_FieldingLogic.unkDE;
+        if (runner >= 0 && g_Runners[runner].runnerOnFieldOrOutOrScored != 1) {
+            g_FieldingLogic.unkDE = -1;
+            fl->unkCC = -1;
+            return;
+        }
+        g_FieldingLogic.unkE2 = base;
+        fn_3_A8074(fielderIdx);
+    }
+    base = fl->unkCC;
+    if (base >= 0 && base <= 3) {
+        if (g_FieldingLogic.unkDE == -1) {
+            fn_3_52F4C(g_Ball.fielderWBallIndex, lbl_3_data_4444[base].x, lbl_3_data_4444[base].z);
+        } else {
+            fn_3_52F4C(g_Ball.fielderWBallIndex, g_Runners[g_FieldingLogic.unkDE].position.x,
+                       g_Runners[g_FieldingLogic.unkDE].position.z);
+        }
+    }
+    fn_3_A3CC0();
 }
 
 // .text:0x000A8478 size:0x150 mapped:0x806E750C
