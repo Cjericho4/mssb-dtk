@@ -22,7 +22,8 @@ typedef struct Data170D8 {
 } Data170D8;
 extern Data170D8 lbl_3_data_170D8;
 typedef struct Lbl80366158_1E08 {
-    u8 _00[0x28];
+    u8 _00[0x27];
+    u8 _27; /* 0x27 */
     u8 _28; /* 0x28 */
 } Lbl80366158_1E08;
 extern Lbl80366158_1E08 lbl_80366158;

@@ -1004,7 +1004,11 @@ typedef struct CommonBss_32724 {
     /* 0xB5 */ u8 unk_B5;
     /* 0xB6 */ u8 unk_B6;
     /* 0xB7 */ u8 unk_B7;
-    /* 0xB8 */ u8 _padB8[0x06];
+    /* 0xB8 */ u8 _padB8;
+    /* 0xB9 */ u8 unk_B9;
+    /* 0xBA */ u8 _padBA;
+    /* 0xBB */ u8 unk_BB;
+    /* 0xBC */ u8 _padBC[0x02];
     /* 0xBE */ u8 unk_BE;
     /* 0xBF */ u8 unk_BF;
     /* 0xC0 */ u8 _padC0[0x03]; // Pad to 0xC3
@@ -1045,7 +1049,8 @@ typedef struct SoundConfig {
     u8 menuVolume;   /* 0x0 */
     u8 confirmVolume; /* 0x1 */
     u8 alertVolume;  /* 0x2 */
-    u8 _pad3[0x3];
+    u8 unk3;         /* 0x3 */
+    u8 _pad4[0x2];
     u8 volume;       /* 0x6 */
     u8 unk7;         /* 0x7 */
 } SoundConfig;
