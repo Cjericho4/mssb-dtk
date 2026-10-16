@@ -166,7 +166,31 @@ void fn_3_92CD8(DrawingSceneStruct* scene) {
 
 // .text:0x000933CC size:0x178 mapped:0x806D2460
 void fn_3_933CC(void) {
-    return;
+    DrawingSceneStruct* scene;
+
+    if ((scene = lbl_803CC1B8)->unk18 < 0xFFFE) {
+        scene->unk18++;
+    } else {
+        scene->unk18 = 0xFFFF;
+    }
+    if (lbl_3_common_bss_32724.someStatusInd == 0 && g_GameLogic.gameStatus == 0x13) {
+        fn_3_92CD8(scene);
+        if (scene->unk1a_u16 == 0 && (lbl_80371C30[scene->unkIndex].obj->field_0x5C >> 16) >= 0x15) {
+            lbl_80371C30[scene->unkIndex].obj->field_0x68 = 0;
+            lbl_80371C30[scene->unkIndex + 3].obj->field_0x68 = 0;
+            lbl_80371C30[scene->unkIndex + 4].obj->field_0x68 = 0;
+            scene->unk1a_u16 = 1;
+        }
+        if (scene->unk18 >= 0x1E && (scene->unk18 - 0x1E) % 27 == 0) {
+            if ((&scene->unk20_u16)[g_GameLogic.homeTeamBattingInd_fieldingTeam] < g_Scores.team[g_GameLogic.homeTeamBattingInd_fieldingTeam].score) {
+                (&scene->unk20_u16)[g_GameLogic.homeTeamBattingInd_fieldingTeam]++;
+            }
+        }
+    } else {
+        fn_80034CEC((u32)scene);
+        fn_800B0A14_removeQueue();
+        lbl_3_common_bss_32724.unk_C5 = 0;
+    }
 }
 
 // .text:0x00093544 size:0x144 mapped:0x806D25D8
