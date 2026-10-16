@@ -555,13 +555,44 @@ void fn_3_34450(void) {
 }
 
 // .text:0x00034A40 size:0x12E8 mapped:0x80673AD4
-void fn_3_34A40(void) {
+void fn_3_34A40(s32 idx) {
     return;
 }
 
 // .text:0x00035D28 size:0xF4 mapped:0x80674DBC
-void fn_3_35D28(void) {
-    return;
+void fn_3_35D28(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    if (g_Ball.framesSinceHit <= 0) {
+        return;
+    }
+    if (fn_3_53130(idx) != 0) {
+        return;
+    }
+    fn_3_34A40(idx);
+    fn_3_4207C(idx);
+    if (g_Ball.ballState == 0) {
+        return;
+    }
+    if (g_Ball.ballState == 3) {
+        return;
+    }
+    if (idx != -1) {
+        f->unk1D3 = 0xC;
+        if (lbl_3_data_3C40.unk60 >= 0) {
+            g_FieldingLogic.unk_F8[idx] = lbl_3_data_3C40.unk60;
+        }
+        f->unk1D5 = 0;
+        f->unk1D6 = 0;
+        f->unk1A4 = 0;
+        f->unk1AC = 0;
+        f->unk1FF = 0;
+    }
+    if (idx <= 5) {
+        f->unk1D5 = 3;
+    } else {
+        f->unk1D5 = 2;
+    }
 }
 
 // .text:0x00035E1C size:0x3BC mapped:0x80674EB0
@@ -1117,7 +1148,7 @@ void fn_3_41D78(void) {
 }
 
 // .text:0x0004207C size:0x7D4 mapped:0x80681110
-void fn_3_4207C(void) {
+void fn_3_4207C(s32 idx) {
     return;
 }
 
