@@ -338,7 +338,36 @@ void fn_3_DE308(void) {
 
 // .text:0x000DE4FC size:0x114 mapped:0x8071D590
 void fn_3_DE4FC(void) {
-    return;
+    s32 i;
+    s32 j;
+    s16 score;
+    s32 rank;
+
+    for (i = 0; i < 4; i++) {
+        g_Minigame.players._18E8[i] = 0;
+        g_Minigame.players._18EC[i] = 0;
+    }
+    for (i = 0; i < g_Minigame.miniGameNumberOfParticipants; i++) {
+        score = g_Minigame.miniGameCurrentPoints[i];
+        rank = 1;
+        for (j = 0; j < g_Minigame.miniGameNumberOfParticipants; j++) {
+            if (g_Minigame.miniGameCurrentPoints[j] > score) {
+                rank++;
+            }
+        }
+        g_Minigame.players._18E8[i] = rank;
+        g_Minigame.players._18EC[i] = rank;
+    }
+    for (i = 0; i < 4; i++) {
+        if (g_Minigame.players._18E8[i] > 1) {
+            break;
+        }
+    }
+    if (i >= 4 && g_Minigame.miniGameNumberOfParticipants > 1) {
+        g_Minigame.challenge_minigame_haven_tWonYetIndicator = 1;
+    } else {
+        g_Minigame.challenge_minigame_haven_tWonYetIndicator = 0;
+    }
 }
 
 // .text:0x000DE610 size:0x134 mapped:0x8071D6A4
