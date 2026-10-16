@@ -7,6 +7,8 @@
 #include "game/m_sound.h"
 #include <math.h>
 #include "Dolphin/GX/GXTexture.h"
+#include "Dolphin/GX/GXGeometry.h"
+#include "Dolphin/GX/GXTev.h"
 
 extern void changeScene(s32, s32);
 
@@ -29,6 +31,47 @@ typedef struct Rep3520Bss_B700 {
     /* 0x40 */ u8 texData[0x40];
 } Rep3520Bss_B700;
 extern Rep3520Bss_B700 lbl_3_bss_B700;
+
+// .text:0x00132EDC size:0x208 mapped:0x80771F70
+void fn_3_132EDC(s32 arg0, s32* stage, s32* coord, s32* map, u8* numTexGens, u8* numStages) {
+    Rep3520Bss_B700* bss = &lbl_3_bss_B700;
+    s32 v;
+    s32 i;
+
+    bss->counter += (lbl_80366158._28 == 0);
+    if (!(bss->counter & 1)) {
+        u32 off = fn_800247E4(0, 0, 4, 4);
+        u8* tex = bss->texData;
+        tex += off;
+        v = *tex;
+        v += lbl_3_data_26580 * 2;
+        if (v > 0xFF) {
+            v = 0xFF;
+        } else if (v < 0) {
+            v = 0;
+        }
+        tex = bss->texData;
+        for (i = 0; i < 32; i += 2) {
+            tex[i] = v;
+        }
+        DCFlushRange(bss->texData, 0x40);
+        if (v + lbl_3_data_26580 * 2 > 0xFF || v + lbl_3_data_26580 * 2 < 0) {
+            lbl_3_data_26580 *= -1;
+        }
+    }
+    GXLoadTexObj(&bss->texObj, *map);
+    GXSetTexCoordGen2(*coord, GX_TG_MTX3X4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+    GXSetTevOrder(*stage, *coord, *map, GX_COLOR_NULL);
+    GXSetTevColorIn(*stage, GX_CC_ZERO, GX_CC_TEXC, GX_CC_TEXA, GX_CC_CPREV);
+    GXSetTevColorOp(*stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaIn(*stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevAlphaOp(*stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    (*stage)++;
+    (*coord)++;
+    (*map)++;
+    (*numTexGens)++;
+    (*numStages)++;
+}
 
 // .text:0x001330E4 size:0x11C mapped:0x80772178
 void fn_3_1330E4(void) {

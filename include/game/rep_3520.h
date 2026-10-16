@@ -34,6 +34,7 @@ typedef struct Rep3520Ball {
 extern f32 lbl_3_data_21A64[9];
 extern s16 lbl_3_data_21A90[][4][2];
 
+void fn_3_132EDC(s32 arg0, s32* stage, s32* coord, s32* map, u8* numTexGens, u8* numStages);
 void fn_3_1330E4(void);
 void fn_3_133200(void);
 void fn_3_133320(void);
