@@ -1,5 +1,6 @@
 #include "game/rep_3520.h"
 #include "game/rep_1838.h"
+#include "game/rep_540.h"
 #include "UnknownHeaders.h"
 #include "game/UnknownHomes_Game.h"
 #include "header_rep_data.h"
@@ -838,8 +839,31 @@ void fn_3_13B9C4(void) {
 }
 
 // .text:0x0013BB30 size:0xC4 mapped:0x8077ABC4
+static inline void initMinigameTargetSpeeds(void) {
+    MinigameTargetSpeed* t = g_Minigame.targetSpeeds;
+    u8 strength;
+    u32 i;
+    f32 speed;
+
+    memset(g_Minigame._1D7C, 0, 0x78);
+    for (i = 0; i < 4; i++) {
+        strength = g_Minigame.players.aIStrength[i];
+        t->unk4 = -1;
+        if (RandomInt_Game(100) < lbl_3_data_21B88[strength]) {
+            speed = 3.0f;
+        } else {
+            speed = 1.5f;
+        }
+        t->speed = speed;
+        t++;
+    }
+}
+
 void fn_3_13BB30(void) {
-    return;
+    fn_3_F1DC();
+    initMinigameTargetSpeeds();
+    changeScene(1, 6);
+    fn_3_5A6D4(2);
 }
 
 // .text:0x0013BBF4 size:0xC4 mapped:0x8077AC88
