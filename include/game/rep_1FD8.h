@@ -50,7 +50,7 @@ void fn_3_C597C(void);
 struct C5CE0Arg;
 BOOL fn_3_C5CE0(struct C5CE0Arg* arg0);
 void fn_3_C5DDC(void);
-void fn_3_C625C(void);
+BOOL fn_3_C625C(struct C5CE0Arg* arg0);
 void fn_3_C63D0(void);
 void fn_3_C71CC(void);
 void fn_3_C7444(ActorObject* arg0);

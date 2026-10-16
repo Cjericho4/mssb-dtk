@@ -577,8 +577,40 @@ void fn_3_C5DDC(void) {
 }
 
 // .text:0x000C625C size:0x174 mapped:0x807052F0
-void fn_3_C625C(void) {
-    return;
+BOOL fn_3_C625C(C5CE0Arg* arg0) {
+    Vec pos;
+    Vec diff;
+    s32 stadium;
+    u8 vol;
+    u8 pan;
+    SND_VOICEID vid;
+
+    pos = arg0->pos;
+    if (g_Ball.ballState == 1) {
+        return FALSE;
+    }
+    if ((g_Ball.currentStarSwing2 == 11) | (g_Ball.currentStarSwing2 == 12)) {
+        return FALSE;
+    }
+    pos.y *= -1.0f;
+    PSVECSubtract((Vec*)&g_Ball.AtBat_Contact_BallPos, &pos, &diff);
+    if (PSVECMag(&diff) <= 2.6f) {
+        stadium = g_d_GameSettings.StadiumID;
+        if (g_d_GameSettings.GameModeSelected == 6) {
+            vol = lbl_3_data_84B8[0][2].vol;
+        } else {
+            vol = lbl_3_data_8404[stadium][2].vol;
+        }
+        vid = sndFXStartEx(lbl_3_data_81DC[stadium] + 2, vol, 0x3F, 0);
+        if (g_d_GameSettings.GameModeSelected == 6) {
+            pan = lbl_3_data_84B8[0][2].pan;
+        } else {
+            pan = lbl_3_data_8404[stadium][2].pan;
+        }
+        sndFXCtrl(vid, 0x5B, pan);
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x000C63D0 size:0xDFC mapped:0x80705464
