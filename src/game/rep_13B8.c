@@ -177,13 +177,43 @@ void fn_3_7F9C4(s32 runnerIdx) {
 }
 
 // .text:0x0007FA78 size:0x318 mapped:0x806BEB0C
-void fn_3_7FA78(void) {
-    return;
+s32 fn_3_7FA78(s32 idx) {
+    return 0;
 }
 
+extern s16 lbl_3_data_4C54[12];
+
 // .text:0x0007FD90 size:0x118 mapped:0x806BEE24
-void fn_3_7FD90(void) {
-    return;
+void fn_3_7FD90(s32 idx) {
+    InMemRunnerType* r = &g_Runners[idx];
+    s32 dir;
+
+    if (r->runningToDugoutInd != 0 && r->runningToDugoutStage != 0) {
+        return;
+    }
+    if (r->actionCode != 0) {
+        return;
+    }
+    if (r->framesSinceLastDirectionChange >= lbl_3_data_4C54[3] || (r->runningDirectionCode != 1 && r->runningDirectionCode != 3)) {
+        if (r->runningDirectionDesired != 0) {
+            if (g_GameLogic.secondaryGameMode == 6) {
+                if (r->runnerOnFieldOrOutOrScored == 1) {
+                    r->nextDirectionBeingProcessed = r->runningDirectionDesired;
+                }
+            } else {
+                if ((idx != 0 || r->nextBase != 1) && r->runnerOnFieldOrOutOrScored == 1) {
+                    r->nextDirectionBeingProcessed = r->runningDirectionDesired;
+                }
+                if (r->nextDirectionBeingProcessed == 3 && r->tagUpInd != 3 && r->baseStandingOn >= 0) {
+                    r->nextDirectionBeingProcessed = 0;
+                }
+            }
+        }
+    }
+    dir = fn_3_7FA78(idx);
+    if (dir != 0) {
+        r->nextDirectionBeingProcessed = dir;
+    }
 }
 
 // .text:0x0007FEA8 size:0x2C mapped:0x806BEF3C
@@ -631,7 +661,6 @@ void fn_3_870AC(void) {
 }
 
 extern f32 lbl_3_data_4C44[4];
-extern s16 lbl_3_data_4C54[12];
 
 // .text:0x000871BC size:0x110 mapped:0x806C6250
 void fn_3_871BC(void) {
