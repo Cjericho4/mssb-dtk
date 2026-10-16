@@ -183,8 +183,8 @@ void fn_3_E3044(void) {
 }
 
 // .text:0x000E3284 size:0x3E4 mapped:0x80722318
-void fn_3_E3284(CastleRotObj* obj) {
-    return;
+u8 fn_3_E3284(CastleRotObj* obj) {
+    return 0;
 }
 
 // .text:0x000E3668 size:0xFC mapped:0x807226FC
@@ -210,8 +210,35 @@ void fn_3_E3668(CastleRotObj* obj) {
 }
 
 // .text:0x000E3764 size:0x1B0 mapped:0x807227F8
-void fn_3_E3764(void) {
-    return;
+void fn_3_E3764(CastleRotObj* obj) {
+    obj->shrinkTimer++;
+    obj->scale += 1.0857142857142859 / obj->shrinkFrames;
+    CTRLSetScale(&obj->control, obj->scale, obj->scale, obj->scale);
+    obj->pos.y = -(1.2 * obj->scale);
+    CTRLSetTranslation(&obj->control, obj->pos.x, -obj->pos.y, obj->pos.z);
+    if (fn_3_E2B70(obj)) {
+        if (fn_3_E3284(obj)) {
+            return;
+        }
+    } else {
+        Vec fwd = {0.0f, 0.0f, -1.0f};
+        Vec diff;
+        f32 angle;
+
+        PSVECSubtract((Vec*)&g_Ball.AtBat_Contact_BallPos, (Vec*)&obj->pos, &diff);
+        diff.y = 0.0f;
+        PSVECNormalize(&diff, &diff);
+        PSVECNormalize(&fwd, &fwd);
+        angle = 57.29578f * (f32)acos(PSVECDotProduct(&diff, &fwd));
+        if (diff.x < 0.0f) {
+            angle = 360.0f - angle;
+        }
+        obj->curRotation = -angle;
+        CTRLSetRotation(&obj->control, 0.0f, obj->curRotation, 0.0f);
+    }
+    if (obj->shrinkTimer >= obj->shrinkFrames) {
+        obj->unkC4 = 2;
+    }
 }
 
 // .text:0x000E3914 size:0x274 mapped:0x807229A8
