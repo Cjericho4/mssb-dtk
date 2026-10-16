@@ -387,7 +387,7 @@ void fn_3_CFB44(void) {
 }
 
 // .text:0x000CFD58 size:0x374 mapped:0x8070EDEC
-void fn_3_CFD58(void) {
+void fn_3_CFD58(StaC2D00D0Obj* obj) {
     return;
 }
 
@@ -397,8 +397,43 @@ void fn_3_D00CC(void) {
 }
 
 // .text:0x000D00D0 size:0x1B0 mapped:0x8070F164
-void fn_3_D00D0(void) {
-    return;
+void fn_3_D00D0(Control* ctrl) {
+    StaC2D00D0Obj* obj = (StaC2D00D0Obj*)ctrl;
+    Vec pos;
+    Control* follow = obj->follow;
+    u8 state = obj->src->state;
+
+    if (state == 0) {
+        if (obj->flag90) {
+            obj->flag90 = 0;
+        }
+        if (obj->alpha != 0xFF) {
+            obj->alpha = 0xFF;
+        }
+        if (obj->handle != 0) {
+            fn_80033964(obj->handle);
+            obj->handle = 0;
+        }
+    } else {
+        if (!obj->flag90) {
+            obj->flag90 = 1;
+        }
+        if (obj->handle == 0) {
+            obj->handle = fn_80033A24(fn_3_CFB44, 0x80, 0, 0x1E, 0, 1);
+            if (obj->handle != 0) {
+                fn_3_CFD58(obj);
+            }
+        }
+        CTRLSetRotation(&obj->control, 0.0f, obj->src->rotY, 0.0f);
+        if (state == 3) {
+            obj->alpha -= 1.7f;
+            if (obj->alpha > 253.3f) {
+                obj->alpha = 0;
+            }
+        }
+    }
+    CTRLGetTranslation(follow, &pos.x, &pos.y, &pos.z);
+    CTRLSetTranslation(&obj->control, pos.x, pos.y, pos.z);
 }
 
 // .text:0x000D0280 size:0x4 mapped:0x8070F314

@@ -117,10 +117,31 @@ void fn_3_CF92C(void);
 void fn_3_CFA88(void);
 void fn_3_CFA8C(ActorObject* actor);
 void fn_3_CFAB4(StaC2Effect* effect, StaC2EffectParent* parent);
+typedef struct StaC2D00D0Src {
+    u8 _pad0[0xC0];
+    f32 rotY;                   /* 0xC0 */
+    u8 _padC4[0xD1 - 0xC4];
+    u8 state;                   /* 0xD1 */
+} StaC2D00D0Src;
+
+typedef struct StaC2D00D0Obj {
+    Control control;            /* 0x00 */
+    u8 _pad3C[0x90 - 0x3C];
+    u8 flag90 : 1;              /* 0x90 */
+    u8 flag90_rest : 7;
+    u8 _pad91;
+    u8 alpha;                   /* 0x92 */
+    u8 _pad93[0xA0 - 0x93];
+    StaC2D00D0Src* src;         /* 0xA0 */
+    Control* follow;            /* 0xA4 */
+    u32 handle;                 /* 0xA8 */
+} StaC2D00D0Obj;
+
 void fn_3_CFB44(void);
-void fn_3_CFD58(void);
+void fn_3_CFD58(StaC2D00D0Obj* obj);
+void fn_80033964(u32 handle);
 void fn_3_D00CC(void);
-void fn_3_D00D0(void);
+void fn_3_D00D0(Control* ctrl);
 void fn_3_D0280(void);
 void fn_3_D0284(void);
 void fn_3_D0490(void);
