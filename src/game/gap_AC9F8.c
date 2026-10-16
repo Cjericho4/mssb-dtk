@@ -9,6 +9,18 @@ extern u8 lbl_803CBC3C;
 void fn_3_BF158(void);
 void fn_3_BF1AC(void);
 #include "musyx/musyx.h"
+#include "game/rep_1838.h"
+
+typedef struct {
+    /* 0x0 */ s16 power;
+    /* 0x2 */ s16 verticalAngle;
+    /* 0x4 */ s16 horizontalAngle;
+} PracticeHitParams; /* size: 0x6 */
+extern PracticeHitParams lbl_3_data_FB08[10];
+extern PracticeHitParams lbl_3_data_FB44[10];
+extern PracticeHitParams lbl_3_data_FB80[10];
+extern PracticeHitParams lbl_3_data_FBBC[10];
+extern s16 lbl_3_data_FBF8[8];
 
 // .text:0x000AC9F8 size:0x100 mapped:0x806EBA8C
 void fn_3_AC9F8(void) {
@@ -381,7 +393,42 @@ void fn_3_B0AAC(void) {
 
 // .text:0x000B0B5C size:0x198 mapped:0x806EFBF0
 void fn_3_B0B5C(void) {
-    return;
+    PracticeStruct* practice = &g_Practice;
+    s32 idx;
+
+    if (practice->hitVariablesSetIndicator != 0) {
+        return;
+    }
+    if (++practice->_152 < lbl_3_data_FBF8[0]) {
+        return;
+    }
+    if (practice->practiceLevel == 0) {
+        idx = fn_3_9EE24(10);
+        g_Ball.Hit_HorizontalPower = lbl_3_data_FB08[idx].power;
+        g_Ball.Hit_VerticalAngle = lbl_3_data_FB08[idx].verticalAngle;
+        g_Ball.Hit_HorizontalAngle = lbl_3_data_FB08[idx].horizontalAngle;
+    } else if (practice->practiceLevel == 1) {
+        idx = fn_3_9EE24(10);
+        g_Ball.Hit_HorizontalPower = lbl_3_data_FB44[idx].power;
+        g_Ball.Hit_VerticalAngle = lbl_3_data_FB44[idx].verticalAngle;
+        g_Ball.Hit_HorizontalAngle = lbl_3_data_FB44[idx].horizontalAngle;
+    } else if (practice->practiceLevel == 2) {
+        idx = fn_3_9EE24(10);
+        g_Ball.Hit_HorizontalPower = lbl_3_data_FB80[idx].power;
+        g_Ball.Hit_VerticalAngle = lbl_3_data_FB80[idx].verticalAngle;
+        g_Ball.Hit_HorizontalAngle = lbl_3_data_FB80[idx].horizontalAngle;
+    } else if (practice->practiceLevel == 3) {
+        idx = fn_3_9EE24(10);
+        g_Ball.Hit_HorizontalPower = lbl_3_data_FBBC[idx].power;
+        g_Ball.Hit_VerticalAngle = lbl_3_data_FBBC[idx].verticalAngle;
+        g_Ball.Hit_HorizontalAngle = lbl_3_data_FBBC[idx].horizontalAngle;
+    }
+    practice->hitVariablesSetIndicator = 1;
+    if (g_Practice.maybeCommandData[0] < 0x7FFE) {
+        g_Practice.maybeCommandData[0]++;
+    } else {
+        g_Practice.maybeCommandData[0] = 0x7FFF;
+    }
 }
 
 // .text:0x000B0CF4 size:0x38 mapped:0x806EFD88
