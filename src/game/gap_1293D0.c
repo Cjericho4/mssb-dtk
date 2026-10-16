@@ -9,6 +9,7 @@
 #include "game/gap_AC9F8.h"
 #include "game/gap_1658F0.h"
 #include "game/rep_1770.h"
+#include "game/gap_157DB8.h"
 
 extern void fn_8004CC2C(void);
 extern void fn_8004D0F0(void);
@@ -79,8 +80,33 @@ void fn_3_129FF8(void) {
 }
 
 // .text:0x0012A2B8 size:0x138 mapped:0x8076934C
+extern s32 lbl_3_data_9ECC;
+
 void fn_3_12A2B8(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 level = g_d_GameSettings.miniGameLevels[g_Minigame.GameMode_MiniGame];
+    s32 i;
+
+    if (g_Minigame._190A != 0) {
+        level = 2;
+    }
+    fn_80034E20(scene, &lbl_3_data_9ECC);
+    for (i = 0; i < 4; i++) {
+        if (level >= i) {
+            fn_800363D8(scene, i + 2, 1, 0x6B, i);
+        } else {
+            fn_800363D8(scene, i + 2, 1, 0x6B, 4);
+        }
+    }
+    scene->unk_1C = 0;
+    if (lbl_3_common_bss_32724.unk_BF != 0) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0x160000;
+        scene->unk_1C = 2;
+    }
+    scene->unk18 = 0;
+    scene->unk1a = 0;
+    lbl_3_common_bss_32724.unk_BE = 1;
+    lbl_803CC1B8->aFunctionPointer = fn_3_129FF8;
 }
 
 // .text:0x0012A3F0 size:0x2D4 mapped:0x80769484
