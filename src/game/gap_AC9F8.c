@@ -738,7 +738,43 @@ void fn_3_B3288(void) {
 
 // .text:0x000B32B8 size:0x190 mapped:0x806F234C
 s32 fn_3_B32B8(void) {
-    return;
+    PracticeStruct* practice = &g_Practice;
+    InputStruct* controls = &g_Controls[practice->homeAway];
+
+    if (g_hugeAnimStruct.maybe_loadingBatterModel_State != 0) {
+        return 0;
+    }
+    if (g_hugeAnimStruct.maybe_relatedToLoadingBatter != 0) {
+        return 0;
+    }
+    if (practice->_186 != 0 || practice->guidedPracticeCompletionRelated != 0) {
+        return 0;
+    }
+    if (g_GameLogic.FrameCountOfCurrentPitch < 0x1E || lbl_8037169C._10 != 0) {
+        return 0;
+    }
+    if (practice->pauseMenuLoading != 0) {
+        lbl_80366158._28 = 1;
+        if (++practice->frames_sinceTimeCalled >= 0x3C) {
+            practice->pauseMenuLoading = 0;
+            practice->_19F = 1;
+            practice->frames_onPauseScreen = 0;
+            lbl_3_common_bss_34C90.field_0x1D2 = 0;
+            lbl_3_common_bss_34C90.field_0x1DA = 0;
+        }
+        return 1;
+    }
+    if (practice->practiceType_2 == 4 && g_Pitcher.pitchTotalTimeCounter > 0) {
+        return 0;
+    }
+    if (controls->newButtonInput & 0x1000) {
+        lbl_80366158._28 = 1;
+        fn_3_59918(0xE, 0);
+        practice->pauseMenuLoading = 1;
+        g_Practice.frames_sinceTimeCalled = 0;
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x000B3448 size:0x1D8 mapped:0x806F24DC

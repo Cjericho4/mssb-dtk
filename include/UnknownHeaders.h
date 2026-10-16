@@ -221,7 +221,9 @@ AnimLevel1** fn_800111D8(AnimationStruct* anim);
 u8 LoadModel(AnimationStruct* anim);
 
 typedef struct {
-    u8 _pad[0x12];
+    u8 _pad[0x10];
+    u8 _10;
+    u8 _11;
     u8 _12;
     u8 _13;
 } Lbl8037169C;
