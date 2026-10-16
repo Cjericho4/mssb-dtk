@@ -69,8 +69,30 @@ void fn_3_169984(void) {
 }
 
 // .text:0x00169D00 size:0x170 mapped:0x807A8D94
-void fn_3_169D00(void) {
-    return;
+void fn_3_169D00(KinokoSegment* segs, u32* count) {
+    KinokoSegment* cur;
+    KinokoSegment* prev;
+    u32 i;
+
+    i = 24;
+    cur = &segs[24];
+    for (; i != 0 && *count < 0x95; cur--, i--) {
+        if (cur->active != 0) {
+            prev = &segs[i - 1];
+            PSVECAdd(&cur->pos, &prev->pos, &lbl_3_bss_BAE0.quads[*count].center);
+            PSVECScale(&lbl_3_bss_BAE0.quads[*count].center, 0.5f, &lbl_3_bss_BAE0.quads[*count].center);
+            lbl_3_bss_BAE0.quads[*count].verts[0].pos = &prev->left;
+            lbl_3_bss_BAE0.quads[*count].verts[0].color = &prev->color;
+            lbl_3_bss_BAE0.quads[*count].verts[1].pos = &prev->right;
+            lbl_3_bss_BAE0.quads[*count].verts[1].color = &prev->color;
+            lbl_3_bss_BAE0.quads[*count].verts[2].pos = &cur->right;
+            lbl_3_bss_BAE0.quads[*count].verts[2].color = &cur->color;
+            lbl_3_bss_BAE0.quads[*count].verts[3].pos = &cur->left;
+            lbl_3_bss_BAE0.quads[*count].verts[3].color = &cur->color;
+            lbl_3_bss_BAE0.quads[*count].active = 1;
+            (*count)++;
+        }
+    }
 }
 
 // .text:0x00169E70 size:0x20C mapped:0x807A8F04
