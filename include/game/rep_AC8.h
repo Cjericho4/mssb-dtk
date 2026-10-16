@@ -119,7 +119,7 @@ void fn_3_3C220(s32 index);
 void fn_3_3C270(void);
 void fn_3_3C484(void);
 void fn_3_3C594(void);
-void fn_3_3CB8C(void);
+BOOL fn_3_3CB8C(s32 idx);
 void fn_3_3CCB0(void);
 void fn_3_3D304(void);
 void fn_3_3D6AC(void);

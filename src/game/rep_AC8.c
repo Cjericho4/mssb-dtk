@@ -1101,8 +1101,48 @@ void fn_3_3C594(void) {
 }
 
 // .text:0x0003CB8C size:0x124 mapped:0x8067BC20
-void fn_3_3CB8C(void) {
-    return;
+BOOL fn_3_3CB8C(s32 idx) {
+    Fielder* f;
+
+    if (g_Ball.AtBat_ContactResult > 1) {
+        return FALSE;
+    }
+    if (g_Ball.hitWallInd != 0) {
+        return FALSE;
+    }
+    if (g_FieldingLogic.unkBC >= 0) {
+        return FALSE;
+    }
+    if (g_Ball.AtBat_ContactResult == 0) {
+        if (g_Ball.landingSpotZoneAwayFromHome >= 1 && idx >= 6) {
+            if (g_Ball.landingSpotAngle < 0x380 && idx == 6) {
+                return FALSE;
+            }
+            if (g_Ball.landingSpotAngle > 0x480 && idx == 8) {
+                return FALSE;
+            }
+            goto set;
+        }
+    } else if (idx >= 6 && idx == g_FieldingLogic.unkB8) {
+        goto set;
+    }
+    return FALSE;
+set:
+    f = &g_Fielders[idx];
+    if (idx != -1) {
+        f->unk1D3 = 0x18;
+        if (lbl_3_data_3C40.actions[0x18].unk0 >= 0) {
+            g_FieldingLogic.unk_F8[idx] = lbl_3_data_3C40.actions[0x18].unk0;
+        }
+        g_FieldingLogic.unkBC = idx;
+        f->unk1D5 = 0;
+        f->unk1D6 = 0;
+        f->unk1A4 = 0;
+        f->unk1AC = 0;
+        f->unk1FF = 0;
+    }
+    g_FieldingLogic.unkBC = idx;
+    return TRUE;
 }
 
 // .text:0x0003CCB0 size:0x654 mapped:0x8067BD44
