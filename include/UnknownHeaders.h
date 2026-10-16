@@ -256,7 +256,9 @@ typedef struct HugeAnimEntry68 {
         /* 0x04 */ AnimLevel1* field_0x4;
         /* 0x04 */ f32 unk4;
     };
-    u8 _pad1[0x2C];         // 0x08-0x33
+    u8 _pad1[0x8];          // 0x08-0x0F
+    /* 0x10 */ u8 unk10;
+    u8 _pad11[0x23];        // 0x11-0x33
     AnimLevel1* unk34;      // offset 0x34, matches lwz r3, 0x34(r3)
     /* 0x38 */ s32 unk38;
     /* 0x3C */ u8 _pad3C[0x6];
