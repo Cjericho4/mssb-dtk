@@ -5,6 +5,7 @@
 #include "stl/mem.h"
 
 static KinokoState lbl_3_bss_BA00;
+s32 fn_8001B728(s32 index, s32 type, VecXYZ* out);
 
 // .text:0x0016917C size:0x2C0 mapped:0x807A8210
 void fn_3_16917C(void) {
@@ -59,8 +60,30 @@ void fn_3_16A07C(void) {
 }
 
 // .text:0x0016B488 size:0x12C mapped:0x807AA51C
-void fn_3_16B488(void) {
-    return;
+void fn_3_16B488(VecXYZ* out, s8 type) {
+    if (out == NULL) {
+        OSPanic("kinoko.c", 0x11C, "Ribbon Effect Pos Data None\n");
+    }
+    memset(out, 0, sizeof(VecXYZ));
+    if (fn_8001B728(lbl_3_data_28928.unk_19DC, type, out) == 0) {
+        switch (type) {
+        case 28:
+            fn_8001B728(lbl_3_data_28928.unk_19DC, 0x1E, out);
+            break;
+        case 32:
+            fn_8001B728(lbl_3_data_28928.unk_19DC, 0x22, out);
+            break;
+        case 7:
+            fn_8001B728(lbl_3_data_28928.unk_19DC, 0x5, out);
+            break;
+        case 18:
+            fn_8001B728(lbl_3_data_28928.unk_19DC, 0x13, out);
+            break;
+        case 24:
+            fn_8001B728(lbl_3_data_28928.unk_19DC, 0x19, out);
+            break;
+        }
+    }
 }
 
 // .text:0x0016B5B4 size:0x2D0 mapped:0x807AA648

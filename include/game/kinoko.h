@@ -33,7 +33,7 @@ void fn_3_169984(void);
 void fn_3_169D00(void);
 void fn_3_169E70(void);
 void fn_3_16A07C(void);
-void fn_3_16B488(void);
+void fn_3_16B488(struct _VecXYZ* out, s8 type);
 void fn_3_16B5B4(void);
 void fn_3_16B884(void);
 void fn_3_16C394(s8 arg0);
