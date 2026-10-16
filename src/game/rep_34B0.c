@@ -58,8 +58,47 @@ void fn_3_12F28C(void) {
 }
 
 // .text:0x0012F424 size:0x200 mapped:0x8076E4B8
-void fn_3_12F424(void) {
-    return;
+void fn_3_12F424(s32 idx, s16 delay, s32 force) {
+    s32 n;
+    s32 colour;
+
+    colour = g_Minigame.barrels[idx].barrelColour;
+    if (idx % 3 != 2) {
+        n = idx + 1;
+        if (g_Minigame.barrels[n].barrelState == 2 && n != g_Minigame.bB_bombBarrelID &&
+            (g_Minigame.barrels[n].barrelColour == colour || force != 0)) {
+            g_Minigame.barrels[n].barrelState = 3;
+            g_Minigame.barrels[n].animationCounter = 0;
+            g_Minigame.barrels[n].delayUntilBlownUp = delay;
+        }
+    }
+    if (idx % 3) {
+        n = idx - 1;
+        if (g_Minigame.barrels[n].barrelState == 2 && n != g_Minigame.bB_bombBarrelID &&
+            (g_Minigame.barrels[n].barrelColour == colour || force != 0)) {
+            g_Minigame.barrels[n].barrelState = 3;
+            g_Minigame.barrels[n].animationCounter = 0;
+            g_Minigame.barrels[n].delayUntilBlownUp = delay;
+        }
+    }
+    if (idx / 3 > 0) {
+        n = idx - 3;
+        if (g_Minigame.barrels[n].barrelState == 2 && n != g_Minigame.bB_bombBarrelID &&
+            (g_Minigame.barrels[n].barrelColour == colour || force != 0)) {
+            g_Minigame.barrels[n].barrelState = 3;
+            g_Minigame.barrels[n].animationCounter = 0;
+            g_Minigame.barrels[n].delayUntilBlownUp = delay;
+        }
+    }
+    if (idx / 3 < 4) {
+        n = idx + 3;
+        if (g_Minigame.barrels[n].barrelState == 2 && n != g_Minigame.bB_bombBarrelID &&
+            (g_Minigame.barrels[n].barrelColour == colour || force != 0)) {
+            g_Minigame.barrels[n].barrelState = 3;
+            g_Minigame.barrels[n].animationCounter = 0;
+            g_Minigame.barrels[n].delayUntilBlownUp = delay;
+        }
+    }
 }
 
 // .text:0x0012F624 size:0x3B0 mapped:0x8076E6B8
