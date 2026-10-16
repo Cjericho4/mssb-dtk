@@ -80,6 +80,7 @@ typedef struct StadiumFileHeader {
     u8 _pad[0x0C];
     u32 field_0x0C;   // self-relative offset to sub-object
     u32 field_0x10;   // self-relative offset to sub-object
+    u32 field_0x14;   // self-relative offset to sub-object
 } StadiumFileHeader;
 struct ACTBone;
 struct ActLayout;

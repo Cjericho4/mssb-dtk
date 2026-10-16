@@ -7,6 +7,7 @@
 #include "game/particle_spawn.h"
 #include "game/gap_16C410.h"
 #include "musyx/musyx.h"
+#include "game/sta_c5.h"
 
 extern f32 lbl_3_rodata_21F0;
 extern u32 lbl_3_bss_9D84;
@@ -38,7 +39,6 @@ extern Control* lbl_3_bss_9D94;
 extern u8 lbl_803CBBC0;
 extern CameraSlot_17804 lbl_3_data_17804[];
 extern CameraMtx_52768* fn_80052768(s32 arg0);
-extern void fn_800A7D4C(s32 arg0, CameraSlot_17804* slot);
 
 // .text:0x000C1964 size:0x10 mapped:0x807009F8
 void fn_3_C1964(void) {
@@ -120,9 +120,62 @@ void fn_3_C23E0(void) {
     }
 }
 
+typedef struct {
+    u8 _pad0[0x60];
+    s16 state; /* 0x60 */
+} StadiumSub14;
+
+typedef struct {
+    Vec lightDir; /* 0x00 */
+    u8 _padC[0x51E4 - 0xC];
+} CharLightingOut;
+
+extern u16 lbl_800F7478[][0x16];
+extern CharLightingOut lbl_80367318;
+extern u16 lbl_3_data_177F8[6];
+extern u32 lbl_3_data_177F4;
+void fn_80023B90(u16* input, CharLightingOut* output);
+void fn_800BEBCC(s32 index, Vec v);
+
 // .text:0x000C24A0 size:0x1A4 mapped:0x80701534
 void fn_3_C24A0(void) {
-    return;
+    StadiumFileHeader* sfh;
+    Vec dir;
+    s16 t;
+    u8 alpha;
+
+    lbl_803CC1B8->loadingState--;
+    t = lbl_803CC1B8->loadingState;
+    if (t == 0) {
+        fn_800B0A14_removeQueue();
+        fn_80023B90(lbl_800F7478[g_d_GameSettings._54], &lbl_80367318);
+        sfh = g_hugeAnimStruct.stadiumFileHeaderPointer;
+        if (sfh != NULL) {
+            ((StadiumSub14*)((u8*)sfh + sfh->field_0x14))->state = 2;
+        }
+    } else {
+        if (t < 12) {
+            alpha = (t << 7) / 12;
+        } else {
+            alpha = 0x80;
+        }
+        fn_80023B90(lbl_3_data_177F8, &lbl_80367318);
+        sfh = g_hugeAnimStruct.stadiumFileHeaderPointer;
+        if (sfh != NULL) {
+            ((StadiumSub14*)((u8*)sfh + sfh->field_0x14))->state = 3;
+        }
+        lbl_803C5090.unk1D = 0xB;
+        lbl_803C5090.unk0 = 1.0f;
+        lbl_803C5090.unk14 = 0x1C0;
+        lbl_803C5090.unk17 = alpha;
+        lbl_803C5090.unk19 = lbl_3_data_177F4;
+        lbl_803C5090.unk18 = 1;
+    }
+    dir.x = -lbl_80367318.lightDir.x;
+    dir.y = -lbl_80367318.lightDir.y;
+    dir.z = -lbl_80367318.lightDir.z;
+    PSVECNormalize(&dir, &dir);
+    fn_800BEBCC(0, dir);
 }
 
 // .text:0x000C2644 size:0x330 mapped:0x807016D8

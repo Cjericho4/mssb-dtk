@@ -161,7 +161,14 @@ typedef struct StaC5ActorHolder {
 extern StaC5ActorHolder* lbl_3_bss_B55C;
 
 typedef struct Lbl803C5090 {
-    /* 0x00 */ u8 _pad0[0x1D];
+    /* 0x00 */ f32 unk0;
+    /* 0x04 */ u8 _pad4[0x14 - 0x4];
+    /* 0x14 */ s16 unk14;
+    /* 0x16 */ u8 _pad16;
+    /* 0x17 */ u8 unk17;
+    /* 0x18 */ u8 unk18;
+    /* 0x19 */ u8 unk19;
+    /* 0x1A */ u8 _pad1A[0x1D - 0x1A];
     /* 0x1D */ u8 unk1D;
     /* 0x1E */ u8 _pad1E[0x20 - 0x1E];
 } Lbl803C5090;
