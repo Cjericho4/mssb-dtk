@@ -124,3 +124,31 @@ BOOL fn_3_163BD4(void) {
     }
     return ret;
 }
+
+// .text:0x00163D34 size:0x160 mapped:0x807A2DC8
+void fn_3_163D34(void) {
+    s16 ids[9];
+    ChallengeSaveData* tracker;
+    ScoutFlagPair* pairs;
+    u8 captain;
+    u8 difficulty;
+    s32 i;
+    s32 j;
+    ChallengeTrackingStruct* m;
+    tracker = &starMissionCompletionTracker;
+    pairs = lbl_3_common_bss_37400.scoutFlags;
+    captain = tracker->challengeCaptain;
+    difficulty = tracker->challengeDifficulty;
+    for (i = 0; i < 9; i++) {
+        ids[i] = inMemRoster[1][i].stats.CharID;
+    }
+    for (j = 0; j < 9; j++) {
+        if (ids[j] != -1) {
+            m = &tracker->missions[ids[j]];
+            if (m->scoutFlagPointer->flags[difficulty][captain] != 0) {
+                pairs[j].oldFlags = m->scoutFlagsAchieved;
+                pairs[j].newFlags = m->scoutFlagPointer->flags[difficulty][captain];
+            }
+        }
+    }
+}
