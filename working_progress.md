@@ -4,7 +4,7 @@
 **Source of truth:** Always follow `queue.log`. If this file disagrees with `queue.log`, `queue.log` wins.
 **Strategy:** Work through functions listed in `queue.log` (plain entries at the bottom, after all COMPLETED/NONMATCHING lines)
 **Queue file:** `queue.log`
-**Next function to attempt:** queue is empty; continue smallest never-attempted (score_functions.py filtered against queue.log + this file's tables). Next up: fn_3_BC54, fn_3_3D6AC, fn_3_3F124, fn_3_7EBD4 (+ fn_3_12F9D4 fixed).
+**Next function to attempt:** queue is empty; continue smallest never-attempted (score_functions.py filtered against queue.log + this file's tables). Next up: fn_3_BC54, fn_3_3D6AC, fn_3_3F124, fn_3_7EBD4. 2026-10-16 solo batches: 25/30, 45/50 (+ fn_3_12F9D4 fixed), 4/4.
 
 To find the next function: look for the first plain entry (not prefixed with COMPLETED/NONMATCHING/SKIPPED) in `queue.log` that hasn't been committed yet.
 
