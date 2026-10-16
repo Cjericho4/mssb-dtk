@@ -269,8 +269,23 @@ void fn_3_2DAC4(void) {
 }
 
 // .text:0x0002DCF4 size:0xC0 mapped:0x8066CD88
-void fn_3_2DCF4(void) {
-    return;
+void fn_3_2DCF4(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    if (g_Ball.framesSinceHit > 0 && g_Ball.framesSinceHit >= f->unk1D2 && fn_3_53130(idx) == 0) {
+        fn_3_447C4(idx);
+        if (idx != -1) {
+            f->unk1D3 = 0x1B;
+            if (lbl_3_data_3C40.unkD8 >= 0) {
+                g_FieldingLogic.unk_F8[idx] = lbl_3_data_3C40.unkD8;
+            }
+            f->unk1D5 = 0;
+            f->unk1D6 = 0;
+            f->unk1A4 = 0;
+            f->unk1AC = 0;
+            f->unk1FF = 0;
+        }
+    }
 }
 
 // .text:0x0002DDB4 size:0x668 mapped:0x8066CE48
@@ -1083,7 +1098,7 @@ void fn_3_433E0(void) {
 }
 
 // .text:0x000447C4 size:0xBD0 mapped:0x80683858
-void fn_3_447C4(void) {
+void fn_3_447C4(s32 idx) {
     return;
 }
 
