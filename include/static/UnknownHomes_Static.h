@@ -160,7 +160,8 @@ typedef struct Camera {
     /* 0x2898 */ f32 unk2898;
     /* 0x289C */ s16 unk289C;
     /* 0x289E */ s16 unk289E;
-    /* 0x28A0 */ u8 _pad28A0[0x28A7 - 0x28A0];
+    /* 0x28A0 */ u8 _pad28A0[0x28A6 - 0x28A0];
+    /* 0x28A6 */ u8 unk28A6;
     /* 0x28A7 */ u8 unk28A7;
     /* 0x28A8 */ u8 unk28A8;
 } Camera;

@@ -1072,9 +1072,46 @@ void fn_3_1CBCC(void) {
     g_pCamera->unk_E3 = 0;
 }
 
+static inline void resetCam_1C0B0(void) {
+    f32 f1 = 0.0f;
+    f32 f0;
+
+    g_pCamera->unk_30 = f1;
+    f0 = 1.0f;
+    g_pCamera->unk_34 = f1;
+    g_pCamera->unk_38 = f1;
+    g_pCamera->unk_C0 = f1;
+    g_pCamera->unk_D0 = f0;
+    g_pCamera->unk_E2 = 0;
+    g_pCamera->unk_E0 = -1;
+    g_pCamera->unk_D4 = f1;
+    g_pCamera->unk_D8 = f1;
+    g_pCamera->unk_DC = f1;
+    g_pCamera->unk_E3 = 0;
+}
+
 // .text:0x0001CCC8 size:0x1C8 mapped:0x8065BD5C
 void fn_3_1CCC8(void) {
-    return;
+    g_pCamera = (Camera*)&g_Camera;
+    g_pCamera->unk28A6 = 0;
+    g_pCamera->unk0 = 0;
+    g_pCamera->unk287C = 0.0f;
+    g_pCamera->unk2880 = 0.0f;
+    g_pCamera->unk283E = 0;
+    g_GameLogic.sceneID = 1;
+    if (g_d_GameSettings.GameModeSelected == 2 && g_Practice.instructionNumber >= 0) {
+        g_pCamera->unk28A7 = lbl_3_data_A38[1];
+    } else {
+        g_pCamera->unk28A7 = lbl_3_data_A38[0];
+    }
+    g_pCamera->unk118 = 0;
+    g_pCamera->unk11C = 0;
+    resetCam_1C0B0();
+    resetCam_1C0B0();
+    g_Camera.unk2818 = 0;
+    g_Camera.unk2819 = 0;
+    fn_3_106BA0();
+    fn_3_FC448();
 }
 
 // .text:0x0001CE90 size:0x9DC mapped:0x8065BF24
