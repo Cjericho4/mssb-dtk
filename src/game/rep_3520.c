@@ -514,9 +514,45 @@ void fn_3_13802C(void) {
     return;
 }
 
+extern s16 lbl_3_data_21AD0[][4];
+extern u8 lbl_3_bss_B781;
+
 // .text:0x001382E0 size:0x168 mapped:0x80777374
-void fn_3_1382E0(void) {
-    return;
+static inline void resetBall1382E0(Rep3520Ball* ball) {
+    u32 idx = (u32)g_Minigame._17C0 / 60 / 20;
+    s32 base;
+    s32 r;
+
+    ball->state3D = 0;
+    ball->frames3A = 0;
+    base = lbl_3_data_21A90[g_Minigame.soloMinigameDifficulty][idx][0];
+    r = fn_3_9EE24((lbl_3_data_21A90[g_Minigame.soloMinigameDifficulty][idx][1] - base) * 60);
+    ball->timer38 = base * 60 + r;
+}
+
+void fn_3_1382E0(Rep3520Ball* ball) {
+    u32 idx;
+
+    idx = (u32)g_Minigame._17C0 / 60 / 20;
+    if (g_Minigame._72A != 0) {
+        resetBall1382E0(ball);
+        return;
+    }
+    if (ball->frames3A < 0x7FFE) {
+        ball->frames3A++;
+    } else {
+        ball->frames3A = 0x7FFF;
+    }
+    if (idx > 3) {
+        idx = 3;
+    }
+    if (ball->frames3A / 60 >= lbl_3_data_21AD0[lbl_3_bss_B781][idx]) {
+        ball->vel.z = 0.0f;
+        ball->vel.x = 0.0f;
+        ball->vel.y = -lbl_3_data_21A64[1];
+        ball->state3D = 2;
+        ball->frames3A = 0;
+    }
 }
 
 // .text:0x00138448 size:0x6C mapped:0x807774DC

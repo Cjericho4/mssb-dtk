@@ -86,7 +86,7 @@ void fn_3_137CF8(Rep3520Ball* ball);
 void fn_3_137DE4(Rep3520Ball* ball);
 void fn_3_137F14(Rep3520Ball* ball);
 void fn_3_13802C(void);
-void fn_3_1382E0(void);
+void fn_3_1382E0(Rep3520Ball* ball);
 typedef struct {
     u8 _pad0[0x38];
     s16 maxCount;   /* 0x38 */
