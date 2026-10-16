@@ -219,6 +219,22 @@ s32 fn_3_9E368(s32* weights, s32 count) {
 
 // .text:0x0009E5A0 size:0x234 mapped:0x806DD634
 s32 fn_3_9E5A0(u8* weights, s32 count) {
+    s32 local[10];
+    s32 total = 0;
+    s32 r;
+    s32 i;
+
+    for (i = 0; i < count; i++) {
+        local[i] = weights[i];
+        total += local[i];
+    }
+    r = randomIntInline(total);
+    for (i = 0; i < count; i++) {
+        if (r < local[i]) {
+            return i;
+        }
+        r -= local[i];
+    }
     return 0;
 }
 
