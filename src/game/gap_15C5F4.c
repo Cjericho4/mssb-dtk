@@ -1,4 +1,8 @@
 #include "game/gap_15C5F4.h"
+#include "game/gap_AC9F8.h"
+#include "game/rep_16B8.h"
+
+extern void fn_8004D0F0(void);
 
 // .text:0x0015C5F4 size:0x44 mapped:0x8079B688
 void fn_3_15C5F4(void) {
@@ -89,6 +93,30 @@ void fn_3_15F3C4(void) {
 
 // .text:0x0015F410 size:0x164 mapped:0x8079E4A4
 void fn_3_15F410(void) {
-    return;
+    if (g_GameLogic._125 < TRANSITION_CALCULATION_TYPE_3) {
+        return;
+    }
+    if (g_GameLogic._125 == TRANSITION_CALCULATION_TYPE_3) {
+        lbl_3_common_bss_32724.unkCF = g_Scores.highscore;
+        lbl_3_common_bss_32724.unkD0 = g_Scores.unkAD;
+        fn_800B0A5C_insertQueue(fn_3_15F3C4, 2);
+    }
+    if (g_GameLogic._125 == TRANSITION_CALCULATION_TYPE_4 && g_GameLogic.FrameCountOfCurrentAtBat_Copy == 1) {
+        fn_800B0A5C_insertQueue(fn_3_15C638, 2);
+    }
+    if (g_GameLogic._125 == TRANSITION_CALCULATION_TYPE_7) {
+        if (g_GameLogic.FrameCountOfCurrentAtBat_Copy == 1) {
+            if (lbl_3_common_bss_34C90.field_0x1D8 == 0 && g_GameLogic._11A != 0) {
+                fn_800B0A5C_insertQueue(fn_3_91FC4, 2);
+                fn_800B0A5C_insertQueue(fn_3_15F220, 2);
+                g_GameLogic._11A = 0;
+            } else if (g_GameLogic._11A != 1) {
+                fn_800B0A5C_insertQueue(fn_3_15EE2C, 2);
+                g_GameLogic._11A = 1;
+            }
+        }
+    } else if (g_GameLogic._125 == TRANSITION_CALCULATION_TYPE_5 && g_GameLogic.FrameCountOfCurrentAtBat_Copy == 1) {
+        fn_800B0A5C_insertQueue(fn_8004D0F0, 2);
+    }
 }
 
