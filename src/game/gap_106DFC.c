@@ -3,6 +3,7 @@
 #include "game/rep_1C0.h"
 #include "game/gap_5985C.h"
 #include "game/gap_90754.h"
+#include "game/m_sound.h"
 #include "game/rep_1D58.h"
 #include "game/gap_9CD90.h"
 #include "game/gap_464.h"
@@ -550,9 +551,59 @@ void fn_3_10F1D4(void) {
     return;
 }
 
+extern CompressedDiskRead lbl_3_data_21EC8[];
+extern s32 fn_80035838(CompressedDiskRead* list, s32 count);
+extern void fn_800189E4(void);
+
 // .text:0x0010F3D8 size:0x178 mapped:0x8074E46C
+static inline void resetTeamEntries_10F3D8(void) {
+    s32 i;
+    s32 zero = 0;
+    s8 minusOne = -1;
+
+    fn_8001CA40(0);
+    i = 0;
+    do {
+        fn_80011BE4(i);
+        g_Minigame.teamEntries[i]._1 = zero;
+        g_Minigame.teamEntries[i].fieldB = minusOne;
+        i++;
+    } while (i < 4);
+}
+
 void fn_3_10F3D8(void) {
-    return;
+    switch (g_GameLogic._125) {
+    case 0:
+        fn_3_8B318(-1);
+        resetTeamEntries_10F3D8();
+        lbl_3_common_bss_34C58._2C = 0;
+        g_GameLogic._125++;
+    case 1:
+        if (fn_3_90928() != 0) {
+            g_GameLogic._125++;
+        }
+        break;
+    case 2:
+        if (fn_80035838(&lbl_3_data_21EC8[29], 9) != 0) {
+            g_GameLogic._125++;
+        }
+        break;
+    case 3:
+        if (g_d_GameSettings.GameModeSelected == 7) {
+            if (fn_80035838(&lbl_3_data_21EC8[13], 0x11) != 0) {
+                g_GameLogic._125++;
+            }
+        } else {
+            g_GameLogic._125++;
+        }
+        break;
+    default:
+        fn_800189E4();
+        fn_800B0A5C_insertQueue(fn_80062A94, 1);
+        g_Minigame.battingHandedness[5] = 1;
+        fn_3_5A6D4(g_Minigame._19DF);
+        break;
+    }
 }
 
 // .text:0x0010F550 size:0x14 mapped:0x8074E5E4
