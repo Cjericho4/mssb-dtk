@@ -172,8 +172,54 @@ void fn_3_706B8(s32 idx) {
 }
 
 // .text:0x00070768 size:0xD0 mapped:0x806AF7FC
-void fn_3_70768(void) {
-    return;
+s32 fn_3_70768(f32* outX, BOOL curve, f32 targetZ) {
+    f32 z = g_Pitcher.ballCurrentPosition.z;
+    f32 x = g_Pitcher.ballCurrentPosition.x;
+    f32 vx = g_Pitcher.ballVelocity.x;
+    f32 vy = g_Pitcher.ballVelocity.y;
+    f32 vz = g_Pitcher.ballVelocity.z;
+    f32 curveV = g_Pitcher.pitchCurveVeloV1;
+    f32 prevX;
+    f32 prevZ;
+    f32 airStart;
+    f32 adj;
+    f32 decel;
+    f32 newVz;
+    f32 dx;
+    f32 dz;
+    s32 frames = 0;
+
+    if (z < targetZ) {
+        return 0;
+    }
+    airStart = g_Pitcher.pitchZ_whenAirResistanceStarts;
+    adj = g_Pitcher.airResistance_veloAdj;
+    decel = g_Pitcher.decelerationFactor;
+    do {
+        prevX = x;
+        prevZ = z;
+        frames++;
+        if (z <= airStart) {
+            newVz = vz - vz * adj;
+            if (newVz < -0.05f) {
+                vz = newVz;
+                vx = vx - vx * adj;
+                vy = vy - vy * adj;
+            }
+        }
+        vx *= decel;
+        vz *= decel;
+        vy *= decel;
+        x += vx;
+        z += vz;
+        if (curve) {
+            x += curveV;
+        }
+    } while (!(z < targetZ));
+    dz = z - prevZ;
+    dx = (x - prevX) * (1.0f - (z - targetZ) / dz);
+    *outX = prevX + dx;
+    return frames;
 }
 
 // .text:0x00070838 size:0x17C mapped:0x806AF8CC

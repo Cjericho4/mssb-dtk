@@ -14,7 +14,7 @@ void fn_3_70280(void);
 void fn_3_703EC(void);
 s32 fn_3_70680(f32 value);
 void fn_3_706B8(s32 idx);
-void fn_3_70768(void);
+s32 fn_3_70768(f32* outX, BOOL curve, f32 targetZ);
 void fn_3_70838(void);
 void fn_3_709B4(void);
 void fn_3_70AEC(void);
