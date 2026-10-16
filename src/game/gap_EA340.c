@@ -2,6 +2,7 @@
 #include "game/rep_3448.h"
 #include "game/gap_16C410.h"
 #include "musyx/musyx.h"
+#include "game/gap_157DB8.h"
 
 // .text:0x000EA340 size:0x114 mapped:0x807293D4
 void fn_3_EA340(void) {
@@ -150,9 +151,27 @@ void fn_3_ED4FC(void) {
     }
 }
 
+extern s32 lbl_3_data_8EC4[];
+
 // .text:0x000ED574 size:0x16C mapped:0x8072C608
 void fn_3_ED574(void) {
-    return;
+    DrawingSceneStruct* scene;
+    s32 turn;
+
+    fn_80034E20(scene = lbl_803CC1B8, lbl_3_data_8EC4);
+    fn_800363D8(scene, 1, 6, 0x4A, g_Minigame.toyField_selectedTurns % 10);
+    fn_800363D8(scene, 1, 5, 0x4A, g_Minigame.toyField_selectedTurns / 10);
+    turn = g_Minigame.toyField_turnNumber;
+    if (turn > g_Minigame.toyField_selectedTurns) {
+        turn = g_Minigame.toyField_selectedTurns;
+    }
+    fn_800363D8(scene, 1, 2, 0x4A, turn % 10);
+    if (turn >= 10) {
+        fn_800363D8(scene, 1, 1, 0x4A, turn / 10);
+    } else {
+        fn_800363D8(scene, 1, 1, 0x4A, 10);
+    }
+    lbl_803CC1B8->aFunctionPointer = fn_3_ED4FC;
 }
 
 // .text:0x000ED6E0 size:0xA4 mapped:0x8072C774
