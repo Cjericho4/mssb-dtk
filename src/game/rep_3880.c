@@ -905,8 +905,37 @@ void fn_3_14E9F0(ListNode_14B9F0* node) {
 }
 
 // .text:0x0014EAF4 size:0x230 mapped:0x8078DB88
-void fn_3_14EAF4(void) {
-    return;
+void fn_3_14EAF4(ListNode_14B9F0* node) {
+    Vec v = {0.0f, 0.0f, 0.0f};
+    VecXYZ delta;
+    u8 type;
+
+    if (node->field_0x4C == 5) {
+        v.x += (f32)(rand() % 10000 - 5000) / 10000.0f;
+        v.y += (f32)(rand() % 10000 - 5000) / 10000.0f;
+        node->offset.x = v.x;
+        node->offset.y = v.y - 0.5f;
+        node->offset.z = v.z;
+    } else {
+        node->offset.x = node->offset.y = node->offset.z = 0.0f;
+    }
+    if (node->field_0x4C < 5) {
+        type = lbl_3_data_26CB8[(u32)rand() % 23];
+        delta.z = 0.0f;
+        delta.y = 0.0f;
+        delta.x = 0.0f;
+        if (fn_8001B728(node->field_0x4C - 1, type, &delta) == 0) {
+            memset(&delta, 0, sizeof(VecXYZ));
+            fn_8001B728(node->field_0x4C - 1, 4, &delta);
+        }
+    } else {
+        delta.x = g_Minigame._6E8;
+        delta.y = -g_Minigame._6EC;
+        delta.z = g_Minigame._6F0;
+    }
+    node->offset.x += delta.x;
+    node->offset.y += delta.y;
+    node->offset.z += delta.z;
 }
 
 // .text:0x0014ED24 size:0x6A8 mapped:0x8078DDB8
