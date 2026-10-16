@@ -115,21 +115,17 @@ void fn_3_12F9D4(s32 idx) {
     BB_barrelStruct* b = &g_Minigame.barrels[idx];
     VecXYZ pos;
     f32 desiredY;
-    f32 y;
-    f32 z;
 
     g_Minigame.barrels[idx].currentPos.y += lbl_3_data_21770[1];
     if (g_Minigame.barrels[idx].currentPos.y < (desiredY = g_Minigame.barrels[idx].desiredPos.y)) {
         b->currentPos.y = desiredY;
         if (b->posAtStartOfTurn.y != b->desiredPos.y) {
-            y = b->currentPos.y;
-            z = b->currentPos.z;
-            pos.y = y;
-            pos.z = z;
             pos.x = b->currentPos.x;
-            pos.y = -y;
-            pos.z = z - 1.0f;
-            if (y <= 0.0f) {
+            pos.y = b->currentPos.y;
+            pos.z = b->currentPos.z;
+            pos.y = -pos.y;
+            pos.z -= 1.0f;
+            if (b->currentPos.y <= 0.0f) {
                 fn_8004C108(&pos, 1);
                 fn_3_90064(0x2E4);
             } else {
