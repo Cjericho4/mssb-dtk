@@ -889,8 +889,39 @@ void fn_3_F6938(void) {
 }
 
 // .text:0x000F6A94 size:0x1CC mapped:0x80735B28
-void fn_3_F6A94(void) {
-    return;
+extern u8 lbl_3_bss_B21D;
+extern u8 lbl_3_bss_B21E;
+
+void fn_3_F6A94(s32* count) {
+    Control control;
+    Mtx m;
+    struct StadiumModel* model;
+    u16 start;
+    s32 i;
+    s32 j;
+
+    start = lbl_3_common_bss_350E4[0].unk40[*count - 1] + lbl_3_common_bss_350E4[0].unk3C[*count - 1];
+    lbl_3_common_bss_350E4[0].unk40[*count] = start;
+    j = start;
+    for (i = 0; i < lbl_3_bss_B21E; i++) {
+        lbl_3_common_bss_350E4[0].unk44[j] = lbl_3_bss_B21D + i;
+        j++;
+        lbl_3_common_bss_350E4[0].unk3C[*count]++;
+    }
+    fn_3_B8574();
+    model = lbl_3_common_bss_350E4[0].src[lbl_3_bss_B21D].unk_78;
+    control.type = 0;
+    CTRLSetTranslation(&control, -50.0f, 0.0f, 40.0f);
+    CTRLBuildMatrix(&control, m);
+    fn_3_B8464(m, model);
+    control.type = 0;
+    CTRLSetTranslation(&control, 50.0f, -20.0f, 95.0f);
+    CTRLBuildMatrix(&control, m);
+    fn_3_B8464(m, model);
+    if (lbl_3_common_bss_350E4[0].unk3C[*count] != 0) {
+        fn_3_B8414(&lbl_3_common_bss_350E4[0].unk48[*count * 2].x, &lbl_3_common_bss_350E4[0].unk48[*count * 2 + 1].x);
+        (*count)++;
+    }
 }
 
 // .text:0x000F6C60 size:0x36C mapped:0x80735CF4
