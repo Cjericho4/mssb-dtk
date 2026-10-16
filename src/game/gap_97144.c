@@ -1,4 +1,5 @@
 #include "game/gap_97144.h"
+#include "game/rep_16B8.h"
 #include "UnknownHeaders.h"
 #include "game/gap_AC9F8.h"
 #include "game/rep_3448.h"
@@ -58,7 +59,42 @@ void fn_3_973EC(void) {
 
 // .text:0x00097800 size:0xDC mapped:0x806D6894
 void fn_3_97800(void) {
-    return;
+    lbl_3_common_bss_32724.someStatusInd = 0;
+    lbl_3_common_bss_32724.unk_A5 = 0;
+    lbl_3_common_bss_32724._pad3a[0] = 0;
+    lbl_3_common_bss_32724.unk_A8 = 0;
+    lbl_3_common_bss_32724._pad3a[1] = 0;
+    lbl_3_common_bss_32724._pad3a[2] = 0;
+    lbl_3_common_bss_32724.unkD1 = 0;
+    lbl_3_common_bss_32724._padAD[0] = 0;
+    lbl_3_common_bss_32724._padAD[1] = 0;
+    lbl_3_common_bss_32724.unk_B0 = 0;
+    lbl_3_common_bss_32724.unk_B1 = 0;
+    lbl_3_common_bss_32724.unk_B2 = 0;
+    lbl_3_common_bss_32724.unk_C7 = 0;
+    lbl_3_common_bss_32724._padD6[0] = 0;
+    lbl_3_common_bss_32724.unk_B6 = 0;
+    lbl_3_common_bss_32724.unkD9 = 0;
+    lbl_3_common_bss_32724.unkDA = 0;
+    lbl_3_common_bss_32724.unk_BC = 0;
+    lbl_3_common_bss_32724.unk_C0 = 0;
+    lbl_3_common_bss_32724._padC1[0] = 0;
+    lbl_3_common_bss_32724._padC1[1] = 0;
+    lbl_3_common_bss_32724.unk_C6 = 0;
+    lbl_3_common_bss_32724.unk_AA = 0;
+    lbl_3_common_bss_32724._padAB = 0;
+    lbl_3_common_bss_32724.unk_C3 = 0;
+    lbl_3_common_bss_32724._padC4 = 0;
+    lbl_3_common_bss_32724.unk_BE = 0;
+    lbl_3_common_bss_32724.unk_BF = 0;
+    lbl_3_common_bss_32724.unk_B3 = 0;
+    lbl_3_common_bss_32724.unk_B4 = 0;
+    lbl_3_common_bss_32724.unk_B5 = 0;
+    lbl_3_common_bss_32724.unk_C5 = 0;
+    if (g_d_GameSettings.minigamesEnabled == 0) {
+        fn_800B0A5C_insertQueue(fn_3_95970, 2);
+    }
+    fn_800B0A5C_insertQueue(fn_3_91A60, 2);
 }
 
 // .text:0x000978DC size:0x410 mapped:0x806D6970
