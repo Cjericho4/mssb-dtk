@@ -671,9 +671,42 @@ void fn_3_197E8(void) {
     return;
 }
 
+typedef struct Data3A40Entry {
+    /* 0x00 */ u8 _pad0[0x10];
+    /* 0x10 */ s16 unk10[2];
+} Data3A40Entry; // size: 0x14
+
+extern Data3A40Entry lbl_3_data_A40[];
+
 // .text:0x00019B3C size:0x174 mapped:0x80658BD0
-void fn_3_19B3C(void) {
-    return;
+void fn_3_19B3C(s32 arg0, f32* out) {
+    s32 vals[4];
+    s32 i;
+    s32 acc;
+    s32 d;
+
+    for (i = 0; i < g_pCamera->unk12; i++) {
+        vals[i] = lbl_3_data_A40[g_pCamera->unk4[i]].unk10[arg0];
+    }
+    if (arg0 != 0) {
+        for (i = 0; i < g_pCamera->unk12; i++) {
+            out[i] = vals[i];
+        }
+        return;
+    }
+    acc = vals[0];
+    out[0] = acc;
+    for (i = 1; i < g_pCamera->unk12; i++) {
+        d = vals[i] - vals[i - 1];
+        if (d > 0x800) {
+            acc -= 0x1000 - d;
+        } else if (d < -0x800) {
+            acc = d + acc + 0x1000;
+        } else {
+            acc += d;
+        }
+        out[i] = acc;
+    }
 }
 
 // .text:0x00019CB0 size:0x2F4 mapped:0x80658D44

@@ -65,7 +65,7 @@ void fn_3_193E8(void);
 void fn_3_195BC(void);
 void fn_3_19770(void);
 void fn_3_197E8(void);
-void fn_3_19B3C(void);
+void fn_3_19B3C(s32 arg0, f32* out);
 void fn_3_19CB0(void);
 void fn_3_19FA4(void);
 void fn_3_1AE44(u8 arg0, s16 arg1, f32 arg2, f32 arg3, f32 arg4);
