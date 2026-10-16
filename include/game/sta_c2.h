@@ -8,6 +8,7 @@ extern u8 lbl_3_bss_A81C;
 
 // Forward declaration for the dependency
 void AnimateActorBones(void* boneData);
+void fn_800B4CA0(void* boneData, f32 val);
 
 // Struct at the first level of indirection
 typedef struct BoneWrapper {
@@ -134,7 +135,6 @@ void fn_3_D127C(void);
 void fn_3_D1280(void);
 void fn_3_D141C(void);
 void fn_3_D173C(void);
-void fn_3_D1848(void);
 void fn_3_D196C(void);
 void fn_3_D1AC4(ActorObject* arg0);
 void fn_3_D1B24(void);
@@ -241,6 +241,31 @@ typedef struct StaC2Vec4 {
 extern StaC2Vec4 lbl_3_data_18730[27];
 
 void fn_3_CF930(StaC2CF930Obj* obj);
+
+typedef struct StaC2D1848Wrapper {
+    void* boneData;     /* 0x00 */
+    u8 _pad4[0x59 - 0x4];
+    u8 unk59;           /* 0x59 */
+    u8 _pad5A[0x5C - 0x5A];
+    f32 unk5C;          /* 0x5C */
+} StaC2D1848Wrapper;
+
+typedef struct StaC2D1848Obj {
+    u8 _pad0[0x74];
+    StaC2D1848Wrapper* wrapper; /* 0x74 */
+    u8 _pad78[0x90 - 0x78];
+    u8 flag90 : 1;              /* 0x90 */
+    u8 flag90_rest : 7;
+    u8 _pad91[0x9C - 0x91];
+    u8 idx;                     /* 0x9C */
+    u8 _pad9D[0xA0 - 0x9D];
+    f32 frame;                  /* 0xA0 */
+    f32 speed;                  /* 0xA4 */
+    u8* trigger;                /* 0xA8 */
+    u8 timer;                   /* 0xAC */
+} StaC2D1848Obj;
+
+void fn_3_D1848(StaC2D1848Obj* obj);
 void fn_3_D1F2C(StaC2ChainParams* params, StaC2D501CEntry* entries, s32 count, Vec* force, StaC2ChainObj* obj);
 void fn_3_CC354(StaC2D501CEntry* entries);
 void fn_3_D501C(StaC2D501CEntry* entries);

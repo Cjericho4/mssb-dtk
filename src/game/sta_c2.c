@@ -414,8 +414,33 @@ void fn_3_D173C(void) {
 }
 
 // .text:0x000D1848 size:0x124 mapped:0x807108DC
-void fn_3_D1848(void) {
-    return;
+void fn_3_D1848(StaC2D1848Obj* obj) {
+    StaC2D1848Wrapper* w = obj->wrapper;
+    if (*obj->trigger != 0) {
+        if (obj->flag90) {
+            obj->flag90 = 0;
+            obj->timer = (obj->idx % 3) * 30;
+            obj->frame = 0.0f;
+            w->unk5C = obj->frame;
+            w->unk59 = 1;
+            fn_800B4CA0(w->boneData, w->unk5C);
+        }
+    } else if (obj->timer != 0) {
+        if (obj->flag90) {
+            obj->flag90 = 0;
+        }
+        obj->timer--;
+    } else {
+        if (!obj->flag90) {
+            obj->flag90 = 1;
+        }
+        obj->frame += obj->speed;
+        if (obj->frame > 100.0f) {
+            obj->frame -= 100.0f;
+            obj->timer = 90;
+        }
+        AnimateActorBones(w->boneData);
+    }
 }
 
 // .text:0x000D196C size:0x158 mapped:0x80710A00
