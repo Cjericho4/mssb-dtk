@@ -40,6 +40,9 @@ void fn_8003BF54(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32
 #include "game/gap_7CE90.h"
 #include "game/rep_E08.h"
 #include "game/rep_12D0.h"
+#include "game/gap_AC9F8.h"
+#include "game/rep_1200.h"
+#include "game/rep_AC8.h"
 
 void fn_3_BF1AC(void);
 void fn_3_BC224(void);
@@ -830,7 +833,48 @@ void fn_3_5EE58(void) {
 
 // .text:0x0005EFEC size:0x168 mapped:0x8069E080
 void fn_3_5EFEC(void) {
-    return;
+    GameControlsStruct* gl = &g_GameLogic;
+
+    if (gl->freeFieldingPracticeInd != 0) {
+        if (fn_3_B32B8() != 0) {
+            return;
+        }
+        if (g_Practice.pauseMenuLoading != 0) {
+            return;
+        }
+    } else {
+        fn_3_AFB64();
+        if (lbl_3_common_bss_34C90.field_0x1D5 != 0) {
+            fn_3_AFA64();
+            return;
+        }
+    }
+    if (g_GameLogic.frameCountdownAtBeginningOfAtBatLockout != 0) {
+        g_GameLogic.frameCountdownAtBeginningOfAtBatLockout--;
+    }
+    fn_3_75560();
+    atBat_batter();
+    fn_3_31594();
+    fn_3_8A958();
+    fn_3_5C74C(0);
+    if (gl->freeFieldingPracticeInd == 0 && (g_Strikes.outs >= 3 || (g_Strikes.unk_C == 2 && g_Pitcher.strikeOutOrWalk == 1))) {
+        gl = &g_GameLogic;
+        if (gl->EventTriggers_EndOfGame == 0) {
+            fn_3_5D094(0);
+            if (gl->EventTriggers_EndOfGame != 0) {
+                fn_3_59918(0xD, 0);
+            } else {
+                Scores* sc = &g_Scores;
+                if (sc->someFlag == 0) {
+                    fn_3_59918(5, 0);
+                    sc->someFlag = 1;
+                }
+            }
+        }
+    }
+    if (g_Pitcher.pitcherActionState == 6) {
+        fn_3_5EE58();
+    }
 }
 
 // .text:0x0005F154 size:0x2A8 mapped:0x8069E1E8
