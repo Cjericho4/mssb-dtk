@@ -35,7 +35,21 @@ typedef struct {
     Mtx mtx; /* 0x40 */
 } CameraMtx_52768;
 
-extern s32 lbl_3_bss_9D90;
+typedef struct {
+    u8 _pad0[0x14];
+    f32 unk14;    /* 0x14 */
+    f32 unk18;    /* 0x18 */
+    f32 unk1C;    /* 0x1C */
+    s16 unk20[2]; /* 0x20 */
+    u8 unk24;     /* 0x24 */
+    u8 unk25[2];  /* 0x25 */
+    u8 unk27[2];  /* 0x27 */
+    u8 unk29;     /* 0x29 */
+    u8 unk2A;     /* 0x2A */
+} RepC19C8Obj;
+
+extern RepC19C8Obj* lbl_3_bss_9D90;
+extern s16 lbl_3_data_17880[4][3];
 extern Control* lbl_3_bss_9D94;
 extern u8 lbl_3_bss_9D81;
 extern u32 lbl_3_bss_9D8C;
@@ -61,7 +75,28 @@ void fn_3_C1974(u8 *arg0) {
 
 // .text:0x000C19C8 size:0x250 mapped:0x80700A5C
 void fn_3_C19C8(void) {
-    return;
+    s32 i;
+    s32 r;
+
+    if (lbl_3_bss_9D90 == NULL) {
+        lbl_3_bss_9D90 = (RepC19C8Obj*)fn_800B0A5C_insertQueue(fn_3_C2244, 5);
+    }
+    if (lbl_803CC1B8->loadingState != 0x136) {
+        fn_3_B7FC8(lbl_3_data_81DC[g_d_GameSettings.StadiumID] + 6, 8);
+    }
+    lbl_3_bss_9D90->unk2A = 0xFF;
+    lbl_3_bss_9D90->unk29 = 2;
+    r = rand() % 3;
+    lbl_3_bss_9D90->unk14 = lbl_3_data_17880[r][0];
+    lbl_3_bss_9D90->unk18 = lbl_3_data_17880[r][1];
+    lbl_3_bss_9D90->unk1C = lbl_3_data_17880[r][2];
+    lbl_3_bss_9D90->unk24 = 10 - rand() % 20;
+    i = 2;
+    while (i-- != 0) {
+        lbl_3_bss_9D90->unk20[i] = (rand() * (((0x1FFF - (rand() * 0x3FFF) / 0x7FFF) >> (1 - i)) + 0x1FFF)) / 0x7FFF;
+        lbl_3_bss_9D90->unk25[i] = lbl_3_bss_9D90->unk24 + 2 - rand() % 2;
+        lbl_3_bss_9D90->unk27[i] = rand() % 2 + 1;
+    }
 }
 
 // .text:0x000C1C18 size:0x62C mapped:0x80700CAC
