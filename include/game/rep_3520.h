@@ -20,7 +20,9 @@ extern s16 lbl_3_data_21A44;
 typedef struct Rep3520Ball {
     Vec pos;            /* 0x00 */
     Vec vel;            /* 0x0C */
-    u8 _pad18[0x20];
+    Vec rot;            /* 0x18 */
+    Vec rotVel;         /* 0x24 */
+    u8 _pad30[0x8];
     s16 timer38;        /* 0x38 */
     s16 frames3A;       /* 0x3A */
     u8 _pad3C;
@@ -81,7 +83,7 @@ void fn_3_1373E0(void);
 void fn_3_1379A0(void);
 u8 fn_3_137B10(Rep3520Ball* ball);
 void fn_3_137CF8(Rep3520Ball* ball);
-void fn_3_137DE4(void);
+void fn_3_137DE4(Rep3520Ball* ball);
 void fn_3_137F14(Rep3520Ball* ball);
 void fn_3_13802C(void);
 void fn_3_1382E0(void);
