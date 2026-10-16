@@ -1411,7 +1411,9 @@ extern f32 vecDotProduct(VecXYZ* a, VecXYZ* b);
 // Whole 0x4508-byte block at 0x80361C50 (Ghidra splits it into several labels).
 typedef struct _ChallengeSaveData {
     /*0x0000*/ ChallengeTrackingStruct missions[54];
-    /*0x0AF8*/ u8 _padAF8[0x4415 - 0xAF8];
+    /*0x0AF8*/ u8 _padAF8[0x43D6 - 0xAF8];
+    /*0x43D6*/ u8 unk43D6[54];
+    /*0x440C*/ u8 _pad440C[0x4415 - 0x440C];
     /*0x4415*/ u8 challengeDifficulty;
     /*0x4416*/ u8 _pad4416[0x441C - 0x4416];
     /*0x441C*/ u8 challengeCaptain;

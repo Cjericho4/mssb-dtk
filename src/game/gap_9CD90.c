@@ -1,5 +1,7 @@
 #include "game/gap_9CD90.h"
 
+extern u8 lbl_80361B20[];
+
 // .text:0x0009CD90 size:0xE8 mapped:0x806DBE24
 void fn_3_9CD90(void) {
     CommonBss32A94* bss = &lbl_3_common_bss_32A94;
@@ -251,8 +253,23 @@ void fn_3_9E7D4(s32 arg0) {
 }
 
 // .text:0x0009E834 size:0x1E8 mapped:0x806DD8C8
-void fn_3_9E834(void) {
-    return;
+BOOL fn_3_9E834(void) {
+    s32 i;
+
+    if (g_d_GameSettings.exhibitionMatchInd == 0) {
+        for (i = 0; i < 54; i++) {
+            if (starMissionCompletionTracker.unk43D6[i] != 0) {
+                return TRUE;
+            }
+        }
+    } else {
+        for (i = 0; i < 54; i++) {
+            if (lbl_80361B20[i] != 0) {
+                return TRUE;
+            }
+        }
+    }
+    return FALSE;
 }
 
 // .text:0x0009EA1C size:0xC8 mapped:0x806DDAB0
