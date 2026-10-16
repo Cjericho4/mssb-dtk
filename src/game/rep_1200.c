@@ -6,6 +6,7 @@
 
 extern f32 lbl_3_rodata_1250;
 extern void fn_3_5C69C(s32 arg0);
+void fn_3_89864(s32 idx, s32 delta);
 
 // .text:0x0006F6CC size:0x7C mapped:0x806AE760
 s32 fn_3_6F6CC(void) {
@@ -155,7 +156,37 @@ void fn_3_7310C(void) {
 
 // .text:0x000735A8 size:0x124 mapped:0x806B263C
 void fn_3_735A8(void) {
-    return;
+    s32 i;
+    s32 found = 0;
+
+    if (g_Pitcher.strikeOutOrWalk == 3) {
+        for (i = 1; i < 4; i++) {
+            InMemRunnerType* r = &g_Runners[i];
+            if (r->runnerOnFieldOrOutOrScored == 1 || r->runnerOnFieldOrOutOrScored == 5) {
+                if (found == 0) {
+                    r->currentBase = i;
+                    fn_3_89864(i, 1);
+                } else {
+                    r->currentBase = r->startingBase_baseAchieved;
+                    r->nextBase = (r->currentBase + 1) & 3;
+                }
+            } else {
+                found = 1;
+            }
+        }
+    } else {
+        for (i = 1; i < 4; i++) {
+            InMemRunnerType* r = &g_Runners[i];
+            if (r->runnerOnFieldOrOutOrScored != 1 && r->runnerOnFieldOrOutOrScored != 5) {
+                break;
+            }
+            if (i == r->currentBase) {
+                fn_3_89864(i, 1);
+            }
+        }
+    }
+    g_Runners[0].currentBase = 1;
+    g_Runners[0].nextBase = 2;
 }
 
 // .text:0x000736CC size:0x4C mapped:0x806B2760
