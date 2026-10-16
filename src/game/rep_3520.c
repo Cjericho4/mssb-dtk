@@ -6,6 +6,7 @@
 #include "game/gap_106DFC.h"
 #include "game/m_sound.h"
 #include <math.h>
+#include "Dolphin/GX/GXTexture.h"
 
 extern void changeScene(s32, s32);
 
@@ -18,6 +19,16 @@ extern Rep3520Bss_B704 lbl_3_bss_B704;
 extern u8 lbl_3_bss_B740[0x40];
 extern s8 lbl_3_data_26580;
 extern u32 fn_800247E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+
+/* File-local bss block starting at 0xB700 (accessed via a single base). */
+typedef struct Rep3520Bss_B700 {
+    /* 0x00 */ u8 _pad0[0x4];
+    /* 0x04 */ u32 counter;
+    /* 0x08 */ GXTexObj texObj;
+    /* 0x28 */ u8 _pad28[0x40 - 0x28];
+    /* 0x40 */ u8 texData[0x40];
+} Rep3520Bss_B700;
+extern Rep3520Bss_B700 lbl_3_bss_B700;
 
 // .text:0x001330E4 size:0x11C mapped:0x80772178
 void fn_3_1330E4(void) {
@@ -46,7 +57,31 @@ void fn_3_1330E4(void) {
 
 // .text:0x00133200 size:0x120 mapped:0x80772294
 void fn_3_133200(void) {
-    return;
+    Rep3520Bss_B700* bss = &lbl_3_bss_B700;
+    u32 y;
+    u32 x;
+    u32 off;
+
+    for (y = 0; y < 4; y++) {
+        for (x = 0; x < 4; x++) {
+            off = fn_800247E4(x, y, 4, 4);
+            if (off < 32) {
+                u8* p = bss->texData;
+                p += off;
+                p[0] = p[2] = 0xFF;
+                p[1] = p[3] = 0x96;
+            } else {
+                u8* p = bss->texData;
+                p += off;
+                p[0] = p[2] = 0x96;
+                p[1] = p[3] = 0x96;
+            }
+        }
+    }
+    GXInitTexObj(&bss->texObj, bss->texData, 4, 4, GX_TF_RGBA8, GX_REPEAT, GX_REPEAT, GX_FALSE);
+    GXInitTexObjLOD(&bss->texObj, GX_LINEAR, GX_LINEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
+    lbl_3_data_26580 = -1;
+    bss->counter = 0;
 }
 
 // .text:0x00133320 size:0x2C mapped:0x807723B4
