@@ -7,6 +7,9 @@
 #include "game/gap_1658F0.h"
 
 extern int lbl_3_data_EC1C;
+extern int lbl_3_data_F224;
+extern u16 lbl_3_data_F344[6];
+void fn_800363D8(DrawingSceneStruct* scene, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 extern u8 lbl_3_data_F430[12][2];
 
 // .text:0x00091520 size:0x540 mapped:0x806D05B4
@@ -85,7 +88,22 @@ void fn_3_91CCC(void) {
 
 // .text:0x00091D1C size:0x130 mapped:0x806D0DB0
 void fn_3_91D1C(void) {
-    return;
+    DrawingSceneStruct* scene;
+    s32 i;
+    s32 idx;
+
+    fn_80034E20(scene = lbl_803CC1B8, &lbl_3_data_F224);
+    lbl_80371C30[scene->unkIndex + 3].obj->unk64 = lbl_3_data_F344[g_d_GameSettings.StadiumID];
+    for (i = 0; i < 3; i++) {
+        idx = g_GameLogic.currentBatterPerTeam[g_GameLogic.awayTeamBattingInd_battingTeam] + i;
+        if (idx > 9) {
+            idx -= 9;
+        }
+        lbl_80371C30[i + (scene->unkIndex + 5)].obj->field_0x5C =
+            inMemRoster[g_GameLogic.teamFielding][g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][idx][0]].stats.CharID << 16;
+    }
+    fn_800363D8(scene, 1, 4, 7, g_d_GameSettings.StadiumID);
+    lbl_803CC1B8->aFunctionPointer = fn_3_91CCC;
 }
 
 // .text:0x00091E4C size:0x178 mapped:0x806D0EE0
