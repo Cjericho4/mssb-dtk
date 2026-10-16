@@ -49,7 +49,7 @@ void fn_3_11FA58(void);
 void fn_3_11FDB0(void);
 void fn_3_12026C(void);
 void fn_3_12089C(void);
-void fn_3_120F5C(void);
+s32 fn_3_120F5C(void);
 void fn_3_120FF8(void);
 void fn_3_121304(void);
 void fn_3_121908(void);

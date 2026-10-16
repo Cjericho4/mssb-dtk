@@ -96,9 +96,20 @@ void fn_3_12089C(void) {
     return;
 }
 
+extern s16 lbl_3_data_21654[12];
+extern s16 lbl_3_data_21672;
 // .text:0x00120F5C size:0x9C mapped:0x8075FFF0
-void fn_3_120F5C(void) {
-    return;
+s32 fn_3_120F5C(void) {
+    s16 mult = 1;
+
+    if ((g_Minigame.multiPlayerInd != 0 || g_Minigame._1A3C != 0 || g_Minigame.soloMinigameDifficulty != 3) &&
+        g_Scores.highscore == g_Scores.threshold) {
+        mult = lbl_3_data_21672;
+    }
+    if (g_Minigame.wallBall_hitNoteBlock == 1) {
+        return lbl_3_data_21654[10] * mult;
+    }
+    return g_Minigame.miniGameLatestPoints[(s8)g_Minigame.minigamePlayerSelectedOrder] * mult;
 }
 
 // .text:0x00120FF8 size:0x30C mapped:0x8076008C
