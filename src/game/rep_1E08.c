@@ -572,8 +572,8 @@ void fn_3_BFB3C(void) {
 }
 
 // .text:0x000BFDA4 size:0x390 mapped:0x806FEE38
-void fn_3_BFDA4(void) {
-    return;
+f32 fn_3_BFDA4(struct Rep21F8Key* keys, u8 count, s32 arg2, u8 cur, u8* curOut, f32 t) {
+    return 0.0f;
 }
 
 // .text:0x000C0134 size:0x63C mapped:0x806FF1C8
