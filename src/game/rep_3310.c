@@ -1018,7 +1018,17 @@ void fn_3_11D1B0(void) {
     }
 }
 
+f32 fn_800BDC88(HugeAnimEntry68* entries, u16 a, u16 b, s32 c, s32 d, s32 e);
+
 // .text:0x0011D2C8 size:0xE4 mapped:0x8075C35C
-void fn_3_11D2C8(void) {
-    return;
+void fn_3_11D2C8(s32 slot, s32 start, s32 count, s32 arg3, s32 arg4) {
+    s32 i;
+
+    for (i = start; i < start + count; i++) {
+        fn_800BDC88(g_hugeAnimStruct.entries_68, i, i, g_hugeAnimStruct.slots_2DA0[slot].unk0, arg3, arg4);
+        fn_800BD548(&((HugeAnimCtrlEntry*)g_hugeAnimStruct.entries_68)[i].sub34, 4, g_hugeAnimStruct.field30_0xac,
+                    g_hugeAnimStruct.field31_0xb0, g_hugeAnimStruct.field32_0xb4, g_hugeAnimStruct.field33_0xb8);
+        CTRLSetTranslation(&((HugeAnimCtrlEntry*)g_hugeAnimStruct.entries_68)[i].ctrl, 0.0f, 0.0f, 0.0f);
+        CTRLSetRotation(&((HugeAnimCtrlEntry*)g_hugeAnimStruct.entries_68)[i].ctrl, 0.0f, 0.0f, 0.0f);
+    }
 }

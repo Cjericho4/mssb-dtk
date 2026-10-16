@@ -307,6 +307,20 @@ typedef struct HugeAnimCtrlObj {
     Control ctrl;            /* 0x44 */
 } HugeAnimCtrlObj;
 
+// entries_68 element viewed as a control object
+typedef struct HugeAnimCtrlEntry {
+    u8 _pad[0x34];
+    HugeAnimSubObj34 sub34;  /* 0x34 */
+    Control ctrl;            /* 0x44 */
+    u8 _pad80[0x90 - 0x80];
+} HugeAnimCtrlEntry; // size: 0x90
+
+typedef struct HugeAnimSlot2DA0 {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+} HugeAnimSlot2DA0; // size: 0xC
+
 typedef struct hugeAnimStruct {
     /* 0x0000 */ u8 field0_0x0[4];
     /* 0x0004 */ struct StadiumFileHeader* stadiumFileHeaderPointer;
@@ -496,24 +510,29 @@ typedef struct hugeAnimStruct {
     /* 0x2D94 */ HugeAnimEntry2D94* entries_2D94;
     /* 0x2D98 */ s32 field213_0x2d98;
     /* 0x2D9C */ struct ActLayout* ActorPointer;
-    /* 0x2DA0 */ s32 field215_0x2da0;
-    /* 0x2DA4 */ s32 field216_0x2da4;
-    /* 0x2DA8 */ s32 field217_0x2da8;
-    /* 0x2DAC */ s32 field218_0x2dac;
-    /* 0x2DB0 */ s32 field219_0x2db0;
-    /* 0x2DB4 */ s32 field220_0x2db4;
-    /* 0x2DB8 */ s32 field221_0x2db8;
-    /* 0x2DBC */ s32 field222_0x2dbc;
-    /* 0x2DC0 */ s32 field223_0x2dc0;
-    /* 0x2DC4 */ s32 field224_0x2dc4;
-    /* 0x2DC8 */ s32 field225_0x2dc8;
-    /* 0x2DCC */ s32 field226_0x2dcc;
-    /* 0x2DD0 */ s32 field227_0x2dd0;
-    /* 0x2DD4 */ s32 field228_0x2dd4;
-    /* 0x2DD8 */ s32 field229_0x2dd8;
-    /* 0x2DDC */ s32 field230_0x2ddc;
-    /* 0x2DE0 */ s32 field231_0x2de0;
-    /* 0x2DE4 */ s32 field232_0x2de4;
+    union {
+        struct {
+        /* 0x2DA0 */ s32 field215_0x2da0;
+        /* 0x2DA4 */ s32 field216_0x2da4;
+        /* 0x2DA8 */ s32 field217_0x2da8;
+        /* 0x2DAC */ s32 field218_0x2dac;
+        /* 0x2DB0 */ s32 field219_0x2db0;
+        /* 0x2DB4 */ s32 field220_0x2db4;
+        /* 0x2DB8 */ s32 field221_0x2db8;
+        /* 0x2DBC */ s32 field222_0x2dbc;
+        /* 0x2DC0 */ s32 field223_0x2dc0;
+        /* 0x2DC4 */ s32 field224_0x2dc4;
+        /* 0x2DC8 */ s32 field225_0x2dc8;
+        /* 0x2DCC */ s32 field226_0x2dcc;
+        /* 0x2DD0 */ s32 field227_0x2dd0;
+        /* 0x2DD4 */ s32 field228_0x2dd4;
+        /* 0x2DD8 */ s32 field229_0x2dd8;
+        /* 0x2DDC */ s32 field230_0x2ddc;
+        /* 0x2DE0 */ s32 field231_0x2de0;
+        /* 0x2DE4 */ s32 field232_0x2de4;
+        };
+        /* 0x2DA0 */ HugeAnimSlot2DA0 slots_2DA0[6];
+    };
     /* 0x2DE8 */ f32 field233_0x2de8;
     /* 0x2DEC */ s32 field234_0x2dec;
     /* 0x2DF0 */ s32 field235_0x2df0;
