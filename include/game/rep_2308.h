@@ -3,7 +3,8 @@
 
 #include "mssbTypes.h"
 
-void fn_3_CABF0(void);
+struct RepCAE00Entry;
+void fn_3_CABF0(struct RepCAE00Entry* entry);
 void fn_3_CAE00(void);
 void fn_3_CAF9C(void);
 void fn_3_CB1B0(s32 index, u8 arg1, s32 arg2);

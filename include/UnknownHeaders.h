@@ -790,7 +790,14 @@ typedef struct CommonBss_35154 {
     /* 0x09C */ s32 unk9C;
     /* 0x0A0 */ u8 _padA0[0xD8 - 0xA0];
     /* 0x0D8 */ CommonBss32724Timer timerD8;
-    /* 0x0F8 */ u8 _padF8[0x3AC - 0xF8];
+    /* 0x0F8 */ s32 unkF8;
+    /* 0x0FC */ u8 _padFC[0x134 - 0xFC];
+    /* 0x134 */ CommonBss32724Timer timer134;
+    /* 0x154 */ s32 unk154;
+    /* 0x158 */ u8 _pad158[0x190 - 0x158];
+    /* 0x190 */ CommonBss32724Timer timer190;
+    /* 0x1B0 */ s32 unk1B0;
+    /* 0x1B4 */ u8 _pad1B4[0x3AC - 0x1B4];
     /* 0x3AC */ u32 bitfield;
     /* 0x3B0 */ u8 unk_3b0;
     /* 0x3B1 */ u8 _pad3b1[7];

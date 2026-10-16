@@ -5,9 +5,13 @@
 #include "static/UnknownHomes_Static.h"
 #include "header_rep_data.h"
 #include "game/rep_1E08.h"
+#include "game/rep_1D58.h"
 
 typedef struct {
-    /* 0x00 */ u32 unk[4];
+    union {
+        /* 0x00 */ u32 unk[4];
+        /* 0x00 */ Quaternion quat;
+    };
 } RepCAE00Params; /* size: 0x10 */
 
 typedef struct {
@@ -30,10 +34,51 @@ typedef struct RepCAE00Entry {
 
 extern RepCAE00Obj* lbl_3_data_17D10[2];
 extern RepCAE00Entry lbl_3_data_17D18[2][2];
+extern s32 lbl_3_data_17D08;
+s32 fn_8005268C(void);
+u32 fn_80024DB0(CommonBss32724Timer* timer);
+void fn_80024FA4(AnimLevel1** anim, s32 arg1, CommonBss32724Timer* timer, s32 arg3);
+void fn_800BDA24(AnimLevel1** anim);
+void fn_800BDA94(AnimLevel1** anim, Mtx mtx);
 
 // .text:0x000CABF0 size:0x210 mapped:0x80709C84
-void fn_3_CABF0(void) {
-    return;
+void fn_3_CABF0(RepCAE00Entry* entry) {
+    Mtx m;
+    s32 ids[3];
+    CommonBss32724Timer* timers[3];
+    ActorAnimState* anim;
+    f32 scale;
+    s32 i;
+    CommonBss32724Timer* t;
+
+    scale = lbl_3_data_17D08 / 100000.0f;
+    anim = (ActorAnimState*)&lbl_3_common_bss_35154.unk10[1].unk34;
+    ids[0] = lbl_3_common_bss_35154.unkF8;
+    timers[0] = &lbl_3_common_bss_35154.timerD8;
+    ids[1] = lbl_3_common_bss_35154.unk154;
+    timers[1] = &lbl_3_common_bss_35154.timer134;
+    ids[2] = lbl_3_common_bss_35154.unk1B0;
+    timers[2] = &lbl_3_common_bss_35154.timer190;
+    PSMTXQuat(m, &entry->params.quat);
+    PSMTXScaleApply(m, m, scale, scale, scale);
+    PSMTXTransApply(m, m, entry->pos.x, entry->pos.y, entry->pos.z);
+    PSMTXConcat(fn_80052734(fn_8005268C())->viewMtx, m, m);
+    i = 2;
+    do {
+        t = timers[i];
+        t->unk0 = 0.0f;
+        t->unkC = 0;
+        t->unk4 = entry->frames;
+        fn_80024DB0(t);
+        fn_80024FA4((AnimLevel1**)anim, ids[i], timers[i], -1);
+    } while (i-- != 0);
+    ((AnimLevel1*)anim->actor)->unk99 = 1;
+    ACTSetAnimation(anim->actor, anim->bank, NULL, anim->seqNum, 0.0f, anim->startTime);
+    fn_800B4CA0(anim->actor, entry->frames);
+    fn_800B4C04(anim->actor, 1.0f);
+    fn_800BDA24((AnimLevel1**)anim);
+    ((AnimLevel1*)anim->actor)->animFlags = 0xFF;
+    fn_800BDA94((AnimLevel1**)anim, m);
 }
 
 // .text:0x000CAE00 size:0x19C mapped:0x80709E94
