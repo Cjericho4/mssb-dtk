@@ -78,9 +78,13 @@ typedef struct UnknownStruct_14CA98 {
 } UnknownStruct_14CA98;
 
 typedef struct {
-    u8 _pad[0x8];
-    s32 unk8;
-    u8 _pad2[0x10];
+    u8 _pad[0x4];
+    s32 unk4;      // 0x04
+    s32 unk8;      // 0x08
+    s32 unkC;      // 0x0C
+    u8 _pad10[0x4];
+    s32 unk14;     // 0x14
+    u8 _pad18[0x4];
 } Struct_26E24;
 
 extern Struct_26E24 lbl_3_data_26E24;
@@ -127,7 +131,11 @@ void fn_3_14A62C(void);
 void fn_3_14A90C(void);
 void fn_3_14AC1C(void);
 void fn_3_14AC40(void);
-void fn_3_14B248(void);
+typedef struct {
+    u8 _pad0[0x24];
+    Vec pos; // 0x24
+} Struct_14B248_Arg;
+void fn_3_14B248(Struct_14B248_Arg* arg0, ListNode_14B9F0* node);
 void fn_3_14B3F4(void);
 void fn_3_14B53C(void* arg0, void* arg1, void* arg2);
 void fn_3_14B92C(void* arg0, void* arg1);

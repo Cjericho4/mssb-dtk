@@ -318,8 +318,28 @@ void fn_3_14AC40(void) {
 }
 
 // .text:0x0014B248 size:0x1AC mapped:0x8078A2DC
-void fn_3_14B248(void) {
-    return;
+void fn_3_14B248(Struct_14B248_Arg* arg0, ListNode_14B9F0* node) {
+    f32 c;
+    f32 angle;
+    f32 dist;
+    f32 s;
+    f32 vx;
+    f32 vy;
+    f32 vz;
+
+    node->scaleX = node->scaleY = (f32)lbl_3_data_26E24.unkC / 100000.0f;
+    node->color[3] = lbl_3_data_26E24.unk14;
+    angle = 0.017453292f * (f32)(rand() % 360);
+    dist = ((u32)rand() % 200) / 1000.0;
+    c = (f32)cos(angle);
+    s = (f32)sin(angle);
+    vx = dist * c;
+    vy = dist * s;
+    vz = 0.0f;
+    node->offset.x = arg0->pos.x + vx;
+    node->offset.y = arg0->pos.y + vy;
+    node->offset.z = arg0->pos.z + vz;
+    node->field_0x4A = lbl_3_data_26E24.unk4;
 }
 
 // .text:0x0014B3F4 size:0x148 mapped:0x8078A488
