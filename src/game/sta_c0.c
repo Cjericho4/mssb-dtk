@@ -4,6 +4,7 @@
 #include "Dolphin/GX/GXTexture.h"
 #include "Dolphin/GX/GXBump.h"
 #include "game/m_sound.h"
+#include "Dolphin/os.h"
 #include "game/gap_16C410.h"
 
 extern GXTexObj lbl_3_bss_9F4C;
@@ -129,7 +130,29 @@ void fn_3_C9B5C(ActorObject* arg0) {
 
 // .text:0x000C9C94 size:0x120 mapped:0x80708D28
 void fn_3_C9C94(void) {
-    return;
+    Mtx23 mtx;
+    u32 y;
+    u32 x;
+    u32 idx;
+
+    mtx[0][0] = 0.5f;
+    mtx[0][1] = 0.0f;
+    mtx[0][2] = 0.0f;
+    mtx[1][0] = 0.0f;
+    mtx[1][1] = 0.0f;
+    mtx[1][2] = 0.0f;
+
+    GXSetIndTexMtx(GX_ITM_0, mtx, 2);
+    lbl_3_bss_9F48 = (s8*)fn_3_B9534(0x80, 0x40, &lbl_3_bss_9F4C);
+    if (lbl_3_bss_9F48 == NULL) {
+        OSPanic("sta_c0.c", 0x29F, "error\n");
+    }
+    for (y = 0; y < 0x40; y++) {
+        for (x = 0; x < 0x80; x++) {
+            idx = fn_800247E4(x, y, 0x80, 2);
+            lbl_3_bss_9F48[idx] = (u8)(rand() % 4) + 0x7E;
+        }
+    }
 }
 
 // .text:0x000C9DB4 size:0xE00 mapped:0x80708E48
