@@ -193,9 +193,32 @@ void fn_3_159D50(void) {
     return;
 }
 
+extern s32 lbl_3_data_B1BC;
+extern u8 lbl_3_data_FAC4[5];
+extern u16 lbl_3_data_B3DC[];
+extern u16 lbl_3_data_B3E8[];
+
 // .text:0x0015A244 size:0x204 mapped:0x807992D8
 void fn_3_15A244(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 i;
+
+    fn_80034E20(scene, &lbl_3_data_B1BC);
+    for (i = 0; i < 5; i++) {
+        lbl_80371C30[scene->unkIndex + i + 6].obj->field_0x5C = lbl_3_data_B3DC[lbl_3_data_FAC4[i]] << 16;
+    }
+    scene->unk_1C = 1;
+    if (g_Practice.practiceType_1 == 1 || g_Practice.practiceType_1 == 2 || g_Practice.practiceType_1 == 3 ||
+        g_Practice.practiceType_1 == 4 || g_Practice.practiceType_1 == 5) {
+        lbl_80371C30[scene->unkIndex].obj->unk64 = lbl_3_data_B3E8[g_Practice.practiceType];
+        lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0x320000;
+        lbl_80371C30[scene->unkIndex].obj->field_0x68 = 4;
+        lbl_80371C30[1 + scene->unkIndex + g_Practice.practiceType].obj->field_0x5C = 0x690000;
+        lbl_80371C30[0xB + scene->unkIndex + g_Practice.practiceType].obj->field_0x5C = 0x690000;
+        scene->unk_1C = 5;
+    }
+    lbl_3_common_bss_32724.unk_C0 = 1;
+    lbl_803CC1B8->aFunctionPointer = fn_3_159D50;
 }
 
 // .text:0x0015A448 size:0x314 mapped:0x807994DC
