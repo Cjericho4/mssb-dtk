@@ -3,6 +3,8 @@
 #include "game/gap_AC9F8.h"
 #include "game/rep_3448.h"
 
+void fn_80069A98(void);
+
 // .text:0x00097144 size:0x15C mapped:0x806D61D8
 void fn_3_97144(void) {
     return;
@@ -15,7 +17,37 @@ void fn_3_972A0(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
 
 // .text:0x000972C8 size:0x124 mapped:0x806D635C
 void fn_3_972C8(void) {
-    return;
+    GameInitVariables* settings;
+
+    lbl_3_common_bss_32724.someStatusInd = 1;
+    settings = &g_d_GameSettings;
+    if (settings->GameModeSelected == 4) {
+        fn_80069A98();
+        fn_80035CA4(0x16);
+    }
+    if (settings->GameModeSelected == 0 || settings->GameModeSelected == 5 || settings->GameModeSelected == 4) {
+        fn_80035CA4(0x10);
+        fn_80035CA4(0xF);
+    }
+    fn_80035CA4(2);
+    fn_80035CA4(5);
+    fn_80035CA4(4);
+    if (g_d_GameSettings.minigamesEnabled != 0) {
+        fn_80035CA4(0x14);
+        if (settings->GameModeSelected == 6) {
+            fn_80035CA4(0xE);
+        }
+        fn_80035CA4(3);
+        fn_80035CA4(9);
+        fn_80035CA4(0xD);
+        fn_80035CA4(0x11);
+    } else if (settings->GameModeSelected == 2) {
+        fn_80035CA4(0xB);
+        fn_80035CA4(9);
+    }
+    if (lbl_3_common_bss_32724.unkD1 != 0) {
+        fn_80035CA4(0xC);
+    }
 }
 
 // .text:0x000973EC size:0x414 mapped:0x806D6480
