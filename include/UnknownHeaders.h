@@ -1014,7 +1014,7 @@ typedef struct CommonBss_32724 {
     /* 0xCB */ u8 flagCB;        // New flag
     /* 0xCC */ u8 flagCC;  
     /* 0xCD */ u8 transitionToMenuAnimation;      // New flag
-    /* 0xCE */ u8 _padCE;
+    /* 0xCE */ u8 unk_CE;
     /* 0xCF */ u8 unkCF;
     /* 0xD0 */ u8 unkD0;
     /* 0xD1 */ u8 unkD1;

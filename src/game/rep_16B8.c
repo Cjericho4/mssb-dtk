@@ -12,6 +12,14 @@ extern int lbl_3_data_F224;
 extern u16 lbl_3_data_F344[6];
 void fn_800363D8(DrawingSceneStruct* scene, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 extern u8 lbl_3_data_F430[12][2];
+extern u8 lbl_3_data_F200[0x24];
+
+typedef struct {
+    /* 0x00 */ u8 _pad0[0x26];
+    /* 0x26 */ u8 unk26;
+    /* 0x27 */ u8 _pad27[0x28 - 0x27];
+} Lbl8034E978; /* size: 0x28 */
+extern Lbl8034E978 lbl_8034E978;
 
 // .text:0x00091520 size:0x540 mapped:0x806D05B4
 void fn_3_91520(void) {
@@ -109,7 +117,41 @@ void fn_3_91D1C(void) {
 
 // .text:0x00091E4C size:0x178 mapped:0x806D0EE0
 void fn_3_91E4C(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 i;
+    Entry_80371C30* next;
+    s32 val;
+    s32 slot;
+
+    if (lbl_3_common_bss_32724.transitionToMenuAnimation == 0) {
+        if (lbl_3_common_bss_32724.unk_CE != 0) {
+            next = &lbl_80371C30[1];
+            lbl_80371C30[scene->unkIndex].obj->field_0x68 = 4;
+            next[scene->unkIndex].obj->field_0x68 = 4;
+            val = next[scene->unkIndex].obj->field_0x5C >> 16;
+            for (i = 0; i < 11; i++) {
+                if (val <= lbl_3_data_F200[i]) {
+                    if (i == 0) {
+                        lbl_80371C30[scene->unkIndex + 2].obj->field_0x68 = 4;
+                        lbl_80371C30[scene->unkIndex + 3].obj->field_0x68 = 4;
+                    }
+                    lbl_80371C30[i + (scene->unkIndex + 6)].obj->field_0x68 = 4;
+                    lbl_80371C30[i + (scene->unkIndex + 0x11)].obj->field_0x68 = 4;
+                }
+            }
+            scene->unk1a_u16++;
+            if (scene->unk1a_u16 >= 0x2D) {
+                goto remove;
+            }
+        }
+        return;
+    }
+remove:
+    fn_80034CEC((u32)scene);
+    fn_800B0A14_removeQueue();
+    if (g_GameLogic.gameStatus == 3) {
+        lbl_8034E978.unk26 = 1;
+    }
 }
 
 // .text:0x00091FC4 size:0xD14 mapped:0x806D1058
