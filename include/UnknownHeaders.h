@@ -1135,7 +1135,8 @@ typedef struct Scores {
     /* 0xC1 */ u8 unkC1;
     /* 0xC2 */ u8 unkC2;
     /* 0xC3 */ u8 someFlag;
-    /* 0xC4 */ u8 _padC4[0xC6 - 0xC4];
+    /* 0xC4 */ u8 unkC4;
+    /* 0xC5 */ u8 unkC5;
     /* 0xC6 */ u8 unkC6;
 } Scores;
 

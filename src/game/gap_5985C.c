@@ -69,7 +69,52 @@ void fn_3_598D0(void) {
 
 // .text:0x00059918 size:0x178 mapped:0x806989AC
 void fn_3_59918(s32 arg0, s32 arg1) {
-    return;
+    s32 i;
+
+    if (g_Stats.unk36 != 0) {
+        return;
+    }
+    if (g_Minigame.GameMode_MiniGame == 1 && g_Ball.deadBallReason != 2) {
+        return;
+    }
+    if (g_d_GameSettings.GameModeSelected == 2 && (g_Practice.practiceLevel == 7 || g_Practice.practiceLevel == 6)) {
+        if (arg0 == 5) {
+            return;
+        }
+    } else if (g_d_GameSettings.GameModeSelected == 2 && g_Practice._186 != 0) {
+        return;
+    }
+    if (g_d_GameSettings.GameModeSelected == 6 && arg0 == 5) {
+        if (lbl_3_common_bss_32724.unk_D3 != 0) {
+            return;
+        }
+        lbl_3_common_bss_32724.unk_D3 = 1;
+    }
+    if (g_GameLogic.playOver != 0) {
+        return;
+    }
+    if (g_Scores.unkC5 != 0) {
+        return;
+    }
+    if (arg0 == 4) {
+        if (g_Scores.unkC4 != 0) {
+            return;
+        }
+        g_Scores.unkC4 = 1;
+    }
+    if (arg0 == 0xD || arg0 == 0x11) {
+        if (g_Scores.unkC5 != 0) {
+            return;
+        }
+        g_Scores.unkC5 = 1;
+        g_GameLogic.gameOverInd = 1;
+    }
+    for (i = 0; i < 5; i++) {
+        if ((&g_UnkSound_32718._02)[i] == 0) {
+            (&g_UnkSound_32718._02)[i] = arg0;
+            return;
+        }
+    }
 }
 
 // .text:0x00059A90 size:0x30 mapped:0x80698B24
