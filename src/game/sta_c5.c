@@ -627,8 +627,30 @@ s32 fn_3_F5F28(f32* a, f32* b) {
 }
 
 // .text:0x000F5F4C size:0x138 mapped:0x80734FE0
-void fn_3_F5F4C(void) {
-    return;
+void fn_3_F5F4C(MtxPtr m) {
+    Vec ball;
+    StadiumIdEntry* entry;
+    StadiumObjectElem* elem;
+    f32 nearZ;
+    u32 i;
+
+    memcpy(&ball, &g_Ball.AtBat_Contact_BallPos, sizeof(ball));
+    PSMTXMultVec(m, &ball, &ball);
+    for (i = 0; i < lbl_3_common_bss_350E4[0].memcpyCount; i++) {
+        entry = &lbl_3_common_bss_350E4[0].idEntries[i];
+        elem = &lbl_3_common_bss_350E4[0].src[entry->id];
+        if (elem->flag90_80) {
+            if (elem->unk9D == 1) {
+                entry->unk0 = 1.0f;
+            } else if (entry->unk0 < (nearZ = 2.0f + ball.z)) {
+                entry->unk0 = 1.0f;
+            } else if (entry->unk0 > 10.0f + ball.z) {
+                entry->unk0 = 0.25f;
+            } else {
+                entry->unk0 = 1.0 - 0.75f * ((entry->unk0 - nearZ) / 8.0f);
+            }
+        }
+    }
 }
 
 // .text:0x000F6084 size:0x480 mapped:0x80735118
