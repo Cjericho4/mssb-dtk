@@ -32,6 +32,14 @@ void fn_8003BF54(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32
 #include "game/game_batter.h"
 #include "game/gap_E1964.h"
 #include "game/gap_9CD90.h"
+#include "game/gap_90754.h"
+#include "game/rep_1D58.h"
+#include "game/gap_97144.h"
+
+void fn_3_BF1AC(void);
+void fn_3_BC224(void);
+void fn_8001E474(void);
+void fn_8001F228(void);
 
 // .text:0x0005985C size:0x74 mapped:0x806988F0
 void fn_3_5985C(s32 idx, s32 arg1) {
@@ -216,7 +224,53 @@ void fn_3_5A6D4(u8 arg0) {
 
 // .text:0x0005A6FC size:0x180 mapped:0x80699790
 void fn_3_5A6FC(void) {
-    return;
+    GameControlsStruct* gl = &g_GameLogic;
+
+    switch (gl->framesOfExitingToMenu) {
+    case 1: {
+        GameInitVariables* gs = &g_d_GameSettings;
+        if (gs->GameModeSelected == 5 && gs->bJMatchInd == 1) {
+            gs->home_AwaySetting ^= 1;
+        }
+        fn_3_BF1AC();
+        lbl_3_common_bss_32724.someStatusInd = 1;
+        if (g_d_GameSettings.minigamesEnabled != 0) {
+            fn_3_90CB0();
+            if (gs->GameModeSelected != 6) {
+                fn_3_B95EC();
+            }
+        } else {
+            fn_3_B95EC();
+        }
+        fn_8001E474();
+        fn_3_BC224();
+        fn_3_972C8();
+        fn_8001F228();
+        fn_3_902FC();
+        fn_3_8C07C();
+        gl->framesOfExitingToMenu++;
+        g_d_GameSettings._55 = 1;
+        break;
+    }
+    case 2:
+        gl->framesOfExitingToMenu++;
+        break;
+    case 29:
+        fn_3_90434();
+        gl->framesOfExitingToMenu++;
+        break;
+    case 30:
+        if (gl->_128 != 0) {
+            lbl_80366158._00[0x1C] = 2;
+        } else {
+            lbl_80366158._00[0x1C] = 1;
+        }
+        g_d_GameSettings.minigamesEnabled = 0;
+        break;
+    default:
+        gl->framesOfExitingToMenu++;
+        break;
+    }
 }
 
 // .text:0x0005A87C size:0x424 mapped:0x80699910
