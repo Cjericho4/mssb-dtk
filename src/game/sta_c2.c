@@ -265,8 +265,23 @@ void fn_3_CF92C(void) {
 }
 
 // .text:0x000CF930 size:0x158 mapped:0x8070E9C4
-void fn_3_CF930(void) {
-    return;
+void fn_3_CF930(StaC2CF930Obj* obj) {
+    StaC2CF930Anim* anim = obj->anim;
+    if (anim != NULL) {
+        u16 numFrames = anim->numFrames;
+        f32 speed = anim->speed;
+        f32 step;
+        if (anim->curFrame == numFrames) {
+            CTRLSetTranslation(&obj->control, lbl_3_data_18730[obj->posIdx].x, 5.0f, lbl_3_data_18730[obj->posIdx].z);
+            obj->anim = NULL;
+            obj->flag90 = 0;
+        }
+        step = 255.0f / (numFrames / speed);
+        if (obj->alpha <= step) { obj->alpha = 0; } else { obj->alpha -= step; }
+    }
+    if (obj->link != NULL && obj->link->active == NULL) {
+        obj->link = NULL;
+    }
 }
 
 // .text:0x000CFA88 size:0x4 mapped:0x8070EB1C

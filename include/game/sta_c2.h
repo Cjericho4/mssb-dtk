@@ -113,7 +113,6 @@ void fn_3_CEFA8(void);
 void fn_3_CF278(void);
 void fn_3_CF72C(void);
 void fn_3_CF92C(void);
-void fn_3_CF930(void);
 void fn_3_CFA88(void);
 void fn_3_CFA8C(ActorObject* actor);
 void fn_3_CFAB4(StaC2Effect* effect, StaC2EffectParent* parent);
@@ -204,6 +203,44 @@ void fn_8003403C(f32 a, f32 b);
 void fn_80033CC8(StaC2Particle* obj, s32 arg1);
 void fn_3_CED40(StaC2Particle* obj, s32 arg1);
 void fn_3_CEE5C(StaC2Particle* obj, s32 arg1);
+
+typedef struct StaC2CF930Anim {
+    u8 _pad0[0xC];
+    f32 curFrame;   /* 0x0C */
+    f32 speed;      /* 0x10 */
+    u8 _pad14[0x24 - 0x14];
+    u16 numFrames;  /* 0x24 */
+} StaC2CF930Anim;
+
+typedef struct StaC2CF930Link {
+    u8 _pad0[0x8];
+    void* active;   /* 0x08 */
+} StaC2CF930Link;
+
+typedef struct StaC2CF930Obj {
+    Control control;            /* 0x00 */
+    u8 _pad3C[0x8C - 0x3C];
+    StaC2CF930Anim* anim;       /* 0x8C */
+    u8 flag90 : 1;              /* 0x90 */
+    u8 flag90_rest : 7;
+    u8 _pad91;
+    u8 alpha;                   /* 0x92 */
+    u8 _pad93[0x9C - 0x93];
+    u8 posIdx;                  /* 0x9C */
+    u8 _pad9D[0xA0 - 0x9D];
+    StaC2CF930Link* link;       /* 0xA0 */
+} StaC2CF930Obj;
+
+typedef struct StaC2Vec4 {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+} StaC2Vec4;
+
+extern StaC2Vec4 lbl_3_data_18730[27];
+
+void fn_3_CF930(StaC2CF930Obj* obj);
 void fn_3_D1F2C(StaC2ChainParams* params, StaC2D501CEntry* entries, s32 count, Vec* force, StaC2ChainObj* obj);
 void fn_3_CC354(StaC2D501CEntry* entries);
 void fn_3_D501C(StaC2D501CEntry* entries);
