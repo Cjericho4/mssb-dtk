@@ -243,9 +243,26 @@ void fn_3_80028(void) {
     return;
 }
 
+extern VecXZ lbl_3_data_4A34[4];
+extern VecXYZ lbl_3_data_4B58[4];
+
 // .text:0x000810C4 size:0xCC mapped:0x806C0158
-void fn_3_810C4(void) {
-    return;
+void fn_3_810C4(s32 runner, s32 base) {
+    InMemRunnerType* r = &g_Runners[runner];
+    s32 next = (base + 1) & 3;
+
+    if (g_GameLogic.secondaryGameMode == 6) {
+        r->runningAngle = lbl_3_data_4B58[base].z;
+        r->percentTowardsNextBase = 0.0f;
+    } else {
+        r->percentTowardsNextBase = r->slidingAdjustment_backwards;
+    }
+    r->fractionalBasesRan = r->percentTowardsNextBase + base;
+    r->baseStandingOn = base;
+    r->currentBaseCoordinates.x = lbl_3_data_4A34[base].x;
+    r->currentBaseCoordinates.z = lbl_3_data_4A34[base].z;
+    r->nextBaseCoordinates.x = lbl_3_data_4A34[next].x;
+    r->nextBaseCoordinates.z = lbl_3_data_4A34[next].z;
 }
 
 // .text:0x00081190 size:0x928 mapped:0x806C0224
@@ -771,7 +788,6 @@ void fn_3_8A4C8(void) {
     g_Runners[0].position.z = g_Batter.batterPos.z;
 }
 
-extern VecXZ lbl_3_data_4A34[4];
 // .text:0x0008A4E4 size:0xC0 mapped:0x806C9578
 void fn_3_8A4E4(void) {
     s32 i;

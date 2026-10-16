@@ -23,7 +23,7 @@ void fn_3_7FEA8(s32 runnerIdx, s32 direction);
 void fn_3_7FED4(VecXYZ* out, f32 dist, f32 t);
 void fn_3_7FFD0(void);
 void fn_3_80028(void);
-void fn_3_810C4(void);
+void fn_3_810C4(s32 runner, s32 base);
 void fn_3_81190(void);
 void fn_3_81AB8(s32 index);
 void fn_3_81AEC(void);
