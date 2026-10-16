@@ -15,6 +15,7 @@ void setDefaultInMemBatter(void);
 #include "game/gap_FBCD0.h"
 void setBatterContactConstants(void);
 int someAnimationIndFunction(void);
+void fn_3_8F21C(void);
 
 extern f32 shortAngleToRad(s16 ang);
 extern f32 lbl_3_rodata_3268;
@@ -63,6 +64,25 @@ void fn_3_111038(void) {
     return;
 }
 
+static inline void fn_3_1111D0_inline(void) {
+    InMemRunnerType* runners = g_Runners;
+    s32 angle;
+
+    if (lbl_3_common_bss_32220.field_0x08 == 4) {
+        angle = g_Ball.Hit_HorizontalAngle;
+        
+        if (angle < 0x200) {
+            angle = 0x200;
+        }
+        
+        if (angle > 0x600) {
+            angle = 0x600;
+        }
+        
+        runners[0].runningAngle = -shortAngleToRad(angle) - lbl_3_rodata_3268;
+    }
+}
+
 // .text:0x001111D0 size:0x80 mapped:0x80750264
 void fn_3_1111D0(void) {
     InMemRunnerType* runners = g_Runners;
@@ -102,8 +122,36 @@ void fn_3_1112B4(void) {
 }
 
 // .text:0x00111738 size:0x17C mapped:0x807507CC
+extern struct {
+    f32 _00;
+    f32 _04;
+    f32 _08;
+    f32 _0C;
+} lbl_3_data_21438;
+
 void fn_3_111738(void) {
-    return;
+    s32 i;
+
+    ballPhysica();
+    fn_3_1111D0_inline();
+    if (g_Ball.bODQualifyingHitInd != 0 && g_Ball.deadBallReason == 1 &&
+        (g_Ball.ballDistanceFromHome > lbl_3_data_21438._0C || g_Minigame.bODRelated3 != 0)) {
+        fn_3_110AD4();
+        g_Minigame.bOD_hitFinishedInd = 1;
+    }
+    for (i = 0; i < 10; i++) {
+        if (g_Minigame.bODRelated5[i] != 0) {
+            g_Minigame.bODRelated5[i]--;
+            if (g_Minigame.bODRelated5[i] == 0) {
+                fn_3_6C854(g_Minigame.minigameControlStruct[0].characterIndex[g_Minigame.rosterID], 0);
+            }
+        }
+    }
+    if (g_Ball.deadBallReason == 2) {
+        g_Minigame.bOD_hitFinishedInd = 1;
+    }
+    fn_3_8F21C();
+    fn_3_1112B4();
 }
 
 // .text:0x001118B4 size:0x1D4 mapped:0x80750948

@@ -1967,9 +1967,7 @@ typedef struct _MiniGameStruct {
     /*0x1A8B*/ u8 _1A8B;
     /*0x1A8C*/ u8 _1A8C[2];
     /*0x1A8E*/ s16 bOD_HitPowerOfEachChar[4];
-    /*0x1A96*/ u8 bODRelated5;
-    /*0x1A97*/ u8 bODRelated6;
-    /*0x1A98*/ u8 bODUnusedBytes[8];
+    /*0x1A96*/ u8 bODRelated5[10];
     /*0x1AA0*/ u8 _1AA0[3];
     /*0x1AA3*/ u8 _1AA3;
     /*0x1AA4*/ u8 _1AA4;
