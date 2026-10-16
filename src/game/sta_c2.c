@@ -23,6 +23,7 @@ extern DrawingSceneStruct* lbl_3_bss_A8A4;
 extern f32 lbl_3_data_188E0;
 extern Vec lbl_3_rodata_24E8[];
 extern StaC2ChainParams lbl_3_bss_A8A8;
+extern StaC2D501CEntry lbl_3_bss_A8D0[4];
 
 // .text:0x000CB8A8 size:0x1F4 mapped:0x8070A93C
 void fn_3_CB8A8(void) {
@@ -107,6 +108,43 @@ void fn_3_CC1D4(void) {
     }
 }
 
+static inline void staC2InitEntries4(StaC2D501CEntry* entries) {
+    StaC2D501CEntry* entry;
+    u32 i;
+
+    if (entries == NULL) {
+        return;
+    }
+    entry = entries;
+    for (i = 0; i < 4; i++, entry++) {
+        if (i == 3) {
+            entry->unk0 = lbl_3_data_188E0;
+            entry->unk8 = 0.504375f;
+            entry->unk3C = 1;
+        } else {
+            entry->unk0 = lbl_3_data_188E0;
+            entry->unk8 = 0.504375f;
+        }
+        entry->unk4 = 1.0f / entry->unk0;
+        memset(entry->unkC, 0, 0x18);
+        memset(entry->unk24, 0, 0xC);
+        memset(entry->unk30, 0, 0xC);
+    }
+}
+
+static inline void staC2InitChainParams(StaC2ChainParams* p, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f, s32 n) {
+    p->unk0 = a;
+    p->unk4 = b;
+    p->unk8 = c;
+    p->unkC = d;
+    p->unk10 = e;
+    p->unk14 = f;
+    p->unk20 = n;
+    p->unk18 = 1.0f / p->unk20 / 60.0f;
+    p->unk1C = p->unk18 * p->unk18;
+    p->unk24 = 1.0f / (2.0f * p->unk18);
+}
+
 // .text:0x000CC354 size:0xE4 mapped:0x8070B3E8
 void fn_3_CC354(StaC2D501CEntry* entries) {
     StaC2D501CEntry* entry;
@@ -134,7 +172,8 @@ void fn_3_CC354(StaC2D501CEntry* entries) {
 
 // .text:0x000CC438 size:0x18C mapped:0x8070B4CC
 void fn_3_CC438(void) {
-    return;
+    staC2InitChainParams(&lbl_3_bss_A8A8, 1.755f, 0.5f, 300.0f, 20.0f, 1.5f, 0.001f, 8);
+    staC2InitEntries4(lbl_3_bss_A8D0);
 }
 
 // .text:0x000CC5C4 size:0x258 mapped:0x8070B658

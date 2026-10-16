@@ -165,10 +165,15 @@ typedef struct {
     s32 unk3C;
 } StaC2D501CEntry; // size: 0x40
 typedef struct StaC2ChainParams {
-    u8 _pad0[0x18];
+    f32 unk0;  /* 0x00 */
+    f32 unk4;  /* 0x04 */
+    f32 unk8;  /* 0x08 */
+    f32 unkC;  /* 0x0C */
+    f32 unk10; /* 0x10 */
+    f32 unk14; /* 0x14 */
     f32 unk18; /* 0x18 */
     f32 unk1C; /* 0x1C */
-    u8 _pad20[0x4];
+    s32 unk20; /* 0x20 */
     f32 unk24; /* 0x24 */
 } StaC2ChainParams; // size: 0x28
 
