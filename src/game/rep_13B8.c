@@ -1,4 +1,5 @@
 #include "game/rep_13B8.h"
+#include "game/gap_1658F0.h"
 #include "game/rep_AC8.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
@@ -605,9 +606,28 @@ void fn_3_86EF8(void) {
     return;
 }
 
+void fn_3_161588(s32 event, s16 rosterID);
+
 // .text:0x000870AC size:0x110 mapped:0x806C6140
 void fn_3_870AC(void) {
-    return;
+    InMemRunnerType* r;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        g_Runners[i].tagType = 0;
+    }
+    if ((g_FieldingLogic.unk111 == 2 || g_FieldingLogic.unk111 == 4) && g_FieldingLogic.unkE8 >= 0) {
+        r = &g_Runners[g_FieldingLogic.unkE8];
+        if (r->runnerOnFieldOrOutOrScored == 1) {
+            r->tagType = 1;
+        }
+        if (g_FieldingLogic.unkEC < 5 && r->actionCode != 0) {
+            r->tagType = 2;
+        }
+        if (g_d_GameSettings.exhibitionMatchInd == 0 && lbl_3_common_bss_37400.playerIndex == g_GameLogic.teamFielding) {
+            fn_3_161588(6, g_Fielders[g_Ball.fielderWBallIndex].unk178);
+        }
+    }
 }
 
 // .text:0x000871BC size:0x110 mapped:0x806C6250
