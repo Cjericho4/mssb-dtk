@@ -630,9 +630,36 @@ void fn_3_870AC(void) {
     }
 }
 
+extern f32 lbl_3_data_4C44[4];
+extern s16 lbl_3_data_4C54[12];
+
 // .text:0x000871BC size:0x110 mapped:0x806C6250
 void fn_3_871BC(void) {
-    return;
+    s32 i;
+    s32 drain;
+    f32 t;
+
+    for (i = 0; i < 4; i++) {
+        if (g_Runners[i].runnerOnFieldOrOutOrScored == 1) {
+            drain = 0;
+            if (g_Runners[i].groundVelocity[0] >= 0.1f) {
+                drain = lbl_3_data_4C54[10];
+            }
+            if (g_Runners[i].turnaroundCode != 0) {
+                drain += lbl_3_data_4C54[11];
+            }
+            if (drain != 0) {
+                g_Runners[i].stamina -= drain;
+                if (g_Runners[i].stamina < 0) {
+                    g_Runners[i].stamina = 0;
+                }
+            }
+            t = 1.0f - (f32)g_Runners[i].stamina / (f32)lbl_3_data_4C54[9];
+            g_Runners[i].staminaMult = 1.0f - lbl_3_data_4C44[1] * t;
+            g_Runners[i].accelerationStaminaEffect = 1.0f - lbl_3_data_4C44[2] * t;
+            g_Runners[i].accelerationStaminaEffectWhileChangingDirection = 1.0f - lbl_3_data_4C44[3] * t;
+        }
+    }
 }
 
 // .text:0x000872CC size:0x158 mapped:0x806C6360
