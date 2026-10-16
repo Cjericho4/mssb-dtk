@@ -421,7 +421,30 @@ void fn_3_BDE14(void) {
 
 // .text:0x000BDF74 size:0x1CC mapped:0x806FD008
 void fn_3_BDF74(void) {
-    return;
+    QueueEntry* qEntry = (QueueEntry*)lbl_803CC1B8;
+    s32 i;
+    f32 angle;
+
+    if (g_d_GameSettings._55 != 0 || lbl_3_common_bss_35154.unk_479 != 0) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (qEntry->unk10 != 0) {
+        qEntry->unk10--;
+        return;
+    }
+    qEntry->vec.x = g_Ball.physicsSubstruct.futureCoordsAndDist[0].pos.x;
+    qEntry->vec.y = -g_Ball.physicsSubstruct.futureCoordsAndDist[0].pos.y;
+    qEntry->vec.z = g_Ball.physicsSubstruct.futureCoordsAndDist[0].pos.z;
+    qEntry->unk20 = lbl_3_data_A3C[1] - 2;
+    qEntry->unk24 = lbl_3_data_11620.hdr2;
+    for (i = 0; i < 0x60; i++) {
+        angle = 6.2831855f * (f32)rand() / 32767.0f;
+        lbl_3_data_11620.c[i].x = (f32)(400.0 * cos((f64)angle));
+        lbl_3_data_11620.c[i].z = (f32)(400.0 * sin((f64)angle));
+    }
+    memcpy(lbl_3_data_11620.d, lbl_3_data_11620.c, 0x300);
+    lbl_803CC1B8->aFunctionPointer = fn_3_BDCA4;
 }
 
 // .text:0x000BE140 size:0x34 mapped:0x806FD1D4

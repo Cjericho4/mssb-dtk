@@ -47,7 +47,10 @@ typedef struct {
     CosSinPair a[0x60];   /* 0x4C */
     u8 _pad1[0x4C];       /* 0x34C */
     CosSinPair b[0x60];   /* 0x398 */
-    u8 _rest[0x698];      /* 0x698 */
+    u8 hdr2[0x4C];        /* 0x698 */
+    CosSinPair c[0x60];   /* 0x6E4 */
+    u8 _pad3[0x4C];       /* 0x9E4 */
+    CosSinPair d[0x60];   /* 0xA30 */
 } Data11620;
 extern Data11620 lbl_3_data_11620;
 
