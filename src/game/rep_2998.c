@@ -299,8 +299,54 @@ void fn_3_E48D0(void) {
 }
 
 // .text:0x000E4A38 size:0x1B0 mapped:0x80723ACC
-void fn_3_E4A38(void) {
-    return;
+void fn_3_E4A38(MtxPtr mtx, E4A38Model* model) {
+    Vec v;
+    Vec center;
+    s32 n;
+    u8* p;
+    f32 minX;
+    f32 minY;
+    f32 minZ;
+    f32 maxX;
+    f32 maxY;
+    f32 maxZ;
+    s32 t;
+    u16 count;
+
+    minX = 10000.0f;
+    maxX = -10000.0f;
+    maxY = maxX;
+    minY = minX;
+    minZ = minX;
+    maxZ = maxX;
+    p = model->data;
+    while (1) {
+        count = ((E4A38PrimHdr*)p)->count;
+        if (count == 0) {
+            break;
+        }
+        t = count * 3;
+        if (((E4A38PrimHdr*)p)->unk1 != 0) {
+            t = count + 2;
+        }
+        n = t;
+        p += sizeof(E4A38PrimHdr);
+        do {
+            if (lbl_3_bss_AE01 == 0) {
+                PSMTXMultVec(mtx, &((E4A38Vtx*)p)->pos, &v);
+            } else {
+                PSVECScale(&((E4A38Vtx*)p)->pos, 1.0f, &v);
+            }
+            p += sizeof(E4A38Vtx);
+            if (minX > v.x) minX = v.x;
+            if (minY > v.y) minY = v.y;
+            if (minZ > v.z) minZ = v.z;
+            if (maxX < v.x) maxX = v.x;
+            if (maxY < v.y) maxY = v.y;
+            if (maxZ < v.z) maxZ = v.z;
+        } while (--n != 0);
+    }
+    PSVECScale((Vec*)&g_Ball, 1.0f, &center);
 }
 
 // .text:0x000E4BE8 size:0xC8 mapped:0x80723C7C

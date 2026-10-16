@@ -111,7 +111,24 @@ void fn_3_E45F0(CastleRotObj *arg0);
 void fn_3_E4658(CastleRotObj* obj);
 void fn_3_E4760(void);
 void fn_3_E48D0(void);
-void fn_3_E4A38(void);
+typedef struct E4A38PrimHdr {
+    /* 0x0 */ u8 unk0;
+    /* 0x1 */ u8 unk1;
+    /* 0x2 */ u16 count;
+} E4A38PrimHdr; /* size: 0x4 */
+
+typedef struct E4A38Vtx {
+    /* 0x0 */ Vec pos;
+    /* 0xC */ f32 unkC;
+} E4A38Vtx; /* size: 0x10 */
+
+typedef struct E4A38Model {
+    /* 0x0 */ u8 _pad0[0x8];
+    /* 0x8 */ u8* data;
+} E4A38Model;
+
+extern u8 lbl_3_bss_AE01;
+void fn_3_E4A38(MtxPtr mtx, E4A38Model* model);
 struct StadiumModel* fn_3_E4BE8(s32 index, MtxPtr m);
 void fn_3_E4CB0(void);
 void fn_3_E4EF4(void);
