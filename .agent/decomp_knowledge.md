@@ -154,6 +154,17 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **`rand() % range - range / 2`**: keep `range / 2` inline, no `half` local (fn_3_13DFBC).
 *   **Global in a saved reg but a local pointer mismatches**: use the global directly; keep a pointer only for the other base (fn_3_1589C4).
 
+*   **Independent stores to different globals get reordered**: source order may be the reverse of binary order — try swapping (fn_3_B4124, fn_3_B5694).
+*   **Inline init helper taking its float constants and count as args** reproduces runtime `(f32)n` and rodata/`lis` order; read the count back through the struct (`p->unk20 = n; 1.0f / p->unk20`) to block folding (fn_3_CC438).
+*   **Object ptr into r31**: declare the param as the first-member type (`Control*`) and cast to the container in a local (fn_3_D00D0).
+*   **`!x` vs `x == 0` as a call arg** schedule `addi r4,r1,X` differently (fn_3_BC888).
+*   **u16 counter saturating at 0xFFFE**: the field must be `u16`; `(u16)` cast of an s16 field still emits `lha`+`clrlwi` (fn_3_B482C).
+*   **Callee gets r3 from a bare `lis`** (no `addi`): it takes no args (fn_3_B8298).
+*   **s16-returning call results in add/sub chains**: `s32` locals (fn_3_6AF9C, fn_3_57A14).
+*   **ctr loop over a byte array in a global**: index the global directly; cached `MiniGameStruct*` gives `lbzx` (fn_3_111738). `if (n != 0) { for ... }` reproduces an extra `cmpwi; beq` before `mtctr` (fn_3_90DD8).
+*   **`rlwinm r0,r0,16,24,29` on an lhz value**: `(src->h & 0xFC0000) >> 16` (fn_3_E5E70).
+*   **Reuse matched sibling helpers** like `setRandomTarget(target, s32 strength)` with `(u8)strength` index for `clrlslwi` + `++i < 4` do-while (fn_3_1471C4).
+
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
 *   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.

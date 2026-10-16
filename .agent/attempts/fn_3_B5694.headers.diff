@@ -1,0 +1,18 @@
+diff --git a/include/UnknownHeaders.h b/include/UnknownHeaders.h
+index 8635771..0daccf8 100644
+--- a/include/UnknownHeaders.h
++++ b/include/UnknownHeaders.h
+@@ -960,7 +960,12 @@ typedef struct CommonBss_32724 {
+     /* 0xB5 */ u8 unk_B5;
+     /* 0xB6 */ u8 unk_B6;
+     /* 0xB7 */ u8 unk_B7;
+-    /* 0xB8 */ u8 _padB8[0x06];
++    /* 0xB8 */ u8 _padB8;
++    /* 0xB9 */ u8 unk_B9;
++    /* 0xBA */ u8 _padBA;
++    /* 0xBB */ u8 unk_BB;
++    /* 0xBC */ u8 _padBC;
++    /* 0xBD */ u8 unk_BD;
+     /* 0xBE */ u8 unk_BE;
+     /* 0xBF */ u8 unk_BF;
+     /* 0xC0 */ u8 _padC0[0x03]; // Pad to 0xC3

@@ -102,6 +102,13 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_CB3AC | ~48 lines: target keeps extra base reg for segment array + separate byte-offset counter over 6660 pair table; MWCC folds to lhzu walk (.agent/attempts/fn_3_CB3AC.c + .headers.diff) |
 | fn_3_CB538 | regalloc: arg0/idx r28/r29 swapped, one stwx vs add+stw; decl-order brute force failed (.agent/attempts/fn_3_CB538.c + .headers.diff) |
 | fn_3_13E21C | regalloc only (~19 lines): strength-reduced loop ptr/counter reg order (.agent/attempts/fn_3_13E21C.c + .headers.diff) |
+| fn_3_BC6D8 | skipped: lwzu on global counter lbl_3_bss_9968 + same-file data off one lbl_3_data_111A8 base — known unfixable (.agent/attempts/fn_3_BC6D8.c note) |
+| fn_3_BD504 | skipped: dead double `b end` — known unfixable |
+| fn_3_BF6C0 | skipped: same-file static data off one base (r29=111A8 +0x1D0/+0x20/+0x444); inlines unmatched fn_3_BF070 (.agent/attempts/fn_3_BF6C0.c note) |
+| fn_3_B5694 | 3 lines: placement of `lis lbl_3_common_bss_32724@ha` in tail (.agent/attempts/fn_3_B5694.c + .headers.diff) |
+| fn_3_111038 | 68 lines, register numbering only; insn sequence identical (.agent/attempts/fn_3_111038.c) |
+| fn_3_90DD8 | 5 lines: scheduling of 2-arg fn_800216F8 call setup (.agent/attempts/fn_3_90DD8.c) |
+| fn_3_168DFC | skipped: same-file static data off one base (lbl_3_data_285A8 +0x120/+0x360) — known unfixable (.agent/attempts/fn_3_168DFC.c note) |
 
 **Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
 | fn_3_24EA0 | register allocation / scheduling (see git log) |
