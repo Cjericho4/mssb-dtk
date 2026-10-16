@@ -1,0 +1,43 @@
+diff --git a/include/game/rep_1C0.h b/include/game/rep_1C0.h
+index 61eb6d7..51c69a8 100644
+--- a/include/game/rep_1C0.h
++++ b/include/game/rep_1C0.h
+@@ -57,7 +57,37 @@ void fn_3_567C(void);
+ void fn_3_5BAC(void);
+ void fn_3_5BCC(struct Fn3_5BCCArg* arg0);
+ void fn_3_5BF0(void);
+-void fn_3_5C68(void);
++typedef struct AnimTileTex {
++    /* 0x00 */ u8* data;
++    /* 0x04 */ u8 _pad4[0x4];
++    /* 0x08 */ u16 width;
++    /* 0x0A */ u16 height;
++} AnimTileTex;
++
++typedef struct AnimTileEntry {
++    /* 0x00 */ u8 row;
++    /* 0x01 */ u8 frame;
++    /* 0x02 */ u8 timer;
++} AnimTileEntry; /* size: 0x3 */
++
++typedef struct AnimTileObj {
++    /* 0x00 */ struct AnimTileDst* dst;
++    /* 0x04 */ AnimTileTex* tex;
++    /* 0x08 */ u8* tiles;
++    /* 0x0C */ u8* frames;
++    /* 0x10 */ AnimTileEntry* entries;
++    /* 0x14 */ u16 count;
++    /* 0x16 */ u16 delay;
++    /* 0x18 */ u16 numFrames;
++} AnimTileObj;
++
++typedef struct AnimTileSet {
++    /* 0x00 */ u8 _pad0[0x8];
++    /* 0x08 */ AnimTileObj* objs[2];
++} AnimTileSet;
++
++void fn_80023F0C(struct AnimTileDst* dst, AnimTileTex* tex, s32 srcX, s32 srcY, s32 w, s32 h, s32 dstX, s32 dstY);
++void fn_3_5C68(AnimTileSet* set);
+ void fn_3_5E60(void);
+ 
+ #endif // !__GAME_rep_1C0_H_

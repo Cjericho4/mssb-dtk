@@ -1,0 +1,22 @@
+diff --git a/include/game/sta_c5.h b/include/game/sta_c5.h
+index a631092..7e748e3 100644
+--- a/include/game/sta_c5.h
++++ b/include/game/sta_c5.h
+@@ -130,10 +130,15 @@ extern u8 lbl_3_bss_AEE8;
+ typedef struct StaC5Bss_AEE0 {
+     /* 0x000 */ u8 _pad0[0x8];
+     /* 0x008 */ u8 unk8;
+-    /* 0x009 */ u8 _pad9[0x18 - 0x9];
++    /* 0x009 */ u8 _pad9[0x14 - 0x9];
++    /* 0x014 */ s32 unk14;
+     /* 0x018 */ s32 emitter18;
+     /* 0x01C */ s32 emitter1C;
+-    /* 0x020 */ u8 _pad20[0x27C - 0x20];
++    /* 0x020 */ u8 _pad20[0x238 - 0x20];
++    /* 0x238 */ u8* unk238;
++    /* 0x23C */ Mtx23 indMtx;
++    /* 0x254 */ GXTexObj texObj;
++    /* 0x274 */ u8 _pad274[0x27C - 0x274];
+     /* 0x27C */ u8 emittersPaused;
+     /* 0x27D */ u8 _pad27D[0x33B - 0x27D];
+     /* 0x33B */ u8 unk33B;

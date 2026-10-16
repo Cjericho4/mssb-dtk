@@ -113,6 +113,12 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_F9164 | 1 line: u8 index on lbl_3_data_81DC emits clrlslwi vs slwi; s32 index moves the 81DC load above the vol if/else (.agent/attempts/fn_3_F9164.c + .headers.diff) |
 | fn_3_F99F0 | same clrlslwi issue as fn_3_F9164 plus selector-load form/regs (.agent/attempts/fn_3_F99F0.c + .headers.diff) |
 | fn_3_79414 | r5/r6 swap between runner ptr and cached status byte; decl-order + loop variants failed (.agent/attempts/fn_3_79414.c + .headers.diff) |
+| fn_3_A295C | rep_18E8 lbl_3_bss_17F8 file-static sub-base (addi r30,r31,0x10) folded by MWCC — known unfixable (.agent/attempts/fn_3_A295C.c) |
+| fn_3_A2DDC | skipped: same 17F8 sub-base pattern (.agent/attempts/fn_3_A2DDC.c note) |
+| fn_3_A2FD8 | skipped: same 17F8 sub-base pattern (.agent/attempts/fn_3_A2FD8.c note) |
+| fn_3_EE96C | after PSMTXCopy: target stores indMtx[1][1] via separate addi r3,r31,0x23c ptr, addi+lfs 0 consts; MWCC folds (.agent/attempts/fn_3_EE96C.c + .headers.diff) |
+| fn_3_5C68 | saved-reg assignment only (obj r29, j r28, i r27, count r26); all 48 decl orders tried (.agent/attempts/fn_3_5C68.c + .headers.diff) |
+| fn_3_168704 | skipped: same-file static data off one base (&lbl_3_data_285A8) — known unfixable (.agent/attempts/fn_3_168704.c note) |
 
 **Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
 | fn_3_24EA0 | register allocation / scheduling (see git log) |
@@ -147,7 +153,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_14C3BC | Register numbering around the int-to-float conversion constants. |
 | fn_3_1CAC0 | One commutative fmul operand swap in the FOV expression. |
 | fn_3_88B18 | r7/r8 swap for the force-state variable. |
-| fn_3_A1F3C | r3/r4 swap for the runner index. |
+| fn_3_A1F3C | matched (stub fn_3_A46A0 given s32 idx param) |
 | fn_3_B97DC | ACTSetAnimation's time argument arrives in f2 in the target; the C3 prototype only has one float parameter. |
 | fn_3_16E1EC | Register allocation of the reset-condition terms and bss base pointer. |
 | fn_3_D8A10 | scheduling of score-table loads; unrolled _1918 loop uses const offsets vs running pointer |

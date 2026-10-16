@@ -176,6 +176,20 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Store order steers regalloc**: flag byte store before a Vec's three `stfs` fixed greg+freg allocation (fn_3_F9164).
 *   **Callback tables**: `.data` entries holding a callback ptr reveal the callback's arg struct (lbl_3_data_174A8 → fn_3_C095C). CommonBss_35154 blocks repeat at 0x10/0x6C/0xC8 (stride 0x5C: ptr, Timer, s32); `Timer+0x18` is a u16 frame count.
 
+*   **Strength-reduced u16 index for a run of stores**: `j = start; arr[j] = ...; j++;` — not `arr[start + i]` (fn_3_F6A94).
+*   **`case 0: default:`** sharing a body gives `cmpwi 1; beq; bge; b default` dispatch (fn_3_1079C8).
+*   **Branch-local BOOL in the wrong saved reg**: compute it in a `static inline BOOL` helper (fn_3_DD1A8).
+*   **`field--` vs `field = field - 1`** change temp regs though both are `subi` (fn_3_795A8).
+*   **`x -= 0.044` keeps a field reload that `x = x - 0.044` drops** (fn_3_EF930; `u8 += 12.0` too, fn_3_F3CD0).
+*   **Byte read at offset**: `u8* p = bss->arr; p += off; v = *p;` gives `addi base,0x40; lbzx` (fn_3_132EDC).
+*   **`lbzu` counter**: `if (++counter >= 5)` on a plain extern s8 (fn_3_1666B0).
+*   **Branchless or-chain with `>=`**: `(a >= 2) | (x == 11) | (x == 12)` gives `subfc/adde` + `cntlzw` + `or.` (fn_3_B91C8).
+*   **Late rodata-initialised local copy**: declare `u32 color[1] = {0};` in a nested block after the first call (fn_3_5C68).
+*   **Global address recomputed per block but kept live across branches**: two local pointers to the same global (fn_3_ED818).
+*   **Stray extsb on a byte field**: anonymous-union `s8` view (fn_3_DCA68) or plain `(s8)` cast where target has `lbz r0; extsb` (fn_3_795A8).
+*   **u8 copy do-while bound**: compare through the global (`g_Minigame.n`), not `mg->n` (fn_3_1079C8).
+*   **Stub signatures matter for callers**: giving stub `fn_3_A46A0` its real `s32 idx` param also matched fn_3_A1F3C.
+
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
 *   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.
