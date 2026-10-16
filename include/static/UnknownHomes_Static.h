@@ -54,7 +54,8 @@ typedef struct _GameInitVariables {
 extern GameInitVariables g_d_GameSettings;
 
 typedef struct Camera {
-    /* 0x000 */ u8 _pad0[0x4];
+    /* 0x000 */ s16 unk0;
+    /* 0x002 */ u8 _pad2[0x4 - 0x2];
     /* 0x004 */ s16 unk4[7];
     /* 0x012 */ u8 unk12;
     /* 0x013 */ u8 _pad13[0x30 - 0x13];

@@ -930,7 +930,49 @@ void fn_3_1C1B0(void) {
 
 // .text:0x0001C684 size:0x214 mapped:0x8065B718
 void fn_3_1C684(void) {
-    return;
+    f32 cosB;
+    f32 dist;
+    f32 angA;
+    f32 sinA;
+    f32 angB;
+    f32 sinB;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    Data3A40Entry* e;
+
+    e = &lbl_3_data_A40[g_pCamera->unk0];
+
+    g_pCamera->unk2858 = e->unk0;
+    g_pCamera->unk285C = e->unk4;
+    g_pCamera->unk2860 = e->unk8;
+    g_pCamera->unk289C = e->unk10[0];
+    g_pCamera->unk289E = e->unk10[1];
+    g_pCamera->unk2878 = e->unkC;
+    angA = shortAngleToRad_Capped(g_pCamera->unk289E);
+    dist = 20.0f * (f32)cos(angA);
+    sinA = sin(angA);
+    angB = shortAngleToRad_Capped(g_pCamera->unk289C);
+    cosB = cos(angB);
+    sinB = sin(angB);
+    dx = cosB * dist;
+    dy = 20.0f * sinA;
+    dz = sinB * dist;
+    g_pCamera->unk2890 = g_pCamera->unk2840;
+    g_pCamera->unk2894 = g_pCamera->unk2844;
+    g_pCamera->unk2898 = g_pCamera->unk2848;
+    g_pCamera->unk2858 += cosB * g_pCamera->unk287C;
+    g_pCamera->unk2860 += sinB * g_pCamera->unk287C;
+    g_pCamera->unk2858 += sinB * g_pCamera->unk2880;
+    g_pCamera->unk2860 -= cosB * g_pCamera->unk2880;
+    g_pCamera->unk284C = dx + g_pCamera->unk2858;
+    g_pCamera->unk2850 = dy + g_pCamera->unk285C;
+    g_pCamera->unk2854 = dz + g_pCamera->unk2860;
+    g_pCamera->unk2840 = g_pCamera->unk2858;
+    g_pCamera->unk2844 = g_pCamera->unk285C;
+    g_pCamera->unk2848 = g_pCamera->unk2860;
+    g_pCamera->unk287C = 0.0f;
+    g_pCamera->unk2880 = 0.0f;
 }
 
 // .text:0x0001C898 size:0x10 mapped:0x8065B92C
