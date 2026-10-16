@@ -148,7 +148,17 @@ void fn_3_12FAC4(void) {
 
 // .text:0x0012FD6C size:0x118 mapped:0x8076EE00
 void fn_3_12FD6C(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 15; i++) {
+        if (g_Minigame.barrels[i].barrelState != 0) {
+            g_Minigame.barrels[i].posAtStartOfTurn.x = g_Minigame.barrels[i].currentPos.x;
+            g_Minigame.barrels[i].posAtStartOfTurn.y = g_Minigame.barrels[i].currentPos.y;
+            g_Minigame.barrels[i].posAtStartOfTurn.z = g_Minigame.barrels[i].currentPos.z;
+            g_Minigame.barrels[i].barrelState = 1;
+        }
+        g_Minigame.barrels[i].animationCounter = 0;
+    }
 }
 
 // .text:0x0012FE84 size:0x150 mapped:0x8076EF18
