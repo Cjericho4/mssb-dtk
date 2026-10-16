@@ -96,8 +96,61 @@ void fn_3_169D00(KinokoSegment* segs, u32* count) {
 }
 
 // .text:0x00169E70 size:0x20C mapped:0x807A8F04
-void fn_3_169E70(void) {
-    return;
+void fn_3_169E70(KinokoSegment* segs) {
+    Vec view;
+    Vec a;
+    Vec b;
+    Vec dir;
+    Vec side;
+    Fn52768Result* cam;
+    KinokoSegment* seg;
+    u32 i;
+
+    cam = fn_80052768(0);
+    seg = segs;
+    for (i = 0; i < 25; i++, seg++) {
+        if (seg->active == 0) {
+            continue;
+        }
+        view.x = cam->mtx[2][0];
+        view.y = cam->mtx[2][1];
+        view.z = cam->mtx[2][2];
+        if (!PSVECMag(&view)) {
+            view.x = 0.0f;
+            view.y = 0.0f;
+            view.z = 1.0f;
+        } else {
+            PSVECNormalize(&view, &view);
+        }
+        if (i == 0) {
+            memcpy(&a, seg, sizeof(Vec));
+        } else {
+            memcpy(&a, &segs[i - 1], sizeof(Vec));
+        }
+        if (i == 24) {
+            memcpy(&b, seg, sizeof(Vec));
+        } else {
+            memcpy(&b, &segs[i + 1], sizeof(Vec));
+        }
+        PSVECSubtract(&a, &b, &dir);
+        if (!PSVECMag(&dir)) {
+            dir.z = 0.0f;
+            dir.y = 0.0f;
+            dir.x = 1.0f;
+        }
+        PSVECNormalize(&dir, &dir);
+        PSVECCrossProduct(&dir, &view, &side);
+        if (!PSVECMag(&side)) {
+            side.z = 0.0f;
+            side.y = 0.0f;
+            side.x = -1.0f;
+        }
+        PSVECNormalize(&side, &side);
+        PSVECScale(&side, -0.15f, &seg->left);
+        PSVECScale(&side, 0.15f, &seg->right);
+        PSVECAdd(&seg->left, &seg->pos, &seg->left);
+        PSVECAdd(&seg->right, &seg->pos, &seg->right);
+    }
 }
 
 // .text:0x0016A07C size:0x140C mapped:0x807A9110

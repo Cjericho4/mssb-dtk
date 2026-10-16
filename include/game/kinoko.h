@@ -55,7 +55,7 @@ void fn_3_169600(void);
 void fn_3_169804(void);
 void fn_3_169984(void);
 void fn_3_169D00(KinokoSegment* segs, u32* count);
-void fn_3_169E70(void);
+void fn_3_169E70(KinokoSegment* segs);
 void fn_3_16A07C(void);
 void fn_3_1695A0(void);
 void fn_3_16B488(struct _VecXYZ* out, s8 type);
