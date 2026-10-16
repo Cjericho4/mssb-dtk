@@ -159,6 +159,9 @@ typedef struct Strikes {
     s32 unk_10;          /* 0x10 */
     s32 unk_14;          /* 0x14 */
     s16 unk_18[3];       /* 0x18 - Array of strike values */
+    s16 unk_1E;          /* 0x1E */
+    u8 unk_20;           /* 0x20 */
+    u8 unk_21;           /* 0x21 */
 } Strikes; // Total size likely 0x1E or padded to 0x20
 
 extern Camera* g_pCamera;

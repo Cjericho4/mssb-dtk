@@ -43,6 +43,8 @@ void fn_8003BF54(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32
 #include "game/gap_AC9F8.h"
 #include "game/rep_1200.h"
 #include "game/rep_AC8.h"
+#include "game/gap_1E154.h"
+#include "game/gap_7976C.h"
 
 void fn_3_BF1AC(void);
 void fn_3_BC224(void);
@@ -51,6 +53,7 @@ void fn_8001F228(void);
 void fn_3_BBF94(void);
 void fn_3_BF158(void);
 void fn_8006C9D8(void);
+void fn_3_AFDA4(void);
 
 typedef struct {
     /* 0x00 */ s16 coins[3];
@@ -905,7 +908,64 @@ void fn_3_5F720(void) {
 
 // .text:0x0005F7A8 size:0x188 mapped:0x8069E83C
 void fn_3_5F7A8(void) {
-    return;
+    GameInitVariables* gs = &g_d_GameSettings;
+    Scores* sc;
+    s32 hs;
+    u8 th;
+    u8 result;
+
+    g_GameLogic._135 = 0;
+    g_GameLogic._136 = 0;
+    g_RunningLogic.unk11 = 0;
+    g_RunningLogic.unk13 = 0;
+    g_RunningLogic.basesOccupied = 0;
+    sc = &g_Scores;
+    hs = sc->highscore;
+    th = sc->threshold;
+    if (hs > th) {
+        result = 5;
+    } else if (th <= 3) {
+        if (th == hs && sc->unkAD != 0) {
+            result = 4;
+        } else {
+            result = 0;
+        }
+    } else if (hs == th) {
+        result = 4;
+    } else if ((th == 9 && hs >= 7) || (th == 7 && hs >= 6)) {
+        result = 3;
+    } else if (hs >= 4) {
+        result = 2;
+    } else {
+        result = 1;
+    }
+    g_Scores.unkAC = result;
+    g_Scores.unkC1 = 0;
+    g_Scores.unkC6 = 0;
+    lbl_3_common_bss_37400.unk48 = 0;
+    fn_3_6C13C();
+    if (gs->exhibitionMatchInd == 0) {
+        fn_3_16598C();
+    }
+    fn_3_5A684();
+    fn_3_75434();
+    fn_3_59338();
+    fn_3_8A350();
+    fn_3_1E178();
+    fn_3_AFDA4();
+    fn_3_6C13C();
+    fn_3_7B130();
+    setBatterContactConstants();
+    fn_3_8A1D8();
+    fn_3_7AFE4();
+    fn_3_1E154();
+    fn_3_6C108();
+    g_Strikes.strikes = 0;
+    g_Strikes.balls = 0;
+    g_Strikes.unk_1E = -1;
+    g_Strikes.unk_21 = 0;
+    g_GameLogic.frameCountdownAtBeginningOfAtBatLockout = 0x5A;
+    g_GameLogic._13D = 0;
 }
 
 // .text:0x0005F930 size:0x558 mapped:0x8069E9C4
