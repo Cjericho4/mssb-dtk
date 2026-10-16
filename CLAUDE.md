@@ -69,6 +69,7 @@ The toolchain consists of:
 - `python3 tools/rodata_value.py <lbl_3_rodata_XXXX>...` print constant values so `extern` rodata floats can be written as literals.
 - `python3 tools/literalize_rodata.py` sweep unmatched game functions replacing extern rodata floats with literals, keeping only improvements (slow; runs ninja repeatedly).
 - `python3 tools/sbs.py <function> [unit]` side-by-side target/current asm from the last build (best for register swaps).
+- `python3 tools/brute.py <src_file> <function> <template.c> [limit]` permute the lines between `//PERM_BEGIN` and `//PERM_END` in a candidate (decl/statement order) via try_function.py until MATCH.
 - `.agent/workflows/parallel_batch.md` how to run a 100-function batch with 4 parallel worktree agents and merge it.
 - `.agent/attempts/` best non-matching attempts (indexed in working_progress.md's Almost Matched table).
 - `.agent/categorize/functions.csv` per-function category/difficulty for unmatched game functions (Codex-generated heuristic; use for picking batches).

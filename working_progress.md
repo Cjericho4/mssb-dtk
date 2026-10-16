@@ -119,6 +119,10 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_EE96C | after PSMTXCopy: target stores indMtx[1][1] via separate addi r3,r31,0x23c ptr, addi+lfs 0 consts; MWCC folds (.agent/attempts/fn_3_EE96C.c + .headers.diff) |
 | fn_3_5C68 | saved-reg assignment only (obj r29, j r28, i r27, count r26); all 48 decl orders tried (.agent/attempts/fn_3_5C68.c + .headers.diff) |
 | fn_3_168704 | skipped: same-file static data off one base (&lbl_3_data_285A8) — known unfixable (.agent/attempts/fn_3_168704.c note) |
+| fn_3_C2AA0 | ~11 lines float regalloc in corner setup; 720 stmt/decl perms tried (.agent/attempts/fn_3_C2AA0.c + .headers.diff) |
+| fn_3_C1004 | reg numbering: target keeps (&lbl_3_bss_9D40 + 1) and j*16 in saved regs (6), MWCC folds to displacements (5) (.agent/attempts/fn_3_C1004.c is a git diff) |
+| fn_3_C1770 | skipped: same-file static data off one base (&lbl_3_data_17248 +0x18/+0x64/+0xA4), like fn_3_C11CC (.agent/attempts/fn_3_C1770.c note) |
+| fn_3_16D5E4 | greg alloc only: idx r30, (u8)(idx-1) r29, fielder ptr r31 vs ours r31/r30/r29; decl+stmt order brute-forced (.agent/attempts/fn_3_16D5E4.c + .headers.diff) |
 
 **Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
 | fn_3_24EA0 | register allocation / scheduling (see git log) |

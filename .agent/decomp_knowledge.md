@@ -190,6 +190,17 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **u8 copy do-while bound**: compare through the global (`g_Minigame.n`), not `mg->n` (fn_3_1079C8).
 *   **Stub signatures matter for callers**: giving stub `fn_3_A46A0` its real `s32 idx` param also matched fn_3_A1F3C.
 
+*   **Constant-first index sums**: `arr[1 + a + b]` gives `add; addi; slwi; lwzx`; `a + b + 1` reassociates the constant onto `b` (fn_3_15A244).
+*   **CR-bit flag words** (mfcr/rlwinm/rlwimi chain): build over separate statements, `f = (x < lo) | ((x > hi) << 1); f |= (y < lo) << 2; ...` (fn_3_C2AA0).
+*   **cmplwi on a masked u8**: `(u32)(acc & 3) == 1` (fn_3_C2AA0).
+*   **Split pointer initialisers**: `T* a; U* b; b = ...; a = ...;` in the target's computation order fixed an r30/r31 swap (fn_3_7DB30).
+*   **Right after `g_pCamera = (Camera*)&g_Camera;`** write through `g_pCamera->` so stores alias and force the target's `lwz` reload (fn_3_1CCC8).
+*   **`f32 half = 0.5f; w * half`** puts the variable operand first in `fmuls`; a literal goes first (fn_3_C2AA0).
+*   **Dead `b end` after `b check`**: `if (cond) { ...; goto check; } return;`. `bge L; b end` before a copy: `if (!visible || x < 0.1f) return;` (fn_3_16D5E4).
+*   **Callee reads an f3 the caller never sets**: the caller's own 3rd float param is passed through; check its callers for the real signature (fn_3_8FF5C / fn_3_1650C).
+*   **GX enums**: blend dst 1 is GX_BL_ONE; ChanCtrl amb src 1 is GX_SRC_VTX — check the `li` values.
+*   **Permutation brute force**: try_function.py builds in ~0.5 s; permute lines between `//PERM_BEGIN`/`//PERM_END` markers with `tools/brute.py <src> <fn> <template.c>` (matched fn_3_7AB78 in seconds). Don't wait on it with `pgrep -f <name>` (matches the loop itself).
+
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
 *   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.

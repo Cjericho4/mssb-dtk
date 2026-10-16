@@ -1,0 +1,13 @@
+diff --git a/include/game/rep_1FD8.h b/include/game/rep_1FD8.h
+index f93cee6..9325a48 100644
+--- a/include/game/rep_1FD8.h
++++ b/include/game/rep_1FD8.h
+@@ -22,7 +22,7 @@ void fn_3_C24A0(void);
+ void fn_3_C2644(void);
+ void fn_3_C2974(void);
+ void fn_3_C298C(void);
+-void fn_3_C2AA0(void);
++BOOL fn_3_C2AA0(Vec* pos, f32 width, f32 height);
+ void fn_3_C2C80(void);
+ void fn_3_C2EDC(void);
+ void fn_3_C30F0(void);
