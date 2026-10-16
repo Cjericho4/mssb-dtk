@@ -103,6 +103,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 ## Almost Matched (do not retry)
 | Function | Issue |
 |---|---|
+| fn_3_1323CC | loop over inlined fn_3_12F9D4 body; only the lbl_3_data_21770[1] vs currentPos.y load order differs (2 lines) |
 | fn_3_E11E0 | target keeps _19DA[i] as raw u8 in r3 and re-extsb's at each use; CW CSEs the sign-extension (6 lines); u8/s8 temps and goto structure tried |
 | fn_3_E4EF4 | 34*n buffer size sum: add operand order/slwi scheduling differs (4 lines); all 4-term orderings and groupings tried |
 | fn_3_70768 | final interpolation: target computes z-prevZ into f4 first and uses non-fused fmuls+fadds; only FP register assignment differs (6 lines) |
