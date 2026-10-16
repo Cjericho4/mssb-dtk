@@ -82,7 +82,24 @@ void fn_3_168DFC(void) {
 }
 
 // .text:0x00168FA0 size:0x120 mapped:0x807A8034
-void fn_3_168FA0(void) {
-    return;
+void fn_3_168FA0(s32 idx, BOOL flag) {
+    Rep3F60QueueObj* q;
+
+    if (g_hugeAnimStruct.AnimationStructPtrs[idx] != NULL) {
+        q = (Rep3F60QueueObj*)fn_800B0A5C_insertQueue(fn_3_168DFC, (u16)(lbl_803CC1B8->priority + 1));
+        q->animIdx = idx;
+        q->unk24 = 0;
+        q->unk20 = lbl_3_data_28680[13] / 100000.0f;
+        getAnimRelatedCoordinates(idx, lbl_3_data_2891E, &q->pos);
+        if (flag) {
+            q->unk2A = 1;
+            q->unk28 = 3;
+            q->unk2B = 6;
+        } else {
+            q->unk2A = 0;
+            q->unk28 = 2;
+            q->unk2B = 5;
+        }
+    }
 }
 
