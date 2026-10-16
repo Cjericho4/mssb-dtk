@@ -902,7 +902,8 @@ typedef struct CommonBss_32724 {
     /* 0x6C */ s32 field6C;      // From fn_3_14D6D4
     /* 0x70 */ s32 unk70;
     /* 0x74 */ s32 unk74;
-    /* 0x78 */ u8 _pad2_to_90[0x18];
+    /* 0x78 */ s32 unk78;
+    /* 0x7C */ u8 _pad2_to_90[0x14];
     /* 0x90 */ s16 unk_90;
     /* 0x92 */ s16 unk_92;
     /* 0x94 */ u8 _pad2[0x2];

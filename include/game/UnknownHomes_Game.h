@@ -1584,9 +1584,12 @@ typedef struct {
 typedef struct MinigameProgressItem {
     u8 _pad0[0x1A];     // 0x00
     s16 field_0x1A;     // 0x1A
-    u8 _pad1C[0xE];     // 0x1C to 0x29
+    u8 _pad1C[0xC];     // 0x1C to 0x27
+    s16 field_0x28;     // 0x28
     u8 field_0x2A;      // 0x2A
-    u8 _pad2B[0xD];     // 0x2B to 0x37
+    u8 _pad2B[0x8];     // 0x2B to 0x32
+    u8 field_0x33;      // 0x33
+    u8 _pad34[0x4];     // 0x34 to 0x37
 } MinigameProgressItem; // Size: 0x38
 
 typedef struct MinigameRandomTarget {

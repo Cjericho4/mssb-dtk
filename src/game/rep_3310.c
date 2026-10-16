@@ -87,6 +87,24 @@ extern void minigamesSetSomePointers2(void);
 extern void fn_80035B50(s32 arg0);
 extern void fn_80018B38(void);
 extern int lbl_3_data_69D0;
+extern f32 lbl_3_data_22694[6];
+extern s16 lbl_3_data_226AC[8];
+
+/* Animation control block embedded at HugeAnimEntry68+0x34 (spans into the next entry). */
+typedef struct Rep3310AnimCtrl {
+    /* 0x00 */ AnimLevel1* anim;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ u8 _pad8[0x6];
+    /* 0x0E */ s16 unkE;
+    /* 0x10 */ u8 _pad10[0x44];
+    /* 0x54 */ f32 unk54;
+    /* 0x58 */ u8 unk58;
+    /* 0x59 */ u8 unk59;
+    /* 0x5A */ u8 unk5A;
+    /* 0x5B */ u8 unk5B;
+    /* 0x5C */ f32 unk5C;
+    /* 0x60 */ f32 unk60;
+} Rep3310AnimCtrl;
 
 // .text:0x00116840 size:0x190 mapped:0x807558D4
 void fn_3_116840(void) {
@@ -510,8 +528,34 @@ void fn_3_11897C(s32 index) {
 }
 
 // .text:0x001189C8 size:0x150 mapped:0x80757A5C
-void fn_3_1189C8(void) {
-    return;
+void fn_3_1189C8(s32 idx, s32 type, s32 base, s32 count, u8 flag) {
+    MinigameProgressItem* item = &g_Minigame.progressItems[idx];
+    Rep3310AnimCtrl* ctrl = (Rep3310AnimCtrl*)&g_hugeAnimStruct.entries_68[idx + 0x82].unk34;
+    f32 rate = 0.0f;
+    s32 v;
+
+    if (count != 0) {
+        rate = 1.0f / count;
+    }
+    v = lbl_3_common_bss_32724.unk78;
+    ctrl->unk4 = v;
+    ctrl->unkE = type;
+    ctrl->unk5C = 0.0f;
+    ctrl->unk58 = 1;
+    ctrl->unk59 = v != 0;
+    ctrl->unk5A = v != 0;
+    ctrl->unk60 = rate;
+    ctrl->unk54 = lbl_3_data_22694[type];
+    ctrl->unk5A = 1;
+    ctrl->unk5C = base + lbl_3_data_226AC[type];
+    ctrl->unk59 = 1;
+    if (flag) {
+        ctrl->unk5B = 3;
+    } else {
+        ctrl->unk5B = 2;
+    }
+    item->field_0x33 = type;
+    item->field_0x28 = base;
 }
 
 // .text:0x00118B18 size:0x7A0 mapped:0x80757BAC

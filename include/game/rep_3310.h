@@ -31,7 +31,7 @@ void fn_3_11874C(void);
 void fn_3_11881C(s32 arg0);
 void fn_3_11887C(void);
 void fn_3_11897C(s32 index);
-void fn_3_1189C8(void);
+void fn_3_1189C8(s32 idx, s32 type, s32 base, s32 count, u8 flag);
 void fn_3_118B18(void);
 void fn_3_1192B8(void);
 void fn_3_119468(s32 index);
