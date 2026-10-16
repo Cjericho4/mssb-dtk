@@ -26,7 +26,8 @@ typedef struct {
     u8 field_0x1D0;      /* 0x1D0 */
     u8 field_0x1D1;      /* 0x1D1 */
     u8 field_0x1D2;      /* 0x1D2 */
-    u8 _pad3[0x2];       /* 0x1D3-0x1D4 */
+    u8 _pad3;            /* 0x1D3 */
+    u8 field_0x1D4;      /* 0x1D4 */
     u8 field_0x1D5;      /* 0x1D5 */
     u8 field_0x1D6;      /* 0x1D6 */
     u8 field_0x1D7;      /* 0x1D7 */

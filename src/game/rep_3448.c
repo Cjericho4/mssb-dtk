@@ -293,7 +293,32 @@ void fn_3_127B68(void) {
 
 // .text:0x00128A38 size:0x158 mapped:0x80767ACC
 void fn_3_128A38(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    if (lbl_3_common_bss_32724.someStatusInd == 0) {
+        if (scene->eventID == 1) {
+            if ((lbl_80371C30[scene->unkIndex].obj->field_0x5C >> 16) >= 10) {
+                lbl_80371C30[scene->unkIndex].obj->field_0x68 = 0;
+                scene->eventID++;
+            }
+            return;
+        } else if (scene->eventID == 2) {
+            if (g_d_GameSettings.GameModeSelected == 6) {
+                if (lbl_3_common_bss_34C90.field_0x1D2 == 5) {
+                    lbl_80371C30[scene->unkIndex].obj->field_0x68 = 1;
+                    scene->eventID++;
+                }
+            } else if (lbl_3_common_bss_34C90.field_0x1D4 == 5) {
+                lbl_80371C30[scene->unkIndex].obj->field_0x68 = 1;
+                scene->eventID++;
+            }
+            return;
+        } else if (scene->eventID != 3 || (lbl_80371C30[scene->unkIndex].obj->field_0x5C >> 16) < 20) {
+            return;
+        }
+    }
+    fn_80034CEC((u32)scene);
+    fn_800B0A14_removeQueue();
 }
 
 typedef struct {
