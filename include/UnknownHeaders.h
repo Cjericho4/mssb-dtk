@@ -567,7 +567,7 @@ typedef struct StadiumObjectElem {
     u8 _pad3C[0x74 - 0x3C];           /* 0x3C */
     void** unk74;                     /* 0x74 */
     struct StadiumModel* unk_78;      /* 0x78 */
-    u8 _pad_0x7c[0x80 - 0x7C];       /* 0x7C */
+    void (*unk7C)(struct StadiumObjectElem* elem); /* 0x7C */
     BALL_COLLISION_TYPE (*fnPtr)(u32, BALL_COLLISION_TYPE, CollisionStruct*);  /* 0x80 */
     u8 _pad_0x84[0x8C - 0x84];       /* 0x84 */
     struct StadiumActorAnim* unk8C;   /* 0x8C */
@@ -610,7 +610,9 @@ typedef struct UnknownStruct_350E4 {
     /* 0x004 */ void* dest;
     /* 0x008 */ u8 _pad_0x8[0xC];
     /* 0x014 */ StadiumIdEntry* idEntries;
-    /* 0x018 */ u8 _pad_0x18[0x18];
+    /* 0x018 */ void (*unk18)(void);
+    /* 0x01C */ void (*unk1C)(void);
+    /* 0x020 */ u8 _pad_0x20[0x10];
     /* 0x030 */ u32 memcpyCount;
     /* 0x034 */ u32 unk34;
     /* 0x038 */ u32 unk38;

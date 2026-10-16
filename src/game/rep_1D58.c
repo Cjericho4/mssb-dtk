@@ -7,6 +7,9 @@
 #include "Dolphin/GX/GXTexture.h"
 #include "Dolphin/GX/GXTev.h"
 #include "Dolphin/GX/GXPixel.h"
+#include "game/rep_1E08.h"
+
+void fn_800638CC(void);
 
 extern f32 lbl_3_data_11178[5];
 
@@ -280,7 +283,34 @@ void fn_3_B93C8(s32) {
 
 // .text:0x000B93CC size:0x140 mapped:0x806F8460
 void fn_3_B93CC(void) {
-    return;
+    s32 i;
+
+    if (g_d_GameSettings._55 != 0) {
+        return;
+    }
+    if (g_GameLogic.gameStatus == 0) {
+        lbl_3_common_bss_350E4->unk66 = rand();
+    }
+    if (lbl_80366158._28 != 0) {
+        if (g_d_GameSettings.GameModeSelected == 2 && lbl_3_common_bss_350E4->unk1C != NULL) {
+            lbl_3_common_bss_350E4->unk1C();
+        }
+        return;
+    }
+    if (lbl_3_common_bss_350E4->unk18 != NULL) {
+        lbl_3_common_bss_350E4->unk18();
+    }
+    if (lbl_3_common_bss_350E4->unk1C != NULL) {
+        lbl_3_common_bss_350E4->unk1C();
+    }
+    if (g_GameLogic.gameStatus == 0) {
+        fn_800638CC();
+    }
+    for (i = 0; i < (s32)lbl_3_common_bss_350E4->memcpyCount; i++) {
+        if (lbl_3_common_bss_350E4->src[i].unk7C != NULL) {
+            lbl_3_common_bss_350E4->src[i].unk7C(&lbl_3_common_bss_350E4->src[i]);
+        }
+    }
 }
 
 // .text:0x000B950C size:0x4 mapped:0x806F85A0
