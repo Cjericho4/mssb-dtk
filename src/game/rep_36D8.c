@@ -127,8 +127,27 @@ void fn_3_13DC48(void) {
 }
 
 // .text:0x0013DDE0 size:0xC4 mapped:0x8077CE74
-void fn_3_13DDE0(void) {
-    return;
+f32 fn_3_13DDE0(u8 dir, f32 a, f32 b) {
+    if (a < 0.0f) {
+        a += 4.0f;
+    } else if (a >= 4.0f) {
+        a -= 4.0f;
+    }
+    if (b < 0.0f) {
+        b += 4.0f;
+    } else if (b >= 4.0f) {
+        b -= 4.0f;
+    }
+    if (dir == 1) {
+        if (a > b) {
+            return 4.0f + b - a;
+        }
+        return b - a;
+    }
+    if (a < b) {
+        return 4.0f + a - b;
+    }
+    return a - b;
 }
 
 // .text:0x0013DEA4 size:0x118 mapped:0x8077CF38

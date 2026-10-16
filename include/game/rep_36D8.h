@@ -19,7 +19,7 @@ void fn_3_13D618(void);
 s32 fn_3_13DA20(unk_13d5e8_struct* a, unk_13d5e8_struct* b);
 f32 fn_3_13DA50(s8 index, f32 targetPos, s8 *result);
 void fn_3_13DC48(void);
-void fn_3_13DDE0(void);
+f32 fn_3_13DDE0(u8 dir, f32 a, f32 b);
 void fn_3_13DEA4(void);
 struct CameraView;
 void fn_3_13DFBC(struct CameraView* cam);
