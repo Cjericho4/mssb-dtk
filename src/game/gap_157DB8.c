@@ -1,6 +1,7 @@
 #include "game/gap_157DB8.h"
 #include "game/rep_3448.h"
 #include "game/gap_AC9F8.h"
+#include "game/rep_16B8.h"
 
 // .text:0x00157DB8 size:0x70 mapped:0x80796E4C
 void fn_3_157DB8(s32 arg0) {
@@ -101,7 +102,35 @@ void fn_3_1586B0(void) {
 
 // .text:0x001589C4 size:0x1A0 mapped:0x80797A58
 void fn_3_1589C4(void) {
-    return;
+    CommonBss_32724* b;
+
+    if (g_Practice.practiceType_2 == 0 || g_Practice.practiceType_2 == 1 || g_Practice.practiceType_2 == 2) {
+        if (g_Practice.tutorialState == 3 && g_Practice._1C7 == 0) {
+            b = &lbl_3_common_bss_32724;
+            if (b->unk_C6 == 0) {
+                fn_800B0A5C_insertQueue(fn_3_1586B0, 2);
+                b->unk_C6 = 1;
+            }
+            if (g_Practice.practiceType_2 == 2 && g_Ball.totalFramesAtPlay == 1) {
+                fn_800B0A5C_insertQueue(fn_3_9669C, 2);
+            }
+            if (g_Practice.practiceType_2 == 2) {
+                if (g_Practice._186 == 0x3C) {
+                    fn_800B0A5C_insertQueue(fn_3_1581FC, 2);
+                }
+            } else if (g_Practice._186 == 1) {
+                fn_800B0A5C_insertQueue(fn_3_1581FC, 2);
+            }
+        }
+    } else if (g_Practice.practiceType_2 == 3 && g_Practice.tutorialState == 3 && g_Practice._1C7 == 0) {
+        if (lbl_3_common_bss_32724.unk_C7 == 0) {
+            fn_800B0A5C_insertQueue(fn_3_1586B0, 2);
+            fn_800B0A5C_insertQueue(fn_3_9669C, 2);
+        }
+        if (g_Practice._186 == 1) {
+            fn_800B0A5C_insertQueue(fn_3_1581FC, 2);
+        }
+    }
 }
 
 // .text:0x00158B64 size:0x480 mapped:0x80797BF8

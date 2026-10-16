@@ -981,7 +981,8 @@ typedef struct CommonBss_32724 {
     /* 0xBF */ u8 unk_BF;
     /* 0xC0 */ u8 _padC0[0x03]; // Pad to 0xC3
     /* 0xC3 */ u8 unk_C3;
-    /* 0xC4 */ u8 _padC4[0x03]; // Pad to 0xC7
+    /* 0xC4 */ u8 _padC4[0x02];
+    /* 0xC6 */ u8 unk_C6;
     /* 0xC7 */ u8 unk_C7;
     /* 0xC8 */ u8 field_0xC8;
     /* 0xC9 */ u8 field_0xC9;
