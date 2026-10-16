@@ -177,9 +177,33 @@ void fn_3_13DEA4(void) {
     } while (++i < 4);
 }
 
+extern f32 lbl_3_bss_B794;
+extern s32 lbl_3_bss_B798;
+void fn_800528B4(void);
+
 // .text:0x0013DFBC size:0x1B8 mapped:0x8077D050
-void fn_3_13DFBC(void) {
-    return;
+void fn_3_13DFBC(CameraView* cam) {
+    Vec v;
+    Mtx m;
+    s32 range;
+
+    range = 1000.0f * lbl_3_bss_B794;
+    v.x = (rand() % range - range / 2) / 1000.0;
+    v.y = (rand() % range - range / 2) / 1000.0;
+    v.z = 0.0f;
+    PSMTXInverse(cam->viewMtx, m);
+    PSMTXMultVecSR(m, &v, &v);
+    cam->pos.x += v.x;
+    cam->pos.y += v.y;
+    cam->pos.z += v.z;
+    cam->target.x += v.x;
+    cam->target.y += v.y;
+    cam->target.z += v.z;
+    if (--lbl_3_bss_B798 <= 0) {
+        lbl_3_bss_B798 = 0;
+        lbl_3_bss_B794 = 0.0f;
+        fn_800528B4();
+    }
 }
 
 // .text:0x0013E174 size:0xA8 mapped:0x8077D208
@@ -211,7 +235,7 @@ void fn_3_13E174(u8 mode) {
     default:
         return;
     }
-    fn_800528AC(fn_3_13DFBC);
+    fn_800528AC((void (*)(void))fn_3_13DFBC);
 }
 
 // .text:0x0013E21C size:0x188 mapped:0x8077D2B0
@@ -332,7 +356,7 @@ void fn_3_140484(void) {
         fn_3_90064(0x2DF);
         lbl_3_bss_B798 = lbl_3_data_218BC.unk30[0];
         lbl_3_bss_B794 = lbl_3_data_218BC.unk38[0];
-        fn_800528AC(fn_3_13DFBC);
+        fn_800528AC((void (*)(void))fn_3_13DFBC);
         for (i = 0; i < 4; i++) {
             fn_3_6C854(i, 1);
         }
