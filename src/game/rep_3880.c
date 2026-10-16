@@ -8,6 +8,8 @@
 #include "game/rep_1838.h"
 #include "Dolphin/mtx.h"
 
+extern f32 lbl_3_data_21770[6];
+
 typedef struct {
     u8 _pad0[0x8];
     s32 unk8;
@@ -509,8 +511,19 @@ void fn_3_14D2C0(void) {
 }
 
 // .text:0x0014D318 size:0x134 mapped:0x8078C3AC
-void fn_3_14D318(void) {
-    return;
+void fn_3_14D318(ListNode_14B9F0* node) {
+    u8 idx;
+    BB_barrelStruct* barrel;
+    f32 half = 0.5f;
+
+    idx = node->field_0x45;
+    barrel = &g_Minigame.barrels[idx];
+
+    node->offset.x = barrel->currentPos.x;
+    node->offset.y = -(lbl_3_data_21770[3] * half + barrel->currentPos.y);
+    node->offset.z = barrel->currentPos.z;
+    node->offset.x += (rand() % 100 - 50) / 100.0;
+    node->offset.y += (rand() % 100 - 50) / 100.0;
 }
 
 // .text:0x0014D44C size:0x288 mapped:0x8078C4E0
