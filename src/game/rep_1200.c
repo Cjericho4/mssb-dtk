@@ -208,7 +208,37 @@ void fn_3_73718(void) {
 
 // .text:0x0007372C size:0x124 mapped:0x806B27C0
 void fn_3_7372C(void) {
-    return;
+    s32 i;
+    s32 found = 0;
+
+    if (g_Pitcher.strikeOutOrWalk == 3) {
+        for (i = 1; i < 4; i++) {
+            InMemRunnerType* r = &g_Runners[i];
+            if (r->runnerOnFieldOrOutOrScored == 1 || r->runnerOnFieldOrOutOrScored == 5) {
+                if (found == 0) {
+                    r->currentBase = i;
+                    fn_3_89864(i, 1);
+                } else {
+                    r->currentBase = r->startingBase_baseAchieved;
+                    r->nextBase = (r->currentBase + 1) & 3;
+                }
+            } else {
+                found = 1;
+            }
+        }
+    } else {
+        for (i = 1; i < 4; i++) {
+            InMemRunnerType* r = &g_Runners[i];
+            if (r->runnerOnFieldOrOutOrScored != 1 && r->runnerOnFieldOrOutOrScored != 5) {
+                break;
+            }
+            if (i == r->currentBase) {
+                fn_3_89864(i, 1);
+            }
+        }
+    }
+    g_Runners[0].currentBase = 1;
+    g_Runners[0].nextBase = 2;
 }
 
 // .text:0x00073850 size:0x58 mapped:0x806B28E4
