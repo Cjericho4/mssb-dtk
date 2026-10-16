@@ -61,7 +61,7 @@ void fn_3_10B200(void);
 void fn_3_10B27C(void);
 void fn_3_10B8D0(void);
 void fn_3_10BE7C(void);
-void fn_3_10C450(void);
+void fn_3_10C450(s32 slot, s32 charID);
 void fn_3_10C58C(void);
 void fn_3_10C7A4(void);
 void fn_3_10C81C(void);

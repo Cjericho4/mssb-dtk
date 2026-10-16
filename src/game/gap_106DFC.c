@@ -6,6 +6,7 @@
 #include "game/rep_1D58.h"
 #include "game/gap_9CD90.h"
 #include "game/gap_464.h"
+#include "game/gap_6D4A0.h"
 
 extern void fn_800246D4(s32 (*compareFn)(u8*, u8*), u8* out, u8* in, u32 elemSize, u8 count);
 extern void fn_8001CA40(s32 arg0);
@@ -433,8 +434,26 @@ void fn_3_10BE7C(void) {
 }
 
 // .text:0x0010C450 size:0x13C mapped:0x8074B4E4
-void fn_3_10C450(void) {
-    return;
+extern u8 lbl_800E86F0[12];
+
+void fn_3_10C450(s32 slot, s32 charID) {
+    CharacterStats* stats = &inMemRoster[0][slot];
+
+    memcpy(stats, &lbl_8034E9A0[charID], sizeof(CharacterStats));
+    if (g_Minigame.players._18D0[slot + 4] != 0) {
+        stats->stats.SlapContactSize += lbl_800E86F0[0];
+        stats->stats.ChargeContactSize += lbl_800E86F0[1];
+        stats->stats.SlapHitPower += lbl_800E86F0[2];
+        stats->stats.ChargeHitPower += lbl_800E86F0[3];
+        stats->stats.BuntingContactSize += lbl_800E86F0[4];
+        stats->stats.Speed += lbl_800E86F0[5];
+        stats->stats.ThrowingArm += lbl_800E86F0[6];
+        stats->stats.CurveBallSpeed += lbl_800E86F0[7];
+        stats->stats.FastBallSpeed += lbl_800E86F0[8];
+        stats->stats.cursedBall += lbl_800E86F0[9];
+        stats->stats.Curve += lbl_800E86F0[10];
+        stats->stats.curveControl += lbl_800E86F0[11];
+    }
 }
 
 // .text:0x0010C58C size:0x218 mapped:0x8074B620
