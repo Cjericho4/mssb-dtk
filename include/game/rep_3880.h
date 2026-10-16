@@ -248,7 +248,7 @@ void fn_3_151760(void);
 void fn_3_151798(void);
 void fn_3_1517D0(ListNode_14B9F0* node, Struct_14C79C_Arg* arg1);
 void fn_3_1519F8(Struct_14C79C_Arg* arg0, ListNode_14B9F0* node);
-void fn_3_151BAC(void);
+void fn_3_151BAC(Struct_14C79C_Arg* arg0, ListNode_14B9F0* node);
 void fn_3_151D6C(void);
 void fn_3_151F2C(void);
 void fn_3_1524E8(void);

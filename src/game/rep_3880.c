@@ -32,6 +32,7 @@ typedef struct {
 } Struct_26BDC;
 extern Struct_26BDC lbl_3_data_26BDC;
 extern Struct_26BDC lbl_3_data_26BEC;
+extern Struct_26BDC lbl_3_data_26BFC;
 f32 fn_3_119854(u32 index);
 extern u8 lbl_3_data_26CB8[23];
 s32 fn_8001B728(s32 index, u8 type, VecXYZ* out);
@@ -1213,8 +1214,41 @@ void fn_3_1519F8(Struct_14C79C_Arg* arg0, ListNode_14B9F0* node) {
 }
 
 // .text:0x00151BAC size:0x1C0 mapped:0x80790C40
-void fn_3_151BAC(void) {
-    return;
+void fn_3_151BAC(Struct_14C79C_Arg* arg0, ListNode_14B9F0* node) {
+    f32 scale;
+    s32 alpha;
+    s32 da;
+    f32 ds;
+    s32 half;
+
+    fn_8003403C(node->scaleX, node->scaleY);
+    fn_80033CC8(node, arg0->unk10);
+    if (node->field_0x4D != 0) {
+        scale = fn_3_119854(2);
+    } else {
+        scale = fn_3_119854(0);
+    }
+    alpha = node->color[3];
+    if (lbl_3_data_26BFC.unkC / node->field_0x4A < 2) {
+        half = lbl_3_data_26BFC.unkC / 2;
+        da = lbl_3_data_26BDC.unk8 / half;
+        ds = ((f32)lbl_3_data_26BFC.unk4 * scale / 100000.0f) / (f32)half;
+    } else {
+        half = lbl_3_data_26BFC.unkC / 2;
+        da = -lbl_3_data_26BDC.unk8 / half;
+        ds = -((f32)lbl_3_data_26BFC.unk4 * scale / 100000.0f) / (f32)half;
+    }
+    alpha += da;
+    if (alpha < 0) {
+        alpha = 0;
+    } else if (alpha > 0xFF) {
+        alpha = 0xFF;
+    }
+    node->color[3] = alpha;
+    node->scaleX += ds;
+    node->scaleY = node->scaleX;
+    PSVECAdd(&node->offset, &node->velocity, &node->offset);
+    node->field_0x4A--;
 }
 
 // .text:0x00151D6C size:0x1C0 mapped:0x80790E00
