@@ -723,7 +723,36 @@ BOOL fn_3_B254C(void) {
 
 // .text:0x000B2630 size:0x11C mapped:0x806F16C4
 void fn_3_B2630(void) {
-    return;
+    InputStruct *temp_r7;
+
+    temp_r7 = &g_Controls[g_Practice.homeAway];
+    if (g_Practice.framesOnAllInstructions < 0x7FFE) {
+        g_Practice.framesOnAllInstructions += 1;
+    } else {
+        g_Practice.framesOnAllInstructions = 0x7FFF;
+    }
+    if ((g_Practice.instructionComplete_readyToAdvance == 0) && (g_Practice.allInstructionsComplete == 0)) {
+        if (g_Practice.framesOnCurrInstruction < 0x7FFE) {
+            g_Practice.framesOnCurrInstruction += 1;
+        } else {
+            g_Practice.framesOnCurrInstruction = 0x7FFF;
+        }
+    }
+    if ((g_Practice.tutorialState == 1) && (temp_r7->newButtonInput & 0x1000)) {
+        if (g_Practice.tutorialState != 2) {
+            g_Practice.practiceState = 0;
+            g_Practice.tutorialState = 2;
+            g_Practice.framesSincePracticeMenuDefaultTransition = 0;
+        }
+    } else if (g_Practice.allInstructionsComplete != 0) {
+        if ((temp_r7->newButtonInput & 0x100) && (g_Practice.tutorialState != 2)) {
+            g_Practice.practiceState = 0;
+            g_Practice.tutorialState = 2;
+            g_Practice.framesSincePracticeMenuDefaultTransition = 0;
+        }
+    } else {
+        fn_3_B1DD0();
+    }
 }
 
 // .text:0x000B274C size:0x58 mapped:0x806F17E0
