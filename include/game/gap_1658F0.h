@@ -12,7 +12,8 @@ typedef struct {
     ScoutFlagPair scoutFlags[9]; /* 0x00 */
     u8 _pad12[0x40 - 0x12];
     s16 playerIndex;   /* 0x40 */
-    u8 _pad42[0x4];
+    s16 unk42;         /* 0x42 */
+    u8 _pad44[0x2];
     u8 unk46;          /* 0x46 */
     u8 unk47;          /* 0x47 */
     u8 unk48;          /* 0x48 */

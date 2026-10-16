@@ -278,7 +278,27 @@ void fn_3_95124(void) {
 
 // .text:0x000951B4 size:0x128 mapped:0x806D4248
 void fn_3_951B4(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    if (g_Ball.deadBallReason == 1) {
+        if (g_GameLogic.gameStatus == 0x14) {
+            lbl_80371C30[scene->unkIndex].obj->field_0x68 = 1;
+        }
+        if (g_GameLogic.gameStatus == 2 || g_GameLogic.gameStatus == 0x14) {
+            return;
+        }
+    } else {
+        if (g_UnkSound_32718._07 == 0 || g_GameLogic.gameStatus == 1) {
+            lbl_80371C30[scene->unkIndex].obj->field_0x68 = 1;
+        }
+        if (lbl_3_common_bss_32724.someStatusInd == 0 && lbl_3_common_bss_37400.unk42 != 0 &&
+            (g_GameLogic.gameStatus == 1 || g_GameLogic.gameStatus == 2)) {
+            return;
+        }
+    }
+    lbl_3_common_bss_32724.unk_B4 = 0;
+    fn_80034CEC((u32)scene);
+    fn_800B0A14_removeQueue();
 }
 
 // .text:0x000952DC size:0xB0 mapped:0x806D4370
