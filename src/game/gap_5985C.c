@@ -25,6 +25,7 @@ typedef struct {
 extern Data228_5985C lbl_3_data_228;
 void fn_3_1CE90(void);
 BOOL fn_3_10007C(void);
+void fn_8003BF54(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, s32 arg8);
 #include "game/rep_1C0.h"
 #include "game/rep_868.h"
 #include "game/rep_540.h"
@@ -247,8 +248,32 @@ end:
 }
 
 // .text:0x0005B220 size:0x148 mapped:0x8069A2B4
-void fn_3_5B220(void) {
-    return;
+BOOL fn_3_5B220(s32 arg0) {
+    s16 state;
+
+    if (g_GameLogic.frames_memoryCardWriteOnMVP < 0x7FFE) {
+        g_GameLogic.frames_memoryCardWriteOnMVP++;
+    } else {
+        g_GameLogic.frames_memoryCardWriteOnMVP = 0x7FFF;
+    }
+    switch (g_GameLogic.endGameStage) {
+    case 0:
+        if (arg0 == 1 && g_Minigame._1A3C == 0 && g_Minigame._1A44 == 0 && g_Minigame._1A45 == 0 && g_Minigame._1A43 == 0) {
+            return TRUE;
+        }
+        fn_8003BF54(lbl_80366158._27, 0, 0, 1, 0, 4, 5, 0, 0);
+        g_GameLogic.endGameStage++;
+        break;
+    case 1:
+        state = lbl_803CC1B8->loadingState;
+        if (state == 1 || (u16)(state - 11) <= 1 || state == 7) {
+            g_GameLogic.endGameStage++;
+        }
+        break;
+    default:
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x0005B368 size:0x18 mapped:0x8069A3FC

@@ -46,7 +46,7 @@ void fn_3_5ACA0(void);
 void fn_3_5AE0C(void);
 void fn_3_5AE9C(void);
 void fn_3_5B0C4(void);
-void fn_3_5B220(void);
+BOOL fn_3_5B220(s32 arg0);
 void fn_3_5B368(void);
 s32 fn_3_5B380(s32 arg0);
 void fn_3_5B408(void);
