@@ -338,7 +338,23 @@ void fn_3_13F6C8(void) {
 
 // .text:0x0013F7E4 size:0xE0 mapped:0x8077E878
 void fn_3_13F7E4(void) {
-    return;
+    s32 i;
+
+    if (g_Minigame._1B19 != 1) {
+        return;
+    }
+    if (g_Minigame._1AFA <= 0) {
+        g_Minigame._1AFE[0] = 0;
+        g_Minigame._1AFE[1] = 0;
+        g_Minigame._1AFE[2] = 0;
+        g_Minigame._1AFE[3] = 0;
+    }
+    for (i = 0; i < 4; i++) {
+        if (g_Minigame._1900[i] >= 0 &&
+            (g_Runners[g_Minigame._1900[i]].runningDirectionCode == 1 || g_Runners[g_Minigame._1900[i]].runningDirectionCode == 3)) {
+            g_Minigame._1AFE[i]++;
+        }
+    }
 }
 
 // .text:0x0013F8C4 size:0x360 mapped:0x8077E958
