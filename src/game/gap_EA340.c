@@ -1,5 +1,7 @@
 #include "game/gap_EA340.h"
 #include "game/rep_3448.h"
+#include "game/gap_16C410.h"
+#include "musyx/musyx.h"
 
 // .text:0x000EA340 size:0x114 mapped:0x807293D4
 void fn_3_EA340(void) {
@@ -72,9 +74,35 @@ void fn_3_ED058(void) {
     return;
 }
 
+extern s32 lbl_3_data_8F64;
+extern u16 lbl_3_data_8FC4[];
+
 // .text:0x000ED0F4 size:0x150 mapped:0x8072C188
 void fn_3_ED0F4(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 stadium;
+    u8 vol;
+    u8 pan;
+    SND_VOICEID vid;
+
+    fn_80034E20(scene, &lbl_3_data_8F64);
+    lbl_80371C30[scene->unkIndex + 1].obj->unk64 = lbl_3_data_8FC4[g_Minigame._1921 - 1];
+    stadium = g_d_GameSettings.StadiumID;
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        vol = lbl_3_data_84B8[0][28].vol;
+    } else {
+        vol = lbl_3_data_8404[stadium][28].vol;
+    }
+    vid = sndFXStartEx(lbl_3_data_81DC[stadium] + 28, vol, 0x3F, 0);
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        pan = lbl_3_data_84B8[0][28].pan;
+    } else {
+        pan = lbl_3_data_8404[stadium][28].pan;
+    }
+    sndFXCtrl(vid, 0x5B, pan);
+    scene->timer18 = 0;
+    g_Minigame._19CD = 1;
+    lbl_803CC1B8->aFunctionPointer = fn_3_ED058;
 }
 
 // .text:0x000ED244 size:0x64 mapped:0x8072C2D8
