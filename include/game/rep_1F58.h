@@ -4,7 +4,8 @@
 #include "mssbTypes.h"
 
 void fn_3_C0854(void);
-void fn_3_C095C(void);
+struct RepC095CEntry;
+void fn_3_C095C(struct RepC095CEntry* entry);
 void fn_3_C0AD8(void);
 void fn_3_C0C4C(s32 idx);
 void fn_3_C0CE8(f32 arg0, f32 arg1, f32 arg2, u8 arg3);

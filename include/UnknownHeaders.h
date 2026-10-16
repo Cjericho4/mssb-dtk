@@ -214,7 +214,8 @@ typedef struct AnimLevel1 {
     /* 0x90 */ void* field7_0x90;
     /* 0x94 */ void* field7_0x94;
     /* 0x98 */ u8    animFlags;
-    /* 0x99 */ u8    _pad2[0xD2 - 0x99];
+    /* 0x99 */ u8    unk99;
+    /* 0x9A */ u8    _pad2[0xD2 - 0x9A];
 } AnimLevel1; 
 AnimLevel1** fn_800111D8(AnimationStruct* anim);
 u8 LoadModel(AnimationStruct* anim);
@@ -735,11 +736,33 @@ typedef struct BssTransRotData {
     f32 rotZ;        /* 0x18 */
 } BssTransRotData; /* size: 0x1C */
 
+typedef struct CommonBss32724Timer {
+    /* 0x00 */ f32 unk0;
+    /* 0x04 */ f32 unk4;
+    /* 0x08 */ u8 _pad8[0x4];
+    /* 0x0C */ u16 unkC;
+    /* 0x0E */ s16 unkE;
+    /* 0x10 */ u8 _pad10;
+    /* 0x11 */ u8 flag80 : 1;
+    /* 0x11 */ u8 _bits11 : 7;
+    /* 0x12 */ u8 _pad12[0x18 - 0x12];
+    /* 0x18 */ u16 unk18;
+    /* 0x1A */ u8 _pad1A[0x20 - 0x1A];
+} CommonBss32724Timer; // size: 0x20
+
 typedef struct CommonBss_35154 {
     /* 0x000 */ u32 firstMember;
     /* 0x004 */ s32 unk4;
     /* 0x008 */ void* field_0x8;
-    /* 0x00C */ u8 _pad0[0x3AC - 0xC];
+    /* 0x00C */ u8 _pad0[0x10 - 0xC];
+    /* 0x010 */ HugeAnimEntry68* unk10;
+    /* 0x014 */ u8 _pad14[0x20 - 0x14];
+    /* 0x020 */ CommonBss32724Timer timer20;
+    /* 0x040 */ s32 unk40;
+    /* 0x044 */ u8 _pad44[0x7C - 0x44];
+    /* 0x07C */ CommonBss32724Timer timer7C;
+    /* 0x09C */ s32 unk9C;
+    /* 0x0A0 */ u8 _padA0[0x3AC - 0xA0];
     /* 0x3AC */ u32 bitfield;
     /* 0x3B0 */ u8 unk_3b0;
     /* 0x3B1 */ u8 _pad3b1[7];
@@ -936,16 +959,6 @@ Struct_14D6D4_Node* listHead;    // 0x0C
 s32 field10;                     // 0x10
 } Struct_14D6D4_Input;
 
-typedef struct CommonBss32724Timer {
-    /* 0x00 */ f32 unk0;
-    /* 0x04 */ u8 _pad4[0x8];
-    /* 0x0C */ u16 unkC;
-    /* 0x0E */ s16 unkE;
-    /* 0x10 */ u8 _pad10;
-    /* 0x11 */ u8 flag80 : 1;
-    /* 0x11 */ u8 _bits11 : 7;
-    /* 0x12 */ u8 _pad12[0x20 - 0x12];
-} CommonBss32724Timer; // size: 0x20
 
 typedef struct CommonBss_32724 {
     /* 0x00 */ u8 _pad0[0x10];

@@ -24,6 +24,24 @@ extern RepC0854Obj* lbl_3_data_174A0[2];
 extern RepC0854Slot lbl_3_data_17260[18];
 void fn_80027918(u8 id, f32 arg1);
 
+typedef struct RepC095CEntry {
+    /* 0x00 */ u32 unk0;
+    /* 0x04 */ void (*callback)(struct RepC095CEntry* entry);
+    /* 0x08 */ f32 x;
+    /* 0x0C */ f32 y;
+    /* 0x10 */ f32 z;
+    /* 0x14 */ u32 frames;
+} RepC095CEntry; /* size: 0x18 */
+
+extern RepC095CEntry lbl_3_data_174A8[2][2];
+s32 fn_8005268C(void);
+u32 fn_80024DB0(CommonBss32724Timer* timer);
+void fn_80024FA4(AnimLevel1** anim, s32 arg1, CommonBss32724Timer* timer, s32 arg3);
+void fn_800B4CA0(AnimLevel1* anim, f32 val);
+void fn_800B4C04(AnimLevel1* anim, f32 val);
+void fn_800BDA24(AnimLevel1** anim);
+void fn_800BDA94(AnimLevel1** anim, Mtx mtx);
+
 // .text:0x000C0854 size:0x108 mapped:0x806FF8E8
 void fn_3_C0854(void) {
     s32 i;
@@ -61,8 +79,36 @@ void fn_3_C0854(void) {
 }
 
 // .text:0x000C095C size:0x17C mapped:0x806FF9F0
-void fn_3_C095C(void) {
-    return;
+void fn_3_C095C(RepC095CEntry* entry) {
+    Mtx m;
+    s32 ids[2];
+    CommonBss32724Timer* timers[2];
+    AnimLevel1** anim;
+    s32 i;
+    CommonBss32724Timer* t;
+
+    anim = &lbl_3_common_bss_35154.unk10->unk34;
+    ids[0] = lbl_3_common_bss_35154.unk40;
+    timers[0] = &lbl_3_common_bss_35154.timer20;
+    ids[1] = lbl_3_common_bss_35154.unk9C;
+    timers[1] = &lbl_3_common_bss_35154.timer7C;
+    PSMTXTrans(m, entry->x, entry->y, entry->z);
+    PSMTXConcat(fn_80052734(fn_8005268C())->viewMtx, m, m);
+    i = 1;
+    do {
+        t = timers[i];
+        t->unk0 = 0.0f;
+        t->unkC = 0;
+        t->unk4 = entry->frames;
+        fn_80024DB0(t);
+        fn_80024FA4(anim, ids[i], timers[i], -1);
+    } while (i-- != 0);
+    (*anim)->unk99 = 1;
+    fn_800B4CA0(*anim, entry->frames);
+    fn_800B4C04(*anim, 1.0f);
+    fn_800BDA24(anim);
+    (*anim)->animFlags = 0xFF;
+    fn_800BDA94(anim, m);
 }
 
 // .text:0x000C0AD8 size:0x174 mapped:0x806FFB6C
