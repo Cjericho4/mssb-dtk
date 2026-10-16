@@ -86,6 +86,7 @@ extern void minigamesSetSomePointers(void);
 extern void minigamesSetSomePointers2(void);
 extern void fn_80035B50(s32 arg0);
 extern void fn_80018B38(void);
+extern int lbl_3_data_69D0;
 
 // .text:0x00116840 size:0x190 mapped:0x807558D4
 void fn_3_116840(void) {
@@ -428,7 +429,14 @@ void fn_3_118508(void) {
 
 // .text:0x00118614 size:0x138 mapped:0x807576A8
 void fn_3_118614(void) {
-    return;
+    DrawingSceneStruct* scene;
+    s32 i;
+
+    fn_80034E20(scene = lbl_803CC1B8, &lbl_3_data_69D0);
+    for (i = 0; i < 40; i++) {
+        lbl_80371C30[scene->unkIndex + i].obj->field_0x5C = 0x20000;
+    }
+    lbl_803CC1B8->aFunctionPointer = fn_3_118508;
 }
 
 // .text:0x0011874C size:0xD0 mapped:0x807577E0
