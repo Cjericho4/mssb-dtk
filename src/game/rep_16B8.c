@@ -6,6 +6,9 @@
 #include "game/rep_720.h"
 #include "game/gap_1658F0.h"
 
+extern int lbl_3_data_EC1C;
+extern u8 lbl_3_data_F430[12][2];
+
 // .text:0x00091520 size:0x540 mapped:0x806D05B4
 void fn_3_91520(void) {
     return;
@@ -96,7 +99,7 @@ void fn_3_91FC4(void) {
 }
 
 // .text:0x00092CD8 size:0x6F4 mapped:0x806D1D6C
-void fn_3_92CD8(void) {
+void fn_3_92CD8(DrawingSceneStruct* scene) {
     return;
 }
 
@@ -107,7 +110,26 @@ void fn_3_933CC(void) {
 
 // .text:0x00093544 size:0x144 mapped:0x806D25D8
 void fn_3_93544(void) {
-    return;
+    DrawingSceneStruct* scene;
+
+    fn_80034E20(scene = lbl_803CC1B8, &lbl_3_data_EC1C);
+    lbl_80371C30[scene->unkIndex + 1].obj->unk64 = lbl_3_data_F430[g_GameLogic.logo[0].captain][1];
+    lbl_80371C30[scene->unkIndex + 2].obj->unk64 = lbl_3_data_F430[g_GameLogic.logo[1].captain][1];
+    lbl_80371C30[scene->unkIndex + 1].obj->field_0x5C = g_GameLogic.logo[0].variationID << 16;
+    lbl_80371C30[scene->unkIndex + 2].obj->field_0x5C = g_GameLogic.logo[1].variationID << 16;
+    if (g_GameLogic.homeTeamBattingInd_fieldingTeam == 0) {
+        scene->unk_1C = g_Scores.prevScore;
+        scene->unk_1E = g_Scores.team[1].score;
+    } else {
+        scene->unk_1C = g_Scores.team[0].score;
+        scene->unk_1E = g_Scores.prevScore;
+    }
+    scene->unk_20 = scene->eventID;
+    scene->drawingState = scene->fielderIndex;
+    fn_3_92CD8(scene);
+    scene->unk18 = 0;
+    scene->unk1a = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_3_933CC;
 }
 
 // .text:0x00093688 size:0x2D8 mapped:0x806D271C

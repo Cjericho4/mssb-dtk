@@ -13,7 +13,7 @@ void fn_3_91CCC(void);
 void fn_3_91D1C(void);
 void fn_3_91E4C(void);
 void fn_3_91FC4(void);
-void fn_3_92CD8(void);
+void fn_3_92CD8(struct DrawingSceneStruct* scene);
 void fn_3_933CC(void);
 void fn_3_93544(void);
 void fn_3_93688(void);
