@@ -1034,7 +1034,24 @@ void fn_3_3EB6C(void) {
 
 // .text:0x0003F034 size:0xF0 mapped:0x8067E0C8
 void fn_3_3F034(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 9; i++) {
+        g_FieldingLogic.unk_F8[i] = 0;
+        clearFielderAction(i);
+    }
+    for (i = 0; i < 4; i++) {
+        g_FieldingLogic.unkD0[i] = -1;
+        g_FieldingLogic.unk101[i] = 0;
+    }
+    g_FieldingLogic.unkBC = -1;
+    g_FieldingLogic.unkBE = -1;
+    g_FieldingLogic.unkC2 = -1;
+    if (g_Ball.AtBat_ContactResult == 0 && g_Ball.hangtimeOfHit > 45) {
+        fn_3_3EB6C();
+    } else {
+        fn_3_3E690();
+    }
 }
 
 // .text:0x0003F124 size:0x128 mapped:0x8067E1B8
