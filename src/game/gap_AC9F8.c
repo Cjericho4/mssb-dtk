@@ -631,9 +631,32 @@ void fn_3_B1C14(void) {
     }
 }
 
+extern s16 lbl_3_data_104B8[16][2][3];
+
 // .text:0x000B1CB0 size:0xF4 mapped:0x806F0D44
-void fn_3_B1CB0(void) {
-    return;
+BOOL fn_3_B1CB0(void) {
+    InputStruct* in = &g_Controls[g_Practice._192];
+
+    if (g_Practice.loadingGuidedPractice == 0) {
+        return FALSE;
+    }
+    if (g_GameLogic.gameStatus != 1 && g_GameLogic.gameStatus != 2) {
+        return FALSE;
+    }
+    if (g_Practice._188 < 0x7FFE) {
+        g_Practice._188++;
+    } else {
+        g_Practice._188 = 0x7FFF;
+    }
+    if (g_Practice._188 > 90 && (in->newButtonInput & 0x1100)) {
+        u8 step = g_Practice._1D8 + 1;
+
+        g_Practice._1D8 = step;
+        if (step >= 3 || lbl_3_data_104B8[g_Practice.practiceLevel_2][g_Practice._1D7][step] < 0) {
+            g_Practice.loadingGuidedPractice = 0;
+        }
+    }
+    return TRUE;
 }
 
 // .text:0x000B1DA4 size:0x2C mapped:0x806F0E38

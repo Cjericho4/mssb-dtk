@@ -111,7 +111,7 @@ void fn_3_B1578(void);
 void fn_3_B1A30(void);
 void fn_3_B1BCC(void);
 void fn_3_B1C14(void);
-void fn_3_B1CB0(void);
+BOOL fn_3_B1CB0(void);
 void fn_3_B1DA4(s32 arg0, u8 arg1);
 void fn_3_B1DD0(void);
 BOOL fn_3_B254C(void);
