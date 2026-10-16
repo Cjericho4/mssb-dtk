@@ -810,6 +810,7 @@ typedef struct DrawingSceneStruct {
     union {
         s16 unk_20;
         s16 unk20;
+        u16 unk20_u16;
     };
     short drawingState;
     u8 field14_0x24[4];

@@ -2,6 +2,7 @@
 #include "game/rep_3448.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
+#include "game/gap_97144.h"
 
 // .text:0x000993A8 size:0x3C4 mapped:0x806D843C
 void fn_3_993A8(void) {
@@ -105,8 +106,47 @@ void fn_3_9B7F4(void) {
 }
 
 // .text:0x0009BEE0 size:0x134 mapped:0x806DAF74
-void fn_3_9BEE0(void) {
-    return;
+void fn_3_9BEE0(DrawingSceneStruct* scene) {
+    s32 i;
+    s32 kind;
+    s32 count;
+
+    count = g_Strikes.outs;
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        count = g_Minigame._190D - g_Minigame._1910;
+    }
+    for (i = 0; i < 7; i++) {
+        kind = 3;
+        if (g_d_GameSettings.GameModeSelected == 6 && i >= 5) {
+            break;
+        }
+        if (i < 2) {
+            if (scene->eventID == g_Strikes.strikes) {
+                continue;
+            }
+            if (g_Strikes.strikes >= i + 1) {
+                kind = 0;
+            }
+        } else if (i < 5) {
+            if (scene->fielderIndex == g_Strikes.balls) {
+                continue;
+            }
+            if (g_Strikes.balls >= i - 1) {
+                kind = 1;
+            }
+        } else {
+            if (scene->unk20_u16 == count) {
+                continue;
+            }
+            if (count >= i - 4) {
+                kind = 2;
+            }
+        }
+        fn_8003649C((s32)scene, i + 1, i + 1, 0x107, kind);
+    }
+    scene->eventID = g_Strikes.strikes;
+    scene->fielderIndex = g_Strikes.balls;
+    scene->unk20_u16 = count;
 }
 
 // .text:0x0009C014 size:0x278 mapped:0x806DB0A8
