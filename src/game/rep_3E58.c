@@ -8,8 +8,31 @@
 extern u8 lbl_3_data_28558[23];
 
 // .text:0x001666B0 size:0x1EC mapped:0x807A5744
-void fn_3_1666B0(void) {
-    return;
+extern s8 lbl_3_bss_B9E0;
+
+void fn_3_1666B0(VecXYZ* src) {
+    VecXYZ pos;
+    ParticleSpawnParams params;
+
+    if (++lbl_3_bss_B9E0 >= 5) {
+        memset(&params, 0, sizeof(ParticleSpawnParams));
+        memcpy(&params, &lbl_3_data_28508, sizeof(ParticleSpawnParams));
+        memcpy(&pos, src, sizeof(VecXYZ));
+        params.unk34 = 0.2f * params.unk30;
+        if (pos.y > 0.0f) {
+            pos.y *= -1.0f;
+        }
+        lbl_3_bss_B9E0 = 0;
+        params.unk0 = lbl_803CBD0C;
+        pos.x += 5.0f * ((f32)rand() / 32767.0f - 0.5f);
+        pos.y -= 3.0f * ((f32)rand() / 32767.0f);
+        pos.z -= 0.45f;
+        memcpy(&params.pos, &pos, sizeof(VecXYZ));
+        params.color[0] = rand() % 256;
+        params.color[1] = rand() % 256;
+        params.color[2] = rand() % 256;
+        fn_80026998(&params);
+    }
 }
 
 // .text:0x0016689C size:0xD0 mapped:0x807A5930

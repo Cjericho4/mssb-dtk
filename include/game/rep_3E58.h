@@ -6,7 +6,8 @@
 typedef struct QueueEntry QueueEntry;
 struct QueueEntry* fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
 
-void fn_3_1666B0(void);
+struct _VecXYZ;
+void fn_3_1666B0(struct _VecXYZ* src);
 void fn_3_16689C(void);
 void fn_3_16696C(void);
 void fn_3_16699C(void);

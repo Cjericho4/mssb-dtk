@@ -6,7 +6,10 @@
 
 typedef struct {
     s32 unk0;
-    u8 _pad04[0x3C];
+    u8 _pad04[0x2C];
+    f32 unk30;           /* 0x30 */
+    f32 unk34;           /* 0x34 */
+    u8 _pad38[0x8];
     VecXYZ pos;          /* 0x40 */
     u8 color[3];         /* 0x4C */
     u8 _pad4F;
