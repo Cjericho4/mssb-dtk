@@ -444,9 +444,40 @@ void fn_3_16034(void) {
     fn_3_FBDAC(0x68);
 }
 
+static inline s32 miniGameIdx_16058(void) {
+    switch ((u8)g_Minigame.GameMode_MiniGame) {
+        case 0: return 6;
+        case 1: return 0;
+        case 2: return 4;
+        case 3: return 5;
+        case 4: return 2;
+        case 5: return 3;
+        case 6: return 1;
+    }
+}
+
 // .text:0x00016058 size:0x168 mapped:0x806550EC
 void fn_3_16058(void) {
-    return;
+    s32 idx;
+    u32 result;
+    if (g_GameLogic.FrameCountOfCurrentPitch <= 1) {
+        if (g_d_GameSettings.GameModeSelected == 7) {
+            idx = miniGameIdx_16058();
+            result = fn_3_9EE24(0);
+            result += idx;
+            fn_3_FBDAC(result + 0x32);
+        } else if (g_d_GameSettings.GameModeSelected == 6) {
+            idx = miniGameIdx_16058();
+            result = fn_3_9EE24(0);
+            result += idx;
+            fn_3_FBDAC(result + 0x32);
+        } else {
+            result = fn_3_9EE24(0);
+            result += g_d_GameSettings.StadiumID;
+            fn_3_FBDAC(result + 0x16);
+        }
+    }
+    fn_3_FD670();
 }
 
 // .text:0x000161C0 size:0x168 mapped:0x80655254
