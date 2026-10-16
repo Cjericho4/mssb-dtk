@@ -221,6 +221,12 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **ACTSetAnimation** takes `(Actor*, ANIMBank*, char*, u16, f32 unk, f32 time)`: callers pass a hidden 0.0f in f1, time in f2 (fixing the prototype matched fn_3_B97DC; may unblock fn_3_168414, 168A6C, BF238, F9E78).
 *   **Per-function rodata table**: `static const f32 x[3] = {...}` inside the function (fn_3_E29B4).
 
+*   **`cmplwi r3,0` with no `clrlwi` after a call to a u8-returning fn**: declare the callee locally as `u32` (`BOOL` gives `cmpwi`) (fn_3_74AC4 → fn_3_107DB4).
+*   **Initialized-local copy uses `lwzu` / global base load folded**: declare the global-derived object ptr first, before the `Vec x = {...}` initializer (fn_3_EEFD4, partial).
+*   **Remove-and-return block at the end in the target**: `if (!flag) { ...body... } else { fn_80034CEC(...); fn_800B0A14_removeQueue(); }` instead of an early return (fn_3_125604).
+*   **Partner ptr in the wrong saved reg**: don't cache it; `if (obj->partner != NULL) inline(obj->partner);` loads it once into r31 (fn_3_F5C30).
+*   **Zero stores in descending-offset order**: chain them, `obj->vel.x = obj->vel.y = obj->vel.z = 0.0f;` (fn_3_F5C30).
+
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
 *   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.

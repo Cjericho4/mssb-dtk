@@ -1,0 +1,100 @@
+diff --git a/src/game/sta_c5.c b/src/game/sta_c5.c
+index 1123679..ee50924 100644
+--- a/src/game/sta_c5.c
++++ b/src/game/sta_c5.c
+@@ -14,6 +14,8 @@
+ #include "game/m_sound.h"
+ #include "game/rep_3880.h"
+ #include "game/gap_B7EF0.h"
++#include "game/game_batter.h"
++void fn_3_CB7E8(f32 x, f32 y, f32 z); /* rep_23E8.h conflicts with game_batter.h */
+ 
+ // .text:0x000EDFAC size:0x110
+ void fn_3_EDFAC(void) {
+@@ -120,8 +122,65 @@ void fn_3_EEFD0(void) {
+ }
+ 
+ // .text:0x000EEFD4 size:0x244 mapped:0x8072E068
+-void fn_3_EEFD4(void) {
+-    return;
++static inline void fn_3_EF890_resetElems(OuterStruct_F13F8* arg0) {
++    InnerStruct_F13F8* p = arg0->unk74;
++    DeepStruct_F13F8* q = p->unk0;
++    u32 i;
++
++    for (i = 0; i < (u32)q->unk6; i++) {
++        ElemStruct_F13F8* elem = q->unk18[i];
++        elem->unk60 = 0;
++        elem->unkA4 = 0;
++    }
++    arg0->unk74->unk58 = 0;
++}
++
++void fn_3_EEFD4(s32 idx) {
++    StadiumObjectElem* obj = &lbl_3_common_bss_350E4[0].src[idx];
++    Vec dir;
++    Vec axis = {1.0f, 0.0f, 0.0f};
++    Vec pos;
++    f32 ang;
++    s32 stadium;
++    u8 vol;
++    u8 pan;
++    SND_VOICEID vid;
++
++    if (obj->unkC6 >= 3) {
++        return;
++    }
++    dir.x = g_Ball.physicsSubstruct.velocity.x;
++    dir.y = 0.0f;
++    dir.z = g_Ball.physicsSubstruct.velocity.z;
++    PSVECNormalize(&dir, &dir);
++    ang = acos(PSVECDotProduct(&axis, &dir));
++    if (dir.z < 0.0f) {
++        ang = 6.283185258507729 - ang;
++    }
++    obj->unkB8 = ang;
++    obj->unkBC = 0.5f;
++    obj->unkC6 = 4;
++    fn_3_EF890_resetElems((OuterStruct_F13F8*)obj);
++    if (g_Ball.AtBat_ContactResult != 2 && lbl_800E8754[4] != 0) {
++        CTRLGetTranslation(&obj->control, &pos.x, &pos.y, &pos.z);
++        fn_3_CB7E8(pos.x, pos.y - 5.0f, pos.z);
++        obj->unkC8 = 1;
++    }
++    stadium = g_d_GameSettings.StadiumID;
++    if (g_d_GameSettings.GameModeSelected == 6) {
++        vol = lbl_3_data_84B8[0][9].vol;
++    } else {
++        vol = lbl_3_data_8404[stadium][9].vol;
++    }
++    vid = sndFXStartEx(lbl_3_data_81DC[stadium] + 9, vol, 0x3F, 0);
++    if (g_d_GameSettings.GameModeSelected == 6) {
++        pan = lbl_3_data_84B8[0][9].pan;
++    } else {
++        pan = lbl_3_data_8404[stadium][9].pan;
++    }
++    sndFXCtrl(vid, 0x5B, pan);
++    fn_3_27648();
++    g_FieldingLogic.unk_13B = 1;
+ }
+ 
+ // .text:0x000EF218 size:0x4 mapped:0x8072E2AC
+@@ -262,18 +321,6 @@ void fn_3_EF800(StaC5PlacedObj* obj) {
+ }
+ 
+ // .text:0x000EF890 size:0xA0 mapped:0x8072E924
+-static inline void fn_3_EF890_resetElems(OuterStruct_F13F8* arg0) {
+-    InnerStruct_F13F8* p = arg0->unk74;
+-    DeepStruct_F13F8* q = p->unk0;
+-    u32 i;
+-
+-    for (i = 0; i < (u32)q->unk6; i++) {
+-        ElemStruct_F13F8* elem = q->unk18[i];
+-        elem->unk60 = 0;
+-        elem->unkA4 = 0;
+-    }
+-    arg0->unk74->unk58 = 0;
+-}
+ 
+ void fn_3_EF890(OuterStruct_F13F8* arg0) {
+     fn_3_EF890_resetElems(arg0);

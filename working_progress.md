@@ -135,6 +135,8 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_C937C | ~11 lines regalloc around player-entry update (.agent/attempts/fn_3_C937C.c + .headers.diff) |
 | fn_3_105E00 | target has no extsh before x+w (needs s32 params) but that breaks matched caller fn_3_105CDC (.agent/attempts/fn_3_105E00.c + .headers.diff) |
 | fn_3_15C3F8 | counters/quads base ptrs kept unfolded (addi rX,r31,0) + rodata order (.agent/attempts/fn_3_15C3F8.c) |
+| fn_3_EEFD4 | one freg: acos result in f1 not f2, frsp after dir.z load (.agent/attempts/fn_3_EEFD4.c + .headers.diff + .src.diff) |
+| fn_3_9497C | unrolled j-loop: target `(scene->unkIndex + J) + E758[i]` with lhz first; MWCC reassociates (.agent/attempts/fn_3_9497C.c) |
 
 **Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
 | fn_3_24EA0 | register allocation / scheduling (see git log) |
