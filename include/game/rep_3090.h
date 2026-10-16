@@ -136,7 +136,7 @@ typedef struct {
 u32 fn_3_105C28(Struct_105C28* arg0, u32 arg1);
 void fn_3_105C84(Fixup_105C84* arg0);
 void fn_3_105CDC(void);
-void fn_3_105E00(void);
+void fn_3_105E00(s16 x, s16 y, s32 w, s32 h);
 void fn_3_106014(f32 x, f32 y, f32 z);
 void fn_3_1060D8(void);
 BOOL fn_3_10617C(s32 animIdx, s32 bone, VecXYZ* out);

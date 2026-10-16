@@ -445,11 +445,28 @@ void fn_3_105C84(Fixup_105C84* arg0) {
 
 // .text:0x00105CDC size:0x124 mapped:0x80744D70
 void fn_3_105CDC(void) {
-    return;
+    VecXYZ* p = lbl_3_common_bss_DE94->field_0x98;
+    s32 i;
+    s32 x;
+    s32 z;
+
+    for (i = 0; i < 1000; i++) {
+        if (-1000.0 != p[i].x && -1000.0 != p[i].y && -1000.0 != p[i].z) {
+            x = (s32)p[i].x * 320 + 320;
+            z = (s32)p[i].z * 224 + 224;
+            if (i == 135) {
+                i = 135;
+            }
+            if (i == 5) {
+                i = 5;
+            }
+            fn_3_105E00(x / 50 + 150, -z / 50 + 400, 2, 2);
+        }
+    }
 }
 
 // .text:0x00105E00 size:0x214 mapped:0x80744E94
-void fn_3_105E00(void) {
+void fn_3_105E00(s16 x, s16 y, s32 w, s32 h) {
     return;
 }
 
