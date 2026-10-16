@@ -33,7 +33,7 @@ typedef struct {
     u8 field_0x1D7;      /* 0x1D7 */
     u8 field_0x1D8;      /* 0x1D8 */
     u8 _pad1D9;          /* 0x1D9 */
-    u8 field_0x1DA;      /* 0x1DA */
+    union { u8 field_0x1DA; s8 field_0x1DA_s8; }; /* 0x1DA */
     u8 _pad5[0x27];      /* 0x1DB-0x201 */
     u8 field_0x202;      /* 0x202 */
     u8 field_0x203;      /* 0x203 */
