@@ -354,7 +354,41 @@ void fn_3_A7C88(void) {
 
 // .text:0x000A7EF8 size:0x17C mapped:0x806E6F8C
 void fn_3_A7EF8(void) {
-    return;
+    InputStruct* input = &g_Controls[g_GameLogic.teams[g_GameLogic.teamFielding]];
+    s16 angle;
+    u8 prev;
+
+    if (g_d_GameSettings.GameModeSelected == 2 && g_Practice.instructionNumber >= 0) {
+        input = &g_Practice.inputs[g_GameLogic.teamFielding];
+    } else if (g_d_GameSettings.minigamesEnabled != 0) {
+        input = &g_Controls[g_Minigame.players.characterIndex[g_Minigame._1922]];
+    }
+    angle = input->controlStickAngle;
+    prev = g_FieldingLogic.unk12E;
+    if (angle >= 0xE00) {
+        g_FieldingLogic.unk12E = 2;
+    } else if (angle >= 0xA00) {
+        g_FieldingLogic.unk12E = 3;
+    } else if (angle >= 0x600) {
+        g_FieldingLogic.unk12E = 4;
+    } else if (angle >= 0x200) {
+        g_FieldingLogic.unk12E = 1;
+    } else if (angle >= 0) {
+        g_FieldingLogic.unk12E = 2;
+    } else {
+        g_FieldingLogic.unk12E = 0;
+    }
+    if (g_FieldingLogic.unk12E == 0) {
+        g_FieldingLogic.unk12F = 0;
+    } else if (g_FieldingLogic.unk12E == prev) {
+        if (g_FieldingLogic.unk12F < 0xFE) {
+            g_FieldingLogic.unk12F++;
+        } else {
+            g_FieldingLogic.unk12F = 0xFF;
+        }
+    } else {
+        g_FieldingLogic.unk12F = 1;
+    }
 }
 
 // .text:0x000A8074 size:0x2C4 mapped:0x806E7108
