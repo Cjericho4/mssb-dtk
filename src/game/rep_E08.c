@@ -2,6 +2,8 @@
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 
+void QueueCharacterAnimation(int character, int animation, u8 arg2, u8 arg3, s16 arg4, u8 flip, int arg6);
+
 static inline void repE08_resetEntry(HugeAnimEntry68* entry, s32 val, s16 arg) {
     entry->unk38 = val;
     entry->unk42 = arg;
@@ -234,7 +236,41 @@ void fn_3_657E4(void) {
 
 // .text:0x00065FE0 size:0x160 mapped:0x806A5074
 void fn_3_65FE0(void) {
-    return;
+    AnimationStruct* anim;
+
+    s32 flip;
+    s32 chr;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        chr = i;
+        anim = g_hugeAnimStruct.AnimationStructPtrs[i];
+        flip = 0;
+        if (g_d_GameSettings.GameModeSelected == 2) {
+            chr = 9;
+            anim = g_hugeAnimStruct.AnimationStructPtrs[9];
+        }
+        if (anim == NULL) {
+            continue;
+        }
+
+        if (g_Minigame.teamEntries[i]._4 == 0 || g_Minigame.teamEntries[i]._4 == 2) {
+            flip = 1;
+        }
+        if (g_Minigame.teamEntries[i].fieldB < 0) {
+            AnimateCharacter(chr, 0x69, 1, 1, 1, 0, flip, 0);
+        } else if ((s8)g_Minigame.teamEntries[i]._1 != 0) {
+            if (anim->animID == 0x69) {
+                AnimateCharacter(chr, 0x6A, 0, 1, 1, 0, flip, 0);
+                QueueCharacterAnimation(chr, 0x6B, 1, 1, 0, flip, -1);
+            }
+        } else {
+            AnimateCharacter(chr, 0x69, 1, 1, 1, 0, flip, 0);
+        }
+        if (g_d_GameSettings.GameModeSelected == 2) {
+            break;
+        }
+    }
 }
 
 // .text:0x00066140 size:0x3BC mapped:0x806A51D4
