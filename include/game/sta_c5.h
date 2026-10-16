@@ -51,19 +51,30 @@ extern StaC5DriftTarget lbl_3_data_1B884[];
 /* Object placed at an entry of lbl_3_data_1B9A4. */
 typedef struct StaC5SpotObj {
     /* 0x00 */ Control control;
-    /* 0x3C */ u8 _pad3C[0x9C - 0x3C];
+    /* 0x3C */ u8 _pad3C[0x74 - 0x3C];
+    /* 0x74 */ struct ActorAnimState* animState;
+    /* 0x78 */ u8 _pad78[0x90 - 0x78];
+    /* 0x90 */ u8 flag90_7 : 1;
+    /* 0x90 */ u8 flag90_rest : 7;
+    /* 0x91 */ u8 _pad91[0x99 - 0x91];
+    /* 0x99 */ u8 unk99;
+    /* 0x9A */ u8 _pad9A[0x9C - 0x9A];
     /* 0x9C */ u8 spotIdx;
     /* 0x9D */ u8 _pad9D[0xA0 - 0x9D];
     /* 0xA0 */ f32 x;
     /* 0xA4 */ f32 y;
     /* 0xA8 */ f32 z;
     /* 0xAC */ f32 rot;
-    /* 0xB0 */ u8 _padB0[0xB4 - 0xB0];
+    /* 0xB0 */ f32 unkB0;
     /* 0xB4 */ f32 turnAngle;
-    /* 0xB8 */ u8 _padB8[0xC4 - 0xB8];
+    /* 0xB8 */ u8 _padB8[0xC0 - 0xB8];
+    /* 0xC0 */ u8 unkC0;
+    /* 0xC1 */ s8 unkC1;
+    /* 0xC2 */ u8 _padC2[0xC4 - 0xC2];
     /* 0xC4 */ s8 turnDir;
-    /* 0xC5 */ u8 _padC5;
+    /* 0xC5 */ u8 unkC5;
     /* 0xC6 */ u8 unkC6;
+    /* 0xC7 */ u8 unkC7;
 } StaC5SpotObj;
 
 typedef struct StaC5Spot {
@@ -71,7 +82,9 @@ typedef struct StaC5Spot {
     /* 0x04 */ f32 y;
     /* 0x08 */ f32 z;
     /* 0x0C */ f32 rot;
-    /* 0x10 */ u8 _pad10[0x18 - 0x10];
+    /* 0x10 */ u8 _pad10[0x14 - 0x10];
+    /* 0x14 */ u8 unk14;
+    /* 0x15 */ u8 _pad15[0x18 - 0x15];
 } StaC5Spot; /* size: 0x18 */
 
 extern StaC5Spot lbl_3_data_1B9A4[];
@@ -188,7 +201,7 @@ void fn_3_F082C(void);
 void fn_3_F0FA4(void);
 void fn_3_F13F8(OuterStruct_F13F8* arg0);
 void fn_3_F1448(StaC5SpotObj* obj);
-void fn_3_F1518(void);
+void fn_3_F1518(StaC5SpotObj* obj);
 void fn_3_F1674(void);
 void fn_3_F1750(void);
 void fn_3_F18A4(StaC5PlacedObj* obj);

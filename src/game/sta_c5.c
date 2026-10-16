@@ -297,8 +297,27 @@ void fn_3_F1448(StaC5SpotObj* obj) {
 }
 
 // .text:0x000F1518 size:0x15C mapped:0x807305AC
-void fn_3_F1518(void) {
-    return;
+void fn_3_F1518(StaC5SpotObj* obj) {
+    obj->unkC5 = lbl_3_data_1B9A4[obj->spotIdx].unk14;
+    obj->unkC6 = 1;
+    obj->unkC7 = 0;
+    obj->unkC1 = -1;
+    if (!obj->flag90_7) {
+        obj->flag90_7 = 1;
+    }
+    obj->unk99 = 1;
+    obj->unkB0 = 0.0f;
+    obj->x = lbl_3_data_1B9A4[obj->spotIdx].x;
+    obj->y = lbl_3_data_1B9A4[obj->spotIdx].y;
+    obj->z = lbl_3_data_1B9A4[obj->spotIdx].z;
+    obj->rot = -lbl_3_data_1B9A4[obj->spotIdx].rot;
+    obj->control.type = 0;
+    CTRLSetTranslation(&obj->control, obj->x, -obj->y, obj->z);
+    CTRLSetRotation(&obj->control, 0.0f, obj->rot, 0.0f);
+    CTRLSetScale(&obj->control, 1.0f, 1.0f, 1.0f);
+    fn_3_B97DC(obj->animState, lbl_3_bss_B154[0]);
+    obj->animState->playAnim = 1;
+    obj->unkC0 = 0;
 }
 
 // .text:0x000F1674 size:0xDC mapped:0x80730708
