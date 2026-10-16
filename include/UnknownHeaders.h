@@ -581,10 +581,15 @@ typedef struct StadiumObjectElem {
     u8 unk99;                         /* 0x99 */
     u8 _pad_0x9a[0x9D - 0x9A];       /* 0x9A */
     u8 unk9D;                         /* 0x9D */
-    u8 _pad_0x9e[0xA9 - 0x9E];       /* 0x9E */
+    u8 _pad_0x9e[0xA0 - 0x9E];       /* 0x9E */
+    f32 unkA0;                        /* 0xA0 */
+    u8 _pad_0xa4[0xA9 - 0xA4];       /* 0xA4 */
     u8 unk_A9;                        /* 0xA9 */
     u8 _pad_0xaa[0xAC - 0xAA];       /* 0xAA */
-    s32 unkAC;                        /* 0xAC */
+    union {
+        s32 unkAC;                    /* 0xAC */
+        u8 unkAC_u8;                  /* 0xAC */
+    };
     f32 unkB0;                        /* 0xB0 */
     u8 _pad_0xb4[0xB8 - 0xB4];       /* 0xB4 */
     f32 unkB8;                        /* 0xB8 */

@@ -76,7 +76,35 @@ void fn_3_CBF80(void) {
 
 // .text:0x000CC1D4 size:0x180 mapped:0x8070B268
 void fn_3_CC1D4(void) {
-    return;
+    Mtx m;
+    Vec v;
+    f32 ang;
+    StadiumObjectElem* e;
+    u32 i;
+    u32 j;
+    ActorAnimState* state;
+
+    ang = shortAngleToRad(g_Minigame._1AF8);
+    PSMTXRotRad(m, 'Y', 0.017453292f * -ang);
+    v.x = 4.5f;
+    v.y = 9.0f;
+    v.z = 0.0f;
+    PSMTXMultVec(m, &v, &v);
+    for (i = 0; i < lbl_3_common_bss_350E4[0].memcpyCount; i++) {
+        if (lbl_3_common_bss_350E4[0].src[i].unk9D == 1) {
+            break;
+        }
+    }
+    for (j = i; j < i + 3; j++) {
+        e = &lbl_3_common_bss_350E4[0].src[j];
+        CTRLSetTranslation(&e->control, g_Minigame._1AE0 + v.x, g_Minigame._1AE4 - v.y, g_Minigame._1AE8 + v.z);
+        state = (ActorAnimState*)e->unk74;
+        e->unkAC_u8 = (j % 3) * 30;
+        e->unkA0 = 0.0f;
+        state->time = e->unkA0;
+        state->setTime = 1;
+        fn_800B4CA0(state->actor, state->time);
+    }
 }
 
 // .text:0x000CC354 size:0xE4 mapped:0x8070B3E8
