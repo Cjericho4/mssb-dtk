@@ -436,8 +436,33 @@ void fn_3_903B8(void) {
 }
 
 // .text:0x00090434 size:0x138 mapped:0x806CF4C8
+void fn_800A86B4(s32 arg0);
+void fn_800A88C0(void);
+void fn_800A8B78(void);
+
 void fn_3_90434(void) {
-    return;
+    Struct34C58* ptr;
+    s32 i;
+
+    fn_800A86B4(3);
+    fn_800A88C0();
+    fn_800A8B78();
+    ptr = &lbl_3_common_bss_34C58;
+    if (sndSeqGetValid(ptr->_04) != 0) {
+        sndSeqVolume(0, 0, ptr->_04, 1);
+    }
+    ptr = &lbl_3_common_bss_34C58;
+    if (sndSeqGetValid(ptr->_08) != 0) {
+        sndSeqVolume(0, 0, ptr->_08, 1);
+    }
+    for (i = 0; i < 3; i++) {
+        if (lbl_3_common_bss_34C58.fxVoices[i] != (u32)-1) {
+            sndFXKeyOff(lbl_3_common_bss_34C58.fxVoices[i]);
+            lbl_3_common_bss_34C58.fxVoices[i] = -1;
+        }
+    }
+    removeAllEmitters();
+    sndRemoveListener(&lbl_3_common_bss_32B20);
 }
 
 // .text:0x0009056C size:0x108 mapped:0x806CF600

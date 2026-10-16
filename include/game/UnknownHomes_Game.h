@@ -2269,9 +2269,14 @@ typedef struct Struct34C58 {
     /* 0x00 */ u32 _00;
     /* 0x04 */ u32 _04;
     /* 0x08 */ u32 _08;
-    /* 0x08 */ u32 _0C;
-    /* 0x10 */ u32 _10;
-    /* 0x14 */ u32 _14;
+    union {
+        struct {
+            /* 0x0C */ u32 _0C;
+            /* 0x10 */ u32 _10;
+            /* 0x14 */ u32 _14;
+        };
+        /* 0x0C */ u32 fxVoices[3];
+    };
     /* 0x18 */ u32 _18;
     /* 0x1C */ u32 _1C; // written to after sndFXStartEx
     /* 0x20 */ s16 _20;
