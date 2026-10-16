@@ -10,6 +10,11 @@ void fn_3_89864(s32 idx, s32 delta);
 void fn_3_155288(void);
 BOOL fn_3_6F4E8(void);
 void fn_3_7CE90(void);
+f32 RandomF32_Game_Range(f32 a, f32 b);
+extern f32 lbl_3_data_4474[4];
+extern f32 lbl_3_data_5EB0[2];
+extern f32 lbl_3_data_5F5C[8];
+extern f32 lbl_3_data_2138C[4];
 
 // .text:0x0006F6CC size:0x7C mapped:0x806AE760
 s32 fn_3_6F6CC(void) {
@@ -314,7 +319,18 @@ void fn_3_73F2C(void) {
 
 // .text:0x00073FAC size:0x124 mapped:0x806B3040
 void fn_3_73FAC(void) {
-    return;
+    g_Pitcher.eggBallBounceYHeight = g_Batter.batPosition2.y;
+    g_Pitcher.pitchStartingPosition_AIMaxCurve = LinearInterpolateToNewRange(g_Pitcher.pitcher.x, lbl_3_data_4474[0], lbl_3_data_4474[1], lbl_3_data_5EB0[0], lbl_3_data_5EB0[1]);
+    if (g_Pitcher.starPitchType == 3 || g_Pitcher.starPitchType == 4) {
+        g_Pitcher.pitchStartingPosition_AIMaxCurve = 0.0f;
+    } else if (g_Pitcher.starPitchType == 9 || g_Pitcher.starPitchType == 10) {
+        g_Pitcher.pitchStartingPosition_AIMaxCurve = RandomF32_Game_Range(-lbl_3_data_5F5C[3], lbl_3_data_5F5C[3]);
+        g_Pitcher.eggBallBounceYHeight = lbl_3_data_5F5C[0];
+        g_Pitcher.frontOfPlateZ = RandomF32_Game_Range(lbl_3_data_5F5C[1], lbl_3_data_5F5C[2]);
+    }
+    if (g_Minigame.GameMode_MiniGame == 1 || g_Minigame.GameMode_MiniGame == 3) {
+        g_Pitcher.pitchStartingPosition_AIMaxCurve = RandomF32_Game_Range(-lbl_3_data_2138C[g_Minigame.soloMinigameDifficulty], lbl_3_data_2138C[g_Minigame.soloMinigameDifficulty]);
+    }
 }
 
 // .text:0x000740D0 size:0x58 mapped:0x806B3164
