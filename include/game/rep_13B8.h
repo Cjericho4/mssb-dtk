@@ -26,7 +26,7 @@ void fn_3_80028(void);
 void fn_3_810C4(s32 runner, s32 base);
 void fn_3_81190(void);
 void fn_3_81AB8(s32 index);
-void fn_3_81AEC(void);
+void fn_3_81AEC(s32 idx);
 void fn_3_81BC8(void);
 void fn_3_81EAC(void);
 void fn_3_823B4(void);

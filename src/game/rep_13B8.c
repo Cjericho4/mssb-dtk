@@ -290,8 +290,26 @@ void fn_3_81AB8(s32 index) {
 }
 
 // .text:0x00081AEC size:0xDC mapped:0x806C0B80
-void fn_3_81AEC(void) {
-    return;
+void fn_3_81AEC(s32 idx) {
+    InMemRunnerType* r = &g_Runners[idx];
+    f32 step;
+
+    if (r->leadoffDurationFrames < 0x7FFE) {
+        r->leadoffDurationFrames++;
+    } else {
+        r->leadoffDurationFrames = 0x7FFF;
+    }
+    if (r->leadOffTotalFrameCountDown <= 0) {
+        r->leadOffStatus = 2;
+        r->percentRanPerFrame_slideAdj = 0.0f;
+        return;
+    }
+    step = r->leadoffDistancePercent + r->slidingAdjustment_backwards - r->percentTowardsNextBase;
+    step /= r->leadOffTotalFrameCountDown;
+    r->percentRanPerFrame_slideAdj = step;
+    r->percentTowardsNextBase += step;
+    r->fractionalBasesRan = r->startingBase_baseAchieved + r->percentTowardsNextBase;
+    r->leadOffTotalFrameCountDown--;
 }
 
 // .text:0x00081BC8 size:0x2E4 mapped:0x806C0C5C
