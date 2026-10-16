@@ -136,7 +136,18 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Stray `b` before a shared tail**: `else if (id != 3 || cond) return;` (fn_3_128A38).
 *   **rep_3310 "0x34 folded" family — possible fix**: take `&entries[i].unk34` as a sub-object pointer (cast or call arg) to get `addi rX,idx*0x90,0x34; add` (fn_3_1189C8, fn_3_11AB2C). Retry 119EE0/119E30/11881C/11897C/1194AC.
 
+*   **Struct assign from a global Vec** (`obj->pos = gVec`) gives `lwz/stw`; per-component gives `lfsu/lfs/stfs` (fn_3_136CF4).
+*   **`fadds f2,f0,f0`**: write `x + x`, not `2.0f * x` (fn_3_1F1CC).
+*   **Float consts in swapped regs**: check source order of the constants (`minX = 10000; maxX = -10000;`); r3/r4 swap fixed by declaring `s32 t` before `u16 count` (fn_3_E4A38).
+*   **Value used unclamped in one branch and clamped later** (target keeps a copy): put the unclamped use in a `static inline` that recomputes it (fn_3_1382E0).
+*   **`InputStruct* in = &g_Controls[...]`** local fixes `lwz r4 / addi r0` order (fn_3_835B0).
+*   **Inlined spawnCharacterParticles**: declare `s8 type;` after the task pointer so the pointer keeps r31 (fn_3_166FCC).
+*   **`bne L; b end` after a byte check**: index the array directly in the test and store instead of caching `&arr[idx]` (fn_3_8BA60).
+*   **Inlined switch returning a value with no default** leaves the result reg unset; a static inline copy reproduces it (fn_3_16058, 161C0, 16328).
+*   **try_function.py restores only the function body**: helper inlines from a failed candidate stay in the file; reset the file between candidates.
+
 ### Known Unfixable Patterns (don't spend attempts)
+*   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
 *   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.
 *   **`lwzu` on a global counter** (`lis; lwzu r3,sym+0x8@l(r4); stw r3,0(r4)`): no struct/union/pointer form reproduces it; likely a separate static in the original (fn_3_16943C).
 *   **File-static bss block off one base with array members** (rep_18E8 lbl_3_bss_17F8..1900): overlay struct works for scalars (sta_c0 9F38) but array sub-bases get folded; real `static` defs don't help under `-pool off` (fn_3_A2B6C, fn_3_A2C9C; also fn_3_EECF4, fn_3_1048E0).
