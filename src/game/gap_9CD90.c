@@ -167,10 +167,55 @@ void fn_3_9E078(void) {
     return;
 }
 
-// .text:0x0009E368 size:0x238 mapped:0x806DD3FC
-void fn_3_9E368(void) {
-    return;
+static inline int randomIntInline(int max) {
+    int ret;
+    int absmax = ABS(max);
+
+    if (absmax <= 1) {
+        return 0;
+    }
+
+    g_Ball.StaticRandomInt1 = g_Ball.StaticRandomInt1 - ((u8)g_Ball.StaticRandomInt2) +
+                              g_Ball.StaticRandomInt2 / absmax + g_Ball.totalFramesAtPlay;
+
+    if (g_d_GameSettings.GameModeSelected == GAME_TYPE_PRACTICE && g_Practice.instructionNumber >= 0) {
+        return 0;
+    }
+
+    if (g_d_GameSettings.GameModeSelected == GAME_TYPE_MINIGAMES) {
+        g_Ball.StaticRandomInt1 += rand();
+    }
+
+    ret = g_Ball.StaticRandomInt1 % absmax;
+    ret = ABS(ret);
+    if (max < 0) {
+        return -ret;
+    } else {
+        return ret;
+    }
 }
+
+// .text:0x0009E368 size:0x238 mapped:0x806DD3FC
+s32 fn_3_9E368(s32* weights, s32 count) {
+    s32 local[10];
+    s32 total = 0;
+    s32 r;
+    s32 i;
+
+    for (i = 0; i < count; i++) {
+        local[i] = weights[i];
+        total += local[i];
+    }
+    r = randomIntInline(total);
+    for (i = 0; i < count; i++) {
+        if (r < local[i]) {
+            return i;
+        }
+        r -= local[i];
+    }
+    return 0;
+}
+
 
 // .text:0x0009E5A0 size:0x234 mapped:0x806DD634
 s32 fn_3_9E5A0(u8* weights, s32 count) {
