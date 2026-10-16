@@ -61,9 +61,53 @@ void fn_3_6FFC4(void) {
     return;
 }
 
+typedef struct {
+    u8 _pad0[2];
+    u8 bodyType;     /* 0x2 */
+    u8 _pad3[3];
+} CharacterBodyInfo; /* size: 0x6 */
+
+typedef struct {
+    u8 maxZ; /* 0x0 */
+    u8 maxX; /* 0x1 */
+    u8 minX; /* 0x2 */
+} HitByPitchZone; /* size: 0x3 */
+
+extern CharacterBodyInfo lbl_800E8558[];
+extern HitByPitchZone lbl_3_data_76FC[];
+
 // .text:0x00070280 size:0x16C mapped:0x806AF314
 void fn_3_70280(void) {
-    return;
+    BOOL hit = FALSE;
+    s32 dx;
+    s32 dz;
+    s32 type;
+
+    if (g_GameLogic.secondaryGameMode == 0xB && g_Practice._1DB == 0) {
+        return;
+    }
+    if (g_Minigame.GameMode_MiniGame == 2) {
+        return;
+    }
+    if (g_Batter.framesSinceStartOfSwing > 0) {
+        return;
+    }
+    if (g_Pitcher.calledStrikeInd != 0) {
+        return;
+    }
+    dx = 100.0f * (g_Pitcher.ballCurrentPosition.x - g_Batter.batterPos.x);
+    dz = 100.0f * (g_Pitcher.ballCurrentPosition.z - g_Batter.batterPos.z);
+    if (g_Batter.batterHand != 0) {
+        dx = -dx;
+    }
+    type = lbl_800E8558[g_Batter.charID].bodyType;
+    if (dz <= lbl_3_data_76FC[type].maxZ && (f32)dz >= 0.0f && dx <= lbl_3_data_76FC[type].maxX &&
+        dx >= -lbl_3_data_76FC[type].minX) {
+        hit = TRUE;
+    }
+    if (hit) {
+        g_Batter.hitByPitch = 1;
+    }
 }
 
 // .text:0x000703EC size:0x294 mapped:0x806AF480
