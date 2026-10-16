@@ -153,8 +153,32 @@ void fn_3_F8BA8(StaC4AnimObj* obj) {
 }
 
 // .text:0x000F8D00 size:0x120 mapped:0x80737D94
+extern char lbl_3_rodata_3030[];
+extern char lbl_3_rodata_303C[];
+
 void fn_3_F8D00(void) {
-    return;
+    Mtx23 m;
+    u32 y;
+    u32 x;
+    u32 off;
+
+    m[0][0] = 0.5f;
+    m[0][1] = 0.0f;
+    m[0][2] = 0.0f;
+    m[1][0] = 0.0f;
+    m[1][1] = 0.5f;
+    m[1][2] = 0.0f;
+    GXSetIndTexMtx(GX_ITM_0, m, 2);
+    lbl_3_bss_B63C = fn_3_B9534(0x80, 0x80, &lbl_3_bss_B640);
+    if (lbl_3_bss_B63C == NULL) {
+        OSPanic(lbl_3_rodata_3030, 0x6DF, lbl_3_rodata_303C);
+    }
+    for (y = 0; y < 0x80; y++) {
+        for (x = 0; x < 0x80; x++) {
+            off = fn_800247E4(x, y, 0x80, 2);
+            lbl_3_bss_B63C[off] = (u8)(rand() % 4) + 0x7E;
+        }
+    }
 }
 
 // .text:0x000F8E20 size:0x268 mapped:0x80737EB4
