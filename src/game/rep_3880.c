@@ -635,7 +635,31 @@ void fn_3_14CBB4(Struct_14C79C_Arg* arg0, ListNode_14B9F0* node) {
 
 // .text:0x0014CD40 size:0x18C mapped:0x8078BDD4
 void fn_3_14CD40(Struct_14C79C_Arg* arg0, ListNode_14B9F0* node) {
-    return;
+    s32 da;
+    s32 alpha;
+    f32 ds;
+
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_CLEAR);
+    fn_8003403C(node->scaleX, node->scaleY);
+    fn_80033CC8(node, arg0->unk10);
+    alpha = node->color[3];
+    if (-node->field_0x48 < lbl_3_data_26D00.unkC) {
+        ds = ((f32)lbl_3_data_26D00.unk14 / 100000.0f) / (f32)lbl_3_data_26D00.unkC;
+        da = lbl_3_data_26D00.unk20 / lbl_3_data_26D00.unkC;
+    } else {
+        ds = ((f32)(lbl_3_data_26D00.unk18 - lbl_3_data_26D00.unk14) / 100000.0f) / (f32)(lbl_3_data_26D00.unk44 - lbl_3_data_26D00.unkC);
+        da = (lbl_3_data_26D00.unk24 - lbl_3_data_26D00.unk20) / (lbl_3_data_26D00.unk44 - lbl_3_data_26D00.unkC);
+    }
+    alpha += da;
+    if (alpha > 0xFF) {
+        alpha = 0xFF;
+    } else if (alpha < 0) {
+        alpha = 0;
+    }
+    node->color[3] = alpha;
+    node->color[0] = node->color[1] = node->color[2] = node->color[3];
+    node->scaleX += ds;
+    node->scaleY = node->scaleX;
 }
 
 // .text:0x0014CECC size:0x3F4 mapped:0x8078BF60
