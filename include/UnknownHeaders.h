@@ -791,6 +791,7 @@ typedef struct DrawingSceneStruct {
     };
     union {
         s16 unk1a;
+        u16 unk1a_u16;
         struct {
             u8 unk1a_hi;
             u8 unk1b;

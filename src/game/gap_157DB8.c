@@ -64,9 +64,29 @@ void fn_3_1581FC(void) {
     lbl_803CC1B8->aFunctionPointer = fn_3_15810C;
 }
 
+extern u8 lbl_3_data_FAF4[][4];
+
 // .text:0x00158264 size:0x148 mapped:0x807972F8
-void fn_3_158264(void) {
-    return;
+void fn_3_158264(DrawingSceneStruct* scene) {
+    s32 v;
+
+    v = lbl_3_data_FAF4[g_Practice.practiceType_2][g_Practice.practiceLevel];
+    fn_800363D8(scene, 1, 3, 0x32, v);
+    fn_800363D8(scene, 1, 4, 0x32, v);
+    v = g_Practice.guidedPracticeCounter;
+    fn_800363D8(scene, 1, 1, 0x32, v);
+    fn_800363D8(scene, 1, 2, 0x32, v);
+    if (v != scene->unk1a_u16) {
+        if ((lbl_80371C30[scene->unkIndex + 1].obj->field_0x5C >> 16) <= 9) {
+            lbl_80371C30[scene->unkIndex + 1].obj->field_0x5C = 0xA0000;
+            lbl_80371C30[scene->unkIndex + 1].obj->field_0x68 = 1;
+        }
+        if ((lbl_80371C30[scene->unkIndex + 1].obj->field_0x5C >> 16) >= 0x13) {
+            lbl_80371C30[scene->unkIndex + 1].obj->field_0x5C = 0x90000;
+            lbl_80371C30[scene->unkIndex + 1].obj->field_0x68 = 0;
+            scene->unk1a_u16 = v;
+        }
+    }
 }
 
 // .text:0x001583AC size:0x304 mapped:0x80797440

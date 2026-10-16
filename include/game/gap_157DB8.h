@@ -32,7 +32,7 @@ void fn_3_157E28(void);
 void fn_3_1580AC(void);
 void fn_3_15810C(void);
 void fn_3_1581FC(void);
-void fn_3_158264(void);
+void fn_3_158264(DrawingSceneStruct* scene);
 void fn_3_1583AC(void);
 void fn_3_1586B0(void);
 void fn_3_1589C4(void);
