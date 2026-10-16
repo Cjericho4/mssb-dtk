@@ -165,6 +165,17 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **`rlwinm r0,r0,16,24,29` on an lhz value**: `(src->h & 0xFC0000) >> 16` (fn_3_E5E70).
 *   **Reuse matched sibling helpers** like `setRandomTarget(target, s32 strength)` with `(u8)strength` index for `clrlslwi` + `++i < 4` do-while (fn_3_1471C4).
 
+*   **r31 loaded straight from a global** (no temp + `mr`): `if ((scene = lbl_803CC1B8)->unk18 < X)` in the first condition (fn_3_933CC).
+*   **`bge L; b end` tail**: `if (x >= N) goto remove;` inside the nested block, `return;` at its end, `remove:` after the outer if (fn_3_91E4C, fn_3_15F088).
+*   **Swapped reg at the start of `cntlzw`/`subf`**: swap the `==` operands (fn_3_5EE58).
+*   **`lwz` of an array ptr scheduled before the first compare**: hoist `anim = ptrs[idx]` into a local declared at the top (fn_3_CAE00, fn_3_C0AD8).
+*   **`lwzu` on a global struct's first field**: read it into a local (`hs = sc->highscore;`) and use that in the if-chain (fn_3_5F7A8).
+*   **Sequential `cmplwi`/`bne` chain**: if/else-if, not switch (fn_3_5ACA0, fn_3_B0B5C).
+*   **`lhax` for first field then offsets**: index the table each time (`tbl[idx].a; tbl[idx].b`), not `&tbl[idx]` (fn_3_B0B5C).
+*   **f28–f31 allocation**: separate f32 locals per call result, brute-force decl order, precompute products the target hoists (fn_3_1045A8).
+*   **Store order steers regalloc**: flag byte store before a Vec's three `stfs` fixed greg+freg allocation (fn_3_F9164).
+*   **Callback tables**: `.data` entries holding a callback ptr reveal the callback's arg struct (lbl_3_data_174A8 → fn_3_C095C). CommonBss_35154 blocks repeat at 0x10/0x6C/0xC8 (stride 0x5C: ptr, Timer, s32); `Timer+0x18` is a u16 frame count.
+
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
 *   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.

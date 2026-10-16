@@ -109,6 +109,10 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_111038 | 68 lines, register numbering only; insn sequence identical (.agent/attempts/fn_3_111038.c) |
 | fn_3_90DD8 | 5 lines: scheduling of 2-arg fn_800216F8 call setup (.agent/attempts/fn_3_90DD8.c) |
 | fn_3_168DFC | skipped: same-file static data off one base (lbl_3_data_285A8 +0x120/+0x360) — known unfixable (.agent/attempts/fn_3_168DFC.c note) |
+| fn_3_C11CC | same-file static .data off one base (r30=&lbl_3_data_17248, 17260 at +0x18) — known unfixable (.agent/attempts/fn_3_C11CC.c) |
+| fn_3_F9164 | 1 line: u8 index on lbl_3_data_81DC emits clrlslwi vs slwi; s32 index moves the 81DC load above the vol if/else (.agent/attempts/fn_3_F9164.c + .headers.diff) |
+| fn_3_F99F0 | same clrlslwi issue as fn_3_F9164 plus selector-load form/regs (.agent/attempts/fn_3_F99F0.c + .headers.diff) |
+| fn_3_79414 | r5/r6 swap between runner ptr and cached status byte; decl-order + loop variants failed (.agent/attempts/fn_3_79414.c + .headers.diff) |
 
 **Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
 | fn_3_24EA0 | register allocation / scheduling (see git log) |

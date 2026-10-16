@@ -1,0 +1,37 @@
+diff --git a/include/UnknownHeaders.h b/include/UnknownHeaders.h
+index 1378899..4d2bb48 100644
+--- a/include/UnknownHeaders.h
++++ b/include/UnknownHeaders.h
+@@ -583,7 +583,9 @@ typedef struct StadiumObjectElem {
+     u8 unk99;                         /* 0x99 */
+     u8 _pad_0x9a[0x9D - 0x9A];       /* 0x9A */
+     u8 unk9D;                         /* 0x9D */
+-    u8 _pad_0x9e[0xA9 - 0x9E];       /* 0x9E */
++    u8 _pad_0x9e[0xA2 - 0x9E];       /* 0x9E */
++    u8 unkA2;                         /* 0xA2 */
++    u8 _pad_0xa3[0xA9 - 0xA3];       /* 0xA3 */
+     u8 unk_A9;                        /* 0xA9 */
+     u8 _pad_0xaa[0xB0 - 0xAA];       /* 0xAA */
+     f32 unkB0;                        /* 0xB0 */
+diff --git a/include/game/sta_c4.h b/include/game/sta_c4.h
+index 2daa76c..a8ccf7b 100644
+--- a/include/game/sta_c4.h
++++ b/include/game/sta_c4.h
+@@ -53,7 +53,7 @@ void fn_3_F8BA8(StaC4AnimObj* obj);
+ void fn_3_F8D00(void);
+ void fn_3_F8E20(void);
+ void fn_3_F9088(VecXYZ* pos, s32 idx);
+-void fn_3_F9164(void);
++void fn_3_F9164(StadiumObjectElem* elem);
+ void fn_3_F92FC(void);
+ void fn_3_F934C(void);
+ typedef struct StaC4QueueObj {
+@@ -71,7 +71,7 @@ typedef struct StaC4LaunchSrc {
+ 
+ void fn_3_F963C(s32 elemIdx, StaC4LaunchSrc* src);
+ void fn_3_F976C(void);
+-void fn_3_F99F0(void);
++void fn_3_F99F0(s32 idx);
+ void fn_3_F9B9C(void);
+ void fn_3_F9D94(StaC4AnimObj* obj);
+ void fn_3_F9E78(void);
