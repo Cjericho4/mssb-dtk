@@ -260,7 +260,6 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_B97DC | matched (ACTSetAnimation prototype gained the hidden f32 before time) |
 | fn_3_16E1EC | Register allocation of the reset-condition terms and bss base pointer. |
 | fn_3_D8A10 | scheduling of score-table loads; unrolled _1918 loop uses const offsets vs running pointer |
-| fn_3_249E8 | register allocation of loop induction vars (r31/r30/r29) |
 | fn_3_BD6AC | bge+b+bl branch direction — CW codegen, unfixable |
 | fn_3_BD80C | bss/transRot base register split (r5+r30 vs r30 only) |
 | fn_3_BF070 | stmw r27 vs 4 individual stw's |
