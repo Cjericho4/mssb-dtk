@@ -146,7 +146,27 @@ void fn_3_FD51C(s32 i) {
 
 // .text:0x000FD5A8 size:0xC8 mapped:0x8073C63C
 void fn_3_FD5A8(void) {
-    return;
+    Vec up = { 0.0f, 1.0f, 0.0f };
+    s32 i;
+
+    for (i = 0; i < 2; i++) {
+        CameraSub13C* s = &((CameraElem*)&g_Camera)[i].unk13C;
+
+        s->unk4 = 0;
+        s->unk8 = 0;
+        s->unkC = up;
+        s->unk1C = 0;
+        s->unk20 = 0;
+        s->unk24 = 0;
+        s->unk28 = 0;
+        s->unk2C = 0.0f;
+        s->unk30 = 0;
+        s->unk34 = 0;
+        s->unk38 = 0;
+        s->unk3C = 0;
+        s->unk40 = 0;
+        s->unk44 = 0.0f;
+    }
 }
 
 // .text:0x000FD670 size:0x38C mapped:0x8073C704
