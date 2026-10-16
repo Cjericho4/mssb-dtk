@@ -9,6 +9,10 @@
 #include "game/gap_6C410.h"
 #include "game/gap_6AEC0.h"
 #include "game/gap_219CC.h"
+#include "game/rep_FE0.h"
+#include "game/rep_1090.h"
+#include "game/gap_6B4C8.h"
+#include "game/gap_157DB8.h"
 
 // .text:0x0006BEA4 size:0x15C mapped:0x806AAF38
 void fn_3_6BEA4(void) {
@@ -53,6 +57,47 @@ void fn_3_6BEA4(void) {
 
 // .text:0x0006C000 size:0xE0 mapped:0x806AB094
 extern VecXYZ lbl_3_data_18DD4[4];
+
+static inline void fn_3_6C000_inline(void) {
+    s32 i;
+    AnimationStruct* anim;
+
+    g_hugeAnimStruct.characterRelated = -1;
+    for (i = 0; i < 13; i++) {
+        if (g_hugeAnimStruct.AnimationStructPtrs[i] != NULL) {
+            g_hugeAnimStruct.AnimationStructPtrs[i]->unk_25D = 0;
+        }
+    }
+    if (g_Practice.practiceState == 6) {
+        return;
+    }
+    if (g_Practice.practiceState <= 1) {
+        return;
+    }
+    anim = g_hugeAnimStruct.AnimationStructPtrs[9];
+    if (anim == NULL) {
+        return;
+    }
+    if (g_Minigame._1A13[0] != 0) {
+        return;
+    }
+    if (g_Minigame.teamEntries[0].fieldB < 0) {
+        return;
+    }
+    if ((s8)g_Minigame.teamEntries[0]._7 == 0) {
+        return;
+    }
+    if ((s8)g_Minigame._19DA[0] < 0) {
+        return;
+    }
+    anim->unk_25D = 1;
+    anim->unk34.x = lbl_3_data_18DD4[0].x;
+    anim->unk34.y = -lbl_3_data_18DD4[0].y;
+    anim->unk34.z = lbl_3_data_18DD4[0].z;
+    anim->unk40.x = 0.0f;
+    anim->unk40.y = 0.0f;
+    anim->unk40.z = 0.0f;
+}
 
 void fn_3_6C000(void) {
     s32 i;
@@ -135,5 +180,40 @@ void fn_3_6C150(void) {
 
 // .text:0x0006C1D8 size:0x238 mapped:0x806AB26C
 void fn_3_6C1D8(void) {
-    return;
+    u8 status;
+    u8 mode;
+
+    status = g_GameLogic.gameStatus;
+    if (status == 4) {
+        return;
+    }
+    mode = g_d_GameSettings.GameModeSelected;
+    if (mode == 2 && g_GameLogic.secondaryGameMode == 0xA && g_Practice.practiceType_1 == 6) {
+        fn_3_6C000_inline();
+    } else if (status != 5 && g_hugeAnimStruct.field269_0x307a != 0) {
+        if (lbl_3_common_bss_1323C->unk25C != 0) {
+            fn_3_6BEA4();
+        } else if (((u8)(status - 0xB) <= 1 || g_GameLogic.secondaryGameMode == 0xA ||
+                    g_GameLogic.secondaryGameMode == 0x12 || (mode == 2 && g_Practice.tutorialState == 0)) &&
+                   !(mode == 6 && status == 0xB)) {
+            fn_3_690FC();
+            fn_3_6AEE0();
+            fn_3_6C454();
+            fn_3_6C410();
+            g_UnkSound_32718._07 = 0;
+        } else {
+            fn_3_697CC();
+            fn_3_685F0();
+            fn_3_6B144();
+            fn_3_6C4D0();
+            fn_3_6C428();
+            fn_3_6B674();
+            fn_3_6AB58();
+        }
+    }
+    if (g_d_GameSettings.GameModeSelected == 2) {
+        fn_3_15A9F4();
+    } else {
+        fn_3_973EC();
+    }
 }
