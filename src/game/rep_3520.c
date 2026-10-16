@@ -269,8 +269,37 @@ void fn_3_13583C(Vec* pos) {
 }
 
 // .text:0x00135924 size:0x140 mapped:0x807749B8
+static inline void fn_3_135924_pushOut(Vec* p, Vec* diff) {
+    Vec center = {0.0f, 0.0f, 20.0f};
+    Vec n;
+    if (p != NULL) {
+        PSVECNormalize(diff, &n);
+        PSVECScale(&n, 3.5f, &n);
+        p->x = center.x + n.x;
+        p->z = center.z + n.z;
+    }
+}
+
+static inline void fn_3_135924_clamp(Vec* p) {
+    Vec center = {0.0f, 0.0f, 20.0f};
+    Vec diff;
+    if (p != NULL) {
+        PSVECSubtract(p, &center, &diff);
+        diff.y = 0.0f;
+        if (PSVECMag(&diff) <= 3.5f) {
+            fn_3_135924_pushOut(p, &diff);
+        }
+    }
+}
+
 void fn_3_135924(void) {
-    return;
+    u32 i;
+
+    for (i = 0; i < 100; i++) {
+        if (g_Minigame.wallBall_coinsVisibleInd[i] == 1 && g_Minigame.wallBall_coinCoordinates[i].y < 3.0f) {
+            fn_3_135924_clamp((Vec*)&g_Minigame.wallBall_coinCoordinates[i]);
+        }
+    }
 }
 
 // .text:0x00135A64 size:0x1B4 mapped:0x80774AF8
