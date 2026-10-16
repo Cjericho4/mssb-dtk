@@ -38,15 +38,26 @@ typedef struct {
     s32 z;
 } EF55C_Arg;
 
+/* Effect handle owned by a StaC5DriftObj (released with fn_80033964). */
+typedef struct StaC5DriftFx {
+    /* 0x00 */ u8 _pad0[0x8];
+    /* 0x08 */ u32 unk8;
+} StaC5DriftFx;
+
 /* Object that drifts toward a target point from lbl_3_data_1B884. */
 typedef struct StaC5DriftObj {
     /* 0x00 */ Control control;
-    /* 0x3C */ u8 _pad3C[0x9C - 0x3C];
+    /* 0x3C */ u8 _pad3C[0x99 - 0x3C];
+    /* 0x99 */ u8 unk99;
+    /* 0x9A */ u8 _pad9A[0x9C - 0x9A];
     /* 0x9C */ u8 targetIdx;
-    /* 0x9D */ u8 _pad9D[0xA8 - 0x9D];
+    /* 0x9D */ u8 _pad9D[0xA0 - 0x9D];
+    /* 0xA0 */ struct StaC5PlacedObj* partner;
+    /* 0xA4 */ StaC5DriftFx* fx;
     /* 0xA8 */ Vec pos;
     /* 0xB4 */ Vec vel;
     /* 0xC0 */ f32 angle;
+    /* 0xC4 */ u8 unkC4;
 } StaC5DriftObj;
 
 typedef struct StaC5DriftTarget {
@@ -248,7 +259,7 @@ void fn_3_F4D00(StaC5DriftObj* obj);
 void fn_3_F4DAC(void);
 void fn_3_F4FBC(void);
 void fn_3_F56CC(void);
-void fn_3_F5C30(void);
+void fn_3_F5C30(StaC5DriftObj* obj);
 s32 fn_3_F5E78(u8 arg0);
 s32 fn_3_F5EFC(unknown_tri_compare* a, unknown_tri_compare* b);
 s32 fn_3_F5F28(f32* a, f32* b);

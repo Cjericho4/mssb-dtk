@@ -131,7 +131,8 @@ void fn_3_EF218(void) {
 
 /* lbl_3_data_1B820 overlay (data addressed off this one base). */
 typedef struct StaC5Data1B820 {
-    /* 0x000 */ u8 _pad0[0x154];
+    /* 0x000 */ s32 emitter0;
+    /* 0x004 */ u8 _pad4[0x154 - 0x4];
     /* 0x154 */ s32 emitPeriod[3];
     /* 0x160 */ f32 emitScale[3];
     /* 0x16C */ u8 _pad16C[0x174 - 0x16C];
@@ -753,8 +754,32 @@ void fn_3_F56CC(void) {
 }
 
 // .text:0x000F5C30 size:0x248 mapped:0x80734CC4
-void fn_3_F5C30(void) {
-    return;
+void fn_3_F5C30(StaC5DriftObj* obj) {
+    obj->pos.x = lbl_3_data_1B884[obj->targetIdx].pos.x;
+    obj->pos.y = lbl_3_data_1B884[obj->targetIdx].pos.y;
+    obj->pos.z = lbl_3_data_1B884[obj->targetIdx].pos.z;
+    obj->angle = -lbl_3_data_1B884[obj->targetIdx].rot;
+    obj->control.type = 0;
+    CTRLSetTranslation(&obj->control, obj->pos.x, -obj->pos.y, obj->pos.z);
+    CTRLSetRotation(&obj->control, 0.0f, obj->angle, 0.0f);
+    obj->vel.x = obj->vel.y = obj->vel.z = 0.0f;
+    if (obj->fx != NULL) {
+        if (obj->fx->unk8 != 0) {
+            fn_80033964((u32)obj->fx);
+            obj->fx = NULL;
+        } else {
+            obj->fx = NULL;
+        }
+    }
+    if (obj->partner != NULL) {
+        fn_3_F3BB0_inline(obj->partner);
+    }
+    obj->unk99 = 1;
+    obj->unkC4 = 0;
+    if (lbl_3_data_1B820.emitter0 != -1) {
+        fn_3_8B890(lbl_3_data_1B820.emitter0);
+        lbl_3_data_1B820.emitter0 = -1;
+    }
 }
 
 extern char lbl_3_rodata_2DB8[];
