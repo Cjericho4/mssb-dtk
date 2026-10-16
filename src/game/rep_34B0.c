@@ -1,4 +1,5 @@
 #include "game/rep_34B0.h"
+#include "game/m_sound.h"
 
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
@@ -106,9 +107,38 @@ void fn_3_12F624(void) {
     return;
 }
 
+extern f32 lbl_3_data_21770[6];
+void fn_8004C108(VecXYZ* pos, s32 arg1);
+
 // .text:0x0012F9D4 size:0xF0 mapped:0x8076EA68
-void fn_3_12F9D4(void) {
-    return;
+void fn_3_12F9D4(s32 idx) {
+    BB_barrelStruct* b = &g_Minigame.barrels[idx];
+    VecXYZ pos;
+    f32 desiredY;
+    f32 y;
+    f32 z;
+
+    g_Minigame.barrels[idx].currentPos.y += lbl_3_data_21770[1];
+    if (g_Minigame.barrels[idx].currentPos.y < (desiredY = g_Minigame.barrels[idx].desiredPos.y)) {
+        b->currentPos.y = desiredY;
+        if (b->posAtStartOfTurn.y != b->desiredPos.y) {
+            y = b->currentPos.y;
+            z = b->currentPos.z;
+            pos.y = y;
+            pos.z = z;
+            pos.x = b->currentPos.x;
+            pos.y = -y;
+            pos.z = z - 1.0f;
+            if (y <= 0.0f) {
+                fn_8004C108(&pos, 1);
+                fn_3_90064(0x2E4);
+            } else {
+                fn_8004C108(&pos, 0);
+                fn_3_90064(0x2E5);
+            }
+        }
+        b->barrelState = 2;
+    }
 }
 
 // .text:0x0012FAC4 size:0x2A8 mapped:0x8076EB58

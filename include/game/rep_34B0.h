@@ -12,7 +12,7 @@ void fn_3_12EFA4(void);
 void fn_3_12F28C(void);
 void fn_3_12F424(s32 idx, s16 delay, s32 force);
 void fn_3_12F624(void);
-void fn_3_12F9D4(void);
+void fn_3_12F9D4(s32 idx);
 void fn_3_12FAC4(void);
 void fn_3_12FD6C(void);
 void fn_3_12FE84(void);
