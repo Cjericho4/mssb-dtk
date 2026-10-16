@@ -99,7 +99,24 @@ void fn_3_166D40(void) {
 
 // .text:0x00166E04 size:0x1C8 mapped:0x807A5E98
 void fn_3_166E04(void) {
-    return;
+    EffectTask* task = (EffectTask*)lbl_803CC1B8;
+    s8 type;
+
+    if (g_d_GameSettings._55 != 0 || lbl_3_common_bss_35154.unk_479 != 0) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (g_GameLogic.gameStatus != 2) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    if (task->owner->animID == 0x22 ||
+        (g_Ball.ballState == 1 && (task->owner->animID == 5 || task->owner->animID == 7))) {
+        type = lbl_3_data_28558[(u32)rand() % 23];
+        spawnCharacterParticles(task->owner, type);
+        return;
+    }
+    fn_800B0A14_removeQueue();
 }
 
 // .text:0x00166FCC size:0x1AC mapped:0x807A6060
