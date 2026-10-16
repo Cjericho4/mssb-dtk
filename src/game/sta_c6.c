@@ -71,8 +71,49 @@ int fn_3_E5E14(Arg0_E5E14* arg0) {
 }
 
 // .text:0x000E5E70 size:0x17C mapped:0x80724F04
-void fn_3_E5E70(void) {
-    return;
+void fn_3_E5E70(StaC6Color* out, u32 fmt, StaC6Texel* src) {
+    s32 type = (fmt >> 4) & 0xF;
+
+    if (out == NULL || src == NULL) {
+        return;
+    }
+    switch (type) {
+    case 0:
+        out->r = (src->h >> 8) & 0xF8;
+        out->g = (src->h >> 3) & 0xFC;
+        out->b = (src->h << 3) & 0xF8;
+        out->a = 0xFF;
+        break;
+    case 3:
+        out->r = (src->h >> 12) & 0xF;
+        out->g = (src->h >> 8) & 0xF;
+        out->b = (src->h >> 4) & 0xF;
+        out->a = src->h & 0xF;
+        out->r = out->r | (out->r << 4);
+        out->g = out->g | (out->g << 4);
+        out->b = out->b | (out->b << 4);
+        out->a = out->a | (out->a << 4);
+        break;
+    case 5:
+        out->r = src->w >> 24;
+        out->g = src->w >> 16;
+        out->b = src->w >> 8;
+        out->a = src->w;
+        break;
+    case 1:
+    case 2:
+        out->r = src->w >> 24;
+        out->g = src->w >> 16;
+        out->b = src->w >> 8;
+        out->a = 0xFF;
+        break;
+    case 4:
+        out->r = (src->h & 0xFC0000) >> 16;
+        out->g = (src->h >> 10) & 0xFC;
+        out->b = (src->h >> 4) & 0xFC;
+        out->a = (src->h << 2) & 0xFC;
+        break;
+    }
 }
 
 // .text:0x000E5FEC size:0x424 mapped:0x80725080

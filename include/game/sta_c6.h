@@ -137,7 +137,19 @@ void fn_3_E5A1C(ActorObject *arg0);
 void fn_3_E5A84(void);
 void fn_3_E5CBC(void);
 int fn_3_E5E14(Arg0_E5E14* arg0);
-void fn_3_E5E70(void);
+typedef struct StaC6Color {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} StaC6Color;
+
+typedef union StaC6Texel {
+    u16 h;
+    u32 w;
+} StaC6Texel;
+
+void fn_3_E5E70(StaC6Color* out, u32 fmt, StaC6Texel* src);
 void fn_3_E5FEC(void);
 void fn_3_E6410(Struct_E6410* arg0);
 u32* fn_3_E64A8(void);
