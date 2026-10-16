@@ -59,7 +59,7 @@ void fn_3_2FB9C(void);
 void fn_3_2FF2C(void);
 void fn_3_300B8(void);
 void fn_3_30214(void);
-void fn_3_30564(void);
+BOOL fn_3_30564(s32 idx);
 void fn_3_3061C(void);
 void fn_3_308B8(void);
 void fn_3_30A58(void);

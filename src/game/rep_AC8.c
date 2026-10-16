@@ -372,9 +372,27 @@ void fn_3_30214(void) {
     return;
 }
 
+extern f32 lbl_3_data_4930[43];
 // .text:0x00030564 size:0xB8 mapped:0x8066F5F8
-void fn_3_30564(void) {
-    return;
+BOOL fn_3_30564(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    if (f->unk25E == 3) {
+        f->unk150 *= lbl_3_data_4930[14];
+        f->unk158 *= lbl_3_data_4930[14];
+        f->pos[0] += f->unk150;
+        f->pos[2] += f->unk158;
+        f->prevPos[0] = f->pos[0];
+        f->prevPos[2] = f->pos[2];
+        f->unk1F0 = 1;
+    } else if (f->unk25E == 4) {
+        f->unk50 = 0.0f;
+        f->unk25F--;
+        if (f->unk25F == 0) {
+            f->unk25E = 0;
+        }
+    }
+    return TRUE;
 }
 
 // .text:0x0003061C size:0x29C mapped:0x8066F6B0
