@@ -318,8 +318,48 @@ BALL_COLLISION_TYPE processStadiumObjectFunction(s32, s32 index, BALL_COLLISION_
 }
 
 // .text:0x000B91C8 size:0x1D4 mapped:0x806F825C
-void fn_3_B91C8(void) {
-    return;
+struct StadiumModel* fn_3_C823C(s32 arg0, Mtx m);
+struct StadiumModel* fn_3_E4BE8(s32 index, MtxPtr m);
+struct StadiumModel* fn_3_E751C(s32 idx, Mtx m);
+struct StadiumModel* fn_3_F6504(s32 index, Mtx m);
+
+static inline struct StadiumModel* fn_3_B91C8_default(s32 index, Mtx m) {
+    CTRLBuildMatrix(&lbl_3_common_bss_350E4[0].src[index].control, m);
+    return lbl_3_common_bss_350E4[0].src[index].unk_78;
+}
+
+struct StadiumModel* fn_3_B91C8(s32 stadium, s32 index, Mtx m) {
+    if (stadium == 1) {
+        return fn_3_C823C(index, m);
+    }
+    if (stadium == 2) {
+        if (g_Ball.AtBat_ContactResult >= 2) {
+            return NULL;
+        }
+        return fn_3_B91C8_default(index, m);
+    }
+    if (stadium == 3) {
+        if ((g_Ball.currentStarSwing2 == 11) | (g_Ball.currentStarSwing2 == 12)) {
+            return NULL;
+        }
+        return fn_3_E4BE8(index, m);
+    }
+    if (stadium == 4) {
+        if ((g_Ball.AtBat_ContactResult >= 2) | (g_Ball.currentStarSwing2 == 11) | (g_Ball.currentStarSwing2 == 12)) {
+            return NULL;
+        }
+        return fn_3_B91C8_default(index, m);
+    }
+    if (stadium == 5) {
+        if (g_Ball.AtBat_ContactResult >= 2) {
+            return NULL;
+        }
+        return fn_3_F6504(index, m);
+    }
+    if (stadium == 6) {
+        return fn_3_E751C(index, m);
+    }
+    return fn_3_B91C8_default(index, m);
 }
 
 // .text:0x000B939C size:0x28 mapped:0x806F8430

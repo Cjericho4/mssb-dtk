@@ -97,7 +97,7 @@ void fn_3_B902C(void);
 void fn_3_B908C(void);
 void fn_3_B9124(void);
 BALL_COLLISION_TYPE processStadiumObjectFunction(s32, s32 index, BALL_COLLISION_TYPE ret, CollisionStruct* outCollision);
-void fn_3_B91C8(void);
+struct StadiumModel* fn_3_B91C8(s32 stadium, s32 index, Mtx m);
 void fn_3_B939C(void);
 void fn_3_B93C4(void);
 void fn_3_B93C8(s32);                                    /* extern */
