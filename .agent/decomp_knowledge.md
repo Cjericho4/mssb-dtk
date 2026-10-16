@@ -242,6 +242,12 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Same value stored to two fields then re-read**: `n = rand() % 24 + 72; p->unk4A = n; p->unk4F = n; ... p->unk4A = p->unk4F;`. Float + byte field from one constant (`stfs` then `fctiwz`/`stb`): `p->unk43 = p->unk24 = 255.0f;` (fn_3_CDB48).
 *   **`a * b + c` fusing into `fmadds`** where the target has `fmuls`/`fadds`: a block-scoped temp still fuses; a function-scope temp (or static inline returning the product) stops fusion but may shift fregs (fn_3_CBF80, unresolved).
 
+*   **All loads grouped before all stores = an argument list**: try an inline setter `set(&v, a.x, a.y, a.z)`; CW evaluates args right to left (loads z,y,x) (fn_3_103C30).
+*   **9 `lwz` then 9 `stw` between stack areas**: a 36-byte struct passed by value to an inline function; args are evaluated right to left into temps first (fn_3_103C30).
+*   **Frame 8 bytes short with int->float conversions**: writing `(f32)x` twice keeps an extra conversion slot; slots are assigned in source order (fn_3_1559E4).
+*   **`fabs` into a named f64 temp** (`ay = __fabs(pos->y); v.y = v.y - ay;`) changes freg order vs inline `__fabs` (fn_3_1559E4).
+*   **`slwi rI,e,3; lfsx; addi rI,rI,4; lfsx`**: `f32 tbl[..][2]` indexed `[e][0]/[e][1]`; a `{x,z}` struct gives `add`+`lfs 0x4` (fn_3_EF55C).
+
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
 *   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.

@@ -1,0 +1,39 @@
+diff --git a/include/game/rep_3090.h b/include/game/rep_3090.h
+index fc26b84..b5fa945 100644
+--- a/include/game/rep_3090.h
++++ b/include/game/rep_3090.h
+@@ -29,7 +29,13 @@ typedef struct Struct_DE94_Inner {
+     /* 0x098 */ VecXYZ* field_0x98;
+     /* 0x09C */ u8 _pad2e[0x04];
+     /* 0x0A0 */ f32 fov;
+-    /* 0x0A4 */ u8 _pad2d[0x74];
++    /* 0x0A4 */ u8 _pad2d[0x20];
++    /* 0x0C4 */ VecXYZ camPos;
++    /* 0x0D0 */ VecXYZ camTarget;
++    /* 0x0DC */ u8 _pad2f[0x30];
++    /* 0x10C */ f32 followGain;
++    /* 0x110 */ f32 followDamp;
++    /* 0x114 */ f32 followDist;
+     /* 0x118 */ u32 field_0x118;   // 0x118
+     /* 0x11C */ u32 field_0x11C;   // 0x11C (Replaced _pad3)
+     /* 0x120 */ u8 _pad3[0x04];    // (Adjusted padding)
+@@ -39,7 +45,9 @@ typedef struct Struct_DE94_Inner {
+     /* 0x9AC */ u8 field_0x9AC;
+     /* 0x9AD */ u8 _pad5[0x04];
+     /* 0x9B1 */ u8 field_0x9B1;    // 0x9B1 (Corrected from 0x9B6)
+-    /* 0x9B2 */ u8 _pad6[0x4];     // Remaining space to field_0x9B6
++    /* 0x9B2 */ u8 _pad6[0x2];
++    /* 0x9B4 */ u8 field_0x9B4;
++    /* 0x9B5 */ u8 _pad6b[0x1];
+     /* 0x9B6 */ u8 field_0x9B6;
+ } Struct_DE94_Inner;
+ 
+@@ -80,7 +88,7 @@ void fn_3_100038(void);
+ BOOL fn_3_10007C(void);
+ void fn_3_1000D8(void);
+ void fn_3_101CC4(void);
+-void fn_3_103C30(void);
++void fn_3_103C30(VecXYZ* pos);
+ void fn_3_103E7C(void);
+ void fn_3_1040D8(void);
+ void fn_3_104338(void);
