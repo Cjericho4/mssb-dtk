@@ -296,3 +296,13 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
 *   **Batter**: Base Address typically in `r31`.
 *   **Pitcher**: Base Address typically in `r3`.
 *   **Runners**: Array access often uses `r3` + index offset.
+
+---
+
+## 5. Patterns found 2026-10-16 (solo batches)
+*   **Duplicated blocks in one function = inlined helper.** Write a `static inline` helper and call it; this changes register allocation and often fixes r30/r31 swaps (e.g. `clearFielderAction`, `initMinigameTargetSpeeds`, `updateBonusCoins`, `barrelSettle`).
+*   **`lbl_3_data_3C40` is a fielder action table**: `actions[N].unk0` lives at offset `N*8`, and the action id N is what gets stored to `Fielder.unk1D3`.
+*   **`stw` / `stb` of a value then `cmpwi`** where the target compares the untruncated value: keep the local `s32` (not `u8`/`s16`), e.g. `s32 frames`, `s32 drain`, `s32 rank`.
+*   **Unrolled `lfsu` lookups over a small float table** come from a plain `for` with `break` over `tbl[i]`.
+*   **`fneg` into a fresh register before `fmuls`**: `angle = -x; angle = K * angle;` (not `K * -x`).
+*   **When register order is close, permute declarations or statements** with `tools/brute.py` (needs `mkdir -p .scratch`); the natural order often wins.
