@@ -35,3 +35,25 @@ void fn_3_1637EC(void) {
         }
     }
 }
+
+// .text:0x00163948 size:0x134 mapped:0x807A29DC
+BOOL fn_3_163948(void) {
+    s16 ids[9];
+    ScoutFlagPair* pairs;
+    s32 i;
+    BOOL ret;
+    s32 j;
+    pairs = lbl_3_common_bss_37400.scoutFlags;
+    for (i = 0; i < 9; i++) {
+        ids[i] = inMemRoster[1][i].stats.CharID;
+    }
+    ret = FALSE;
+    for (j = 0; j < 9; j++) {
+        if (ids[j] != -1) {
+            if (pairs[j].newFlags != 0 && pairs[j].oldFlags < pairs[j].newFlags) {
+                ret = TRUE;
+            }
+        }
+    }
+    return ret;
+}
