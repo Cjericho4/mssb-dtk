@@ -11,8 +11,13 @@
 #include "game/m_sound.h"
 #include "game/rep_540.h"
 #include "game/rep_1D58.h"
+#include "game/gap_16C410.h"
+void fn_3_CB7E8(f32 x, f32 y, f32 z);
+#include "musyx/musyx.h"
 
 extern f32 lbl_3_rodata_2664;
+extern u8 lbl_800E8754[];
+extern StadiumActorAnim lbl_3_bss_A034[];
 extern char lbl_3_rodata_286C[];
 extern char lbl_3_rodata_2878[];
 extern u8 lbl_3_bss_A898[];
@@ -370,13 +375,55 @@ void fn_3_CEFA8(void) {
 }
 
 // .text:0x000CF278 size:0x4B4 mapped:0x8070E30C
-void fn_3_CF278(void) {
+void fn_3_CF278(StadiumObjectElem* e, Vec pos) {
     return;
 }
 
 // .text:0x000CF72C size:0x200 mapped:0x8070E7C0
-void fn_3_CF72C(void) {
-    return;
+void fn_3_CF72C(s32 idx) {
+    StadiumObjectElem* e = &lbl_3_common_bss_350E4[0].src[idx];
+    Vec pos;
+    Vec ballPos;
+    s32 stadium;
+    u8 vol;
+    u8 pan;
+    SND_VOICEID vid;
+
+    if (g_Ball.AtBat_ContactResult < 2 && e->unkA4 != 1) {
+        if (lbl_800E8754[4] != 0) {
+            CTRLGetTranslation(&e->control, &pos.x, &pos.y, &pos.z);
+            fn_3_CB7E8(pos.x, pos.y - 5.0f, pos.z);
+            e->unkA4 = 1;
+        }
+        if (e->handleA0 != 0) {
+            fn_80033964(e->handleA0);
+            e->handleA0 = 0;
+        }
+        e->handleA0 = fn_80033A24(fn_3_CEFA8, 0x80, 0, 0x1E, 1, 0);
+        if (e->handleA0 != 0) {
+            ballPos.x = g_Ball.AtBat_Contact_BallPos.x;
+            ballPos.y = g_Ball.AtBat_Contact_BallPos.y;
+            ballPos.z = g_Ball.AtBat_Contact_BallPos.z;
+            fn_3_CF278(e, ballPos);
+        }
+        e->unk8C = &lbl_3_bss_A034[e->unk9C];
+        fn_80025EEC(e->unk8C, 0, 0);
+        e->unk8C->unk1A = 1;
+        e->unk8C->unk58 = -1;
+        stadium = g_d_GameSettings.StadiumID;
+        if (g_d_GameSettings.GameModeSelected == 6) {
+            vol = lbl_3_data_84B8[0][0].vol;
+        } else {
+            vol = lbl_3_data_8404[stadium][0].vol;
+        }
+        vid = sndFXStartEx(lbl_3_data_81DC[stadium], vol, 0x3F, 0);
+        if (g_d_GameSettings.GameModeSelected == 6) {
+            pan = lbl_3_data_84B8[0][0].pan;
+        } else {
+            pan = lbl_3_data_8404[stadium][0].pan;
+        }
+        sndFXCtrl(vid, 0x5B, pan);
+    }
 }
 
 // .text:0x000CF92C size:0x4 mapped:0x8070E9C0

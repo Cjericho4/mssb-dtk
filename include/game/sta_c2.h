@@ -119,8 +119,8 @@ void fn_3_CED34(void);
 void fn_3_CED38(void);
 void fn_3_CED3C(void);
 void fn_3_CEFA8(void);
-void fn_3_CF278(void);
-void fn_3_CF72C(void);
+void fn_3_CF278(struct StadiumObjectElem* e, Vec pos);
+void fn_3_CF72C(s32 idx);
 void fn_3_CF92C(void);
 void fn_3_CFA88(void);
 void fn_3_CFA8C(ActorObject* actor);
@@ -190,6 +190,13 @@ void fn_3_D1280(struct StaC2D1280Obj* obj);
 void fn_3_D141C(struct StaC2D1280Obj* obj);
 void fn_3_D173C(void);
 void fn_3_D196C(s32 idx);
+typedef struct StadiumActorAnim {
+    u8 _pad0[0x1A];  /* 0x00 */
+    s16 unk1A;       /* 0x1A */
+    u8 _pad1C[0x58 - 0x1C];
+    s8 unk58;        /* 0x58 */
+    u8 _pad59[0x5C - 0x59];
+} StadiumActorAnim; /* size 0x5C */
 void fn_80025EEC(struct StadiumActorAnim* anim, s32 arg1, s32 arg2);
 void fn_3_D1AC4(ActorObject* arg0);
 void fn_3_D1B24(void);
