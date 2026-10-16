@@ -134,9 +134,37 @@ void fn_3_12BB64(void) {
     return;
 }
 
+extern s32 lbl_3_data_92D4;
+extern u8 lbl_3_data_21268[];
+
 // .text:0x0012BFE8 size:0x1C4 mapped:0x8076B07C
 void fn_3_12BFE8(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    fn_80034E20(scene, &lbl_3_data_92D4);
+    if (g_d_GameSettings.GameModeSelected != 2) {
+        if (g_d_GameSettings.GameModeSelected == 6) {
+            lbl_80371C30[scene->unkIndex + 5].obj->flags &= ~2;
+            lbl_80371C30[scene->unkIndex + 6].obj->flags &= ~2;
+        } else {
+            lbl_80371C30[scene->unkIndex + 5].obj->flags &= ~2;
+            lbl_80371C30[scene->unkIndex + 6].obj->flags &= ~2;
+        }
+    }
+    lbl_3_common_bss_32724.unk_BC = 1;
+    if (g_d_GameSettings.GameModeSelected == 2) {
+        scene->unk20 = g_Practice.practiceType_2;
+        lbl_80371C30[scene->unkIndex + 3].obj->unk64 = 0x5F;
+        lbl_80371C30[scene->unkIndex + 4].obj->unk64 = 0x5C;
+    } else {
+        scene->unk20 = lbl_3_data_21268[(s8)g_Minigame._19E1];
+        lbl_80371C30[scene->unkIndex + 3].obj->unk64 = 0x5E;
+        lbl_80371C30[scene->unkIndex + 4].obj->unk64 = 0x5B;
+    }
+    scene->unk1a = 0;
+    scene->unk_1C = 0;
+    scene->drawingState = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_3_12BB64;
 }
 
 // .text:0x0012C1AC size:0x244 mapped:0x8076B240
