@@ -103,9 +103,55 @@ void fn_3_10768C(void) {
     }
 }
 
+extern void fn_80062A94(void);
+extern void fn_80062A74(void);
+
 // .text:0x00107784 size:0x174 mapped:0x80746818
 void fn_3_107784(void) {
-    return;
+    GameControlsStruct* gl = &g_GameLogic;
+
+    switch (gl->_125) {
+    case 0:
+        gl->_125++;
+        g_Minigame.battingHandedness[7] = 0;
+        if (g_Minigame.battingHandedness[5] == 0) {
+            fn_800B0A5C_insertQueue(fn_80062A94, 1);
+        }
+        break;
+    case 1:
+        changeScene(1, 6);
+        g_GameLogic.FrameCountOfCurrentAtBat_Copy = 0;
+        gl->_125++;
+        break;
+    case 2:
+        fn_3_10B27C();
+        if (g_Minigame.battingHandedness[6] == 2) {
+            gl->_125 = 5;
+        } else if (g_Minigame.battingHandedness[6] != 0) {
+            gl->_125++;
+        }
+        break;
+    case 3:
+        changeScene(3, 6);
+        if (lbl_8037169C._13 != 0) {
+            gl->_125++;
+        }
+        break;
+    case 4:
+        fn_80062A74();
+        g_Minigame.battingHandedness[5] = 0;
+        fn_3_5A6D4(0x29);
+        break;
+    case 5:
+        changeScene(3, 6);
+        if (lbl_8037169C._13 != 0) {
+            gl->_125 = 6;
+        }
+        break;
+    case 6:
+        fn_3_5A6D4(0x1E);
+        break;
+    }
 }
 
 // .text:0x001078F8 size:0x90 mapped:0x8074698C
