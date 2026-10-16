@@ -22,6 +22,20 @@ void fn_3_CB7D4(void) {
 
 // .text:0x000CB7E8 size:0xC0 mapped:0x8070A87C
 void fn_3_CB7E8(f32 x, f32 y, f32 z) {
-    return;
+    lbl_3_common_bss_35154.transRot.transX = x;
+    lbl_3_common_bss_35154.transRot.transY = y;
+    lbl_3_common_bss_35154.transRot.transZ = z;
+    lbl_3_common_bss_35154.transRot.rotZ = 0.0f;
+    lbl_3_common_bss_35154.transRot.rotY = 0.0f;
+    lbl_3_common_bss_35154.transRot.rotX = 0.0f;
+    lbl_3_common_bss_35154.someHalfword = 0x50;
+    lbl_3_common_bss_35154.unk_40a = 1;
+    lbl_3_common_bss_35154.bitfield |= 4;
+    fn_800B0A5C_insertQueue(fn_3_CB738, (u16)(lbl_803CC1B8->priority + 1));
+    playSoundEffect(0x19D);
+    if (g_GameLogic.TeamStars[g_GameLogic.teamBatting] < 5) {
+        g_GameLogic.TeamStars[g_GameLogic.teamBatting]++;
+    }
+    g_GameLogic.stadiumStarObtained = 1;
 }
 
