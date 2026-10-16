@@ -610,10 +610,31 @@ typedef struct StadiumIdEntry {
     /* 0x4 */ s32 id;
 } StadiumIdEntry; /* size: 0x8 */
 
+typedef struct StadiumVisEntry {
+    /* 0x0 */ u8 idx0;
+    /* 0x1 */ u8 val0[2];
+    /* 0x3 */ u8 idx1;
+    /* 0x4 */ u8 val1[2];
+} StadiumVisEntry; /* size: 0x6 */
+
+typedef struct StadiumVisObj {
+    /* 0x00 */ u8 _pad0[0x1C];
+    /* 0x1C */ u16 state;
+    /* 0x1E */ u8 _pad1E[0x2];
+} StadiumVisObj; /* size: 0x20 */
+
+typedef struct StadiumVisSet {
+    /* 0x00 */ StadiumVisEntry entries[2][2];
+    /* 0x18 */ StadiumVisObj* objs;
+    /* 0x1C */ f32 threshold;
+    /* 0x20 */ u8 count;
+} StadiumVisSet;
+
 typedef struct UnknownStruct_350E4 {
     /* 0x000 */ StadiumObjectElem* src;
     /* 0x004 */ void* dest;
-    /* 0x008 */ u8 _pad_0x8[0xC];
+    /* 0x008 */ u8 _pad_0x8[0x8];
+    /* 0x010 */ StadiumVisSet* visSet;
     /* 0x014 */ StadiumIdEntry* idEntries;
     /* 0x018 */ void (*unk18)(void);
     /* 0x01C */ void (*unk1C)(void);

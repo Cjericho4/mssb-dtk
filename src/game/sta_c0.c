@@ -6,6 +6,9 @@
 #include "game/m_sound.h"
 #include "Dolphin/os.h"
 #include "game/gap_16C410.h"
+#include "game/rep_720.h"
+#include "game/sta_c5.h"
+#include "Dolphin/GX/GXPixel.h"
 
 extern GXTexObj lbl_3_bss_9F4C;
 
@@ -57,7 +60,46 @@ void fn_3_C9744(void) {
 
 // .text:0x000C9878 size:0x180 mapped:0x8070890C
 void fn_3_C9878(void) {
-    return;
+    StadiumVisSet* vis = lbl_3_common_bss_350E4[0].visSet;
+    Vec dir;
+    Vec axis = {0.0f, 0.0f, 1.0f};
+    s32 view;
+    u8 flag;
+    f32 thresh;
+    CameraView* cam;
+    s32 i;
+
+    if (vis == NULL) {
+        return;
+    }
+    GXSetZCompLoc(GX_FALSE);
+    view = fn_8005268C();
+    switch (g_GameLogic.gameStatus) {
+    case 3:
+    case 0xB:
+    case 0x13:
+    case 0x14:
+    case 0x15:
+    case 0x16:
+    case 0x17:
+        goto hidden;
+    }
+    if (g_Stats.unk36 != 0) {
+        goto hidden;
+    }
+    cam = fn_80052734(view);
+    PSVECSubtract(&cam->target, &cam->pos, &dir);
+    dir.y = 0.0f;
+    thresh = vis->threshold * PSVECMag(&dir);
+    flag = PSVECDotProduct(&dir, &axis) > thresh;
+    goto apply;
+hidden:
+    flag = FALSE;
+apply:
+    for (i = 0; i < vis->count; i++) {
+        vis->objs[vis->entries[view][i].idx0].state = vis->entries[view][i].val0[flag];
+        vis->objs[vis->entries[view][i].idx1].state = vis->entries[view][i].val1[flag];
+    }
 }
 
 // .text:0x000C99F8 size:0x68 mapped:0x80708A8C
