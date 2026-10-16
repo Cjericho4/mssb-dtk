@@ -124,7 +124,43 @@ void fn_3_ED2A8(void) {
 
 // .text:0x000ED2F4 size:0x19C mapped:0x8072C388
 void fn_3_ED2F4(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 stadium;
+    u8 vol;
+    u8 pan;
+    SND_VOICEID vid;
+
+    if (lbl_3_common_bss_32724.someStatusInd == 0) {
+        if (g_UnkSound_32718._07 == 0) {
+            lbl_80371C30[scene->unkIndex].obj->field_0x68 = 1;
+            if (scene->eventID == 0) {
+                if (lbl_800EF808.unk398 == 1) {
+                    stadium = g_d_GameSettings.StadiumID;
+                    if (g_d_GameSettings.GameModeSelected == 6) {
+                        vol = lbl_3_data_84B8[0][27].vol;
+                    } else {
+                        vol = lbl_3_data_8404[stadium][27].vol;
+                    }
+                    vid = sndFXStartEx(lbl_3_data_81DC[stadium] + 27, vol, 0x3F, 0);
+                    if (g_d_GameSettings.GameModeSelected == 6) {
+                        pan = lbl_3_data_84B8[0][27].pan;
+                    } else {
+                        pan = lbl_3_data_8404[stadium][27].pan;
+                    }
+                    sndFXCtrl(vid, 0x5B, pan);
+                }
+                scene->eventID = 1;
+            }
+        } else {
+            lbl_80371C30[scene->unkIndex].obj->field_0x68 = 0;
+        }
+        if (lbl_80371C30[scene->unkIndex].obj->field_0x69 != 2) {
+            return;
+        }
+    }
+    fn_80034CEC((u32)scene);
+    fn_800B0A14_removeQueue();
+    g_Minigame.toyfield_waitFor_CoinsX2_AnimationToEnd = 0;
 }
 
 // .text:0x000ED490 size:0x6C mapped:0x8072C524
