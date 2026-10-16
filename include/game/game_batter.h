@@ -34,6 +34,7 @@ extern struct {
     f32 _00;
     f32 _04;
     f32 _08;
+    f32 _0C;
 } lbl_3_data_21438;
 extern s16 lbl_3_data_21410[5];
 extern s16 lbl_3_data_5488[5][5][2];
