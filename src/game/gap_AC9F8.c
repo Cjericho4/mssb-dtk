@@ -820,8 +820,8 @@ void fn_3_B27A4(void) {
     g_Practice.inputs[1].right_left = 0;
     g_Practice.inputs[1].up_down = 0;
     g_Practice.inputs[1].rightTriggerDistance = 0;
-    g_GameLogic.__0x142padding[4] = 0;
-    g_GameLogic.__0x142padding[3] = 0;
+    g_GameLogic.autoFielding[0] = 0;
+    g_GameLogic.teamAIInd[1] = 0;
     g_GameLogic.batterHandedness[1] = 0;
     g_GameLogic.batterHandedness[0] = 0;
     g_GameLogic.teamAIInd[1] = 0;

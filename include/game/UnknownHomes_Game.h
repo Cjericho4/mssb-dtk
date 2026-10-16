@@ -1228,7 +1228,7 @@ typedef struct _GameControlsStruct {
     /*0x13C*/ u8 scoutFlag_VsScreenInd;
     /*0x13D*/ u8 _13D;
     /*0x13E*/ u8 _13E[2];
-    artificial_padding(0x13E, 0x142, u8[2]);
+    /*0x140*/ u8 _140[2];
     /*0x142*/ u8 teamAIInd[2];
     /*0x144*/ u8 autoFielding[2];
     /*0x146*/ u8 batterHandedness[2];
