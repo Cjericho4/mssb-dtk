@@ -205,7 +205,38 @@ void fn_3_15ADD4(void) {
 
 // .text:0x0015AE34 size:0x144 mapped:0x80799EC8
 void fn_3_15AE34(void) {
-    return;
+    s32 ids[4];
+    s32 i;
+    s32 j;
+
+    if (g_GameLogic.secondaryGameMode == 0xF) {
+        for (i = 0; i < 4; i++) {
+            ids[i] = i + 1;
+        }
+        for (i = 0; i < 4; i++) {
+            for (j = 1; j < 4; j++) {
+                if (g_Runners[j].rosterID == ids[i]) {
+                    ids[i] = -1;
+                }
+            }
+        }
+        for (i = 0; i < 4; i++) {
+            if (ids[i] >= 0) {
+                g_Practice.rosterID = ids[i];
+                break;
+            }
+        }
+    }
+    if (g_GameLogic.TeamStars[0] == 0) {
+        g_GameLogic.TeamStars[0] = 5;
+    }
+    if (g_GameLogic.TeamStars[1] == 0) {
+        g_GameLogic.TeamStars[1] = 5;
+    }
+    if (g_Strikes.outs >= 3) {
+        g_Strikes.outs = 0;
+    }
+    g_Practice.guidedPracticeCompletionRelated = 0;
 }
 
 // .text:0x0015AF78 size:0x160 mapped:0x8079A00C
