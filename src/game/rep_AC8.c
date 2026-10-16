@@ -502,7 +502,34 @@ void fn_3_37114(void) {
 
 // .text:0x0003740C size:0x17C mapped:0x806764A0
 void fn_3_3740C(void) {
-    return;
+    s16 ang;
+    f32 maxV = 0.0f;
+    s32 minDiff = 0x1000;
+    s32 best = -1;
+    s32 i;
+    s32 diff;
+
+    if (g_Ball.ballState == 0 && g_FieldingLogic.unkB0 <= 5) {
+        for (i = 0; i < 6; i++) {
+            if (g_Fielders[i].unk70 > maxV) {
+                maxV = g_Fielders[i].unk70;
+            }
+        }
+        if (5.0f + maxV < g_Ball.ballDistanceFromHome) {
+            ang = g_Ball.ballAngleFromHome;
+            for (i = 6; i < 9; i++) {
+                diff = __abs(ang - g_Fielders[i].unk180);
+                if (minDiff > diff) {
+                    minDiff = diff;
+                    best = i;
+                }
+            }
+            g_Ball.ballAngleFromHome = ang;
+            if (i >= 0) {
+                fn_3_38790(best, 0);
+            }
+        }
+    }
 }
 
 // .text:0x00037588 size:0x88 mapped:0x8067661C
