@@ -156,7 +156,34 @@ void fn_3_9FA4(void) {
 
 // .text:0x0000A020 size:0xD0 mapped:0x806490B4
 void fn_3_A020(void) {
-    return;
+    BOOL struckOut;
+
+    if (g_Ball.deadBallReason != 0) {
+        return;
+    }
+    g_Ball.deadBallReason = 2;
+    struckOut = FALSE;
+    g_Ball.deadballLastLoc.x = g_Ball.AtBat_Contact_BallPos.x;
+    g_Ball.deadballLastLoc.y = g_Ball.AtBat_Contact_BallPos.y;
+    g_Ball.deadballLastLoc.z = g_Ball.AtBat_Contact_BallPos.z;
+    g_Ball.AtBat_ContactResult = -1;
+    g_Ball.ballInitialHitDoneInd = 1;
+    if (g_FieldingLogic.unk110 == 1) {
+        return;
+    }
+    g_FieldingLogic.unk110 = 1;
+    if (++g_Strikes.strikes >= 3) {
+        if (g_Ball.maybeBuntInd != 0) {
+            g_Ball.maybebuntOn2Strikes = 1;
+            fn_3_88D88(0);
+            struckOut = TRUE;
+        } else {
+            g_Strikes.strikes = 2;
+        }
+    }
+    if (!struckOut) {
+        fn_3_59918(3, 0);
+    }
 }
 
 // .text:0x0000A0F0 size:0xA8 mapped:0x80649184
