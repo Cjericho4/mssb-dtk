@@ -69,7 +69,7 @@ void fn_3_FCF20(void);
 void fn_3_FCF24(void);
 void fn_3_FD408(u32 idx, VecXYZ* outPos, f32* outVals);
 void fn_3_FD4DC(void);
-void fn_3_FD51C(void);
+void fn_3_FD51C(s32 i);
 void fn_3_FD5A8(void);
 void fn_3_FD670(void);
 u32 fn_3_FD9FC(void);

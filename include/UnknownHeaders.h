@@ -937,6 +937,32 @@ typedef struct CameraStruct {
     u8 _pad281A[0x28B0 - 0x281A];
 } CameraStruct;
 
+typedef struct CameraSub13C {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    Vec unkC;
+    s32 unk18;
+    s32 unk1C;
+    s32 unk20;
+    s32 unk24;
+    s32 unk28;
+    f32 unk2C;
+    s32 unk30;
+    s32 unk34;
+    s32 unk38;
+    s32 unk3C;
+    s32 unk40;
+    f32 unk44;
+} CameraSub13C; // size: 0x48
+
+// per-player view of g_Camera
+typedef struct CameraElem {
+    u8 _pad0[0x13C];
+    CameraSub13C unk13C;
+    u8 _pad184[0x9BC - 0x184];
+} CameraElem; // size: 0x9BC
+
 extern CameraStruct g_Camera;
 extern void* _OSAllocFromHeap(s32 heap, u32 size);
 
