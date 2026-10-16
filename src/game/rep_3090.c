@@ -2,6 +2,8 @@
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "stl/mem.h"
+#include "game/rep_1838.h"
+#include "stl/math.h"
 
 // .text:0x000FC448 size:0x4F0 mapped:0x8073B4DC
 void fn_3_FC448(void) {
@@ -249,7 +251,37 @@ void fn_3_104338(void) {
 
 // .text:0x001045A8 size:0x198 mapped:0x8074363C
 void fn_3_1045A8(void) {
-    return;
+    f32 sinPitch;
+    f32 cosYaw;
+    f32 sinYaw;
+    f32 yaw;
+    f32 angle;
+    f32 horiz;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+
+    angle = fn_3_9FEA8(g_pCamera->unk2874);
+    horiz = 20.0f * (f32)cos(angle);
+    sinPitch = (f32)sin(angle);
+    yaw = fn_3_9FEA8(g_pCamera->unk2870);
+    cosYaw = (f32)cos(yaw);
+    sinYaw = (f32)sin(yaw);
+    dx = cosYaw * horiz;
+    dy = 20.0f * sinPitch;
+    dz = sinYaw * horiz;
+    g_pCamera->unk2858 += cosYaw * g_pCamera->unk287C;
+    g_pCamera->unk2860 += sinYaw * g_pCamera->unk287C;
+    g_pCamera->unk2858 += sinYaw * g_pCamera->unk2880;
+    g_pCamera->unk2860 -= cosYaw * g_pCamera->unk2880;
+    g_pCamera->unk284C = dx + g_pCamera->unk2858;
+    g_pCamera->unk2850 = dy + g_pCamera->unk285C;
+    g_pCamera->unk2854 = dz + g_pCamera->unk2860;
+    g_pCamera->unk2840 = g_pCamera->unk2858;
+    g_pCamera->unk2844 = g_pCamera->unk285C;
+    g_pCamera->unk2848 = g_pCamera->unk2860;
+    g_pCamera->unk287C = 0.0f;
+    g_pCamera->unk2880 = 0.0f;
 }
 
 // .text:0x00104740 size:0x1A0 mapped:0x807437D4
