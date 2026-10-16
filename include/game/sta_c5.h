@@ -58,6 +58,12 @@ typedef struct StaC5SpotObj {
     /* 0xA4 */ f32 y;
     /* 0xA8 */ f32 z;
     /* 0xAC */ f32 rot;
+    /* 0xB0 */ u8 _padB0[0xB4 - 0xB0];
+    /* 0xB4 */ f32 turnAngle;
+    /* 0xB8 */ u8 _padB8[0xC4 - 0xB8];
+    /* 0xC4 */ s8 turnDir;
+    /* 0xC5 */ u8 _padC5;
+    /* 0xC6 */ u8 unkC6;
 } StaC5SpotObj;
 
 typedef struct StaC5Spot {
@@ -169,7 +175,7 @@ void fn_3_EEFD4(void);
 void fn_3_EF218(void);
 void fn_3_EF21C(void);
 void fn_3_EF3D4(UnknownStruct_EF3D4* arg0, u32 index);
-void fn_3_EF408(void);
+void fn_3_EF408(StaC5SpotObj* obj);
 u8 fn_3_EF55C(EF55C_Arg* arg0);
 s32 fn_3_EF7B4(EF55C_Arg* arg0);
 void fn_3_EF800(StaC5PlacedObj* obj);

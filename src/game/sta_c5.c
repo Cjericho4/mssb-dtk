@@ -151,8 +151,34 @@ void fn_3_EF3D4(UnknownStruct_EF3D4* arg0, u32 index) {
 }
 
 // .text:0x000EF408 size:0x154 mapped:0x8072E49C
-void fn_3_EF408(void) {
-    return;
+void fn_3_EF408(StaC5SpotObj* obj) {
+    Vec toSpot;
+    Vec facing;
+    Vec cross;
+    f32 ang;
+    f32 dot;
+
+    toSpot.x = lbl_3_data_1B9A4[obj->spotIdx].x - obj->x;
+    toSpot.y = 0.0f;
+    toSpot.z = lbl_3_data_1B9A4[obj->spotIdx].z - obj->z;
+    PSVECNormalize(&toSpot, &toSpot);
+    ang = -(0.017453292f * obj->rot);
+    facing.x = cos(ang);
+    facing.y = 0.0f;
+    facing.z = sin(ang);
+    PSVECNormalize(&facing, &facing);
+    dot = PSVECDotProduct(&toSpot, &facing);
+    if (dot < -1.0) {
+        dot = -1.0f;
+    }
+    obj->turnAngle = 57.29578f * (f32)acos(dot);
+    PSVECCrossProduct(&toSpot, &facing, &cross);
+    if (cross.y < 0.0f) {
+        obj->turnDir = 1;
+    } else {
+        obj->turnDir = -1;
+    }
+    obj->unkC6 = 0;
 }
 
 // .text:0x000EF55C size:0x258 mapped:0x8072E5F0
