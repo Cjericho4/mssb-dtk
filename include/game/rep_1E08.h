@@ -99,7 +99,7 @@ typedef struct {
 } BdcArrayElement; /* size 0x34C */
 
 typedef struct {
-    u8 _pad0[0x40];
+    Mtx44 proj;      /* 0x00 */
     Mtx mtx;         /* 0x40 */
     VecXYZ eye;      /* 0x70 */
     VecXYZ target;   /* 0x7C */

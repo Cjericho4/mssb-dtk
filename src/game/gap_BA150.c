@@ -4,6 +4,8 @@
 #include "Dolphin/GX/GXLight.h"
 #include "Dolphin/GX/GXGeometry.h"
 #include "Dolphin/GX/GXTev.h"
+#include "Dolphin/GX/GXTransform.h"
+#include "game/rep_1E08.h"
 
 extern void fn_800246D4(s32 (*compareFn)(BA150SortItem*, BA150SortItem*), BA150SortItem* out, BA150SortItem* in, u32 elemSize, u32 count);
 
@@ -48,7 +50,27 @@ BA150Node* fn_3_BA1A0(BA150Node* list, u32 count) {
 
 // .text:0x000BA268 size:0x184 mapped:0x806F92FC
 void fn_3_BA268(void) {
-    return;
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
+    GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+    GXSetNumChans(1);
+    GXSetNumTexGens(1);
+    GXSetNumTevStages(1);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_RASC, GX_CC_TEXC, GX_CC_ZERO);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_RASA, GX_CA_TEXA, GX_CA_ZERO);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
+    GXLoadPosMtxImm(fn_80052768(0)->mtx, GX_PNMTX0);
+    GXSetCurrentMtx(GX_PNMTX0);
+    GXSetProjection(fn_80052768(0)->proj, GX_PERSPECTIVE);
 }
 
 // .text:0x000BA3EC size:0x14C mapped:0x806F9480
