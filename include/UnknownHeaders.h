@@ -116,7 +116,9 @@ typedef struct AnimationStruct {
     s8 unk254;          /* 0x254 */
     u8 _rest255[0x8];
     u8 unk_25D; /* 0x25D */
-    u8 _rest2[0x1E];
+    u8 _rest2[0x279 - 0x25E];
+    u8 unk279;          /* 0x279 */
+    u8 _rest27A[0x27C - 0x27A];
 } AnimationStruct; /* size: 0x27C */
 
 /* EOSPad - 2-u8 struct used for alignment padding */

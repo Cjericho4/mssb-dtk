@@ -1,5 +1,6 @@
 #include "game/gap_219CC.h"
 #include "UnknownHeaders.h"
+#include "game/rep_720.h"
 
 // .text:0x000219CC size:0xDC mapped:0x80660A60
 void fn_3_219CC(void) {
@@ -8,7 +9,41 @@ void fn_3_219CC(void) {
 
 // .text:0x00021AA8 size:0x134 mapped:0x80660B3C
 void fn_3_21AA8(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    InMemRunnerType* runner = &g_Runners[0];
+    AnimationStruct* anim = g_hugeAnimStruct.AnimationStructPtrs[9];
+    s16 charID;
+
+    switch (scene->drawingState) {
+    case 0:
+        charID = runner->charID;
+        if (charID == 2 || charID == 9) {
+            scene->drawingState = 1;
+        } else {
+            scene->drawingState = 3;
+        }
+        break;
+    case 1:
+        if (scene->timer18-- == 0) {
+            scene->drawingState = 2;
+        }
+        break;
+    case 2:
+        if ((anim->unk279 & 2) || (anim->unk279 & 1)) {
+            fn_3_14E50();
+        }
+        if ((s8)lbl_3_common_bss_1323C->unk27E == 0) {
+            scene->drawingState = 3;
+        }
+        break;
+    case 3:
+        fn_3_14E1C();
+        lbl_3_common_bss_1323C->unk27E = 0;
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->drawingState = 0;
+        break;
+    }
 }
 
 // .text:0x00021BDC size:0xA0 mapped:0x80660C70
