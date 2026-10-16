@@ -190,7 +190,53 @@ s32 fn_3_107988(u32 arg0) {
 
 // .text:0x001079C8 size:0x1D4 mapped:0x80746A5C
 void fn_3_1079C8(MinigameStanding* out, s32 arg1) {
-    return;
+    MiniGameStruct* mg = &g_Minigame;
+    u8 order[4];
+    s16 score[4];
+    u32 i;
+
+    i = 0;
+    do {
+        order[i] = i;
+        i++;
+    } while (i < g_Minigame.miniGameNumberOfParticipants);
+    switch (arg1) {
+    case 0:
+    default:
+        fn_800246D4(fn_3_107C04, order, order, 1, mg->miniGameNumberOfParticipants);
+        i = 0;
+        do {
+            score[i] = g_Minigame.miniGameCurrentPoints[i];
+            i++;
+        } while (i < mg->miniGameNumberOfParticipants);
+        break;
+    case 1:
+        fn_800246D4(fn_3_107BD0, order, order, 1, mg->miniGameNumberOfParticipants);
+        i = 0;
+        do {
+            score[i] = g_Minigame.field_1E22[i];
+            i++;
+        } while (i < g_Minigame.miniGameNumberOfParticipants);
+        break;
+    case 2:
+        fn_800246D4(fn_3_107B9C, order, order, 1, mg->miniGameNumberOfParticipants);
+        i = 0;
+        do {
+            score[i] = g_Minigame.field_1E26[i];
+            i++;
+        } while (i < g_Minigame.miniGameNumberOfParticipants);
+        break;
+    }
+    out[0].id = order[0];
+    out[0].eliminated = 0;
+    for (i = 1; i < mg->miniGameNumberOfParticipants; i++) {
+        out[i].id = order[i];
+        if (score[order[i]] == score[order[i - 1]]) {
+            out[i].eliminated = out[i - 1].eliminated;
+        } else {
+            out[i].eliminated = i;
+        }
+    }
 }
 
 // .text:0x00107B9C size:0x34 mapped:0x80746C30
