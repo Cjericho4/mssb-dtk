@@ -232,7 +232,10 @@ void fn_800B2C44(AnimLevel1* model, u16 bone, VecXYZ* out);
 
 typedef struct HugeAnimEntry2D94 {
     // Not confident of these
-    /* 0x00 */ void* stadiumFileHeaderPointer;
+    union {
+        /* 0x00 */ void* stadiumFileHeaderPointer;
+        /* 0x00 */ void (*callback)(s32);
+    };
     union {
         struct {
             /* 0x04 */ void* stadiumObjectLoadingPtr;

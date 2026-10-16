@@ -317,7 +317,27 @@ void fn_3_117588(s32 index) {
 
 // .text:0x001179EC size:0xF8 mapped:0x80756A80
 void fn_3_1179EC(void) {
-    return;
+    HugeAnimEntry2D94* e;
+    MiniGamePosElement* p;
+    u32 i;
+
+    for (i = 0; i < 4; i++) {
+        e = &g_hugeAnimStruct.entries_2D94[i + 233];
+        p = &g_Minigame.unkBB0[i];
+        e->unk_26 = 0;
+        e->callback = NULL;
+        if (g_Minigame.unkBB0[i].unk3D != 0) {
+            e->unk_26 = 1;
+            e->pos.x = p->_00;
+            e->pos.y = -p->unk4;
+            e->pos.z = p->_08;
+            e->vel.x = 0.017453292f * p->unk18;
+            e->vel.y = 0.017453292f * p->unk1C;
+            e->vel.z = 0.017453292f * p->unk20;
+            fn_8001D0D0(i + 233, 2.5f);
+            e->callback = fn_3_117588;
+        }
+    }
 }
 
 typedef struct {

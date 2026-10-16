@@ -1537,9 +1537,15 @@ typedef struct _UnkStructMinigame {
 
 typedef struct {
     /*0x00*/ f32 _00;
-    /*0x04*/ u8 _04[4];
+    /*0x04*/ f32 unk4;
     /*0x08*/ f32 _08;
-    /*0x0C*/ u8 _0C[52];
+    /*0x0C*/ u8 _0C[0x18 - 0x0C];
+    /*0x18*/ f32 unk18;
+    /*0x1C*/ f32 unk1C;
+    /*0x20*/ f32 unk20;
+    /*0x24*/ u8 _24[0x3D - 0x24];
+    /*0x3D*/ u8 unk3D;
+    /*0x3E*/ u8 _3E[2];
 } MiniGamePosElement; // size: 0x40
 
 typedef struct _MiniGameControlStruct {
