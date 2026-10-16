@@ -295,9 +295,58 @@ void fn_3_8C07C(void) {
     lbl_3_bss_1768->commands[idx].arg2 = 0;
 }
 
+extern u8 lbl_800E88A4[16][2];
+void fn_800A8878(u8 a, u8 b);
+
 // .text:0x0008C104 size:0x1D8 mapped:0x806CB198
-void fn_3_8C104(void) {
-    return;
+void fn_3_8C104(s32 arg) {
+    s32 row;
+    s32 sub;
+    u8 val;
+    u8 idx;
+    u8 next;
+
+    sub = 0;
+    if (lbl_800EF808.unk398 == 0) {
+        return;
+    }
+    if (arg == -2) {
+        sub = 1;
+    }
+    if (g_d_GameSettings.GameModeSelected == 6) {
+        row = 9;
+        val = lbl_800E88A4[9][sub];
+    } else if (g_GameLogic.gameStatus == 0x24) {
+        row = 7;
+        val = lbl_800E88A4[7][sub];
+    } else if (lbl_3_common_bss_34C58._20 == 0x16) {
+        row = 6;
+        val = lbl_800E88A4[6][sub];
+    } else if (lbl_3_common_bss_34C58._20 == 0x17) {
+        row = 14;
+        val = lbl_800E88A4[14][sub];
+    } else if (g_GameLogic.gameStatus == 0xE) {
+        row = 7;
+        val = lbl_800E88A4[7][sub];
+    } else if (g_GameLogic.gameStatus == 0x17) {
+        row = 8;
+        val = lbl_800E88A4[8][sub];
+    } else {
+        row = g_d_GameSettings.StadiumID;
+        val = lbl_800E88A4[row][sub];
+    }
+    if (arg >= 0) {
+        val = arg;
+    }
+    if (lbl_3_bss_1768 != NULL && lbl_3_bss_1768->readIdx != (next = ((idx = lbl_3_bss_1768->writeIdx) + 1) % 14)) {
+        lbl_3_bss_1768->writeIdx = next;
+        lbl_3_bss_1768->commands[idx].cmd = row;
+        lbl_3_bss_1768->commands[idx].arg1 = 0;
+        lbl_3_bss_1768->commands[idx].arg2 = val;
+    }
+    if (val == 0) {
+        fn_800A8878(val, val);
+    }
 }
 
 // .text:0x0008C2DC size:0x214 mapped:0x806CB370

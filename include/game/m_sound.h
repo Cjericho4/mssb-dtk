@@ -50,7 +50,7 @@ s32 fn_3_8BBC4(s32 soundID, VecXYZ* pos, VecXYZ* dir, s32 sfx);
 void fn_3_8BDF4(void);
 void fn_3_8BE8C(void);
 void fn_3_8C07C(void);
-void fn_3_8C104(void);
+void fn_3_8C104(s32 arg);
 void fn_3_8C2DC(void);
 void fn_3_8C4F0(void);
 void fn_3_8C5C8(void);
