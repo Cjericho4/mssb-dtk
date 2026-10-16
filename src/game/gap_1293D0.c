@@ -145,8 +145,31 @@ void fn_3_12C1AC(void) {
 }
 
 // .text:0x0012C3F0 size:0x124 mapped:0x8076B484
+extern s32 lbl_3_data_9208;
+extern u16 lbl_3_data_92C8[];
+
 void fn_3_12C3F0(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    u16 eventID;
+
+    fn_80034E20(scene, &lbl_3_data_9208);
+    lbl_3_common_bss_32724.unkD9 = 1;
+    if (g_d_GameSettings.GameModeSelected == 7) {
+        if (g_GameLogic.gameStatus == 0x1C || g_GameLogic.gameStatus == 0x1B || g_GameLogic.gameStatus == 0x1D) {
+            eventID = lbl_3_data_92C8[0];
+        } else {
+            eventID = lbl_3_data_92C8[1];
+        }
+    } else if (g_Practice.practiceType_1 == 6) {
+        eventID = lbl_3_data_92C8[4];
+    } else {
+        eventID = lbl_3_data_92C8[3];
+    }
+    lbl_80371C30[scene->unkIndex + 1].obj->unk64 = eventID;
+    lbl_80371C30[scene->unkIndex + 1].obj->field_0x5C = 0x280000;
+    scene->eventID = eventID;
+    scene->unk_1E = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_3_12C1AC;
 }
 
 // .text:0x0012C514 size:0xB8 mapped:0x8076B5A8
