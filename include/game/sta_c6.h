@@ -134,7 +134,7 @@ f32 fn_800B4C40(void *boneData);
 void fn_800B4CA0(void *boneData, f32 val);
 void fn_3_E59B4(ActorObject *arg0);
 void fn_3_E5A1C(ActorObject *arg0);
-void fn_3_E5A84(void);
+void fn_3_E5A84(ActorObject* actor);
 void fn_3_E5CBC(void);
 int fn_3_E5E14(Arg0_E5E14* arg0);
 typedef struct StaC6Color {

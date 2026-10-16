@@ -42,9 +42,79 @@ void fn_3_E5A1C(ActorObject *arg0) {
     AnimateActorBones(boneData);
 }
 
+typedef struct StaC6BoneLink {
+    /* 0x00 */ u8 _pad0[0x18];
+    /* 0x18 */ Mtx mtx;
+} StaC6BoneLink;
+
+typedef struct StaC6Bone {
+    /* 0x00 */ u8 _pad0[0x14];
+    /* 0x14 */ StaC6BoneLink* link;
+    /* 0x18 */ u8 _pad18[0x4];
+    /* 0x1C */ Control ctrl;
+    u8 _padCtrlEnd[0xEC - 0x1C - sizeof(Control)];
+    /* 0xEC */ MtxPtr mtx;
+} StaC6Bone;
+
+typedef struct StaC6Model {
+    /* 0x00 */ u8 _pad0[0x6];
+    /* 0x06 */ u16 boneCount;
+    /* 0x08 */ u8 _pad8[0x10];
+    /* 0x18 */ StaC6Bone** bones;
+    /* 0x1C */ u8 _pad1C[0x98 - 0x1C];
+    /* 0x98 */ u8 unk98;
+} StaC6Model;
+
+u8 fn_800B3C04(s32 arg0, StaC6Model* model, Mtx viewMtx);
+s32 fn_8005268C(void);
+
+static inline StaC6Model* StaC6_GetModel(BoneWrapper* wrapper) {
+    return wrapper->boneData;
+}
+
 // .text:0x000E5A84 size:0x238 mapped:0x80724B18
-void fn_3_E5A84(void) {
-    return;
+void fn_3_E5A84(ActorObject* actor) {
+    Control ctrl;
+    Mtx m;
+    StaC6Bone* bone;
+    s32 i;
+    CameraView* cam;
+    u8 vis;
+
+    PSMTXIdentity(m);
+    ctrl.type = 0;
+    if (actor->field_0xc1 < 8) {
+        CTRLSetTranslation(&ctrl, lbl_3_bss_AEB4.objs[actor->field_0xc0].pos.x, lbl_3_bss_AEB4.objs[actor->field_0xc0].pos.y,
+                           lbl_3_bss_AEB4.objs[actor->field_0xc0].pos.z);
+        CTRLSetRotation(&ctrl, 0.0f, lbl_3_bss_AEB4.objs[actor->field_0xc0].rotY, 0.0f);
+    } else {
+        CTRLSetTranslation(&ctrl, lbl_3_data_19644[actor->field_0xc3].x, lbl_3_data_19644[actor->field_0xc3].y,
+                           lbl_3_data_19644[actor->field_0xc3].z);
+        CTRLSetRotation(&ctrl, 0.0f, lbl_3_data_19698[actor->field_0xc3], 0.0f);
+    }
+    CTRLBuildMatrix(&ctrl, m);
+    for (i = 0; i < StaC6_GetModel(actor->wrapper)->boneCount; i++) {
+        bone = StaC6_GetModel(actor->wrapper)->bones[i];
+        CTRLBuildMatrix(&bone->ctrl, bone->mtx);
+        PSMTXConcat(m, bone->mtx, bone->mtx);
+        PSMTXCopy(bone->mtx, bone->link->mtx);
+    }
+    if (actor->wrapper9C != NULL) {
+        for (i = 0; i < StaC6_GetModel(actor->wrapper9C)->boneCount; i++) {
+            bone = StaC6_GetModel(actor->wrapper9C)->bones[i];
+            CTRLBuildMatrix(&bone->ctrl, bone->mtx);
+            PSMTXConcat(m, bone->mtx, bone->mtx);
+            if (bone->link != NULL) {
+                PSMTXCopy(bone->mtx, bone->link->mtx);
+            }
+        }
+        cam = fn_80052734(fn_8005268C());
+        vis = fn_800B3C04(0, StaC6_GetModel(actor->wrapper9C), cam->viewMtx);
+        StaC6_GetModel(actor->wrapper9C)->unk98 = vis;
+    }
+    cam = fn_80052734(fn_8005268C());
+    vis = fn_800B3C04(0, StaC6_GetModel(actor->wrapper), cam->viewMtx);
+    StaC6_GetModel(actor->wrapper)->unk98 = vis;
 }
 
 // .text:0x000E5CBC size:0x158 mapped:0x80724D50
