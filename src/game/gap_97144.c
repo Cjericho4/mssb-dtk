@@ -2,6 +2,7 @@
 #include "UnknownHeaders.h"
 #include "game/gap_AC9F8.h"
 #include "game/rep_3448.h"
+#include "stl/mem.h"
 
 void fn_80069A98(void);
 
@@ -171,9 +172,65 @@ void fn_3_98DE0(void) {
     lbl_803CC1B8->aFunctionPointer = fn_3_98C20;
 }
 
+typedef struct {
+    /* 0x00 */ u8 unk0;
+    /* 0x01 */ u8 _pad1[0x8 - 0x1];
+    /* 0x08 */ u8 unk8;
+    /* 0x09 */ u8 unk9;
+    /* 0x0A */ u8 _padA[0x26 - 0xA];
+    /* 0x26 */ u8 unk26;
+    /* 0x27 */ u8 _pad27[0x28 - 0x27];
+} MenuNumberState; /* size: 0x28 */
+extern MenuNumberState lbl_8034E978;
+
+typedef struct {
+    /* 0x0 */ u8 _pad0[0x8];
+    /* 0x8 */ u16 unk8;
+    /* 0xA */ u8 _padA[0x10 - 0xA];
+} MenuEntry_800FEF70; /* size: 0x10 */
+extern MenuEntry_800FEF70 lbl_800FEF70[];
+
+typedef struct {
+    /* 0x0000 */ u8 _pad0[0xCFA2];
+    /* 0xCFA2 */ u8 unkCFA2[2];
+} Lbl803297E0;
+extern Lbl803297E0 lbl_803297E0;
+
+void fn_80053FE8(void);
+void fn_800486E0(s32 arg0, s8 arg1, u8 arg2);
+
 // .text:0x00098EA8 size:0x1BC mapped:0x806D7F3C
 void fn_3_98EA8(void) {
-    return;
+    if (lbl_3_common_bss_34C90.field_0x1D2 == 2) {
+        fn_800B0A5C_insertQueue(fn_80053FE8, 2);
+        memset(&lbl_8034E978, 0, sizeof(MenuNumberState));
+        switch (lbl_803297E0.unkCFA2[lbl_3_common_bss_34C90.field_0x00]) {
+        case 0:
+            lbl_8034E978.unk0 = g_d_GameSettings.GameModeSelected == 5 ? 0x1C : 8;
+            lbl_8034E978.unk9 = lbl_8034E978.unk8;
+            lbl_8034E978.unk8 = lbl_800FEF70[g_d_GameSettings.GameModeSelected == 5 ? 0x1C : 8].unk8;
+            break;
+        case 1:
+            lbl_8034E978.unk0 = 0xA;
+            lbl_8034E978.unk9 = lbl_8034E978.unk8;
+            lbl_8034E978.unk8 = lbl_800FEF70[0xA].unk8;
+            break;
+        case 2:
+            lbl_8034E978.unk0 = 0x1E;
+            lbl_8034E978.unk9 = lbl_8034E978.unk8;
+            lbl_8034E978.unk8 = lbl_800FEF70[0x1E].unk8;
+            break;
+        case 3:
+            lbl_8034E978.unk0 = 0x1F;
+            lbl_8034E978.unk9 = lbl_8034E978.unk8;
+            lbl_8034E978.unk8 = lbl_800FEF70[0x1F].unk8;
+            break;
+        }
+        fn_800486E0(0, g_GameLogic.teams[lbl_3_common_bss_34C90.field_0x00], lbl_3_common_bss_34C90.field_0x00);
+    }
+    if (lbl_3_common_bss_34C90.field_0x1D2 == 5) {
+        lbl_8034E978.unk26 = 1;
+    }
 }
 
 // .text:0x00099064 size:0x344 mapped:0x806D80F8
