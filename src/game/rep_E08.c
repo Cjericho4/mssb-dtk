@@ -111,7 +111,41 @@ void fn_3_62904(void) {
 
 // .text:0x00062B50 size:0x158 mapped:0x806A1BE4
 void fn_3_62B50(void) {
-    return;
+    s16 fielder = g_Ball.fielderWBallIndex;
+
+    if (fielder < 0) {
+        g_UnkThrowing_31ACC.throwType = 0;
+        return;
+    }
+    if (g_FieldingLogic.unkC4 < 0) {
+        g_UnkThrowing_31ACC.throwType = 0;
+        return;
+    }
+    if (g_UnkThrowing_31ACC.throwType != 0) {
+        return;
+    }
+    g_FieldingLogic.unk10A = 0;
+    g_UnkThrowing_31ACC.throwDest.x = g_Ball.throwDestination.x;
+    g_UnkThrowing_31ACC.throwDest.y = g_Ball.throwDestination.y;
+    g_UnkThrowing_31ACC.throwDest.z = g_Ball.throwDestination.z;
+    if (g_FieldingLogic._107 == 1 && fielder == 0 && (g_FieldingLogic.unkC4 == 1 || g_FieldingLogic.unkC4 == 2 || g_FieldingLogic.unkC4 == 3) &&
+        g_Pitcher.pickOffLoc != 4 && g_Pitcher.pickOffLoc != -1) {
+        g_UnkThrowing_31ACC.throwType = 7;
+    } else if (g_FieldingLogic.unk106 == 8) {
+        g_UnkThrowing_31ACC.throwType = 3;
+    } else if (g_FieldingLogic.unk106 == 9) {
+        g_UnkThrowing_31ACC.throwType = 4;
+    } else if (g_FieldingLogic.unk106 == 10) {
+        if (fielder == 3) {
+            g_UnkThrowing_31ACC.throwType = 5;
+        } else {
+            g_UnkThrowing_31ACC.throwType = 6;
+        }
+    } else if (g_FieldingLogic.unk109 != 0) {
+        g_UnkThrowing_31ACC.throwType = 2;
+    } else {
+        g_UnkThrowing_31ACC.throwType = 1;
+    }
 }
 
 // .text:0x00062CA8 size:0x9C mapped:0x806A1D3C

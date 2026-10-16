@@ -582,7 +582,9 @@ typedef struct FieldingLogic {
     /* 0x106 */ u8 unk106;
     /* 0x107 */ u8 _107;
     /* 0x108 */ u8 _108;
-    /* 0x109 */ u8 _pad109[0x10C - 0x109];
+    /* 0x109 */ u8 unk109;
+    /* 0x10A */ u8 unk10A;
+    /* 0x10B */ u8 _pad10B;
     /* 0x10C */ u8 unk10C;
     /* 0x10D */ u8 unk10D;
     /* 0x10E */ u8 unk10E;
@@ -2438,5 +2440,14 @@ typedef struct UnkSimulation31AC0 {
 } UnkSimulation31AC0;
 
 extern UnkSimulation31AC0 g_UnkSimulation_31AC0;
+
+typedef struct UnkThrowing31ACC {
+    /* 0x00 */ VecXYZ throwDest;
+    /* 0x0C */ u8 _padC[0x2];
+    /* 0x0E */ u8 throwType;
+    /* 0x0F */ u8 _padF[0x3E0 - 0xF];
+} UnkThrowing31ACC; // size: 0x3E0
+
+extern UnkThrowing31ACC g_UnkThrowing_31ACC;
 
 #endif // !__UNKNOWN_HOMES_H_
