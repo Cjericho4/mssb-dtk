@@ -938,7 +938,9 @@ typedef struct CommonBss32A94 {
     s8 unk25;           /* 0x25 */
     u8 _pad26[0x44 - 0x26];
     s16 unk44[2];  /* 0x44 */
-    u8 _pad48[0x7D - 0x48];
+    u8 _pad48[0x4C - 0x48];
+    s16 unk4C[2];  /* 0x4C */
+    u8 _pad50[0x7D - 0x50];
     u8 unk7D;
     u8 unk7E;
     u8 unk7F;
@@ -1170,7 +1172,9 @@ typedef struct Scores {
     /* 0xAD */ u8 unkAD;
     /* 0xAE */ u8 _padAE[0xB7 - 0xAE];
     /* 0xB7 */ s8 unkB7[2];
-    /* 0xB9 */ u8 _padB9[0xC1 - 0xB9];
+    /* 0xB9 */ u8 _padB9[0xBB - 0xB9];
+    /* 0xBB */ u8 unkBB[2];
+    /* 0xBD */ u8 _padBD[0xC1 - 0xBD];
     /* 0xC1 */ u8 unkC1;
     /* 0xC2 */ u8 unkC2;
     /* 0xC3 */ u8 someFlag;

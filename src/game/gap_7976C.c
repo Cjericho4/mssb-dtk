@@ -1,4 +1,5 @@
 #include "game/gap_7976C.h"
+#include "game/gap_15C5F4.h"
 
 s32 fn_3_6C938(s32, s32);
 
@@ -89,8 +90,58 @@ void fn_3_7AB34(void) {
 }
 
 // .text:0x0007AB78 size:0x1F0 mapped:0x806B9C0C
-void fn_3_7AB78(void) {
-    return;
+void fn_3_7AB78(s32 arg0) {
+    s32 i;
+    s32 team;
+    s32 pitcher;
+    s32 catcher;
+
+    if (arg0 != 0) {
+        if (g_Scores.unkBB[g_GameLogic.awayTeamBattingInd_battingTeam] < 0xFE) {
+            g_Scores.unkBB[g_GameLogic.awayTeamBattingInd_battingTeam]++;
+        } else {
+            g_Scores.unkBB[g_GameLogic.awayTeamBattingInd_battingTeam] = 0xFF;
+        }
+    }
+    team = g_GameLogic.awayTeamBattingInd_battingTeam;
+    pitcher = g_GameLogic.battingOrderAndPositionMapping[team][0][0];
+    for (i = 1; i < 10; i++) {
+        if (g_GameLogic.battingOrderAndPositionMapping[team][i][1] == 1) {
+            catcher = g_GameLogic.battingOrderAndPositionMapping[team][i][0];
+            break;
+        }
+    }
+    if (lbl_80353A90.pitchers[g_GameLogic.teamFielding][0].id == -1) {
+        lbl_80353A90.pitchers[g_GameLogic.teamFielding][0].id = pitcher;
+        lbl_80353A90.pitchers[g_GameLogic.teamFielding][0].inning = 1;
+        lbl_80353A90.catchers[g_GameLogic.teamFielding][0] = catcher;
+        return;
+    }
+    for (i = 1; i < 10; i++) {
+        if (lbl_80353A90.pitchers[g_GameLogic.teamFielding][i].id == -1) {
+            if (lbl_80353A90.pitchers[g_GameLogic.teamFielding][i - 1].id != pitcher) {
+                lbl_80353A90.pitchers[g_GameLogic.teamFielding][i].id = pitcher;
+                lbl_80353A90.pitchers[g_GameLogic.teamFielding][i].inning = g_Scores.highscore;
+                if (lbl_3_common_bss_32A94.unk4C[team] < 0x7FFE) {
+                    lbl_3_common_bss_32A94.unk4C[team]++;
+                } else {
+                    lbl_3_common_bss_32A94.unk4C[team] = 0x7FFF;
+                }
+            }
+            break;
+        }
+    }
+    if (arg0 != 0) {
+        return;
+    }
+    for (i = 1; i < 5; i++) {
+        if (lbl_80353A90.catchers[g_GameLogic.teamFielding][i] == -1) {
+            if (lbl_80353A90.catchers[g_GameLogic.teamFielding][i - 1] != catcher) {
+                lbl_80353A90.catchers[g_GameLogic.teamFielding][i] = catcher;
+            }
+            return;
+        }
+    }
 }
 
 // .text:0x0007AD68 size:0x140 mapped:0x806B9DFC

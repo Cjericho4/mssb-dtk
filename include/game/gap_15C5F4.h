@@ -11,7 +11,15 @@ extern s32 lbl_3_data_273E0;
 extern u8 lbl_3_data_27C54[];
 
 typedef struct {
-    u8 _pad0[0x104];
+    s8 id;
+    u8 inning;
+} SomeScorePitcherEntry;
+
+typedef struct {
+    u8 _pad0[0xBE];
+    SomeScorePitcherEntry pitchers[2][10]; // 0xBE
+    s8 catchers[2][5];                     // 0xE6
+    u8 _padF0[0x104 - 0xF0];
     u8 unk104;          // 0x104
     u8 _pad105[0x108 - 0x105];
 } SomeScoreStruct; // size: 0x108
