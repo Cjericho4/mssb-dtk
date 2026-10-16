@@ -1,0 +1,27 @@
+diff --git a/include/game/UnknownHomes_Game.h b/include/game/UnknownHomes_Game.h
+index 64caf70..2d8d690 100644
+--- a/include/game/UnknownHomes_Game.h
++++ b/include/game/UnknownHomes_Game.h
+@@ -2189,7 +2189,8 @@ extern MiniGameStruct g_Minigame;
+ 
+ typedef struct Fielder {
+     /* 0x000 */ f32 pos[3];
+-    /* 0x00C */ u8 _pad_mid[0x8]; 
++    /* 0x00C */ f32 unkC;
++    /* 0x010 */ u8 _pad_mid[0x4]; 
+     /* 0x014 */ f32 prevPos[3];
+     /* 0x020 */ u8 _pad_mid2[0x10];
+     /* 0x030 */ f32 unk30;
+diff --git a/include/game/rep_37A8.h b/include/game/rep_37A8.h
+index 940cd46..f8efe9e 100644
+--- a/include/game/rep_37A8.h
++++ b/include/game/rep_37A8.h
+@@ -25,7 +25,7 @@ void fn_3_14402C(void);
+ void fn_3_14423C(void);
+ void fn_3_14443C(void);
+ void fn_3_14471C(void);
+-void fn_3_144ADC(void);
++void fn_3_144ADC(s32 i);
+ void fn_3_144CB8(void);
+ void fn_3_1453BC(void);
+ void fn_3_145AD0(void);

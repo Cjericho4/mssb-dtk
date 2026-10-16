@@ -127,6 +127,14 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_1573AC | same-file static data off one base (&lbl_3_data_266A8 in r31 across calls) — known unfixable (.agent/attempts/fn_3_1573AC.c + .headers.diff) |
 | fn_3_169600 | 9 lines: target keeps non-propagated copy `mr r30,r29` of outer loop counter for first nested loop; all forms copy-propagated (.agent/attempts/fn_3_169600.c + .headers.diff) |
 | fn_3_15F648 | same base-reg pattern as fn_3_1573AC (addi r3,r30,0x148; lwz 4(r3)) plus colour build clrlslwi/rlwimi diffs (.agent/attempts/fn_3_15F648.c + .headers.diff) |
+| fn_3_CD968 | corner-setup float block: freg numbering and w*0.5 fmuls operand order (.agent/attempts/fn_3_CD968.c) |
+| fn_3_E3044 | 2 small diffs: lbz before `mr r31`, deg->rad load order (.agent/attempts/fn_3_E3044.c + .headers.diff) |
+| fn_3_142088 | ~58 lines: inlined fn_3_142030 texel index associated differently; all term orders brute-forced (.agent/attempts/fn_3_142088.c) |
+| fn_3_144ADC | ~38 lines lerp load scheduling (.agent/attempts/fn_3_144ADC.c + .headers.diff) |
+| fn_3_215AC | ~32 lines float reg numbering only (.agent/attempts/fn_3_215AC.c) |
+| fn_3_C937C | ~11 lines regalloc around player-entry update (.agent/attempts/fn_3_C937C.c + .headers.diff) |
+| fn_3_105E00 | target has no extsh before x+w (needs s32 params) but that breaks matched caller fn_3_105CDC (.agent/attempts/fn_3_105E00.c + .headers.diff) |
+| fn_3_15C3F8 | counters/quads base ptrs kept unfolded (addi rX,r31,0) + rodata order (.agent/attempts/fn_3_15C3F8.c) |
 
 **Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
 | fn_3_24EA0 | register allocation / scheduling (see git log) |
@@ -162,7 +170,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_1CAC0 | One commutative fmul operand swap in the FOV expression. |
 | fn_3_88B18 | r7/r8 swap for the force-state variable. |
 | fn_3_A1F3C | matched (stub fn_3_A46A0 given s32 idx param) |
-| fn_3_B97DC | ACTSetAnimation's time argument arrives in f2 in the target; the C3 prototype only has one float parameter. |
+| fn_3_B97DC | matched (ACTSetAnimation prototype gained the hidden f32 before time) |
 | fn_3_16E1EC | Register allocation of the reset-condition terms and bss base pointer. |
 | fn_3_D8A10 | scheduling of score-table loads; unrolled _1918 loop uses const offsets vs running pointer |
 | fn_3_249E8 | register allocation of loop induction vars (r31/r30/r29) |

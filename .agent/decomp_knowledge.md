@@ -211,6 +211,16 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **`lwzu` on a global's first field** can come out naturally (`(f32)g.unk0` then other `g.` reads, fn_3_1534C0) — try once before calling it unfixable.
 *   **`(f32)` of a u8 with signed `xoris` conversion**: `(s32)(u8)(v >> 8)`; plain u8 gives the unsigned magic constant (fn_3_8C2DC).
 
+*   **Same body inlined in a same-file caller** (CC1D4 in CB8A8, D2220 in D36B0, D4CA4 in D4E00): `static inline` copy for the caller; keep the standalone function's own body.
+*   **Weighted-random pickers inline `RandomInt_Game`**: a `static inline` copy of the rep_1838 body (fn_3_9E368, fn_3_9E5A0).
+*   **Clamp in r0 vs r3/r4**: split it, `x = obj->alpha; x -= 1.7f;` / `a = p->unk43; a -= 8; if (a < 0) a = 0;`.
+*   **`acos(...) / 2.0`** matched where `* 0.5` and `0.5 *` swapped fmul operands.
+*   **Stubborn fmuls operand swap**: store an intermediate first (`step = (b-a)/5.0f` local) or compute all trig into locals before any struct store (stfsu pattern, fn_3_E3044).
+*   **File-static block off one base, scalar fields**: overlay struct + local `T* bss = &lbl_X;` matched (fn_3_E1DB8, fn_3_C937C, fn_3_142088); separate externs like lbl_3_bss_B7C1 can stay.
+*   **`lfsx`/unfolded base**: `p = arr; p += idx; x = *p;` stops folding the field offset into the displacement.
+*   **ACTSetAnimation** takes `(Actor*, ANIMBank*, char*, u16, f32 unk, f32 time)`: callers pass a hidden 0.0f in f1, time in f2 (fixing the prototype matched fn_3_B97DC; may unblock fn_3_168414, 168A6C, BF238, F9E78).
+*   **Per-function rodata table**: `static const f32 x[3] = {...}` inside the function (fn_3_E29B4).
+
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
 *   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.

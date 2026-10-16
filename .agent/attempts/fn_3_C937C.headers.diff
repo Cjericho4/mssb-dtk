@@ -1,0 +1,13 @@
+diff --git a/include/game/rep_21F8.h b/include/game/rep_21F8.h
+index 328f04c..2d8fcbc 100644
+--- a/include/game/rep_21F8.h
++++ b/include/game/rep_21F8.h
+@@ -6,7 +6,7 @@
+ 
+ extern u8 lbl_3_bss_9F34;
+ 
+-void fn_3_C937C(void);
++BOOL fn_3_C937C(void);
+ typedef struct Rep21F8Key {
+     f32 value;      /* 0x0 */
+     f32 slope;      /* 0x4 */
