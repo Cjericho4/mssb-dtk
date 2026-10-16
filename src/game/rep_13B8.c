@@ -486,8 +486,26 @@ void fn_3_85074(void) {
 }
 
 // .text:0x00085744 size:0xFC mapped:0x806C47D8
-void fn_3_85744(void) {
-    return;
+void fn_3_85744(s32 idx) {
+    InMemRunnerType* r = &g_Runners[idx];
+
+    if (r->fractionalBasesRan > 0.2) {
+        return;
+    }
+    if (r->distanceFromBall < 20.0f && g_Ball.ballState == 3) {
+        r->relatedToRunnerPos = 0;
+    }
+    if (g_FieldingLogic.unkC4 == 5 || g_FieldingLogic.unkC4 == 6 || g_FieldingLogic.unkC4 == r->currentBase) {
+        if (r->percentTowardsNextBase >= 0.125f && r->runningDirectionCode == 1 && g_Ball.ballZoneAwayFromHome <= 3) {
+            r->relatedToRunnerPos = 0;
+        }
+    }
+    if (r->baseStandingOn >= 0 && r->baseRoundingState == 2) {
+        r->relatedToRunnerPos = 1;
+        if (0.0f == r->groundVelocity[0]) {
+            r->relatedToRunnerPos = 0;
+        }
+    }
 }
 
 // .text:0x00085840 size:0x230 mapped:0x806C48D4
