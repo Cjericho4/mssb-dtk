@@ -5,6 +5,7 @@
 #include "game/rep_540.h"
 #include "game/rep_1200.h"
 #include "game/rep_AC8.h"
+#include "game/rep_28A8.h"
 #include "game/gap_106DFC.h"
 #include "game/gap_5985C.h"
 #include "game/rep_3310.h"
@@ -92,7 +93,15 @@ void fn_3_115738(void) {
 
 // .text:0x00115828 size:0x88 mapped:0x807548BC
 void fn_3_115828(void) {
-    return;
+    fn_3_DE4FC();
+    if (g_Minigame.soloMinigameDifficulty <= 2 && g_Minigame.multiPlayerInd == 0) {
+        if (g_Minigame.players._18E8[(s8)g_Minigame._1908] == 1 && g_Minigame.challenge_minigame_haven_tWonYetIndicator == 0) {
+            g_Minigame._1A37 = 1;
+        } else {
+            g_Minigame._1A37 = 2;
+        }
+    }
+    fn_3_5A6D4(0xE);
 }
 
 // .text:0x001158B0 size:0x48 mapped:0x80754944
