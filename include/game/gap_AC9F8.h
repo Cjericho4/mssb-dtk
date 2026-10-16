@@ -21,7 +21,8 @@ typedef struct {
     s16 field_0x0C;      /* 0x0C */
     s16 field_0x0E;      /* 0x0E */
     s16 field_0x10;      /* 0x10 */
-    u8 _pad2[0x1BE];     /* 0x12 */
+    s16 field_0x12;      /* 0x12 */
+    u8 _pad2[0x1BC];     /* 0x14 */
     u8 field_0x1D0;      /* 0x1D0 */
     u8 field_0x1D1;      /* 0x1D1 */
     u8 field_0x1D2;      /* 0x1D2 */
@@ -43,7 +44,9 @@ typedef struct {
     u8 _pad21E[0x3];     /* 0x21E */
     u8 unk_221;          /* 0x221 */
     u8 field_0x222;      /* 0x222 */
-    u8 _pad223[0x1F];    /* 0x223 */
+    u8 _pad223[0x1C];    /* 0x223 */
+    u8 field_0x23F[2];   /* 0x23F */
+    u8 _pad241;          /* 0x241 */
     s16 field_0x242[9];  /* 0x242 */
     u8 _pad254[0xC];     /* 0x254 */
     u8 field_0x260;      /* 0x260 */
@@ -56,7 +59,7 @@ extern int lbl_3_data_D9E4[];
 void fn_3_AC9F8(void);
 void fn_3_ACAF8(void);
 void fn_3_ACD38(void);
-void fn_3_AD164(void);
+void fn_3_AD164(s32 arg0);
 void fn_3_AD2A0(void);
 void fn_3_AD3BC(void);
 void fn_3_AD8CC(void);
