@@ -1,8 +1,24 @@
 #include "game/gap_6D4A0.h"
+#include "game/UnknownHomes_Game.h"
+
+void fn_800A97D0(s32 arg0, s32 arg1);
 
 // .text:0x0006D4A0 size:0xC4 mapped:0x806AC534
 void fn_3_6D4A0(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        g_Controls[i].controlStickAngle = 0;
+        g_Controls[i].controlStickMagnitude = 0;
+        g_Controls[i].buttonInput = 0;
+        g_Controls[i].newButtonInput = 0;
+        g_Controls[i]._08 = 0;
+        g_Controls[i].right_left = 0;
+        g_Controls[i].up_down = 0;
+        g_Controls[i].rightTriggerDistance = 0;
+        g_Controls[i].leftTriggerDistance = 0;
+    }
+    fn_800A97D0(0x10, 0x1E);
 }
 
 // .text:0x0006D564 size:0xA0 mapped:0x806AC5F8
