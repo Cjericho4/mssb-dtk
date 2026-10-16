@@ -3,8 +3,53 @@
 #include "game/rep_1D58.h"
 #include "Dolphin/GX/GXTexture.h"
 #include "Dolphin/GX/GXBump.h"
+#include "game/m_sound.h"
+#include "game/gap_16C410.h"
 
 extern GXTexObj lbl_3_bss_9F4C;
+
+// File-local .bss block, addressed off a common base.
+typedef struct {
+    /* 0x00 */ u8 _0[8];
+    /* 0x08 */ s32 crowdEmitter;
+    /* 0x0C */ s32 ambientEmitter;
+    /* 0x10 */ u8 _10[0x34 - 0x10];
+    /* 0x34 */ u8 paused;
+} StaC0Bss_9F38;
+extern StaC0Bss_9F38 lbl_3_bss_9F38;
+
+// .text:0x000C9744 size:0x134 mapped:0x807087D8
+void fn_3_C9744(void) {
+    StaC0Bss_9F38* bss = &lbl_3_bss_9F38;
+    GameInitVariables* gs = &g_d_GameSettings;
+
+    if (gs->GameModeSelected == 2) {
+        return;
+    }
+    if (g_GameLogic.gameStatus == 0x21) {
+        return;
+    }
+    if (g_GameLogic.gameStatus == 0xB) {
+        if (bss->paused == 0) {
+            fn_3_8B890(bss->crowdEmitter);
+            if (gs->GameModeSelected != 7) {
+                fn_3_8B890(bss->ambientEmitter);
+            }
+            bss->paused = 1;
+        }
+    } else if (bss->paused != 0) {
+        bss->crowdEmitter = fn_3_8BBC4(lbl_3_data_81DC[gs->StadiumID] + 1, NULL, 0, 1);
+        if (gs->GameModeSelected != 7) {
+            bss->ambientEmitter = fn_3_B7FC8(lbl_3_data_81DC[gs->StadiumID], 0);
+        }
+        bss->paused = 0;
+    } else {
+        fn_3_8BA60(bss->crowdEmitter, NULL, NULL);
+        if (gs->GameModeSelected != 7) {
+            fn_3_8BA60(bss->ambientEmitter, NULL, NULL);
+        }
+    }
+}
 
 // .text:0x000C9878 size:0x180 mapped:0x8070890C
 void fn_3_C9878(void) {

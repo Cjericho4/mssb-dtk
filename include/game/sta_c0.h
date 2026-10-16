@@ -5,6 +5,7 @@
 #include "game/sta_c2.h"
 #include "game/UnknownHomes_Game.h"
 
+void fn_3_C9744(void);
 void fn_3_C9878(void);
 void fn_3_C99F8(ActorObject *arg0);
 void fn_3_C9A60(ActorObject *arg0);

@@ -63,7 +63,7 @@ extern void fn_8003A8A0(struct DODisplayObj* dispObj, MtxPtr camera, s32 arg2);
 void fn_3_B8184(C2310Holder* holder, MtxPtr camera);
 
 
-void fn_3_B7FC8(s32 soundID, s32 arg1);
+s32 fn_3_B7FC8(s32 soundID, s32 arg1);
 void fn_3_B80D0(void);
 struct StadiumObject* fn_3_B827C(void);
 void fn_3_B828C(struct StadiumObject*);

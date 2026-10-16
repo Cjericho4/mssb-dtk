@@ -18,7 +18,7 @@ static u8 lbl_3_bss_1940[0x8000];
 static struct StadiumObject* lbl_3_bss_9940;
 
 // .text:0x000B7FC8 size:0x108 mapped:0x806F705C
-void fn_3_B7FC8(s32 soundID, s32 arg1) {
+s32 fn_3_B7FC8(s32 soundID, s32 arg1) {
     VecXYZ pos = {0.0f, 0.0f, 37.0f};
     f32 angle;
 
@@ -26,7 +26,7 @@ void fn_3_B7FC8(s32 soundID, s32 arg1) {
     pos.x += 100.0f * (f32)cos(angle);
     pos.y += -30.0f;
     pos.z += 100.0f * (f32)sin(angle);
-    fn_3_8BBC4(soundID, &pos, 0, arg1);
+    return fn_3_8BBC4(soundID, &pos, 0, arg1);
 }
 
 // .text:0x000B80D0 size:0xB4 mapped:0x806F7164
