@@ -24,6 +24,7 @@ extern f32 lbl_3_data_188E0;
 extern Vec lbl_3_rodata_24E8[];
 extern StaC2ChainParams lbl_3_bss_A8A8;
 extern StaC2D501CEntry lbl_3_bss_A8D0[4];
+extern const Vec lbl_3_rodata_25F8;
 
 // .text:0x000CB8A8 size:0x1F4 mapped:0x8070A93C
 void fn_3_CB8A8(void) {
@@ -497,8 +498,32 @@ void fn_3_D1004(void) {
 }
 
 // .text:0x000D1110 size:0x16C mapped:0x807101A4
-void fn_3_D1110(void) {
-    return;
+static inline void staC2PlaceSwing(StaC2D00D0Src* obj, StaC2BoneNode* node, f32 x, f32 y, f32 z, f32 rot) {
+    Vec axis = lbl_3_rodata_25F8;
+    Quaternion q;
+
+    obj->pos.x = x;
+    obj->pos.y = y;
+    obj->pos.z = z;
+    obj->rotY = 0.0f;
+    obj->control.type = 0;
+    CTRLSetTranslation(&obj->control, obj->pos.x, -obj->pos.y, obj->pos.z);
+    CTRLSetRotation(&obj->control, 0.0f, rot, 0.0f);
+    C_QUATRotAxisRad(&q, &axis, 0.017453292f * obj->rotY);
+    PSQUATMultiply(&q, &obj->quat, &q);
+    PSQUATNormalize(&q, &q);
+    CTRLSetQuat(&node->control, q.x, q.y, q.z, q.w);
+}
+
+void fn_3_D1110(StaC2D00D0Src* obj) {
+    u8 idx = obj->idx;
+    StaC2BoneNode* node = (*obj->actor)->bones->node;
+
+    staC2PlaceSwing(obj, node, lbl_3_data_18364[idx].pos.x, lbl_3_data_18364[idx].pos.y, lbl_3_data_18364[idx].pos.z, lbl_3_data_18364[idx].rotY);
+    obj->unkC8 = lbl_3_data_18364[obj->idx].pos.y;
+    obj->unkBC = 0.0f;
+    obj->unkC4 = 0.0f;
+    obj->state = 0;
 }
 
 // .text:0x000D127C size:0x4 mapped:0x80710310

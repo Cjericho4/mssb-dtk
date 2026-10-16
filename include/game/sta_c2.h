@@ -33,7 +33,10 @@ typedef struct ActorObject {
 } ActorObject;
 
 typedef struct StaC2RangeEntry {
-    u8 _pad0[0x20];
+    Vec pos;      /* 0x00 */
+    u8 _padC[0x4];
+    f32 rotY;     /* 0x10 */
+    u8 _pad14[0x20 - 0x14];
     f32 posMin;   /* 0x20 */
     f32 posRange; /* 0x24 */
     f32 negMin;   /* 0x28 */
@@ -117,10 +120,35 @@ void fn_3_CF92C(void);
 void fn_3_CFA88(void);
 void fn_3_CFA8C(ActorObject* actor);
 void fn_3_CFAB4(StaC2Effect* effect, StaC2EffectParent* parent);
+typedef struct StaC2BoneNode {
+    u8 _pad0[0x1C];
+    Control control;            /* 0x1C */
+} StaC2BoneNode;
+
+typedef struct StaC2BoneSet {
+    u8 _pad0[0xC];
+    StaC2BoneNode* node;        /* 0x0C */
+} StaC2BoneSet;
+
+typedef struct StaC2BoneActor {
+    u8 _pad0[0x18];
+    StaC2BoneSet* bones;        /* 0x18 */
+} StaC2BoneActor;
+
 typedef struct StaC2D00D0Src {
-    u8 _pad0[0xC0];
+    Control control;            /* 0x00 */
+    u8 _pad3C[0x74 - 0x3C];
+    StaC2BoneActor** actor;     /* 0x74 */
+    u8 _pad78[0x9C - 0x78];
+    u8 idx;                     /* 0x9C */
+    u8 _pad9D[0xA0 - 0x9D];
+    Vec pos;                    /* 0xA0 */
+    Quaternion quat;            /* 0xAC */
+    f32 unkBC;                  /* 0xBC */
     f32 rotY;                   /* 0xC0 */
-    u8 _padC4[0xD1 - 0xC4];
+    f32 unkC4;                  /* 0xC4 */
+    f32 unkC8;                  /* 0xC8 */
+    u8 _padCC[0xD1 - 0xCC];
     u8 state;                   /* 0xD1 */
 } StaC2D00D0Src;
 
@@ -151,7 +179,7 @@ void fn_3_D0534(void);
 f32 fn_3_D0854(StaC2RangeObj* obj);
 void fn_3_D0918(void);
 void fn_3_D1004(void);
-void fn_3_D1110(void);
+void fn_3_D1110(struct StaC2D00D0Src* obj);
 void fn_3_D127C(void);
 void fn_3_D1280(void);
 void fn_3_D141C(void);
