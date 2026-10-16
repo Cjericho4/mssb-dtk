@@ -1,4 +1,6 @@
 #include "game/rep_2308.h"
+#include <string.h>
+#include <math.h>
 #include "UnknownHeaders.h"
 #include "game/rep_1F58.h"
 #include "game/UnknownHomes_Game.h"
@@ -34,7 +36,8 @@ typedef struct RepCAE00Entry {
 
 extern RepCAE00Obj* lbl_3_data_17D10[2];
 extern RepCAE00Entry lbl_3_data_17D18[2][2];
-extern s32 lbl_3_data_17D08;
+extern s32 lbl_3_data_17D08[2];
+void fn_3_15C024(Vec* pos, Vec* vel, Vec* accel, s32 arg3);
 s32 fn_8005268C(void);
 u32 fn_80024DB0(CommonBss32724Timer* timer);
 void fn_80024FA4(AnimLevel1** anim, s32 arg1, CommonBss32724Timer* timer, s32 arg3);
@@ -51,7 +54,7 @@ void fn_3_CABF0(RepCAE00Entry* entry) {
     s32 i;
     CommonBss32724Timer* t;
 
-    scale = lbl_3_data_17D08 / 100000.0f;
+    scale = lbl_3_data_17D08[0] / 100000.0f;
     anim = (ActorAnimState*)&lbl_3_common_bss_35154.unk10[1].unk34;
     ids[0] = lbl_3_common_bss_35154.unkF8;
     timers[0] = &lbl_3_common_bss_35154.timerD8;
@@ -108,7 +111,48 @@ void fn_3_CAE00(void) {
 
 // .text:0x000CAF9C size:0x214 mapped:0x8070A030
 void fn_3_CAF9C(void) {
-    return;
+    RepCAE00Obj* obj = (RepCAE00Obj*)fn_800B0A5C_insertQueue(fn_3_CAE00, 1);
+    Vec pos;
+    Vec vel;
+    Vec accel;
+    s32 n;
+    s32 i;
+
+    obj->frames = 0;
+    obj->charIndex = g_Pitcher.rosterID;
+    memcpy(&pos, &g_Pitcher.ballCurrentPosition, sizeof(Vec));
+    memcpy(&vel, &g_Pitcher.ballVelocity, sizeof(Vec));
+    memcpy(&accel, &g_Pitcher.pitchCurveVeloV1, sizeof(Vec));
+    n = lbl_3_data_17D08[1];
+    while (n-- != 0) {
+        fn_3_15C024(&pos, &vel, &accel, 0);
+    }
+    obj->pos.x = pos.x;
+    obj->pos.y = -pos.y;
+    obj->pos.z = pos.z;
+    pos.x -= g_Pitcher.ballCurrentPosition.x;
+    pos.y -= g_Pitcher.ballCurrentPosition.y;
+    pos.z -= g_Pitcher.ballCurrentPosition.z;
+    pos.y = -pos.y;
+    PSVECNormalize(&pos, &pos);
+    vel.x = -1.0f;
+    vel.y = 0.0f;
+    vel.z = 0.0f;
+    PSVECCrossProduct(&vel, &pos, (Vec*)&obj->params.quat);
+    obj->params.quat.w = acos(PSVECDotProduct(&vel, &pos)) / 2.0;
+    if (PSVECMag((Vec*)&obj->params.quat)) {
+        PSVECNormalize((Vec*)&obj->params.quat, (Vec*)&obj->params.quat);
+        PSVECScale((Vec*)&obj->params.quat, (f32)sin(obj->params.quat.w), (Vec*)&obj->params.quat);
+    }
+    obj->params.quat.w = cos(obj->params.quat.w);
+    obj->done = i = 0;
+    for (; i < 2; i++) {
+        if (lbl_3_data_17D10[i] == NULL) {
+            lbl_3_data_17D10[i] = obj;
+            obj->slot = i;
+            break;
+        }
+    }
 }
 
 // .text:0x000CB1B0 size:0x84 mapped:0x8070A244
