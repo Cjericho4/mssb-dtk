@@ -192,10 +192,15 @@ typedef struct SoundEmitterDef {
     /* 0x00 */ s32 x;
     /* 0x04 */ s32 y;
     /* 0x08 */ s32 z;
-    /* 0x0C */ u8 _padC[0x14 - 0xC];
+    /* 0x0C */ s32 maxDis;
+    /* 0x10 */ s32 comp;
     /* 0x14 */ s32 maxVol;
-    /* 0x18 */ u8 _pad18[0x3C - 0x18];
+    /* 0x18 */ s32 minVol;
+    /* 0x1C */ s32 flags[7];
+    /* 0x38 */ u8 _pad38[0x3C - 0x38];
 } SoundEmitterDef; /* size: 0x3C */
+
+u32 sndAddEmitter(SoundEmitterSlot* em, VecXYZ* pos, VecXYZ* dir, f32 maxDis, f32 comp, u32 flags, u16 fxid, u8 maxVol, u8 minVol, struct SND_ROOM* room);
 
 extern SoundEmitterDef lbl_3_data_8974[];
 extern VecXYZ lbl_3_data_8D7C;
@@ -228,7 +233,36 @@ void fn_3_8BA60(s32 emitterIdx, VecXYZ* pos, VecXYZ* dir) {
 }
 
 // .text:0x0008BBC4 size:0x230 mapped:0x806CAC58
-s32 fn_3_8BBC4(s32 soundID, VecXYZ* pos, s32 arg2, s32 arg3) {
+s32 fn_3_8BBC4(s32 soundID, VecXYZ* pos, VecXYZ* dir, s32 sfx) {
+    VecXYZ tmp;
+    s32 i;
+
+    for (i = 0; i < SOUND_EMITTER_COUNT; i++) {
+        if (lbl_3_common_bss_32B20.emitterActive[i] == 0 || sndCheckEmitter(&lbl_3_common_bss_32B20.emitters[i]) == 0) {
+            lbl_3_common_bss_32B20.emitterSfx[i] = sfx;
+            lbl_3_common_bss_32B20.emitterActive[i] = 1;
+            lbl_3_common_bss_32B20.emitterUnk2098[i] = 0;
+            if (pos == NULL) {
+                pos = &tmp;
+                tmp.x = lbl_3_data_8974[sfx].x / 100000.0f;
+                tmp.y = lbl_3_data_8974[sfx].y / 100000.0f;
+                tmp.z = lbl_3_data_8974[sfx].z / 100000.0f;
+            }
+            if (dir == NULL) {
+                dir = &lbl_3_data_8D7C;
+            }
+            sndAddEmitter(&lbl_3_common_bss_32B20.emitters[i], pos, dir,
+                          lbl_3_data_8974[sfx].maxDis / 100000.0f, lbl_3_data_8974[sfx].comp / 100000.0f,
+                          lbl_3_data_8974[sfx].flags[0] | lbl_3_data_8974[sfx].flags[1] | lbl_3_data_8974[sfx].flags[2] |
+                              lbl_3_data_8974[sfx].flags[3] | lbl_3_data_8974[sfx].flags[4] | lbl_3_data_8974[sfx].flags[5] |
+                              lbl_3_data_8974[sfx].flags[6],
+                          soundID, lbl_3_data_8974[sfx].maxVol, lbl_3_data_8974[sfx].minVol, NULL);
+            return i;
+        }
+    }
+    if (i == SOUND_EMITTER_COUNT) {
+        OSPanic("m_sound.c", 0xE4C, "No Empty Emitter");
+    }
     return -1;
 }
 

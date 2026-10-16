@@ -25,7 +25,8 @@ typedef struct CommonBss32B20 {
     SoundEmitterSlot emitters[SOUND_EMITTER_COUNT]; /* 0x90 */
     u8 emitterSfx[SOUND_EMITTER_COUNT];           /* 0x1FD0 */
     u8 emitterActive[SOUND_EMITTER_COUNT];        /* 0x2034 */
-    u8 _pad2098[0x2138 - 0x2098];
+    u8 emitterUnk2098[SOUND_EMITTER_COUNT];       /* 0x2098 */
+    u8 _pad20FC[0x2138 - 0x20FC];
 } CommonBss32B20;
 
 u32 sndCheckEmitter(SoundEmitterSlot* em);
@@ -45,7 +46,7 @@ void fn_3_8B964(VecXYZ* pos, VecXYZ* vel, VecXYZ* orient);
 BOOL sndAddListener(CommonBss32B20* listener, VecXYZ* pos, VecXYZ* dir, VecXYZ* heading, Data8D70* up, f32 frontSur, f32 backSur, f32 sideSur, u32 flags, u8 vol, struct SND_ROOM* room);
 void fn_3_8B9BC(VecXYZ* pos);
 void fn_3_8BA60(s32 emitterIdx, VecXYZ* pos, VecXYZ* dir);
-s32 fn_3_8BBC4(s32 soundID, VecXYZ* pos, s32 arg2, s32 arg3);
+s32 fn_3_8BBC4(s32 soundID, VecXYZ* pos, VecXYZ* dir, s32 sfx);
 void fn_3_8BDF4(void);
 void fn_3_8BE8C(void);
 void fn_3_8C07C(void);
