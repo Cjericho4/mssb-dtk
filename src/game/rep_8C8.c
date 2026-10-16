@@ -8,6 +8,7 @@
 extern u8 lbl_3_data_1AAC[4];
 extern u8 lbl_3_data_1AB0[4][3];
 extern f32 lbl_3_data_19DC[5][2];
+extern f32 lbl_3_data_1A04[2];
 extern u8 lbl_3_data_1A24[4];
 extern u8 lbl_3_data_1A28[4][5];
 extern u8 lbl_3_data_1A3C[4];
@@ -56,7 +57,41 @@ void fn_3_1EFE4(void) {
 
 // .text:0x0001F1CC size:0x184 mapped:0x8065E260
 void fn_3_1F1CC(void) {
-    return;
+    AIStruct* ai = &g_AiLogic;
+    f32 offset;
+    f32 x;
+
+    if (ai->batterAIInd10_relatedToBoxPosPrePitch == 3) {
+        ai->batterAIDesiredXPosInBox = ai->boxHorizontalPoint;
+        return;
+    }
+    if (g_Batter.characterClass == 2) {
+        if (ai->batterAIInd10_relatedToBoxPosPrePitch == 1) {
+            return;
+        }
+        if (ai->batterAIInd10_relatedToBoxPosPrePitch == 2 && ai->_6B != 0) {
+            ai->_6B--;
+            return;
+        }
+        g_AiLogic.batterAIDesiredXPosInBox = RandomF32_Game_Range(lbl_3_data_19DC[0][0], lbl_3_data_19DC[4][1]);
+        offset = RandomF32_Game_Range(lbl_3_data_1A04[1], lbl_3_data_1A04[0] + lbl_3_data_1A04[0]);
+        if (RandomInt_Game(2) != 0) {
+            g_AiLogic.batterAIDesiredXPosInBox += offset;
+        } else {
+            g_AiLogic.batterAIDesiredXPosInBox -= offset;
+        }
+        if (g_AiLogic.batterAIDesiredXPosInBox < -lbl_3_data_1A04[0]) {
+            g_AiLogic.batterAIDesiredXPosInBox = -lbl_3_data_1A04[0];
+        } else if (g_AiLogic.batterAIDesiredXPosInBox > lbl_3_data_1A04[0]) {
+            g_AiLogic.batterAIDesiredXPosInBox = lbl_3_data_1A04[0];
+        }
+        ai->batterAIInd10_relatedToBoxPosPrePitch = 1;
+        g_AiLogic._6B = RandomInt_Game(45) + 15;
+    } else if (ai->batterAIInd10_relatedToBoxPosPrePitch == 0) {
+        x = RandomF32_Game_Range(lbl_3_data_19DC[ai->batterAIInd9PrincessStarHit + 1][0], lbl_3_data_19DC[ai->batterAIInd9PrincessStarHit + 1][1]);
+        ai->batterAIInd10_relatedToBoxPosPrePitch = 1;
+        g_AiLogic.batterAIDesiredXPosInBox = x;
+    }
 }
 
 // .text:0x0001F350 size:0x128 mapped:0x8065E3E4
