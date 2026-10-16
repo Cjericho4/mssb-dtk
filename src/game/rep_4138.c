@@ -3,6 +3,37 @@
 #include "header_rep_data.h"
 #include "stl/mem.h"
 #include "game/rep_3E58.h"
+#include "game/rep_1E08.h"
+s32 fn_8005268C(void);
+#include "Dolphin/gx.h"
+
+extern void fn_80033B58(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+
+static inline void setupGX_16D9B0(void) {
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_CLEAR);
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+    GXSetNumChans(1);
+    GXSetNumTexGens(1);
+    GXSetNumTevStages(1);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO, GX_CC_ZERO);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO, GX_CA_ZERO);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
+    GXLoadPosMtxImm(fn_80052768(fn_8005268C())->mtx, GX_PNMTX0);
+    GXSetCurrentMtx(GX_PNMTX0);
+    GXSetProjection(fn_80052768(fn_8005268C())->proj, GX_PERSPECTIVE);
+    fn_80033B58((s32)lbl_3_bss_D6E4, lbl_3_bss_D6E8, 0, 0);
+}
 
 // .text:0x0016D810 size:0x1A0 mapped:0x807AC8A4
 void fn_3_16D810(void) {
@@ -11,11 +42,11 @@ void fn_3_16D810(void) {
 
 // .text:0x0016D9B0 size:0x1BC mapped:0x807ACA44
 void fn_3_16D9B0(void) {
-    return;
+    setupGX_16D9B0();
 }
 
 // .text:0x0016DB6C size:0x458 mapped:0x807ACC00
-void fn_3_16DB6C(void) {
+void fn_3_16DB6C(u8 idx) {
     return;
 }
 
@@ -61,7 +92,6 @@ typedef struct {
 } Data2A498Entry;
 extern Data2A498Entry lbl_3_data_2A498[];
 extern u8 lbl_803CBBC0;
-void fn_800A7D4C(s32 arg0, Data2A498Entry* elem);
 
 // .text:0x0016E1EC size:0x110 mapped:0x807AD280
 void fn_3_16E1EC(void) {
@@ -79,7 +109,7 @@ void fn_3_16E1EC(void) {
         lbl_3_bss_D6E0.snapshot.balls = g_Strikes.balls;
         lbl_3_bss_D6E0.snapshot.outs = g_Strikes.outs;
     }
-    fn_800A7D4C(1, &lbl_3_data_2A498[lbl_803CBBC0]);
+    fn_800A7D4C(1, (BdcArrayElement*)&lbl_3_data_2A498[lbl_803CBBC0]);
 }
 
 // .text:0x0016E2FC size:0x2C mapped:0x807AD390

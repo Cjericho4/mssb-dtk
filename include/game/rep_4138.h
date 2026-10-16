@@ -27,7 +27,7 @@ extern u8 lbl_3_bss_D6EC;
 
 void fn_3_16D810(void);
 void fn_3_16D9B0(void);
-void fn_3_16DB6C(void);
+void fn_3_16DB6C(u8 idx);
 void fn_3_16DFC4(void);
 void fn_3_16E1A0(void);
 void fn_3_16E1EC(void);
