@@ -986,8 +986,46 @@ void fn_3_1C8A8(void) {
 }
 
 // .text:0x0001C8AC size:0x214 mapped:0x8065B940
-void fn_3_1C8AC(void) {
-    return;
+void fn_3_1C8AC(s32 useRaw) {
+    f32 cosB;
+    f32 dy;
+    f32 ang;
+    f32 dist;
+    f32 sinB;
+    f32 dx;
+    f32 dz;
+
+    if (useRaw) {
+        ang = fn_3_9FEA8(g_pCamera->unk2874);
+    } else {
+        ang = shortAngleToRad_Capped(g_pCamera->unk289E);
+    }
+    dist = 20.0f * (f32)cos(ang);
+    dy = 20.0f * (f32)sin(ang);
+    if (useRaw) {
+        ang = fn_3_9FEA8(g_pCamera->unk2870);
+    } else {
+        ang = shortAngleToRad_Capped(g_pCamera->unk289C);
+    }
+    cosB = cos(ang);
+    sinB = sin(ang);
+    dx = cosB * dist;
+    dz = sinB * dist;
+    g_pCamera->unk2890 = g_pCamera->unk2840;
+    g_pCamera->unk2894 = g_pCamera->unk2844;
+    g_pCamera->unk2898 = g_pCamera->unk2848;
+    g_pCamera->unk2858 += cosB * g_pCamera->unk287C;
+    g_pCamera->unk2860 += sinB * g_pCamera->unk287C;
+    g_pCamera->unk2858 += sinB * g_pCamera->unk2880;
+    g_pCamera->unk2860 -= cosB * g_pCamera->unk2880;
+    g_pCamera->unk284C = dx + g_pCamera->unk2858;
+    g_pCamera->unk2850 = dy + g_pCamera->unk285C;
+    g_pCamera->unk2854 = dz + g_pCamera->unk2860;
+    g_pCamera->unk2840 = g_pCamera->unk2858;
+    g_pCamera->unk2844 = g_pCamera->unk285C;
+    g_pCamera->unk2848 = g_pCamera->unk2860;
+    g_pCamera->unk287C = 0.0f;
+    g_pCamera->unk2880 = 0.0f;
 }
 
 

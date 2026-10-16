@@ -79,7 +79,7 @@ void fn_3_1C1B0(void);
 void fn_3_1C684(void);
 u8 getSceneID(void);
 void fn_3_1C8A8(void);
-void fn_3_1C8AC(void);
+void fn_3_1C8AC(s32 useRaw);
 void fn_3_1CAC0(void);
 void fn_3_1CBCC(void);
 void fn_3_1CCC8(void);
