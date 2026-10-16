@@ -301,8 +301,8 @@ void fn_3_A67E8(s32 index) {
 }
 
 // .text:0x000A6810 size:0x2AC mapped:0x806E58A4
-void fn_3_A6810(void) {
-    return;
+s32 fn_3_A6810(f32 x0, f32 z0, f32 x1, f32 z1) {
+    return 0;
 }
 
 // .text:0x000A6ABC size:0x28C mapped:0x806E5B50

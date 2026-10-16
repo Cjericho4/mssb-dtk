@@ -4,6 +4,7 @@
 #include "header_rep_data.h"
 #include "game/gap_9CD90.h"
 #include "game/rep_140.h"
+#include "game/rep_18E8.h"
 
 extern f32 lbl_3_rodata_1498;
 
@@ -266,9 +267,32 @@ void fn_3_83714(void) {
     return;
 }
 
+extern s16 lbl_3_data_1C88[];
+
 // .text:0x000841C0 size:0x124 mapped:0x806C3254
-void fn_3_841C0(void) {
-    return;
+s32 fn_3_841C0(s32 runnerIdx, s32 frames) {
+    InMemRunnerType* runner = &g_Runners[runnerIdx];
+    s32 t;
+
+    if (runner->forceOutCd == 1) {
+        return 1;
+    }
+    t = frames + fn_3_A6810(g_Ball.physicsSubstruct.futureCoordsAndDist[frames].pos.x, g_Ball.physicsSubstruct.futureCoordsAndDist[frames].pos.z,
+                            lbl_3_data_4444[runner->nextBase].x, lbl_3_data_4444[runner->nextBase].z);
+    t += 45;
+    if ((s32)g_GameLogic.AIDifficulty0Special3Weak[g_GameLogic.awayTeamBattingInd_battingTeam] >= 3) {
+        t -= 30;
+    } else {
+        t += lbl_3_data_1C88[g_GameLogic.runnerAIInd[g_GameLogic.homeTeamBattingInd_fieldingTeam]];
+    }
+    if (g_Ball.ballZoneAwayFromHome <= 1) {
+        if (t - 20 > runner->framesToNextBase) {
+            return 1;
+        }
+    } else if (t > runner->framesToNextBase) {
+        return 1;
+    }
+    return -1;
 }
 
 // .text:0x000842E4 size:0x3E4 mapped:0x806C3378

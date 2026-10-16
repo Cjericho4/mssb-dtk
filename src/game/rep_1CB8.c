@@ -39,7 +39,7 @@ s32 fn_3_B7D6C(f32 f1, f32 f2) {
  */
 s32 fn_3_B7DD8(f32 f1, f32 f2) {
     /* Target: lfs f3, 0x14(r3) */
-    f32 limit = lbl_3_data_4444.unk14;
+    f32 limit = lbl_3_data_4444[2].z;
     
     /* Target: fadds f0, f1, f3 -> fcmpo cr0, f2, f0 -> ble .L_000B7DF8 */
     if (f2 > f1 + limit) {

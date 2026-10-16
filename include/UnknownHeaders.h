@@ -668,10 +668,10 @@ struct ActorAnimState* unk74;
 /* The global is accessed as an array of 32-bit values (pointers or ints) */
 extern struct ANIMBank* lbl_3_bss_B154[];
 typedef struct {
-    u8 pad[0x14];
-    f32 unk14;
-} UnknownStructB7;
-extern UnknownStructB7 lbl_3_data_4444;
+    f32 x;
+    f32 z;
+} UnknownStructB7; /* per-base XZ position */
+extern UnknownStructB7 lbl_3_data_4444[5];
 
 typedef struct DataArrayElement {
     /* 0x0 */ f32 x;

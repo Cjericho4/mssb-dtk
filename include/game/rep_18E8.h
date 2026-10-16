@@ -40,7 +40,7 @@ extern s32 lbl_3_bss_1838[];
 
 void fn_3_A63E4(void);
 void fn_3_A67E8(s32 index);
-void fn_3_A6810(void);
+s32 fn_3_A6810(f32 x0, f32 z0, f32 x1, f32 z1);
 void fn_3_A6ABC(void);
 void fn_3_A6D48(void);
 void fn_3_A6E98(void);
