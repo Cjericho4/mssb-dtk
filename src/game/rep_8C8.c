@@ -5,6 +5,8 @@
 #include "game/gap_9CD90.h"
 #include "game/gap_AC9F8.h"
 
+extern f32 lbl_3_data_19CC[4];
+extern f32 lbl_3_data_4474[4];
 extern u8 lbl_3_data_1AAC[4];
 extern u8 lbl_3_data_1AB0[4][3];
 extern f32 lbl_3_data_19DC[5][2];
@@ -133,7 +135,33 @@ void batterAIControlled(void) {
 
 // .text:0x0001FF48 size:0x11C mapped:0x8065EFDC
 void fn_3_1FF48(void) {
-    return;
+    s32 zone;
+    f32 step;
+    f32 edge;
+
+    if (g_Pitcher.starPitchType != 0) {
+        return;
+    }
+    g_AiLogic.lastPitchFramesUntilPitchGetsToBatter = g_Pitcher.framesUntilPitchGetsToBatter;
+    g_AiLogic.lastPitchType = g_Pitcher.TypeOfPitch;
+    for (zone = 0; zone < 4; zone++) {
+        if (g_Pitcher.pitchXPosition < lbl_3_data_19CC[zone]) {
+            break;
+        }
+    }
+    if (g_Batter.batterHand != 0) {
+        zone = 4 - zone;
+    }
+    g_AiLogic.lastPitchBallLocZone = zone;
+    step = (lbl_3_data_4474[1] - lbl_3_data_4474[0]) / 5.0f;
+    edge = lbl_3_data_4474[0] + step;
+    for (zone = 0; zone < 4; zone++) {
+        if (g_Pitcher.pitcher.x < edge) {
+            break;
+        }
+        edge += step;
+    }
+    g_AiLogic.lastPitchMoundZone = zone;
 }
 
 // .text:0x00020064 size:0x124 mapped:0x8065F0F8
