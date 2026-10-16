@@ -268,7 +268,61 @@ void fn_3_AFDC0(void) {
 
 // .text:0x000AFE0C size:0x230 mapped:0x806EEEA0
 void fn_3_AFE0C(void) {
-    return;
+    InputStruct* in;
+    s16 limit;
+
+    limit = 0x78;
+    in = &g_Controls[g_Practice.homeAway];
+    if (g_Practice.instructionNumber >= 0) {
+        if (g_Practice.allowPlayToEndIndicator != 0) {
+            limit = 0x3C;
+        } else {
+            g_FieldingLogic.unkAE = 0;
+            return;
+        }
+    } else if (g_Ball.AtBat_ContactResult == 0) {
+        g_FieldingLogic.unkAE = 0;
+        return;
+    } else if (g_Practice.guidedPracticeCompletionRelated != 0) {
+        g_FieldingLogic.unkAE = 0;
+        return;
+    } else if (g_Ball.deadBallReason == 1) {
+        if (g_Practice._1B0 == 0) {
+            if (in->newButtonInput & 0x1100) {
+                g_Practice._1B0 = 1;
+            }
+            limit = 0x12C;
+        } else {
+            limit = 0x2D;
+        }
+        lbl_3_common_bss_34C58._2A = 1;
+        lbl_3_common_bss_34C58._24 = 0x1E;
+    } else if (g_Ball.framesSinceHit > 0xB4) {
+        limit = 0x78;
+    }
+    if (g_FieldingLogic.unkAE < 0x7FFE) {
+        g_FieldingLogic.unkAE++;
+    } else {
+        g_FieldingLogic.unkAE = 0x7FFF;
+    }
+    if (g_GameLogic.framePlayEnd > limit && g_FieldingLogic.unkAE > limit - 0x5A) {
+        g_FieldingLogic.unkAE = 0;
+        g_FieldingLogic.unkEE = 0;
+    }
+    if (g_FieldingLogic.unkAE >= limit) {
+        g_Practice.allowPlayToEndIndicator = 0;
+        g_GameLogic.pre_PostMiniGameInd = 1;
+        g_GameLogic.minigameLastTurnSuccessInd = 1;
+        fn_3_1DD48();
+        fn_3_5A6D4(7);
+    } else if (g_FieldingLogic.unkAE >= limit - 6) {
+        changeScene(3, 6);
+    } else if (g_FieldingLogic.unkAE == limit - 0x1E) {
+        g_FieldingLogic.unk10E = 1;
+        g_FieldingLogic.unkEE = 1;
+    }
+    g_GameLogic.framePlayEnd = limit;
+    g_GameLogic.CountdownUntilFade = limit - g_FieldingLogic.unkAE;
 }
 
 // .text:0x000B003C size:0x1A4 mapped:0x806EF0D0
