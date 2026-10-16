@@ -35,7 +35,9 @@ typedef struct {
 extern Struct_32234 lbl_3_common_bss_32234;
 
 typedef struct {
-    u8 _pad0[0x38];
+    u8 _pad0[0x28];
+    f32 unk28; // Offset 0x28
+    u8 _pad2C[0x38 - 0x2C];
     s16 unk38; // Offset 0x38
     s16 unk3A; // Offset 0x3A
     u8 _pad3C[0x40 - 0x3C];
