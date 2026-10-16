@@ -1,4 +1,6 @@
 #include "game/gap_5985C.h"
+#include "game/rep_13B8.h"
+#include "game/rep_A00.h"
 #include "game/rep_1188.h"
 #include "game/rep_1038.h"
 #include "game/gap_6D4A0.h"
@@ -714,7 +716,26 @@ void fn_3_5D3FC(void) {
 
 // .text:0x0005D51C size:0xCC mapped:0x8069C5B0
 void fn_3_5D51C(void) {
-    return;
+    if (g_Scores.unkAD == 0) {
+        g_Scores.unkAD = 1;
+    } else {
+        g_Scores.unkAD = 0;
+        g_Scores.highscore++;
+    }
+    g_GameLogic.homeTeamBattingInd_fieldingTeam ^= 1;
+    g_GameLogic.awayTeamBattingInd_battingTeam ^= 1;
+    g_GameLogic.teamBatting ^= 1;
+    g_GameLogic.teamFielding ^= 1;
+    g_GameLogic._131 = 0;
+    g_GameLogic._132 = 0;
+    g_Scores.prevScore = g_Scores.team[g_Scores.unkAD].score;
+    fn_3_5A684();
+    fn_3_8A350();
+    fn_3_F7B8();
+    fn_3_75434();
+    fn_3_59338();
+    fn_3_7B130();
+    fn_3_22850();
 }
 
 // .text:0x0005D5E8 size:0x410 mapped:0x8069C67C
