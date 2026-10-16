@@ -8,6 +8,7 @@
 #include "game/rep_1200.h"
 #include "game/game_batter.h"
 #include "game/rep_868.h"
+#include "musyx/musyx.h"
 
 extern void Set_803cb848(s32 arg0);
 extern void fn_3_BF158(void);
@@ -41,8 +42,35 @@ void fn_3_DC380(void) {
 }
 
 // .text:0x000DC5A4 size:0x144 mapped:0x8071B638
+void fn_3_5B408(void);
+s32 fn_3_6C938(s32 arg0, s32 arg1);
+
 void fn_3_DC5A4(void) {
-    return;
+    s32 ret;
+
+    if ((ret = fn_3_6C938(1, 0x100)) != 0) {
+        lbl_3_common_bss_34C90.field_0x00 = ret - 1;
+        if ((s32)lbl_3_common_bss_34C90.field_0x1DA == 2) {
+            fn_3_5B408();
+            lbl_3_common_bss_34C90.field_0x1D2 = 9;
+        } else {
+            lbl_3_common_bss_34C90.field_0x1D2 = 4;
+        }
+        sndFXStartEx(0x1B8, lbl_800EFBA4.confirmVolume, 0x3F, 0);
+    } else if (fn_3_6C938(1, 8) != 0) {
+        if ((s8)lbl_3_common_bss_34C90.field_0x1DA != 0) {
+            lbl_3_common_bss_34C90.field_0x1DA--;
+        } else {
+            lbl_3_common_bss_34C90.field_0x1DA = 2;
+        }
+        sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+    } else if (fn_3_6C938(1, 4) != 0) {
+        lbl_3_common_bss_34C90.field_0x1DA++;
+        if ((s8)lbl_3_common_bss_34C90.field_0x1DA >= 3) {
+            lbl_3_common_bss_34C90.field_0x1DA = 0;
+        }
+        sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+    }
 }
 
 // .text:0x000DC6E8 size:0x380 mapped:0x8071B77C
