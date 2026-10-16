@@ -41,7 +41,7 @@ struct Struct_800339F0_Result;
 BOOL fn_3_C4724(struct Struct_800339F0_Result* obj);
 void fn_3_C48D0(void);
 void fn_3_C4B80(void);
-void fn_3_C4CF4(void);
+void fn_3_C4CF4(struct Struct_800339F0_Result* obj, u8 id);
 void fn_3_C4F00(void);
 void fn_3_C5304(void);
 void fn_3_C54D0(void);

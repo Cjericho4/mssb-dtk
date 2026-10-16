@@ -292,6 +292,7 @@ typedef struct StaC2Particle {
     s16 unk4A;      /* 0x4A */
     u8 _pad4C[0x4F - 0x4C];
     u8 unk4F;       /* 0x4F */
+    u8 unk50;       /* 0x50 */
 } StaC2Particle;
 
 void fn_8003403C(f32 a, f32 b);
