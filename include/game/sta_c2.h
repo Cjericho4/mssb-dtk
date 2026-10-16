@@ -109,7 +109,6 @@ void fn_3_CED30(void);
 void fn_3_CED34(void);
 void fn_3_CED38(void);
 void fn_3_CED3C(void);
-void fn_3_CEE5C(void);
 void fn_3_CEFA8(void);
 void fn_3_CF278(void);
 void fn_3_CF72C(void);
@@ -204,6 +203,7 @@ typedef struct StaC2Particle {
 void fn_8003403C(f32 a, f32 b);
 void fn_80033CC8(StaC2Particle* obj, s32 arg1);
 void fn_3_CED40(StaC2Particle* obj, s32 arg1);
+void fn_3_CEE5C(StaC2Particle* obj, s32 arg1);
 void fn_3_D1F2C(StaC2ChainParams* params, StaC2D501CEntry* entries, s32 count, Vec* force, StaC2ChainObj* obj);
 void fn_3_CC354(StaC2D501CEntry* entries);
 void fn_3_D501C(StaC2D501CEntry* entries);
