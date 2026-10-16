@@ -49,6 +49,8 @@ extern struct {
     u8 _00[0x27];
     u8 _27;
     u8 _28;
+    u8 _29;
+    u8 _2A;
 } lbl_80366158;
 extern u8 lbl_800E8754[];
 

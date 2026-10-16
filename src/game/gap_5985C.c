@@ -35,11 +35,18 @@ void fn_8003BF54(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32
 #include "game/gap_90754.h"
 #include "game/rep_1D58.h"
 #include "game/gap_97144.h"
+#include "game/gap_FF4C.h"
+#include "game/rep_10E8.h"
+#include "game/gap_7CE90.h"
+#include "game/rep_E08.h"
 
 void fn_3_BF1AC(void);
 void fn_3_BC224(void);
 void fn_8001E474(void);
 void fn_8001F228(void);
+void fn_3_BBF94(void);
+void fn_3_B482C(void);
+void fn_3_10FDC8(void);
 
 // .text:0x0005985C size:0x74 mapped:0x806988F0
 void fn_3_5985C(s32 idx, s32 arg1) {
@@ -280,7 +287,50 @@ void fn_3_5A87C(void) {
 
 // .text:0x0005ACA0 size:0x16C mapped:0x80699D34
 void fn_3_5ACA0(void) {
-    return;
+    GameInitVariables* gs;
+
+    if (g_GameLogic.framesOfExitingToMenu != 0) {
+        fn_3_5A6FC();
+        return;
+    }
+    if (g_GameLogic.FrameCountOfCurrentPitch < 0xFFFE) {
+        g_GameLogic.FrameCountOfCurrentPitch++;
+    } else {
+        g_GameLogic.FrameCountOfCurrentPitch = 0xFFFF;
+    }
+    if (g_GameLogic.FrameCountOfCurrentAtBat_Copy < 0xFFFE) {
+        g_GameLogic.FrameCountOfCurrentAtBat_Copy++;
+    } else {
+        g_GameLogic.FrameCountOfCurrentAtBat_Copy = 0xFFFF;
+    }
+    fn_3_FF4C();
+    fn_3_6D304();
+    gs = &g_d_GameSettings;
+    if (gs->GameModeSelected != 6 && gs->GameModeSelected != 7) {
+        fn_3_7D458();
+    }
+    fn_3_668BC();
+    if (gs->GameModeSelected == 2) {
+        fn_3_B482C();
+    } else if (gs->GameModeSelected == 6) {
+        fn_3_DFBAC();
+    } else if (gs->GameModeSelected == 7) {
+        fn_3_10FDC8();
+    } else if (g_GameLogic.secondaryGameMode == 0) {
+        fn_3_6011C();
+    }
+    if (g_d_GameSettings.minigamesEnabled != 0) {
+        fn_3_66140();
+    } else {
+        fn_3_664FC();
+    }
+    fn_3_BBF94();
+    if (g_hugeAnimStruct.displayObjects != 0) {
+        fn_3_B93CC();
+    }
+    if (gs->GameModeSelected == 4 && lbl_80366158._2A == 0) {
+        lbl_80366158._2A = 1;
+    }
 }
 
 // .text:0x0005AE0C size:0x90 mapped:0x80699EA0
