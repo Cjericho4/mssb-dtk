@@ -22,6 +22,8 @@ extern u8 lbl_800E8754[];
 void fn_80033620(void);
 void fn_8004C094(Vec* pos);
 extern s32 lbl_3_data_182C4;
+extern u8 lbl_3_bss_A02C;
+extern u8 lbl_3_bss_A02D;
 extern StadiumActorAnim lbl_3_bss_A034[];
 extern char lbl_3_rodata_286C[];
 extern char lbl_3_rodata_2878[];
@@ -1244,8 +1246,39 @@ void fn_3_D60C0(void) {
 }
 
 // .text:0x000D62F0 size:0x224 mapped:0x80715384
-void fn_3_D62F0(void) {
-    return;
+void fn_3_D62F0(s32* count) {
+    StaC2ControlExt control;
+    Mtx m;
+    StadiumObjectElem* obj;
+    u16 start;
+    s32 i;
+    s32 idx;
+
+    for (i = 0; i < lbl_3_bss_A02D; i++) {
+        start = lbl_3_common_bss_350E4[0].unk40[*count - 1] + lbl_3_common_bss_350E4[0].unk3C[*count - 1];
+        lbl_3_common_bss_350E4[0].unk40[*count] = start;
+        idx = lbl_3_bss_A02C + i;
+        lbl_3_common_bss_350E4[0].unk44[start] = idx;
+        lbl_3_common_bss_350E4[0].unk3C[*count]++;
+        obj = &lbl_3_common_bss_350E4[0].src[idx];
+        control = *(StaC2ControlExt*)&obj->control;
+        CTRLBuildMatrix(&control.control, m);
+        fn_3_B8464(m, obj->unk_78);
+        CTRLSetTranslation(&control.control, 14.250000447034836 + lbl_3_data_182C8[obj->unk9C].pos.x,
+                           -(9.375f + lbl_3_data_182C8[obj->unk9C].pos.y),
+                           14.250000447034836 + lbl_3_data_182C8[obj->unk9C].pos.z);
+        CTRLBuildMatrix(&control.control, m);
+        fn_3_B8464(m, obj->unk_78);
+        CTRLSetTranslation(&control.control, lbl_3_data_182C8[obj->unk9C].pos.x - 14.250000447034836,
+                           -(9.375f + lbl_3_data_182C8[obj->unk9C].pos.y),
+                           lbl_3_data_182C8[obj->unk9C].pos.z - 14.250000447034836);
+        CTRLBuildMatrix(&control.control, m);
+        fn_3_B8464(m, obj->unk_78);
+        if (lbl_3_common_bss_350E4[0].unk3C[*count] != 0) {
+            fn_3_B8414(&lbl_3_common_bss_350E4[0].unk48[*count * 2].x, &lbl_3_common_bss_350E4[0].unk48[*count * 2 + 1].x);
+            (*count)++;
+        }
+    }
 }
 
 // .text:0x000D6514 size:0x2B8 mapped:0x807155A8
