@@ -451,8 +451,33 @@ void fn_3_1371E8(void) {
 }
 
 // .text:0x00137224 size:0x1BC mapped:0x807762B8
-void fn_3_137224(void) {
-    return;
+void fn_3_137224(Vec* center) {
+    Vec pos;
+    Vec diff;
+    Vec kick;
+    u32 i;
+    f32 scale;
+
+    for (i = 0; i < 100; i++) {
+        if (g_Minigame.wallBall_coinsVisibleInd[i] == 1 && !(g_Minigame.wallBall_coinCoordinates[i].y > lbl_3_data_219B8.unk38) &&
+            !(g_Minigame.wallBall_coinVelocity[i].y > 0.05)) {
+            pos.x = g_Minigame.wallBall_coinCoordinates[i].x;
+            pos.y = g_Minigame.wallBall_coinCoordinates[i].y;
+            pos.z = g_Minigame.wallBall_coinCoordinates[i].z;
+            PSVECSubtract(&pos, center, &diff);
+            scale = (36.0f - PSVECMag(&diff)) / 36.0f;
+            diff.y = 0.0f;
+            if (!PSVECMag(&diff)) {
+                diff.z = -1.0f;
+            }
+            PSVECNormalize(&diff, &diff);
+            kick.x = 0.0f;
+            kick.z = 0.0f;
+            kick.y = 0.05f * (2.0 * ((f32)rand() / 32767.0f - 0.5)) + 0.3f;
+            PSVECScale(&kick, scale, &kick);
+            PSVECAdd(&kick, (Vec*)&g_Minigame.wallBall_coinVelocity[i], (Vec*)&g_Minigame.wallBall_coinVelocity[i]);
+        }
+    }
 }
 
 // .text:0x001373E0 size:0x5C0 mapped:0x80776474

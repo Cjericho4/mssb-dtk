@@ -1146,7 +1146,9 @@ CameraView* fn_80052734(s32 viewIdx);
 typedef struct {
     u8 _00[0x2C];
     f32 coinGravity; /* 0x2C */
-    u8 _30[0x1C];
+    u8 _30[0x38 - 0x30];
+    f32 unk38;       /* 0x38 */
+    u8 _3C[0x4C - 0x3C];
 } Data219B8; // size: 0x4C
 extern Data219B8 lbl_3_data_219B8;
 extern VecXYZ lbl_3_data_21A48;
