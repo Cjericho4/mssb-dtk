@@ -106,7 +106,7 @@ void fn_3_CC81C(void);
 void fn_3_CCC24(void);
 void fn_3_CD958(void);
 void fn_3_CD968(void);
-void fn_3_CDB48(void);
+void fn_3_CDB48(struct StaC2Particle* p, struct StaC2CDB48Src* src);
 void fn_3_CDD90(void);
 void fn_3_CDFA4(void);
 void fn_3_CE56C(void *arg0, u8 arg1);
@@ -360,6 +360,11 @@ typedef struct StaC2Emitter {
     u8 _pad14[0x20 - 0x14];
     StaC2D00D0Obj* owner;     /* 0x20 */
 } StaC2Emitter;
+
+typedef struct StaC2CDB48Src {
+    u8 _pad0[0x18];
+    Vec pos;        /* 0x18 */
+} StaC2CDB48Src;
 
 void fn_8003403C(f32 a, f32 b);
 void fn_80033CC8(StaC2Particle* obj, s32 arg1);

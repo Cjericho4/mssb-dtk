@@ -275,8 +275,28 @@ void fn_3_CD968(void) {
 }
 
 // .text:0x000CDB48 size:0x248 mapped:0x8070CBDC
-void fn_3_CDB48(void) {
-    return;
+void fn_3_CDB48(StaC2Particle* p, StaC2CDB48Src* src) {
+    f32 ang;
+    s32 n;
+
+    ang = 0.017453292f * (rand() % 360);
+    p->vel.x = 0.01 * (f32)cos(ang);
+    p->vel.z = 0.01 * (f32)sin(ang);
+    p->vel.y = 0.12f;
+    p->unk1C = 0.5f;
+    p->unk1C += ((u32)rand() % 2500) / 1000.0;
+    p->unk38 = 2.0 * p->unk1C;
+    p->unk3C = 6.0 * p->unk1C;
+    p->unk20 = (rand() % 101) / 100.0;
+    n = rand() % 24 + 72;
+    p->unk4A = n;
+    p->unk4F = n;
+    p->pos.x = src->pos.x;
+    p->pos.y = src->pos.y;
+    p->pos.z = src->pos.z;
+    p->unk43 = p->unk24 = 255.0f;
+    p->unk4A = p->unk4F;
+    p->unk48 = 0;
 }
 
 // .text:0x000CDD90 size:0x214 mapped:0x8070CE24
