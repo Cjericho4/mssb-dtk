@@ -83,6 +83,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 ## Almost Matched (do not retry)
 | Function | Issue |
 |---|---|
+| fn_3_12F9D4 | f3/f5 swap for x/z of the barrel position copy; local decl-order permutations exhausted |
 | fn_3_E4EF4 | 34*n buffer size sum: add operand order/slwi scheduling differs (4 lines); all 4-term orderings and groupings tried |
 | fn_3_70768 | final interpolation: target computes z-prevZ into f4 first and uses non-fused fmuls+fadds; only FP register assignment differs (6 lines) |
 | fn_3_3ABF0 | target keeps beq+blr where CW emits bnelr, plus r7/r8 swap for idx vs unkB0 multiplies; ||, goto and decl-order variants tried |
