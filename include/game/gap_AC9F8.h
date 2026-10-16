@@ -39,8 +39,13 @@ typedef struct {
     u8 field_0x1D9;      /* 0x1D9 */
     union { u8 field_0x1DA; s8 field_0x1DA_s8; }; /* 0x1DA */
     u8 _pad5[0x27];      /* 0x1DB-0x201 */
-    u8 field_0x202;      /* 0x202 */
-    u8 field_0x203;      /* 0x203 */
+    union {
+        struct {
+            u8 field_0x202;      /* 0x202 */
+            u8 field_0x203;      /* 0x203 */
+        };
+        u8 field_0x202_team[2];  /* 0x202 */
+    };
     u8 _pad204[0x2];     /* 0x204 */
     s8 field_0x206;      /* 0x206 */
     u8 _pad207[0x15];    /* 0x207 */

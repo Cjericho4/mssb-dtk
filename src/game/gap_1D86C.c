@@ -4,8 +4,8 @@
 #include "game/UnknownHomes_Game.h"
 
 // .text:0x0001D86C size:0x2F0 mapped:0x8065C900
-void fn_3_1D86C(void) {
-    return;
+BOOL fn_3_1D86C(void) {
+    return FALSE;
 }
 
 // .text:0x0001DB5C size:0xD4 mapped:0x8065CBF0
@@ -23,7 +23,23 @@ void fn_3_1DB5C(void) {
 
 // .text:0x0001DC30 size:0x118 mapped:0x8065CCC4
 void fn_3_1DC30(void) {
-    return;
+    BOOL changed;
+    s32 i;
+
+    if (g_GameLogic._13E[g_GameLogic.teamFielding] == 0) {
+        return;
+    }
+    changed = FALSE;
+    for (i = 0; i < 10; i++) {
+        lbl_3_common_bss_34C90.battingOrder[g_GameLogic.teamFielding][i][0].cur = g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][i][0];
+        lbl_3_common_bss_34C90.battingOrder[g_GameLogic.teamFielding][i][0].orig = g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][i][0];
+        lbl_3_common_bss_34C90.battingOrder[g_GameLogic.teamFielding][i][1].cur = g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][i][1];
+        lbl_3_common_bss_34C90.battingOrder[g_GameLogic.teamFielding][i][1].orig = g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][i][1];
+    }
+    changed |= fn_3_1D86C();
+    if (changed) {
+        lbl_3_common_bss_34C90.field_0x202_team[g_GameLogic.teamFielding] = 1;
+    }
 }
 
 // .text:0x0001DD48 size:0x20 mapped:0x8065CDDC

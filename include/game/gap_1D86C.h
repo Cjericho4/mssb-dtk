@@ -4,7 +4,7 @@
 #include "mssbTypes.h"
 #include "game/rep_8C8.h"
 
-void fn_3_1D86C(void);
+BOOL fn_3_1D86C(void);
 void fn_3_1DB5C(void);
 void fn_3_1DC30(void);
 void fn_3_1DD48(void);
