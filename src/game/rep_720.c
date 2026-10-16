@@ -545,6 +545,16 @@ s32 fn_3_164A8(void) {
     }
 }
 
+typedef struct Data3A40Entry {
+    /* 0x00 */ f32 unk0;
+    /* 0x04 */ f32 unk4;
+    /* 0x08 */ f32 unk8;
+    /* 0x0C */ f32 unkC;
+    /* 0x10 */ s16 unk10[2];
+} Data3A40Entry; // size: 0x14
+
+extern Data3A40Entry lbl_3_data_A40[];
+
 typedef struct {
     u8 _pad0[0x40];
     Mtx mtx;         /* 0x40 */
@@ -593,7 +603,46 @@ s32 fn_3_1650C(s32* outX, s32* outY, s32 mode, f32 x, f32 y, f32 z) {
 
 // .text:0x000166F4 size:0x20C mapped:0x80655788
 void fn_3_166F4(void) {
-    return;
+    f32 cosB;
+    f32 dist;
+    f32 angA;
+    f32 sinA;
+    f32 angB;
+    f32 sinB;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+
+    g_pCamera->unk2858 = lbl_3_data_A40[88].unk0;
+    g_pCamera->unk285C = lbl_3_data_A40[88].unk4;
+    g_pCamera->unk2860 = lbl_3_data_A40[88].unk8;
+    g_pCamera->unk289C = lbl_3_data_A40[88].unk10[0];
+    g_pCamera->unk289E = lbl_3_data_A40[88].unk10[1];
+    g_pCamera->unk2878 = lbl_3_data_A40[88].unkC;
+    angA = shortAngleToRad_Capped(g_pCamera->unk289E);
+    dist = 20.0f * (f32)cos(angA);
+    sinA = sin(angA);
+    angB = shortAngleToRad_Capped(g_pCamera->unk289C);
+    cosB = cos(angB);
+    sinB = sin(angB);
+    dx = cosB * dist;
+    dy = 20.0f * sinA;
+    dz = sinB * dist;
+    g_pCamera->unk2890 = g_pCamera->unk2840;
+    g_pCamera->unk2894 = g_pCamera->unk2844;
+    g_pCamera->unk2898 = g_pCamera->unk2848;
+    g_pCamera->unk2858 += cosB * g_pCamera->unk287C;
+    g_pCamera->unk2860 += sinB * g_pCamera->unk287C;
+    g_pCamera->unk2858 += sinB * g_pCamera->unk2880;
+    g_pCamera->unk2860 -= cosB * g_pCamera->unk2880;
+    g_pCamera->unk284C = dx + g_pCamera->unk2858;
+    g_pCamera->unk2850 = dy + g_pCamera->unk285C;
+    g_pCamera->unk2854 = dz + g_pCamera->unk2860;
+    g_pCamera->unk2840 = g_pCamera->unk2858;
+    g_pCamera->unk2844 = g_pCamera->unk285C;
+    g_pCamera->unk2848 = g_pCamera->unk2860;
+    g_pCamera->unk287C = 0.0f;
+    g_pCamera->unk2880 = 0.0f;
 }
 
 // .text:0x00016900 size:0x2A0 mapped:0x80655994
@@ -713,12 +762,6 @@ void fn_3_197E8(void) {
     return;
 }
 
-typedef struct Data3A40Entry {
-    /* 0x00 */ u8 _pad0[0x10];
-    /* 0x10 */ s16 unk10[2];
-} Data3A40Entry; // size: 0x14
-
-extern Data3A40Entry lbl_3_data_A40[];
 
 // .text:0x00019B3C size:0x174 mapped:0x80658BD0
 void fn_3_19B3C(s32 arg0, f32* out) {
