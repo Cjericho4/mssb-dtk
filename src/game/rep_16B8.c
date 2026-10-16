@@ -310,7 +310,27 @@ void fn_3_94BC4(void) {
 
 // .text:0x00094E68 size:0x198 mapped:0x806D3EFC
 void fn_3_94E68(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    u8 gs;
+
+    if (lbl_3_common_bss_32724.someStatusInd == 0 &&
+        (scene->eventID == lbl_3_common_bss_37400.unk46 || lbl_3_common_bss_37400.unk47 == 2) &&
+        (gs = g_GameLogic.gameStatus) != 3 && (gs != 8 || lbl_3_common_bss_37400.unk47 == 0) &&
+        (gs != 0 || lbl_3_common_bss_37400.unk47 != 2)) {
+        if (g_Stats.unk36 != 0) {
+            lbl_80371C30[scene->unkIndex].obj->flags &= ~2;
+            lbl_80371C30[scene->unkIndex + 1].obj->flags &= ~2;
+        } else if (gs <= 1 || gs == 2) {
+            lbl_80371C30[scene->unkIndex].obj->flags |= 2;
+            lbl_80371C30[scene->unkIndex + 1].obj->flags |= 2;
+        } else {
+            lbl_80371C30[scene->unkIndex].obj->flags &= ~2;
+            lbl_80371C30[scene->unkIndex + 1].obj->flags &= ~2;
+        }
+    } else {
+        fn_80034CEC((u32)scene);
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x00095000 size:0x98 mapped:0x806D4094
