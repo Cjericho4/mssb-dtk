@@ -37,6 +37,9 @@ typedef struct {
 
 extern s32 lbl_3_bss_9D90;
 extern Control* lbl_3_bss_9D94;
+extern u8 lbl_3_bss_9D81;
+extern u32 lbl_3_bss_9D8C;
+void fn_800528B4(void);
 
 
 extern u8 lbl_803CBBC0;
@@ -263,8 +266,34 @@ void fn_3_C39C8(void) {
 }
 
 // .text:0x000C3A38 size:0x1F4 mapped:0x80702ACC
-void fn_3_C3A38(void) {
-    return;
+void fn_3_C3A38(CameraView* cam) {
+    Mtx inv;
+    Vec v;
+
+    if (g_GameLogic.gameStatus != 2 || cam == NULL) {
+        lbl_3_bss_9D8C = 0;
+        lbl_3_bss_9D81 = 0;
+        fn_800528B4();
+        return;
+    }
+    if (lbl_3_bss_9D81 != 0) {
+        lbl_3_bss_9D8C = 60;
+        lbl_3_bss_9D81 = 0;
+    }
+    if (lbl_3_bss_9D8C != 0) {
+        v.x = (f32)(rand() % 20 - 10) / 17.0f;
+        v.y = (f32)(rand() % 20 - 10) / 17.0f;
+        v.z = 0.0f;
+        PSMTXInverse(fn_80052768(0)->mtx, inv);
+        PSMTXMultVecSR(inv, &v, &v);
+        cam->pos.x += v.x;
+        cam->pos.y += v.y;
+        cam->pos.z += v.z;
+        cam->target.x += v.x;
+        cam->target.y += v.y;
+        cam->target.z += v.z;
+        lbl_3_bss_9D8C--;
+    }
 }
 
 // .text:0x000C3C2C size:0x268 mapped:0x80702CC0
