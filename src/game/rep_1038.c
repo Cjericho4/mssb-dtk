@@ -6,10 +6,49 @@
 #include "game/gap_97144.h"
 #include "game/rep_EA0.h"
 #include "game/gap_674E0.h"
+#include "game/gap_6C410.h"
+#include "game/gap_6AEC0.h"
+#include "game/gap_219CC.h"
 
 // .text:0x0006BEA4 size:0x15C mapped:0x806AAF38
 void fn_3_6BEA4(void) {
-    return;
+    s32 i;
+    AnimationStruct* anim;
+
+    fn_3_690FC();
+    fn_3_6AEE0();
+    fn_3_6C454();
+    g_UnkSound_32718._07 = 0;
+    for (i = 0; i < 13; i++) {
+        if (lbl_3_common_bss_1323C->unk240[i] < 0) {
+            continue;
+        }
+        anim = g_hugeAnimStruct.AnimationStructPtrs[i];
+        if (anim == NULL) {
+            continue;
+        }
+        anim->unk_25D = lbl_3_common_bss_1323C->unk261[i];
+        if (i <= 8) {
+            lbl_3_common_bss_1323C->unk26E[i] = 0;
+            if (g_Fielders[i].unk178 != -1) {
+                anim->unk34.x = g_Fielders[i].pos[0];
+                anim->unk34.y = g_Fielders[i].pos[1];
+                anim->unk34.z = g_Fielders[i].pos[2];
+                anim->unk40.y = g_Fielders[i].unk48;
+            }
+        } else if (i <= 12) {
+            InMemRunnerType* runner = &g_Runners[i - 9];
+            lbl_3_common_bss_1323C->unk26E[i] = 0;
+            if (runner->rosterID != -1) {
+                anim->unk34.x = runner->position.x;
+                anim->unk34.y = runner->position.y;
+                anim->unk34.z = runner->position.z;
+                anim->unk40.y = runner->runningAngle;
+            }
+        }
+        anim->unk40.x = 0.0f;
+        anim->unk40.z = 0.0f;
+    }
 }
 
 // .text:0x0006C000 size:0xE0 mapped:0x806AB094
