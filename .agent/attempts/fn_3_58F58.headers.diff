@@ -1,0 +1,28 @@
+diff --git a/include/game/UnknownHomes_Game.h b/include/game/UnknownHomes_Game.h
+index b4b8017..e321afc 100644
+--- a/include/game/UnknownHomes_Game.h
++++ b/include/game/UnknownHomes_Game.h
+@@ -604,7 +604,9 @@ typedef struct FieldingLogic {
+     /* 0x114 */ u8 unk114;
+     /* 0x115 */ u8 _pad1d[0x119 - 0x115];
+     /* 0x119 */ u8 unk119;
+-    /* 0x11A */ u8 _pad11A[0x12E - 0x11A];
++    /* 0x11A */ u8 _pad11A[0x11E - 0x11A];
++    /* 0x11E */ u8 unk11E;
++    /* 0x11F */ u8 _pad11F[0x12E - 0x11F];
+     /* 0x12E */ u8 unk12E;
+     /* 0x12F */ u8 unk12F;
+     /* 0x130 */ u8 _pad130[0x133 - 0x130];
+diff --git a/include/game/rep_AC8.h b/include/game/rep_AC8.h
+index 6342571..5271b5b 100644
+--- a/include/game/rep_AC8.h
++++ b/include/game/rep_AC8.h
+@@ -231,7 +231,7 @@ void fn_3_583B8(void);
+ void fn_3_58688(void);
+ void fn_3_58870(void);
+ void fn_3_58E50(void);
+-void fn_3_58F58(void);
++void fn_3_58F58(s32 idx, f32* x, f32* z);
+ void fn_3_591AC(void);
+ void fn_3_59338(void);
+ void fn_3_595C4(void);

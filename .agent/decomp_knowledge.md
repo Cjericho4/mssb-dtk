@@ -227,6 +227,16 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Partner ptr in the wrong saved reg**: don't cache it; `if (obj->partner != NULL) inline(obj->partner);` loads it once into r31 (fn_3_F5C30).
 *   **Zero stores in descending-offset order**: chain them, `obj->vel.x = obj->vel.y = obj->vel.z = 0.0f;` (fn_3_F5C30).
 
+*   **`neg; orc; srawi 31; addi 2`**: `(x <= 0) ? 1 : 2`; `(x > 0) + 1` gives `andc/srwi/addi 1`, `2 - (x <= 0)` gives `cntlzw/rlwnm/subfic` (fn_3_58F58).
+*   **`li rX,0` between a `cmpwi` and its branch**: reset the local just before the if (`col = 0; if (g.field > 30 && ...)`), compare reading the global (fn_3_58F58).
+*   **`mullw rX, <rand result>, rY` operand order**: put the other factor inline, `rand() * (... >> (1 - i)) + 0x1FFF)`; a precomputed `range` local swaps it (fn_3_C19C8).
+*   **`extsh` after s16-returning calls feeding another call**: `s32` locals, cast `(s16)` at the call; s16 locals give `mr` (fn_3_62904).
+*   **Search loop whose found-path recomputes `&arr[i]` and re-tests the field**: `for (...) { if (arr[i].f) { static_inline_check(i); break; } }` (fn_3_62904).
+*   **`blt end` then `bne L; b end` on two guards**: one `if (idx < 0 || g.flag == 0) return;` (fn_3_62904).
+*   **`i + 4` also a call arg**: `lbl_80371C30[i + (scene->unkIndex + 4)]` avoids reusing the arg's CSE (fn_3_12A6C4).
+*   **`lis` order for a table vs a cached global ptr**: place `mg = &g_Minigame;` after the first straight-line store (fn_3_12A6C4).
+*   **Linked-list loop with hoisted float consts (unresolved)**: first float referenced in the body gets f31, rest go up from f23; a literal store before a loop-carried float's first use pushes it down a reg (fn_3_F8878).
+
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
 *   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.
