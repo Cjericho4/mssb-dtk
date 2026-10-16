@@ -288,9 +288,70 @@ void fn_3_14A164(void) {
     pitchingMachinePitching(0x24);
 }
 
+typedef struct {
+    u8 _pad0[0x8];
+    s32 unk8;   // 0x08
+    u8 _padC[0x4];
+    s32 unk10;  // 0x10
+    s32 unk14;  // 0x14
+    u8 _pad18[0x8];
+    s32 unk20;  // 0x20
+    s32 unk24;  // 0x24
+    s32 unk28;  // 0x28
+    s32 unk2C;  // 0x2C
+    u8 _pad30[0xC];
+} Struct_26E40;
+extern Struct_26E40 lbl_3_data_26E40;
+void fn_80033620(struct Struct_14C79C_Arg* arg);
+void fn_80033F64(f32 a, f32 b, f32 c);
+void fn_80033CC8(ListNode_14B9F0* node, s32 arg1);
+
 // .text:0x0014A188 size:0x1F4 mapped:0x8078921C
-void fn_3_14A188(void) {
-    return;
+s32 fn_3_14A188(Struct_14C79C_Arg* arg) {
+    ListNode_14B9F0* node;
+    s32 alpha;
+    s32 count;
+    s32 da;
+    f32 ds;
+
+    count = 0;
+    if (lbl_80366158._28 != 0) {
+        return 0;
+    }
+    fn_80033620(arg);
+    node = arg->node;
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+    do {
+        if (node->field_0x4A != 0) {
+            alpha = node->color[3];
+            fn_80033F64(node->scaleX, node->scaleY, node->velocity.x);
+            fn_80033CC8(node, arg->unk10);
+            if (lbl_3_data_26E40.unk8 - node->field_0x4A < lbl_3_data_26E40.unk10) {
+                ds = (node->velocity.z - (f32)lbl_3_data_26E40.unk14 / 100000.0f) / (f32)lbl_3_data_26E40.unk10;
+                da = (lbl_3_data_26E40.unk28 - lbl_3_data_26E40.unk24) / lbl_3_data_26E40.unk10;
+            } else {
+                ds = ((f32)lbl_3_data_26E40.unk20 / 100000.0f + node->velocity.z) / (f32)(lbl_3_data_26E40.unk8 - lbl_3_data_26E40.unk10);
+                da = (lbl_3_data_26E40.unk2C - lbl_3_data_26E40.unk28) / (lbl_3_data_26E40.unk8 - lbl_3_data_26E40.unk10);
+            }
+            alpha += da;
+            if (alpha < 0) {
+                alpha = 0;
+            }
+            if (alpha > 0xFF) {
+                alpha = 0xFF;
+            }
+            node->color[3] = alpha;
+            node->scaleX += ds;
+            node->scaleY = node->scaleX;
+            node->velocity.x += node->velocity.y;
+            if (--node->field_0x4A != 0) {
+                count++;
+            }
+        }
+        node = node->next;
+    } while (node != NULL);
+    return count == 0;
 }
 
 // .text:0x0014A37C size:0x2B0 mapped:0x80789410
