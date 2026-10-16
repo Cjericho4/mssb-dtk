@@ -156,7 +156,7 @@ void fn_3_E7350(void);
 void fn_3_E7364(s32 index);
 void fn_3_E7388(void);
 void fn_3_E7424(void);
-void fn_3_E751C(void);
+struct StadiumModel* fn_3_E751C(s32 idx, Mtx m);
 void fn_3_E763C(void);
 typedef void (*StaC6ObjFn)();
 typedef struct StaC6SetupObj {

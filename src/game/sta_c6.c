@@ -9,6 +9,21 @@ extern long rand(void);
 extern u32 lbl_3_data_19018[3];
 extern u8 lbl_3_bss_AE80[8];
 
+typedef struct StaC6PlacedObj {
+    /* 0x00 */ VecXYZ pos;
+    /* 0x0C */ f32 rotY;
+    /* 0x10 */ u8 _pad10[0x4];
+} StaC6PlacedObj; // size: 0x14
+
+typedef struct StaC6Bss_AEB4 {
+    /* 0x00 */ StaC6PlacedObj* objs;
+    /* 0x04 */ u8 _pad4[0x28];
+} StaC6Bss_AEB4;
+
+extern StaC6Bss_AEB4 lbl_3_bss_AEB4;
+extern VecXYZ lbl_3_data_19644[7];
+extern f32 lbl_3_data_19698[7];
+
 // .text:0x000E59B4 size:0x68 mapped:0x80724A48
 void fn_3_E59B4(ActorObject *arg0) {
     void *boneData = arg0->wrapper->boneData;
@@ -258,8 +273,21 @@ void fn_3_E7424(void) {
 }
 
 // .text:0x000E751C size:0x120 mapped:0x807265B0
-void fn_3_E751C(void) {
-    return;
+struct StadiumModel* fn_3_E751C(s32 idx, Mtx m) {
+    Control ctrl;
+    StadiumObjectElem* elem;
+
+    ctrl.type = 0;
+    elem = &lbl_3_common_bss_350E4->src[idx];
+    if (elem->unkC1 <= 7) {
+        CTRLSetTranslation(&ctrl, lbl_3_bss_AEB4.objs[idx].pos.x, -0.04f, lbl_3_bss_AEB4.objs[idx].pos.z);
+        CTRLSetRotation(&ctrl, 0.0f, lbl_3_bss_AEB4.objs[idx].rotY, 0.0f);
+    } else {
+        CTRLSetTranslation(&ctrl, lbl_3_data_19644[elem->unkC3].x, -0.04f, lbl_3_data_19644[elem->unkC3].z);
+        CTRLSetRotation(&ctrl, 0.0f, lbl_3_data_19698[elem->unkC3], 0.0f);
+    }
+    CTRLBuildMatrix(&ctrl, m);
+    return elem->unk_78;
 }
 
 // .text:0x000E763C size:0x3F0 mapped:0x807266D0

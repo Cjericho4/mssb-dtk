@@ -587,7 +587,8 @@ typedef struct StadiumObjectElem {
     u8 _pad_0xb4[0xC0 - 0xB4];       /* 0xB4 */
     u8 unkC0;                         /* 0xC0 */
     u8 unkC1;                         /* 0xC1 */
-    u8 _pad_0xc2[0xC4 - 0xC2];       /* 0xC2 */
+    u8 unkC2;                         /* 0xC2 */
+    u8 unkC3;                         /* 0xC3 */
     u8 unkC4;                         /* 0xC4 */
     u8 _pad_0xc5;                     /* 0xC5 */
     u8 unkC6;                         /* 0xC6 */
