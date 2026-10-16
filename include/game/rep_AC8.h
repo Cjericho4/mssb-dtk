@@ -150,9 +150,9 @@ void fn_3_42CDC(void);
 void fn_3_43038(s32 fielderIndex);
 void fn_3_433E0(void);
 void fn_3_447C4(s32 idx);
-void fn_3_45394(void);
+void fn_3_45394(s32 idx);
 void fn_3_455B4(void);
-void fn_3_45860(void);
+void fn_3_45860(s32 idx);
 void fn_3_4597C(void);
 void fn_3_45B88(void);
 void fn_3_45E98(void);
@@ -205,7 +205,14 @@ void fn_3_52F4C(s32 fielderIdx, f32 x, f32 z);
 void fn_3_530EC(int index);
 int fn_3_53130(s32 temp);
 void fn_3_5372C(void);
-typedef struct {
+typedef struct FielderActionEntry {
+    s32 unk0;
+    s32 unk4;
+} FielderActionEntry; // size: 0x8
+
+typedef union {
+    FielderActionEntry actions[29];
+    struct {
     s32 unk0;
     u8 _pad4[0x60 - 0x4];
     s32 unk60;
@@ -220,6 +227,7 @@ typedef struct {
     u8 _padB4[0xD8 - 0xB4];
     s32 unkD8;
     u8 _pad2[0xE8 - 0xDC];
+    };
 } Struct_3C40;
 extern Struct_3C40 lbl_3_data_3C40;
 void fn_3_53EE8(s32 idx);
