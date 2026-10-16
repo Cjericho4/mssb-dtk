@@ -87,6 +87,8 @@ extern void minigamesSetSomePointers2(void);
 extern void fn_80035B50(s32 arg0);
 extern void fn_80018B38(void);
 extern int lbl_3_data_69D0;
+u32 fn_80024DB0(CommonBss32724Timer* timer);
+void fn_80024FA4(AnimLevel1** anim, s32 arg1, CommonBss32724Timer* timer, s32 arg3);
 extern f32 lbl_3_data_22694[6];
 extern s16 lbl_3_data_226AC[8];
 
@@ -763,7 +765,31 @@ void fn_3_11A92C(HugeAnimEntry2D94* entry, s32 idx) {
 
 // .text:0x0011AB2C size:0x140 mapped:0x80759BC0
 void fn_3_11AB2C(void) {
-    return;
+    s32 idx;
+    HugeAnimEntry2D94* entry;
+    CommonBss32724Timer* timer;
+
+    idx = 2;
+    if (g_d_GameSettings.GameModeSelected == 2) {
+        idx = 0;
+    }
+    entry = &g_hugeAnimStruct.entries_2D94[idx];
+    if (entry != NULL) {
+        entry->unk_26 = 1;
+        fn_3_11A92C(entry, idx);
+        if (g_Pitcher.pitcherActionState >= 2 && lbl_80366158._28 == 0) {
+            timer = &lbl_3_common_bss_32724.timer10;
+            if (timer != NULL) {
+                lbl_3_common_bss_32724.timer10.flag80 = 1;
+            }
+            fn_80024DB0(timer);
+            fn_80024FA4(&g_hugeAnimStruct.entries_68[idx].unk34, lbl_3_common_bss_32724.unk30, timer, -1);
+        } else if (g_Pitcher.pitcherActionState < 2 && lbl_3_common_bss_32724.timer10.unkE == 0) {
+            lbl_3_common_bss_32724.timer10.unkC = 0;
+            lbl_3_common_bss_32724.timer10.unk0 = lbl_3_common_bss_32724.timer10.unkC;
+            lbl_3_common_bss_32724.timer10.unkE = 1;
+        }
+    }
 }
 
 // .text:0x0011AC6C size:0xAF0 mapped:0x80759D00

@@ -897,8 +897,22 @@ Struct_14D6D4_Node* listHead;    // 0x0C
 s32 field10;                     // 0x10
 } Struct_14D6D4_Input;
 
+typedef struct CommonBss32724Timer {
+    /* 0x00 */ f32 unk0;
+    /* 0x04 */ u8 _pad4[0x8];
+    /* 0x0C */ u16 unkC;
+    /* 0x0E */ s16 unkE;
+    /* 0x10 */ u8 _pad10;
+    /* 0x11 */ u8 flag80 : 1;
+    /* 0x11 */ u8 _bits11 : 7;
+    /* 0x12 */ u8 _pad12[0x20 - 0x12];
+} CommonBss32724Timer; // size: 0x20
+
 typedef struct CommonBss_32724 {
-    /* 0x00 */ u8 _pad0[0x6C];
+    /* 0x00 */ u8 _pad0[0x10];
+    /* 0x10 */ CommonBss32724Timer timer10;
+    /* 0x30 */ s32 unk30;
+    /* 0x34 */ u8 _pad34[0x6C - 0x34];
     /* 0x6C */ s32 field6C;      // From fn_3_14D6D4
     /* 0x70 */ s32 unk70;
     /* 0x74 */ s32 unk74;
