@@ -540,9 +540,26 @@ void fn_3_75434(void) {
     }
 }
 
+extern f32 lbl_3_data_5E98[6];
+extern f32 lbl_3_data_5F90[12];
 // .text:0x000754B8 size:0xA8 mapped:0x806B454C
 void fn_3_754B8(void) {
-    return;
+    g_Pitcher.pitcherActionState = 0;
+    g_Pitcher.currentStateFrameCounter = 0;
+    g_Pitcher.pitchSpeedScaler = lbl_3_data_5F90[0];
+    g_Pitcher.decelerationFactor = lbl_3_data_5F90[1];
+    g_Pitcher.centerOfStrikeZone.x = 0.5f * (lbl_3_data_5E98[0] + lbl_3_data_5E98[1]);
+    g_Pitcher.centerOfStrikeZone.z = 0.5f * (lbl_3_data_5E98[2] + lbl_3_data_5E98[3]);
+    g_Pitcher.strikeZoneLeft = lbl_3_data_5E98[0];
+    g_Pitcher.strikeZoneRight = lbl_3_data_5E98[1];
+    g_Pitcher.beginningOfStrikeCheckZ = lbl_3_data_5E98[2];
+    g_Pitcher.endingOfStrikeCheckZ = lbl_3_data_5E98[3];
+    g_Pitcher.pitcher.x = lbl_3_data_446C.x;
+    g_Pitcher.pitcher.z = lbl_3_data_446C.z;
+    g_Pitcher.windupCountdownUntilBallReleased = 100;
+    g_Pitcher.pitchWindUpCountDown = 100;
+    g_Pitcher.curvePitchWindupFrames = 100;
+    g_Pitcher.playStartOfGameAnimation = 1;
 }
 
 // .text:0x00075560 size:0x45C mapped:0x806B45F4
