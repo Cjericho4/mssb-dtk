@@ -17,6 +17,9 @@ typedef struct {
     /* 0x34 */ u8 paused;
 } StaC0Bss_9F38;
 extern StaC0Bss_9F38 lbl_3_bss_9F38;
+extern u32 lbl_3_bss_9F3C;
+extern s8* lbl_3_bss_9F48;
+extern u32 fn_800247E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 
 // .text:0x000C9744 size:0x134 mapped:0x807087D8
 void fn_3_C9744(void) {
@@ -88,9 +91,40 @@ void fn_3_C9AC8(void) {
     GXSetTevIndWarp(GX_TEVSTAGE1, GX_IND_TEX_STAGE_0, GX_FALSE, GX_FALSE, GX_ITM_0);
 }
 
+static inline s8 getTexel(u32 x, u32 y) {
+    return lbl_3_bss_9F48[fn_800247E4(x, y, 0x80, 2)];
+}
+
 // .text:0x000C9B5C size:0x138 mapped:0x80708BF0
-void fn_3_C9B5C(void) {
-    return;
+void fn_3_C9B5C(ActorObject* arg0) {
+    u32 x;
+    u32 y;
+    s32 prev;
+    u32 idx;
+    s32 tmp;
+
+    if (g_GameLogic.gameStatus == GAME_STATUS_AT_BAT || g_GameLogic.gameStatus == GAME_STATUS_DEFAULT) {
+        arg0->unk90_bit0 = 0;
+        return;
+    }
+    arg0->unk90_bit0 = 1;
+    if (lbl_3_bss_9F3C < 3) {
+        lbl_3_bss_9F3C++;
+        return;
+    }
+    for (x = 0; x < 0x80; x++) {
+        for (y = 0; y < 0x40; y++) {
+            if (y == 0) {
+                prev = getTexel(x, 0x3F);
+            }
+            idx = fn_800247E4(x, y, 0x80, 2);
+            tmp = lbl_3_bss_9F48[idx];
+            lbl_3_bss_9F48[idx] = prev;
+            prev = tmp;
+        }
+    }
+    lbl_3_bss_9F3C = 0;
+    DCFlushRange(lbl_3_bss_9F48, 0x4000);
 }
 
 // .text:0x000C9C94 size:0x120 mapped:0x80708D28
