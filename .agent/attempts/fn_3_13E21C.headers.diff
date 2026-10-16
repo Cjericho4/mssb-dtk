@@ -1,0 +1,62 @@
+diff --git a/include/game/rep_36D8.h b/include/game/rep_36D8.h
+index 81f42f0..60558f1 100644
+--- a/include/game/rep_36D8.h
++++ b/include/game/rep_36D8.h
+@@ -24,7 +24,13 @@ void fn_3_13DEA4(void);
+ struct CameraView;
+ void fn_3_13DFBC(struct CameraView* cam);
+ void fn_3_13E174(u8 mode);
+-void fn_3_13E21C(f32* arg0);
++typedef struct Struct_13E21C_Arg {
++    u8 _pad0[0x18];
++    f32 basePos; /* 0x18 */
++    s16 timer;   /* 0x1C */
++    u8 active;   /* 0x1E */
++} Struct_13E21C_Arg;
++void fn_3_13E21C(Struct_13E21C_Arg* arg0);
+ void fn_3_13E3A4(f32* arg0);
+ void fn_3_13E670(void);
+ void fn_3_13E6D4(void);
+diff --git a/src/game/rep_36D8.c b/src/game/rep_36D8.c
+index 528d6ea..59e63f4 100644
+--- a/src/game/rep_36D8.c
++++ b/src/game/rep_36D8.c
+@@ -10,6 +10,7 @@
+ #include "musyx/musyx.h"
+ #include "game/gap_157DB8.h"
+ #include "game/m_sound.h"
++#include "game/kinoko.h"
+ 
+ // .text:0x0013C7BC size:0xDBC mapped:0x8077B850
+ void fn_3_13C7BC(void) {
+@@ -213,7 +214,8 @@ typedef struct {
+     f32 unk10;    /* 0x10 */
+     u8 _pad14[0x18 - 0x14];
+     f32 unk18;    /* 0x18 */
+-    u8 _pad1C[0x30 - 0x1C];
++    u8 _pad1C[0x2C - 0x1C];
++    f32 unk2C;    /* 0x2C */
+     f32 unk30[2]; /* 0x30 */
+     f32 unk38[2]; /* 0x38 */
+     f32 unk40[2]; /* 0x40 */
+@@ -238,8 +240,10 @@ void fn_3_13E174(u8 mode) {
+     fn_800528AC((void (*)(void))fn_3_13DFBC);
+ }
+ 
++extern s16 lbl_3_data_21924[4];
++
+ // .text:0x0013E21C size:0x188 mapped:0x8077D2B0
+-void fn_3_13E21C(f32* arg0) {
++void fn_3_13E21C(Struct_13E21C_Arg* arg0) {
+     return;
+ }
+ 
+@@ -256,7 +260,7 @@ void fn_3_13E670(void) {
+         return;
+     }
+     if ((u8)g_Minigame._CCE[0] != 0) {
+-        fn_3_13E21C(&g_Minigame._CB0);
++        fn_3_13E21C((Struct_13E21C_Arg*)&g_Minigame._CB0);
+         return;
+     }
+     fn_3_13E3A4(&g_Minigame._CB0);

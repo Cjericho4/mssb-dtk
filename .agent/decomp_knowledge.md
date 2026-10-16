@@ -146,6 +146,14 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Inlined switch returning a value with no default** leaves the result reg unset; a static inline copy reproduces it (fn_3_16058, 161C0, 16328).
 *   **try_function.py restores only the function body**: helper inlines from a failed candidate stay in the file; reset the file between candidates.
 
+*   **`subfic/cntlzw/srwi/or.` for adjacent-constant compares**: bitwise or, `(x == 11) | (x == 12)` (fn_3_C625C) — another range-merge workaround.
+*   **`addi rX,idx,1; slwi; lwzx`** instead of folded `lwz 0x8(r)`: `arr[(s32)(u16field + 1)]` (fn_3_912B4).
+*   **Every switch case sets a flag FALSE**: `goto` one shared `flag = FALSE;` label (fn_3_C9878). Writing `set->entries[view][i].val[flag]` directly (no element ptr) gave the target's two parallel pointers.
+*   **Repeated GXPosition3f32/GXColor1u32 vertex blocks**: a plain 4-iteration `for` loop; MWCC unrolls to the `lfsu` form (fn_3_1480E0).
+*   **Byte field loaded before an if/else computing a delta**: read it above (`alpha = node->color[3];`), add after (`alpha += da;`) (fn_3_14CBB4).
+*   **`rand() % range - range / 2`**: keep `range / 2` inline, no `half` local (fn_3_13DFBC).
+*   **Global in a saved reg but a local pointer mismatches**: use the global directly; keep a pointer only for the other base (fn_3_1589C4).
+
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
 *   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.

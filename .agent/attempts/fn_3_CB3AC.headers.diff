@@ -1,0 +1,50 @@
+diff --git a/include/UnknownHeaders.h b/include/UnknownHeaders.h
+index e954481..7138a6a 100644
+--- a/include/UnknownHeaders.h
++++ b/include/UnknownHeaders.h
+@@ -115,7 +115,9 @@ typedef struct AnimationStruct {
+     s8 unk252;          /* 0x252 */
+     u8 _rest253;
+     s8 unk254;          /* 0x254 */
+-    u8 _rest255[0x8];
++    u8 _rest255[0x5];
++    u8 unk25A;          /* 0x25A */
++    u8 _rest25B[0x2];
+     u8 unk_25D; /* 0x25D */
+     u8 _rest2[0x279 - 0x25E];
+     u8 unk279;          /* 0x279 */
+@@ -741,7 +743,8 @@ typedef struct CommonBss_35154 {
+     /* 0x440 */ f32 unk_440;
+     /* 0x444 */ f32 unk_444;
+     /* 0x448 */ f32 unk_448;
+-    /* 0x44C */ u8 _pad3[0x18];
++    /* 0x44C */ Vec unk_44C;
++    /* 0x458 */ u8 _pad458[0xC];
+     /* 0x464 */ s16 unk_464;
+     /* 0x466 */ u8 someFlag;
+     /* 0x467 */ u8 unk_467;
+diff --git a/include/game/rep_2390.h b/include/game/rep_2390.h
+index 48bf5ec..e2deff0 100644
+--- a/include/game/rep_2390.h
++++ b/include/game/rep_2390.h
+@@ -4,6 +4,6 @@
+ #include "mssbTypes.h"
+ 
+ void fn_3_CB3AC(void);
+-void fn_3_CB538(void);
++void fn_3_CB538(s32 arg0);
+ 
+ #endif // !__GAME_rep_2390_H_
+diff --git a/src/game/rep_1E08.c b/src/game/rep_1E08.c
+index 4072d35..ad9c7bf 100644
+--- a/src/game/rep_1E08.c
++++ b/src/game/rep_1E08.c
+@@ -207,7 +207,7 @@ void fn_3_BD504(s32 flag, f32 f1, f32 f2, f32 f3) {
+             if (starType < 1) {       // 0: 000BD594-000BD5B8 (fall through to end)
+                 // Do nothing, fall through to end
+             } else if (starType < 3) { // 1-2: 000BD5AC-000BD5B0
+-                fn_3_CB538();          // 000BD5B4-000BD5B8
++                fn_3_CB538(starType);          // 000BD5B4-000BD5B8
+             } else {                   // 3-4: 000BD5B0-000BD5B8
+                 fn_3_160814();         // 000BD5B8-000BD5BC (actually goes to 0xBD5F4 then 0xBD620)
+             }

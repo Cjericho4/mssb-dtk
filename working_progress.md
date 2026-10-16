@@ -98,6 +98,10 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_88C24 | regalloc only: loop counter r9 vs hoisted g_FieldingLogic._108 r3, reversed in target (.agent/attempts/fn_3_88C24.c) |
 | fn_3_8A618 | regalloc in unrolled 4-runner loop (ptr r5/_107 r4 vs r6/r5) (.agent/attempts/fn_3_8A618.c + .headers.diff) |
 | fn_3_678B8 | file-static bss/data array sub-bases off one base — known unfixable; needs 10-arg fn_3_67EF0 proto (.agent/attempts/fn_3_678B8.c analysis) |
+| fn_3_ECBB0 | dead double `b end` after 2-case switch — known unfixable; plus add operand order (.agent/attempts/fn_3_ECBB0.c) |
+| fn_3_CB3AC | ~48 lines: target keeps extra base reg for segment array + separate byte-offset counter over 6660 pair table; MWCC folds to lhzu walk (.agent/attempts/fn_3_CB3AC.c + .headers.diff) |
+| fn_3_CB538 | regalloc: arg0/idx r28/r29 swapped, one stwx vs add+stw; decl-order brute force failed (.agent/attempts/fn_3_CB538.c + .headers.diff) |
+| fn_3_13E21C | regalloc only (~19 lines): strength-reduced loop ptr/counter reg order (.agent/attempts/fn_3_13E21C.c + .headers.diff) |
 
 **Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
 | fn_3_24EA0 | register allocation / scheduling (see git log) |
