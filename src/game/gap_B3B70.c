@@ -6,6 +6,8 @@
 #include "game/rep_AC8.h"
 #include "game/rep_1188.h"
 #include "game/rep_13B8.h"
+#include "game/gap_6D4A0.h"
+#include <string.h>
 
 // .text:0x000B3B70 size:0x60 mapped:0x806F2C04
 void fn_3_B3B70(void) {
@@ -75,9 +77,33 @@ void fn_3_B3FE8(void) {
 }
 
 // .text:0x000B4124 size:0x184 mapped:0x806F31B8
-void fn_3_B4124(void) {
-    return;
+void fn_3_B4124(s32 team, s32 slot, s32 charId, s32 hand) {
+    if (team == 0 && slot == 0) {
+        g_GameLogic.battingOrderAndPositionMapping[team][0][0] = slot;
+    }
+    g_GameLogic.battingOrderAndPositionMapping[team][slot + 1][0] = slot;
+    g_GameLogic.battingOrderAndPositionMapping[team][slot + 1][1] = slot;
+    lbl_80354720[team][slot].unk0 = slot;
+    lbl_80354720[team][slot].unk1 = slot;
+    lbl_80354720[team][slot].unk2 = slot;
+    if (slot >= 0 && slot <= 8) {
+        fn_80011BE4(slot);
+    }
+    memcpy(&inMemRoster[team][slot], &lbl_8034E9A0[charId], sizeof(CharacterStats));
+    if (hand >= 0) {
+        if (hand == 0 || hand == 1) {
+            inMemRoster[team][slot].stats.FieldingArm = 0;
+        } else {
+            inMemRoster[team][slot].stats.FieldingArm = 1;
+        }
+        if (hand == 0 || hand == 2) {
+            inMemRoster[team][slot].stats.BattingStance = 0;
+        } else {
+            inMemRoster[team][slot].stats.BattingStance = 1;
+        }
+    }
 }
+
 
 // .text:0x000B42A8 size:0x140 mapped:0x806F333C
 void fn_3_B42A8(void) {

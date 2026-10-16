@@ -14,7 +14,16 @@ void fn_3_B3C94(u8 arg0);
 void fn_3_B3CAC(u8 arg0);
 void fn_3_B3CD4(void);
 void fn_3_B3FE8(void);
-void fn_3_B4124(void);
+typedef struct LineUpEntry {
+    s8 unk0;
+    s8 unk1;
+    s8 unk2;
+    u8 _pad3;
+} LineUpEntry; /* size: 0x4 */
+extern LineUpEntry lbl_80354720[2][9];
+void fn_80011BE4(s32 slot);
+
+void fn_3_B4124(s32 team, s32 slot, s32 charId, s32 hand);
 void fn_3_B42A8(void);
 void fn_3_B43E8(void);
 void fn_3_B482C(void);
