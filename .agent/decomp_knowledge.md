@@ -106,6 +106,15 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **`u8 &= 0xFB`** gives `andi.`; `&= ~4` gives `rlwinm` (fn_3_D196C).
 *   **u8 passed to several calls and compared with a u16**: declare the local `s32` (fn_3_158264).
 
+*   **Code repeated across a sibling chain** (F1750/F3BB0/F3AE0): turn the matched sibling into a `static inline` and call it; fixes float load order. But a standalone function whose body is also inlined elsewhere must keep its own body (fn_3_F38D4/F37BC).
+*   **Stack Vec passed as three float pointers**: one `Vec pos` with `&pos.x, &pos.y, &pos.z`, not three f32 locals (fn_3_C414C).
+*   **Missing `frsp` after acos**: `(f32)acos(x)`.
+*   **extsb'd index in a saved reg**: local is `s32 idx = obj->s8field`. `lbz r0; extsb` on byte data = `u8*` buffer read into `s8` temps.
+*   **Avoid range-merge of compares**: compare the global directly (`g_GameLogic.gameStatus == 0x1C || == 0x1B || == 0x1D`), no u8 local (fn_3_12C3F0).
+*   **`li -1; stb` then `cmpwi 1` without extsb**: field is s8.
+*   **PSVECScale**: header prototype is `(src, f32, dst)`; call as `PSVECScale(src, k, dst)` for the real `(src, dst, scale)` registers.
+*   **Callee reads an r4 the caller never sets**: pass the caller's own 2nd param through (fn_3_F1750 → fn_800B4A94).
+
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Same-file static data off one base register** (`addi r4,r31,0x4f44` from `&lbl_3_data_1C0A8`): extern symbols reload `lis`/`addi` per use (fn_3_1048E0).
 *   **Adjacent-constant compares merged into a range check** (`== 9 || == 10` → `subi`/`cmplwi 1`) when the target keeps them separate (fn_3_B7CDC, fn_3_B7C2C). **Possible workaround** (worked for fn_3_5C418): compare as unsigned, `(u32)x == 1 || (u32)x == 2`, and write intended ranges as `(u8)(x - 0x13) <= 3`. Retry B7CDC/B7C2C with this.

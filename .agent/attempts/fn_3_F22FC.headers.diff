@@ -1,0 +1,43 @@
+diff --git a/include/UnknownHeaders.h b/include/UnknownHeaders.h
+index 3afbc97..ee9a3e4 100644
+--- a/include/UnknownHeaders.h
++++ b/include/UnknownHeaders.h
+@@ -576,7 +576,11 @@ typedef struct StadiumObjectElem {
+     u8 unk9D;                         /* 0x9D */
+     u8 _pad_0x9e[0xA9 - 0x9E];       /* 0x9E */
+     u8 unk_A9;                        /* 0xA9 */
+-    u8 _pad_0xaa[0xC0 - 0xAA];       /* 0xAA */
++    u8 _pad_0xaa[0xAC - 0xAA];       /* 0xAA */
++    f32 unkAC;                        /* 0xAC */
++    u8 _pad_0xb0[0xB8 - 0xB0];       /* 0xB0 */
++    f32 unkB8;                        /* 0xB8 */
++    f32 unkBC;                        /* 0xBC */
+     u8 unkC0;                         /* 0xC0 */
+     u8 unkC1;                         /* 0xC1 */
+     u8 _pad_0xc2[0xC4 - 0xC2];       /* 0xC2 */
+diff --git a/include/game/UnknownHomes_Game.h b/include/game/UnknownHomes_Game.h
+index 6619efc..79620bf 100644
+--- a/include/game/UnknownHomes_Game.h
++++ b/include/game/UnknownHomes_Game.h
+@@ -2222,7 +2222,7 @@ typedef struct Fielder {
+     /* 0x200 */ u8 _pad3c[0x215 - 0x200];
+     /* 0x215 */ u8 unk215;
+     /* 0x216 */ u8 unk216;
+-    /* 0x217 */ u8 _pad217;
++    /* 0x217 */ u8 unk217;
+     /* 0x218 */ u8 unk218;
+     /* 0x219 */ u8 _pad3c2[0x21C - 0x219];
+     /* 0x21C */ f32 unk21C;
+diff --git a/include/game/sta_c5.h b/include/game/sta_c5.h
+index f1a42b7..c0779ee 100644
+--- a/include/game/sta_c5.h
++++ b/include/game/sta_c5.h
+@@ -213,7 +213,7 @@ void fn_3_F1750(StaC5PlacedObj* obj, struct hugeAnimStruct* anim);
+ void fn_3_F18A4(StaC5PlacedObj* obj);
+ void fn_3_F193C(void);
+ void fn_3_F1E2C(void);
+-void fn_3_F22FC(void);
++void fn_3_F22FC(StaC5PlacedObj* obj, s32 fielderIdx);
+ void fn_3_F2448(void);
+ void fn_3_F2724(void);
+ void fn_3_F2938(void);
