@@ -173,13 +173,27 @@ typedef struct StaC2D00D0Obj {
     u32 handle;                 /* 0xA8 */
 } StaC2D00D0Obj;
 
+typedef struct StaC2D0284Obj {
+    Control control;            /* 0x00 */
+    u8 _pad3C[0x90 - 0x3C];
+    u8 flag90 : 1;              /* 0x90 */
+    u8 flag90_rest : 7;
+    u8 _pad91;
+    u8 alpha;                   /* 0x92 */
+    u8 _pad93[0xA0 - 0x93];
+    StaC2D00D0Src* src;         /* 0xA0 */
+    Vec base;                   /* 0xA4 */
+    Vec offset;                 /* 0xB0 */
+    f32 scale;                  /* 0xBC */
+} StaC2D0284Obj;
+
 BOOL fn_3_CFB44(struct StaC2Emitter* em);
 void fn_3_CFD58(StaC2D00D0Obj* obj);
 void fn_80033964(u32 handle);
 void fn_3_D00CC(void);
 void fn_3_D00D0(Control* ctrl);
 void fn_3_D0280(void);
-void fn_3_D0284(void);
+void fn_3_D0284(Control* ctrl);
 void fn_3_D0490(void);
 void fn_3_D0528(void);
 s32 fn_3_D052C(void);

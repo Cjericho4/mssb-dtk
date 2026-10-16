@@ -1,5 +1,6 @@
 #include "Dolphin/vec.h"
 #include <string.h>
+#include <math.h>
 #include "game/sta_c2.h"
 #include "game/rep_1838.h"
 #include "game/rep_AC8.h"
@@ -586,8 +587,44 @@ void fn_3_D0280(void) {
 }
 
 // .text:0x000D0284 size:0x20C mapped:0x8070F318
-void fn_3_D0284(void) {
-    return;
+void fn_3_D0284(Control* ctrl) {
+    StaC2D0284Obj* obj = (StaC2D0284Obj*)ctrl;
+    u8 state = obj->src->state;
+    f32 ang;
+    s32 a;
+
+    if (state == 0) {
+        if (obj->flag90) {
+            obj->flag90 = 0;
+        }
+        if (obj->alpha != 0xFF) {
+            obj->alpha = 0xFF;
+        }
+        if (obj->scale != 1.0) {
+            obj->scale = 1.0f;
+        }
+    } else {
+        if (!obj->flag90) {
+            obj->flag90 = 1;
+        }
+        CTRLSetRotation(&obj->control, 0.0f, obj->src->rotY, 0.0f);
+        ang = 0.017453292f * (rand() % 360);
+        obj->offset.x = obj->scale * (f32)cos(ang);
+        obj->offset.z = obj->scale * (f32)sin(ang);
+        CTRLSetTranslation(&obj->control, obj->base.x + obj->offset.x, 0.0f, obj->base.z + obj->offset.z);
+        if (state == 3) {
+            a = obj->alpha;
+            a -= 1.7f;
+            if (a < 0) {
+                a = 0;
+            }
+            obj->alpha = a;
+            obj->scale -= 0.006666666666666667;
+            if (obj->scale < 0.0f) {
+                obj->scale = 0.0f;
+            }
+        }
+    }
 }
 
 // .text:0x000D0490 size:0x98 mapped:0x8070F524
