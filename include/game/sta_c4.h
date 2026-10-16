@@ -39,6 +39,9 @@ typedef struct StaC4AnimObj {
     /* 0x91 */ u8 _pad91[0x9C - 0x91];
     /* 0x9C */ f32 animTime;
     /* 0xA0 */ u8 slotId;
+    /* 0xA1 */ u8 _padA1;
+    /* 0xA2 */ u8 texFrame;
+    /* 0xA3 */ u8 tickCount;
 } StaC4AnimObj;
 void fn_3_F85B0(void);
 void fn_3_F8878(void);
@@ -46,7 +49,7 @@ void fn_3_F8ABC(void);
 void fn_3_F8B04(void);
 void fn_3_F8B30(void);
 void fn_3_F8B34(void);
-void fn_3_F8BA8(void);
+void fn_3_F8BA8(StaC4AnimObj* obj);
 void fn_3_F8D00(void);
 void fn_3_F8E20(void);
 void fn_3_F9088(VecXYZ* pos, s32 idx);

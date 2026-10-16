@@ -9,6 +9,7 @@
 #include "game/gap_16C410.h"
 #include "game/rep_3448.h"
 #include "game/sta_c2.h"
+#include "C3/unktypes.h"
 
 extern GXTexObj lbl_3_bss_B640;
 
@@ -100,8 +101,55 @@ void fn_3_F8B34(void) {
 }
 
 // .text:0x000F8BA8 size:0x158 mapped:0x80737C3C
-void fn_3_F8BA8(void) {
-    return;
+/* Minimal views of the C3 Actor -> sBone -> DODisplayObj chain (C3/geoPalette.h can't be included here). */
+typedef struct StaC4DispObj {
+    /* 0x00 */ u8 _pad0[0x10];
+    /* 0x10 */ DisplayData* displayData;
+} StaC4DispObj;
+
+typedef struct StaC4Bone {
+    /* 0x00 */ u8 _pad0[0x14];
+    /* 0x14 */ StaC4DispObj* dispObj;
+} StaC4Bone;
+
+typedef struct StaC4Actor {
+    /* 0x00 */ u8 _pad0[0x18];
+    /* 0x18 */ StaC4Bone** boneArray;
+} StaC4Actor;
+
+extern u8* lbl_3_bss_B63C;
+extern u32 fn_800247E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+
+void fn_3_F8BA8(StaC4AnimObj* obj) {
+    DisplayStateList* state = ((StaC4Actor*)obj->animState->actor)->boneArray[0]->dispObj->displayData->displayStateList;
+    u32 x;
+    u32 y;
+    s8 prev;
+    s8 cur;
+    u32 off;
+
+    if (obj->tickCount != 0 && obj->tickCount % 3 == 0) {
+        obj->texFrame++;
+        if (obj->texFrame > 25) {
+            obj->texFrame = 10;
+            obj->tickCount = 0;
+        }
+        state->setting &= ~0x1FFF;
+        state->setting |= obj->texFrame;
+        for (x = 0; x < 0x80; x++) {
+            for (y = 0; y < 0x80; y++) {
+                if (y == 0) {
+                    prev = lbl_3_bss_B63C[fn_800247E4(x, 0x7F, 0x80, 2)];
+                }
+                off = fn_800247E4(x, y, 0x80, 2);
+                cur = lbl_3_bss_B63C[off];
+                lbl_3_bss_B63C[off] = prev;
+                prev = cur;
+            }
+        }
+        DCFlushRange(lbl_3_bss_B63C, 0x8000);
+    }
+    obj->tickCount++;
 }
 
 // .text:0x000F8D00 size:0x120 mapped:0x80737D94
