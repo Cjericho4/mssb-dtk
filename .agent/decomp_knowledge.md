@@ -237,6 +237,11 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **`lis` order for a table vs a cached global ptr**: place `mg = &g_Minigame;` after the first straight-line store (fn_3_12A6C4).
 *   **Linked-list loop with hoisted float consts (unresolved)**: first float referenced in the body gets f31, rest go up from f23; a literal store before a loop-carried float's first use pushes it down a reg (fn_3_F8878).
 
+*   **Frame 8–0x10 bytes too small with a local `Control`**: declare it as `StaC2ControlExt` (0x44); MWCC drops unused padding locals, so a dummy `Vec` doesn't grow the frame (fn_3_CBF80).
+*   **Unsigned `mulhwu`/`srwi` modulo then unsigned int-to-float magic (no `xoris`)**: `((u32)rand() % 2500) / 1000.0` (fn_3_CDB48).
+*   **Same value stored to two fields then re-read**: `n = rand() % 24 + 72; p->unk4A = n; p->unk4F = n; ... p->unk4A = p->unk4F;`. Float + byte field from one constant (`stfs` then `fctiwz`/`stb`): `p->unk43 = p->unk24 = 255.0f;` (fn_3_CDB48).
+*   **`a * b + c` fusing into `fmadds`** where the target has `fmuls`/`fadds`: a block-scoped temp still fuses; a function-scope temp (or static inline returning the product) stops fusion but may shift fregs (fn_3_CBF80, unresolved).
+
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
 *   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.

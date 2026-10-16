@@ -139,6 +139,7 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_9497C | unrolled j-loop: target `(scene->unkIndex + J) + E758[i]` with lhz first; MWCC reassociates (.agent/attempts/fn_3_9497C.c) |
 | fn_3_58F58 | 4 lines: mulli/slwi scratch regs r6/r7 swapped in lbl_3_data_4554[idx-2][col] lookup (.agent/attempts/fn_3_58F58.c + .headers.diff) |
 | fn_3_F8878 | 2 lines: `stfs 0x14` (unk14 = 0.123f) lands after if/else instead of loop header; moving it reorders f30/f31 (.agent/attempts/fn_3_F8878.c + .headers.diff; header comment lists needed same-file edits) |
+| fn_3_CBF80 | regalloc after `bl cos`: target cos in f1, 2.4f f0, 0.15f f2; one expression fuses to fmadds, every temp form swaps regs; 720 decl perms tried (.agent/attempts/fn_3_CBF80.c) |
 
 **Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
 | fn_3_24EA0 | register allocation / scheduling (see git log) |
