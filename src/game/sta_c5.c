@@ -345,8 +345,33 @@ void fn_3_F1674(void) {
 }
 
 // .text:0x000F1750 size:0x154 mapped:0x807307E4
-void fn_3_F1750(void) {
-    return;
+extern u8 lbl_3_bss_B219;
+
+static inline void fn_3_F3A5C_inline(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY) {
+    obj->pos.x = x;
+    obj->pos.y = y;
+    obj->pos.z = z;
+    obj->rotY = rotY;
+    obj->control.type = 0;
+    CTRLSetTranslation(&obj->control, obj->pos.x, -obj->pos.y, obj->pos.z);
+    CTRLSetRotation(&obj->control, 0.0f, rotY, 0.0f);
+}
+
+void fn_3_F1750(StaC5PlacedObj* obj, struct hugeAnimStruct* anim) {
+    ActorAnimState* state = obj->animState;
+
+    if (!fn_800B4A94((AnimLevel1*)state->actor, anim)) {
+        obj->homeX = lbl_3_data_1B884[obj->targetIdx].pos.x;
+        obj->homeZ = lbl_3_data_1B884[obj->targetIdx].pos.z;
+        fn_3_F3A5C_inline(obj, obj->homeX, 10.0f, obj->homeZ, -lbl_3_data_1B884[obj->targetIdx].rot);
+        obj->unkC1 = 0;
+        obj->flag90_7 = 1;
+        obj->animState = &g_hugeAnimStruct.animTable->entries[lbl_3_bss_B219 + obj->targetIdx].anim;
+        obj->unkC4 = 0;
+        obj->unk99 = 1;
+    } else {
+        AnimateActorBones(state->actor);
+    }
 }
 
 // .text:0x000F18A4 size:0x98 mapped:0x80730938
@@ -427,16 +452,6 @@ void fn_3_F3A04(OuterStruct_F13F8* arg0) {
 }
 
 // .text:0x000F3A5C size:0x84 mapped:0x80732AF0
-static inline void fn_3_F3A5C_inline(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY) {
-    obj->pos.x = x;
-    obj->pos.y = y;
-    obj->pos.z = z;
-    obj->rotY = rotY;
-    obj->control.type = 0;
-    CTRLSetTranslation(&obj->control, obj->pos.x, -obj->pos.y, obj->pos.z);
-    CTRLSetRotation(&obj->control, 0.0f, rotY, 0.0f);
-}
-
 void fn_3_F3A5C(StaC5PlacedObj* obj, f32 x, f32 y, f32 z, f32 rotY) {
     fn_3_F3A5C_inline(obj, x, y, z, rotY);
 }
