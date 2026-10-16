@@ -232,7 +232,7 @@ void fn_3_D36B0(struct StaC2ChainObj* obj);
 void fn_3_D3880(void);
 void fn_3_D3CDC(void);
 void fn_3_D3F54(void);
-void fn_3_D4E00(void);
+void fn_3_D4E00(struct StaC2PlacedObj* obj);
 typedef struct {
     f32 unk0;
     f32 unk4;
@@ -299,14 +299,24 @@ extern StaC2PlaceEntry lbl_3_data_182C8[3];
 
 typedef struct StaC2PlacedObj {
     Control control;            /* 0x00 */
-    u8 _pad3C[0x9C - 0x3C];
+    u8 _pad3C[0x8C - 0x3C];
+    struct StadiumActorAnim* anim; /* 0x8C */
+    u8 flag90 : 1;              /* 0x90 */
+    u8 flag90_rest : 7;
+    u8 _pad91[0x99 - 0x91];
+    u8 unk99;                   /* 0x99 */
+    u8 _pad9A[0x9C - 0x9A];
     u8 idx;                     /* 0x9C */
     u8 _pad9D[0xA0 - 0x9D];
     Vec pos;                    /* 0xA0 */
     u8 _padAC[0xC0 - 0xAC];
     f32 angle;                  /* 0xC0 */
-    u8 _padC4[0xCA - 0xC4];
+    u8 _padC4[0xC8 - 0xC4];
+    s16 unkC8;                  /* 0xC8 */
     u8 unkCA;                   /* 0xCA */
+    u8 unkCB;                   /* 0xCB */
+    u8 _padCC;
+    u8 unkCD;                   /* 0xCD */
 } StaC2PlacedObj;
 
 void fn_3_D4780(StaC2PlacedObj* obj);

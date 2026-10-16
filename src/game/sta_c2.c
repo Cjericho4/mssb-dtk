@@ -21,6 +21,7 @@ extern f32 lbl_3_rodata_2664;
 extern u8 lbl_800E8754[];
 void fn_80033620(void);
 void fn_8004C094(Vec* pos);
+extern s32 lbl_3_data_182C4;
 extern StadiumActorAnim lbl_3_bss_A034[];
 extern char lbl_3_rodata_286C[];
 extern char lbl_3_rodata_2878[];
@@ -1045,6 +1046,23 @@ void fn_3_D4780(StaC2PlacedObj* obj) {
     return;
 }
 
+static inline void staC2PlaceObj(StaC2PlacedObj* obj) {
+    obj->control.type = 0;
+    CTRLSetScale(&obj->control, 0.75f, 0.75f, 0.75f);
+    if (obj->unkCA == 0) {
+        CTRLSetRotation(&obj->control, lbl_3_data_182C8[obj->idx].rotB.x, -lbl_3_data_182C8[obj->idx].rotB.y, lbl_3_data_182C8[obj->idx].rotB.z);
+        obj->angle = -lbl_3_data_182C8[obj->idx].rotB.y;
+    } else {
+        CTRLSetRotation(&obj->control, lbl_3_data_182C8[obj->idx].rotA.x, -lbl_3_data_182C8[obj->idx].rotA.y, lbl_3_data_182C8[obj->idx].rotA.z);
+        obj->angle = -lbl_3_data_182C8[obj->idx].rotA.y;
+    }
+    CTRLSetTranslation(&obj->control, lbl_3_data_182C8[obj->idx].pos.x, lbl_3_data_182C8[obj->idx].pos.y, lbl_3_data_182C8[obj->idx].pos.z);
+    obj->pos.x = lbl_3_data_182C8[obj->idx].pos.x;
+    obj->pos.y = -lbl_3_data_182C8[obj->idx].pos.y;
+    obj->pos.z = lbl_3_data_182C8[obj->idx].pos.z;
+    fn_3_D4780(obj);
+}
+
 // .text:0x000D4CA4 size:0x15C mapped:0x80713D38
 void fn_3_D4CA4(StaC2PlacedObj* obj) {
     obj->control.type = 0;
@@ -1064,8 +1082,25 @@ void fn_3_D4CA4(StaC2PlacedObj* obj) {
 }
 
 // .text:0x000D4E00 size:0x21C mapped:0x80713E94
-void fn_3_D4E00(void) {
-    return;
+void fn_3_D4E00(StaC2PlacedObj* obj) {
+    obj->unkCA = rand() % 10;
+    if (obj->unkCA < 3) {
+        obj->unkCA = 0;
+        fn_80025EEC(obj->anim, 0, 2);
+    } else {
+        obj->unkCA = 1;
+        fn_80025EEC(obj->anim, 0, 1);
+    }
+    obj->unkCB = obj->unkCA;
+    obj->flag90 = 1;
+    staC2PlaceObj(obj);
+    obj->unk99 = 0;
+    obj->unkC8 = 1;
+    if (lbl_3_data_182C4 != -1) {
+        fn_3_8B890(lbl_3_data_182C4);
+        lbl_3_data_182C4 = -1;
+    }
+    obj->unkCD = 1;
 }
 
 // .text:0x000D501C size:0x100 mapped:0x807140B0
