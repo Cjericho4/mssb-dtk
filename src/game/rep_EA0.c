@@ -1,5 +1,6 @@
 #include "game/rep_EA0.h"
 #include "header_rep_data.h"
+#include "game/rep_720.h"
 
 // .text:0x0006750C size:0xAC mapped:0x806A65A0
 void fn_3_6750C(Elem6750C* elems) {
@@ -90,8 +91,46 @@ void fn_3_6916C(void) {
 }
 
 // .text:0x00069184 size:0x15C mapped:0x806A8218
+extern f32 lbl_3_data_6848[];
+
 void fn_3_69184(void) {
-    return;
+    StadiumObjEntry* entry;
+
+    if (g_Batter.trimmedBat == 1) {
+        entry = &g_hugeAnimStruct.starAnimRelated[6];
+    } else {
+        entry = &g_hugeAnimStruct.starAnimRelated[5];
+    }
+    entry->visible = 0;
+    if (g_d_GameSettings.GameModeSelected == 2) {
+        if (g_GameLogic.secondaryGameMode == 10) {
+            return;
+        }
+        if (g_Practice.practiceLevel != 4 && g_Practice.practiceType_2 != 1) {
+            return;
+        }
+    } else if (!g_Batter.easyBatting) {
+        return;
+    }
+    if (g_Stats.unk36 != 0) {
+        return;
+    }
+    if (g_GameLogic.gameStatus != 0 && g_GameLogic.gameStatus != 1) {
+        return;
+    }
+    if (g_GameLogic.sceneID != 1) {
+        return;
+    }
+    entry->visible = 1;
+    if (g_Batter.batterHand) {
+        entry->pos.x = -g_Batter.batPosition2.x;
+        entry->rot.y = 3.1415927f;
+    } else {
+        entry->pos.x = g_Batter.batPosition2.x;
+        entry->rot.y = 0.0f;
+    }
+    entry->pos.z = g_Batter.batPosition2.z + lbl_3_data_6848[1];
+    entry->pos.y = lbl_3_data_6848[0];
 }
 
 // .text:0x000692E0 size:0x318 mapped:0x806A8374
