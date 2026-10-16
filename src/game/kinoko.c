@@ -6,6 +6,15 @@
 
 static KinokoState lbl_3_bss_BA00;
 
+// .text:0x0016917C size:0x2C0 mapped:0x807A8210
+void fn_3_16917C(void) {
+    return;
+}
+
+// .text:0x001695A0 size:0x4 mapped:0x807A8634
+void fn_3_1695A0(void) {
+}
+
 // .text:0x001695A4 size:0x5C mapped:0x807A8638
 void fn_3_1695A4(s8 arg1, u8 arg2) {
     KinokoState *state = &lbl_3_bss_BA00;
