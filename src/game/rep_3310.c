@@ -35,7 +35,14 @@ typedef struct Rep3310Entry2D94Ext {
     f32 field_0xFD4;
     u8 _pad0[0xFEE - 0xFD8];
     u8 field_0xFEE;
-    u8 _pad1[0x2440 - 0xFEF];
+    u8 _padFEF[0x19F0 - 0xFEF];
+    void (*field_0x19F0)(s32);
+    f32 field_0x19F4;
+    f32 field_0x19F8;
+    f32 field_0x19FC;
+    u8 _pad1A00[0x1A16 - 0x1A00];
+    u8 field_0x1A16;
+    u8 _pad1[0x2440 - 0x1A17];
     void (*field_0x2440)(void);
     f32 field_0x2444;
     f32 field_0x2448;
@@ -614,7 +621,22 @@ f32 fn_3_119854(u32 index) {
 }
 // .text:0x00119878 size:0xBC mapped:0x8075890C
 void fn_3_119878(void) {
-    return;
+    Rep3310Entry2D94Ext* entry;
+    MiniGameStruct* minigame;
+
+    minigame = &g_Minigame;
+    entry = (Rep3310Entry2D94Ext*)g_hugeAnimStruct.entries_2D94;
+    entry->field_0x1A16 = 0;
+    entry->field_0x19F0 = NULL;
+    if (minigame->_CCE[0] != 0 &&
+        (minigame->_CCC > 60 || minigame->_CCC % 2 != 0 || minigame->_1B19 == 2 || minigame->_1B19 == 3)) {
+        entry->field_0x1A16 = 1;
+        entry->field_0x19F0 = fn_3_11741C;
+        entry->field_0x19F4 = minigame->_CB0;
+        entry->field_0x19F8 = -minigame->_CB4;
+        entry->field_0x19FC = minigame->_CB8;
+        fn_8001D0D0(0xA6, 3.5f);
+    }
 }
 
 // .text:0x00119934 size:0x300 mapped:0x807589C8
