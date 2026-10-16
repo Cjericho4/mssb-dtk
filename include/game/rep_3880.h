@@ -22,7 +22,10 @@ typedef struct ListNode_14B9F0 {
     u8 _pad28[0x10];                // 0x28
     f32 scaleX;                     // 0x38
     f32 scaleY;                     // 0x3C
-    u8 color[4];                    // 0x40
+    union {
+        u8 color[4];                // 0x40
+        u32 colorU32;               // 0x40
+    };
     u8 field_0x44;                  // 0x44
     u8 field_0x45;                  // 0x45
     u8 _pad46[0x2];                 // 0x46

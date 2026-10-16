@@ -1137,9 +1137,43 @@ void fn_3_151798(void) {
     pitchingMachinePitching(0x1C);
 }
 
+void fn_80033B58(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+
 // .text:0x001517D0 size:0x228 mapped:0x80790864
 void fn_3_1517D0(ListNode_14B9F0* node, Struct_14C79C_Arg* arg1) {
-    return;
+    f32 half = 0.5f;
+    f32 w = node->scaleX * half;
+    f32 h = node->scaleY * half;
+    Mtx m;
+    Mtx44 proj;
+    Vec quad[4];
+    f32 uv[4][2] = {{0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f}};
+    s32 i;
+
+    quad[0].x = -w;
+    quad[0].y = -h;
+    quad[1].x = w;
+    quad[1].y = -h;
+    quad[2].x = w;
+    quad[2].y = h;
+    quad[3].x = -w;
+    quad[3].y = h;
+    quad[0].z = quad[1].z = quad[2].z = quad[3].z = 0.0f;
+    PSMTXIdentity(m);
+    PSMTX44Identity(proj);
+    GXLoadPosMtxImm(m, GX_PNMTX0);
+    GXSetCurrentMtx(GX_PNMTX0);
+    GXSetProjection(proj, GX_PERSPECTIVE);
+    fn_80033B58(arg1->unk10, node->field_0x4D, 0, 0);
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+    for (i = 0; i < 4; i++) {
+        GXPosition3f32(node->offset.x + quad[i].x, node->offset.y + quad[i].y, -1.0f);
+        GXColor1u32(node->colorU32);
+        GXTexCoord2f32(uv[node->field_0x4E + i][0], uv[node->field_0x4E + i][1]);
+    }
+    GXLoadPosMtxImm(fn_80052768(0)->mtx, GX_PNMTX0);
+    GXSetCurrentMtx(GX_PNMTX0);
+    GXSetProjection(fn_80052768(0)->proj, GX_PERSPECTIVE);
 }
 
 extern f32 lbl_3_data_26C1C[4][2];
