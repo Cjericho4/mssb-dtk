@@ -213,8 +213,64 @@ void fn_3_DD000(void) {
 }
 
 // .text:0x000DD1A8 size:0x1D4 mapped:0x8071C23C
+int fn_3_9EE24(int max);
+extern s16 lbl_3_data_18C48[];
+
+static inline BOOL fn_3_DD1A8_done(GameControlsStruct* gl) {
+    BOOL done = FALSE;
+    if (gl->FrameCountOfCurrentPitch >= lbl_3_data_18C48[2]) {
+        done = TRUE;
+    } else if (gl->FrameCountOfCurrentAtBat_Copy >= lbl_3_data_18C48[1] && fn_3_6C938(1, 0x1100)) {
+        done = TRUE;
+    }
+    return done;
+}
+
 void fn_3_DD1A8(void) {
-    return;
+    GameControlsStruct* gl = &g_GameLogic;
+    s32 i;
+
+    switch (gl->_125) {
+    case 0:
+        if (g_Minigame.toyField_turnNumber == 0) {
+            if (fn_3_9EE24(100) < lbl_3_data_18C48[7] || g_Minigame._1907 == 4) {
+                i = 0;
+                do {
+                    g_Minigame.rosterID = fn_3_9EE24(4);
+                    i++;
+                    if (i >= 100) {
+                        break;
+                    }
+                } while (g_Minigame.players.battingHandedness[g_Minigame.rosterID] != 0);
+            } else {
+                i = 0;
+                do {
+                    g_Minigame.rosterID = fn_3_9EE24(4);
+                    i++;
+                    if (i >= 100) {
+                        break;
+                    }
+                } while (g_Minigame.players.battingHandedness[g_Minigame.rosterID] == 0);
+            }
+        }
+        changeScene(1, 6);
+        g_GameLogic.FrameCountOfCurrentAtBat_Copy = 0;
+        gl->_125 = 1;
+        break;
+    case 1:
+        if (fn_3_DD1A8_done(gl)) {
+            gl->_125 = 2;
+            changeScene(3, 6);
+        }
+        break;
+    case 2:
+        if (lbl_8037169C._13 != 0) {
+            fn_3_FBD70();
+            fn_3_FBD58();
+            fn_3_5A6D4(7);
+        }
+        break;
+    }
 }
 
 // .text:0x000DD37C size:0x80 mapped:0x8071C410
