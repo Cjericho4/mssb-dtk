@@ -583,7 +583,30 @@ void fn_3_D24E8(StaC2D24E8Arg* arg0, s32 arg1) {
 
 // .text:0x000D255C size:0x128 mapped:0x807115F0
 s8 fn_3_D255C(StaC2ChainObj* obj) {
-    return 0;
+    Vec diff;
+    u8 orderA[9] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+    u8 orderB[9] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+    u32 i;
+    u8* order;
+
+    if (obj->pos.y > 3.0) {
+        return -1;
+    }
+    if (obj->pos.x > 0.0f) {
+        order = orderA;
+    } else {
+        order = orderB;
+    }
+    for (i = 0; i < 9; i++) {
+        Fielder* f = &g_Fielders[order[i]];
+        if (f != NULL && f->unk210 == 0) {
+            PSVECSubtract(&obj->pos, (Vec*)f->pos, &diff);
+            if (PSVECMag(&diff) <= 4.5) {
+                return (s8)order[i];
+            }
+        }
+    }
+    return -1;
 }
 
 // .text:0x000D2684 size:0x108 mapped:0x80711718
