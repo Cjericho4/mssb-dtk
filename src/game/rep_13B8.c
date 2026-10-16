@@ -333,8 +333,57 @@ void fn_3_82670(void) {
 }
 
 // .text:0x00082F80 size:0xFC mapped:0x806C2014
-void fn_3_82F80(void) {
-    return;
+void fn_3_82F80(s32 idx, s16* outBack, s16* outFwd) {
+    InMemRunnerType* r = &g_Runners[idx];
+    f32 max;
+    f32 dist;
+    f32 v;
+    f32 start;
+    s32 frames;
+    f32 max2;
+    f32 dist2;
+    f32 v2;
+    s32 frames2;
+
+    frames = 0;
+    dist = r->percentTowardsNextBase_slideAdj;
+    if (dist > 0.0f) {
+        start = r->percentRanPerFrame_slideAdj;
+        max = r->velocityPercent_stamAdj;
+        if (start < max) {
+            v = start;
+            do {
+                v += r->accelerationPercent_stamAdj;
+                frames++;
+                if (v > max) {
+                    dist -= max;
+                    break;
+                }
+                dist -= v;
+            } while (!(dist < 0.0f));
+        }
+        frames = (s32)(dist / max) + 1 + frames;
+    }
+    *outFwd = frames;
+
+    frames2 = 0;
+    dist2 = r->percentFromCurrentBase_slideAdj;
+    if (dist2 > 0.0f) {
+        max2 = r->velocityPercent_stamAdj;
+        if ((v2 = r->percentRanPerFrame_slideAdj) > -max2) {
+            do {
+                v2 -= r->accelerationPercent_stamAdj;
+                frames2++;
+                if (v2 < -max2) {
+                    dist2 -= max2;
+                    break;
+                }
+                dist2 -= v2;
+            } while (!(dist2 < 0.0f));
+        }
+        frames2 = (s32)(dist2 / max2) + 1 + frames2;
+    }
+    *outBack = frames2;
 }
 
 // .text:0x0008307C size:0x370 mapped:0x806C2110
