@@ -10,6 +10,7 @@
 #include "game/rep_1E08.h"
 #include "Dolphin/GX/GXTransform.h"
 #include "Dolphin/gx.h"
+#include "C3/control.h"
 
 extern f32 lbl_3_data_21770[6];
 extern Vec lbl_3_bss_B860[4];
@@ -152,7 +153,7 @@ void fn_3_147F94(void) {
 }
 
 // .text:0x001480E0 size:0x174 mapped:0x80787174
-void fn_3_1480E0(Rep3880QuadColors* obj) {
+void fn_3_1480E0(Rep3880DrawObj* obj) {
     s32 i;
 
     GXSetCullMode(GX_CULL_BACK);
@@ -170,8 +171,41 @@ void fn_3_1480E0(Rep3880QuadColors* obj) {
 }
 
 // .text:0x00148254 size:0x180 mapped:0x807872E8
-void fn_3_148254(void) {
-    return;
+void fn_3_148254(Rep3880DrawObj* obj, ListNode_14B9F0* node) {
+    Control ctrl;
+    Mtx m;
+    Vec v;
+    f32 w;
+    f32 h;
+    f32 half;
+    AnimationStruct* anim;
+
+    half = 0.5f;
+    w = node->scaleX * half;
+    h = node->scaleY * half;
+    anim = g_hugeAnimStruct.AnimationStructPtrs[obj->animIdx];
+    lbl_3_bss_B860[0].x = -w;
+    lbl_3_bss_B860[0].y = -h;
+    lbl_3_bss_B860[1].x = w;
+    lbl_3_bss_B860[1].y = -h;
+    lbl_3_bss_B860[2].x = w;
+    lbl_3_bss_B860[2].y = h;
+    lbl_3_bss_B860[3].x = -w;
+    lbl_3_bss_B860[3].y = h;
+    PSMTXInverse(fn_80052768(0)->mtx, m);
+    m[0][1] = m[1][0] = m[1][2] = m[2][1] = 0.0f;
+    m[1][1] = 1.0f;
+    v.x = node->offset.x;
+    v.y = node->offset.y;
+    v.z = node->offset.z;
+    PSMTXMultVecSR(m, &v, &v);
+    ctrl.type = 0;
+    CTRLSetRotation(&ctrl, node->pos.x, node->pos.y, node->pos.z);
+    CTRLSetTranslation(&ctrl, anim->unk34.x + v.x, -anim->unk34.y + v.y, anim->unk34.z + v.z);
+    CTRLBuildMatrix(&ctrl, m);
+    PSMTXConcat(fn_80052768(0)->mtx, m, m);
+    GXLoadPosMtxImm(m, 0);
+    GXSetCurrentMtx(0);
 }
 
 // .text:0x001483D4 size:0x48 mapped:0x80787468
