@@ -290,6 +290,26 @@ typedef struct {
 extern WallBallCoinPhysics lbl_3_data_2188C;
 extern s16 lbl_3_data_218A8;
 
+static inline void updateBonusCoins(void) {
+    u32 i;
+
+    for (i = 15; i < 35; i++) {
+        if (g_Minigame.wallBall_coinsVisibleInd) {
+            PSVECAdd((Vec*)&g_Minigame.wallBall_coinCoordinates[i], (Vec*)&g_Minigame.wallBall_coinVelocity[i], (Vec*)&g_Minigame.wallBall_coinCoordinates[i]);
+            g_Minigame.wallBall_coinVelocity[i].y += lbl_3_data_2188C.gravity;
+            if (g_Minigame.wallBall_coinCoordinates[i].y < 0.01) {
+                g_Minigame.wallBall_coinCoordinates[i].y = 0.01f;
+                g_Minigame.wallBall_coinVelocity[i].x *= lbl_3_data_2188C.bounceDamp;
+                g_Minigame.wallBall_coinVelocity[i].z *= lbl_3_data_2188C.bounceDamp;
+                g_Minigame.wallBall_coinVelocity[i].y *= -lbl_3_data_2188C.bounceRest;
+            }
+            if (++g_Minigame.wallBall_coinsVisibleFrameCounter[i] >= lbl_3_data_218A8) {
+                g_Minigame.wallBall_coinsVisibleInd[i] = 0;
+            }
+        }
+    }
+}
+
 // .text:0x0013E6D4 size:0x100 mapped:0x8077D768
 void fn_3_13E6D4(void) {
     u32 i;
@@ -333,7 +353,12 @@ void fn_3_13F484(void) {
 
 // .text:0x0013F6C8 size:0x11C mapped:0x8077E75C
 void fn_3_13F6C8(void) {
-    return;
+    if (g_Minigame.turnOverStatus != 0) {
+        return;
+    }
+    fn_3_13F484();
+    fn_3_13EA30();
+    updateBonusCoins();
 }
 
 // .text:0x0013F7E4 size:0xE0 mapped:0x8077E878
