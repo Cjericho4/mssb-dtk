@@ -9,10 +9,15 @@
 // Linked list node used by fn_3_14B9F0
 typedef struct ListNode_14B9F0 {
     struct ListNode_14B9F0* next;  // 0x00
-    VecXYZ offset;                  // 0x04
-    u8 _pad10[0x8];                 // 0x10
-    s16 field_0x18;                 // 0x18
-    u8 _pad1A[0x2];                 // 0x1A
+    Vec offset;                     // 0x04
+    union {
+        Vec velocity;               // 0x10
+        struct {
+            u8 _pad10[0x8];
+            s16 field_0x18;         // 0x18
+            u8 _pad1A[0x2];         // 0x1A
+        };
+    };
     VecXYZ pos;                     // 0x1C
     u8 _pad28[0x10];                // 0x28
     f32 scaleX;                     // 0x38
@@ -22,7 +27,7 @@ typedef struct ListNode_14B9F0 {
     u8 field_0x45;                  // 0x45
     u8 _pad46[0x2];                 // 0x46
     s16 field_0x48;                 // 0x48
-    u16 field_0x4A;                 // 0x4A
+    s16 field_0x4A;                 // 0x4A
     u8 field_0x4C;                  // 0x4C
     u8 field_0x4D;                  // 0x4D
     u8 field_0x4E;                  // 0x4E
@@ -233,8 +238,8 @@ void fn_3_151694(void* arg0, void* arg1);
 void fn_3_151710(void* arg0, void* arg1);
 void fn_3_151760(void);
 void fn_3_151798(void);
-void fn_3_1517D0(void);
-void fn_3_1519F8(void);
+void fn_3_1517D0(ListNode_14B9F0* node, Struct_14C79C_Arg* arg1);
+void fn_3_1519F8(Struct_14C79C_Arg* arg0, ListNode_14B9F0* node);
 void fn_3_151BAC(void);
 void fn_3_151D6C(void);
 void fn_3_151F2C(void);

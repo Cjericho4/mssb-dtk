@@ -1048,13 +1048,44 @@ void fn_3_151798(void) {
 }
 
 // .text:0x001517D0 size:0x228 mapped:0x80790864
-void fn_3_1517D0(void) {
+void fn_3_1517D0(ListNode_14B9F0* node, Struct_14C79C_Arg* arg1) {
     return;
 }
 
+extern f32 lbl_3_data_26C1C[4][2];
+void fn_3_11F4B4(s32 arg1, s32 arg2);
+
 // .text:0x001519F8 size:0x1B4 mapped:0x80790A8C
-void fn_3_1519F8(void) {
-    return;
+void fn_3_1519F8(Struct_14C79C_Arg* arg0, ListNode_14B9F0* node) {
+    Vec v;
+    Vec dir;
+    Vec w;
+    f32 mag;
+
+    fn_3_1517D0(node, arg0);
+    if (lbl_80366158._28 != 0) {
+        return;
+    }
+    PSVECAdd(&node->offset, &node->velocity, &node->offset);
+    memcpy(&v, &node->offset, sizeof(Vec));
+    v.x = lbl_3_data_26C1C[node->field_0x44][0] - v.x;
+    v.y = lbl_3_data_26C1C[node->field_0x44][1] - v.y;
+    v.z = 0.0f;
+    PSVECNormalize(&v, &dir);
+    mag = PSVECMag(&v);
+    PSVECScale(&dir, 0.0015f * (1.0f / (mag * mag)), &v);
+    PSVECAdd(&node->velocity, &v, &node->velocity);
+    w.x = lbl_3_data_26C1C[node->field_0x44][0];
+    w.y = lbl_3_data_26C1C[node->field_0x44][1];
+    w.z = 0.0f;
+    PSVECNormalize(&w, &w);
+    if (PSVECDotProduct(&dir, &w) < 0.0f || !mag) {
+        node->field_0x4A = 0;
+    }
+    if (node->field_0x4A == 0 && node->field_0x45 != 0) {
+        fn_3_11F4B4(node->field_0x44, node->field_0x4D == 1);
+        node->field_0x45 = 0;
+    }
 }
 
 // .text:0x00151BAC size:0x1C0 mapped:0x80790C40
