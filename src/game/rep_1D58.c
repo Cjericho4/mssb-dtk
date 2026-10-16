@@ -470,7 +470,7 @@ void fn_3_B97DC(ActorAnimState* state, ANIMBank* bank) {
     state->unk68 = 0;
     state->playAnim = 1;
     if (state->playAnim) {
-        ACTSetAnimation(state->actor, state->bank, NULL, state->seqNum, state->startTime);
+        ACTSetAnimation(state->actor, state->bank, NULL, state->seqNum, 0.0f, state->startTime);
         fn_800B4BC8(state->actor, 1);
     }
     if (state->setTime) {
