@@ -887,9 +887,53 @@ s32 fn_3_B32B8(void) {
     return 0;
 }
 
+typedef struct {
+    u8 count;   /* 0x0 */
+    u8 vals[4]; /* 0x1 */
+} PracticeMenuRow; /* size: 0x5 */
+extern PracticeMenuRow lbl_3_data_FAE8[];
+
 // .text:0x000B3448 size:0x1D8 mapped:0x806F24DC
 void fn_3_B3448(void) {
-    return;
+    InputStruct* in = &g_Controls[g_Practice.homeAway];
+    s32 row = 0;
+
+    if (g_Practice.practiceLevel == 3) {
+        row = 1;
+    }
+    if (in->newButtonInput & 0x100) {
+        if (g_Practice.currentMessageDoneTyping == 0) {
+            return;
+        }
+        switch (lbl_3_data_FAE8[row].vals[(s8)lbl_3_common_bss_34C90.field_0x1DA]) {
+        case 0:
+            lbl_3_common_bss_34C90.field_0x1D2 = 10;
+            break;
+        case 1:
+            lbl_3_common_bss_34C90.field_0x1D2 = 4;
+            break;
+        case 2:
+            lbl_3_common_bss_34C90.field_0x1D2 = 6;
+            break;
+        case 3:
+            fn_3_5B408();
+            lbl_3_common_bss_34C90.field_0x1D2 = 12;
+            break;
+        }
+        sndFXStartEx(0x1B8, lbl_800EFBA4.confirmVolume, 0x3F, 0);
+    } else if (in->_08 & 4) {
+        lbl_3_common_bss_34C90.field_0x1DA++;
+        if ((s8)lbl_3_common_bss_34C90.field_0x1DA >= lbl_3_data_FAE8[row].count) {
+            lbl_3_common_bss_34C90.field_0x1DA = 0;
+        }
+        sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+    } else if (in->_08 & 8) {
+        lbl_3_common_bss_34C90.field_0x1DA--;
+        if ((s8)lbl_3_common_bss_34C90.field_0x1DA < 0) {
+            lbl_3_common_bss_34C90.field_0x1DA = lbl_3_data_FAE8[row].count - 1;
+        }
+        sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+    }
 }
 
 // .text:0x000B3620 size:0x408 mapped:0x806F26B4
