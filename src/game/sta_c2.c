@@ -673,13 +673,26 @@ void fn_3_D3F54(void) {
 }
 
 // .text:0x000D4780 size:0x524 mapped:0x80713814
-void fn_3_D4780(void) {
+void fn_3_D4780(StaC2PlacedObj* obj) {
     return;
 }
 
 // .text:0x000D4CA4 size:0x15C mapped:0x80713D38
-void fn_3_D4CA4(void) {
-    return;
+void fn_3_D4CA4(StaC2PlacedObj* obj) {
+    obj->control.type = 0;
+    CTRLSetScale(&obj->control, 0.75f, 0.75f, 0.75f);
+    if (obj->unkCA == 0) {
+        CTRLSetRotation(&obj->control, lbl_3_data_182C8[obj->idx].rotB.x, -lbl_3_data_182C8[obj->idx].rotB.y, lbl_3_data_182C8[obj->idx].rotB.z);
+        obj->angle = -lbl_3_data_182C8[obj->idx].rotB.y;
+    } else {
+        CTRLSetRotation(&obj->control, lbl_3_data_182C8[obj->idx].rotA.x, -lbl_3_data_182C8[obj->idx].rotA.y, lbl_3_data_182C8[obj->idx].rotA.z);
+        obj->angle = -lbl_3_data_182C8[obj->idx].rotA.y;
+    }
+    CTRLSetTranslation(&obj->control, lbl_3_data_182C8[obj->idx].pos.x, lbl_3_data_182C8[obj->idx].pos.y, lbl_3_data_182C8[obj->idx].pos.z);
+    obj->pos.x = lbl_3_data_182C8[obj->idx].pos.x;
+    obj->pos.y = -lbl_3_data_182C8[obj->idx].pos.y;
+    obj->pos.z = lbl_3_data_182C8[obj->idx].pos.z;
+    fn_3_D4780(obj);
 }
 
 // .text:0x000D4E00 size:0x21C mapped:0x80713E94

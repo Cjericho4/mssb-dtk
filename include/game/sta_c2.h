@@ -154,8 +154,6 @@ void fn_3_D36B0(void);
 void fn_3_D3880(void);
 void fn_3_D3CDC(void);
 void fn_3_D3F54(void);
-void fn_3_D4780(void);
-void fn_3_D4CA4(void);
 void fn_3_D4E00(void);
 typedef struct {
     f32 unk0;
@@ -186,6 +184,31 @@ void fn_3_CBAFC(StaC2ChainObj* obj);
 void fn_3_D2220(StaC2ChainObj* obj);
 InMemBallType* fn_3_D233C(StaC2ChainObj* obj);
 s8 fn_3_D255C(StaC2ChainObj* obj);
+
+typedef struct StaC2PlaceEntry {
+    Vec pos;        /* 0x00 */
+    u8 _padC[0x4];
+    Vec rotA;       /* 0x10 */
+    Vec rotB;       /* 0x1C */
+    u8 _pad28[0x34 - 0x28];
+} StaC2PlaceEntry; /* size: 0x34 */
+
+extern StaC2PlaceEntry lbl_3_data_182C8[3];
+
+typedef struct StaC2PlacedObj {
+    Control control;            /* 0x00 */
+    u8 _pad3C[0x9C - 0x3C];
+    u8 idx;                     /* 0x9C */
+    u8 _pad9D[0xA0 - 0x9D];
+    Vec pos;                    /* 0xA0 */
+    u8 _padAC[0xC0 - 0xAC];
+    f32 angle;                  /* 0xC0 */
+    u8 _padC4[0xCA - 0xC4];
+    u8 unkCA;                   /* 0xCA */
+} StaC2PlacedObj;
+
+void fn_3_D4780(StaC2PlacedObj* obj);
+void fn_3_D4CA4(StaC2PlacedObj* obj);
 
 typedef struct StaC2Particle {
     u8 _pad0[0x4];
