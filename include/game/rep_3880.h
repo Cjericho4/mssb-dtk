@@ -181,7 +181,7 @@ void fn_3_14E988(s8 arg0);
 void fn_3_14E9F0(ListNode_14B9F0* node);
 void fn_3_14EAF4(void);
 void fn_3_14ED24(void);
-void fn_3_14F3CC(void);
+void fn_3_14F3CC(ListNode_14B9F0* node);
 typedef struct {
     u8 _pad0[0x38];
     f32 field_0x38;

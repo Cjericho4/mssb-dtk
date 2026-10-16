@@ -853,8 +853,20 @@ void fn_3_14ED24(void) {
 }
 
 // .text:0x0014F3CC size:0x178 mapped:0x8078E460
-void fn_3_14F3CC(void) {
-    return;
+void fn_3_14F3CC(ListNode_14B9F0* node) {
+    Vec v = {0.0f, 0.0f, 0.0f};
+    f32 yOff;
+    s16 rangeX;
+    s16 rangeY;
+
+    yOff = node->field_0x4C < 5 ? 1.25f : 0.5f;
+    rangeX = node->field_0x4C < 5 ? 20000 : 10000;
+    rangeY = node->field_0x4C < 5 ? 20000 : 10000;
+    v.x += (f32)(rand() % rangeX - rangeX / 2) / 10000.0f;
+    v.y += (f32)(rand() % rangeY - rangeY / 2) / 10000.0f;
+    node->offset.x = v.x;
+    node->offset.y = v.y - yOff;
+    node->offset.z = v.z;
 }
 
 // .text:0x0014F544 size:0x60 mapped:0x8078E5D8
