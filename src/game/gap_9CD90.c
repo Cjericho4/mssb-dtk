@@ -189,7 +189,7 @@ void fn_3_9DC18(u8* arr, u32 count, s32 arg2) {
 }
 
 // .text:0x0009E078 size:0x2F0 mapped:0x806DD10C
-void fn_3_9E078(void) {
+void fn_3_9E078(s32* order, u8 count, s32 arg2) {
     return;
 }
 

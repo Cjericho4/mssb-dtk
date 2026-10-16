@@ -31,7 +31,7 @@ void fn_3_9D6A4(void);
 void fn_3_9DB5C(void);
 void fn_3_9DBE4(void);
 void fn_3_9DC18(u8* arr, u32 count, s32 arg2);
-void fn_3_9E078(void);
+void fn_3_9E078(s32* order, u8 count, s32 arg2);
 s32 fn_3_9E368(s32* weights, s32 count);
 s32 fn_3_9E5A0(u8* weights, s32 count);
 void fn_3_9E7D4(s32 arg0);
