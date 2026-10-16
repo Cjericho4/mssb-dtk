@@ -13,8 +13,8 @@ void fn_3_B7C2C(void) {
 }
 
 // .text:0x000B7CDC size:0x90 mapped:0x806F6D70
-void fn_3_B7CDC(void) {
-    return;
+BOOL fn_3_B7CDC(f32 x, f32 z) {
+    return 0;
 }
 
 // .text:0x000B7D6C size:0x6C mapped:0x806F6E00

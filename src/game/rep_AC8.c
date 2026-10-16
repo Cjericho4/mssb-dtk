@@ -1,4 +1,5 @@
 #include "game/rep_AC8.h"
+#include "game/rep_1CB8.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "game/rep_1188.h"
@@ -146,9 +147,67 @@ void fn_3_28CA8(void) {
     return;
 }
 
+typedef struct Data47D0 {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+} Data47D0; // size: 0x14
+extern Data47D0 lbl_3_data_47D0[6];
+
 // .text:0x0002A164 size:0x124 mapped:0x806691F8
-void fn_3_2A164(void) {
-    return;
+static inline void startFielderCatch(s32 idx, s32 type, s32 frames, u8 arg3, u8 arg4) {
+    Fielder* f = &g_Fielders[idx];
+
+    f->unk24C = frames;
+    f->unk24E = 0;
+    f->unk252 = type;
+    f->unk253 = 0;
+    f->unk254 = 0;
+    f->unk255 = arg4;
+    f->unk_25B = arg3;
+    f->unk259 = 0;
+    f->unk25C = 0;
+    f->unk25D = 0;
+    f->unk25E = 0;
+    f->unk25F = 0;
+    f->unk264 = 0;
+    f->unk260 = 0;
+    if (type == 7) {
+        f->unk260 = 1;
+    }
+    if (frames < g_Ball.framesUntilBallHitsGround) {
+        f->unk264 = 1;
+    }
+    switch (type) {
+    case 3:
+        f->unk259 = 2;
+        break;
+    case 4:
+        f->unk259 = 3;
+        break;
+    }
+    g_Ball.catchAnimationTotalFrames = 0;
+}
+
+BOOL fn_3_2A164(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    if (f->unk74 > lbl_3_data_47D0[f->unk1CA].unk8) {
+        return FALSE;
+    }
+    if (g_Ball.AtBat_Contact_BallPos.y < f->unk15C) {
+        return FALSE;
+    }
+    if (g_Ball.AtBat_Contact_BallPos.y > f->unk15C + f->unkF4) {
+        return FALSE;
+    }
+    if (fn_3_B7CDC(g_Ball.AtBat_Contact_BallPos.x, g_Ball.AtBat_Contact_BallPos.z) != 0) {
+        return FALSE;
+    }
+    startFielderCatch(idx, 6, 1, 0, 0);
+    return TRUE;
 }
 
 // .text:0x0002A288 size:0x414 mapped:0x8066931C

@@ -25,7 +25,7 @@ void fn_3_27D68(void);
 void fn_3_27FF4(void);
 void fn_3_28224(void);
 void fn_3_28CA8(void);
-void fn_3_2A164(void);
+BOOL fn_3_2A164(s32 idx);
 void fn_3_2A288(void);
 void fn_3_2A69C(void);
 BOOL fn_3_2ACD8(s32 fielderIdx, s32 frame);
