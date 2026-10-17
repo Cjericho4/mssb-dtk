@@ -6,7 +6,7 @@
 
 void fn_2_8ACE0(void);
 void fn_2_8AEE0(void);
-void fn_2_8B118(void);
+void fn_2_8B118(f32 value);
 void fn_2_8B158(void);
 void fn_2_8B2C0(void);
 void fn_2_8B418(void);

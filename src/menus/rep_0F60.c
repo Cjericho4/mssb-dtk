@@ -3,6 +3,7 @@
 #include "menus/rep_0568.h"
 
 extern hugeAnimStruct* lbl_2_bss_340140;
+extern f32 lbl_2_rodata_FB4;
 
 // .text:0x0008ACE0 size:0x200
 void fn_2_8ACE0(void) {
@@ -15,8 +16,9 @@ void fn_2_8AEE0(void) {
 }
 
 // .text:0x0008B118 size:0x40
-void fn_2_8B118(void) {
-    return;
+void fn_2_8B118(f32 value) {
+    if (value != lbl_2_rodata_FB4) lbl_2_bss_340140->field269_0x307a = 3;
+    else lbl_2_bss_340140->field269_0x307a = 0;
 }
 
 // .text:0x0008B158 size:0x168
