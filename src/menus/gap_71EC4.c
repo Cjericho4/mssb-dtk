@@ -188,7 +188,7 @@ void fn_2_74CD8(void) {
 
 // .text:0x00074D8C size:0x2C
 void fn_2_74D8C(void) {
-    return;
+    fn_800B0A5C_insertQueue(fn_2_74CD8, 0x1000);
 }
 
 // .text:0x00074DB8 size:0x5C
