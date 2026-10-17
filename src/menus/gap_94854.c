@@ -6,7 +6,12 @@
 extern MenusSceneScript lbl_2_data_311E4;
 
 extern void fn_80062674(s32);
+extern void fn_800626EC(s32);
 extern void fn_80053FE8(void);
+
+static inline BOOL menusCanStart(void) {
+    return lbl_803C66B0.state4F == 0;
+}
 
 // .text:0x00094854 size:0x18
 void fn_2_94854(u8 value) {
@@ -76,8 +81,16 @@ void fn_2_95E80(void) {
 }
 
 // .text:0x00095F3C size:0xA4
-void fn_2_95F3C(void) {
-    return;
+void fn_2_95F3C(DrawingSceneStruct* scene) {
+    BOOL ready = menusCanStart();
+    if (ready) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x68 = 4;
+        (&lbl_80371C30[scene->unkIndex])[1].obj->field_0x68 = 4;
+        (&lbl_80371C30[scene->unkIndex])[3].obj->field_0x68 = 4;
+        (&lbl_80371C30[scene->unkIndex])[4].obj->field_0x68 = 4;
+        fn_800626EC(0);
+        lbl_803C66B0.state4F = 1;
+    }
 }
 
 // .text:0x00095FE0 size:0x138

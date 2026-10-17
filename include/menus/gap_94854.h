@@ -3,6 +3,7 @@
 
 #include "mssbTypes.h"
 #include "menus/rep_10C0.h"
+#include "UnknownHeaders.h"
 
 typedef struct MenusPreferences {
     u8 _pad0[0xF];
@@ -20,7 +21,7 @@ void fn_2_95654(void);
 void fn_2_95B28(void);
 void fn_2_95B78(void);
 void fn_2_95E80(void);
-void fn_2_95F3C(void);
+void fn_2_95F3C(DrawingSceneStruct* scene);
 void fn_2_95FE0(void);
 void fn_2_96118(void);
 void fn_2_96698(void);
