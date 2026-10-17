@@ -16,7 +16,7 @@ typedef struct MenusD08State {
 
 extern MenusD08State* lbl_803CBBCC;
 
-void fn_2_D08(void);
+void fn_2_D08(u16 index, u16 time, u8 mode);
 void fn_2_D88(void);
 void fn_2_E84(void);
 void fn_2_F64(void);

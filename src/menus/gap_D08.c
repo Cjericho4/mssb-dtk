@@ -1,10 +1,16 @@
 #include "menus/gap_D08.h"
 #include "UnknownHeaders.h"
+#include "musyx/seq.h"
+
+extern u32 sndSeqGetValid(u32 sequence);
+extern u32 lbl_2_bss_D974[];
 extern void (*lbl_2_data_138[])(void);
 
 // .text:0x00000D08 size:0x80
-void fn_2_D08(void) {
-    return;
+void fn_2_D08(u16 index, u16 time, u8 mode) {
+    if (lbl_2_bss_D974[index] != 0xFFFFFFFF && sndSeqGetValid(lbl_2_bss_D974[index]) != 0) {
+        sndSeqVolume(0, time, lbl_2_bss_D974[index], mode);
+    }
 }
 
 // .text:0x00000D88 size:0xFC
