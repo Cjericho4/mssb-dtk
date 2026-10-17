@@ -1,4 +1,5 @@
 #include "menus/gap_D08.h"
+#include "UnknownHeaders.h"
 
 // .text:0x00000D08 size:0x80
 void fn_2_D08(void) {
@@ -36,8 +37,9 @@ void fn_2_10FC(void) {
 }
 
 // .text:0x00001130 size:0x34
-void fn_2_1130(void) {
-    return;
+void fn_2_1130(s16 state) {
+    lbl_803CC1B8->currentDrawingItem->loadingState = state;
+    fn_800B0A14_removeQueue();
 }
 
 // .text:0x00001164 size:0x38
