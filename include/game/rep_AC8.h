@@ -14,7 +14,7 @@ void fn_3_25844(s32 fielderIdx, s32 arg1);
 void fn_3_258D8(void);
 void fn_3_25A68(void);
 void fn_3_25C40(void);
-void fn_3_261E8(void);
+void fn_3_261E8(s32 fielderIdx);
 void fn_3_26664(void);
 void fn_3_26A74(void);
 void fn_3_27648(void);
@@ -181,7 +181,7 @@ void fn_3_4B8D0(void);
 void fn_3_4BA0C(void);
 void fn_3_4C9C8(void);
 void fn_3_4CFB0(void);
-void fn_3_4D20C(void);
+void fn_3_4D20C(s32 fielderIdx);
 BOOL fn_3_4DB84(s32 i);
 void fn_3_4DC14(void);
 void fn_3_4E1BC(void);
@@ -204,7 +204,7 @@ void fn_3_526DC(s32 fielderIdx);
 void fn_3_52F4C(s32 fielderIdx, f32 x, f32 z);
 void fn_3_530EC(int index);
 int fn_3_53130(s32 temp);
-void fn_3_5372C(void);
+void fn_3_5372C(s32 fielderIdx);
 typedef struct FielderActionEntry {
     s32 unk0;
     s32 unk4;
@@ -235,6 +235,7 @@ extern VecXZ lbl_3_data_4300[9];    /* per fielder */
 extern f32 lbl_3_data_4348[7][2];   /* [stadium][fieldingTeam] */
 extern VecXZ lbl_3_data_4484[6];
 extern VecXZ lbl_3_data_44B4[11];
+extern f32 lbl_3_data_4780[5];
 void fn_3_53EE8(s32 idx);
 void fn_3_53F48(void);
 void fn_3_544B8(void);
