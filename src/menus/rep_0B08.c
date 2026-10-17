@@ -356,7 +356,26 @@ void fn_2_6A5A8(s32 index) {
 
 // .text:0x0006A628 size:0xE0
 void fn_2_6A628(void) {
-    return;
+    Mtx matrix;
+    Vec velocity;
+    MenusSceneState* scene = lbl_2_bss_1A8248;
+    if (!(scene->rep0B08Objects[0].unk38 <= 0.0f)) {
+        PSMTXRotRad(matrix, 'Y', scene->rep0B08Objects[0].angle);
+        velocity.x = 0.0f;
+        velocity.y = 0.0f;
+        velocity.z = -scene->rep0B08Objects[0].unk38;
+        PSMTXMultVec(matrix, &velocity, &velocity);
+        scene->rep0B08Objects[0].velocity.x = velocity.x;
+        scene->rep0B08Objects[0].velocity.z = velocity.z;
+        scene->rep0B08Objects[0].position.x += scene->rep0B08Objects[0].velocity.x;
+        scene->rep0B08Objects[0].position.z += scene->rep0B08Objects[0].velocity.z;
+    }
+    scene->rep0B08Objects[0].previousPosition.x = scene->rep0B08Objects[0].position.x;
+    scene->rep0B08Objects[0].previousPosition.z = scene->rep0B08Objects[0].position.z;
+    if (0.0f == scene->rep0B08Objects[0].unk38) {
+        scene->rep0B08Objects[0].acceleration.x = 0.0f;
+        scene->rep0B08Objects[0].acceleration.z = 0.0f;
+    }
 }
 
 // .text:0x0006A708 size:0x174
