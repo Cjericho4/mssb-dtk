@@ -71,13 +71,14 @@ void fn_1_7280(void) {
 }
 
 // .text:0x000073B8 size:0x434
-void fn_1_73B8(void) {
+void fn_1_73B8(Rep0138Model* model, s32 count, ...) {
     return;
 }
 
 // .text:0x000077EC size:0x5C
-void fn_1_77EC(void) {
-    return;
+void fn_1_77EC(Rep0138Model* model) {
+    GXSetCullMode(lbl_1_data_8C4);
+    fn_1_73B8(model, 3, lbl_1_data_848[0], lbl_1_data_848[1], lbl_1_data_848[2]);
 }
 
 // .text:0x00007848 size:0x24
