@@ -6,7 +6,11 @@
 
 typedef struct Menus1254State {
     s32 states[4];
-    u8 _pad10[0x46];
+    u8 _pad10[0x1E];
+    u8 unk2E;
+    u8 _pad2F[0x20];
+    u8 unk4F;
+    u8 _pad50[6];
     u8 unk56;
 } Menus1254State;
 

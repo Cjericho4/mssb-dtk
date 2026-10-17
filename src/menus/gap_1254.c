@@ -1,6 +1,9 @@
 #include "menus/gap_1254.h"
 #include "menus/rep_0438.h"
 #include "game/rep_3448.h"
+#include "menus/gap_D08.h"
+
+extern u8 lbl_2_bss_100B4;
 
 extern u32 lbl_803CB750;
 extern void fn_800625A4(s32 index, s32 command);
@@ -219,7 +222,12 @@ s32 fn_2_60D4(u8 index) {
 
 // .text:0x00006138 size:0x68
 void fn_2_6138(void) {
-    return;
+    fn_800625A4(0, 0x13);
+    fn_800625A4(1, 0x13);
+    lbl_2_bss_F468.unk4F = 0;
+    lbl_2_bss_F468.unk2E = 0;
+    lbl_2_bss_100B4 = 1;
+    lbl_803CBBCC->state = 8;
 }
 
 // .text:0x000061A0 size:0x2E4
