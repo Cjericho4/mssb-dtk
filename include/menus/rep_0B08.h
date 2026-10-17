@@ -118,7 +118,7 @@ void fn_2_68DE8(s32 index, Vec* out);
 void fn_2_68E68(void);
 void fn_2_68F08(s32 index, u8 value);
 void fn_2_68F24(s32 index, s32 animation);
-void fn_2_68FBC(void);
+void fn_2_68FBC(s32 index, s32 animation);
 void fn_2_69070(void);
 void fn_2_692D0(void);
 void fn_2_69554(void);

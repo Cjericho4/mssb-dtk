@@ -216,8 +216,13 @@ void fn_2_68F24(s32 index, s32 animation) {
 }
 
 // .text:0x00068FBC size:0xB4
-void fn_2_68FBC(void) {
-    return;
+void fn_2_68FBC(s32 index, s32 animation) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    Rep0B08AnimationConfig* config = &lbl_2_data_3C84[animation];
+    if (lbl_2_bss_1A824C->animations[obj->index] != animation) {
+        fn_2_8CD58(obj->index, config->animation, config->flag, 1, config->time, 0, 0);
+        lbl_2_bss_1A824C->animations[obj->index] = animation;
+    }
 }
 
 // .text:0x00069070 size:0x260
