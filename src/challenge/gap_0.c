@@ -42,7 +42,9 @@ void fn_1_568(void) {
 
 // .text:0x0000058C size:0x5C
 void fn_1_58C(void) {
-    return;
+    fn_800B0A5C_insertQueue(fn_1_1E0, 0)->unk10 = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_1_568;
+    lbl_803CC1B8->loadingState = 0;
 }
 
 // .text:0x000005E8 size:0x4
