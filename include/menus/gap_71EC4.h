@@ -4,6 +4,12 @@
 #include "mssbTypes.h"
 #include "menus/rep_0B08.h"
 
+typedef struct MenusInputFlags {
+    u8 _pad0[0xD];
+    u8 flags[4];
+} MenusInputFlags;
+extern MenusInputFlags lbl_803C66B0;
+
 void fn_2_71EC4(Rep0B08Obj* obj);
 void fn_2_71EFC(Rep0B08Obj* obj);
 void fn_2_71F20(Rep0B08Obj* obj);
@@ -56,7 +62,7 @@ void fn_2_76650(void);
 void fn_2_76874(void);
 void fn_2_76DF0(void);
 void fn_2_776A0(void);
-void fn_2_78034(void);
+void fn_2_78034(s32 unused, s32 index);
 void fn_2_7805C(void);
 void fn_2_7836C(void);
 void fn_2_78AC0(void);

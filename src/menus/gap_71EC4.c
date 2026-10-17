@@ -271,8 +271,11 @@ void fn_2_776A0(void) {
 }
 
 // .text:0x00078034 size:0x28
-void fn_2_78034(void) {
-    return;
+void fn_2_78034(s32 unused, s32 index) {
+    u8* flag = &lbl_803C66B0.flags[index];
+    if ((u32)__cntlzw(*flag) >> 5) {
+        *flag = 1;
+    }
 }
 
 // .text:0x0007805C size:0x310
