@@ -47,7 +47,13 @@ void fn_1_96D0(void) {
 
 // .text:0x000096D4 size:0x68
 void fn_1_96D4(void) {
-    return;
+    DrawingSceneStruct* scene;
+    (scene = lbl_803CC1B8)->unk18++;
+    if ((lbl_803C77B8.held & 1) || (lbl_803C77B8.held & 2)) {
+        fn_80034CEC((u32)scene);
+        fn_800B0A14_removeQueue();
+    }
+    lbl_1_bss_2FB9 = lbl_1_bss_2FAA;
 }
 
 // .text:0x0000973C size:0x7C

@@ -3,6 +3,10 @@
 
 #include "mssbTypes.h"
 #include "UnknownHeaders.h"
+#include "challenge/challenge.h"
+
+extern u8 lbl_1_bss_2FAA;
+extern u8 lbl_1_bss_2FB9;
 
 void fn_1_8CD4(void);
 void fn_1_8DBC(void);
