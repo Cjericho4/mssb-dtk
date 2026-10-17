@@ -21,8 +21,23 @@ void fn_1_1DCE4(void) {
 }
 
 // .text:0x0001DD48 size:0x4C
-void fn_1_1DD48(void) {
-    return;
+f32 fn_1_1DD48(u16 buttons, s32 negate, f32 value, f32 stepA, f32 step, f32 stepB, f32 min, f32 max) {
+    if (buttons & 0x40) {
+        step = stepA;
+    } else if (buttons & 0x20) {
+        step = stepB;
+    }
+    if (negate) {
+        step = -step;
+    }
+    value += step;
+    if (value < min) {
+        value = min;
+    }
+    if (value > max) {
+        value = max;
+    }
+    return value;
 }
 
 // .text:0x0001DD94 size:0x50

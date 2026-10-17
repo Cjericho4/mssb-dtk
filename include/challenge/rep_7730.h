@@ -27,7 +27,7 @@ void fn_1_1D694(void);
 void fn_1_1D944(void);
 void fn_1_1DA54(void);
 void fn_1_1DCE4(void);
-void fn_1_1DD48(void);
+f32 fn_1_1DD48(u16 buttons, s32 negate, f32 value, f32 stepA, f32 step, f32 stepB, f32 min, f32 max);
 void fn_1_1DD94(void);
 void fn_1_1DDE4(f32 value);
 void fn_1_1DDF4(f32 value);
