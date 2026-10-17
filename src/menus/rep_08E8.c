@@ -11,6 +11,7 @@ extern MenusEffectState* lbl_2_data_13374[];
 extern void fn_80031CA4(Vec* position, MenusEffectState* state);
 
 extern MenusDisplayConfig lbl_2_data_13228[];
+extern u16 lbl_2_data_13238[];
 extern void LITXForm(MenusLight* light, Mtx matrix);
 
 // .text:0x00046C88 size:0x78
@@ -184,8 +185,19 @@ void fn_2_49E5C(void) {
 }
 
 // .text:0x00049EFC size:0x80
-void fn_2_49EFC(void) {
-    return;
+s32 fn_2_49EFC(u16* text, u16 font) {
+    s32 width = 0;
+    while (*text != 0x4000) {
+        u16 code = *text;
+        if (code == 0x4003) width += lbl_2_data_13238[font];
+        else if (code == 0x4002) width += (u32)lbl_2_data_13238[font] >> 1;
+        else if (!(code & 0x4000)) {
+            if (code & 0x8000) width += lbl_2_data_13238[font];
+            else width += (u32)lbl_2_data_13238[font] >> 1;
+        }
+        text++;
+    }
+    return width;
 }
 
 // .text:0x00049F7C size:0xE8

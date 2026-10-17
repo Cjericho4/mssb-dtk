@@ -38,7 +38,7 @@ void fn_2_4906C(void);
 void fn_2_4917C(void);
 void fn_2_49DB8(void);
 void fn_2_49E5C(void);
-void fn_2_49EFC(void);
+s32 fn_2_49EFC(u16* text, u16 font);
 void fn_2_49F7C(void);
 void fn_2_4A064(void);
 s32 fn_2_4A068(u16* text);
