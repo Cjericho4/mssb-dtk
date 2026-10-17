@@ -1,4 +1,5 @@
 #include "game/rep_540.h"
+#include "stl/math.h"
 #include "game/gap_9CD90.h"
 #include "header_rep_data.h"
 #include "game/UnknownHomes_Game.h"
@@ -429,9 +430,35 @@ void estimateAndSetFutureCoords(int) {
     return;
 }
 
+extern f32 lbl_3_rodata_5A0;
+extern f32 lbl_3_rodata_660;
+extern f32 lbl_3_rodata_664;
+extern f32 lbl_3_rodata_668;
+extern f32 lbl_3_rodata_66C;
+
 // .text:0x0000D9EC size:0x1E4 mapped:0x8064CA80
 void fn_3_D9EC(void) {
-    return;
+    f32 speed = dolsqrtf2((g_Ball.physicsSubstruct.velocity.x * g_Ball.physicsSubstruct.velocity.x) + (g_Ball.physicsSubstruct.velocity.z * g_Ball.physicsSubstruct.velocity.z));
+    f32 checkSpeed = (f32)(double)speed;
+    g_Ball.ballVelocity = speed;
+    g_Ball.ballStoppingCode1ReallySlow2Stopped = 0;
+    if (lbl_3_rodata_590 != checkSpeed) {
+        g_Ball.ballVelocityPercent.x = g_Ball.physicsSubstruct.velocity.x / checkSpeed;
+        g_Ball.ballVelocityPercent.z = g_Ball.physicsSubstruct.velocity.z / checkSpeed;
+    }
+    if (g_Ball.ballVelocity <= lbl_3_rodata_660 &&
+        g_Ball.AtBat_Contact_BallPos.y <= lbl_3_rodata_664 &&
+        g_Ball.physicsSubstruct.velocity.y < lbl_3_rodata_668 &&
+        g_Ball.physicsSubstruct.velocity.y > lbl_3_rodata_66C) {
+        if (g_Ball.ballVelocity < lbl_3_rodata_5A0) {
+            g_Ball.ballStoppingCode1ReallySlow2Stopped = 2;
+            g_Ball.physicsSubstruct.velocity.x = 0.0f;
+            g_Ball.physicsSubstruct.velocity.z = 0.0f;
+            g_Ball.ballVelocity = 0.0f;
+            return;
+        }
+        g_Ball.ballStoppingCode1ReallySlow2Stopped = 1;
+    }
 }
 
 // .text:0x0000DBD0 size:0x78 mapped:0x8064CC64
