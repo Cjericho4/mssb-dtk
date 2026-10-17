@@ -50,7 +50,7 @@ void fn_2_908FC(Rep1028Obj* obj);
 void fn_2_90934(Rep1028Obj* obj);
 void fn_2_90940(Rep1028Obj* obj);
 void fn_2_9094C(void);
-void fn_2_909F4(void);
+void fn_2_909F4(Rep1028Obj* obj);
 void fn_2_90A2C(void);
 void fn_2_90AB0(Rep1028Obj* obj);
 void fn_2_90ABC(void);
