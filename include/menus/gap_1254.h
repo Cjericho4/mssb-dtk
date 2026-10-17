@@ -30,7 +30,7 @@ void fn_2_12F8(u16* value, u16 amount);
 void fn_2_1328(u32* value, u16 amount);
 void fn_2_1354(void);
 void fn_2_145C(void);
-void fn_2_148C(void);
+s32 fn_2_148C(u16* text);
 void fn_2_14F8(void);
 u32 fn_2_1554(void);
 void fn_2_1578(void);

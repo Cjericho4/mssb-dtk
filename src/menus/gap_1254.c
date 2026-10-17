@@ -54,8 +54,24 @@ void fn_2_145C(void) {
 }
 
 // .text:0x0000148C size:0x6C
-void fn_2_148C(void) {
-    return;
+s32 fn_2_148C(u16* text) {
+    s32 width = 0;
+    for (;;) {
+        u16 code = *text++;
+        if (code & 0x4000) {
+            switch (code & 0x3FFF) {
+            case 0: goto done;
+            case 2: width += 11; break;
+            case 3: width += 22; break;
+            }
+        } else if (code & 0x8000) {
+            width += 22;
+        } else {
+            width += 11;
+        }
+    }
+done:
+    return width;
 }
 
 // .text:0x000014F8 size:0x5C
