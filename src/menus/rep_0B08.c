@@ -420,7 +420,11 @@ void fn_2_6C28C(Rep0B08Obj* obj) {
 
 // .text:0x0006C2C4 size:0x24
 void fn_2_6C2C4(void) {
-    return;
+    Rep0B08Obj* obj;
+    lbl_2_bss_1A8248->unk442F = 0;
+    obj = &lbl_2_bss_1A8248->rep0B08Objects[1];
+    obj->variant = 0;
+    obj->state = 0;
 }
 
 // .text:0x0006C2E8 size:0x60
