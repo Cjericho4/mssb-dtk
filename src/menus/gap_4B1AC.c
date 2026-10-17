@@ -24,6 +24,8 @@ extern s16 lbl_2_data_3ED4[];
 extern s16 lbl_2_data_3EC8[];
 
 extern u16 lbl_2_bss_9600[2];
+extern u16 lbl_2_bss_9604[2];
+extern u16 lbl_2_bss_9A08[2][256];
 extern u16 lbl_2_bss_9608[2][256];
 
 static inline u32* menuStringTable(void) {
@@ -303,8 +305,21 @@ void fn_2_50E5C(void) {
 }
 
 // .text:0x00050F20 size:0xA8
-void fn_2_50F20(void) {
-    return;
+void fn_2_50F20(s32 index, s32 id, u16* source) {
+    u32* table = menuStringTable();
+    u16* output;
+    u16 code;
+    s32 old;
+    if (lbl_2_bss_9604[index] != 0) lbl_2_bss_9604[index]--;
+    source = resolveMenuString(table, id, source);
+    output = lbl_2_bss_9A08[index];
+    do {
+        code = *source++;
+        old = lbl_2_bss_9604[index];
+        lbl_2_bss_9604[index] = old + 1;
+        output[old] = code;
+        if (lbl_2_bss_9604[index] == 256) return;
+    } while (!(code & 0x4000) || (code & 0x3FFF));
 }
 
 // .text:0x00050FC8 size:0xE0
