@@ -3,6 +3,7 @@
 #include "math.h"
 #include "UnknownHeaders.h"
 #include "menus/rep_0B08.h"
+#include "menus/rep_10C0.h"
 
 extern MenusDisplayConfig lbl_2_data_13228[];
 
@@ -124,7 +125,13 @@ void fn_2_48BE0(void) {
 
 // .text:0x00048D08 size:0x4C
 void fn_2_48D08(void) {
-    return;
+    AnimationStruct* anim = &g_hugeAnimStruct.fielderStructs[lbl_2_bss_1A824C->animationIndex];
+    anim->unk34.x = 0.0f;
+    anim->unk34.y = 0.0f;
+    anim->unk34.z = 0.0f;
+    anim->unk40.x = 0.0f;
+    anim->unk40.y = 0.0f;
+    anim->unk40.z = 0.0f;
 }
 
 // .text:0x00048D54 size:0x60
