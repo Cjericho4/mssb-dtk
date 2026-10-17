@@ -899,7 +899,40 @@ void fn_3_87E80(void) {
 
 // .text:0x00088228 size:0x1E0 mapped:0x806C72BC
 void fn_3_88228(void) {
-    return;
+    s32 runnerIndex;
+
+    if (g_Ball.baseBallAndFielderAreOn >= 0 &&
+        g_Ball.AtBat_ContactResult >= 0 &&
+        g_Ball.AtBat_ContactResult != 3 &&
+        g_Fielders[g_Ball.fielderWBallIndex]._pad1E6[1] == 0) {
+        runnerIndex = (g_Ball.baseBallAndFielderAreOn + 3) & 3;
+        if (g_Runners[runnerIndex].forceOutCd == 1) {
+            fn_3_88D88(runnerIndex);
+            g_Runners[runnerIndex].forceOutCd = 2;
+            g_Runners[runnerIndex].outType = 2;
+            if (g_Ball.fielderWhoGotLastOut < 0) {
+                if (g_Ball.throwingFielder < 0) {
+                    g_Ball.fielderWhoGotLastOut = g_Ball.fielderWBallIndex;
+                    return;
+                }
+                g_Ball.fielderWhoGotLastOut = g_Ball.throwingFielder;
+                if (g_FieldingLogic._pad140[1] != 0 &&
+                    g_d_GameSettings.exhibitionMatchInd == 0 &&
+                    lbl_3_common_bss_37400.playerIndex == g_GameLogic.teamFielding) {
+                    fn_3_161588(8, g_Fielders[g_Ball.throwingFielder].unk178);
+                }
+                if ((s8)g_FieldingLogic._pad1d > 0 &&
+                    g_FieldingLogic.unk133 != 0) {
+                    g_UnkSound_32718._08 = 4;
+                    g_FieldingLogic._pad2 = g_Ball.fielderWithBallIndexStored2;
+                    if (g_d_GameSettings.exhibitionMatchInd == 0 &&
+                        lbl_3_common_bss_37400.playerIndex == g_GameLogic.teamFielding) {
+                        fn_3_161588(2, g_Fielders[g_Ball.fielderWithBallIndexStored2].unk178);
+                    }
+                }
+            }
+        }
+    }
 }
 
 // .text:0x00088408 size:0x5F4 mapped:0x806C749C
