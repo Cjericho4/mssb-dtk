@@ -26,6 +26,8 @@ extern void fn_800AD054(u32 high, u32 low);
 extern s16 lbl_2_data_3ED4[];
 extern s16 lbl_2_data_3EC8[];
 
+extern MenusMenuBuffer lbl_2_bss_5600;
+extern MenusMenuBuffer* lbl_2_data_1E99C[];
 extern u16 lbl_2_bss_9600[2];
 extern u16 lbl_2_bss_9604[2];
 extern u16 lbl_2_bss_9A08[2][256];
@@ -263,8 +265,17 @@ void fn_2_50B0C(void) {
 }
 
 // .text:0x00050BF4 size:0xCC
-void fn_2_50BF4(void) {
-    return;
+void fn_2_50BF4(s16 index) {
+    lbl_2_bss_1A824C->panel.unk1BA8 = 0;
+    lbl_2_bss_1A824C->panel.unk1BA6 = 0;
+    lbl_2_bss_1A824C->panel.unk1BAA = index;
+    lbl_2_bss_1A824C->panel.unk1BA0 = 0;
+    lbl_2_bss_1A824C->panel.unk1B9E = 0;
+    lbl_2_bss_1A824C->panel.unk1E72 = 0;
+    lbl_2_bss_1A824C->panel.unk1E70 = 0;
+    memcpy(&lbl_2_bss_5600, lbl_2_data_1E99C[lbl_2_bss_1A824C->panel.unk1BAA], sizeof(MenusMenuBuffer));
+    lbl_2_bss_1A824C->panel.textBuffer = &lbl_2_bss_5600;
+    fn_2_4EB9C();
 }
 
 // .text:0x00050CC0 size:0x80
