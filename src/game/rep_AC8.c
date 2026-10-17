@@ -1,4 +1,5 @@
 #include "game/rep_AC8.h"
+#include "game/gap_9CD90.h"
 #include "game/rep_1CB8.h"
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
@@ -3535,7 +3536,78 @@ void fn_3_49F40(s32 arg0, s32 arg1) {
 
 // .text:0x0004A124 size:0x2E4 mapped:0x806891B8
 void fn_3_4A124(void) {
-    return;
+    s32 var_r31;
+
+    if (g_Ball.hitClassification3 == 5) {
+        if ((g_FieldingLogic.unk_F8[2] == 1) || (g_FieldingLogic.unk_F8[2] == 0xA) || (g_FieldingLogic.unk_F8[2] == 0xB)) {
+            fn_3_49F40(8, 0);
+            fn_3_49F40(6, 7);
+            fn_3_49F40(7, 1);
+            return;
+        }
+        if ((g_FieldingLogic.unk_F8[4] == 1) || (g_FieldingLogic.unk_F8[4] == 0xA) || (g_FieldingLogic.unk_F8[4] == 0xB)) {
+            fn_3_49F40(6, 0);
+            fn_3_49F40(7, 1);
+            fn_3_49F40(8, 4);
+            return;
+        }
+        fn_3_49F40(7, 0);
+        if (g_Ball.Hit_HorizontalAngle < 0x400) {
+            fn_3_49F40(8, 0);
+            fn_3_49F40(6, 7);
+            return;
+        }
+        fn_3_49F40(6, 0);
+        fn_3_49F40(8, 4);
+        return;
+    } else if (g_Ball.hitClassification3 == 6) {
+        fn_3_49F40(7, 0);
+        if ((g_Ball.Hit_HorizontalAngle >= 0x3E0) && (g_Ball.Hit_HorizontalAngle < 0x420)) {
+            fn_3_49F40(8, 0);
+            fn_3_49F40(6, 0);
+            return;
+        }
+        if (g_Ball.Hit_HorizontalAngle < 0x400) {
+            fn_3_49F40(8, 0);
+            fn_3_49F40(6, 7);
+            return;
+        }
+        fn_3_49F40(6, 0);
+        fn_3_49F40(8, 6);
+        return;
+    } else if (g_Ball.hitClassification3 == 7) {
+        if ((g_FieldingLogic.unk_F8[1] != 1) && (g_FieldingLogic.unk_F8[1] != 0xA) && (g_FieldingLogic.unk_F8[1] != 0xB)) {
+            fn_3_49F40(8, 0);
+            fn_3_49F40(6, 1);
+            fn_3_49F40(7, 1);
+            return;
+        }
+        fn_3_49F40(6, 1);
+        fn_3_49F40(7, 1);
+        fn_3_49F40(8, 1);
+        return;
+    } else if (g_Ball.hitClassification3 == 8) {
+        if ((g_FieldingLogic.unk_F8[1] != 1) && (g_FieldingLogic.unk_F8[1] != 0xA) && (g_FieldingLogic.unk_F8[1] != 0xB)) {
+            fn_3_49F40(6, 0);
+            fn_3_49F40(7, 1);
+            fn_3_49F40(8, 1);
+            return;
+        }
+        fn_3_49F40(6, 1);
+        fn_3_49F40(7, 1);
+        fn_3_49F40(8, 1);
+        return;
+    } else {
+        fn_3_49F40(6, 1);
+        fn_3_49F40(7, 1);
+        fn_3_49F40(8, 4);
+        var_r31 = 2;
+        do {
+            fn_3_49F40(var_r31, 0);
+            var_r31 += 1;
+        } while (var_r31 < 6);
+        return;
+    }
 }
 
 // .text:0x0004A408 size:0x5A4 mapped:0x8068949C
@@ -4106,8 +4178,63 @@ void fn_3_544B8(void) {
 }
 
 // .text:0x00054900 size:0x258 mapped:0x80693994
-void fn_3_54900(void) {
-    return;
+void fn_3_54900(s32 fielderIdx) {
+    Fielder *temp_r31;
+    f32 var_f2;
+    f32 var_f3;
+    s32 var_r4;
+
+    temp_r31 = &g_Fielders[fielderIdx];
+    var_r4 = g_RunningLogic.unk4;
+    if ((s8) (u8) temp_r31->unk1F5 >= 0) {
+        var_f2 = lbl_3_data_4444[4].x;
+        var_f3 = lbl_3_data_4444[4].z;
+        goto block_28;
+    }
+    if ((u8) g_RunningLogic.unk10 == 0) {
+        temp_r31->unk4C = (f32) temp_r31->unk48;
+        temp_r31->_pad1F2[0] = 1;
+        return;
+    }
+    if ((s16) g_Ball.AtBat_ContactResult == 3) {
+        var_r4 &= 0xFFF0;
+    }
+    switch (var_r4) {                               /* irregular */
+    case 0x1:
+        var_f2 = lbl_3_data_4444[1].x;
+        var_f3 = lbl_3_data_4444[1].z;
+        break;
+    case 0x10:
+        var_f2 = (0.7f * lbl_3_data_4444[2].x) + (0.3f * lbl_3_data_4444[1].x);
+        var_f3 = (0.7f * lbl_3_data_4444[2].z) + (0.3f * lbl_3_data_4444[1].z);
+        break;
+    case 0x100:
+        var_f2 = (0.7f * lbl_3_data_4444[3].x) + (0.3f * lbl_3_data_4444[2].x);
+        var_f3 = (0.7f * lbl_3_data_4444[3].z) + (0.3f * lbl_3_data_4444[2].z);
+        break;
+    case 0x11:
+        var_f2 = 0.5f * (lbl_3_data_4444[1].x + lbl_3_data_4444[2].x);
+        var_f3 = 0.5f * (lbl_3_data_4444[1].z + lbl_3_data_4444[2].z);
+        break;
+    case 0x110:
+        var_f2 = 0.5f * (lbl_3_data_4444[2].x + lbl_3_data_4444[3].x);
+        var_f3 = 0.5f * (lbl_3_data_4444[2].z + lbl_3_data_4444[3].z);
+        break;
+    case 0x111:
+        var_f2 = (0.3f * lbl_3_data_4444[3].x) + (0.7f * lbl_3_data_4444[2].x);
+        var_f3 = (0.3f * lbl_3_data_4444[3].z) + (0.7f * lbl_3_data_4444[2].z);
+        break;
+    case 0x101:
+        var_f2 = lbl_3_data_4444[4].x;
+        var_f3 = lbl_3_data_4444[4].z;
+        break;
+    default:
+        var_f2 = lbl_3_data_4444->x;
+        var_f3 = lbl_3_data_4444->z;
+        break;
+    }
+block_28:
+    temp_r31->unk48 = (f32) atan2((f64) (var_f3 - temp_r31->pos[2]), (f64) (var_f2 - temp_r31->pos[0]));
 }
 
 // .text:0x00054B58 size:0x818 mapped:0x80693BEC
@@ -4243,7 +4370,40 @@ void fn_3_57144(void) {
 
 // .text:0x00057488 size:0x22C mapped:0x8069651C
 void fn_3_57488(void) {
+    s32 idx = g_FieldingLogic.unkB0;
+    Fielder* f;
+    f32 dist;
+
+    if (g_d_GameSettings.minigamesEnabled != 0) {
+        idx = g_Minigame.minigameRelatedIndex;
+    }
+    f = &g_Fielders[idx];
+
+    if (g_AiLogic._78 != 0 || g_Ball.ballState == 3) {
+        goto useFuturePosition;
+    }
+    if (g_Ball.ballState == 0) {
+        if (g_Ball.hitWallInd != 0 || g_Ball.ballStoppingCode1ReallySlow2Stopped != 0) {
+            goto useFuturePosition;
+        }
+        if (g_FieldingLogic.unkB0 >= 6 || g_d_GameSettings.minigamesEnabled != 0) {
+            dist = dolsqrtf2(f->unk20 * f->unk20 + f->unk24 * f->unk24);
+            if (dist > 10.0f && g_Ball.ballDistanceFromHome > dist) {
+                goto useFuturePosition;
+            }
+        }
+    }
+    if (f->unk20 > 1000.0f) {
+        fn_3_43038(g_FieldingLogic.unkB0);
+        f->unk20 = f->prevPos[0];
+        f->unk24 = f->prevPos[2];
+    }
     return;
+
+useFuturePosition:
+    g_AiLogic._78 = 1;
+    f->unk20 = g_Ball.physicsSubstruct.futureCoordsAndDist[15].pos.x;
+    f->unk24 = g_Ball.physicsSubstruct.futureCoordsAndDist[15].pos.z;
 }
 
 // .text:0x000576B4 size:0x360 mapped:0x80696748

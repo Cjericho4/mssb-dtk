@@ -253,7 +253,7 @@ extern Struct_4884 lbl_3_data_4884[2];
 void fn_3_53EE8(s32 idx);
 void fn_3_53F48(void);
 void fn_3_544B8(void);
-void fn_3_54900(void);
+void fn_3_54900(s32 fielderIdx);
 void fn_3_54B58(void);
 void fn_3_55370(void);
 void fn_3_555AC(s32 idx);

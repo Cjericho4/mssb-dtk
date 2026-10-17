@@ -11,7 +11,8 @@ typedef struct {
     s16 basesOccupied;  /* 0x02: runner bitmask, e.g. 0x1011 */
     s16 unk4;           /* 0x04 */
     s16 runnerOnBase[4]; /* 0x06: -1 when base is empty */
-    u8 _padE[0x11 - 0x0E];
+    u8 _padE[0x10 - 0x0E];
+    u8 unk10;         /* 0x10 */
     u8 unk11;           /* 0x11 */
     u8 unk12;           /* 0x12 */
     u8 unk13;           /* 0x13 */
