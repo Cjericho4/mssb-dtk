@@ -7,6 +7,8 @@
 #include "menus/rep_0568.h"
 #include "menus/gap_16870.h"
 
+extern void fn_800AD038(u32 value);
+
 extern u8 lbl_2_bss_100B4;
 
 extern u32 lbl_803CB750;
@@ -561,7 +563,18 @@ void fn_2_11EA8(void) {
 
 // .text:0x000120D0 size:0x9C
 void fn_2_120D0(void) {
-    return;
+    lbl_8034E9A0.unk48AD = 1;
+    lbl_8034E9A0.unk4755 = 3;
+    lbl_803C66B0.unk0 = 0;
+    lbl_803C66B0.unk5A = 0;
+    lbl_803C66B0.unk59 = 0;
+    lbl_8034E9A0.unk472A = 0xFF;
+    lbl_8034E9A0.unk48AF = 1;
+    lbl_8034E9A0.unk48B1 = 1;
+    memset(lbl_803C66B0.resetData, 0, 6);
+    lbl_8034E978.unk26 = 1;
+    fn_800AD038(lbl_8034E9A0.timeHigh);
+    g_d_GameSettings._10 = 0;
 }
 
 // .text:0x0001216C size:0xCC

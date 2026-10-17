@@ -20,6 +20,9 @@ typedef struct MenusInputFlags {
     };
     u8 unk55;
     u8 unk56;
+    u8 _pad57[2];
+    u8 unk59;
+    u8 unk5A;
 } MenusInputFlags;
 extern MenusInputFlags lbl_803C66B0;
 
@@ -39,7 +42,9 @@ typedef struct MenusSceneTransition {
     u8 _pad1[7];
     u8 current;
     u8 previous;
-    u8 _padA[0x1E];
+    u8 _padA[0x1C];
+    u8 unk26;
+    u8 _pad27;
 } MenusSceneTransition;
 
 typedef struct MenusTransitionConfig {
