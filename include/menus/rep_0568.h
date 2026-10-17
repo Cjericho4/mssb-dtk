@@ -17,6 +17,7 @@ typedef struct Rep0568State {
     u8 active[8];
     union {
         s8 counters[9];
+        u8 holdTimers[9];
         struct {
             u8 _pad1C[4];
             u8 unk20;

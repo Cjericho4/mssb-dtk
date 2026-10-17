@@ -13,6 +13,7 @@ extern MenusSceneScript lbl_2_data_2D33C;
 extern s32 lbl_2_bss_A840;
 #include "menus/gap_8782C.h"
 #include "game/rep_3448.h"
+#include "static/UnknownHomes_Static.h"
 extern void fn_800363D8(DrawingSceneStruct* scene, s32 index, s32 enabled, s32 value, s32 order);
 
 extern void fn_80053FE8(void);
@@ -652,8 +653,20 @@ void fn_2_802EC(void) {
 }
 
 // .text:0x00080500 size:0xDC
-void fn_2_80500(void) {
-    return;
+void fn_2_80500(DrawingSceneStruct* scene, s32 index) {
+    u8 singlePlayer;
+    if ((u32)__cntlzw(lbl_803C66B0.flags[index]) >> 5) {
+        singlePlayer = (u32)__cntlzw(lbl_8034E9A0.controllerIndices[0]) >> 5;
+        lbl_80371C30[scene->unkIndex + 0x7B].obj->field_0x5C = singlePlayer << 16;
+        lbl_80371C30[scene->unkIndex + 0x19].obj->field_0x5C = (singlePlayer + 4) << 16;
+        fn_800626EC(index);
+        lbl_803C66B0.flags[index] = 1;
+    }
+    if (lbl_803C66B0.flags[index] == 1) {
+        fn_80062674(index);
+        lbl_803C66B0.flags[index] = 2;
+        g_d_GameSettings._10 = 0;
+    }
 }
 
 // .text:0x000805DC size:0x250

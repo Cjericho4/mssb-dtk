@@ -45,8 +45,17 @@ void fn_2_150D0(u8 index) {
 }
 
 // .text:0x00015104 size:0xB8
-void fn_2_15104(void) {
-    return;
+s32 fn_2_15104(s32 previous, s32 current, u8 index, u8 value) {
+    if (current != previous) {
+        lbl_2_bss_100B8.holdTimers[index] = 1;
+    } else if (lbl_2_bss_100B8.holdTimers[index] != 0) {
+        if (++lbl_2_bss_100B8.holdTimers[index] >= 15) {
+            lbl_2_bss_100B8.active[index] = 1;
+            lbl_2_bss_100B8.holdTimers[index] = 0;
+            fn_2_16A48(index, value);
+        }
+    }
+    return (u32)__cntlzw(lbl_2_bss_100B8.holdTimers[index]) >> 5;
 }
 
 // .text:0x000151BC size:0x450
