@@ -176,7 +176,7 @@ void fn_3_4A124(void);
 void fn_3_4A408(void);
 void fn_3_4A9AC(void);
 void fn_3_4B128(void);
-void fn_3_4B514(void);
+void fn_3_4B514(s32 fielderIdx);
 void fn_3_4B8D0(void);
 void fn_3_4BA0C(void);
 void fn_3_4C9C8(void);
@@ -233,6 +233,7 @@ extern Struct_3C40 lbl_3_data_3C40;
 extern VecXZ lbl_3_data_4290[7][2]; /* [stadium][battingTeam] */
 extern VecXZ lbl_3_data_4300[9];    /* per fielder */
 extern f32 lbl_3_data_4348[7][2];   /* [stadium][fieldingTeam] */
+extern VecXZ lbl_3_data_44B4[11];
 void fn_3_53EE8(s32 idx);
 void fn_3_53F48(void);
 void fn_3_544B8(void);

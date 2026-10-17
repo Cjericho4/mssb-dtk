@@ -2014,8 +2014,27 @@ void fn_3_4B128(void) {
 }
 
 // .text:0x0004B514 size:0x3BC mapped:0x8068A5A8
-void fn_3_4B514(void) {
-    return;
+void fn_3_4B514(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    f32 off = 0.0f;
+
+    if (fn_3_53130(fielderIdx) != 0) {
+        return;
+    }
+    if (f->unk1D4 >= 2) {
+        setFielderTarget(f, lbl_3_data_44B4[f->unk1D4].x, lbl_3_data_44B4[f->unk1D4].z);
+    } else {
+        if (fielderIdx == 6) {
+            off = 10.0f;
+        }
+        if (fielderIdx == 8) {
+            off = -10.0f;
+        }
+        setFielderTargetIdx(fielderIdx, f->pos[0] + off, f->pos[2] - 20.0f);
+    }
+    if (fielderIdx != -1) {
+        setFielderReadyAction(fielderIdx, 6);
+    }
 }
 
 // .text:0x0004B8D0 size:0x13C mapped:0x8068A964
