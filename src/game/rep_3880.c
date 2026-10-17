@@ -1568,8 +1568,47 @@ void fn_3_1552AC(void) {
 }
 
 // .text:0x001559E4 size:0x244 mapped:0x80794A78
-void fn_3_1559E4(void) {
-    return;
+typedef struct {
+    u8 _pad0[0x8];
+    s32 scale;        // 0x08
+    u8 _padC[0x4];
+    s32 alpha;        // 0x10
+    u8 _pad14[0x4];
+    s32 field_0x18;   // 0x18
+} Struct_26BC0;
+extern Vec lbl_3_data_26BB4;
+extern Struct_26BC0 lbl_3_data_26BC0;
+
+// .text:0x001559E4 size:0x244 mapped:0x80794A78
+void fn_3_1559E4(ListNode_14B9F0* node, Vec* pos, Vec* rot) {
+    struct { Control ctrl; u8 _pad[8]; } control;
+    Mtx m;
+    Vec v;
+    Vec base;
+    f64 ay;
+
+    node->field_0x4A = lbl_3_data_26BC0.field_0x18;
+    control.ctrl.type = 0;
+    CTRLSetRotation(&control.ctrl, rot->x, rot->y, rot->z);
+    CTRLBuildMatrix(&control.ctrl, m);
+    if (g_Minigame.GameMode_MiniGame == MINI_GAME_ID_BOBOMB_DERBY) {
+        base = lbl_3_data_26BB4;
+    } else {
+        PSVECScale(&lbl_3_data_26BB4, 1.5f, &base);
+    }
+    v.x = base.x + 1.5 * ((rand() % 40 - 20) / 100.0);
+    v.y = base.y;
+    v.z = base.z + 1.5 * ((rand() % 40 - 20) / 100.0);
+    PSMTXMultVec(m, &v, &v);
+    v.x += pos->x;
+    ay = __fabs(pos->y);
+    v.y = v.y - ay;
+    v.z += pos->z;
+    node->offset.x = v.x;
+    node->offset.y = v.y;
+    node->offset.z = v.z;
+    node->scaleY = node->scaleX = (f32)lbl_3_data_26BC0.scale;
+    node->color[3] = lbl_3_data_26BC0.alpha;
 }
 
 // .text:0x00155C28 size:0x2E0 mapped:0x80794CBC
