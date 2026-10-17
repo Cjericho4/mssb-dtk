@@ -1,5 +1,7 @@
 #include "menus/gap_33E70.h"
 #include "game/rep_3448.h"
+#include "menus/gap_4B1AC.h"
+#include "menus/rep_0B08.h"
 
 // .text:0x00033E70 size:0x1F0
 void fn_2_33E70(void) {
@@ -283,7 +285,15 @@ void fn_2_38D44(void) {
 
 // .text:0x00038EA8 size:0xA0
 void fn_2_38EA8(void) {
-    return;
+    lbl_2_bss_1A8248->unk4416 = lbl_2_bss_1A8248->unk4415;
+    lbl_2_bss_1A8244->visited[lbl_2_bss_1A8248->unk4415] = 1;
+    if (lbl_2_bss_1A8248->unk4415 < 3) {
+        if (!lbl_2_bss_1A8244->chosen[lbl_2_bss_1A8248->unk441C]) {
+            lbl_2_bss_1A8244->chosen[lbl_2_bss_1A8248->unk441C] = 1;
+        }
+        lbl_2_bss_1A8248->unk4415++;
+        lbl_2_bss_1A8244->counts[lbl_2_bss_1A8248->unk441C]++;
+    }
 }
 
 // .text:0x00038F48 size:0x26C

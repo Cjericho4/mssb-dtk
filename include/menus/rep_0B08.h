@@ -71,7 +71,8 @@ typedef struct MenusSceneState {
     s16 previousCounter;
     u8 _pad43C0[0x55];
     u8 unk4415;
-    u8 _pad4416[5];
+    u8 unk4416;
+    u8 _pad4417[4];
     u8 unk441B;
     u8 unk441C;
     u8 _pad441D[3];
