@@ -39,7 +39,7 @@ void fn_2_1A88(void);
 void fn_2_1BAC(void);
 void fn_2_1C34(void);
 void fn_2_1D28(void);
-void fn_2_1D54(void);
+void fn_2_1D54(s32* value, u8 index, s32 count);
 void fn_2_1DC4(void);
 void fn_2_1DC8(void);
 void fn_2_1F30(void);

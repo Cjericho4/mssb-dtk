@@ -119,8 +119,15 @@ void fn_2_1D28(void) {
 }
 
 // .text:0x00001D54 size:0x70
-void fn_2_1D54(void) {
-    return;
+void fn_2_1D54(s32* value, u8 index, s32 count) {
+    u16 buttons = lbl_8034E9A0.input[index].buttons;
+    if (buttons & 8) {
+        --*value;
+        if (*value < 0) *value = count - 1;
+    } else if (buttons & 4) {
+        ++*value;
+        if (*value == count) *value = 0;
+    }
 }
 
 // .text:0x00001DC4 size:0x4
