@@ -270,6 +270,7 @@ typedef struct HugeAnimEntry68 {
     union {
         /* 0x00 */ AnimLevel1* field_0x0;
         /* 0x00 */ f32 unk0;
+        /* 0x00 */ u16 count;
     };
     union {
         /* 0x04 */ AnimLevel1* field_0x4;

@@ -3,6 +3,7 @@
 #include "menus/rep_08E8.h"
 #include "game/rep_1E08.h"
 
+extern void fn_800BDA94(AnimLevel1** anim, Mtx matrix);
 extern void LITXForm(MenusLight* light, Mtx matrix);
 
 extern hugeAnimStruct* lbl_2_bss_340140;
@@ -74,7 +75,15 @@ void fn_2_86DCC(void) {
 
 // .text:0x00086F40 size:0xAC
 void fn_2_86F40(void) {
-    return;
+    AnimLevel1** anim;
+    s32 i;
+    for (i = 0; i < g_hugeAnimStruct.entries_68->count; i++) {
+        anim = &g_hugeAnimStruct.entries_68[i].unk34;
+        if (*anim && g_hugeAnimStruct.entries_68[i + 1].unk10) {
+            if (g_hugeAnimStruct.entries_2D94[i].callback) g_hugeAnimStruct.entries_2D94[i].callback(i);
+            fn_800BDA94(anim, fn_80052768(0)->mtx);
+        }
+    }
 }
 
 // .text:0x00086FEC size:0xE8
