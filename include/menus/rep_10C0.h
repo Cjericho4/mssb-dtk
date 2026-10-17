@@ -4,7 +4,10 @@
 #include "mssbTypes.h"
 
 typedef struct Rep10C0State {
-    u8 _pad0[0x1976E4];
+    u8 _pad0[0x195424];
+    u32 timeHigh;
+    u32 timeLow;
+    u8 _pad19542C[0x22B8];
     s16 unk1976E4;
     u8 _pad1976E6[0x64];
     s16 unk19774A;

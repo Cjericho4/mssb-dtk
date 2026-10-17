@@ -3,6 +3,14 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusTimeState {
+    u32 unk0;
+    u32 high;
+    u32 low;
+} MenusTimeState;
+
+extern MenusTimeState lbl_803C7898;
+
 void fn_2_4B1AC(void);
 void fn_2_4B2D0(void);
 void fn_2_4C314(void);
