@@ -2,9 +2,15 @@
 #define __MENUS_rep_1028_H_
 
 #include "mssbTypes.h"
+#include "Dolphin/mtx.h"
 
 typedef struct Rep1028Obj {
-    /* 0x00 */ u8 _pad0[0x78];
+    /* 0x00 */ Vec position;
+    u8 _padC[0x1C];
+    f32 unk28;
+    u8 _pad2C[4];
+    f32 unk30;
+    u8 _pad34[0x44];
     s32 index;
     u8 _pad7C[0x14];
     /* 0x90 */ s16 state;
@@ -46,7 +52,7 @@ void fn_2_8FD14(void);
 void fn_2_8FDB0(void);
 void fn_2_8FE9C(void);
 void fn_2_9007C(void);
-void fn_2_9033C(void);
+void fn_2_9033C(s32 index, Vec* position, f32 value);
 void fn_2_903A8(void);
 void fn_2_90428(void);
 void fn_2_904A8(void);

@@ -2,6 +2,7 @@
 #include "menus/rep_0B08.h"
 #include "menus/gap_8782C.h"
 #include "Dolphin/GX/GXTypes.h"
+#include "string.h"
 
 extern GXColor lbl_800F7478[];
 extern void (*lbl_2_data_30900[])(s32);
@@ -173,8 +174,12 @@ void fn_2_9007C(void) {
 }
 
 // .text:0x0009033C size:0x6C
-void fn_2_9033C(void) {
-    return;
+void fn_2_9033C(s32 index, Vec* position, f32 value) {
+    Rep1028Obj* obj = &lbl_2_bss_1A8248->rep1028Objects[index];
+    memcpy(&obj->position, position, sizeof(Vec));
+    obj->unk28 = value;
+    obj->unk30 = 0.0f;
+    obj->unk28 = value;
 }
 
 // .text:0x000903A8 size:0x80
