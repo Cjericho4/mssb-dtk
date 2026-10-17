@@ -71,8 +71,10 @@ void fn_2_8ABFC(void) {
 }
 
 // .text:0x0008AC84 size:0x2C
-void fn_2_8AC84(void) {
-    return;
+void fn_2_8AC84(s32 index, u8 visible) {
+    if (lbl_2_bss_340140->entries_2D94 != 0) {
+        lbl_2_bss_3401BC->visible[index] = visible;
+    }
 }
 
 // .text:0x0008ACB0 size:0x2C
