@@ -207,7 +207,6 @@ typedef struct SND_EMITTER {
   struct SND_EMITTER* next;
   struct SND_EMITTER* prev;
   SND_ROOM* room;
-  SND_PARAMETER_INFO* paraInfo;
   u32 flags;
   SND_FVECTOR pos;
   SND_FVECTOR dir;
