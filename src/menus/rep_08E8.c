@@ -3,6 +3,8 @@
 #include "UnknownHeaders.h"
 #include "menus/rep_0B08.h"
 
+extern MenusDisplayConfig lbl_2_data_13228[];
+
 // .text:0x00046C88 size:0x78
 void fn_2_46C88(void) {
     return;
@@ -106,7 +108,7 @@ void fn_2_487A0(void) {
 
 // .text:0x000489DC size:0x40
 void fn_2_489DC(void) {
-    return;
+    fn_800A7D4C(12, (BdcArrayElement*)&lbl_2_data_13228[lbl_803CBBC0]);
 }
 
 // .text:0x00048A1C size:0x1C4

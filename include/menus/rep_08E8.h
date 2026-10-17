@@ -3,6 +3,11 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusDisplayConfig {
+    u32 unk0;
+    u32 unk4;
+} MenusDisplayConfig;
+
 void fn_2_46C88(void);
 BOOL fn_2_46D00(void);
 void fn_2_46D34(void);
