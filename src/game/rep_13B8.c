@@ -1254,7 +1254,34 @@ void fn_3_8A618(void) {
 
 // .text:0x0008A7B4 size:0x1A4 mapped:0x806C9848
 void fn_3_8A7B4(void) {
-    return;
+    if (g_GameLogic.battingAIInd[g_GameLogic.homeTeamBattingInd_fieldingTeam] != 0) {
+        fn_3_85CB0();
+    } else {
+        InputStruct* input = &g_Controls[g_GameLogic.teams[g_GameLogic.teamBatting]];
+        if (g_Pitcher.pitcherActionState == 1 || g_Pitcher.pitcherActionState == 2 ||
+            g_Pitcher.pitcherActionState == 3) {
+            if (g_d_GameSettings.GameModeSelected == 2 && (s8)g_Practice.instructionNumber >= 0)
+                input = &g_Practice.inputs[g_GameLogic.teamBatting];
+            if (input->newButtonInput & 0x800) {
+                s16 angle = input->controlStickAngle;
+                if (angle < 0) {
+                    InMemRunnerType* runner = &g_Runners[1];
+                    int i;
+                    for (i = 0; i < 3; i++, runner++) {
+                        if (runner->runnerOnFieldOrOutOrScored != 0 && runner->stealingStatus == 0)
+                            runner->stealingStatus = 1;
+                    }
+                } else {
+                    if (angle >= 0x1C0 && angle <= 0x640) g_Runners[1].stealingStatus = 1;
+                    angle = input->controlStickAngle;
+                    if (angle >= 0x5C0 && angle <= 0xA40) g_Runners[2].stealingStatus = 1;
+                    angle = input->controlStickAngle;
+                    if (angle >= 0x9C0 && angle <= 0xE40) g_Runners[3].stealingStatus = 1;
+                }
+            }
+        }
+    }
+    fn_3_86EF8();
 }
 
 // .text:0x0008A958 size:0x73C mapped:0x806C99EC
