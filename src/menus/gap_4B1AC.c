@@ -138,7 +138,7 @@ void fn_2_4E898(void) {
 
 // .text:0x0004E8BC size:0x24
 void fn_2_4E8BC(void) {
-    return;
+    fn_80035B50(24);
 }
 
 // .text:0x0004E8E0 size:0x24
