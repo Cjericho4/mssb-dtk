@@ -14,9 +14,14 @@ typedef struct Rep10C0State {
     u32 timeHigh;
     u32 timeLow;
     MenusPanelState panel;
-    u8 _pad1972BC[0x3E0];
+    u8 flag1972BC;
+    u8 _pad1972BD[3];
+    u8 flag1972C0;
+    u8 _pad1972C1[0x3DB];
     s32 animationIndex; /* 0x19769C */
-    u8 _pad1976A0[0x44];
+    u8 _pad1976A0[0x36];
+    s16 unk1976D6;
+    u8 _pad1976D8[0xC];
     s16 unk1976E4;
     u8 _pad1976E6[0x64];
     s16 unk19774A;

@@ -4,6 +4,14 @@
 #include "mssbTypes.h"
 #include "menus/rep_10C0.h"
 
+typedef struct MenusLoadingState {
+    u8 _pad0[0x30];
+    s16 state;
+    u8 _pad32[2];
+    u8 unk34;
+} MenusLoadingState;
+extern MenusLoadingState* lbl_2_bss_1A823C;
+
 typedef struct MenusDisplayPanel {
     u8 visible;
     u8 _pad1[0x1E];

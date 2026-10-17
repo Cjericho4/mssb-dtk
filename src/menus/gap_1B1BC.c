@@ -1,5 +1,8 @@
 #include "menus/gap_1B1BC.h"
 #include "menus/rep_0B08.h"
+#include "menus/gap_4B1AC.h"
+
+extern void fn_80068720(s32 state);
 
 // .text:0x0001B1BC size:0x158
 void fn_2_1B1BC(void) {
@@ -33,7 +36,13 @@ void fn_2_1B7B4(void) {
 
 // .text:0x0001BF50 size:0x80
 void fn_2_1BF50(void) {
-    return;
+    fn_80068720(13);
+    lbl_2_bss_1A824C->flag1972BC = 1;
+    lbl_2_bss_1A824C->flag1972C0 = 1;
+    lbl_2_bss_1A824C->unk1976D6 = 0;
+    lbl_2_bss_1A8248->unk44F2 = 0;
+    fn_2_4E898();
+    lbl_2_bss_1A823C->unk34 = 0;
 }
 
 // .text:0x0001BFD0 size:0x104
