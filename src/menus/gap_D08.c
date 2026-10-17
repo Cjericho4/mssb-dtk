@@ -55,8 +55,11 @@ void fn_2_119C(void) {
 }
 
 // .text:0x000011A0 size:0x38
-void fn_2_11A0(void) {
-    return;
+void fn_2_11A0(u16 selection) {
+    lbl_803CBBCC->previousSelection = lbl_803CBBCC->selection;
+    lbl_803CBBCC->previousState = lbl_803CBBCC->state;
+    lbl_803CBBCC->selection = selection;
+    lbl_803CBBCC->state = 0;
 }
 
 // .text:0x000011D8 size:0x44

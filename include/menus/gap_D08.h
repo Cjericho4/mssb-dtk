@@ -3,6 +3,16 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusD08State {
+    u16 unk0;
+    u16 selection;
+    u16 state;
+    u16 previousSelection;
+    u16 previousState;
+} MenusD08State;
+
+extern MenusD08State* lbl_803CBBCC;
+
 void fn_2_D08(void);
 void fn_2_D88(void);
 void fn_2_E84(void);
@@ -13,7 +23,7 @@ s32 fn_2_10FC(void);
 void fn_2_1130(s16 state);
 void fn_2_1164(void);
 void fn_2_119C(void);
-void fn_2_11A0(void);
+void fn_2_11A0(u16 selection);
 void fn_2_11D8(void);
 
 #endif // !__MENUS_gap_D08_H_
