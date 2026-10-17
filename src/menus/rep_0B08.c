@@ -1,5 +1,7 @@
 #include "menus/rep_0B08.h"
 
+extern void (*lbl_2_data_2A29C[])(Rep0B08Obj*);
+
 extern void (*lbl_2_data_2A2AC[])(Rep0B08Obj*);
 
 extern void (*lbl_2_data_2A2B8[])(Rep0B08Obj*);
@@ -371,8 +373,8 @@ void fn_2_6C190(void) {
 }
 
 // .text:0x0006C28C size:0x38
-void fn_2_6C28C(void) {
-    return;
+void fn_2_6C28C(Rep0B08Obj* obj) {
+    lbl_2_data_2A29C[obj->state](obj);
 }
 
 // .text:0x0006C2C4 size:0x24
