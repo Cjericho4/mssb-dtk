@@ -5,6 +5,8 @@
 #include "game/gap_5985C.h"
 #include "stl/mem.h"
 #include "game/rep_1838.h"
+#include "game/m_sound.h"
+#include "musyx/musyx.h"
 
 typedef struct {
     u8 _00[0x28];
@@ -293,8 +295,54 @@ void fn_3_145FF4(void) {
 }
 
 // .text:0x001461A4 size:0x264 mapped:0x80785238
+typedef struct WallBallCountdown {
+    u8 _pad0[0x22];
+    s16 countdown; // 0x22
+} WallBallCountdown;
+extern WallBallCountdown lbl_3_data_21E68;
+
 void fn_3_1461A4(void) {
-    return;
+    u32 i;
+    if (g_Minigame.turnOverStatus == 0) {
+        if (g_Minigame._17C4 == 0) {
+            g_Minigame.turnOverStatus = 1;
+            fn_3_10F550(3, 0);
+            sndFXStartEx(0x1BE, lbl_800EFBA4.unk7, 0x3F, 0);
+        }
+    } else {
+        if (g_Minigame.turnOverStatus == 1) {
+            g_Minigame.turnOverStatus = 2;
+            g_GameLogic.CountdownUntilFade = lbl_3_data_21E68.countdown;
+        }
+        if (--g_GameLogic.CountdownUntilFade == 7) {
+            changeScene(3, 6);
+        }
+        if (g_GameLogic.CountdownUntilFade <= 0) {
+            fn_3_157570();
+            fn_3_DE4FC();
+            if (g_Minigame.soloMinigameDifficulty <= 2 && g_Minigame.multiPlayerInd == 0) {
+                if (g_Minigame.players._18E8[(s8)g_Minigame._1908] == 1 &&
+                    g_Minigame.challenge_minigame_haven_tWonYetIndicator == 0) {
+                    g_Minigame._1A37 = 1;
+                } else {
+                    g_Minigame._1A37 = 2;
+                }
+            }
+            fn_3_5A6D4(14);
+            for (i = 0; i < 50; i++) {
+                g_Minigame.wallBall_coinsVisibleInd[i] = 0;
+                g_Minigame.wallBall_coinGroup[i] = -1;
+            }
+            g_Minigame._1B4C = 60;
+            for (i = 0; i < 3; i++) {
+                fn_3_14402C(i);
+                g_Minigame.progressItems[i].field_0x2A = 2;
+                g_Minigame.progressItems[i].field_0x1C = 1;
+                g_Minigame.progressItems[i].field_0x2B = 0;
+            }
+            fn_3_154214();
+        }
+    }
 }
 
 // .text:0x00146408 size:0x520 mapped:0x8078549C
