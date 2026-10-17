@@ -1914,8 +1914,65 @@ void fn_3_483CC(s32 idx) {
 }
 
 // .text:0x00048480 size:0x5D4 mapped:0x80687514
-void fn_3_48480(void) {
-    return;
+void fn_3_48480(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    s32 base;
+    f32 z;
+    f32 x;
+    u8 state;
+
+    switch (fn_3_53130(fielderIdx)) {
+    case 2:
+        return;
+    default:
+        if (g_FieldingLogic.unkC4 == 6) {
+            fn_3_46ABC(fielderIdx);
+            fn_3_A7C88();
+        } else if (g_Strikes.outs < 3) {
+            base = getLeadRunnerChaseBase();
+            if (base != -1) {
+                f->unk18E = base;
+                if (fn_3_46E08(fielderIdx, &x, &z) != 0) {
+                    setFielderTarget(f, x, z);
+                }
+            }
+            fn_3_526DC(fielderIdx);
+        }
+        if (f->unk50 != 0.0f) {
+            f->unk17E = f->unk68 / f->unk50;
+        }
+    case 1:
+        state = g_Ball.ballState;
+        if (state != 0 && g_FieldingLogic.unkC4 != 6 && g_Ball.ballZoneAwayFromHome <= 1) {
+            f->unk18C = -1;
+            f->unk1D7 = 0;
+            if (fielderIdx != -1) {
+                setFielderReadyAction(fielderIdx, 0xC);
+            }
+            g_FieldingLogic.unkBE = -1;
+        } else if (state == 1 && g_Fielders[g_Ball.fielderWBallIndex].unkA8[f->unk18E] < 15.0f &&
+                   g_FieldingLogic.unkC4 != 6) {
+            f->unk18C = fn_3_3D7D4(fielderIdx);
+            f->unk1D7 = 2;
+            if (fielderIdx != -1) {
+                setFielderReadyAction(fielderIdx, 0xE);
+            }
+            f->unk1D6 = 0;
+            g_FieldingLogic.unkBE = -1;
+            g_FieldingLogic.unkC0 = 0x5A;
+        } else if (state == 2 && g_FieldingLogic.unkC4 != 6) {
+            f->unk18C = fn_3_3D7D4(fielderIdx);
+            f->unk1D7 = 2;
+            if (fielderIdx != -1) {
+                setFielderReadyAction(fielderIdx, 0xE);
+            }
+            f->unk1D6 = 0;
+            g_FieldingLogic.unkBE = -1;
+        }
+        if (g_Ball.fielderBeingThrownTo == fielderIdx) {
+            fn_3_4E638();
+        }
+    }
 }
 
 // .text:0x00048A54 size:0xAA0 mapped:0x80687AE8
