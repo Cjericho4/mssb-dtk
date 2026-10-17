@@ -3,11 +3,18 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusPanelState {
+    u8 _pad0[0x1E8C];
+    u8 mode;
+    u8 _pad1E8D[3];
+} MenusPanelState;
+
 typedef struct Rep10C0State {
     u8 _pad0[0x195424];
     u32 timeHigh;
     u32 timeLow;
-    u8 _pad19542C[0x2270];
+    MenusPanelState panel;
+    u8 _pad1972BC[0x3E0];
     s32 animationIndex; /* 0x19769C */
     u8 _pad1976A0[0x44];
     s16 unk1976E4;

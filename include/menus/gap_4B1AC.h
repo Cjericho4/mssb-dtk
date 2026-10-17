@@ -93,7 +93,7 @@ void fn_2_5146C(void);
 void fn_2_51470(void);
 void fn_2_51568(void);
 void fn_2_5156C(void);
-void fn_2_515DC(void);
+void fn_2_515DC(u8 mode);
 void fn_2_5163C(void);
 void fn_2_51890(void);
 void fn_2_519F0(void);

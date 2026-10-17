@@ -1,6 +1,8 @@
 #include "menus/gap_4B1AC.h"
 #include "menus/rep_0438.h"
 #include "menus/rep_0B08.h"
+#include "menus/rep_08E8.h"
+#include "string.h"
 #include "menus/rep_10C0.h"
 #include "UnknownHeaders.h"
 #include "game/rep_1C0.h"
@@ -357,8 +359,10 @@ void fn_2_5156C(void) {
 }
 
 // .text:0x000515DC size:0x60
-void fn_2_515DC(void) {
-    return;
+void fn_2_515DC(u8 mode) {
+    memset(&lbl_2_bss_1A824C->panel, 0, sizeof(MenusPanelState));
+    lbl_2_bss_1A824C->panel.mode = mode;
+    fn_2_4906C();
 }
 
 // .text:0x0005163C size:0x254
