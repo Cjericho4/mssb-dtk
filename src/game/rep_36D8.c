@@ -50,56 +50,55 @@ s32 fn_3_13DA20(unk_13d5e8_struct* a, unk_13d5e8_struct* b) {
 
 // .text:0x0013DA50 size:0x1F8 mapped:0x8077CAE4
 f32 fn_3_13DA50(s8 index, f32 targetPos, s8 *result) {
-    f32 zero = 0.0f; // Load f0 early
-    f32 wrappedTarget = targetPos; // fmr f3, f1
-    InMemRunnerType *runner = &g_Runners[index];
-    f32 fractionalBasesRan = runner->fractionalBasesRan; // lfs f4
+    f32 four = 4.0f;
     f32 wrappedRunner;
+    f32 wrappedTarget = targetPos;
+    f32 fractionalBasesRan = g_Runners[index].fractionalBasesRan;
     f32 dist1;
     f32 dist2;
 
-    wrappedRunner = fractionalBasesRan; // fmr f2, f4
-    if (fractionalBasesRan < zero) {
-        wrappedRunner = fractionalBasesRan + 4.0f;
-    } else if (fractionalBasesRan >= 4.0f) {
-        wrappedRunner = fractionalBasesRan - 4.0f;
+    wrappedRunner = fractionalBasesRan;
+    if (fractionalBasesRan < 0.0f) {
+        wrappedRunner = fractionalBasesRan + four;
+    } else if (fractionalBasesRan >= four) {
+        wrappedRunner = fractionalBasesRan - four;
     }
 
-    if (targetPos < zero) {
-        wrappedTarget = targetPos + 4.0f;
-    } else if (targetPos >= 4.0f) {
-        wrappedTarget = targetPos - 4.0f;
+    if (targetPos < 0.0f) {
+        wrappedTarget += four;
+    } else if (targetPos >= four) {
+        wrappedTarget -= four;
     }
 
     if (wrappedRunner > wrappedTarget) {
-        dist1 = (4.0f + wrappedTarget) - wrappedRunner;
+        dist1 = (four + wrappedTarget) - wrappedRunner;
     } else {
         dist1 = wrappedTarget - wrappedRunner;
     }
 
-    if (runner->runningDirectionCode == 3) {
+    if (g_Runners[index].runningDirectionCode == 3) {
         dist1 += 0.15f;
     }
 
-    if (fractionalBasesRan < zero) {
-        fractionalBasesRan += 4.0f;
-    } else if (fractionalBasesRan >= 4.0f) {
-        fractionalBasesRan -= 4.0f;
+    if (fractionalBasesRan < 0.0f) {
+        fractionalBasesRan += four;
+    } else if (fractionalBasesRan >= four) {
+        fractionalBasesRan -= four;
     }
 
-    if (targetPos < zero) {
-        targetPos += 4.0f;
-    } else if (targetPos >= 4.0f) {
-        targetPos -= 4.0f;
+    if (targetPos < 0.0f) {
+        targetPos += four;
+    } else if (targetPos >= four) {
+        targetPos -= four;
     }
 
     if (fractionalBasesRan < targetPos) {
-        dist2 = (4.0f + fractionalBasesRan) - targetPos;
+        dist2 = (four + fractionalBasesRan) - targetPos;
     } else {
         dist2 = fractionalBasesRan - targetPos;
     }
 
-    if (runner->runningDirectionCode == 1) {
+    if (g_Runners[index].runningDirectionCode == 1) {
         dist2 += 0.15f;
     }
 
@@ -107,17 +106,11 @@ f32 fn_3_13DA50(s8 index, f32 targetPos, s8 *result) {
         *result = 1;
         return dist1;
     }
-    
     if (dist1 > dist2) {
         *result = 3;
         return dist2;
     }
-
-    if (RandomInt_Game(2) == 0) {
-        *result = 3;
-    } else {
-        *result = 1;
-    }
+    *result = (RandomInt_Game(2) != 0) ? 1 : 3;
     return dist1;
 }
 
