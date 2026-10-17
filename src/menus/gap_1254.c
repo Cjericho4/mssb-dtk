@@ -372,8 +372,28 @@ void fn_2_9ACC(void) {
 }
 
 // .text:0x00009F70 size:0xD0
-void fn_2_9F70(void) {
-    return;
+s32 fn_2_9F70(s8 side) {
+    s32 result;
+    s8 other = lbl_2_bss_F468.teamIndices[(s8)side ^ 1];
+    s32 own = lbl_2_bss_F468.teamIndices[(s8)side];
+    s32 i, j;
+    switch (lbl_2_bss_F468.options[own]) {
+    case 1: result = 2; break;
+    case 2: result = 1; break;
+    case 3: result = 1; break;
+    }
+restart:
+    for (i = 0; i < 9; i++) {
+        u8 character = inMemRoster[other][i].stats.CharID;
+        for (j = 0; j < 9; j++) {
+            if (character == 0) {
+                if (result == 1 || result == 2) return 3;
+                result = 2;
+                goto restart;
+            }
+        }
+    }
+    return result;
 }
 
 // .text:0x0000A040 size:0x160

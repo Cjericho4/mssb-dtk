@@ -13,9 +13,11 @@ extern MenusTeamSelections lbl_803C6724;
 
 typedef struct Menus1254State {
     s32 states[4];
-    u8 _pad10[0x1E];
+    s32 options[4];
+    u8 _pad20[0xE];
     u8 unk2E;
-    u8 _pad2F[0x20];
+    s8 teamIndices[2];
+    u8 _pad31[0x1E];
     u8 unk4F;
     u8 _pad50[6];
     u8 unk56;
@@ -89,7 +91,7 @@ void fn_2_8940(void);
 void fn_2_8CF8(void);
 void fn_2_95D8(void);
 void fn_2_9ACC(void);
-void fn_2_9F70(void);
+s32 fn_2_9F70(s8 side);
 void fn_2_A040(void);
 void fn_2_A1A0(void);
 void fn_2_A288(void);
