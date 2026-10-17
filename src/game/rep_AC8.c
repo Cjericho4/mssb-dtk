@@ -4161,7 +4161,37 @@ void fn_3_583B8(void) {
 
 // .text:0x00058688 size:0x1E8 mapped:0x8069771C
 void fn_3_58688(void) {
-    return;
+    s32 i;
+
+    g_FieldingLogic.unkCE = g_FieldingLogic.unkCC;
+    g_FieldingLogic.unkE0 = g_FieldingLogic.unkDE;
+    if (g_Ball.looseBall_5FrameCountdown != 0) {
+        g_Ball.looseBall_5FrameCountdown--;
+    }
+    for (i = 0; i < 9; i++) {
+        g_Fielders[i].unk1FC = 0;
+        g_Fielders[i].unk257 = g_Fielders[i].unk256;
+        g_Fielders[i].unk256 = 0;
+        g_Fielders[i].unk20C = g_Fielders[i].unk20B;
+        g_Fielders[i].unk20B = 0;
+        g_Fielders[i].unk216 = 0;
+        g_Fielders[i].unk263 = 0;
+    }
+    if (g_Ball.framesSinceHit == 1 || (g_Ball.framesSinceHit == 101 && g_FieldingLogic._107 != 0)) {
+        for (i = 0; i < 9; i++) {
+            g_Fielders[i].unk118 = g_Fielders[i].pos[0];
+            g_Fielders[i].unk11C = g_Fielders[i].pos[2];
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        g_FieldingLogic.targets[i].unk2 = 0;
+    }
+    g_FieldingLogic.unk144 = 0;
+    g_Ball.fielderActionOccuring = 0;
+    g_Pitcher.unused_pitcherIsFielder = 0;
+    if (g_FieldingLogic.unk146 != 0) {
+        g_FieldingLogic.unk146--;
+    }
 }
 
 // .text:0x00058870 size:0x5E0 mapped:0x80697904

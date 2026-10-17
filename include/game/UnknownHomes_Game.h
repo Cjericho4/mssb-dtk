@@ -655,7 +655,9 @@ typedef struct FieldingLogic {
     /* 0x13F */ u8 unk13F;
     /* 0x140 */ u8 _pad140[0x144 - 0x140];
     /* 0x144 */ u8 unk144;
-    /* 0x145 */ u8 _pad145[0x148 - 0x145];
+    /* 0x145 */ u8 _pad145;
+    /* 0x146 */ u8 unk146;
+    /* 0x147 */ u8 _pad147;
     /* 0x148 */ u16 unk148;
     /* 0x14A */ u16 unk14A;           // lhz r0, 0x14a(r5)
     /* 0x14C */ u16 unk14C;
@@ -2246,7 +2248,10 @@ typedef struct Fielder {
     /* 0x0E8 */ f32 unkE8;
     /* 0x0EC */ u8 _padEC[0xF4 - 0xEC];
     /* 0x0F4 */ f32 unkF4;
-    /* 0x0F8 */ u8 _padF8[0x128 - 0xF8];
+    /* 0x0F8 */ u8 _padF8[0x118 - 0xF8];
+    /* 0x118 */ f32 unk118;
+    /* 0x11C */ f32 unk11C;
+    /* 0x120 */ u8 _pad120[0x128 - 0x120];
     /* 0x128 */ f32 unk128;
     /* 0x12C */ u8 _pad12C[0x130 - 0x12C];
     /* 0x130 */ f32 unk130;
@@ -2363,7 +2368,9 @@ typedef struct Fielder {
     /* 0x207 */ u8 unk207;
     /* 0x208 */ u8 unk208;
     /* 0x209 */ u8 unk209;
-    /* 0x20A */ u8 _pad20A[0x20D - 0x20A];
+    /* 0x20A */ u8 _pad20A;
+    /* 0x20B */ u8 unk20B;
+    /* 0x20C */ u8 unk20C;
     /* 0x20D */ u8 unk20D;
     /* 0x20E */ u8 _pad20E;
     /* 0x20F */ u8 unk20F;
@@ -2392,7 +2399,8 @@ typedef struct Fielder {
     /* 0x254 */ u8 unk254;
     /* 0x255 */ u8 unk255;
     /* 0x256 */ u8 unk256;
-    /* 0x257 */ u8 _pad257[0x259 - 0x257];
+    /* 0x257 */ u8 unk257;
+    /* 0x258 */ u8 _pad258;
     /* 0x259 */ u8 unk259;
     /* 0x25A */ u8 unk25A;
     /* 0x25B */ u8 unk_25B;
@@ -2402,7 +2410,8 @@ typedef struct Fielder {
     /* 0x25F */ u8 unk25F;
     /* 0x260 */ u8 unk260;
     /* 0x261 */ u8 unk261;
-    /* 0x262 */ u8 _pad262[0x264 - 0x262];
+    /* 0x262 */ u8 _pad262;
+    /* 0x263 */ u8 unk263;
     /* 0x264 */ u8 unk264;
     /* 0x265 */ u8 _pad265[0x268 - 0x265];
     } Fielder; // sizeof == 0x268
