@@ -211,8 +211,14 @@ s16 fn_2_4A150(s16 angle) {
 }
 
 // .text:0x0004A18C size:0x5C
-void fn_2_4A18C(void) {
-    return;
+f32 fn_2_4A18C(f32 angle) {
+    if (angle >= 3.1415927f) {
+        while (angle >= 3.1415927f) angle -= 6.2831855f;
+    }
+    if (angle < -3.1415927f) {
+        while (angle < -3.1415927f) angle = 6.2831855f + angle;
+    }
+    return angle;
 }
 
 // .text:0x0004A1E8 size:0x4C
