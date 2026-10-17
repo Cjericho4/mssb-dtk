@@ -1157,7 +1157,49 @@ void fn_3_30D74(void) {
 
 // .text:0x000313B0 size:0x1E4 mapped:0x80670444
 void fn_3_313B0(void) {
-    return;
+    s32 i;
+    u8 mg;
+    s32 k;
+
+    for (i = 0; i < 9; i++) {
+        mg = g_d_GameSettings.minigamesEnabled;
+        if (mg) {
+            for (k = 0; k < 4; k++) {
+                if (g_Minigame.minigameFielderIndex[k] == i) {
+                    break;
+                }
+            }
+            if (k >= 4) {
+                continue;
+            }
+        }
+        if (g_Fielders[i].unk50 > 0.0f) {
+            if (lbl_3_common_bss_34C90.field_0x1D5 == 0) {
+                g_Fielders[i].unk48 = atan2(g_Fielders[i].unk34, g_Fielders[i].unk30);
+            }
+        } else if (g_Pitcher.pitchTotalTimeCounter <= 0 && g_Runners[1].runnerOnFieldOrOutOrScored == 1 && i == 2 &&
+                   mg == 0) {
+            g_Fielders[i].unk48 = -3.1415927f;
+        } else {
+            g_Fielders[i].unk48 = atan2(-g_Fielders[i].pos[2], -g_Fielders[i].pos[0]);
+        }
+        if (g_Fielders[i].unk30 != 0.0f || g_Fielders[i].unk34 != 0.0f) {
+            g_Fielders[i].unk64 = atan2(g_Fielders[i].unk34, g_Fielders[i].unk30);
+            g_Fielders[i].unk19A = radToShortAngle(g_Fielders[i].unk64);
+        } else {
+            g_Fielders[i].unk64 = 0.0f;
+            g_Fielders[i].unk19A = -1;
+        }
+        if (g_d_GameSettings.minigamesEnabled) {
+            g_Minigame.minigameRelatedIndex = i;
+            fn_3_544B8();
+        }
+    }
+    if (g_d_GameSettings.minigamesEnabled) {
+        fn_3_53F48();
+    } else {
+        fn_3_544B8();
+    }
 }
 
 // .text:0x00031594 size:0xE4 mapped:0x80670628
