@@ -6,7 +6,7 @@
 
 void fn_2_71EC4(Rep0B08Obj* obj);
 void fn_2_71EFC(void);
-void fn_2_71F20(void);
+void fn_2_71F20(Rep0B08Obj* obj);
 void fn_2_71F60(void);
 void fn_2_72038(void);
 void fn_2_72054(void);

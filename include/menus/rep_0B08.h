@@ -4,10 +4,18 @@
 #include "mssbTypes.h"
 
 typedef struct Rep0B08Obj {
-    /* 0x00 */ u8 _pad0[0x94];
+    /* 0x00 */ u8 _pad0[0x80];
+    s32 index;
+    u8 _pad84[0x10];
     /* 0x94 */ s16 state;
     /* 0x96 */ u8 _pad96[0xC];
     /* 0xA2 */ s16 countdown;
+    u8 _padA4[0x1F];
+    u8 variant; /* 0xC3 */
+    u8 _padC4[0xC];
+    u8 unkD0;
+    u8 _padD1[3];
+    void (*callback)(struct Rep0B08Obj*); /* 0xD4 */
 } Rep0B08Obj;
 
 typedef struct MenusSceneState {

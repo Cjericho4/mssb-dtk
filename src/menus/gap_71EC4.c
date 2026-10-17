@@ -1,4 +1,5 @@
 #include "menus/gap_71EC4.h"
+extern void (*lbl_2_data_2A2EC[])(Rep0B08Obj*);
 
 extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "UnknownHeaders.h"
@@ -15,8 +16,9 @@ void fn_2_71EFC(void) {
 }
 
 // .text:0x00071F20 size:0x40
-void fn_2_71F20(void) {
-    return;
+void fn_2_71F20(Rep0B08Obj* obj) {
+    obj->callback = lbl_2_data_2A2EC[obj->variant];
+    obj->callback(obj);
 }
 
 // .text:0x00071F60 size:0xD8
