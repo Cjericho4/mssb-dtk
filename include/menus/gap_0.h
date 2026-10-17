@@ -18,6 +18,8 @@ typedef struct MenusCommandQueue {
     u8 commands[0x20];
 } MenusCommandQueue;
 
+extern MenusCommandQueue* lbl_2_bss_4;
+
 void fn_2_0(void);
 void fn_2_3C(void);
 void _epilog(void);
