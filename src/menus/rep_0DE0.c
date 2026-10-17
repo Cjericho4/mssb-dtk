@@ -36,7 +36,16 @@ void fn_2_868C8(void) {
 
 // .text:0x000869B4 size:0x58
 void fn_2_869B4(void) {
-    return;
+    s32 i;
+    for (i = 0; i < lbl_2_bss_340140->field268_0x3078; i++) {
+        HugeAnimEntry2D94* entry = &lbl_2_bss_340140->entries_2D94[i];
+        entry->pos.x = 0.0f;
+        entry->pos.y = 0.0f;
+        entry->pos.z = 0.0f;
+        entry->vel.x = 0.0f;
+        entry->vel.y = 0.0f;
+        entry->vel.z = 0.0f;
+    }
 }
 
 // .text:0x00086A0C size:0x74
