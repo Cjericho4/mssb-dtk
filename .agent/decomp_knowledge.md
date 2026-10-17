@@ -306,3 +306,16 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
 *   **Unrolled `lfsu` lookups over a small float table** come from a plain `for` with `break` over `tbl[i]`.
 *   **`fneg` into a fresh register before `fmuls`**: `angle = -x; angle = K * angle;` (not `K * -x`).
 *   **When register order is close, permute declarations or statements** with `tools/brute.py` (needs `mkdir -p .scratch`); the natural order often wins.
+
+## 6. rep_AC8 fielder-AI family (2026-10-16)
+
+*   **The "atan2 + inlined dolsqrtf2 -> unk64/unk68, unk1D9 = 1" tail is a `static inline` helper** (top of `rep_AC8.c`). Three variants exist: `setFielderTarget(Fielder*, x, z)` (dz declared first; target `dx` in f30), `setFielderTargetIdx(idx, x, z)` (dx first, computes `f` itself; `dx` in f31), and `aimFielderAt` (early `return` on zero distance, so `unk1D9` is skipped). Pick by which register holds dx and whether the zero path skips `unk1D9`.
+*   **Other shared inlines there**: `setFielderReadyAction`, `stopFielder`, `fielderFramesToReach`, `getLeadRunnerChaseBase`, `startFielderChase` (= fn_3_49EA8), `sendFielderToHome` (= fn_3_3C270), `aimPitcherAtBase`. A block that looks like a matched function's body is almost always that function as an inline.
+*   **Inline temp stack slots are numbered by nesting depth, then source order**: `dolsqrtf2` called directly in the function gets the highest `stfs fN, 0xNN(r1)` slots; ones inside a depth-2 inline come next. If late branches get "too early" slots, wrap those branches in one more inline (fn_3_433E0).
+*   **x/z register swaps on a helper call**: copy into block-scoped locals first: `{ f32 x = a; f32 z = b; setFielderTargetIdx(i, x, z); }` (fn_3_4597C, fn_3_494F4).
+*   **`case 2: return;` vs `break`**: a dead `b END` after `b DEFAULT` in a switch dispatch means a case body is `return;`. A shared failure `li r0,0` reached from two paths needs `goto` to one `return 0;` (fn_3_3CCB0).
+*   **Compare forms**: `!(x >= c)` gives `fcmpo; cror; bne`; `!(x < c)` gives `fcmpo; blt`.
+*   **`frsp` after `fadds`** on a +-constant adjustment disappears with an if/else; a ternary emits it (fn_3_433E0).
+*   **Argument load order follows parameter order**: if `f1` loads before `r3`, the prototype is `(f32, s16)`, not `(s16, f32)` (fn_3_B7E44).
+*   **Insights from Fable's batch**: declare an element pointer BEFORE a `Vec v = {...}` initializer (fn_3_FD51C). Use an `s8` field and `s8` local for repeated `extsb` per compare (fn_3_E11E0). Use `sinf_kludge`/`cosf_kludge` instead of out-param `getComponentsFromRad` (fn_3_9F79C). Write `g_hugeAnimStruct.entries_2D94[k]` with k = offset/0x28 instead of "Ext" casts (fn_3_119878). Take `e = &t[i]` as the first loop statement to order strength-reduced walkers, and use `do {} while (++i < N)` to keep a base init before a call (fn_3_1356F8).
+*   **`tools/feedback_diff.py` caps its output at 10 lines**: count the `*` lines from `tools/sbs.py` for a true diff size, and treat a failed build as "no result" (sbs shows the previous build).
