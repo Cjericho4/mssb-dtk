@@ -1700,8 +1700,28 @@ void fn_3_468DC(void) {
 }
 
 // .text:0x00046ABC size:0x34C mapped:0x80685B50
-void fn_3_46ABC(void) {
-    return;
+void fn_3_46ABC(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    f32 t;
+    f32 x;
+    f32 z;
+
+    if (g_Ball.framesSinceThrowStarted == 5 && g_Ball.ballVelocity != 0.0f) {
+        t = f->unk74 / g_Ball.ballVelocity;
+        x = g_Ball.physicsSubstruct.velocity.x * t + g_Ball.AtBat_Contact_BallPos.x;
+        z = g_Ball.physicsSubstruct.velocity.z * t + g_Ball.AtBat_Contact_BallPos.z;
+        if (dolsqrtf2((f->pos[0] - x) * (f->pos[0] - x) + (f->pos[2] - z) * (f->pos[2] - z)) > f->unkE8) {
+            f->unk1E9 = 1;
+            setFielderTarget(f, x, z);
+        }
+    }
+    fn_3_526DC(fielderIdx);
+    if (f->unk1E9 != 0 && f->unk50 == 0.0f) {
+        f->unk1E9 = 0;
+    }
+    if (g_Ball.fielderBeingThrownTo == fielderIdx) {
+        fn_3_4E638();
+    }
 }
 
 // .text:0x00046E08 size:0x820 mapped:0x80685E9C
