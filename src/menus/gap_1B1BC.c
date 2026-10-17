@@ -69,7 +69,13 @@ void fn_2_1C3A4(void) {
 
 // .text:0x0001C3A8 size:0x74
 void fn_2_1C3A8(void) {
-    return;
+    if ((s32)lbl_2_bss_1A824C->displayMode == 1) {
+        lbl_2_bss_1A8234->panels[0].active = 1;
+        lbl_2_bss_1A8234->panels[1].active = 0;
+    } else {
+        lbl_2_bss_1A8234->panels[1].active = 1;
+        lbl_2_bss_1A8234->panels[0].active = 0;
+    }
 }
 
 // .text:0x0001C41C size:0x74

@@ -2,6 +2,22 @@
 #define __MENUS_gap_1B1BC_H_
 
 #include "mssbTypes.h"
+#include "menus/rep_10C0.h"
+
+typedef struct MenusDisplayPanel {
+    u8 visible;
+    u8 _pad1[0x1E];
+    u8 controls[3];
+    u8 _pad22[0x11];
+    u8 active;
+    u8 _pad34[0x1B6];
+} MenusDisplayPanel;
+
+typedef struct MenusDisplayState {
+    u8 _pad0[0x162657];
+    MenusDisplayPanel panels[2];
+} MenusDisplayState;
+extern MenusDisplayState* lbl_2_bss_1A8234;
 
 void fn_2_1B1BC(void);
 void fn_2_1B314(void);
