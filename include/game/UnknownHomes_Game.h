@@ -561,7 +561,8 @@ typedef struct FieldingTarget {
     /* 0x03 */ u8  _pad3[3];
 } FieldingTarget; // size: 0x6
 typedef struct FieldingLogicEntry {
-    /* 0x00 */ u8 _pad0[0xC];
+    /* 0x00 */ u8 _pad0[0x8];
+    /* 0x08 */ f32 unk8;
     /* 0x0C */ s16 unkC;
     /* 0x0E */ u8 _padE[0x1A - 0xE];
     /* 0x1A */ u8 unk1A;
@@ -581,9 +582,9 @@ typedef struct FieldingLogic {
     /* 0xB0 */ s16 unkB0;
     /* 0xB2 */ s16 unkB2;
     /* 0xB4 */ s16 unkB4;
-    /* 0xB6 */ u8 _pad1a[0xB8 - 0xB6];
+    /* 0xB6 */ s16 unkB6;
     /* 0xB8 */ s16 unkB8;
-    /* 0xBA */ u8 _padBA[0xBC - 0xBA];
+    /* 0xBA */ s16 unkBA;
     /* 0xBC */ s16 unkBC;
     /* 0xBE */ s16 unkBE;
     /* 0xC0 */ s16 unkC0;
@@ -642,7 +643,9 @@ typedef struct FieldingLogic {
     
     /* 0x134 */ u8 _pad2;
     /* 0x135 */ u8 unk135;
-    /* 0x136 */ u8 _pad136[0x139 - 0x136];
+    /* 0x136 */ u8 unk136;
+    /* 0x137 */ u8 unk137;
+    /* 0x138 */ u8 _pad138;
     /* 0x139 */ u8 unk139;
     /* 0x13A */ u8 _pad13A;
     /* 0x13B */ u8 unk_13B;           // Preserving your previous find
@@ -2281,7 +2284,11 @@ typedef struct Fielder {
     /* 0x1C8 */ u8 _pad1C8;
     /* 0x1C9 */ u8 unk1C9;
     /* 0x1CA */ u8 unk1CA;
-    /* 0x1CB */ u8 _pad1CB[0x1D1 - 0x1CB];
+    /* 0x1CB */ u8 _pad1CB[0x1CD - 0x1CB];
+    /* 0x1CD */ u8 unk1CD;
+    /* 0x1CE */ u8 _pad1CE;
+    /* 0x1CF */ u8 unk1CF;
+    /* 0x1D0 */ u8 _pad1D0;
     /* 0x1D1 */ u8 unk1D1;
     /* 0x1D2 */ u8 unk1D2;
     /* 0x1D3 */ u8 unk1D3;
@@ -2310,7 +2317,8 @@ typedef struct Fielder {
     /* 0x1EE */ u8 unk1EE;
     /* 0x1EF */ u8 unk1EF;
     /* 0x1F0 */ u8 unk1F0;
-    /* 0x1F1 */ u8 _pad1F1[0x1F5 - 0x1F1];
+    /* 0x1F1 */ u8 unk1F1;
+    /* 0x1F2 */ u8 _pad1F2[0x1F5 - 0x1F2];
     /* 0x1F5 */ s8 unk1F5;
     /* 0x1F6 */ u8 _pad1F6[0x1F8 - 0x1F6];
     /* 0x1F8 */ u8 unk1F8;
@@ -2337,7 +2345,8 @@ typedef struct Fielder {
     /* 0x216 */ u8 unk216;
     /* 0x217 */ u8 _pad217;
     /* 0x218 */ u8 unk218;
-    /* 0x219 */ u8 _pad3c2[0x21C - 0x219];
+    /* 0x219 */ u8 unk219;
+    /* 0x21A */ u8 _pad21A[0x21C - 0x21A];
     /* 0x21C */ f32 unk21C;
     /* 0x220 */ u8 _pad220[0x224 - 0x220];
     /* 0x224 */ f32 unk224;

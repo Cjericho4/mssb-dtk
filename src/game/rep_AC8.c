@@ -3677,7 +3677,39 @@ void fn_3_59338(void) {
 
 // .text:0x000595C4 size:0x134 mapped:0x80698658
 void fn_3_595C4(void) {
-    return;
+    s32 i;
+
+    fn_3_58870();
+    for (i = 0; i < 9; i++) {
+        g_FieldingLogic.unk_F8[i] = 0;
+        g_Fielders[i].unk1CF = 100;
+        g_Fielders[i].unk58 = 0.0003f * g_Fielders[i].unk1CF + 0.1f;
+        g_Fielders[i].unk1CD = 120;
+        g_Fielders[i].unk1D2 = 10;
+        g_Fielders[i].unk1D1 = 15;
+        g_Fielders[i].unk5C = g_Fielders[i].unk58 / g_Fielders[i].unk1D1;
+        g_Fielders[i].unk1D3 = 0;
+        g_Fielders[i].unk1D9 = 0;
+        g_Fielders[i].unk1F1 = 0;
+        g_Fielders[i].unk1E3 = 0;
+        g_Fielders[i].unk219 = 1;
+        g_Fielders[i].unk178 = -1;
+    }
+    g_FieldingLogic.unkB0 = -1;
+    g_FieldingLogic.entries[0].unk8 = 1.0f;
+    g_FieldingLogic.entries[0].unk8 = 1.0f;
+    g_FieldingLogic.entries[0].unk8 = 1.0f;
+    g_FieldingLogic.unkB2 = -1;
+    g_FieldingLogic.unkB4 = -1;
+    g_FieldingLogic.unkB6 = -1;
+    g_FieldingLogic.unkB8 = -1;
+    g_FieldingLogic.unkBA = -1;
+    g_FieldingLogic.unkBE = -1;
+    g_FieldingLogic.unk136 = 1;
+    g_FieldingLogic.unk137 = 0;
+    g_FieldingLogic.unk70 = g_FieldingLogic.entries;
+    g_FieldingLogic.unk8C = g_FieldingLogic.targets;
+    g_FieldingLogic.entries[0].unk8 = 1.0f;
 }
 
 // .text:0x000596F8 size:0x164 mapped:0x8069878C
