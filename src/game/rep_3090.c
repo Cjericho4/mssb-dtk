@@ -124,12 +124,11 @@ void fn_3_FD4DC(void) {
 
 // .text:0x000FD51C size:0x8C mapped:0x8073C5B0
 void fn_3_FD51C(s32 i) {
+    CameraSub13C* s = &((CameraElem*)&g_Camera)[i].unk13C;
     Vec up = { 0.0f, 1.0f, 0.0f };
-    CameraSub13C* s;
 
-    ((CameraElem*)&g_Camera)[i].unk13C.unk4 = 0;
-    ((CameraElem*)&g_Camera)[i].unk13C.unk8 = 0;
-    s = &((CameraElem*)&g_Camera)[i].unk13C;
+    s->unk4 = 0;
+    s->unk8 = 0;
     s->unkC = up;
     s->unk1C = 0;
     s->unk20 = 0;
