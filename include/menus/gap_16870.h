@@ -4,7 +4,10 @@
 #include "mssbTypes.h"
 
 typedef struct Menus16870State {
-    u8 _pad0[0x46];
+    u8 _pad0[0x14];
+    u8 active[8];
+    u8 counters[8];
+    u8 _pad24[0x22];
     u8 values[4];
     u8 _pad4A[0xA];
 } Menus16870State;

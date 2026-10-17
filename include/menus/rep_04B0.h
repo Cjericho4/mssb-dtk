@@ -8,7 +8,7 @@ void fn_2_14790(void);
 void fn_2_14BB8(void);
 void fn_2_14CA0(void);
 void fn_2_14FB8(void);
-void fn_2_150D0(void);
+void fn_2_150D0(u8 index);
 void fn_2_15104(void);
 void fn_2_151BC(void);
 void fn_2_1560C(void);

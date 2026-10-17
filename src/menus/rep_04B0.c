@@ -1,4 +1,5 @@
 #include "menus/rep_04B0.h"
+#include "menus/gap_16870.h"
 
 // .text:0x00014574 size:0x21C
 void fn_2_14574(void) {
@@ -26,8 +27,11 @@ void fn_2_14FB8(void) {
 }
 
 // .text:0x000150D0 size:0x34
-void fn_2_150D0(void) {
-    return;
+void fn_2_150D0(u8 index) {
+    if (lbl_2_bss_100B8.active[index] == 0) {
+        lbl_2_bss_100B8.active[index] = 1;
+        lbl_2_bss_100B8.counters[index] = 0;
+    }
 }
 
 // .text:0x00015104 size:0xB8
