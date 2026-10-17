@@ -292,7 +292,12 @@ void fn_2_44014(void) {
 
 // .text:0x00044184 size:0xB4
 void fn_2_44184(void) {
-    return;
+    s32 i;
+    s32 count = 0;
+    for (i = 0; i < 9; i++) {
+        if (lbl_2_bss_1A8248->choiceGrid[i][0] == 12) count++;
+    }
+    if (count == 0) lbl_2_bss_1A8248->unk44F7 = 1;
 }
 
 // .text:0x00044238 size:0xB0
