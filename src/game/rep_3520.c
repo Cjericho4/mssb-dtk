@@ -473,7 +473,7 @@ void fn_3_136220(void) {
 }
 
 // .text:0x0013688C size:0x468 mapped:0x80775920
-void fn_3_13688C(void) {
+void fn_3_13688C(f32* pos) {
     return;
 }
 
@@ -518,7 +518,43 @@ void fn_3_136CF4(Rep3520Obj136CF4* obj) {
 
 // .text:0x00136EA4 size:0x1FC mapped:0x80775F38
 void fn_3_136EA4(void) {
-    return;
+    s8 id;
+    f32 angle;
+
+    if (g_Minigame.turnOverStatus != 0) {
+        g_Minigame.playerIDWithPowerup[0] = -1;
+        g_Minigame._CCE[0] = 0;
+        return;
+    }
+    if (g_Minigame._CCE[0] != 0) {
+        fn_3_13688C(&g_Minigame._CB0);
+        return;
+    }
+    id = g_Minigame.playerIDWithPowerup[0];
+    if (id != -1) {
+        if (--g_Minigame._1D58 <= 0) {
+            if ((s8)g_Minigame._1D6D != id) {
+                fn_800115C8(id);
+            }
+            g_Minigame.playerIDWithPowerup[0] = -1;
+        }
+        return;
+    }
+    if (--g_Minigame._CCC <= 0) {
+        if ((s8)(rand() % 100 - lbl_3_data_21B16) < 0) {
+            g_Minigame._CCE[0] = 1;
+        } else {
+            g_Minigame._CCE[0] = 2;
+        }
+        g_Minigame._CB0 = lbl_3_data_219AC.x;
+        g_Minigame._CB4 = lbl_3_data_219AC.y;
+        g_Minigame._CB8 = lbl_3_data_219AC.z;
+        g_Minigame._CC0 = lbl_3_data_21AF8[0];
+        angle = 0.017453292f * (360.0f * ((f32)rand() / 32767.0f));
+        g_Minigame._CBC = lbl_3_data_21AF8[1] * (f32)cos(angle);
+        g_Minigame._CC4 = lbl_3_data_21AF8[1] * (f32)sin(angle);
+        g_Minigame._CCC = lbl_3_data_21B10[1];
+    }
 }
 
 // .text:0x001370A0 size:0x148 mapped:0x80776134
