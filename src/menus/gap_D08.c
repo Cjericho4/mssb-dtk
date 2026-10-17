@@ -32,8 +32,9 @@ void fn_2_10AC(void) {
 }
 
 // .text:0x000010FC size:0x34
-void fn_2_10FC(void) {
-    return;
+s32 fn_2_10FC(void) {
+    fn_80021518(31, (s32)lbl_800EF808.files[2]);
+    return 0;
 }
 
 // .text:0x00001130 size:0x34
