@@ -62,6 +62,23 @@ typedef struct Rep0610Camera68FC {
 extern Rep0610Camera68FC lbl_1_bss_68FC;
 void LITXForm(struct MenusLight* light, Mtx view);
 #include "Dolphin/GX/GXTransform.h"
+typedef struct Rep0610Unk67E0 {
+    /* 0x000 */ u8 _pad0[0x108];
+    /* 0x108 */ Vec pos;
+    /* 0x114 */ u8 _pad114[8];
+} Rep0610Unk67E0;
+extern Rep0610Unk67E0 lbl_1_bss_67E0;
+typedef struct Rep0610Obj1073C {
+    /* 0x00 */ u8 _pad0[0x34];
+    /* 0x34 */ Vec pos;
+} Rep0610Obj1073C;
+typedef struct Rep0610UnkADC4 {
+    /* 0x00 */ u8 _pad0[0x1C];
+} Rep0610UnkADC4;
+extern f32 lbl_1_data_ADC0;
+extern Rep0610UnkADC4 lbl_1_data_ADC4;
+void fn_80026134(s32 arg0, Vec* arg1);
+void fn_80026130(s32 arg0, Rep0610UnkADC4* arg1, f32 arg2);
 void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 extern s16 lbl_1_data_A978[0x6E];
 typedef struct Rep0610Ctrl5F7C {
@@ -150,7 +167,7 @@ void fn_1_10670(void);
 s32 fn_1_106A4(void);
 void fn_1_106B4(void);
 void fn_1_106C4(void);
-void fn_1_1073C(void);
+void fn_1_1073C(Rep0610Obj1073C* obj);
 void fn_1_107B8(void);
 void fn_1_10AA4(Rep0610Obj* obj, f32 value);
 void fn_1_10ACC(void);

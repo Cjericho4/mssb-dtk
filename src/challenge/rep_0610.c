@@ -303,8 +303,13 @@ void fn_1_106C4(void) {
 }
 
 // .text:0x0001073C size:0x7C
-void fn_1_1073C(void) {
-    return;
+void fn_1_1073C(Rep0610Obj1073C* obj) {
+    Vec dir;
+    dir.x = lbl_1_bss_67E0.pos.x - obj->pos.x;
+    dir.y = lbl_1_bss_67E0.pos.y - obj->pos.y;
+    dir.z = lbl_1_bss_67E0.pos.z - obj->pos.z;
+    fn_80026134(0, &dir);
+    fn_80026130(0, &lbl_1_data_ADC4, lbl_1_data_ADC0);
 }
 
 // .text:0x000107B8 size:0x2EC
