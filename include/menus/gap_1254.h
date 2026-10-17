@@ -20,7 +20,7 @@ void fn_2_1354(void);
 void fn_2_145C(void);
 void fn_2_148C(void);
 void fn_2_14F8(void);
-void fn_2_1554(void);
+u32 fn_2_1554(void);
 void fn_2_1578(void);
 void fn_2_1800(void);
 void fn_2_1A88(void);

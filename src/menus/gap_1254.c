@@ -1,5 +1,7 @@
 #include "menus/gap_1254.h"
 
+extern u32 lbl_803CB750;
+
 // .text:0x00001254 size:0x4
 void fn_2_1254(void) {
     return;
@@ -55,8 +57,8 @@ void fn_2_14F8(void) {
 }
 
 // .text:0x00001554 size:0x24
-void fn_2_1554(void) {
-    return;
+u32 fn_2_1554(void) {
+    return lbl_803CB750 = lbl_803CB750 * 0x5D588B65 + 1;
 }
 
 // .text:0x00001578 size:0x288
