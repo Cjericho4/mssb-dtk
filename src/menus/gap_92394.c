@@ -4,6 +4,7 @@
 #include "Dolphin/GX/GXTypes.h"
 
 extern GXColor lbl_800F7478[];
+extern void (*lbl_2_data_30900[])(s32);
 extern void fn_800BD2CC(s32 enabled, GXColor color);
 extern void (*lbl_2_data_308B4[])(Rep1028Obj*);
 
@@ -29,8 +30,21 @@ void fn_2_923D8(Rep1028Obj* obj) {
 }
 
 // .text:0x000923E4 size:0x88
-void fn_2_923E4(void) {
-    return;
+void fn_2_923E4(Rep1028Obj* obj) {
+    s32 index;
+    hugeAnimStruct* render;
+    Rep1028Obj* target;
+    HugeAnimEntry2D94* entries;
+    fn_2_8AC84(obj->index, 1);
+    index = obj->index;
+    render = lbl_2_bss_340140;
+    target = &lbl_2_bss_1A8248->rep1028Objects[index];
+    entries = render->entries_2D94;
+    if (entries != 0) {
+        target->unkA6 = 0;
+        entries[index].callback = lbl_2_data_30900[0];
+    }
+    obj->state = 1;
 }
 
 // .text:0x0009246C size:0x38
