@@ -122,7 +122,7 @@ void fn_2_6E88C(void);
 void fn_2_6EA74(void);
 void fn_2_6ED30(void);
 void fn_2_6F104(void);
-void fn_2_6F6F4(void);
+void fn_2_6F6F4(Rep0B08Obj* obj);
 void fn_2_6F72C(void);
 void fn_2_6F78C(void);
 void fn_2_6F88C(void);
