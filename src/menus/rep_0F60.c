@@ -81,7 +81,7 @@ void fn_2_8CCCC(s32 index, s32 animation, u8 flag, u8 mode, u8 value263, s16 val
 }
 
 // .text:0x0008CD58 size:0x2CC
-void fn_2_8CD58(void) {
+void fn_2_8CD58(s32 index, s32 animation, u8 flag, u8 mode, s16 time, u8 value266, u8 duration) {
     return;
 }
 

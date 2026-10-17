@@ -6,6 +6,13 @@
 #include "menus/rep_1028.h"
 #include "menus/gap_3C03C.h"
 
+typedef struct Rep0B08AnimationConfig {
+    s16 animation;
+    s16 time;
+    u8 flag;
+    u8 _pad5;
+} Rep0B08AnimationConfig;
+
 typedef struct Rep0B08Obj {
     /* 0x00 */ Vec position;
     Vec previousPosition; /* 0x0C */
@@ -104,7 +111,7 @@ void fn_2_68DAC(s32 index, Vec* out);
 void fn_2_68DE8(s32 index, Vec* out);
 void fn_2_68E68(void);
 void fn_2_68F08(s32 index, u8 value);
-void fn_2_68F24(void);
+void fn_2_68F24(s32 index, s32 animation);
 void fn_2_68FBC(void);
 void fn_2_69070(void);
 void fn_2_692D0(void);

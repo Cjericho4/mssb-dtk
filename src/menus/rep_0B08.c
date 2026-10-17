@@ -1,5 +1,9 @@
 #include "menus/rep_0B08.h"
+#include "menus/rep_10C0.h"
+#include "menus/rep_0F60.h"
 #include "string.h"
+
+extern Rep0B08AnimationConfig lbl_2_data_3C84[];
 #include "math.h"
 #include "menus/rep_08E8.h"
 #include "Dolphin/GX/GXTypes.h"
@@ -176,8 +180,11 @@ void fn_2_68F08(s32 index, u8 value) {
 }
 
 // .text:0x00068F24 size:0x98
-void fn_2_68F24(void) {
-    return;
+void fn_2_68F24(s32 index, s32 animation) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    Rep0B08AnimationConfig* config = &lbl_2_data_3C84[animation];
+    fn_2_8CD58(obj->index, config->animation, config->flag, 1, config->time, 0, 0);
+    lbl_2_bss_1A824C->animations[obj->index] = animation;
 }
 
 // .text:0x00068FBC size:0xB4
