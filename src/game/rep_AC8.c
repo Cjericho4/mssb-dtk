@@ -2128,7 +2128,74 @@ void fn_3_47628(void) {
 
 // .text:0x00047778 size:0x940 mapped:0x8068680C
 void fn_3_47778(void) {
-    return;
+    u8 hit = g_Ball.hitClassification2;
+    Fielder* f;
+
+    if (hit != 5 && hit != 6 && hit != 8) {
+        return;
+    }
+    if (g_FieldingLogic.unk_F8[3] == 1 || g_FieldingLogic.unk_F8[3] == 10 || g_FieldingLogic.unk_F8[3] == 11) {
+        if (g_Fielders[5].unk18C != -1) {
+            g_Fielders[3].unk18C = 6;
+            g_Fielders[3].unk1D7 = 2;
+        } else {
+            g_Fielders[5].unk18C = 6;
+            g_Fielders[5].unk1D7 = 2;
+            if (g_FieldingLogic.unk_F8[5] == 0) {
+                setFielderReadyAction(5, 0xB);
+            }
+        }
+    } else if (g_FieldingLogic.unk_F8[5] == 1 || g_FieldingLogic.unk_F8[5] == 10 ||
+               g_FieldingLogic.unk_F8[5] == 11) {
+        if (g_Fielders[3].unk18C != -1) {
+            g_Fielders[5].unk18C = 6;
+            g_Fielders[5].unk1D7 = 2;
+        } else {
+            g_Fielders[3].unk18C = 6;
+            g_Fielders[3].unk1D7 = 2;
+            if (g_FieldingLogic.unk_F8[3] == 0) {
+                setFielderReadyAction(3, 0xB);
+            }
+        }
+    } else if (g_Ball.Hit_HorizontalAngle < 0x400) {
+        if (g_Fielders[3].unk18C == 1 && (g_FieldingLogic.unk_F8[2] == 1 || g_FieldingLogic.unk_F8[2] == 10 ||
+                                          g_FieldingLogic.unk_F8[2] == 11)) {
+            g_Fielders[2].unk18C = 6;
+            g_Fielders[2].unk1D7 = 2;
+        } else {
+            g_Fielders[3].unk18C = 6;
+            g_Fielders[3].unk1D7 = 2;
+            if (g_FieldingLogic.unk_F8[3] == 0) {
+                setFielderReadyAction(3, 0xB);
+            }
+        }
+    } else {
+        if (g_Fielders[5].unk18C == 3 && (g_FieldingLogic.unk_F8[4] == 1 || g_FieldingLogic.unk_F8[4] == 10 ||
+                                          g_FieldingLogic.unk_F8[4] == 11)) {
+            g_Fielders[4].unk18C = 6;
+            g_Fielders[4].unk1D7 = 2;
+        } else {
+            g_Fielders[5].unk18C = 6;
+            g_Fielders[5].unk1D7 = 2;
+            if (g_FieldingLogic.unk_F8[5] == 0) {
+                setFielderReadyAction(5, 0xB);
+            }
+        }
+    }
+    if (g_FieldingLogic.unk_F8[0] == 0) {
+        f = &g_Fielders[0];
+        f->unk18C = 0xF;
+        if (g_Ball.Hit_HorizontalAngle < 0x320) {
+            setFielderTarget(f, 6.0f, 16.0f);
+        } else if (g_Ball.Hit_HorizontalAngle < 0x400) {
+            setFielderTargetIdx(0, 3.0f, 21.0f);
+        } else if (g_Ball.Hit_HorizontalAngle < 0x4E0) {
+            setFielderTargetIdx(0, -3.0f, 21.0f);
+        } else {
+            setFielderTargetIdx(0, -6.0f, 16.0f);
+        }
+        setFielderReadyAction(0, 0xE);
+    }
 }
 
 // .text:0x000480B8 size:0x314 mapped:0x8068714C
