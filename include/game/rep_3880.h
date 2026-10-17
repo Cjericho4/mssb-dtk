@@ -202,7 +202,7 @@ void fn_3_14D710(void);
 void fn_3_14DC80(s32 arg);
 void fn_3_14DCE0(void);
 s32 fn_3_14DD04(struct Struct_800339F0_Result* obj);
-void fn_3_14DF6C(void);
+void fn_3_14DF6C(struct Struct_800339F0_Result* obj, Vec* pos);
 void fn_3_14E234(void);
 void fn_3_14E7C0(void* arg0);
 void fn_3_14E810(void);

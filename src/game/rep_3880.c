@@ -1115,8 +1115,32 @@ s32 fn_3_14DD04(struct Struct_800339F0_Result* obj) {
 }
 
 // .text:0x0014DF6C size:0x2C8 mapped:0x8078D000
-void fn_3_14DF6C(void) {
-    return;
+void fn_3_14DF6C(struct Struct_800339F0_Result* obj, Vec* pos) {
+    ListNode_14B9F0* node = obj->listHead;
+    obj->field_0x10 = lbl_3_common_bss_32724.field6C;
+    do {
+        f32 speed;
+        f32 half;
+        f32 quarter;
+        node->field_0x4D = lbl_3_data_26CD0.unk0;
+        node->field_0x4E = 0;
+        node->offset.x = pos->x + (f32)(rand() % 1000 - 500) / 1000.0f;
+        node->offset.y = -(0.75f + pos->y);
+        node->offset.z = pos->z + (f32)(rand() % 1000 - 500) / 1000.0f;
+        node->velocity.x = node->velocity.z = 0.0f;
+        node->velocity.y = (f32)lbl_3_data_26CD0.unk24 / 100000.0f;
+        speed = node->velocity.y;
+        half = 0.5f;
+        quarter = 0.25f;
+        node->velocity.y += ((f32)(rand() % (s32)(1000.0f * (speed * half))) - 1000.0f * (speed * quarter)) / 1000.0f;
+        node->color[0] = node->color[1] = node->color[2] = 255;
+        node->color[3] = lbl_3_data_26CD0.unk18;
+        node->pos.x = (f32)(rand() % 1000 + 500) / 1000.0f;
+        node->scaleX = node->scaleY = ((f32)lbl_3_data_26CD0.unkC / 100000.0f) * node->pos.x;
+        node->field_0x4A = lbl_3_data_26CD0.unk8;
+        node->field_0x48 = 0;
+        node = node->next;
+    } while (node != NULL);
 }
 
 // .text:0x0014E234 size:0x58C mapped:0x8078D2C8
