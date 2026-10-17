@@ -271,8 +271,12 @@ void fn_2_90C08(Rep1028Obj* obj) {
 }
 
 // .text:0x00090C14 size:0x38
-void fn_2_90C14(void) {
-    return;
+void fn_2_90C14(Rep1028Obj* obj) {
+    if (obj->unkA0 == 1) {
+        Rep1028Obj* target = &lbl_2_bss_1A8248->rep1028Objects[obj->index];
+        target->variant = 0;
+        target->state = 0;
+    }
 }
 
 // .text:0x00090C4C size:0x84
