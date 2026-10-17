@@ -340,9 +340,48 @@ void fn_3_AFE0C(void) {
     g_GameLogic.CountdownUntilFade = limit - g_FieldingLogic.unkAE;
 }
 
+extern u8 lbl_3_data_FAF4[][4];
+extern s16 lbl_3_data_FB04;
+
 // .text:0x000B003C size:0x1A4 mapped:0x806EF0D0
 void fn_3_B003C(void) {
-    return;
+    if (((u8) g_Practice.practiceType_2 != 4) && ((u8) g_Practice.guidedPracticeCompletionRelated2 == 0)) {
+        if ((u8) g_Ball.deadBallReason != 0) {
+            if (((u8) g_Ball.framesOnGroundUntilPickedUp == 0) && ((u8) g_Practice._1B0 == 0) && ((s16) g_Ball.matchFramesAndBallAngle.ballOverWallFrames < (s16) lbl_3_data_FB04)) {
+                return;
+            }
+            goto block_8;
+        }
+        if ((s16) g_Ball.framesSinceBallHitGroundOrWasCaught >= (s16) lbl_3_data_FB04) {
+block_8:
+            switch ((s32) g_Practice.practiceLevel) { /* irregular */
+            case 0:
+                if ((u8) g_Batter.hitGeneralType != 3) {
+                    g_Practice.guidedPracticeCounter += 1;
+                }
+                break;
+            case 1:
+                if (((u8) g_Batter.hitGeneralType == 1) || ((g_Batter.hitGeneralType == 2) && ((u8) g_Batter.moonShotInd != 0))) {
+                    g_Practice.guidedPracticeCounter += 1;
+                }
+                break;
+            case 2:
+                if ((u8) g_Batter.hitGeneralType == 3) {
+                    g_Practice.guidedPracticeCounter += 1;
+                }
+                break;
+            case 3:
+                if (((u8) g_Batter.hitGeneralType == 2) && ((u8) g_Batter.moonShotInd == 0)) {
+                    g_Practice.guidedPracticeCounter += 1;
+                }
+                break;
+            }
+            if ((u8) g_Practice.guidedPracticeCounter >= (u8) lbl_3_data_FAF4[g_Practice.practiceType_2][g_Practice.practiceLevel]) {
+                g_Practice.guidedPracticeCompletionRelated = 1;
+            }
+            g_Practice.guidedPracticeCompletionRelated2 = 1;
+        }
+    }
 }
 
 // .text:0x000B01E0 size:0x7C mapped:0x806EF274
