@@ -11,10 +11,20 @@ typedef struct Rep0568Obj {
 } Rep0568Obj;
 
 typedef struct Rep0568State {
-    u8 _pad0[0x2D];
+    u8 _pad0[0x14];
+    u8 active[8];
+    u8 counters[8];
+    u8 _pad24[9];
     u8 count;
     u8 _pad2E[0x12];
-    u8 flags[13];
+    union {
+        u8 flags[13];
+        struct {
+            u8 _pad40[6];
+            u8 values[4];
+        };
+    };
+    u8 _pad4D[7];
 } Rep0568State;
 extern Rep0568State lbl_2_bss_100B8;
 

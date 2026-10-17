@@ -4,6 +4,8 @@
 #include "menus/gap_D08.h"
 #include "menus/gap_71EC4.h"
 #include "string.h"
+#include "menus/rep_0568.h"
+#include "menus/gap_16870.h"
 
 extern u8 lbl_2_bss_100B4;
 
@@ -302,7 +304,15 @@ void fn_2_7504(void) {
 
 // .text:0x00007D44 size:0x98
 void fn_2_7D44(void) {
-    return;
+    if (lbl_803CBBCC->previousSelection == 9) {
+        memset(&lbl_2_bss_100B8, 0, sizeof(Rep0568State));
+    }
+    lbl_8034E9A0.unk4755 = 1;
+    lbl_2_bss_100B8.count = 4;
+    fn_2_16A74(0, 0);
+    fn_2_16A74(1, 0);
+    fn_2_16A74(2, 0);
+    fn_2_16A74(3, 0);
 }
 
 // .text:0x00007DDC size:0x910
