@@ -645,10 +645,61 @@ void fn_3_166F4(void) {
     g_pCamera->unk2880 = 0.0f;
 }
 
+extern Data3A40Entry lbl_3_data_1594[];
+
 // .text:0x00016900 size:0x2A0 mapped:0x80655994
 void fn_3_16900(void) {
-    return;
+    Data3A40Entry *var_r5;
+    f32 cosB, dist, angA, sinA, angB, sinB, dx, dy, dz;
+
+    if (g_d_GameSettings.minigamesEnabled == 0) {
+        if (g_GameLogic._125 == 3) {
+            fn_3_FBDAC(0x68);
+        }
+        fn_3_FD670();
+        return;
+    }
+    var_r5 = &lbl_3_data_1594[g_Minigame.GameMode_MiniGame];
+    if (g_GameLogic.gameStatus == 0x27 && (s8)g_Minigame._1908 >= 0) {
+        if (g_GameLogic._125 == 1 && g_GameLogic.FrameCountOfCurrentAtBat_Copy == 0) {
+            fn_3_FBDAC(0x69);
+        }
+        fn_3_FD670();
+        return;
+    }
+    g_pCamera->unk2858 = var_r5->unk0;
+    g_pCamera->unk285C = var_r5->unk4;
+    g_pCamera->unk2860 = var_r5->unk8;
+    g_pCamera->unk289C = var_r5->unk10[0];
+    g_pCamera->unk289E = var_r5->unk10[1];
+    g_pCamera->unk2878 = var_r5->unkC;
+    angA = shortAngleToRad_Capped(g_pCamera->unk289E);
+    dist = 20.0f * (f32)cos(angA);
+    sinA = sin(angA);
+    angB = shortAngleToRad_Capped(g_pCamera->unk289C);
+    cosB = cos(angB);
+    sinB = sin(angB);
+    dx = cosB * dist;
+    dy = 20.0f * sinA;
+    dz = sinB * dist;
+    g_pCamera->unk2890 = g_pCamera->unk2840;
+    g_pCamera->unk2894 = g_pCamera->unk2844;
+    g_pCamera->unk2898 = g_pCamera->unk2848;
+    g_pCamera->unk2858 += cosB * g_pCamera->unk287C;
+    g_pCamera->unk2860 += sinB * g_pCamera->unk287C;
+    g_pCamera->unk2858 += sinB * g_pCamera->unk2880;
+    g_pCamera->unk2860 -= cosB * g_pCamera->unk2880;
+    g_pCamera->unk284C = dx + g_pCamera->unk2858;
+    g_pCamera->unk2850 = dy + g_pCamera->unk285C;
+    g_pCamera->unk2854 = dz + g_pCamera->unk2860;
+    g_pCamera->unk2840 = g_pCamera->unk2858;
+    g_pCamera->unk2844 = g_pCamera->unk285C;
+    g_pCamera->unk2848 = g_pCamera->unk2860;
+    g_pCamera->unk287C = 0.0f;
+    g_pCamera->unk2880 = 0.0f;
 }
+
+
 
 // .text:0x00016BA0 size:0x1CC mapped:0x80655C34
 void fn_3_16BA0(void) {
