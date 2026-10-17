@@ -7,9 +7,15 @@ typedef struct Gap3C03CObj {
     u8 _pad0[5];
     s8 unk5;
     u8 _pad6[0x2B];
-    u8 unk31;
+    s8 unk31;
     u8 _pad32[2];
 } Gap3C03CObj;
+
+typedef struct MenusChoiceRecord {
+    u8 _pad0[3];
+    u8 choice;
+    u8 _pad4[6];
+} MenusChoiceRecord;
 
 void fn_2_3C03C(void);
 void fn_2_3C168(void);
@@ -80,7 +86,7 @@ void fn_2_45204(void);
 void fn_2_45354(void);
 void fn_2_454E8(void);
 void fn_2_45810(void);
-void fn_2_45938(void);
+BOOL fn_2_45938(s32 index);
 void fn_2_45978(void);
 void fn_2_45A84(void);
 void fn_2_45BA4(void);

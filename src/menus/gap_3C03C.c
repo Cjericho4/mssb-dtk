@@ -2,6 +2,8 @@
 #include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
 
+extern u8 lbl_803CB8F0[];
+
 // .text:0x0003C03C size:0x12C
 void fn_2_3C03C(void) {
     return;
@@ -350,8 +352,10 @@ void fn_2_45810(void) {
 }
 
 // .text:0x00045938 size:0x40
-void fn_2_45938(void) {
-    return;
+BOOL fn_2_45938(s32 index) {
+    MenusSceneState* scene = lbl_2_bss_1A8248;
+    Gap3C03CObj* obj = &scene->gap3C03CObjects[lbl_803CB8F0[scene->choices[index].choice]];
+    return obj->unk31 == 0;
 }
 
 // .text:0x00045978 size:0x10C
