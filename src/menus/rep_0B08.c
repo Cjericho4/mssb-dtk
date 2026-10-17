@@ -265,8 +265,13 @@ void fn_2_6AF80(void) {
 }
 
 // .text:0x0006AF9C size:0x38
-void fn_2_6AF9C(void) {
-    return;
+BOOL fn_2_6AF9C(s32 index) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    if (obj->unkD0 == 0) {
+        obj->unkD0 = 0;
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x0006AFD4 size:0x50
