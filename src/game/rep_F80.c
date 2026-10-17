@@ -2,6 +2,9 @@
 #include "game/rep_1E08.h"
 #include "game/rep_E08.h"
 #include "header_rep_data.h"
+#include "game/rep_2308.h"
+#include "game/auto_00_000CB344_text.h"
+#include "game/rep_540.h"
 
 // .text:0x0006A2A4 size:0x5C mapped:0x806A9338
 void fn_3_6A2A4(s8 arg1) {
@@ -56,8 +59,46 @@ void fn_3_6A414(void) {
 
 // .text:0x0006A83C size:0x174 mapped:0x806A98D0
 void fn_3_6A83C(void) {
-    return;
+    VecXYZ sp8;
+    s32 var_r4;
+    s32 var_r30;
+    s16 pitchTime;
+    u8 status;
+
+    var_r30 = 0;
+    pitchTime = g_Pitcher.pitchTotalTimeCounter;
+    if (pitchTime <= 0) {
+        lbl_3_common_bss_32724.field_0xC8 = 0;
+        return;
+    }
+    status = lbl_3_common_bss_32724.field_0xC8;
+    if (status < 2U) {
+        if ((u8) g_d_GameSettings.minigamesEnabled != 0) {
+            var_r30 = g_Minigame.players.characterIndex[(s8) g_Minigame.minigamePlayerSelectedOrder];
+        }
+        if ((pitchTime >= 0) && (((u8) g_Pitcher.TypeOfPitch != 0) || ((u8) g_Pitcher.ChargePitchType != 0))) {
+            if (status == 0) {
+                fn_3_CB344(var_r30, g_Pitcher.starPitchType);
+                lbl_3_common_bss_32724.field_0xC8 = 1;
+            }
+            if ((u8) lbl_3_common_bss_32724.field_0xC8 == 1) {
+                if (((s16) g_Ball.pitchHangtimeCounter == 1) || ((u8) g_GameLogic.gameStatus != 1)) {
+                    fn_3_CB234(var_r30, 1);
+                    lbl_3_common_bss_32724.field_0xC8 = 2;
+                    return;
+                }
+                var_r4 = 0x1A;
+                if ((u8) g_Pitcher.handedness != 0) {
+                    var_r4 = 0x14;
+                }
+                getAnimRelatedCoordinates(var_r30, var_r4, &sp8);
+                fn_3_CB284(var_r30, g_Pitcher.windupCountdownUntilBallReleased, g_Pitcher.pitchChargeUpAnimationProportion);
+            }
+        }
+    }
 }
+
+
 
 // .text:0x0006A9B0 size:0xE8 mapped:0x806A9A44
 void fn_3_6A9B0(void) {
