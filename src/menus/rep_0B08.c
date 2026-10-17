@@ -1,4 +1,5 @@
 #include "menus/rep_0B08.h"
+#include "string.h"
 
 extern void (*lbl_2_data_2A1F4[])(Rep0B08Obj*);
 
@@ -129,8 +130,8 @@ void fn_2_68D90(void) {
 }
 
 // .text:0x00068DAC size:0x3C
-void fn_2_68DAC(void) {
-    return;
+void fn_2_68DAC(s32 index, Vec* out) {
+    memcpy(out, &lbl_2_bss_1A8248->rep0B08Objects[index].position, sizeof(Vec));
 }
 
 // .text:0x00068DE8 size:0x80

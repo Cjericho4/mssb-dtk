@@ -2,9 +2,11 @@
 #define __MENUS_rep_0B08_H_
 
 #include "mssbTypes.h"
+#include "Dolphin/mtx.h"
 
 typedef struct Rep0B08Obj {
-    /* 0x00 */ u8 _pad0[0x80];
+    /* 0x00 */ Vec position;
+    u8 _padC[0x74];
     s32 index;
     u8 _pad84[0x10];
     /* 0x94 */ s16 state;
@@ -19,7 +21,9 @@ typedef struct Rep0B08Obj {
 } Rep0B08Obj;
 
 typedef struct MenusSceneState {
-    u8 _pad0[0x441C];
+    u8 _pad0[0x1610];
+    Rep0B08Obj rep0B08Objects[14];
+    u8 _pad21E0[0x223C];
     u8 unk441C;
     u8 _pad441D[5];
     u8 unk4422;
@@ -45,7 +49,7 @@ void fn_2_68A88(void);
 void fn_2_68B54(void);
 void fn_2_68C80(void);
 void fn_2_68D90(void);
-void fn_2_68DAC(void);
+void fn_2_68DAC(s32 index, Vec* out);
 void fn_2_68DE8(void);
 void fn_2_68E68(void);
 void fn_2_68F08(void);
