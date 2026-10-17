@@ -212,8 +212,41 @@ void fn_3_AE334(void) {
 }
 
 // .text:0x000AE770 size:0x190 mapped:0x806ED804
+extern u8 lbl_800E8754[];
+extern void fn_80035B50(s32);
+extern void fn_3_FBD70(void);
+extern void fn_3_FBD58(void);
+
 void fn_3_AE770(void) {
-    return;
+    s32 i;
+    if (lbl_3_common_bss_34C90.field_0x0C <= 1) {
+        lbl_803CBC3C.unk2 = 0;
+        fn_80035B50(0x13);
+    }
+    fn_3_753E8(1);
+    setBatterContactConstants();
+    for (i = 0; i < 2; i++) {
+        if (g_GameLogic._13E[i] == 0) {
+            if (lbl_800E8754[g_GameLogic.teams[i] * 7 + 9] != 0) {
+                g_GameLogic.battingAIInd[g_GameLogic.homeTeamInd ^ i] = 1;
+            } else {
+                g_GameLogic.battingAIInd[g_GameLogic.homeTeamInd ^ i] = 0;
+            }
+            if (lbl_800E8754[g_GameLogic.teams[i] * 7 + 10] != 0) {
+                g_GameLogic.teamAIInd[g_GameLogic.homeTeamInd ^ i] = 1;
+                g_GameLogic.autoFielding[g_GameLogic.homeTeamInd ^ i] = 1;
+            } else {
+                g_GameLogic.teamAIInd[g_GameLogic.homeTeamInd ^ i] = 0;
+                g_GameLogic.autoFielding[g_GameLogic.homeTeamInd ^ i] = 0;
+            }
+        }
+    }
+    fn_3_FBD70();
+    fn_3_FBD58();
+    g_hugeAnimStruct.renderStadiumFlag = 1;
+    g_GameLogic.pre_PostMiniGameInd = 1;
+    changeScene(1, 6);
+    fn_3_5A6D4(0);
 }
 
 // .text:0x000AE900 size:0x350 mapped:0x806ED994
