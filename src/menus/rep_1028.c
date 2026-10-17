@@ -317,7 +317,18 @@ void fn_2_8FC88(s32 index) {
 
 // .text:0x0008FD14 size:0x9C
 void fn_2_8FD14(void) {
-    return;
+    HugeAnimEntry2D94* entry;
+    Rep1028Obj* obj;
+    s32 i;
+    for (i = 0; i < lbl_2_bss_340140->field268_0x3078; i++) {
+        if (lbl_2_bss_340140->entries_2D94 != 0) {
+            entry = &lbl_2_bss_340140->entries_2D94[i];
+            obj = &lbl_2_bss_1A8248->rep1028Objects[i];
+            memcpy(&entry->pos, &obj->position, sizeof(Vec));
+            entry->vel.y = obj->unk28;
+            entry->unk_26 = obj->unkAA;
+        }
+    }
 }
 
 // .text:0x0008FDB0 size:0xEC
