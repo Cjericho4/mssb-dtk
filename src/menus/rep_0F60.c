@@ -63,8 +63,21 @@ void fn_2_8CCAC(s32 index, u8 value) {
 }
 
 // .text:0x0008CCCC size:0x8C
-void fn_2_8CCCC(void) {
-    return;
+void fn_2_8CCCC(s32 index, s32 animation, u8 flag, u8 mode, u8 value263, s16 value6C, u8 value266, s32 value26A) {
+    AnimationStruct* anim = lbl_2_bss_340140->AnimationStructPtrs[index];
+    if (anim == 0) return;
+    if (mode == 1 && anim->animID == animation) return;
+    if (mode == 3) mode = 1;
+    anim->nextAnim = animation;
+    anim->unk6C = value6C;
+    anim->unk260 = flag;
+    anim->unk25E = mode;
+    anim->unk263 = value263;
+    anim->unk266 = value266;
+    anim->unk26D = 0;
+    if (value26A == -1) anim->unk26A = 5;
+    else anim->unk26A = value26A;
+    anim->unk66 = -1;
 }
 
 // .text:0x0008CD58 size:0x2CC
