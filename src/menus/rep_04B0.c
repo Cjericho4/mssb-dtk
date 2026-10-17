@@ -2,6 +2,9 @@
 #include "menus/rep_0438.h"
 #include "menus/gap_1254.h"
 #include "static/UnknownHomes_Static.h"
+#include "menus/rep_08E8.h"
+
+extern void LITXForm(MenusLight* light, Mtx matrix);
 
 extern MenusSceneAsset lbl_2_data_1DD4;
 extern void fn_8001CB10(MenusSceneAsset* asset, s32 mode);
@@ -88,7 +91,14 @@ void fn_2_16460(void) {
 
 // .text:0x00016664 size:0x68
 void fn_2_16664(void) {
-    return;
+    hugeAnimStruct* anim = &g_hugeAnimStruct;
+    MenusLightMatrixState* state = &lbl_2_bss_10164;
+    f32 (*matrix)[4] = state->matrix;
+    s32 i = 0;
+    do {
+        LITXForm(anim->menuLights[i], matrix);
+        i++;
+    } while (i < 4);
 }
 
 // .text:0x000166CC size:0x58

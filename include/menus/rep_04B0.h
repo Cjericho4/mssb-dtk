@@ -2,6 +2,13 @@
 #define __MENUS_rep_04B0_H_
 
 #include "mssbTypes.h"
+#include "Dolphin/mtx.h"
+
+typedef struct MenusLightMatrixState {
+    u8 _pad0[0x14];
+    Mtx matrix;
+} MenusLightMatrixState;
+extern MenusLightMatrixState lbl_2_bss_10164;
 
 typedef struct MenusSceneAsset MenusSceneAsset;
 

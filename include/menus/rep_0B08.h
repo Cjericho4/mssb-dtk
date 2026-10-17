@@ -60,7 +60,9 @@ typedef struct MenusSceneState {
     u8 _pad4416[5];
     u8 unk441B;
     u8 unk441C;
-    u8 _pad441D[5];
+    u8 _pad441D[3];
+    u8 unk4420;
+    u8 _pad4421;
     u8 unk4422;
     u8 _pad4423;
     u8 unk4424;
