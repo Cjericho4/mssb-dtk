@@ -277,6 +277,36 @@ static inline void updateFielderHeading(s32 idx) {
     }
 }
 
+static inline void beginFielderCatchAnim(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+    s32 type = f->unk1CC;
+    s32 rosterID = idx;
+    s32 k;
+    f32 scale = 0.1f;
+    s32 n;
+
+    f->unk203 = 1;
+    f->unk15C = 0.0f;
+    if (g_d_GameSettings.minigamesEnabled) {
+        if (idx == 0) {
+            rosterID = g_Minigame.players.characterIndex[g_Minigame.minigamePlayerSelectedOrder];
+        } else {
+            rosterID = g_Minigame.players.fielderRosterIDs[idx - 2];
+        }
+    }
+    f->unk164 = lbl_3_data_4884[type].unk0;
+    f->unk160 = f->unk38 * scale * lbl_3_data_4884[type].unk8;
+    k = lbl_3_data_4884[type].unkC;
+    f->unk168 = f->unk3C * scale * lbl_3_data_4884[type].unk8;
+    n = f->unk164 / lbl_3_data_4884[type].unk4;
+    f->unk1B0 = n + 1;
+    f->unk1AE = (n + n) + (k + 2);
+    f->unk204 = 0;
+    if (type != 0) {
+        fn_3_1682AC(g_hugeAnimStruct.AnimationStructPtrs[rosterID], 6);
+    }
+}
+
 // .text:0x000251E4 size:0x1C0 mapped:0x80664278
 void fn_3_251E4(void) {
     return;
@@ -311,8 +341,18 @@ void fn_3_25844(s32 fielderIdx, s32 arg1) {
 }
 
 // .text:0x000258D8 size:0x190 mapped:0x8066496C
-void fn_3_258D8(void) {
-    return;
+s32 fn_3_258D8(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    if (g_FieldingLogic.unk8C->unk2 == 0) {
+        return 0;
+    }
+    if (f->unk25A != 0) {
+        return 0;
+    }
+    beginFielderCatchAnim(idx);
+    g_FieldingLogic.unk8C->unk2 = 0;
+    return 1;
 }
 
 // .text:0x00025A68 size:0x1D8 mapped:0x80664AFC
