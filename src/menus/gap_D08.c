@@ -4,6 +4,7 @@
 
 extern u32 sndSeqGetValid(u32 sequence);
 extern u32 lbl_2_bss_D974[];
+extern s16 lbl_2_bss_D958[];
 extern void (*lbl_2_data_138[])(void);
 
 // .text:0x00000D08 size:0x80
@@ -29,8 +30,15 @@ void fn_2_F64(void) {
 }
 
 // .text:0x00001018 size:0x94
-void fn_2_1018(void) {
-    return;
+void fn_2_1018(u16 index) {
+    if (lbl_2_bss_D974[index] != 0xFFFFFFFF) {
+        if (sndSeqGetValid(lbl_2_bss_D974[index]) != 0) {
+            sndSeqVolume(0, 0, lbl_2_bss_D974[index], 1);
+            sndSeqStop(lbl_2_bss_D974[index]);
+        }
+        lbl_2_bss_D974[index] = 0xFFFFFFFF;
+        lbl_2_bss_D958[index] = -1;
+    }
 }
 
 // .text:0x000010AC size:0x50

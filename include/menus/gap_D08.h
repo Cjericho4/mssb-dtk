@@ -20,7 +20,7 @@ void fn_2_D08(u16 index, u16 time, u8 mode);
 void fn_2_D88(void);
 void fn_2_E84(void);
 void fn_2_F64(void);
-void fn_2_1018(void);
+void fn_2_1018(u16 index);
 void fn_2_10AC(void);
 s32 fn_2_10FC(void);
 void fn_2_1130(s16 state);
