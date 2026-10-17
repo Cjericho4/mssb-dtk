@@ -1,18 +1,18 @@
 #include "Unknown/gap_8003AE54.h"
 
 // .text:0x8003AE54 size:0x8
-void fn_8003AE54(void) {
-    return;
+u8 fn_8003AE54(void) {
+    return lbl_803CBCB4;
 }
 
 // .text:0x8003AE5C size:0x8
-void fn_8003AE5C(void) {
-    return;
+void fn_8003AE5C(u8 value) {
+    lbl_803CBCB4 = value;
 }
 
 // .text:0x8003AE64 size:0xC
 void fn_8003AE64(void) {
-    return;
+    lbl_803CBCB8 = 0x0;
 }
 
 // .text:0x8003AE70 size:0x5C

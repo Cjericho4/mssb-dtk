@@ -3,6 +3,8 @@
 
 #include "mssbTypes.h"
 
+extern s32 lbl_803CBC60;
+
 void fn_8002244C(void);
 void fn_8002254C(void);
 void fn_80022620(void);
@@ -25,8 +27,8 @@ void fn_80023AA4(void);
 void fn_80023B04(void);
 void fn_80023B90(void);
 void fn_80023CF4(void);
-void fn_80023D3C(void);
-void fn_80023D44(void);
+s32 fn_80023D3C(void);
+void fn_80023D44(s32 value);
 void fn_80023D4C(void);
 void fn_80023D98(void);
 void fn_80023DFC(void);

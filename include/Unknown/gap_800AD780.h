@@ -3,12 +3,14 @@
 
 #include "mssbTypes.h"
 
+extern u8 lbl_803CC17D;
+
 void fn_800AD780(void);
 void fn_800AD830(void);
 void fn_800AD914(void);
 void fn_800AD95C(void);
 void fn_800AD9F4(void);
-void fn_800ADAFC(void);
+u8 fn_800ADAFC(void);
 void fn_800ADB04(void);
 void fn_800ADBFC(void);
 void fn_800ADC40(void);

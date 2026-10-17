@@ -16,8 +16,8 @@ void fn_8004157C(void) {
 }
 
 // .text:0x800415A0 size:0x8
-void fn_800415A0(void) {
-    return;
+void fn_800415A0(s16 value) {
+    lbl_803CBCC0 = value;
 }
 
 // .text:0x800415A8 size:0xAD4

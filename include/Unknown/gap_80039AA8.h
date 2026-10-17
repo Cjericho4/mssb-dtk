@@ -3,6 +3,9 @@
 
 #include "mssbTypes.h"
 
+extern s32 lbl_803CBCA8;
+extern s32 lbl_803CBCB0;
+
 void GetUITexture(void);
 void fn_80039AB4(void);
 void fn_80039AC0(void);
@@ -14,9 +17,9 @@ void fn_8003A2C0(void);
 void fn_8003A2EC(void);
 void fn_8003A37C(void);
 void fn_8003A4C8(void);
-void fn_8003A538(void);
-void fn_8003A540(void);
-void fn_8003A548(void);
+s32 fn_8003A538(void);
+void fn_8003A540(s32 value);
+void fn_8003A548(s32 value);
 void fn_8003A550(void);
 void fn_8003A688(void);
 void fn_8003A6B0(void);

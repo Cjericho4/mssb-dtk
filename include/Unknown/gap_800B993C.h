@@ -3,15 +3,20 @@
 
 #include "mssbTypes.h"
 
+extern s32 lbl_803CC1F0;
+extern s32 lbl_803CC1F4;
+extern s32 lbl_803CC200;
+extern s32 lbl_803CC20C;
+
 void fn_800B993C(void);
-void fn_800B9948(void);
+void fn_800B9948(s32 value);
 void fn_800B9950(void);
-void fn_800B996C(void);
+void fn_800B996C(s32 value);
 void SetFogNone(void);
 void SetFog(void);
 void SetFogNoneAgain(void);
 void fn_800B9A9C(void);
-void fn_800B9AA8(void);
+void fn_800B9AA8(s32 value);
 void fn_800B9AB0(void);
 void fn_800B9EA8(void);
 void fn_800BA44C(void);
@@ -30,7 +35,7 @@ void fn_800BCDBC(void);
 void fn_800BCE38(void);
 void fn_800BCEF8(void);
 void fn_800BD190(void);
-void fn_800BD1E8(void);
+void fn_800BD1E8(s32 value);
 void __MTGQR5(void);
 void __MTGQR6(void);
 void __MTGQR7(void);

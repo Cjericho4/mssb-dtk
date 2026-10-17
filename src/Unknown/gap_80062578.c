@@ -151,8 +151,8 @@ void fn_800637BC(void) {
 }
 
 // .text:0x800637D4 size:0x8
-void fn_800637D4(void) {
-    return;
+s32 fn_800637D4(void) {
+    return 0x0;
 }
 
 // .text:0x800637DC size:0xD8

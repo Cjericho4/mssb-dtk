@@ -3,8 +3,13 @@
 
 #include "mssbTypes.h"
 
+extern s32 lbl_803CB848;
+extern s32 lbl_803CBCE8;
+extern s32 lbl_803CBCFC;
+extern s32 lbl_803CBD0C;
+
 void fn_80048BEC(void);
-void fn_80048C14(void);
+void fn_80048C14(s32 value);
 void fn_80048C1C(void);
 void fn_80048C28(void);
 void fn_80048D4C(void);
@@ -25,8 +30,8 @@ void fn_8004A34C(void);
 void fn_8004A5B8(void);
 void fn_8004A7D0(void);
 void fn_8004A9E0(void);
-void Set_803cb848(void);
-void fn_8004ABE0(void);
+void Set_803cb848(s32 value);
+s32 fn_8004ABE0(void);
 void fn_8004ABE8(void);
 void fn_8004AC00(void);
 void fn_8004ACC4(void);
@@ -35,7 +40,7 @@ void fn_8004ACF4(void);
 void fn_8004AD54(void);
 void fn_8004AE18(void);
 void fn_8004AFA8(void);
-void fn_8004B1B8(void);
+void fn_8004B1B8(s32 value);
 void fn_8004B1C0(void);
 void fn_8004B208(void);
 void fn_8004B270(void);

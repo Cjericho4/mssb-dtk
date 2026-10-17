@@ -106,8 +106,8 @@ void fn_80011468(void) {
 }
 
 // .text:0x80011570 size:0x8
-void fn_80011570(void) {
-    return;
+s32 fn_80011570(void) {
+    return lbl_803CBC18;
 }
 
 // .text:0x80011578 size:0x50

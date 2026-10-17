@@ -1,8 +1,8 @@
 #include "Unknown/gap_80008E00.h"
 
 // .text:0x80008E00 size:0x8
-void fn_80008E00(void) {
-    return;
+void fn_80008E00(s32 value) {
+    lbl_803CBBB8 = value;
 }
 
 // .text:0x80008E08 size:0x1C8
@@ -17,7 +17,7 @@ void PostRetraceCallback(void) {
 
 // .text:0x8000900C size:0xC
 void fn_8000900C(void) {
-    return;
+    lbl_803CBBAC = 0x1;
 }
 
 // .text:0x80009018 size:0x10

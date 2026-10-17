@@ -3,7 +3,9 @@
 
 #include "mssbTypes.h"
 
-void fn_800528AC(void);
+extern s32 lbl_803CBD10;
+
+void fn_800528AC(s32 value);
 void fn_800528B4(void);
 void fn_800528C0(void);
 void fn_80052968(void);

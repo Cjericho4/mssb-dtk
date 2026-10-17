@@ -1,13 +1,13 @@
 #include "Unknown/gap_800528AC.h"
 
 // .text:0x800528AC size:0x8
-void fn_800528AC(void) {
-    return;
+void fn_800528AC(s32 value) {
+    lbl_803CBD10 = value;
 }
 
 // .text:0x800528B4 size:0xC
 void fn_800528B4(void) {
-    return;
+    lbl_803CBD10 = 0x0;
 }
 
 // .text:0x800528C0 size:0xA8

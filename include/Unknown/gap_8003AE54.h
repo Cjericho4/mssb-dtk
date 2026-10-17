@@ -3,8 +3,11 @@
 
 #include "mssbTypes.h"
 
-void fn_8003AE54(void);
-void fn_8003AE5C(void);
+extern u8 lbl_803CBCB4;
+extern s32 lbl_803CBCB8;
+
+u8 fn_8003AE54(void);
+void fn_8003AE5C(u8 value);
 void fn_8003AE64(void);
 void fn_8003AE70(void);
 void fn_8003AECC(void);

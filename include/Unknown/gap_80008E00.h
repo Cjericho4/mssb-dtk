@@ -3,7 +3,10 @@
 
 #include "mssbTypes.h"
 
-void fn_80008E00(void);
+extern s32 lbl_803CBBAC;
+extern s32 lbl_803CBBB8;
+
+void fn_80008E00(s32 value);
 void fn_80008E08(void);
 void PostRetraceCallback(void);
 void fn_8000900C(void);

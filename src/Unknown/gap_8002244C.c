@@ -111,13 +111,13 @@ void fn_80023CF4(void) {
 }
 
 // .text:0x80023D3C size:0x8
-void fn_80023D3C(void) {
-    return;
+s32 fn_80023D3C(void) {
+    return lbl_803CBC60;
 }
 
 // .text:0x80023D44 size:0x8
-void fn_80023D44(void) {
-    return;
+void fn_80023D44(s32 value) {
+    lbl_803CBC60 = value;
 }
 
 // .text:0x80023D4C size:0x4C

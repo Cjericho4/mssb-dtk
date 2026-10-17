@@ -106,8 +106,8 @@ void fn_8006C398(void) {
 }
 
 // .text:0x8006C3F0 size:0x8
-void fn_8006C3F0(void) {
-    return;
+void fn_8006C3F0(s32 value) {
+    lbl_803CBD38 = value;
 }
 
 // .text:0x8006C3F8 size:0x44
@@ -116,8 +116,8 @@ void fn_8006C3F8(void) {
 }
 
 // .text:0x8006C43C size:0x8
-void fn_8006C43C(void) {
-    return;
+void fn_8006C43C(s32 value) {
+    lbl_803CBD3C = value;
 }
 
 // .text:0x8006C444 size:0x44

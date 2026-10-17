@@ -2,12 +2,12 @@
 
 // .text:0x800B993C size:0xC
 void fn_800B993C(void) {
-    return;
+    lbl_803CC200 = 0x0;
 }
 
 // .text:0x800B9948 size:0x8
-void fn_800B9948(void) {
-    return;
+void fn_800B9948(s32 value) {
+    lbl_803CC200 = value;
 }
 
 // .text:0x800B9950 size:0x1C
@@ -16,8 +16,8 @@ void fn_800B9950(void) {
 }
 
 // .text:0x800B996C size:0x8
-void fn_800B996C(void) {
-    return;
+void fn_800B996C(s32 value) {
+    lbl_803CC1F4 = value;
 }
 
 // .text:0x800B9974 size:0x50
@@ -41,8 +41,8 @@ void fn_800B9A9C(void) {
 }
 
 // .text:0x800B9AA8 size:0x8
-void fn_800B9AA8(void) {
-    return;
+void fn_800B9AA8(s32 value) {
+    lbl_803CC1F0 = value;
 }
 
 // .text:0x800B9AB0 size:0x3F8
@@ -136,8 +136,8 @@ void fn_800BD190(void) {
 }
 
 // .text:0x800BD1E8 size:0x8
-void fn_800BD1E8(void) {
-    return;
+void fn_800BD1E8(s32 value) {
+    lbl_803CC20C = value;
 }
 
 // .text:0x800BD1F0 size:0x8

@@ -26,8 +26,8 @@ void fn_800AD9F4(void) {
 }
 
 // .text:0x800ADAFC size:0x8
-void fn_800ADAFC(void) {
-    return;
+u8 fn_800ADAFC(void) {
+    return lbl_803CC17D;
 }
 
 // .text:0x800ADB04 size:0xF8

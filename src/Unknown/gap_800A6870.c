@@ -161,18 +161,18 @@ void fn_800A8878(void) {
 }
 
 // .text:0x800A88C0 size:0x8
-void fn_800A88C0(void) {
-    return;
+s32 fn_800A88C0(void) {
+    return lbl_803CC154;
 }
 
 // .text:0x800A88C8 size:0x8
-void fn_800A88C8(void) {
-    return;
+s32 fn_800A88C8(void) {
+    return lbl_803CC148;
 }
 
 // .text:0x800A88D0 size:0x8
-void fn_800A88D0(void) {
-    return;
+s32 fn_800A88D0(void) {
+    return lbl_803CC140;
 }
 
 // .text:0x800A88D8 size:0x1D8
@@ -181,8 +181,8 @@ void fn_800A88D8(void) {
 }
 
 // .text:0x800A8AB0 size:0x8
-void fn_800A8AB0(void) {
-    return;
+void fn_800A8AB0(s32 value) {
+    lbl_803CC140 = value;
 }
 
 // .text:0x800A8AB8 size:0xC0

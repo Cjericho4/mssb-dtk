@@ -51,8 +51,8 @@ void fn_80052634(void) {
 }
 
 // .text:0x8005268C size:0x8
-void fn_8005268C(void) {
-    return;
+s32 fn_8005268C(void) {
+    return lbl_803CBD14;
 }
 
 // .text:0x80052694 size:0xA0
@@ -76,8 +76,8 @@ void fn_80052798(void) {
 }
 
 // .text:0x800527BC size:0x8
-void fn_800527BC(void) {
-    return;
+s32 fn_800527BC(void) {
+    return lbl_803CB880;
 }
 
 // .text:0x800527C4 size:0xE8

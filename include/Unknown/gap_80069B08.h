@@ -3,6 +3,9 @@
 
 #include "mssbTypes.h"
 
+extern s32 lbl_803CBD38;
+extern s32 lbl_803CBD3C;
+
 void fn_80069B08(void);
 void fn_80069B68(void);
 void fn_80069BDC(void);
@@ -24,9 +27,9 @@ void fn_8006C13C(void);
 void fn_8006C268(void);
 void fn_8006C2B4(void);
 void fn_8006C398(void);
-void fn_8006C3F0(void);
+void fn_8006C3F0(s32 value);
 void fn_8006C3F8(void);
-void fn_8006C43C(void);
+void fn_8006C43C(s32 value);
 void fn_8006C444(void);
 void fn_8006C488(void);
 void challengeDrawStarsOnMissionMenu(void);

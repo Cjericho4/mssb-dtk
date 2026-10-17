@@ -56,18 +56,18 @@ void fn_8003A4C8(void) {
 }
 
 // .text:0x8003A538 size:0x8
-void fn_8003A538(void) {
-    return;
+s32 fn_8003A538(void) {
+    return lbl_803CBCB0;
 }
 
 // .text:0x8003A540 size:0x8
-void fn_8003A540(void) {
-    return;
+void fn_8003A540(s32 value) {
+    lbl_803CBCB0 = value;
 }
 
 // .text:0x8003A548 size:0x8
-void fn_8003A548(void) {
-    return;
+void fn_8003A548(s32 value) {
+    lbl_803CBCA8 = value;
 }
 
 // .text:0x8003A550 size:0x138

@@ -3,6 +3,10 @@
 
 #include "mssbTypes.h"
 
+extern s32 lbl_803CC140;
+extern s32 lbl_803CC148;
+extern s32 lbl_803CC154;
+
 void fn_800A6870(void);
 void fn_800A6890(void);
 void fn_800A68D4(void);
@@ -35,11 +39,11 @@ void fn_800A8518(void);
 void fn_800A86B4(void);
 void fn_800A8864(void);
 void fn_800A8878(void);
-void fn_800A88C0(void);
-void fn_800A88C8(void);
-void fn_800A88D0(void);
+s32 fn_800A88C0(void);
+s32 fn_800A88C8(void);
+s32 fn_800A88D0(void);
 void fn_800A88D8(void);
-void fn_800A8AB0(void);
+void fn_800A8AB0(s32 value);
 void fn_800A8AB8(void);
 void fn_800A8B78(void);
 void LoadFile(void);

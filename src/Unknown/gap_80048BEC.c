@@ -6,8 +6,8 @@ void fn_80048BEC(void) {
 }
 
 // .text:0x80048C14 size:0x8
-void fn_80048C14(void) {
-    return;
+void fn_80048C14(s32 value) {
+    lbl_803CBCE8 = value;
 }
 
 // .text:0x80048C1C size:0xC
@@ -111,13 +111,13 @@ void fn_8004A9E0(void) {
 }
 
 // .text:0x8004ABD8 size:0x8
-void Set_803cb848(void) {
-    return;
+void Set_803cb848(s32 value) {
+    lbl_803CB848 = value;
 }
 
 // .text:0x8004ABE0 size:0x8
-void fn_8004ABE0(void) {
-    return;
+s32 fn_8004ABE0(void) {
+    return lbl_803CBCFC;
 }
 
 // .text:0x8004ABE8 size:0x18
@@ -161,8 +161,8 @@ void fn_8004AFA8(void) {
 }
 
 // .text:0x8004B1B8 size:0x8
-void fn_8004B1B8(void) {
-    return;
+void fn_8004B1B8(s32 value) {
+    lbl_803CBD0C = value;
 }
 
 // .text:0x8004B1C0 size:0x48

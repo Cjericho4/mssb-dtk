@@ -3,10 +3,12 @@
 
 #include "mssbTypes.h"
 
+extern s16 lbl_803CBCC0;
+
 void fn_80041348(void);
 void fn_8004153C(void);
 void fn_8004157C(void);
-void fn_800415A0(void);
+void fn_800415A0(s16 value);
 void fn_800415A8(void);
 void capApplicationFunction(void);
 void fn_80042598(void);

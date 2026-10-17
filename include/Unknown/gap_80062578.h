@@ -33,7 +33,7 @@ void fn_80063028(void);
 void fn_800633AC(void);
 void fn_80063718(void);
 void fn_800637BC(void);
-void fn_800637D4(void);
+s32 fn_800637D4(void);
 void fn_800637DC(void);
 void fn_800638B4(void);
 void fn_800638CC(void);
