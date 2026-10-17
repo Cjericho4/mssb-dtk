@@ -1,4 +1,7 @@
 #include "menus/gap_0.h"
+#include "menus/gap_D08.h"
+#include "UnknownHeaders.h"
+#include "Dolphin/GX/GXPixel.h"
 
 // .text:0x00000000 size:0x3C
 void fn_2_0(void) {
@@ -87,7 +90,7 @@ void fn_2_794(void) {
 
 // .text:0x00000940 size:0x38
 void fn_2_940(void) {
-    return;
+    if (lbl_803CBBCC->unk0 == 5) fn_800B0A14_removeQueue();
 }
 
 // .text:0x00000978 size:0x9C
