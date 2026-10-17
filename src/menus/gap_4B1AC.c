@@ -2,6 +2,7 @@
 #include "menus/rep_10C0.h"
 #include "UnknownHeaders.h"
 
+extern void fn_80035B50(s32 arg0);
 extern s16 lbl_2_data_3ED4[];
 extern s16 lbl_2_data_3EC8[];
 
@@ -132,7 +133,7 @@ void fn_2_4E878(u32 arg0, u32 arg1) {
 
 // .text:0x0004E898 size:0x24
 void fn_2_4E898(void) {
-    return;
+    fn_80035B50(23);
 }
 
 // .text:0x0004E8BC size:0x24
