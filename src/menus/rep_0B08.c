@@ -6,6 +6,8 @@
 
 extern Rep0B08AnimationConfig lbl_2_data_3C84[];
 extern Vec lbl_2_data_2EA4[];
+extern f32 lbl_2_data_3EF4[];
+extern f32 lbl_2_data_3F5C;
 #include "math.h"
 #include "menus/rep_08E8.h"
 #include "Dolphin/GX/GXTypes.h"
@@ -58,6 +60,12 @@ static inline void setMenuObjectActive(s32 index, u8 value) {
 static inline void setMenuObjectAlpha(s32 index, u8 value) {
     Rep0B08Obj* target = &lbl_2_bss_1A8248->rep0B08Objects[index];
     target->unkCA = value;
+}
+
+static inline void menuScalePosition(Vec* source, Vec* target, f32 scale) {
+    target->x = source->x * scale;
+    target->y = source->y * scale;
+    target->z = source->z * scale;
 }
 
 // .text:0x0006832C size:0xC0
@@ -190,8 +198,17 @@ s16 fn_2_689CC(s32 index) {
 }
 
 // .text:0x00068A88 size:0xCC
-void fn_2_68A88(void) {
-    return;
+BOOL fn_2_68A88(s32 index, s32 targetIndex) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    Rep1028Obj* target = &lbl_2_bss_1A8248->rep1028Objects[targetIndex];
+    Vec position;
+    f32 distance;
+    f32 radius;
+    menuScalePosition(&target->position, &position, 0.5f);
+    distance = PSVECDistance(&obj->position, &position);
+    radius = lbl_2_data_3EF4[lbl_2_bss_1A8248->unk441C];
+    if (distance < radius + lbl_2_data_3F5C && obj->unkC0) return 1;
+    return 0;
 }
 
 // .text:0x00068B54 size:0x12C

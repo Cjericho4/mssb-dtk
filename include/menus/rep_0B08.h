@@ -115,7 +115,7 @@ void fn_2_687A4(void);
 f32 fn_2_688A4(s32 index, s32 target);
 f32 fn_2_68940(s32 firstIndex, s32 secondIndex);
 s16 fn_2_689CC(s32 index);
-void fn_2_68A88(void);
+BOOL fn_2_68A88(s32 index, s32 targetIndex);
 void fn_2_68B54(void);
 void fn_2_68C80(void);
 void fn_2_68D90(s32 index, u8 value);
