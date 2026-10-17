@@ -16,6 +16,10 @@ extern MenusResourceEntry lbl_2_data_104EC[];
 extern MenusSceneScript lbl_2_data_1048C;
 extern MenusSceneScript lbl_2_data_1059C;
 extern void fn_8000FE54(void);
+#include "menus/rep_0F60.h"
+#include "menus/rep_08E8.h"
+#include "menus/rep_0B08.h"
+#include "Dolphin/GX/GXPixel.h"
 #include "menus/gap_1B1BC.h"
 
 // .text:0x0001D440 size:0x2ACC
@@ -81,7 +85,17 @@ void fn_2_20258(void) {
 
 // .text:0x0002025C size:0xCC
 void fn_2_2025C(void) {
-    return;
+    MenusSceneState* scene = lbl_2_bss_1A8248;
+    if (scene->unk44F2 == 2) g_hugeAnimStruct.field269_0x307a = 0;
+    else if (lbl_2_bss_1A824C->unk1978F3 != 0) g_hugeAnimStruct.field269_0x307a = 4;
+    if (g_hugeAnimStruct.field269_0x307a == 4 && scene->unk44F2 != 3) {
+        if (scene->unk44F2 != 4) fn_2_68E68();
+        fn_2_8FD14();
+        fn_2_8AEE0();
+        fn_2_47FF8();
+        if (lbl_2_bss_1A8248->unk44F2 != 4) fn_2_47CFC();
+    }
+    GXSetZCompLoc(0);
 }
 
 // .text:0x00020328 size:0x4D4
