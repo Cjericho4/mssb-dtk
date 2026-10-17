@@ -1,4 +1,10 @@
 #include "menus/rep_0AB0.h"
+#include "menus/gap_1B1BC.h"
+#include "menus/gap_71EC4.h"
+#include "UnknownHeaders.h"
+
+extern void fn_80053FE8(void);
+extern MenusResourceEntry lbl_2_data_268A8[];
 
 // .text:0x0005979C size:0x55C
 void fn_2_5979C(void) {
@@ -22,7 +28,15 @@ void fn_2_5AE54(void) {
 
 // .text:0x0005AF24 size:0x8C
 void fn_2_5AF24(void) {
-    return;
+    QueueEntry* task;
+    lbl_8034E978.state = 0x53;
+    fn_800B0A5C_insertQueue(fn_80053FE8, 0);
+    task = fn_800B0A5C_insertQueue(fn_2_5AE54, 0);
+    task->unk1C = 0;
+    task->unk1E = 0;
+    fn_2_54354(lbl_2_data_268A8, 0x2E0);
+    lbl_2_bss_1A8234->flag162604 = 1;
+    lbl_2_bss_1A8234->flag162605 = 1;
 }
 
 // .text:0x0005AFB0 size:0x82C
