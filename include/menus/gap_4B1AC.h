@@ -38,7 +38,7 @@ BOOL fn_2_4E970(void);
 void fn_2_4E9A8(void);
 BOOL fn_2_4EABC(void);
 BOOL fn_2_4EAF4(void);
-void fn_2_4EB2C(void);
+BOOL fn_2_4EB2C(void);
 void fn_2_4EB64(void);
 void fn_2_4EB9C(void);
 void fn_2_50898(void);

@@ -6,6 +6,7 @@
 extern CompressedDiskRead lbl_2_data_132DC[];
 extern CompressedDiskRead lbl_2_data_1326C[];
 extern CompressedDiskRead lbl_2_data_1325C[];
+extern CompressedDiskRead lbl_2_data_1324C[];
 extern s32 fn_80035838(CompressedDiskRead* list, s32 count);
 #include "menus/gap_8782C.h"
 
@@ -189,8 +190,8 @@ BOOL fn_2_4EAF4(void) {
 }
 
 // .text:0x0004EB2C size:0x38
-void fn_2_4EB2C(void) {
-    return;
+BOOL fn_2_4EB2C(void) {
+    return fn_80035838(lbl_2_data_1324C, 21) != 0;
 }
 
 // .text:0x0004EB64 size:0x38
