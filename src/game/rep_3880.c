@@ -2081,8 +2081,60 @@ void fn_3_155C28(struct Struct_800339F0_Result* obj) {
 }
 
 // .text:0x00155F08 size:0x310 mapped:0x80794F9C
+static inline void initBallRotatedEffects(struct Struct_800339F0_Result* obj) {
+    ListNode_14B9F0* node = obj->listHead;
+    u32 i = 0;
+    obj->field_0x10 = lbl_3_common_bss_32724.field6C;
+    do {
+        node->field_0x48 = (u8)i;
+        i++;
+        node->field_0x4D = lbl_3_data_26BC0.unk0;
+        node->field_0x4E = 0;
+        if (node->field_0x48 == 0) {
+
+    struct { Control ctrl; u8 _pad[8]; } control;
+    Mtx m;
+    Vec v;
+    Vec base;
+    f32 y;
+    f32 x;
+    f32 z;
+    f64 ay;
+
+    x = 57.29578f * shortAngleToRad(g_Ball.matchFramesAndBallAngle.ballSpinAngle.yaw);
+    y = 57.29578f * shortAngleToRad(g_Ball.matchFramesAndBallAngle.ballSpinAngle.pitch);
+    z = 57.29578f * shortAngleToRad(g_Ball.matchFramesAndBallAngle.ballSpinAngle.roll);
+    node->field_0x4A = lbl_3_data_26BC0.field_0x18;
+    control.ctrl.type = 0;
+    CTRLSetRotation(&control.ctrl, x, y, z);
+    CTRLBuildMatrix(&control.ctrl, m);
+    if (g_Minigame.GameMode_MiniGame == MINI_GAME_ID_BOBOMB_DERBY) {
+        base = lbl_3_data_26BB4;
+    } else {
+        PSVECScale(&lbl_3_data_26BB4, 1.5f, &base);
+    }
+    v.x = base.x + 1.5 * ((rand() % 40 - 20) / 100.0);
+    v.y = base.y;
+    v.z = base.z + 1.5 * ((rand() % 40 - 20) / 100.0);
+    PSMTXMultVec(m, &v, &v);
+    v.x += g_Ball.AtBat_Contact_BallPos.x;
+    ay = __fabs(g_Ball.AtBat_Contact_BallPos.y);
+    v.y = v.y - ay;
+    v.z += g_Ball.AtBat_Contact_BallPos.z;
+    node->offset.x = v.x;
+    node->offset.y = v.y;
+    node->offset.z = v.z;
+    node->scaleY = node->scaleX = (f32)lbl_3_data_26BC0.scale;
+    node->color[3] = lbl_3_data_26BC0.alpha;
+
+        }
+        node = node->next;
+    } while (node != NULL);
+}
 void fn_3_155F08(void) {
-    return;
+    struct Struct_800339F0_Result* obj;
+    obj = (struct Struct_800339F0_Result*)fn_80033A24(fn_3_1552AC, 0x80, 0, lbl_3_data_26BC0.unk4, 1, 0x1B);
+    if (obj != NULL) initBallRotatedEffects(obj);
 }
 
 // .text:0x00156218 size:0x330 mapped:0x807952AC
