@@ -50,6 +50,14 @@ typedef struct Rep0610Globals80366158 {
     /* 0x8 */ s32 unk8;
 } Rep0610Globals80366158;
 extern Rep0610Globals80366158 lbl_80366158;
+
+typedef struct Rep0610Camera68FC {
+    /* 0x00 */ u8 _pad0[0x10];
+    /* 0x10 */ Mtx view;
+    /* 0x40 */ u8 _pad40[4];
+} Rep0610Camera68FC;
+extern Rep0610Camera68FC lbl_1_bss_68FC;
+void LITXForm(struct MenusLight* light, Mtx view);
 extern u8 lbl_1_bss_3216;
 extern u8 lbl_1_bss_5F78;
 extern f32 lbl_1_bss_5F74;

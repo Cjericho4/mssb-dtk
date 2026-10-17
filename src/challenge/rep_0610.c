@@ -340,7 +340,10 @@ void fn_1_11714(void) {
 
 // .text:0x00011C98 size:0x68
 void fn_1_11C98(void) {
-    return;
+    s32 i;
+    for (i = 0; i < 3; i++) {
+        LITXForm(g_hugeAnimStruct.menuLights[i], lbl_1_bss_68FC.view);
+    }
 }
 
 // .text:0x00011D00 size:0x208
