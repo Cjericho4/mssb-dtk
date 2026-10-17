@@ -2,6 +2,7 @@
 #define __MENUS_gap_5597C_H_
 
 #include "mssbTypes.h"
+#include "menus/rep_0788.h"
 
 void fn_2_5597C(void);
 void fn_2_55A40(void);
@@ -27,7 +28,7 @@ void fn_2_58098(void);
 void fn_2_581E0(void);
 void fn_2_58328(void);
 void fn_2_58470(void);
-void fn_2_58510(void);
+void fn_2_58510(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_5853C(void);
 void fn_2_587F8(void);
 
