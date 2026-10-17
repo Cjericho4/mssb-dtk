@@ -44,7 +44,8 @@ void fn_2_1130(s16 state) {
 
 // .text:0x00001164 size:0x38
 void fn_2_1164(void) {
-    return;
+    lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+    fn_800B0A14_removeQueue();
 }
 
 // .text:0x0000119C size:0x4
