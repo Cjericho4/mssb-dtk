@@ -905,8 +905,10 @@ void fn_2_704A0(Rep0B08Obj* obj) {
 }
 
 // .text:0x000704AC size:0xDC
-void fn_2_704AC(void) {
-    return;
+void fn_2_704AC(Rep0B08Obj* obj) {
+    setMenuObjectActive(obj->index, 1);
+    menuChangeAnimation(obj->index, 1);
+    obj->state = 1;
 }
 
 // .text:0x00070588 size:0x38

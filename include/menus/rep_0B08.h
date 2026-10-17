@@ -229,7 +229,7 @@ void fn_2_70110(void);
 void fn_2_7045C(Rep0B08Obj* obj);
 void fn_2_70494(Rep0B08Obj* obj);
 void fn_2_704A0(Rep0B08Obj* obj);
-void fn_2_704AC(void);
+void fn_2_704AC(Rep0B08Obj* obj);
 void fn_2_70588(Rep0B08Obj* obj);
 void fn_2_705C0(void);
 void fn_2_709A0(void);
