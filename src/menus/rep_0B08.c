@@ -1,5 +1,9 @@
 #include "menus/rep_0B08.h"
 #include "string.h"
+#include "Dolphin/GX/GXTypes.h"
+
+extern GXColor lbl_800F7478[];
+extern void fn_800BD2CC(s32 enabled, GXColor color);
 
 extern void (*lbl_2_data_2A1F4[])(Rep0B08Obj*);
 
@@ -343,8 +347,11 @@ void fn_2_6BA18(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006BA50 size:0x5C
-void fn_2_6BA50(void) {
-    return;
+void fn_2_6BA50(Rep0B08Obj* obj) {
+    GXColor color = lbl_800F7478[10];
+    color.a = 255;
+    fn_800BD2CC(0, color);
+    obj->state = 2;
 }
 
 // .text:0x0006BAAC size:0x2C
