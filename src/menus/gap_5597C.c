@@ -1,4 +1,11 @@
 #include "menus/gap_5597C.h"
+#include "menus/gap_4B1AC.h"
+#include "menus/gap_1B1BC.h"
+#include "UnknownHeaders.h"
+
+extern void fn_8001F228(void);
+extern void fn_80021410(void);
+extern void fn_80035B50(s32);
 #include "game/rep_3448.h"
 
 // .text:0x0005597C size:0xC4
@@ -8,7 +15,17 @@ void fn_2_5597C(void) {
 
 // .text:0x00055A40 size:0x94
 void fn_2_55A40(void) {
-    return;
+    lbl_2_bss_1A824C->flag1972BC = 1;
+    fn_2_4E7EC();
+    fn_8001F228();
+    fn_80021410();
+    fn_800ACFB0(lbl_800EF808.files[4]);
+    fn_80035B50(10);
+    if (lbl_80366B18.tables[2] != 0) {
+        fn_800ACFB0(lbl_80366B18.tables[2]);
+        lbl_80366B18.tables[2] = 0;
+    }
+    lbl_2_bss_1A823C->unk34 = 0;
 }
 
 // .text:0x00055AD4 size:0x188
