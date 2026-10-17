@@ -17,7 +17,7 @@
 // all-web forms (zt/one webs), declaration orders (incl. before z), block-scoped initialised declarations,
 // dx/dz assigned inside `if (z < targetZ) { ...; break; }` (for(;;)/while(1)/do-while(1)), two-exit loops,
 // inline helpers (lerp/interp/frac/remain/scale/dif/est* in ~20 shapes), a named -0.05f local,
-// barriers/second uses to stop sinking. Probe harness: .scratch/probe/probe.sh + gen*.py + check3.py.
+// barriers/second uses to stop sinking. Probe harness: .agent/probe/ (probe.sh, tail.py, check3.py, bytail.py; see README.md there).
 // Tail currently in tree:
 //    dz = z;
 //    dz -= prevZ;
