@@ -3637,6 +3637,8 @@ extern u8 lbl_3_data_46F8[][9];
 void fn_3_58E50(void) {
     s32 i;
     s32 fielderIndex;
+    Fielder* f;
+    s32 id;
 
     g_GameLogic.rosterLoc_skippingCap = 0;
     if (g_d_GameSettings.minigamesEnabled == 0) {
@@ -3644,12 +3646,14 @@ void fn_3_58E50(void) {
     }
     for (i = 0; i < 4; i++) {
         if (g_Minigame.players.fielderRosterIDs[i] >= 0) {
-            fielderIndex = (g_Minigame.players.fielderRosterIDs[i] == (s8)g_Minigame.minigamePlayerSelectedOrder) ? 0 : i + 2;
-            setFielderValues(g_Minigame.players.fielderRosterIDs[i], fielderIndex);
+            id = g_Minigame.players.fielderRosterIDs[i];
+            fielderIndex = (id == (s8)g_Minigame.minigamePlayerSelectedOrder) ? 0 : i + 2;
+            setFielderValues(id, fielderIndex);
+            f = &g_Fielders[fielderIndex];
             if (fielderIndex == 0) {
-                g_Fielders[fielderIndex].unk1D2 = lbl_3_data_46F8[g_Minigame.players.battingHandedness[i]][0];
+                f->unk1D2 = lbl_3_data_46F8[g_Minigame.players.battingHandedness[i]][0];
             } else {
-                g_Fielders[fielderIndex].unk1D2 = lbl_3_data_46F8[g_Minigame.players.battingHandedness[i]][7];
+                f->unk1D2 = lbl_3_data_46F8[g_Minigame.players.battingHandedness[i]][7];
             }
         }
     }
