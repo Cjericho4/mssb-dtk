@@ -1331,7 +1331,8 @@ extern Data484C lbl_3_data_484C;
 // .text:0x0003ABF0 size:0xD0 mapped:0x80679C84
 void fn_3_3ABF0(s32 idx) {
     Fielder* f = &g_Fielders[idx];
-    Fielder* other = &g_Fielders[g_FieldingLogic.unkB0];
+    s32 b = g_FieldingLogic.unkB0;
+    Fielder* other = &g_Fielders[b];
 
     if (g_Ball.framesSinceHit < lbl_3_data_484C.unk0) {
         return;
@@ -1339,15 +1340,10 @@ void fn_3_3ABF0(s32 idx) {
     if (g_FieldingLogic.unk139 != 0) {
         return;
     }
-    if ((other->unk256 == 1 && f->unk84[g_FieldingLogic.unkB0] < 15.0f) || (other->unk252 != 0 && other->unk_25B == 0)) {
-        g_Fielders[idx].prevPos[0] = f->pos[0];
-        g_Fielders[idx].prevPos[1] = f->pos[1];
-        g_Fielders[idx].prevPos[2] = f->pos[2];
-        g_Fielders[idx].unk30 = 0.0f;
-        g_Fielders[idx].unk34 = 0.0f;
-        g_Fielders[idx].unk50 = 0.0f;
-        g_Fielders[idx].unk68 = 0.0f;
+    if (!((other->unk256 == 1 && f->unk84[b] < 15.0f) || (other->unk252 != 0 && other->unk_25B == 0))) {
+        return;
     }
+    stopFielder(idx);
 }
 
 // .text:0x0003ACC0 size:0x174 mapped:0x80679D54
