@@ -7,7 +7,7 @@ void fn_2_4B1AC(void);
 void fn_2_4B2D0(void);
 void fn_2_4C314(void);
 void fn_2_4C36C(void);
-void fn_2_4C3C4(void);
+s16 fn_2_4C3C4(s32 index);
 void fn_2_4C3D8(void);
 void fn_2_4C3EC(void);
 void fn_2_4C6A8(void);

@@ -1,5 +1,8 @@
 #include "menus/gap_4B1AC.h"
 
+extern s16 lbl_2_data_3ED4[];
+extern s16 lbl_2_data_3EC8[];
+
 // .text:0x0004B1AC size:0x124
 void fn_2_4B1AC(void) {
     return;
@@ -21,8 +24,8 @@ void fn_2_4C36C(void) {
 }
 
 // .text:0x0004C3C4 size:0x14
-void fn_2_4C3C4(void) {
-    return;
+s16 fn_2_4C3C4(s32 index) {
+    return lbl_2_data_3ED4[index];
 }
 
 // .text:0x0004C3D8 size:0x14
