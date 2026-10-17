@@ -3,6 +3,12 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusExitState {
+    u8 _pad0[0x3E];
+    u8 unk3E;
+} MenusExitState;
+extern MenusExitState lbl_803C5F04;
+
 void fn_2_8E6A4(void);
 void fn_2_8E8A4(void);
 void fn_2_8EA80(void);

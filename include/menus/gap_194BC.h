@@ -11,7 +11,8 @@ typedef struct MenusControllerState {
 } MenusControllerState;
 
 typedef struct MenusRuntimePreferences {
-    u8 _pad0[0x25];
+    u8 unk0;
+    u8 _pad1[0x24];
     u8 unk25;
 } MenusRuntimePreferences;
 
