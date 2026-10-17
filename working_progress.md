@@ -115,23 +115,13 @@ To find the next function: look for the first plain entry (not prefixed with COM
 |---|---|
 | fn_3_55CC4 | Codex attempt; 15 lines off, mostly r4/r5 swaps around g_FieldingLogic.unkF4 stores |
 | fn_3_1323CC | loop over inlined fn_3_12F9D4 body; only the lbl_3_data_21770[1] vs currentPos.y load order differs (2 lines) |
-| fn_3_E11E0 | target keeps _19DA[i] as raw u8 in r3 and re-extsb's at each use; CW CSEs the sign-extension (6 lines); u8/s8 temps and goto structure tried |
-| fn_3_E4EF4 | 34*n buffer size sum: add operand order/slwi scheduling differs (4 lines); all 4-term orderings and groupings tried |
 | fn_3_70768 | final interpolation: target computes z-prevZ into f4 first and uses non-fused fmuls+fadds; only FP register assignment differs (6 lines) |
-| fn_3_3ABF0 | target keeps beq+blr where CW emits bnelr, plus r7/r8 swap for idx vs unkB0 multiplies; ||, goto and decl-order variants tried |
 | fn_3_7D2E0 | CW hoists g_Stats.unk40 load above replay-frame stores (target reloads after); inline-helper and indexing variants didn't block it |
-| fn_3_119878 | r5/r6 swap between minigame base and entries_2D94 pointer; decl/assign order and nested-if variants tried |
-| fn_3_1356F8 | r26/r27 swap between strength-reduced aIStrength[i] pointer and targetSpeeds pointer; decl-order permutations exhausted |
-| fn_3_49EA8 | &unk_F8[idx] base: target reuses one reg (add r6; addi r6,r6,0xf8), CW allocates a separate temp; register-only |
-| fn_3_FD51C | CW coalesces camera elem base and &elem->unk13C into one reg (target keeps separate r5/r7 and schedules stw 0x144 after addi), register/scheduling only |
 | fn_3_105C28 | register allocation / scheduling (see git log) |
 | fn_3_E6798 | register allocation / scheduling (see git log) |
 | fn_3_11881C | register allocation / scheduling (see git log) |
 | fn_3_129370 | register allocation / scheduling (see git log) |
 | fn_3_135E38 | register allocation / scheduling (see git log) |
-| fn_3_14DC80 | register allocation / scheduling (see git log) |
-| fn_3_14F8D0 | register allocation / scheduling (see git log) |
-| fn_3_150010 | register allocation / scheduling (see git log) |
 | fn_3_1354BC | CW register allocation: uses f4 for diff1 and f1 for diff2, generating different fsubs destinations (f4/f1 vs f1/f2); li r3,0 placement also differs — unfixable |
 | fn_3_90AB0 | r0/r4 register swap in index base+offset computation, and lwz vs lwzu update form — both unfixable from C |
 | fn_3_10FB74 | beq+b double-branch vs bne/fallthrough — CW branch direction codegen, unfixable from C |
@@ -203,7 +193,6 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_C1004 | reg numbering: target keeps (&lbl_3_bss_9D40 + 1) and j*16 in saved regs (6), MWCC folds to displacements (5) (.agent/attempts/fn_3_C1004.c is a git diff) |
 | fn_3_C1770 | skipped: same-file static data off one base (&lbl_3_data_17248 +0x18/+0x64/+0xA4), like fn_3_C11CC (.agent/attempts/fn_3_C1770.c note) |
 | fn_3_16D5E4 | greg alloc only: idx r30, (u8)(idx-1) r29, fielder ptr r31 vs ours r31/r30/r29; decl+stmt order brute-forced (.agent/attempts/fn_3_16D5E4.c + .headers.diff) |
-| fn_3_14BCB0 | 12 lines float-const load scheduling (0.5 before 2.0f, 2.0f must be a variable); 15+ forms tried (.agent/attempts/fn_3_14BCB0.c) |
 | fn_3_1573AC | same-file static data off one base (&lbl_3_data_266A8 in r31 across calls) — known unfixable (.agent/attempts/fn_3_1573AC.c + .headers.diff) |
 | fn_3_169600 | 9 lines: target keeps non-propagated copy `mr r30,r29` of outer loop counter for first nested loop; all forms copy-propagated (.agent/attempts/fn_3_169600.c + .headers.diff) |
 | fn_3_15F648 | same base-reg pattern as fn_3_1573AC (addi r3,r30,0x148; lwz 4(r3)) plus colour build clrlslwi/rlwimi diffs (.agent/attempts/fn_3_15F648.c + .headers.diff) |
@@ -220,7 +209,6 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_58F58 | 4 lines: mulli/slwi scratch regs r6/r7 swapped in lbl_3_data_4554[idx-2][col] lookup (.agent/attempts/fn_3_58F58.c + .headers.diff) |
 | fn_3_F8878 | 2 lines: `stfs 0x14` (unk14 = 0.123f) lands after if/else instead of loop header; moving it reorders f30/f31 (.agent/attempts/fn_3_F8878.c + .headers.diff; header comment lists needed same-file edits) |
 | fn_3_CBF80 | regalloc after `bl cos`: target cos in f1, 2.4f f0, 0.15f f2; one expression fuses to fmadds, every temp form swaps regs; 720 decl perms tried (.agent/attempts/fn_3_CBF80.c) |
-| fn_3_1559E4 | all insns/regs match; only frame size: target 0xC0 with int->double slots at 0x98/0xA0/0xA8, ours 0xB0 (8 unexplained bytes after ctrl@0x50) (.agent/attempts/fn_3_1559E4.c + .headers.diff) |
 | fn_3_103C30 | ~75/150 lines: stack layout of 36-byte by-value inline param + param addr caching (target recomputes addi) + camPos/camTarget load order (.agent/attempts/fn_3_103C30.c + .headers.diff) |
 | fn_3_EF55C | ~38/150 lines: r27/r28 swap edge-table ptr vs sign counter + 6 component load/sub/store scheduling; 720 stmt perms tried. Real proto is u8 fn_3_EF55C(Vec*, u8) (EF55C_Arg is wrong) (.agent/attempts/fn_3_EF55C.c + .headers.diff) |
 
