@@ -98,9 +98,9 @@ static void InsertData(u16 id, void* data, u8 dataType, u32 remove) {
     break;
   case 1:
     if (!remove) {
-      dataAddSampleReference(id);
+      dataAddSampleReference(id, &dataStackCur->heap);
     } else {
-      dataRemoveSampleReference(id);
+      dataRemoveSampleReference(id, &dataStackCur->heap);
     }
     break;
   }

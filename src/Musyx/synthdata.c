@@ -389,7 +389,7 @@ bool32 dataRemoveSDir(struct SDIR_DATA *sdir)
   return FALSE;
 }
 
-bool32 dataAddSampleReference(u16 sid)
+bool32 dataAddSampleReference(u16 sid, DATA_STACK_HEAP* heap)
 {
   u32 i;                 // r29
   SAMPLE_HEADER *header; // r1+0xC
@@ -422,7 +422,7 @@ done:
   return TRUE;
 }
 
-bool32 dataRemoveSampleReference(u16 sid)
+bool32 dataRemoveSampleReference(u16 sid, DATA_STACK_HEAP* heap)
 {
   u32 i;           // r30
   SDIR_DATA *sdir; // r31
@@ -431,13 +431,13 @@ bool32 dataRemoveSampleReference(u16 sid)
   {
     for (sdir = dataSmpSDirs[i].data; sdir->id != 0xFFFF; ++sdir)
     {
-      if (sdir->id == sid && sdir->ref_cnt != 0xFFFF)
+      if (sdir->id == sid && sdir->ref_cnt != 0)
       {
         --sdir->ref_cnt;
 
         if (sdir->ref_cnt == 0)
         {
-          hwRemoveSample(&sdir->header, sdir->addr, 0);
+          hwRemoveSample(&sdir->header, sdir->addr, heap);
         }
 
         return TRUE;
