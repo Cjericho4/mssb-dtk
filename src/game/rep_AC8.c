@@ -156,6 +156,28 @@ static inline void aimPitcherAtBase(void) {
     setFielderTargetIdx(0, x, z);
 }
 
+static inline s32 tryCoverNearBase(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+
+    if (f->unkA8[0] < 5.0f) {
+        f->unk18C = 9;
+    } else if (f->unkA8[1] < 5.0f) {
+        f->unk18C = fn_3_3D7D4(fielderIdx);
+    } else if (f->unkA8[2] < 5.0f) {
+        f->unk18C = fn_3_3D7D4(fielderIdx);
+    } else if (f->unkA8[3] < 5.0f) {
+        f->unk18C = fn_3_3D7D4(fielderIdx);
+    } else {
+        return 0;
+    }
+    f->unk1D7 = 2;
+    if (fielderIdx != -1) {
+        setFielderReadyAction(fielderIdx, 0xE);
+    }
+    f->unk1D6 = 0xB;
+    return 1;
+}
+
 // .text:0x000251E4 size:0x1C0 mapped:0x80664278
 void fn_3_251E4(void) {
     return;
@@ -1509,8 +1531,8 @@ s32 fn_3_3C270(s32 idx) {
 }
 
 // .text:0x0003C484 size:0x110 mapped:0x8067B518
-void fn_3_3C484(void) {
-    return;
+s32 fn_3_3C484(s32 fielderIdx) {
+    return tryCoverNearBase(fielderIdx);
 }
 
 // .text:0x0003C594 size:0x5F8 mapped:0x8067B628
@@ -1564,27 +1586,6 @@ set:
 }
 
 // .text:0x0003CCB0 size:0x654 mapped:0x8067BD44
-static inline s32 tryCoverNearBase(s32 fielderIdx) {
-    Fielder* f = &g_Fielders[fielderIdx];
-
-    if (f->unkA8[0] < 5.0f) {
-        f->unk18C = 9;
-    } else if (f->unkA8[1] < 5.0f) {
-        f->unk18C = fn_3_3D7D4(fielderIdx);
-    } else if (f->unkA8[2] < 5.0f) {
-        f->unk18C = fn_3_3D7D4(fielderIdx);
-    } else if (f->unkA8[3] < 5.0f) {
-        f->unk18C = fn_3_3D7D4(fielderIdx);
-    } else {
-        return 0;
-    }
-    f->unk1D7 = 2;
-    if (fielderIdx != -1) {
-        setFielderReadyAction(fielderIdx, 0xE);
-    }
-    f->unk1D6 = 0xB;
-    return 1;
-}
 
 static inline s32 tryOutfieldBackup(s32 fielderIdx) {
     if (g_Ball.AtBat_ContactResult > 1) {
