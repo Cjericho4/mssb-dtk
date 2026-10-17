@@ -861,8 +861,59 @@ void fn_3_14DCE0(void) {
 }
 
 // .text:0x0014DD04 size:0x268 mapped:0x8078CD98
-void fn_3_14DD04(void) {
-    return;
+typedef struct {
+    s32 unk0, unk4, unk8, unkC, unk10, unk14, unk18, unk1C, unk20, unk24, unk28;
+} EffectConfig26CD0;
+extern EffectConfig26CD0 lbl_3_data_26CD0;
+ListNode_14B9F0* fn_80031F34(ListNode_14B9F0* node, s32 count);
+s32 fn_3_14DD04(struct Struct_800339F0_Result* obj) {
+    ListNode_14B9F0* node;
+    ListNode_14B9F0** link;
+    ListNode_14B9F0* tail;
+    s32 count = 0;
+    node = obj->listHead = fn_80031F34(obj->listHead, obj->count);
+    link = &obj->listHead;
+    tail = NULL;
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_DSTALPHA, GX_LO_CLEAR);
+    do {
+        if (node->field_0x4A != 0) {
+            s32 alpha;
+            s32 da;
+            f32 ds;
+            fn_8003403C(node->scaleX, node->scaleY);
+            fn_80033CC8(node, obj->field_0x10);
+            node->offset.y -= node->velocity.y;
+            node->velocity.y -= (f32)lbl_3_data_26CD0.unk28 / 100000.0f;
+            alpha = node->color[3];
+            if (lbl_3_data_26CD0.unk8 / node->field_0x4A < 2) {
+                ds = node->pos.x * (((f32)(lbl_3_data_26CD0.unk10 - lbl_3_data_26CD0.unkC) / 100000.0f) / (f32)(lbl_3_data_26CD0.unk8 / 2));
+                da = (lbl_3_data_26CD0.unk1C - lbl_3_data_26CD0.unk18) / (lbl_3_data_26CD0.unk8 / 2);
+            } else {
+                ds = node->pos.x * (((f32)(lbl_3_data_26CD0.unk14 - lbl_3_data_26CD0.unk10) / 100000.0f) / (f32)(lbl_3_data_26CD0.unk8 / 2));
+                da = (lbl_3_data_26CD0.unk20 - lbl_3_data_26CD0.unk1C) / (lbl_3_data_26CD0.unk8 / 2);
+            }
+            alpha += da;
+            node->scaleX += ds;
+            node->scaleY = node->scaleX;
+            if (alpha < 0) alpha = 0;
+            else if (alpha > 255) alpha = 255;
+            node->color[3] = alpha;
+            node->field_0x4A--;
+            if (node->field_0x4A == 0) {
+                *link = node->next;
+                if (tail != NULL) tail->next = node;
+                tail = node;
+                node->next = NULL;
+                obj->count--;
+            } else {
+                link = &node->next;
+                count++;
+            }
+        }
+        node = *link;
+    } while (node != NULL);
+    return count == 0;
 }
 
 // .text:0x0014DF6C size:0x2C8 mapped:0x8078D000
