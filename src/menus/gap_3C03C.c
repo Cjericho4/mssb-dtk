@@ -3,6 +3,9 @@
 #include "menus/rep_10C0.h"
 
 extern u8 lbl_803CB8F0[];
+extern u32 lbl_803CBD0C;
+extern MenusEffectState* lbl_2_data_13374[];
+extern void fn_80031CA4(Vec* position, MenusEffectState* state);
 
 // .text:0x0003C03C size:0x12C
 void fn_2_3C03C(void) {
@@ -445,6 +448,11 @@ s32 fn_2_46C24(void) {
 }
 
 // .text:0x00046C2C size:0x5C
-void fn_2_46C2C(void) {
-    return;
+void fn_2_46C2C(s32 unused, Vec* position) {
+    Vec pos;
+    pos.x = position->x;
+    pos.y = position->y;
+    pos.z = position->z;
+    lbl_2_data_13374[0]->type = lbl_803CBD0C;
+    fn_80031CA4(&pos, lbl_2_data_13374[0]);
 }

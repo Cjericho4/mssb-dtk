@@ -2,6 +2,7 @@
 #define __MENUS_gap_3C03C_H_
 
 #include "mssbTypes.h"
+#include "Dolphin/mtx.h"
 
 typedef struct Gap3C03CObj {
     u8 _pad0[5];
@@ -10,6 +11,10 @@ typedef struct Gap3C03CObj {
     s8 unk31;
     u8 _pad32[2];
 } Gap3C03CObj;
+
+typedef struct MenusEffectState {
+    u32 type;
+} MenusEffectState;
 
 typedef struct MenusChoiceRecord {
     u8 _pad0[3];
@@ -104,6 +109,6 @@ void fn_2_467FC(void);
 void fn_2_468DC(void);
 void fn_2_46ADC(void);
 s32 fn_2_46C24(void);
-void fn_2_46C2C(void);
+void fn_2_46C2C(s32 unused, Vec* position);
 
 #endif // !__MENUS_gap_3C03C_H_
