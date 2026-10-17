@@ -22,7 +22,8 @@ typedef struct ListNode_14B9F0 {
         VecXYZ pos;                 // 0x1C
         Vec posVec;                 // 0x1C
     };
-    u8 _pad28[0x10];                // 0x28
+    u8 _pad28[0xC];
+    f32 unk34;                // 0x28
     f32 scaleX;                     // 0x38
     f32 scaleY;                     // 0x3C
     union {
@@ -237,7 +238,7 @@ extern Struct_26C94 lbl_3_data_26C94;
 extern f32 lbl_3_rodata_3930;
 
 void fn_3_14F544(Struct_14F544_Arg* arg);
-void fn_3_14F5A4(void);
+void fn_3_14F5A4(struct Struct_800339F0_Result* obj, s32 group);
 void fn_3_14F8D0(struct Struct_800339F0_Result* arg);
 void fn_3_14F930(void);
 void fn_3_150010(s32 arg);

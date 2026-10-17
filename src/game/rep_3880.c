@@ -1352,8 +1352,59 @@ void fn_3_14F544(Struct_14F544_Arg* arg) {
 }
 
 // .text:0x0014F5A4 size:0x32C mapped:0x8078E638
-void fn_3_14F5A4(void) {
-    return;
+static inline void addEffectGroupPosition(ListNode_14B9F0* node) {
+    VecXYZ delta;
+    s32 r;
+    u8 type;
+
+    if (node->field_0x4C < 5) {
+        type = lbl_3_data_26CB8[(u32)rand() % 23];
+        delta.z = 0.0f;
+        delta.y = 0.0f;
+        delta.x = 0.0f;
+        if (fn_8001B728(node->field_0x4C - 1, type, &delta) == 0) {
+            memset(&delta, 0, sizeof(VecXYZ));
+            fn_8001B728(node->field_0x4C - 1, 4, &delta);
+        }
+    } else {
+        delta.x = g_Minigame._6E8;
+        delta.y = -g_Minigame._6EC;
+        delta.z = g_Minigame._6F0;
+    }
+    node->offset.x += delta.x;
+    node->offset.y += delta.y;
+    node->offset.z += delta.z;
+}
+static inline void initEffectGroupPosition(ListNode_14B9F0* node) {
+    Vec v = {0.0f, 0.0f, 0.0f};
+    if (node->field_0x4C == 5) {
+        v.x += (f32)(rand() % 10000 - 5000) / 10000.0f;
+        v.y += (f32)(rand() % 10000 - 5000) / 10000.0f;
+        node->offset.x = v.x;
+        node->offset.y = v.y - 0.5f;
+        node->offset.z = v.z;
+    } else {
+        node->offset.x = node->offset.y = node->offset.z = 0.0f;
+    }
+    addEffectGroupPosition(node);
+}
+void fn_3_14F5A4(struct Struct_800339F0_Result* obj, s32 group) {
+    s32 target = (s8)group + 1;
+    ListNode_14B9F0* node = obj->listHead;
+    u32 i = 0;
+    do {
+        if (node->field_0x4C == target) {
+            node->field_0x4A = lbl_3_data_26C94.field_0x1C;
+            node->color[3] = lbl_3_data_26C94.field_0x14;
+            node->scaleX = node->scaleY = (f32)lbl_3_data_26C94.field_0x8 / 100000.0f;
+            node->field_0x48 = ((f32)node->field_0x4A / 18.0f) * (f32)i;
+            if (node->field_0x48 == 0) initEffectGroupPosition(node);
+            node->color[0] = node->color[1] = node->color[2] = 255;
+            node->unk34 = 0.0f;
+            i++;
+        }
+        node = node->next;
+    } while (node != NULL);
 }
 
 // .text:0x0014F8D0 size:0x60 mapped:0x8078E964
