@@ -6,6 +6,7 @@
 #include "game/rep_1838.h"
 #include "game/rep_18E8.h"
 #include "game/gap_AC9F8.h"
+#include "game/gap_167CC4.h"
 
 static inline void setFielderReadyAction(s32 idx, s32 action) {
     Fielder* f = &g_Fielders[idx];
@@ -646,8 +647,34 @@ void fn_3_2F574(s32 fielderIdx) {
 }
 
 // .text:0x0002F7D4 size:0x150 mapped:0x8066E868
-void fn_3_2F7D4(void) {
-    return;
+void fn_3_2F7D4(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+    s32 type = f->unk1CC;
+    s32 rosterID = idx;
+    s32 k;
+    f32 scale = 0.1f;
+    s32 n;
+
+    f->unk203 = 1;
+    f->unk15C = 0.0f;
+    if (g_d_GameSettings.minigamesEnabled) {
+        if (idx == 0) {
+            rosterID = g_Minigame.players.characterIndex[g_Minigame.minigamePlayerSelectedOrder];
+        } else {
+            rosterID = g_Minigame.players.fielderRosterIDs[idx - 2];
+        }
+    }
+    f->unk164 = lbl_3_data_4884[type].unk0;
+    f->unk160 = f->unk38 * scale * lbl_3_data_4884[type].unk8;
+    k = lbl_3_data_4884[type].unkC;
+    f->unk168 = f->unk3C * scale * lbl_3_data_4884[type].unk8;
+    n = f->unk164 / lbl_3_data_4884[type].unk4;
+    f->unk1B0 = n + 1;
+    f->unk1AE = (n + n) + (k + 2);
+    f->unk204 = 0;
+    if (type != 0) {
+        fn_3_1682AC(g_hugeAnimStruct.AnimationStructPtrs[rosterID], 6);
+    }
 }
 
 // .text:0x0002F924 size:0x278 mapped:0x8066E9B8

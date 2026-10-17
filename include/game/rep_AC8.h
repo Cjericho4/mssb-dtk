@@ -53,7 +53,7 @@ void fn_3_2EA88(s32 idx);
 void fn_3_2EEC4(s32 idx);
 void fn_3_2F484(void);
 void fn_3_2F574(s32 fielderIdx);
-void fn_3_2F7D4(void);
+void fn_3_2F7D4(s32 idx);
 void fn_3_2F924(void);
 void fn_3_2FB9C(void);
 void fn_3_2FF2C(void);
@@ -236,6 +236,14 @@ extern f32 lbl_3_data_4348[7][2];   /* [stadium][fieldingTeam] */
 extern VecXZ lbl_3_data_4484[6];
 extern VecXZ lbl_3_data_44B4[11];
 extern f32 lbl_3_data_4780[5];
+
+typedef struct {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+} Struct_4884;
+extern Struct_4884 lbl_3_data_4884[2];
 void fn_3_53EE8(s32 idx);
 void fn_3_53F48(void);
 void fn_3_544B8(void);
