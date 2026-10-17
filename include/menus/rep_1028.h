@@ -49,7 +49,7 @@ void fn_2_8F758(s32 index, u8 value);
 f32 fn_2_8F774(s32 index);
 void fn_2_8F7B0(s32 index, s16 id);
 void fn_2_8F838(s32 index, s16 id);
-void fn_2_8F8C0(void);
+void fn_2_8F8C0(s32 index, s16 id);
 void fn_2_8F948(void);
 void fn_2_8F9D0(void);
 void fn_2_8FA58(void);
