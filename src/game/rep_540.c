@@ -113,9 +113,49 @@ void fn_3_9808(void) {
     return;
 }
 
+extern f32 lbl_3_rodata_5E4;
+extern f32 lbl_3_rodata_5F0;
+extern f32 lbl_3_rodata_5F4;
+
 // .text:0x00009B74 size:0x16C mapped:0x80648C08
 void fn_3_9B74(void) {
-    return;
+    f32 temp_f1;
+    f32 var_f1;
+    f32 var_f2;
+
+    if (g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x > 0.0f) {
+        var_f1 = g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z - g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x;
+    } else {
+        var_f1 = g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z + g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x;
+    }
+    if (var_f1 < -20.0f) {
+        g_Ball.howFoulTheBallWillBe = 3;
+    } else if (var_f1 < lbl_3_rodata_5F0) {
+        g_Ball.howFoulTheBallWillBe = 2;
+    } else if (var_f1 < lbl_3_rodata_5E4) {
+        g_Ball.howFoulTheBallWillBe = 1;
+    } else {
+        g_Ball.howFoulTheBallWillBe = 0;
+    }
+    if (g_Ball.physicsSubstruct.hitLandingSpotDistFromHome > lbl_3_rodata_5F4) {
+        var_f2 = g_Ball.ballWillHitBallPos.x;
+        if (var_f2 < 0.0f) {
+            var_f2 = -var_f2;
+        }
+        temp_f1 = g_Ball.ballWillHitBallPos.z - var_f2;
+        if (temp_f1 < -20.0f) {
+            g_Ball.howFoulTheBallWillBe = 3;
+        } else if (temp_f1 < lbl_3_rodata_5F0) {
+            g_Ball.howFoulTheBallWillBe = 2;
+        } else if (temp_f1 < lbl_3_rodata_5E4) {
+            g_Ball.howFoulTheBallWillBe = 1;
+        } else {
+            g_Ball.howFoulTheBallWillBe = 0;
+        }
+    }
+    if ((u8) g_Ball.deadBallReason == 1) {
+        g_Ball.howFoulTheBallWillBe = 0;
+    }
 }
 
 // .text:0x00009CE0 size:0x138 mapped:0x80648D74
