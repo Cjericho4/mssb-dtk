@@ -517,12 +517,14 @@ extern Struct_26D5C lbl_3_data_26D5C;
 void fn_3_14C3BC(ListNode_14B9F0* node) {
     Mtx m;
     Vec v;
+    f32 half;
 
     PSVECScale(&lbl_3_data_26D50, 0.75f, &v);
     PSMTXRotRad(m, 'Y', shortAngleToRad(g_Minigame._1AF8));
     PSMTXMultVec(m, &v, &v);
-    node->offset.x = (g_Minigame._1AE0 + v.x) + ((f32)lbl_3_data_26D5C.unk14 / 100000.0f) * 0.5f;
-    node->offset.y = v.y - (g_Minigame._1AE4 + ((f32)lbl_3_data_26D5C.unk14 / 100000.0f) * 0.5f);
+    half = 0.5f;
+    node->offset.x = (g_Minigame._1AE0 + v.x) + ((f32)lbl_3_data_26D5C.unk14 / 100000.0f) * half;
+    node->offset.y = v.y - (g_Minigame._1AE4 + ((f32)lbl_3_data_26D5C.unk14 / 100000.0f) * half);
     node->offset.z = g_Minigame._1AE8 + v.z;
 }
 
