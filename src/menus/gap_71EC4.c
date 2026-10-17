@@ -595,7 +595,10 @@ void fn_2_84FA8(void) {
 
 // .text:0x00085108 size:0x54
 void fn_2_85108(void) {
-    return;
+    lbl_8034E978.state = 5;
+    lbl_8034E978.previous = lbl_8034E978.current;
+    lbl_8034E978.current = lbl_800FEF70.next;
+    fn_800B0A5C_insertQueue(fn_2_84FA8, 0x3000);
 }
 
 // .text:0x0008515C size:0x4

@@ -14,6 +14,20 @@ typedef struct MenusInputFlags {
 } MenusInputFlags;
 extern MenusInputFlags lbl_803C66B0;
 
+typedef struct MenusSceneTransition {
+    u8 state;
+    u8 _pad1[7];
+    u8 current;
+    u8 previous;
+} MenusSceneTransition;
+
+typedef struct MenusTransitionConfig {
+    u8 _pad0[0x58];
+    u16 next;
+} MenusTransitionConfig;
+extern MenusSceneTransition lbl_8034E978;
+extern MenusTransitionConfig lbl_800FEF70;
+
 void fn_2_71EC4(Rep0B08Obj* obj);
 void fn_2_71EFC(Rep0B08Obj* obj);
 void fn_2_71F20(Rep0B08Obj* obj);
