@@ -4,6 +4,7 @@ extern void (*lbl_2_data_2A2EC[])(Rep0B08Obj*);
 extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "UnknownHeaders.h"
 #include "menus/gap_D08.h"
+#include "menus/rep_10C0.h"
 #include "menus/rep_0438.h"
 
 extern MenusSceneScript lbl_2_data_2B4DC;
@@ -46,7 +47,17 @@ void fn_2_71F20(Rep0B08Obj* obj) {
 
 // .text:0x00071F60 size:0xD8
 void fn_2_71F60(void) {
-    return;
+    s32 i;
+    if (lbl_2_bss_1A8248->unk44F2 == 1 || lbl_2_bss_1A8248->unk44F2 == 2 || lbl_2_bss_1A8248->unk44F2 == 3) return;
+    for (i = 0; i < 8; i++) {
+        Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[i];
+        obj->callback = lbl_2_data_2A2EC[obj->variant];
+        obj->callback(obj);
+    }
+    if (lbl_2_bss_1A824C->flag1972BC) {
+        lbl_2_bss_1A824C->flag1972BC = 0;
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x00072038 size:0x1C
