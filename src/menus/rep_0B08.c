@@ -67,8 +67,9 @@ void fn_2_68654(s32 index, u8 value) {
 }
 
 // .text:0x00068670 size:0x20
-void fn_2_68670(void) {
-    return;
+s32 fn_2_68670(s32 index) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    return obj->unkCD;
 }
 
 // .text:0x00068690 size:0x20
