@@ -1,4 +1,7 @@
 #include "menus/rep_0F60.h"
+#include "UnknownHeaders.h"
+
+extern hugeAnimStruct* lbl_2_bss_340140;
 
 // .text:0x0008ACE0 size:0x200
 void fn_2_8ACE0(void) {
@@ -51,8 +54,9 @@ void fn_2_8CC88(void) {
 }
 
 // .text:0x0008CCAC size:0x20
-void fn_2_8CCAC(void) {
-    return;
+void fn_2_8CCAC(s32 index, u8 value) {
+    AnimationStruct* obj = &lbl_2_bss_340140->fielderStructs[index];
+    if (obj != NULL) obj->unk_25D = value;
 }
 
 // .text:0x0008CCCC size:0x8C
