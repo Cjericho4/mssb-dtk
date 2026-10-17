@@ -2,10 +2,12 @@
 #include "menus/gap_D08.h"
 #include "UnknownHeaders.h"
 #include "Dolphin/GX/GXPixel.h"
+#include "Dolphin/GX/GXTev.h"
 
 // .text:0x00000000 size:0x3C
 void fn_2_0(void) {
-    return;
+    GXSetZCompLoc(GX_FALSE);
+    GXSetAlphaCompare(GX_GREATER, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
 // .text:0x0000003C size:0x2C
