@@ -7,6 +7,8 @@ extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "menus/rep_0438.h"
 
 extern MenusSceneScript lbl_2_data_2B4DC;
+extern MenusSceneScript lbl_2_data_2AADC;
+extern void fn_800363D8(DrawingSceneStruct* scene, s32 index, s32 enabled, s32 value, s32 order);
 
 extern void fn_800625A4(s32, s32);
 extern void fn_800626EC(s32);
@@ -55,7 +57,16 @@ void fn_2_7207C(void) {
 
 // .text:0x00072594 size:0x9C
 void fn_2_72594(void) {
-    return;
+    DrawingSceneStruct* scene;
+    s32 i;
+    fn_80034E20(scene = lbl_803CC1B8, &lbl_2_data_2AADC);
+    i = 0;
+    do {
+        fn_800363D8(scene, i + 7, 1, 50, 3 - i);
+        i++;
+    } while (i < 4);
+    fn_800363D8(scene, 2, 1, 53, 0);
+    lbl_803CC1B8->unk_00 = fn_2_7207C;
 }
 
 // .text:0x00072630 size:0x2C
