@@ -149,8 +149,9 @@ void fn_2_68E68(void) {
 }
 
 // .text:0x00068F08 size:0x1C
-void fn_2_68F08(void) {
-    return;
+void fn_2_68F08(s32 index, u8 value) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    obj->unkC0 = value;
 }
 
 // .text:0x00068F24 size:0x98

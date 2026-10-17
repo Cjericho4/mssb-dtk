@@ -62,7 +62,7 @@ void fn_2_68D90(s32 index, u8 value);
 void fn_2_68DAC(s32 index, Vec* out);
 void fn_2_68DE8(void);
 void fn_2_68E68(void);
-void fn_2_68F08(void);
+void fn_2_68F08(s32 index, u8 value);
 void fn_2_68F24(void);
 void fn_2_68FBC(void);
 void fn_2_69070(void);
