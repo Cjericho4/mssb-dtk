@@ -6,7 +6,7 @@
 
 void fn_3_7D79C(s32 idx);
 void fn_3_7D920(s32 idx);
-void fn_3_7D9DC(void);
+void fn_3_7D9DC(s32 idx);
 void fn_3_7DB30(s32 unk);
 void fn_3_7DD24(s32 unk);
 void fn_3_7DD6C(void);

@@ -1,4 +1,5 @@
 #include "game/rep_13B8.h"
+#include "stl/math.h"
 #include "game/gap_1658F0.h"
 #include "game/rep_AC8.h"
 #include "UnknownHeaders.h"
@@ -86,9 +87,19 @@ void fn_3_7D920(s32 idx) {
     }
 }
 
+typedef struct {
+    u8 _pad0[0x1C];
+    f32 runnerVelocityScale;
+} RunnerSpeedData;
+extern RunnerSpeedData lbl_3_data_218BC;
+
 // .text:0x0007D9DC size:0x154 mapped:0x806BCA70
-void fn_3_7D9DC(void) {
-    return;
+void fn_3_7D9DC(s32 idx) {
+    InMemRunnerType* runner = &g_Runners[idx];
+    f32 magnitude = dolsqrtf2(g_Minigame._1AEC * g_Minigame._1AEC + g_Minigame._1AF4 * g_Minigame._1AF4);
+    runner->velocity.x = lbl_3_data_218BC.runnerVelocityScale * (g_Minigame._1AEC / magnitude);
+    runner->velocity.z = lbl_3_data_218BC.runnerVelocityScale * (g_Minigame._1AF4 / magnitude);
+    runner->runningToDugoutFrameCounter = 0;
 }
 
 // .text:0x0007DB30 size:0x1F4 mapped:0x806BCBC4
