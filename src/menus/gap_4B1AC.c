@@ -1,5 +1,6 @@
 #include "menus/gap_4B1AC.h"
 #include "menus/rep_0438.h"
+#include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
 #include "UnknownHeaders.h"
 #include "game/rep_1C0.h"
@@ -44,7 +45,13 @@ void fn_2_4C314(void) {
 
 // .text:0x0004C36C size:0x58
 void fn_2_4C36C(void) {
-    return;
+    MenusSceneState* scene;
+    lbl_2_bss_1A8248->unk4424 = 1;
+    lbl_2_bss_1A8248->unk4425 = 1;
+    lbl_2_bss_1A8248->unk441B = 0;
+    scene = lbl_2_bss_1A8248;
+    lbl_2_bss_1A8244->completed[scene->unk441C][scene->unk4415] = 1;
+    lbl_2_bss_1A8248->unk1606 = 1;
 }
 
 // .text:0x0004C3C4 size:0x14
