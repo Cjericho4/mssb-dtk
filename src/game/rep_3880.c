@@ -2061,6 +2061,44 @@ f32 fn_3_15791C(s32 arg) {
 }
 
 // .text:0x00157AC4 size:0x2F4 mapped:0x80796B58
-void fn_3_157AC4(void) {
-    return;
+struct Rep3880PulseEffect {
+    u8 _pad0[0xC];
+    ListNode_14B9F0* node;
+    u8 _pad10[8];
+    s32 frame;
+    s32 endFrame;
+};
+extern Vec lbl_3_data_266A8;
+static inline f32 pulseEffectScale(s32 arg) {
+    s32 cycles = (arg + 48) / 120;
+    s32 frame = (arg + 48) % 120;
+    f32 value;
+    f32 half = 0.5f;
+    if (frame >= 48) {
+        value = (f32)cos(3.1415927f * (1.0f + ((f32)frame - 48.0f) / 72.0f));
+    } else {
+        value = (f32)cos(3.1415927f * ((f32)frame / 48.0f));
+    }
+    value = value * half;
+    value += half;
+    if (cycles != 0 && g_GameLogic.gameStatus != 14 && g_GameLogic.gameStatus != 34 && g_GameLogic.gameStatus != 36 && g_GameLogic.gameStatus != 38) {
+        value += (half * ((f32)arg - 72.0f)) / 120.0f;
+    }
+    return 4.0f * value;
+}
+s32 fn_3_157AC4(struct Rep3880PulseEffect* obj) {
+    Mtx m;
+    ListNode_14B9F0* node = obj->node;
+    Vec v = {2.775f, -6.975f, 0.0f};
+    PSMTXRotRad(m, 'Y', shortAngleToRad(g_Minigame._1AF8));
+    PSMTXMultVec(m, &v, &v);
+    node->scaleX = node->scaleY = pulseEffectScale(obj->frame);
+    node->offset.x = (g_Minigame._1AE0 + v.x) + node->scaleX * lbl_3_data_266A8.x;
+    node->offset.y = (g_Minigame._1AE4 + v.y) + node->scaleY * lbl_3_data_266A8.y;
+    node->offset.z = g_Minigame._1AE8 + v.z;
+    fn_8003403C(node->scaleX, node->scaleY);
+    fn_80033CC8(obj->node, lbl_3_common_bss_32724.unk64);
+    if (lbl_80366158._28 == 0) obj->frame++;
+    if (g_Minigame._1A40 != 0) return 1;
+    return obj->frame == obj->endFrame && g_GameLogic.gameStatus != 14;
 }

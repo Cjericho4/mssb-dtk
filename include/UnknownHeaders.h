@@ -1063,7 +1063,9 @@ typedef struct CommonBss_32724 {
     /* 0x00 */ u8 _pad0[0x10];
     /* 0x10 */ CommonBss32724Timer timer10;
     /* 0x30 */ s32 unk30;
-    /* 0x34 */ u8 _pad34[0x6C - 0x34];
+    /* 0x34 */ u8 _pad34[0x64 - 0x34];
+    /* 0x64 */ s32 unk64;
+    /* 0x68 */ u8 _pad68[4];
     /* 0x6C */ s32 field6C;      // From fn_3_14D6D4
     /* 0x70 */ s32 unk70;
     /* 0x74 */ s32 unk74;

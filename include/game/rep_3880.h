@@ -297,7 +297,8 @@ Struct_B850_Entry* fn_3_1575F0(u32 index);
 void fn_3_15767C(void);
 void fn_3_1578F8(void);
 f32 fn_3_15791C(s32 arg);
-void fn_3_157AC4(void);
+struct Rep3880PulseEffect;
+s32 fn_3_157AC4(struct Rep3880PulseEffect* obj);
 
 // No local headers needed.
 #endif // !__GAME_rep_3880_H_
