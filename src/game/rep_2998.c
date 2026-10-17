@@ -455,7 +455,8 @@ void fn_3_E4CB0(s32* arg0, s32* arg1) {
 // .text:0x000E4EF4 size:0xD0 mapped:0x80723F88
 void fn_3_E4EF4(void) {
     UnknownStruct_350E4* p = lbl_3_common_bss_350E4;
-    u32 size = p->memcpyCount * 24 + p->memcpyCount * 4 + p->memcpyCount * 4 + p->memcpyCount * 2;
+    u32 n = p->memcpyCount;
+    u32 size = n * sizeof(u16) + n * sizeof(u32) + n * sizeof(u32) + n * sizeof(VecXYZ) * 2;
     s32 a;
     s32 b;
 
