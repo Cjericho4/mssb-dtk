@@ -389,7 +389,40 @@ void fn_3_AFA64(void) {
 
 // .text:0x000AFB64 size:0x1E4 mapped:0x806EEBF8
 void fn_3_AFB64(void) {
+    if (((u8) g_hugeAnimStruct.maybe_loadingBatterModel_State == 0) && ((u8) g_hugeAnimStruct.maybe_relatedToLoadingBatter == 0) && ((u8) g_hugeAnimStruct.maybe_relatedToLoadingBatter2 == 0) && (((u8) g_d_GameSettings.exhibitionMatchInd != 0) || ((u8) lbl_3_common_bss_32724.unk_B3 == 0)) && (g_Pitcher.pitchTotalTimeCounter <= 0) && ((u8) lbl_3_common_bss_34C90.field_0x1D5 == 0) && ((u8) g_Pitcher.pitcherActionState != 2)) {
+        lbl_3_common_bss_34C90.menuFlag = 0;
+        if ((u8) lbl_3_common_bss_34C90.field_0x202_team[g_GameLogic.teamFielding] != 0) {
+            lbl_3_common_bss_34C90.field_0x1D8 = 0;
+            lbl_3_common_bss_34C90.field_0x202_team[g_GameLogic.teamFielding] = 0;
+            lbl_3_common_bss_34C90.menuTeamFlag[g_GameLogic.teamFielding] = 0;
+            goto block_19;
+        }
+        if ((u8) lbl_3_common_bss_34C90.field_0x202_team[g_GameLogic.teamBatting] != 0) {
+            lbl_3_common_bss_34C90.field_0x1D8 = 1;
+            lbl_3_common_bss_34C90.field_0x202_team[g_GameLogic.teamBatting] = 0;
+            lbl_3_common_bss_34C90.menuTeamFlag[g_GameLogic.teamBatting] = 0;
+            goto block_19;
+        }
+        if (((u8) g_GameLogic._13E[g_GameLogic.teamFielding] == 0) && (g_Controls[g_GameLogic.teams[g_GameLogic.teamFielding]].newButtonInput & 0x1000)) {
+            lbl_3_common_bss_34C90.field_0x1D8 = 0;
+            goto block_19;
+        }
+        if (((u8) g_GameLogic._13E[g_GameLogic.teamBatting] == 0) && (g_Controls[g_GameLogic.teams[g_GameLogic.teamBatting]].newButtonInput & 0x1000)) {
+            lbl_3_common_bss_34C90.field_0x1D8 = 1;
+            goto block_19;
+        }
+    }
     return;
+block_19:
+    lbl_3_common_bss_34C90.field_0x1D5 = 1;
+    lbl_3_common_bss_34C90.field_0x1D1 = 0;
+    lbl_3_common_bss_34C90.field_0x1D2 = 0;
+    lbl_3_common_bss_34C90.field_0x0C = 0;
+    lbl_3_common_bss_34C90.field_0x0E = 0;
+    lbl_3_common_bss_34C90.field_0x10 = 0;
+    fn_3_59918(0xE, 0);
+    lbl_3_common_bss_34C58._2A = 1;
+    lbl_3_common_bss_34C58._24 = 0x3B;
 }
 
 // .text:0x000AFD48 size:0x38 mapped:0x806EEDDC
