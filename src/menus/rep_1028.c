@@ -61,7 +61,9 @@ void fn_2_8F640(void) {
 
 // .text:0x0008F688 size:0x48
 void fn_2_8F688(void) {
-    return;
+    GXColor color = lbl_800F7478[10];
+    color.a = 255;
+    fn_800BD2CC(0, color);
 }
 
 // .text:0x0008F6D0 size:0x50
