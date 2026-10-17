@@ -5,6 +5,8 @@
 #include "string.h"
 
 extern GXColor lbl_800F7478[];
+extern Rep1028Config lbl_2_data_369C[];
+extern Rep1028Config lbl_2_data_3198[];
 extern void (*lbl_2_data_30900[])(s32);
 extern void fn_800BD2CC(s32 enabled, GXColor color);
 
@@ -183,8 +185,11 @@ void fn_2_9033C(s32 index, Vec* position, f32 value) {
 }
 
 // .text:0x000903A8 size:0x80
-void fn_2_903A8(void) {
-    return;
+void fn_2_903A8(s32 index) {
+    Rep1028Obj* obj = &lbl_2_bss_1A8248->rep1028Objects[index];
+    memcpy(&obj->position, &lbl_2_data_369C[index].position, sizeof(Vec));
+    obj->unk30 = 0.0f;
+    obj->unk28 = lbl_2_data_369C[index].value;
 }
 
 // .text:0x00090428 size:0x80
