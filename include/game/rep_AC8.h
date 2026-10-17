@@ -165,7 +165,7 @@ void fn_3_47778(void);
 void fn_3_480B8(s32 fielderIdx);
 void fn_3_483CC(s32 idx);
 void fn_3_48480(s32 fielderIdx);
-void fn_3_48A54(void);
+void fn_3_48A54(s32 fielderIdx);
 void fn_3_494F4(s32 fielderIdx);
 void fn_3_499C4(s32 fielderIdx, VecXYZ* out);
 void fn_3_49C18(s32 fielderIdx);

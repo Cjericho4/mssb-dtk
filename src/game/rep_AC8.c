@@ -2361,8 +2361,92 @@ void fn_3_48480(s32 fielderIdx) {
 }
 
 // .text:0x00048A54 size:0xAA0 mapped:0x80687AE8
-void fn_3_48A54(void) {
-    return;
+static inline void claimRunnerChase(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+    s16 base;
+
+    g_FieldingLogic.unkBE = idx;
+    if (idx != -1) {
+        setFielderReadyAction(idx, 5);
+    }
+    fn_3_48480(idx);
+    if (g_FieldingLogic.unkD8 != idx && f->unk18C < 0) {
+        return;
+    }
+    base = f->unk18C;
+    if (base < 0) {
+        return;
+    }
+    if (base <= 3) {
+        if (g_FieldingLogic.unkD0[base] == idx) {
+            g_FieldingLogic.unkD0[base] = -1;
+            g_FieldingLogic.unk101[base] = 0;
+        }
+        f->unk18C = -1;
+        f->unk1D7 = 0;
+        if (f->unk1D3 == 1 && idx != -1) {
+            setFielderReadyAction(idx, 0xC);
+        }
+    } else if (base == 5) {
+        f->unk18C = -1;
+        f->unk1D7 = 0;
+        g_FieldingLogic.unkD8 = -1;
+        g_FieldingLogic.unk105 = 0;
+        if (f->unk1D3 == 0xE && idx != -1) {
+            setFielderReadyAction(idx, 0xC);
+        }
+    }
+}
+
+void fn_3_48A54(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    f32 x;
+    f32 z;
+    s16 other;
+    f32 dist;
+
+    if (fn_3_53130(fielderIdx) != 0) {
+        return;
+    }
+    if (f->unk252 != 0) {
+        return;
+    }
+    f->unk18E = getLeadRunnerChaseBase();
+    if (g_FieldingLogic.unkBE < 0) {
+        if (fn_3_46E08(fielderIdx, &x, &z) == 0) {
+            return;
+        }
+        setFielderTarget(f, x, z);
+        claimRunnerChase(fielderIdx);
+    } else if (g_FieldingLogic.unkC4 == 6) {
+        if (fielderIdx != -1) {
+            setFielderReadyAction(fielderIdx, 0xC);
+        }
+        g_Fielders[fielderIdx].unk1D5 = 4;
+    } else {
+        if (fn_3_46E08(fielderIdx, &x, &z) == 0) {
+            return;
+        }
+        dist = dolsqrtf2((x - f->pos[0]) * (x - f->pos[0]) + (z - f->pos[2]) * (z - f->pos[2]));
+        other = g_FieldingLogic.unkBE;
+        if (dist < g_Fielders[g_FieldingLogic.unkBE].unk68) {
+            if (g_Ball.fielderWBallIndex != other) {
+                if (other != -1) {
+                    setFielderReadyAction(other, 0xC);
+                }
+                g_Fielders[g_FieldingLogic.unkBE].unk1D5 = 4;
+            }
+            g_Fielders[g_FieldingLogic.unkBE].unk18C = -1;
+            g_Fielders[g_FieldingLogic.unkBE].unk1D7 = 0;
+            setFielderTargetIdx(fielderIdx, x, z);
+            claimRunnerChase(fielderIdx);
+        } else {
+            if (fielderIdx != -1) {
+                setFielderReadyAction(fielderIdx, 0xC);
+            }
+            g_Fielders[fielderIdx].unk1D5 = 4;
+        }
+    }
 }
 
 // .text:0x000494F4 size:0x4D0 mapped:0x80688588
