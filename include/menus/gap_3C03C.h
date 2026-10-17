@@ -79,7 +79,7 @@ void fn_2_44014(void);
 void fn_2_44184(void);
 void fn_2_44238(void);
 void fn_2_442E8(void);
-void fn_2_44368(void);
+BOOL fn_2_44368(void);
 void fn_2_44414(void);
 void fn_2_44504(void);
 void fn_2_44E2C(void);
