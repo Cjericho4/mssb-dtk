@@ -906,7 +906,7 @@ void fn_3_14CB28(s8 arg0) {
 typedef struct {
     s32 unk0;
     s32 unk4;
-    u8 _pad8[4];
+    s32 unk8;
     s32 unkC;  // 0x0C
     s32 unk10;
     s32 unk14; // 0x14
@@ -1081,8 +1081,95 @@ void fn_3_14D6D4(Struct_14D6D4_Input* in) {
 }
 
 // .text:0x0014D710 size:0x570 mapped:0x8078C7A4
-void fn_3_14D710(void) {
-    return;
+static inline void initBarrelEffects(struct Struct_800339F0_Result* obj, s32 arg1) {
+    u8 index = arg1;
+    ListNode_14B9F0* node = obj->listHead;
+    s32 i = 0;
+    do {
+        if (node->field_0x44 == 0 && node->field_0x4A == 0) {
+            if (i < 3) {
+                node->field_0x44 = 1;
+                node->field_0x45 = index;
+                node->unk46 = 255;
+                node->field_0x4D = lbl_3_data_26D00.unk0;
+                node->scaleX = node->scaleY = (f32)lbl_3_data_26D00.unk10;
+                node->color[3] = lbl_3_data_26D00.unk1C;
+                positionBarrelSmoke(node);
+                node->field_0x4A = lbl_3_data_26D00.unk44;
+                node->field_0x48 = 0;
+            } else {
+                node->field_0x44 = 2;
+                node->field_0x45 = index;
+                node->unk46 = (i - 3) / 5;
+                node->field_0x4D = lbl_3_data_26D00.unk4;
+                node->scaleX = node->scaleY = (f32)lbl_3_data_26D00.unk2C;
+                node->color[3] = lbl_3_data_26D00.unk38;
+                node->field_0x48 = ((i - 3) % 5) * 4 + 1;
+                node->field_0x4A = lbl_3_data_26D00.unk48;
+            }
+            node->color[0] = node->color[1] = node->color[2] = 255;
+            i++;
+        }
+        node = node->next;
+    } while (node != NULL && i < 43);
+}
+static inline void initNewBarrelEffects(struct Struct_800339F0_Result* obj, s32 arg1) {
+    ListNode_14B9F0* node = obj->listHead;
+    s32 i = 0;
+    u8 index = arg1;
+    do {
+        if (node->field_0x44 == 0 && node->field_0x4A == 0) {
+            if (i < 3) {
+                node->field_0x44 = 1;
+                node->field_0x45 = index;
+                node->unk46 = 255;
+                node->field_0x4D = lbl_3_data_26D00.unk0;
+                node->scaleX = node->scaleY = (f32)lbl_3_data_26D00.unk10;
+                node->color[3] = lbl_3_data_26D00.unk1C;
+                positionBarrelSmoke(node);
+                node->field_0x4A = lbl_3_data_26D00.unk44;
+                node->field_0x48 = 0;
+            } else {
+                node->field_0x44 = 2;
+                node->field_0x45 = index;
+                node->unk46 = (i - 3) / 5;
+                node->field_0x4D = lbl_3_data_26D00.unk4;
+                node->scaleX = node->scaleY = (f32)lbl_3_data_26D00.unk2C;
+                node->color[3] = lbl_3_data_26D00.unk38;
+                node->field_0x48 = ((i - 3) % 5) * 4 + 1;
+                node->field_0x4A = lbl_3_data_26D00.unk48;
+            }
+            node->color[0] = node->color[1] = node->color[2] = 255;
+            i++;
+        }
+        node = node->next;
+    } while (node != NULL && i < 43);
+}
+static inline void clearBarrelEffects(struct Struct_800339F0_Result* obj) {
+    ListNode_14B9F0* node;
+    obj->field_0x10 = lbl_3_common_bss_32724.field6C;
+    node = obj->listHead;
+    do {
+        node->unk46 = 0;
+        node->field_0x45 = 0;
+        node->field_0x44 = 0;
+        node->field_0x4A = 0;
+        node->field_0x4E = 0;
+        node = node->next;
+    } while (node != NULL);
+}
+void fn_3_14D710(s32 index) {
+    struct Struct_800339F0_Result* obj;
+    obj = fn_800339F0(0, 0x20);
+    if (obj != NULL) {
+        initBarrelEffects(obj, index);
+    } else {
+        obj = (struct Struct_800339F0_Result*)fn_80033A24(fn_3_14CECC, 0xF0, 0, lbl_3_data_26D00.unk8, 1, 0x20);
+        if (obj != NULL) {
+            clearBarrelEffects(obj);
+            initNewBarrelEffects(obj, index);
+        }
+    }
 }
 
 // .text:0x0014DC80 size:0x60 mapped:0x8078CD14
@@ -1090,7 +1177,7 @@ void fn_3_14DC80(s32 arg) {
     if (g_d_GameSettings.GameModeSelected != GAME_TYPE_MINIGAMES) return;
     if (g_Minigame.GameMode_MiniGame != MINI_GAME_ID_BARREL_BATTER) return;
     if ((s8)arg >= 15 || (s8)arg < 0) return;
-    fn_3_14D710();
+    fn_3_14D710(arg);
 }
 
 // .text:0x0014DCE0 size:0x24 mapped:0x8078CD74
