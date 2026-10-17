@@ -142,7 +142,9 @@ void fn_2_2469C(void) {
 
 // .text:0x000246E0 size:0x44
 void fn_2_246E0(void) {
-    return;
+    QueueEntry* task = fn_800B0A5C_insertQueue(fn_2_24488, 2);
+    task->unk1C = 0;
+    fn_2_54354(lbl_2_data_9FC8, 659);
 }
 
 // .text:0x00024724 size:0x4
