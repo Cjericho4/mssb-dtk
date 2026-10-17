@@ -559,7 +559,9 @@ void fn_1_1770C(void) {
 
 // .text:0x00017954 size:0x78
 void fn_1_17954(void) {
-    return;
+    Mtx44 proj;
+    C_MTXFrustum(proj, -0.000175f, 0.000175f, 0.00025f, -0.00025f, 0.001f, 512.0f);
+    GXSetProjection(proj, GX_PERSPECTIVE);
 }
 
 // .text:0x000179CC size:0x190

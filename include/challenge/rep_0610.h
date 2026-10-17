@@ -61,6 +61,8 @@ typedef struct Rep0610Camera68FC {
 } Rep0610Camera68FC;
 extern Rep0610Camera68FC lbl_1_bss_68FC;
 void LITXForm(struct MenusLight* light, Mtx view);
+#include "Dolphin/GX/GXTransform.h"
+void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 extern s16 lbl_1_data_A978[0x6E];
 typedef struct Rep0610Ctrl5F7C {
     /* 0x000 */ HugeAnimCtrlObj* obj;
