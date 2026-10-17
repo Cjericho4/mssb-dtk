@@ -26,7 +26,17 @@ void fn_2_E84(void) {
 
 // .text:0x00000F64 size:0xB4
 void fn_2_F64(void) {
-    return;
+    u16 i;
+    for (i = 0; i < 4; i++) {
+        if (lbl_2_bss_D974[i] != 0xFFFFFFFF) {
+            if (sndSeqGetValid(lbl_2_bss_D974[i]) != 0) {
+                sndSeqVolume(0, 0, lbl_2_bss_D974[i], 1);
+                sndSeqStop(lbl_2_bss_D974[i]);
+            }
+            lbl_2_bss_D974[i] = -1;
+            lbl_2_bss_D958[i] = -1;
+        }
+    }
 }
 
 // .text:0x00001018 size:0x94
