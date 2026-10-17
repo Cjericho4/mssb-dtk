@@ -45,7 +45,7 @@ void fn_3_C4CF4(struct Struct_800339F0_Result* obj, u8 id);
 void fn_3_C4F00(void);
 void fn_3_C5304(struct Struct_800339F0_Result* obj, struct C5CE0Arg* src);
 void fn_3_C54D0(StadiumObjectElem* elem);
-void fn_3_C56E8(void);
+void fn_3_C56E8(StadiumObjectElem* elem);
 void fn_3_C597C(void);
 struct C5CE0Arg;
 BOOL fn_3_C5CE0(struct C5CE0Arg* arg0);
