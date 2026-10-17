@@ -156,8 +156,10 @@ void fn_2_4A064(void) {
 }
 
 // .text:0x0004A068 size:0x2C
-void fn_2_4A068(void) {
-    return;
+s32 fn_2_4A068(u16* text) {
+    u16* end = text;
+    while (*end != 0x4000) end++;
+    return end - text;
 }
 
 // .text:0x0004A094 size:0x30

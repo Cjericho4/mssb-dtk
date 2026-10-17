@@ -34,7 +34,7 @@ void fn_2_49E5C(void);
 void fn_2_49EFC(void);
 void fn_2_49F7C(void);
 void fn_2_4A064(void);
-void fn_2_4A068(void);
+s32 fn_2_4A068(u16* text);
 void fn_2_4A094(void);
 void fn_2_4A0C4(void);
 void fn_2_4A150(void);
