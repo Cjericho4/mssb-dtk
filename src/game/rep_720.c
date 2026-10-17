@@ -186,7 +186,7 @@ void fn_3_15144(s32 arg0) {
 
 // .text:0x00015220 size:0x5C mapped:0x806542B4
 void fn_3_15220(s32 arg0) {
-    if (g_FieldingLogic._pad3[3] == 0) {
+    if (g_FieldingLogic.unk13F == 0) {
         return;
     }
     if (arg0 == 0) {

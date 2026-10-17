@@ -1566,8 +1566,52 @@ void fn_3_4597C(s32 fielderIdx) {
 }
 
 // .text:0x00045B88 size:0x310 mapped:0x80684C1C
-void fn_3_45B88(void) {
-    return;
+void fn_3_45B88(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    VecXZ out;
+    VecXZ perp[2];
+    VecXZ path[2];
+    f32 nx;
+    f32 nz;
+
+    g_FieldingLogic.unk13C = 0;
+    if (f->unk1FF == 0) {
+        f->unk1FF = 1;
+        f->unk202 = 1;
+        g_FieldingLogic.unkB0 = fielderIdx;
+        path[0].x = g_Ball.AtBat_Contact_BallPos.x;
+        path[0].z = g_Ball.AtBat_Contact_BallPos.z;
+        path[1].x = g_Ball.throwTarget.x;
+        path[1].z = g_Ball.throwTarget.z;
+        nx = -(path[1].z - path[0].z);
+        nz = path[1].x - path[0].x;
+        perp[0].x = f->pos[0];
+        perp[0].z = f->pos[2];
+        perp[1].x = f->pos[0] + nx;
+        perp[1].z = f->pos[2] + nz;
+        calculateLineIntersection(&out, path, perp);
+        setFielderTarget(f, out.x, out.z);
+    }
+    switch (fn_3_53130(fielderIdx)) {
+    case 2:
+        return;
+    default:
+        if (f->unk202 != 0) {
+            fn_3_526DC(fielderIdx);
+            if (g_FieldingLogic.unk14A & 0x100) {
+                g_FieldingLogic.unk13C = 1;
+            }
+        }
+    case 1:
+        if (g_Ball.ballState != 2) {
+            g_FieldingLogic.unkC2 = -1;
+            f->unk202 = 0;
+            if (fielderIdx != -1) {
+                setFielderReadyAction(fielderIdx, 9);
+            }
+        }
+        break;
+    }
 }
 
 // .text:0x00045E98 size:0x7F0 mapped:0x80684F2C
