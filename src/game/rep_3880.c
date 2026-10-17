@@ -470,27 +470,96 @@ void fn_3_14B9F0(void) {
     pitchingMachinePitching(0x22);
 }
 
-// .text:0x0014BA40 size:0x270 mapped:0x8078AAD4
-void fn_3_14BA40(void) {
-    return;
-}
-
-// .text:0x0014BCB0 size:0x21C mapped:0x8078AD44
 typedef struct {
     s32 unk0;
     s32 unk4;
     s32 unk8;
-    u8 _padC[4];
+    s32 unkC;
     s32 unk10;
-    u8 _pad14[8];
+    s32 unk14;
+    s32 unk18;
     s32 unk1C;
     s32 unk20;
     s32 unk24;
     s32 unk28;
-    u8 _pad2C[0x10];
+    s32 unk2C;
+    s32 unk30;
+    u8 _pad34[8];
 } EffectConfig26D88;
 extern EffectConfig26D88 lbl_3_data_26D88;
 extern EffectConfig26D88 lbl_3_data_26DC4;
+ListNode_14B9F0* fn_80031F34(ListNode_14B9F0* node, s32 count);
+
+// .text:0x0014BA40 size:0x270 mapped:0x8078AAD4
+void fn_8003403C(f32 a, f32 b);
+s32 fn_3_14BA40(struct Struct_800339F0_Result* obj) {
+    ListNode_14B9F0* node;
+    ListNode_14B9F0** link;
+    ListNode_14B9F0* removed;
+    ListNode_14B9F0* tail;
+    s32 phase;
+    s32 count = 0;
+    s32 frames;
+    EffectConfig26D88* config;
+    if (lbl_80366158._28 != 0) return 0;
+    node = obj->listHead = fn_80031F34(obj->listHead, obj->count);
+    link = &obj->listHead;
+    tail = NULL;
+    removed = NULL;
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+    do {
+        if (node->field_0x4A != 0) {
+            s32 alpha;
+            s32 da;
+            f32 ds;
+            config = node->field_0x4F == 0 ? &lbl_3_data_26D88 : &lbl_3_data_26DC4;
+            frames = config->unk8;
+            phase = config->unkC;
+            fn_8003403C(node->scaleX, node->scaleY);
+            fn_80033CC8(node, obj->field_0x10);
+            alpha = node->color[3];
+            if (frames - node->field_0x4A < phase) {
+                ds = (f32)((config->unk14 - config->unk10) / phase) / 100000.0f;
+                da = (config->unk2C - config->unk28) / phase;
+            } else {
+                ds = (f32)((config->unk18 - config->unk14) / (frames - phase)) / 100000.0f;
+                da = (config->unk30 - config->unk2C) / (frames - phase);
+            }
+            alpha += da;
+            if (alpha > 255) alpha = 255;
+            if (alpha < 0) alpha = 0;
+            node->color[3] = alpha;
+            node->scaleX += ds;
+            node->scaleY = node->scaleX;
+            node->field_0x4A--;
+            if (node->field_0x4A == 0) {
+                *link = node->next;
+                if (tail != NULL) tail->next = node;
+                else removed = node;
+                tail = node;
+                node->next = NULL;
+                obj->count--;
+            } else {
+                link = &node->next;
+                count++;
+            }
+        }
+        node = *link;
+    } while (node != NULL);
+    if (removed != NULL) {
+        node = removed;
+        do {
+            node->field_0x4C = 0;
+            node->field_0x48 = 0;
+            node = node->next;
+        } while (node != NULL);
+        fn_80033794(removed);
+    }
+    return count == 0;
+}
+
+// .text:0x0014BCB0 size:0x21C mapped:0x8078AD44
 void fn_3_14BCB0(struct Struct_800339F0_Result* obj, Vec* pos, s32 arg2) {
     EffectConfig26D88* config;
     ListNode_14B9F0* node;

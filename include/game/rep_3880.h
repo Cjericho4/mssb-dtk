@@ -171,7 +171,7 @@ void fn_3_14B53C(void* arg0, void* arg1, void* arg2);
 void fn_3_14B92C(void* arg0, void* arg1);
 void fn_3_14B9A0(void* arg0, void* arg1);
 void fn_3_14B9F0(void);
-void fn_3_14BA40(void);
+s32 fn_3_14BA40(struct Struct_800339F0_Result* obj);
 void fn_3_14BCB0(struct Struct_800339F0_Result* obj, Vec* pos, s32 arg2);
 void fn_3_14BECC(void* arg0, void* arg1);
 void fn_3_14C348(void* arg0, void* arg1);
