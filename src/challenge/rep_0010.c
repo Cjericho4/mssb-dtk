@@ -37,7 +37,11 @@ void fn_1_1148(void) {
 
 // .text:0x000011D0 size:0x70
 void fn_1_11D0(void) {
-    return;
+    resetAllDrawingStructs();
+    fn_80009144();
+    fn_800AD054(lbl_80366158.unk8, lbl_80366158.unk4);
+    GXSetCopyClear(lbl_1_data_A8, 0xFFFFFF);
+    lbl_803CC1B8->aFunctionPointer = fn_1_16A0;
 }
 
 // .text:0x00001240 size:0x2F8
