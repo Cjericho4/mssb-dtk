@@ -431,8 +431,8 @@ void fn_2_6D040(void) {
 }
 
 // .text:0x0006D078 size:0x10
-void fn_2_6D078(void) {
-    return;
+void fn_2_6D078(Rep0B08Obj* obj) {
+    obj->countdown--;
 }
 
 // .text:0x0006D088 size:0xDC

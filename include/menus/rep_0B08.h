@@ -6,6 +6,8 @@
 typedef struct Rep0B08Obj {
     /* 0x00 */ u8 _pad0[0x94];
     /* 0x94 */ s16 state;
+    /* 0x96 */ u8 _pad96[0xC];
+    /* 0xA2 */ s16 countdown;
 } Rep0B08Obj;
 
 void fn_2_6832C(void);
@@ -94,7 +96,7 @@ void fn_2_6CBB0(void);
 void fn_2_6CCB8(void);
 void fn_2_6CDD4(void);
 void fn_2_6D040(void);
-void fn_2_6D078(void);
+void fn_2_6D078(Rep0B08Obj* obj);
 void fn_2_6D088(void);
 void fn_2_6D164(void);
 void fn_2_6D250(void);
