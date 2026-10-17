@@ -30,7 +30,8 @@ typedef struct Rep0B08Obj {
     f32 unk70;
     u8 _pad74[0xC];
     s32 index;
-    u8 _pad84[8];
+    s32 animationIndex; /* 0x84 */
+    u8 _pad88[4];
     f32 unk8C;
     u8 _pad90[4];
     /* 0x94 */ s16 state;
@@ -192,7 +193,7 @@ void fn_2_6CCB8(void);
 void fn_2_6CDD4(void);
 void fn_2_6D040(Rep0B08Obj* obj);
 void fn_2_6D078(Rep0B08Obj* obj);
-void fn_2_6D088(void);
+void fn_2_6D088(Rep0B08Obj* obj);
 void fn_2_6D164(void);
 void fn_2_6D250(Rep0B08Obj* obj);
 void fn_2_6D288(Rep0B08Obj* obj);

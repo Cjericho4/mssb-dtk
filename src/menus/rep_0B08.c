@@ -68,6 +68,15 @@ static inline void menuScalePosition(Vec* source, Vec* target, f32 scale) {
     target->z = source->z * scale;
 }
 
+static inline void menuChangeAnimation(s32 index, s32 animation) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    Rep0B08AnimationConfig* configs = lbl_2_data_3C84;
+    if (lbl_2_bss_1A824C->animations[obj->index] != animation) {
+        fn_2_8CD58(obj->index, configs[animation].animation, configs[animation].flag, 1, configs[animation].time, 0, 0);
+        lbl_2_bss_1A824C->animations[obj->index] = animation;
+    }
+}
+
 // .text:0x0006832C size:0xC0
 void fn_2_6832C(void) {
     Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[1];
@@ -702,8 +711,12 @@ void fn_2_6D078(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006D088 size:0xDC
-void fn_2_6D088(void) {
-    return;
+void fn_2_6D088(Rep0B08Obj* obj) {
+    if (fn_2_8CC88(obj->animationIndex)) {
+        menuChangeAnimation(obj->index, 7);
+        obj->countdown = 30;
+        obj->state = 2;
+    }
 }
 
 // .text:0x0006D164 size:0xEC
