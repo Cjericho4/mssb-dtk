@@ -1,4 +1,5 @@
 #include "menus/rep_08E8.h"
+#include "stdlib.h"
 
 // .text:0x00046C88 size:0x78
 void fn_2_46C88(void) {
@@ -163,8 +164,11 @@ s32 fn_2_4A068(u16* text) {
 }
 
 // .text:0x0004A094 size:0x30
-void fn_2_4A094(void) {
-    return;
+u16* fn_2_4A094(u16* dst, u16* src) {
+    u16* start = dst;
+    while (*src != 0x4000) *dst++ = *src++;
+    *dst = *src;
+    return start;
 }
 
 // .text:0x0004A0C4 size:0x8C
