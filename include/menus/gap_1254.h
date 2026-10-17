@@ -15,7 +15,7 @@ void fn_2_1258(void);
 void fn_2_12A0(s16* value, s16 amount);
 void fn_2_12CC(u8* value, u16 amount);
 void fn_2_12F8(void);
-void fn_2_1328(void);
+void fn_2_1328(u32* value, u16 amount);
 void fn_2_1354(void);
 void fn_2_145C(void);
 void fn_2_148C(void);

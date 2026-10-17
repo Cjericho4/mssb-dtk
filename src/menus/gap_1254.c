@@ -28,8 +28,10 @@ void fn_2_12F8(void) {
 }
 
 // .text:0x00001328 size:0x2C
-void fn_2_1328(void) {
-    return;
+void fn_2_1328(u32* value, u16 amount) {
+    u32 result = *value + amount;
+    if (result > 0x7FFFFFFF) *value = 0x7FFFFFFF;
+    else *value = result;
 }
 
 // .text:0x00001354 size:0x108
