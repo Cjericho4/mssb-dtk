@@ -22,7 +22,7 @@ void fn_2_19520(void) {
 // .text:0x00019554 size:0x84
 s32 fn_2_19554(void) {
     s8 changed = 0;
-    if (lbl_800EF808.unk398 != fn_8003AE70(0) || lbl_800EF808._pad397 != fn_8003AE70(1) || lbl_80366158.unk1F != fn_8003AE70(2)) {
+    if (lbl_800EF808.unk398 != fn_8003AE70(0) || lbl_800EF808.unk397 != fn_8003AE70(1) || lbl_80366158.unk1F != fn_8003AE70(2)) {
         changed = 1;
     }
     return changed;

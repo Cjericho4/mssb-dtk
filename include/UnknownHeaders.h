@@ -39,7 +39,7 @@ typedef struct {
     u8 musicVolume;     /* 0x391 */
     u8 _pad392[0x396 - 0x392];
     u8 soundMode;       /* 0x396: 1 = positional panning */
-    u8 _pad397;
+    u8 unk397;
     u8 unk398;
     u8 _pad399;
     u8 unk39A;          /* 0x39A */
