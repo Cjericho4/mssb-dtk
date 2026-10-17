@@ -2868,7 +2868,54 @@ end:
 
 // .text:0x00045394 size:0x220 mapped:0x80684428
 void fn_3_45394(s32 idx) {
-    return;
+    Fielder* f = &g_Fielders[idx];
+
+    if (g_FieldingLogic._107 == 3 && g_Ball.framesSinceHit < 145 && idx == 1) {
+        return;
+    }
+    if (g_Ball.framesSinceHit <= 0) {
+        return;
+    }
+    if (f->unk1DF != 0) {
+        if (f->unk194 < 0x7FFE) {
+            f->unk194++;
+        } else {
+            f->unk194 = 0x7FFF;
+        }
+        if (f->unk194 < f->unk196) {
+            if (g_Ball.ballState == 1) {
+                f->unk194 = f->unk196;
+            }
+            return;
+        }
+        f->unk194 = 0;
+        f->unk1DF = 0;
+    }
+    switch (fn_3_53130(idx)) {
+    case 2:
+        return;
+    default:
+        if (f->unk1ED == 0) {
+            fn_3_433E0(idx);
+        }
+        if (!g_d_GameSettings.minigamesEnabled) {
+            fn_3_4207C(idx);
+        }
+        if (g_d_GameSettings.minigamesEnabled) {
+            if (g_Ball.deadBallReason != 0 && idx != -1) {
+                setFielderReadyAction(idx, 0xC);
+            }
+            return;
+        }
+    case 1:
+        if (g_Ball.deadBallReason != 0) {
+            if (idx != -1) {
+                setFielderReadyAction(idx, 0xC);
+            }
+        } else {
+            fn_3_5372C(idx);
+        }
+    }
 }
 
 // .text:0x000455B4 size:0x2AC mapped:0x80684648
