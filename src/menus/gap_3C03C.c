@@ -301,8 +301,14 @@ void fn_2_44238(void) {
 }
 
 // .text:0x000442E8 size:0x80
-void fn_2_442E8(void) {
-    return;
+BOOL fn_2_442E8(void) {
+    s32 i;
+    s32 count = 0;
+    for (i = 0; i < 9; i++) {
+        s32 value = lbl_2_bss_1A8248->choiceGrid[i][0];
+        if (value == 0 || value == 1) count++;
+    }
+    return count == 2;
 }
 
 // .text:0x00044368 size:0xAC
