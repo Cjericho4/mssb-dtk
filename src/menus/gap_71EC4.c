@@ -12,6 +12,7 @@ extern MenusSceneScript lbl_2_data_2AADC;
 extern MenusSceneScript lbl_2_data_2D33C;
 extern s32 lbl_2_bss_A840;
 #include "menus/gap_8782C.h"
+#include "game/rep_3448.h"
 extern void fn_800363D8(DrawingSceneStruct* scene, s32 index, s32 enabled, s32 value, s32 order);
 
 extern void fn_80053FE8(void);
@@ -104,28 +105,63 @@ void fn_2_7265C(void) {
 }
 
 // .text:0x00072814 size:0xAC
-void fn_2_72814(void) {
-    return;
+void fn_2_72814(DrawingSceneStruct* scene) {
+    s32 first;
+    if ((u32)__cntlzw(1 - lbl_803CBBC4.unk3) >> 5) {
+        first = !!fn_80042DA8(scene, 0, 0);
+        if (first + !!fn_80042DA8(scene, 1, 0) == 2) {
+            lbl_803CBBC4.unk3 = 0;
+            lbl_803CBBC4.unk2 = 0;
+            lbl_803CBBC4.unk0 = 0;
+            lbl_803CBBC4.unk4 = 1;
+        }
+    }
 }
 
 // .text:0x000728C0 size:0x7C
-void fn_2_728C0(void) {
-    return;
+void fn_2_728C0(DrawingSceneStruct* scene) {
+    if ((u32)__cntlzw(lbl_803CBBC4.unk2) >> 5) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0x190000;
+        lbl_80371C30[scene->unkIndex].obj->field_0x68 = 4;
+        lbl_80371C30[scene->unkIndex + 1].obj->field_0x5C = 0x190000;
+        lbl_80371C30[scene->unkIndex + 1].obj->field_0x68 = 4;
+        lbl_803CBBC4.unk2 = 1;
+        lbl_803CBBC4.unk3 = 1;
+    }
 }
 
 // .text:0x0007293C size:0xA4
-void fn_2_7293C(void) {
-    return;
+void fn_2_7293C(DrawingSceneStruct* scene) {
+    s32 first;
+    if ((u32)__cntlzw(1 - lbl_803CBBC4.unk3) >> 5) {
+        first = !!fn_80042DA8(scene, 0, 25);
+        if (first + !!fn_80042DA8(scene, 1, 25) == 2) {
+            lbl_803CBBC4.unk3 = 0;
+            lbl_803CBBC4.unk2 = 0;
+            lbl_803CBBC4.unk0 = 0;
+        }
+    }
 }
 
 // .text:0x000729E0 size:0x78
-void fn_2_729E0(void) {
-    return;
+void fn_2_729E0(DrawingSceneStruct* scene) {
+    if ((u32)__cntlzw(lbl_803CBBC4.unk2) >> 5) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0x190000;
+        lbl_80371C30[scene->unkIndex].obj->field_0x68 = 1;
+        lbl_80371C30[scene->unkIndex + 1].obj->field_0x5C = 0x190000;
+        lbl_80371C30[scene->unkIndex + 1].obj->field_0x68 = 1;
+        lbl_803CBBC4.unk2 = 1;
+        lbl_803CBBC4.unk3 = 1;
+    }
 }
 
 // .text:0x00072A58 size:0x30
 void fn_2_72A58(void) {
-    return;
+    if ((u32)__cntlzw(1 - lbl_803CBBC4.unk3) >> 5) {
+        lbl_803CBBC4.unk3 = 0;
+        lbl_803CBBC4.unk2 = 0;
+        lbl_803CBBC4.unk0 = 0;
+    }
 }
 
 // .text:0x00072A88 size:0x22C
@@ -134,18 +170,42 @@ void fn_2_72A88(void) {
 }
 
 // .text:0x00072CB4 size:0xAC
-void fn_2_72CB4(void) {
-    return;
+void fn_2_72CB4(DrawingSceneStruct* scene) {
+    s32 first;
+    if ((u32)__cntlzw(1 - lbl_803CBBC4.unk3) >> 5) {
+        first = !!fn_80042DA8(scene, 0, 0);
+        if (first + !!fn_80042DA8(scene, 1, 0) == 2) {
+            lbl_803CBBC4.unk3 = 0;
+            lbl_803CBBC4.unk2 = 0;
+            lbl_803CBBC4.unk0 = 0;
+            lbl_803CBBC4.unk4 = 1;
+        }
+    }
 }
 
 // .text:0x00072D60 size:0x7C
-void fn_2_72D60(void) {
-    return;
+void fn_2_72D60(DrawingSceneStruct* scene) {
+    if ((u32)__cntlzw(lbl_803CBBC4.unk2) >> 5) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0x190000;
+        lbl_80371C30[scene->unkIndex].obj->field_0x68 = 4;
+        lbl_80371C30[scene->unkIndex + 1].obj->field_0x5C = 0x190000;
+        lbl_80371C30[scene->unkIndex + 1].obj->field_0x68 = 4;
+        lbl_803CBBC4.unk2 = 1;
+        lbl_803CBBC4.unk3 = 1;
+    }
 }
 
 // .text:0x00072DDC size:0x78
-void fn_2_72DDC(void) {
-    return;
+void fn_2_72DDC(DrawingSceneStruct* scene) {
+    s32 first;
+    if ((u32)__cntlzw(1 - lbl_803CBBC4.unk3) >> 5) {
+        first = !!fn_80042DA8(scene, 0, 25);
+        if (first == 1) {
+            lbl_803CBBC4.unk3 = 0;
+            lbl_803CBBC4.unk2 = 0;
+            lbl_803CBBC4.unk0 = 0;
+        }
+    }
 }
 
 // .text:0x00072E54 size:0x1D4
@@ -683,8 +743,15 @@ void fn_2_836A4(void) {
 }
 
 // .text:0x00083744 size:0x94
-void fn_2_83744(void) {
-    return;
+void fn_2_83744(DrawingSceneStruct* scene) {
+    if (lbl_80371C30[scene->unkIndex].obj->field_0x5C >> 16 == 0x14) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x68 = 1;
+    }
+    if (lbl_80371C30[scene->unkIndex].obj->field_0x5C >> 16 == 0x1E) {
+        lbl_803CBCD8.unk4 = 1;
+        fn_80062674(0);
+        lbl_803C66B0.unk31 = 2;
+    }
 }
 
 // .text:0x000837D8 size:0x19C

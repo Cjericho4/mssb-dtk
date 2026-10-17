@@ -12,7 +12,9 @@ typedef struct MenusInputFlags {
             u8 state;
             u8 _pad8[5];
             u8 flags[4];
-            u8 _pad11[0x3E];
+            u8 _pad11[0x20];
+            u8 unk31;
+            u8 _pad32[0x1D];
             u8 state4F;
             u8 _pad50[5];
         };
@@ -30,6 +32,29 @@ typedef struct MenusInputFlags {
     u8 unk5A;
 } MenusInputFlags;
 extern MenusInputFlags lbl_803C66B0;
+
+/* 0x803CBBC4: per-scene "pending transition" bytes (DOL .sbss, 8 bytes) */
+typedef struct MenusTransitionFlags {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+    u8 unk4;
+    u8 _pad5[3];
+} MenusTransitionFlags;
+extern MenusTransitionFlags lbl_803CBBC4;
+
+/* 0x803CBCD8: menu scene state bytes (DOL .sbss, 8 bytes) */
+typedef struct MenusSubsceneState {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+    u8 unk4;
+    u8 unk5;
+    u8 _pad6[2];
+} MenusSubsceneState;
+extern MenusSubsceneState lbl_803CBCD8;
 
 typedef struct MenusSceneScript MenusSceneScript;
 struct DrawingSceneStruct;
@@ -94,15 +119,15 @@ void fn_2_7207C(void);
 void fn_2_72594(void);
 void fn_2_72630(void);
 void fn_2_7265C(void);
-void fn_2_72814(void);
-void fn_2_728C0(void);
-void fn_2_7293C(void);
-void fn_2_729E0(void);
+void fn_2_72814(struct DrawingSceneStruct* scene);
+void fn_2_728C0(struct DrawingSceneStruct* scene);
+void fn_2_7293C(struct DrawingSceneStruct* scene);
+void fn_2_729E0(struct DrawingSceneStruct* scene);
 void fn_2_72A58(void);
 void fn_2_72A88(void);
-void fn_2_72CB4(void);
-void fn_2_72D60(void);
-void fn_2_72DDC(void);
+void fn_2_72CB4(struct DrawingSceneStruct* scene);
+void fn_2_72D60(struct DrawingSceneStruct* scene);
+void fn_2_72DDC(struct DrawingSceneStruct* scene);
 void fn_2_72E54(void);
 void fn_2_73028(void);
 void fn_2_7302C(void);
@@ -189,7 +214,7 @@ void fn_2_82E58(void);
 void fn_2_82EC0(void);
 void fn_2_834F0(void);
 void fn_2_836A4(void);
-void fn_2_83744(void);
+void fn_2_83744(struct DrawingSceneStruct* scene);
 void fn_2_837D8(void);
 void fn_2_83974(void);
 void fn_2_83B34(void);
