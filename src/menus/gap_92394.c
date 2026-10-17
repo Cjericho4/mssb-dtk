@@ -1,4 +1,5 @@
 #include "menus/gap_92394.h"
+#include "menus/rep_0B08.h"
 extern void (*lbl_2_data_308B4[])(Rep1028Obj*);
 
 extern void (*lbl_2_data_307F0[])(Rep1028Obj*);
@@ -59,8 +60,10 @@ void fn_2_9257C(void) {
 }
 
 // .text:0x00092654 size:0x28
-void fn_2_92654(void) {
-    return;
+void fn_2_92654(s32 index, u8 variant) {
+    Rep1028Obj* obj = &lbl_2_bss_1A8248->rep1028Objects[index];
+    obj->variant = variant;
+    obj->state = 0;
 }
 
 // .text:0x0009267C size:0x14C
