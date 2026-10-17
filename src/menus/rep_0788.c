@@ -1,4 +1,5 @@
 #include "menus/rep_0788.h"
+#include "UnknownHeaders.h"
 
 // .text:0x0001D440 size:0x2ACC
 void fn_2_1D440(void) {
@@ -141,8 +142,8 @@ void fn_2_24800(void) {
 }
 
 // .text:0x00024E9C size:0x14
-void fn_2_24E9C(void) {
-    return;
+s16 fn_2_24E9C(void) {
+    return lbl_803CC1B8->loadingState;
 }
 
 // .text:0x00024EB0 size:0x14
