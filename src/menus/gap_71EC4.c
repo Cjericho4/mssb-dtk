@@ -14,10 +14,18 @@ extern s32 lbl_2_bss_A840;
 extern void fn_800363D8(DrawingSceneStruct* scene, s32 index, s32 enabled, s32 value, s32 order);
 
 extern void fn_80053FE8(void);
+extern void fn_8004E2EC(void);
+extern void fn_8004F964(void);
 extern void fn_800625A4(s32, s32);
 extern void fn_800626EC(s32);
 extern void fn_80062674(s32);
 #include "menus/gap_1254.h"
+
+static inline void menuSetTransition(u8 mode) {
+    lbl_8034E978.state = mode;
+    lbl_8034E978.previous = lbl_8034E978.current;
+    lbl_8034E978.current = lbl_800FEF70.entries[mode].next;
+}
 
 // .text:0x00071EC4 size:0x38
 void fn_2_71EC4(Rep0B08Obj* obj) {
@@ -155,7 +163,14 @@ void fn_2_73758(void) {
 
 // .text:0x000738C8 size:0xCC
 void fn_2_738C8(void) {
-    return;
+    if (lbl_803CBBCC->previousSelection == 5) fn_800B0A5C_insertQueue(fn_80053FE8, 0);
+    if (g_d_GameSettings.GameModeSelected == 5) {
+        menuSetTransition(13);
+        fn_800B0A5C_insertQueue(fn_8004E2EC, 0x3000);
+    } else {
+        menuSetTransition(0);
+        fn_800B0A5C_insertQueue(fn_8004F964, 0x3000);
+    }
 }
 
 // .text:0x00073994 size:0x1C0
