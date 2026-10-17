@@ -8,6 +8,7 @@
 #include "menus/gap_16870.h"
 
 extern void fn_800AD038(u32 value);
+extern void fn_8004EEF4(s32 a, s32 b, s32 c, s32 d, s32 enabled);
 
 extern u8 lbl_2_bss_100B4;
 
@@ -586,5 +587,15 @@ void fn_2_120D0(void) {
 
 // .text:0x0001216C size:0xCC
 void fn_2_1216C(void) {
-    return;
+    s8 modes[4];
+    memset(modes, 2, sizeof(modes));
+    if (g_d_GameSettings._10 == 0) {
+        modes[lbl_8034E9A0.controllerIndices[0]] = 1;
+        if (lbl_8034E9A0.controllerIndices[0] == 0) modes[1] = 2;
+        else modes[0] = 2;
+    } else {
+        modes[lbl_8034E9A0.controllerIndices[1]] = 1;
+        modes[lbl_8034E9A0.controllerIndices[0]] = 1;
+    }
+    fn_8004EEF4(modes[0], modes[1], modes[2], modes[3], 1);
 }
