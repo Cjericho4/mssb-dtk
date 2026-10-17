@@ -1,8 +1,22 @@
 #include "challenge/rep_7920.h"
 
 // .text:0x00026B7C size:0x80
-void fn_1_26B7C(void) {
-    return;
+void fn_1_26B7C(Rep7920Anim* anim) {
+    anim->unk0 = 0.0f;
+    anim->unk4 = 1.0f;
+    anim->unk8 = 1;
+    anim->unkA = 0;
+    anim->unkC = 0;
+    anim->unkE = -1;
+    anim->unk10 = 1;
+    anim->unk14 = 0;
+    anim->flag80 = 1;
+    if (anim != NULL) {
+        anim->mode60 = 3;
+    }
+    if (anim != NULL) {
+        anim->mode18 = 3;
+    }
 }
 
 // .text:0x00026BFC size:0x30

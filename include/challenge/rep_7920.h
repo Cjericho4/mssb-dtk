@@ -16,7 +16,22 @@ typedef struct Rep7920Entry {
 } Rep7920Entry;
 extern Rep7920Entry lbl_1_common_bss_4C6F8[];
 
-void fn_1_26B7C(void);
+typedef struct Rep7920Anim {
+    /* 0x00 */ f32 unk0;
+    /* 0x04 */ f32 unk4;
+    /* 0x08 */ s16 unk8;
+    /* 0x0A */ s16 unkA;
+    /* 0x0C */ s16 unkC;
+    /* 0x0E */ s16 unkE;
+    /* 0x10 */ u8 unk10;
+    /* 0x11 */ u8 flag80 : 1;
+    /* 0x11 */ u8 mode60 : 2;
+    /* 0x11 */ u8 mode18 : 2;
+    /* 0x11 */ u8 _bits : 3;
+    /* 0x12 */ u8 _pad12[2];
+    /* 0x14 */ s32 unk14;
+} Rep7920Anim;
+void fn_1_26B7C(Rep7920Anim* anim);
 Rep7920Entry* fn_1_26BFC(Rep7920Source* src, s32 index);
 void fn_1_26C2C(void);
 
