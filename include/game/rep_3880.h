@@ -264,7 +264,7 @@ void fn_3_151BAC(Struct_14C79C_Arg* arg0, ListNode_14B9F0* node);
 void fn_3_151D6C(Struct_14C79C_Arg* arg0, ListNode_14B9F0* node);
 void fn_3_151F2C(void);
 void fn_3_1524E8(ListNode_14B9F0* node, s32 randomize);
-void fn_3_152794(void);
+void fn_3_152794(ListNode_14B9F0* node);
 void fn_3_152AB4(void);
 void fn_3_1531A4(ListNode_14B9F0* node);
 void fn_3_1534C0(ListNode_14B9F0* node);
