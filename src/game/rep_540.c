@@ -94,9 +94,70 @@ void fn_3_8CF0(void) {
     return;
 }
 
+extern const f32 lbl_3_rodata_5B0;
+
 // .text:0x0000904C size:0x214 mapped:0x806480E0
 void fn_3_904C(void) {
-    return;
+    f32 scaledX = lbl_3_rodata_5B0;
+    scaledX *= g_Ball.physicsSubstruct.velocity.x;
+    g_Ball.physicsSubstruct.velocity.x = scaledX;
+    g_Ball.physicsSubstruct.velocity.y = lbl_3_rodata_5B0 * g_Ball.physicsSubstruct.velocity.y;
+    g_Ball.physicsSubstruct.velocity.z = lbl_3_rodata_5B0 * g_Ball.physicsSubstruct.velocity.z;
+    if (g_Ball.deadBallReason == 1) {
+        g_Ball.homeRunInd = 1;
+        return;
+    }
+    if (g_Ball.AtBat_ContactResult != -1) {
+        if (g_Ball.AtBat_ContactResult == 0 || g_Ball.deadBallReason == 1 ||
+            (g_Ball.numberOfThrowsDuringPlay == 0 &&
+             g_Ball.numFieldersWhoHandledBallDuringPlay != 0 &&
+             g_Ball.framesOnGroundUntilPickedUp == 0)) {
+            if (g_Ball.deadBallReason == 0) {
+                g_Ball.deadballLastLoc.x = g_Ball.AtBat_Contact_BallPos.x;
+                g_Ball.deadballLastLoc.y = g_Ball.AtBat_Contact_BallPos.y;
+                g_Ball.deadballLastLoc.z = g_Ball.AtBat_Contact_BallPos.z;
+                g_Ball.deadBallReason = 1;
+                g_Ball.matchFramesAndBallAngle.ballOverWallFrames = 1;
+                g_Ball.AtBat_ContactResult = 1;
+                g_Ball.ballInitialHitDoneInd = 1;
+                if (g_d_GameSettings.GameModeSelected != 6) {
+                    fn_3_59918(0xF, 0);
+                }
+            }
+            g_Ball.homeRunInd = 1;
+            return;
+        }
+        if (g_Ball.deadBallReason == 0) {
+            if (g_FieldingLogic._107 != 0) {
+                if (g_Ball.deadBallReason != 4) {
+                    g_Ball.deadballLastLoc.x = g_Ball.AtBat_Contact_BallPos.x;
+                    g_Ball.deadballLastLoc.y = g_Ball.AtBat_Contact_BallPos.y;
+                    g_Ball.deadballLastLoc.z = g_Ball.AtBat_Contact_BallPos.z;
+                    g_Ball.deadBallReason = 4;
+                    if (g_RunningLogic.unk0 != 0) {
+                        fn_3_59918(0x14, 0);
+                    }
+                }
+            } else if (g_Ball.numFieldersWhoHandledBallDuringPlay != 0 &&
+                       g_Ball.numberOfThrowsDuringPlay != 0) {
+                if (g_Ball.deadBallReason != 4) {
+                    g_Ball.deadballLastLoc.x = g_Ball.AtBat_Contact_BallPos.x;
+                    g_Ball.deadballLastLoc.y = g_Ball.AtBat_Contact_BallPos.y;
+                    g_Ball.deadballLastLoc.z = g_Ball.AtBat_Contact_BallPos.z;
+                    g_Ball.deadBallReason = 4;
+                    if (g_RunningLogic.unk0 != 0) {
+                        fn_3_59918(0x14, 0);
+                    }
+                }
+            } else {
+                g_Ball.deadBallReason = 3;
+                g_Ball.deadballLastLoc.x = g_Ball.AtBat_Contact_BallPos.x;
+                g_Ball.deadballLastLoc.y = g_Ball.AtBat_Contact_BallPos.y;
+                g_Ball.deadballLastLoc.z = g_Ball.AtBat_Contact_BallPos.z;
+                fn_3_59918(7, 0);
+            }
+        }
+    }
 }
 
 // .text:0x00009260 size:0x2A8 mapped:0x806482F4
