@@ -213,19 +213,13 @@ void fn_3_111F80(void) {
 
 // .text:0x00112070 size:0x70 mapped:0x80751104
 void fn_3_112070(void) {
-    s32 temp_r3;
-    s32 temp_ret;
-    s32 q;
-    extern void fn_3_155288(s32, MiniGameStruct *, u32);
+    extern void fn_3_155288(void);
     extern void fn_3_DE4FC(void);
 
     fn_3_DE4FC();
     fn_3_5A6D4(0xE);
-    temp_ret = rand();
-    q = temp_ret / 30;
-    temp_r3 = temp_ret - q * 30;
-    g_Minigame._18A6 = temp_r3 + 0xF;
-    fn_3_155288(temp_r3, &g_Minigame, (u32)q >> 0x1F);
+    g_Minigame._18A6 = rand() % 30 + 0xF;
+    fn_3_155288();
     minigamesSetSomePointers();
     minigamesGXStuff();
     minigamesSetSomePointers2();
