@@ -81,8 +81,8 @@ void fn_2_18FBC(void) {
 }
 
 // .text:0x000190B8 size:0x24
-void fn_2_190B8(void) {
-    return;
+void fn_2_190B8(Rep0568Obj* obj) {
+    fn_800B9AA8(obj->context);
 }
 
 // .text:0x000190DC size:0x148

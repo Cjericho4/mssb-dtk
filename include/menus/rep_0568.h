@@ -3,6 +3,13 @@
 
 #include "mssbTypes.h"
 
+typedef struct Rep0568Obj {
+    u8 _pad0[0x70];
+    u32 context;
+} Rep0568Obj;
+
+void fn_800B9AA8(u32 context);
+
 void fn_2_16A98(void);
 void fn_2_16CE0(void);
 void fn_2_16D38(void);
@@ -19,7 +26,7 @@ void fn_2_18650(void);
 void fn_2_18748(void);
 void fn_2_188EC(void);
 void fn_2_18FBC(void);
-void fn_2_190B8(void);
+void fn_2_190B8(Rep0568Obj* obj);
 void fn_2_190DC(void);
 void fn_2_19224(void);
 void fn_2_1937C(void);
