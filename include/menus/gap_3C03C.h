@@ -59,7 +59,7 @@ void fn_2_409CC(void);
 void fn_2_40A9C(void);
 void fn_2_40B90(void);
 void fn_2_40CB8(void);
-void fn_2_42270(void);
+void fn_2_42270(s32 index);
 void fn_2_422FC(void);
 void fn_2_42388(void);
 void fn_2_42474(void);

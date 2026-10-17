@@ -3,6 +3,10 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusMenuBuffer {
+    u8 data[0x4000];
+} MenusMenuBuffer;
+
 typedef struct MenusPanelState {
     u8 _pad0[0x1B9E];
     s16 unk1B9E;
@@ -25,7 +29,13 @@ typedef struct Rep10C0State {
     u8 flag1972BC;
     u8 _pad1972BD[3];
     u8 flag1972C0;
-    u8 _pad1972C1[0x3DB];
+    u8 _pad1972C1[0x3C3];
+    MenusMenuBuffer* buffer; /* 0x197684 */
+    u8 _pad197688[4];
+    u32 unk19768C;
+    u32 unk197690;
+    u32 unk197694;
+    u8 _pad197698[4];
     s32 animationIndex; /* 0x19769C */
     u8 _pad1976A0[0x36];
     s16 unk1976D6;

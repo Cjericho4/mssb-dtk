@@ -1,6 +1,11 @@
 #include "menus/gap_3C03C.h"
 #include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
+#include "string.h"
+
+extern MenusMenuBuffer lbl_2_bss_15B8;
+extern MenusMenuBuffer* lbl_2_data_12CE8[];
+extern MenusMenuBuffer* lbl_2_data_12C0C[];
 
 extern u8 lbl_803CB8F0[];
 extern u32 lbl_803CBD0C;
@@ -193,8 +198,12 @@ void fn_2_40CB8(void) {
 }
 
 // .text:0x00042270 size:0x8C
-void fn_2_42270(void) {
-    return;
+void fn_2_42270(s32 index) {
+    lbl_2_bss_1A824C->unk197694 = 0;
+    lbl_2_bss_1A824C->unk19768C = 0;
+    lbl_2_bss_1A824C->unk197690 = 0;
+    memcpy(&lbl_2_bss_15B8, lbl_2_data_12CE8[index], sizeof(MenusMenuBuffer));
+    lbl_2_bss_1A824C->buffer = &lbl_2_bss_15B8;
 }
 
 // .text:0x000422FC size:0x8C
