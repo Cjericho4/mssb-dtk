@@ -108,13 +108,53 @@ void fn_2_5754C(void) {
 }
 
 // .text:0x00057724 size:0x148
-void fn_2_57724(void) {
-    return;
+void fn_2_57724(DrawingSceneStruct* scene, Rep0788Item* item) {
+    s32 result = fn_2_53BC8(item);
+    if ((s16)result != -1) item->state = result;
+    switch (item->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
+        item->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 1;
+        item->state = 0x25;
+        break;
+    case 5:
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 4;
+        item->state = 0x26;
+        break;
+    case 8: break;
+    case 0x24: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x0005786C size:0x148
-void fn_2_5786C(void) {
-    return;
+void fn_2_5786C(DrawingSceneStruct* scene, Rep0788Item* item) {
+    s32 result = fn_2_53BC8(item);
+    if ((s16)result != -1) item->state = result;
+    switch (item->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
+        item->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 1;
+        item->state = 0x25;
+        break;
+    case 5:
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 4;
+        item->state = 0x26;
+        break;
+    case 8: break;
+    case 0x24: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x000579B4 size:0x244
@@ -128,23 +168,103 @@ void fn_2_57BF8(void) {
 }
 
 // .text:0x00057F50 size:0x148
-void fn_2_57F50(void) {
-    return;
+void fn_2_57F50(DrawingSceneStruct* scene, Rep0788Item* item) {
+    s32 result = fn_2_53BC8(item);
+    if ((s16)result != -1) item->state = result;
+    switch (item->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
+        item->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 1;
+        item->state = 0x25;
+        break;
+    case 5:
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 4;
+        item->state = 0x26;
+        break;
+    case 8: break;
+    case 0x24: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x00058098 size:0x148
-void fn_2_58098(void) {
-    return;
+void fn_2_58098(DrawingSceneStruct* scene, Rep0788Item* item) {
+    s32 result = fn_2_53BC8(item);
+    if ((s16)result != -1) item->state = result;
+    switch (item->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
+        item->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 1;
+        item->state = 0x25;
+        break;
+    case 5:
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 4;
+        item->state = 0x26;
+        break;
+    case 8: break;
+    case 0x24: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x000581E0 size:0x148
-void fn_2_581E0(void) {
-    return;
+void fn_2_581E0(DrawingSceneStruct* scene, Rep0788Item* item) {
+    s32 result = fn_2_53BC8(item);
+    if ((s16)result != -1) item->state = result;
+    switch (item->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
+        item->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 1;
+        item->state = 0x25;
+        break;
+    case 5:
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 4;
+        item->state = 0x26;
+        break;
+    case 8: break;
+    case 0x24: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x00058328 size:0x148
-void fn_2_58328(void) {
-    return;
+void fn_2_58328(DrawingSceneStruct* scene, Rep0788Item* item) {
+    s32 result = fn_2_53BC8(item);
+    if ((s16)result != -1) item->state = result;
+    switch (item->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
+        item->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 1;
+        item->state = 0x25;
+        break;
+    case 5:
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 4;
+        item->state = 0x26;
+        break;
+    case 8: break;
+    case 0x24: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x00058470 size:0xA0
