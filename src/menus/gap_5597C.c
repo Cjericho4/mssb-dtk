@@ -1,4 +1,5 @@
 #include "menus/gap_5597C.h"
+#include "menus/rep_10C0.h"
 #include "menus/gap_4B1AC.h"
 #include "menus/gap_1B1BC.h"
 #include "UnknownHeaders.h"
@@ -9,8 +10,21 @@ extern void fn_80035B50(s32);
 #include "game/rep_3448.h"
 
 // .text:0x0005597C size:0xC4
-void fn_2_5597C(void) {
-    return;
+s32 fn_2_5597C(void) {
+    s32 value = lbl_2_bss_1A824C->unk1976FE + lbl_2_bss_1A824C->unk1976FA;
+    s32 result;
+    if (value < 26) result = 0;
+    else if (value < 52) result = 1;
+    else if (value < 106) result = 2;
+    else if (value < 140) result = 3;
+    else if (value < 145) result = 4;
+    else if (value < 193) result = 5;
+    else if (value < 195) result = 6;
+    else if (value < 196) result = 7;
+    else if (value < 210) result = 8;
+    else if (value < 213) result = 9;
+    else result = 10;
+    return result;
 }
 
 // .text:0x00055A40 size:0x94
