@@ -32,6 +32,8 @@ typedef struct MenusSceneTransition {
 typedef struct MenusTransitionConfig {
     u8 _pad0[0x58];
     u16 next;
+    u8 _pad5A[0x55E];
+    u16 next5B8;
 } MenusTransitionConfig;
 extern MenusSceneTransition lbl_8034E978;
 extern MenusTransitionConfig lbl_800FEF70;

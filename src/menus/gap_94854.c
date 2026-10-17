@@ -3,6 +3,7 @@
 #include "menus/gap_71EC4.h"
 
 extern void fn_80062674(s32);
+extern void fn_80053FE8(void);
 
 // .text:0x00094854 size:0x18
 void fn_2_94854(u8 value) {
@@ -94,5 +95,10 @@ void fn_2_96AD4(void) {
 
 // .text:0x00096D20 size:0x74
 void fn_2_96D20(void) {
-    return;
+    fn_800B0A5C_insertQueue(fn_80053FE8, 0x3000);
+    lbl_8034E978.state = 0x5B;
+    lbl_8034E978.previous = lbl_8034E978.current;
+    lbl_8034E978.current = lbl_800FEF70.next5B8;
+    fn_800B0A5C_insertQueue(fn_2_948B8, 0x3000);
+    fn_800B0A5C_insertQueue(fn_2_96AD4, 0x3000);
 }
