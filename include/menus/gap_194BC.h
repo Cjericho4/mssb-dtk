@@ -3,6 +3,20 @@
 
 #include "mssbTypes.h"
 #include "menus/rep_0568.h"
+#include "UnknownHeaders.h"
+
+typedef struct MenusControllerState {
+    u8 _pad0[0x1F];
+    u8 unk1F;
+} MenusControllerState;
+
+typedef struct MenusRuntimePreferences {
+    u8 _pad0[0x25];
+    u8 unk25;
+} MenusRuntimePreferences;
+
+extern MenusControllerState lbl_80366158;
+extern MenusRuntimePreferences lbl_800E8754;
 
 void fn_2_194BC(Rep0568Obj* obj);
 void fn_2_194E8(void);

@@ -1,5 +1,7 @@
 #include "menus/gap_194BC.h"
 
+extern void fn_80021204(void);
+
 // .text:0x000194BC size:0x2C
 void fn_2_194BC(Rep0568Obj* obj) {
     if (obj->context != 0) fn_800B9AA8(obj->context);
@@ -7,7 +9,8 @@ void fn_2_194BC(Rep0568Obj* obj) {
 
 // .text:0x000194E8 size:0x38
 void fn_2_194E8(void) {
-    return;
+    fn_80021204();
+    lbl_800E8754.unk25 = lbl_80366158.unk1F;
 }
 
 // .text:0x00019520 size:0x34
