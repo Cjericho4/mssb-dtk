@@ -24,7 +24,18 @@ typedef struct Gap9EA0Obj {
 void fn_1_9EA0(void);
 void fn_1_9F04(void);
 void fn_1_A024(void);
-void fn_1_A184(void);
+typedef struct Gap9EA0TextEntry {
+    /* 0x00 */ char* text;
+    /* 0x04 */ u8 _pad4[0xC];
+} Gap9EA0TextEntry;
+typedef struct Gap9EA0TextList {
+    /* 0x00 */ Gap9EA0TextEntry* entries;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ s32 start;
+    /* 0x0C */ s32 count;
+    /* 0x10 */ s32 total;
+} Gap9EA0TextList;
+void fn_1_A184(Gap9EA0TextList* list);
 void fn_1_A1F4(Gap9EA0Obj* obj, s32 arg1, s32 arg2, s32 arg3);
 char* fn_1_A210(char* path);
 void fn_1_A250(void);

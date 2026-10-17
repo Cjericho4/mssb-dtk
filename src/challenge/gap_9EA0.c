@@ -16,8 +16,26 @@ void fn_1_A024(void) {
 }
 
 // .text:0x0000A184 size:0x70
-void fn_1_A184(void) {
-    return;
+void fn_1_A184(Gap9EA0TextList* list) {
+    char* s;
+    s32 n;
+    s32 i;
+    Gap9EA0TextEntry* entry;
+
+    if (list->start + list->count < list->total) {
+        n = list->count;
+    } else if (list->total < list->count) {
+        n = list->total;
+    } else {
+        n = list->total - list->start;
+    }
+    entry = &list->entries[list->start];
+    for (i = 0; i < n; i++, entry++) {
+        if ((s = entry->text) != NULL) {
+            while (*s++ != 0) {
+            }
+        }
+    }
 }
 
 // .text:0x0000A1F4 size:0x1C
