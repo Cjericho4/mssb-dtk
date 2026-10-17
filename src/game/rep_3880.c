@@ -398,8 +398,44 @@ void fn_3_14A37C(struct Struct_800339F0_Result* obj, Vec* pos) {
 }
 
 // .text:0x0014A62C size:0x2E0 mapped:0x807896C0
-void fn_3_14A62C(void) {
-    return;
+static inline void initRadialEffects(struct Struct_800339F0_Result* obj, Vec* pos) {
+    ListNode_14B9F0* node;
+    u32 i;
+    f32 angle;
+    obj->field_0x10 = lbl_3_common_bss_32724.field6C;
+    node = obj->listHead;
+    i = 0;
+    do {
+        node->field_0x4D = lbl_3_data_26E40.unk0;
+        node->field_0x4E = 0;
+        node->field_0x4A = lbl_3_data_26E40.unk8;
+        node->field_0x48 = 0;
+        node->offset.x = pos->x;
+        node->offset.y = -pos->y;
+        node->offset.z = pos->z;
+        angle = (f32)((360 / lbl_3_data_26E40.unk4) * i);
+        angle = 0.017453292f * angle;
+        node->offset.x = radialOffset(lbl_3_data_26E40.unkC, (f32)cos(angle)) + node->offset.x;
+        node->offset.y = radialOffset(lbl_3_data_26E40.unkC, (f32)sin(angle)) + node->offset.y;
+        node->scaleX = node->scaleY = (f32)lbl_3_data_26E40.unk14 / 100000.0f;
+        node->color[0] = node->color[1] = node->color[2] = 255;
+        node->color[3] = lbl_3_data_26E40.unk24;
+        node->velocity.x = 0.0f;
+        node->velocity.y = (f32)(lbl_3_data_26E40.unk30 - rand() % lbl_3_data_26E40.unk34);
+        node->velocity.y /= 100000.0f;
+        node->velocity.y *= (f32)(-((rand() % 2) * 2) + 1);
+        node->velocity.z = (f32)(lbl_3_data_26E40.unk18 - rand() % lbl_3_data_26E40.unk1C);
+        node->velocity.z /= 100000.0f;
+        i++;
+        node = node->next;
+    } while (node != NULL);
+}
+void fn_3_14A62C(Vec* pos) {
+    struct Struct_800339F0_Result* obj;
+    obj = (struct Struct_800339F0_Result*)fn_80033A24((void (*)(void))fn_3_14A188, 0x80, 0, lbl_3_data_26E40.unk4, 1, 0x24);
+    if (obj != NULL) {
+        initRadialEffects(obj, pos);
+    }
 }
 
 // .text:0x0014A90C size:0x310 mapped:0x807899A0
