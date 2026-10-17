@@ -314,8 +314,9 @@ s32 fn_2_44F14(s32 index) {
 }
 
 // .text:0x00044F34 size:0x30
-void fn_2_44F34(void) {
-    return;
+BOOL fn_2_44F34(s32 index) {
+    Gap3C03CObj* obj = &lbl_2_bss_1A8248->gap3C03CObjects[index];
+    return obj->unk5 <= 3;
 }
 
 // .text:0x00044F64 size:0x180

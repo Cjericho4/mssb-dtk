@@ -73,7 +73,7 @@ void fn_2_44414(void);
 void fn_2_44504(void);
 void fn_2_44E2C(void);
 s32 fn_2_44F14(s32 index);
-void fn_2_44F34(void);
+BOOL fn_2_44F34(s32 index);
 void fn_2_44F64(void);
 void fn_2_450E4(void);
 void fn_2_45204(void);
