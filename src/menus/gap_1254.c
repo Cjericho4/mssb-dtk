@@ -211,8 +211,10 @@ void fn_2_6098(u8 index) {
 }
 
 // .text:0x000060D4 size:0x64
-void fn_2_60D4(void) {
-    return;
+s32 fn_2_60D4(u8 index) {
+    if (g_d_GameSettings.GameModeSelected != 5) return lbl_8034E9A0.players[index];
+    if (index != 0) return lbl_8034E9A0.players[index];
+    return lbl_8034E9A0.players[index];
 }
 
 // .text:0x00006138 size:0x68

@@ -57,7 +57,7 @@ s32 fn_2_57E8(s32 arg0, s32 arg1);
 void fn_2_57F0(void);
 void fn_2_5F80(void);
 void fn_2_6098(u8 index);
-void fn_2_60D4(void);
+s32 fn_2_60D4(u8 index);
 void fn_2_6138(void);
 void fn_2_61A0(void);
 void fn_2_6484(void);

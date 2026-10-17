@@ -4,7 +4,8 @@
 #include "mssbTypes.h"
 
 typedef struct MenusSaveState {
-    u8 _pad0[0x46E8];
+    u8 _pad0[0x46E0];
+    s32 players[2];
     u32 timeHigh;
     u32 timeLow;
     u32 alternateTimeHigh;
