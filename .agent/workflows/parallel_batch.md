@@ -21,9 +21,10 @@ Each worker needs its own build dir; never share `build/GYQE01`. Untracked input
 W=/home/plex/repos/mssb-dtk-w1   # w1..w4
 git worktree add $W main -b queue-w1        # or: git -C $W checkout -B queue-w1 main
 mkdir -p $W/build $W/orig/GYQE01
-ln -s $PWD/build/compilers $W/build/compilers; ln -s $PWD/build/tools $W/build/tools
+ln -s $PWD/build/compilers $W/build/compilers; ln -s $PWD/build/tools $W/build/tools; ln -s $PWD/build/binutils $W/build/binutils
 ln -s $PWD/orig/GYQE01/files $W/orig/GYQE01/files; ln -s $PWD/orig/GYQE01/sys $W/orig/GYQE01/sys
-ln -s $PWD/.venv $W/.venv
+ln -s $PWD/.venv $W/.venv; ln -s $PWD/tools/m2c_repo $W/tools/m2c_repo   # m2c is untracked; decomp.sh --m2c needs it
+# Build worktrees one at a time: parallel first builds race on the shared tool dirs.
 (cd $W && source .venv/bin/activate && python3 configure.py && ninja)
 ```
 The first build sometimes fails when several run at once; rerun `ninja` serially. Verify with
