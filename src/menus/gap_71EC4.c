@@ -34,8 +34,10 @@ void fn_2_72038(s32 index, s16 value) {
 }
 
 // .text:0x00072054 size:0x28
-void fn_2_72054(void) {
-    return;
+void fn_2_72054(s32 index, u8 variant) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    obj->variant = variant;
+    obj->state = 0;
 }
 
 // .text:0x0007207C size:0x518
