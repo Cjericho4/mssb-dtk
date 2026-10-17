@@ -69,6 +69,8 @@ typedef struct MenusSceneState {
     u8 unk4425;
     u8 _pad4426[9];
     u8 unk442F;
+    u8 _pad4430[0xC2];
+    u8 unk44F2;
 } MenusSceneState;
 
 extern MenusSceneState* lbl_2_bss_1A8248;

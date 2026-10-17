@@ -3,6 +3,7 @@
 #include "menus/rep_0B08.h"
 #include "menus/rep_08E8.h"
 #include "string.h"
+#include "Dolphin/GX/GXPixel.h"
 #include "menus/rep_10C0.h"
 #include "UnknownHeaders.h"
 #include "game/rep_1C0.h"
@@ -522,7 +523,12 @@ void fn_2_549B4(void) {
 
 // .text:0x00054B38 size:0x74
 void fn_2_54B38(void) {
-    return;
+    if (g_hugeAnimStruct.field269_0x307a == 2) {
+        if (lbl_2_bss_1A8248->unk44F2 != 4) fn_2_68E68();
+        fn_2_47FF8();
+        if (lbl_2_bss_1A8248->unk44F2 != 4) fn_2_47CFC();
+    }
+    GXSetZCompLoc(GX_FALSE);
 }
 
 // .text:0x00054BAC size:0x4
