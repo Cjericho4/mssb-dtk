@@ -475,7 +475,8 @@ void fn_2_54844(void) {
 
 // .text:0x00054848 size:0x2C
 void fn_2_54848(void) {
-    return;
+    lbl_2_bss_1A824C->unk197754 = 1;
+    lbl_2_bss_1A824C->unk197752 = 10;
 }
 
 // .text:0x00054874 size:0x1C
