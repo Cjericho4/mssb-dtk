@@ -10,6 +10,7 @@ typedef struct MenusInputFlags {
 } MenusInputFlags;
 extern MenusInputFlags lbl_803C66B0;
 
+
 void fn_2_71EC4(Rep0B08Obj* obj);
 void fn_2_71EFC(Rep0B08Obj* obj);
 void fn_2_71F20(Rep0B08Obj* obj);
@@ -36,7 +37,7 @@ void fn_2_7308C(void);
 void fn_2_73758(void);
 void fn_2_738C8(void);
 void fn_2_73994(void);
-void fn_2_73B54(void);
+s32 fn_2_73B54(s32 value);
 void fn_2_73B94(void);
 void fn_2_73BF0(void);
 void fn_2_73CBC(void);

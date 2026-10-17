@@ -141,8 +141,11 @@ void fn_2_73994(void) {
 }
 
 // .text:0x00073B54 size:0x40
-void fn_2_73B54(void) {
-    return;
+s32 fn_2_73B54(s32 value) {
+    extern s32 lbl_2_bss_A840;
+    if (lbl_2_bss_A840 == 0 && value == 6) return 4;
+    if (lbl_2_bss_A840 == 6 && value == 0) return 1;
+    return 1;
 }
 
 // .text:0x00073B94 size:0x5C
