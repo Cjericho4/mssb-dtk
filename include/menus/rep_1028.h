@@ -72,7 +72,7 @@ void fn_2_91450(Rep1028Obj* obj);
 void fn_2_91488(void);
 void fn_2_9150C(Rep1028Obj* obj);
 void fn_2_91518(void);
-void fn_2_916C0(void);
+void fn_2_916C0(Rep1028Obj* obj);
 void fn_2_916F8(void);
 void fn_2_9177C(Rep1028Obj* obj);
 void fn_2_91788(void);
