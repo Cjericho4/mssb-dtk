@@ -3,6 +3,12 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusPlayerInput {
+    u16 unk0;
+    u16 unk2;
+    u16 buttons;
+} MenusPlayerInput;
+
 typedef struct MenusSaveState {
     u8 _pad0[0x46E0];
     s32 players[2];
@@ -19,7 +25,8 @@ typedef struct MenusSaveState {
     u8 unk4729;
     u8 unk472A;
     u8 unk472B;
-    u8 _pad472C[0x28];
+    MenusPlayerInput input[2];
+    u8 _pad4738[0x1C];
     u8 unk4754;
     u8 unk4755;
     u8 unk4756;

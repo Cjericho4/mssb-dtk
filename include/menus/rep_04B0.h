@@ -21,7 +21,7 @@ void fn_2_150D0(u8 index);
 void fn_2_15104(void);
 void fn_2_151BC(void);
 void fn_2_1560C(void);
-void fn_2_15A90(void);
+void fn_2_15A90(s32* value, u8 index, s32 maximum);
 void fn_2_15AFC(void);
 void fn_2_15E80(void);
 void fn_2_1641C(void);

@@ -60,8 +60,15 @@ void fn_2_1560C(void) {
 }
 
 // .text:0x00015A90 size:0x6C
-void fn_2_15A90(void) {
-    return;
+void fn_2_15A90(s32* value, u8 index, s32 maximum) {
+    u16 buttons = lbl_8034E9A0.input[index].buttons;
+    if (buttons & 1) {
+        --*value;
+        if (*value < 0) *value = maximum;
+    } else if (buttons & 2) {
+        ++*value;
+        if (*value > maximum) *value = 0;
+    }
 }
 
 // .text:0x00015AFC size:0x384
