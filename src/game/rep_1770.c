@@ -50,9 +50,7 @@ void fn_3_99C88(void) {
 
     if (lbl_3_common_bss_32724.someStatusInd == 0 && lbl_3_common_bss_32724.unk_A7 != 0) {
         Struct_80371C30_Inner* obj = lbl_80371C30[scene->unkIndex].obj;
-        u32 temp = obj->field_0x58 & 0xFFFFFF00;
-        temp |= lbl_3_common_bss_32724.unk_A7;
-        obj->field_0x58 = temp;
+        obj->field_0x58 = lbl_3_common_bss_32724.unk_A7 | (obj->field_0x58 & ~0xFF);
     } else {
         fn_80034CEC((u32)scene);
         fn_800B0A14_removeQueue();
