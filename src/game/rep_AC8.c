@@ -761,7 +761,44 @@ void fn_3_2FB9C(s32 idx) {
 
 // .text:0x0002FF2C size:0x18C mapped:0x8066EFC0
 void fn_3_2FF2C(s32 idx) {
-    return;
+    u8 state;
+    Fielder* f = &g_Fielders[idx];
+
+    if (f->unk1B2 < 0x7FFE) {
+        f->unk1B2++;
+    } else {
+        f->unk1B2 = 0x7FFF;
+    }
+    state = f->unk205;
+    if (state == 5 && f->unk1B2 < lbl_3_data_49DC[6]) {
+        return;
+    }
+    if (state == 3 || state == 5) {
+        if (state == 3) {
+            f->unk150 = f->unk140 * lbl_3_data_4930[19];
+            f->unk158 = f->unk144 * lbl_3_data_4930[19];
+            f->unk154 = lbl_3_data_4930[21];
+        } else {
+            f->unk150 = f->unk140 * lbl_3_data_4930[20];
+            f->unk158 = f->unk144 * lbl_3_data_4930[20];
+            f->unk154 = lbl_3_data_4930[22];
+        }
+        f->unk205++;
+    } else {
+        f->unk150 *= lbl_3_data_4930[23];
+        f->unk158 *= lbl_3_data_4930[23];
+        f->unk154 += lbl_3_data_4930[24];
+    }
+    f->pos[0] += f->unk150;
+    f->pos[2] += f->unk158;
+    f->unk148 += f->unk154;
+    if (f->unk148 <= 0.0f) {
+        f->unk148 = 0.0f;
+        f->unk205 = 0;
+        f->unk1FC = 1;
+    }
+    f->unk30 = f->pos[0] - f->unkD4;
+    f->unk34 = f->pos[2] - f->unkD8;
 }
 
 // .text:0x000300B8 size:0x15C mapped:0x8066F14C
