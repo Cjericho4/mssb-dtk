@@ -3,6 +3,14 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusCompletionState {
+    u8 _pad0[0xC6];
+    u8 completed[5][4];
+    u8 _padDA[0x1A];
+    u8 allCompleted;
+} MenusCompletionState;
+extern MenusCompletionState* lbl_2_bss_1A8244;
+
 typedef struct MenusResourceEntry {
     u32 resource;
     s16 index;

@@ -30,7 +30,16 @@ void fn_2_4B2D0(void) {
 
 // .text:0x0004C314 size:0x58
 void fn_2_4C314(void) {
-    return;
+    MenusCompletionState* state = lbl_2_bss_1A8244;
+    s32 all = 1;
+    s32 i;
+    s32 j;
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 3; j++) {
+            if (state->completed[i][j] == 0) all = 0;
+        }
+    }
+    state->allCompleted = all;
 }
 
 // .text:0x0004C36C size:0x58
