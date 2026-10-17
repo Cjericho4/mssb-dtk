@@ -98,7 +98,8 @@ typedef struct StadiumObjEntry {
 /* AnimationStruct - 0x27C bytes, used in arrays within hugeAnimStruct.
  * Full field definitions available in in_game.h. */
 typedef struct AnimationStruct {
-    u8 _pad[0xC];
+    u8 _pad[8];
+    struct MenusAnimationAux* aux; /* 0x08 */
     struct AnimModelData* field3_0xc; /* 0x0C */
     u8 _pad10[0x24];
     VecXYZ unk34;       /* 0x34 */

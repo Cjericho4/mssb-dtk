@@ -3,6 +3,8 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusAnimationAux MenusAnimationAux;
+
 typedef struct Rep0568Obj {
     u8 _pad0[0x70];
     u32 context;

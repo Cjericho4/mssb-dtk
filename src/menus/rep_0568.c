@@ -1,5 +1,6 @@
 #include "menus/rep_0568.h"
 #include "UnknownHeaders.h"
+#include "string.h"
 
 // .text:0x00016A98 size:0x248
 void fn_2_16A98(void) {
@@ -18,7 +19,10 @@ void fn_2_16CE0(void) {
 
 // .text:0x00016D38 size:0x70
 void fn_2_16D38(void) {
-    return;
+    s32 i;
+    for (i = 0; i < lbl_2_bss_100B8.count; i++) {
+        memset(g_hugeAnimStruct.fielderStructs[i].aux, 0, 0x5C);
+    }
 }
 
 // .text:0x00016DA8 size:0x164
