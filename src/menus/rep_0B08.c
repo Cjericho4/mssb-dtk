@@ -1,5 +1,6 @@
 #include "menus/rep_0B08.h"
 #include "string.h"
+#include "math.h"
 #include "Dolphin/GX/GXTypes.h"
 
 extern GXColor lbl_800F7478[];
@@ -422,8 +423,10 @@ void fn_2_6BF88(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006BFC0 size:0x60
-void fn_2_6BFC0(void) {
-    return;
+void fn_2_6BFC0(Rep0B08Obj* obj) {
+    if ((f32)fabs(PSVECDistance(&lbl_2_bss_1A8248->rep0B08Objects[0].position, &obj->position)) > 1.6f) {
+        obj->state = 1;
+    }
 }
 
 // .text:0x0006C020 size:0x100
