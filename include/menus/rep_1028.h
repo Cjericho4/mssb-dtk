@@ -54,7 +54,7 @@ void fn_2_909F4(Rep1028Obj* obj);
 void fn_2_90A2C(void);
 void fn_2_90AB0(Rep1028Obj* obj);
 void fn_2_90ABC(void);
-void fn_2_90BD0(void);
+void fn_2_90BD0(Rep1028Obj* obj);
 void fn_2_90C08(Rep1028Obj* obj);
 void fn_2_90C14(void);
 void fn_2_90C4C(void);
