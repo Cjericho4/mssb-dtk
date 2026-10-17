@@ -151,8 +151,23 @@ f32 fn_2_68940(s32 firstIndex, s32 secondIndex) {
 }
 
 // .text:0x000689CC size:0xBC
-void fn_2_689CC(void) {
-    return;
+s16 fn_2_689CC(s32 index) {
+    Vec position;
+    Vec target;
+    f32 best = 10000.0f;
+    s32 i;
+    s32 closest = 0;
+    memcpy(&position, &lbl_2_bss_1A8248->rep0B08Objects[index].position, sizeof(Vec));
+    for (i = 0; i < 51; i++) {
+        f32 distance;
+        memcpy(&target, &lbl_2_data_2EA4[i], sizeof(Vec));
+        distance = PSVECDistance(&position, &target);
+        if (distance < best) {
+            best = distance;
+            closest = i;
+        }
+    }
+    return closest;
 }
 
 // .text:0x00068A88 size:0xCC
