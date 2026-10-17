@@ -6,7 +6,7 @@ void fn_1_5EC(void) {
 }
 
 // .text:0x00000AF4 size:0x438
-void fn_1_AF4(void) {
+void fn_1_AF4(s32 arg0, s32 arg1, f32 arg2) {
     return;
 }
 

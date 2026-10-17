@@ -26,7 +26,7 @@ void fn_1_28C34(void) {
 }
 
 // .text:0x00028CE8 size:0x374
-void fn_1_28CE8(void) {
+void fn_1_28CE8(DrawingSceneStruct* scene) {
     return;
 }
 
@@ -41,8 +41,13 @@ void fn_1_2935C(void) {
 }
 
 // .text:0x00029414 size:0x78
-void fn_1_29414(void) {
-    return;
+void fn_1_29414(DrawingSceneStruct* scene) {
+    if (scene->flag14 != 0) {
+        fn_80048BEC(&lbl_1_bss_471BC, 0, 0);
+    }
+    fn_1_272DC(&lbl_1_bss_471D8.camera, 0);
+    fn_1_AF4(10, 10, 1.0f);
+    fn_1_28CE8(scene);
 }
 
 // .text:0x0002948C size:0x15C
