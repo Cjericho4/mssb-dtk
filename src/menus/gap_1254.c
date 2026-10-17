@@ -2,6 +2,8 @@
 #include "menus/rep_0438.h"
 #include "game/rep_3448.h"
 #include "menus/gap_D08.h"
+#include "menus/gap_71EC4.h"
+#include "string.h"
 
 extern u8 lbl_2_bss_100B4;
 
@@ -101,7 +103,12 @@ void fn_2_1A88(void) {
 
 // .text:0x00001BAC size:0x88
 void fn_2_1BAC(void) {
-    return;
+    memset(lbl_803C66B0.resetData, 0, sizeof(lbl_803C66B0.resetData));
+    lbl_803C66B0.unk56 = 0;
+    lbl_803C66B0.unk55 = 0;
+    memset(&lbl_803C5EA4, 0, sizeof(MenusSceneFlags));
+    memset(lbl_8034E9A0.resetData, 0, sizeof(lbl_8034E9A0.resetData));
+    memset(&lbl_8034E978, 0, sizeof(MenusSceneTransition));
 }
 
 // .text:0x00001C34 size:0xF4

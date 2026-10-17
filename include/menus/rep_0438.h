@@ -32,7 +32,9 @@ typedef struct MenusSaveState {
     u8 unk4754;
     u8 unk4755;
     u8 unk4756;
-    u8 _pad4757[0x158];
+    u8 _pad4757[0x144];
+    u8 resetData[0x12]; /* 0x489B */
+    u8 _pad48AD[2];
     u8 unk48AF;
     u8 _pad48B0[3];
     u8 unk48B3;

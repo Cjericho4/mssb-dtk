@@ -5,12 +5,21 @@
 #include "menus/rep_0B08.h"
 
 typedef struct MenusInputFlags {
-    u8 _pad0[7];
-    u8 state;
-    u8 _pad8[5];
-    u8 flags[4];
-    u8 _pad11[0x3E];
-    u8 state4F;
+    u8 unk0;
+    union {
+        struct {
+            u8 _pad1[6];
+            u8 state;
+            u8 _pad8[5];
+            u8 flags[4];
+            u8 _pad11[0x3E];
+            u8 state4F;
+            u8 _pad50[5];
+        };
+        u8 resetData[0x54];
+    };
+    u8 unk55;
+    u8 unk56;
 } MenusInputFlags;
 extern MenusInputFlags lbl_803C66B0;
 
@@ -21,6 +30,7 @@ typedef struct MenusSceneFlags {
     u8 _pad0[0x37];
     u8 unk37;
     u8 unk38;
+    u8 _pad39;
 } MenusSceneFlags;
 extern MenusSceneFlags lbl_803C5EA4;
 
@@ -29,6 +39,7 @@ typedef struct MenusSceneTransition {
     u8 _pad1[7];
     u8 current;
     u8 previous;
+    u8 _padA[0x1E];
 } MenusSceneTransition;
 
 typedef struct MenusTransitionConfig {
