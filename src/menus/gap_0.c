@@ -69,8 +69,10 @@ void fn_2_4C4(void) {
 }
 
 // .text:0x00000510 size:0x44
-void fn_2_510(void) {
-    return;
+u8 fn_2_510(MenusCommandQueue* queue) {
+    if (queue->readIndex == queue->writeIndex) return 0;
+    queue->readIndex = (queue->readIndex + 1) % 32;
+    return queue->commands[queue->readIndex];
 }
 
 // .text:0x00000554 size:0x110

@@ -3,6 +3,13 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusCommandQueue {
+    u8 _pad0[0x15];
+    u8 writeIndex;
+    u8 readIndex;
+    u8 commands[0x20];
+} MenusCommandQueue;
+
 void fn_2_0(void);
 void fn_2_3C(void);
 void _epilog(void);
@@ -15,7 +22,7 @@ void fn_2_2DC(void);
 void fn_2_328(void);
 void fn_2_374(void);
 void fn_2_4C4(void);
-void fn_2_510(void);
+u8 fn_2_510(MenusCommandQueue* queue);
 void fn_2_554(void);
 void fn_2_664(void);
 void fn_2_708(void);
