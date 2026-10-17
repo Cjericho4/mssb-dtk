@@ -12,9 +12,19 @@ typedef struct Rep0B08Obj {
     /* 0x94 */ s16 state;
     /* 0x96 */ u8 _pad96[0xC];
     /* 0xA2 */ s16 countdown;
-    u8 _padA4[0x1F];
+    u8 _padA4[0x10];
+    s16 unkB4;
+    u8 _padB6[0xA];
+    u8 unkC0;
+    u8 _padC1[2];
     u8 variant; /* 0xC3 */
-    u8 _padC4[0xC];
+    u8 unkC4;
+    u8 _padC5[5];
+    u8 unkCA;
+    u8 _padCB[2];
+    u8 unkCD;
+    u8 unkCE;
+    u8 unkCF;
     u8 unkD0;
     u8 _padD1[3];
     void (*callback)(struct Rep0B08Obj*); /* 0xD4 */
@@ -34,7 +44,7 @@ extern MenusSceneState* lbl_2_bss_1A8248;
 void fn_2_6832C(void);
 void fn_2_683EC(void);
 void fn_2_684D0(void);
-void fn_2_68638(void);
+void fn_2_68638(s32 index, u8 value);
 void fn_2_68654(void);
 void fn_2_68670(void);
 void fn_2_68690(void);

@@ -55,8 +55,9 @@ void fn_2_684D0(void) {
 }
 
 // .text:0x00068638 size:0x1C
-void fn_2_68638(void) {
-    return;
+void fn_2_68638(s32 index, u8 value) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    obj->unkCE = value;
 }
 
 // .text:0x00068654 size:0x1C
