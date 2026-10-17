@@ -4088,8 +4088,62 @@ void fn_3_555AC(s32 idx) {
 }
 
 // .text:0x00055710 size:0x208 mapped:0x806947A4
-void fn_3_55710(void) {
-    return;
+void fn_3_55710(s32 idx) {
+    Fielder* f;
+    s32 i;
+    InMemRunnerType* r;
+    s32 base;
+
+    f = &g_Fielders[idx];
+    base = f->unk1F5;
+    if (g_FieldingLogic.unk116 != 0) {
+        if (g_Runners[g_FieldingLogic.unk11B].baseStandingOn >= 0 ||
+            g_Runners[g_FieldingLogic.unk11B].runnerOnFieldOrOutOrScored == 2) {
+            g_FieldingLogic.unk116 = 0;
+            g_FieldingLogic.unkEC = 0;
+        }
+        return;
+    }
+    if (g_FieldingLogic.unk125 >= 0) {
+        base = g_FieldingLogic.unk125;
+    }
+    if (base < 0) {
+        return;
+    }
+    for (i = 3, r = &g_Runners[3]; i >= 0; r--, i--) {
+        if (r->runnerOnFieldOrOutOrScored == 1 && r->forceOutCd <= 0 &&
+            r->baseRunningTowards == base && r->tagUpInd == 0 && r->baseStandingOn < 0 &&
+            r->actionCode != 0) {
+            if (r->actionCode == 2) {
+                f->unk211 = 2;
+                f->unk212 = 0;
+                g_FieldingLogic.unk116 = 2;
+                g_FieldingLogic.unkEC = 6;
+                g_FieldingLogic.unk111 = 7;
+                g_FieldingLogic.unk13F = 2;
+                f->unk213 = i;
+                if (g_GameLogic._13E[g_GameLogic.teamFielding] == 0) {
+                    fn_3_6C854(g_GameLogic.teamFielding, 2);
+                }
+            } else if (r->actionCode == 3) {
+                f->unk211 = 1;
+                f->unk212 = 0;
+                g_FieldingLogic.unk116 = 1;
+                g_FieldingLogic.unkEC = r->actionFrames_countDown;
+                g_FieldingLogic.unk111 = 6;
+                g_FieldingLogic.unk13F = 1;
+                f->unk213 = i;
+            } else if (r->actionFrames_countDown < 6) {
+                g_FieldingLogic.unk116 = 2;
+                g_FieldingLogic.unkEC = 6;
+            } else {
+                g_FieldingLogic.unk116 = 1;
+                g_FieldingLogic.unkEC = r->actionFrames_countDown;
+            }
+            g_FieldingLogic.unk11B = i;
+            return;
+        }
+    }
 }
 
 // .text:0x00055918 size:0x3AC mapped:0x806949AC
