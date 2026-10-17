@@ -1135,6 +1135,7 @@ typedef struct CommonBss_32724 {
     /* 0xD9 */ u8 unkD9;
     /* 0xDA */ u8 unkDA;
     /* 0xDB */ u8 _padDB;
+    /* 0xDC */ u8 unkDC;
 } CommonBss_32724;
 
 extern CommonBss_32724 lbl_3_common_bss_32724;
