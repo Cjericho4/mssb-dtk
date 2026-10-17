@@ -1,5 +1,6 @@
 #include "menus/gap_71EC4.h"
 #include "UnknownHeaders.h"
+#include "menus/gap_1254.h"
 
 // .text:0x00071EC4 size:0x38
 void fn_2_71EC4(void) {
@@ -222,8 +223,8 @@ void fn_2_76098(void) {
 }
 
 // .text:0x0007609C size:0x30
-void fn_2_7609C(void) {
-    return;
+void fn_2_7609C(s32 unused, u8 mode, u8 flag) {
+    if (flag == 0) fn_2_8794(mode, 0);
 }
 
 // .text:0x000760CC size:0x240

@@ -47,7 +47,7 @@ void fn_2_74F40(void);
 void fn_2_75B58(void);
 void fn_2_75BE4(void);
 void fn_2_76098(void);
-void fn_2_7609C(void);
+void fn_2_7609C(s32 unused, u8 mode, u8 flag);
 void fn_2_760CC(void);
 void fn_2_7630C(void);
 void fn_2_7664C(void);
