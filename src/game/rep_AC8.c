@@ -5,6 +5,7 @@
 #include "game/rep_1188.h"
 #include "game/rep_1838.h"
 #include "game/rep_18E8.h"
+#include "game/gap_AC9F8.h"
 
 static inline void setFielderReadyAction(s32 idx, s32 action) {
     Fielder* f = &g_Fielders[idx];
@@ -628,7 +629,88 @@ void fn_3_30A58(void) {
 
 // .text:0x00030D74 size:0x63C mapped:0x8066FE08
 void fn_3_30D74(void) {
-    return;
+    s32 i;
+    Fielder* f;
+    Fielder* g;
+    s32 j;
+    f32 z;
+    f32 x;
+    s32 moving;
+    s16 t;
+
+    if (lbl_3_common_bss_34C90.field_0x1D5 != 0) {
+        return;
+    }
+    g = &g_Fielders[2];
+    for (i = 2, f = g; i < 9; i++, f++) {
+        fn_3_58F58(i, &x, &z);
+        if (dolsqrtf2((f->pos[0] - x) * (f->pos[0] - x) + (f->pos[2] - z) * (f->pos[2] - z)) < 0.1f) {
+            x = f->pos[0];
+            z = f->pos[2];
+        }
+        aimFielderAt(f, x, z);
+    }
+    for (j = 2; j < 9; j++, g++) {
+        moving = 0;
+        if (g->unk68 > 0.2f) {
+            moving = 1;
+        } else if (g->unk50 >= 0.1f && g->unk68 > 0.05f) {
+            moving = 1;
+        }
+        if (moving) {
+            t = g_Pitcher.pitchTotalTimeCounter;
+            if (t <= 0) {
+                g->unk50 = 0.1f;
+            } else if (g_Batter.buntStatus >= 1 && g_Batter.buntStatus <= 3 && (j == 2 || j == 4)) {
+                g->unk50 += g->unk5C;
+                if (g->unk50 > g->unk58) {
+                    g->unk50 = g->unk58;
+                }
+            } else if (((j == 3 && g_Batter.batterHand == 0) || (j == 5 && g_Batter.batterHand != 0)) &&
+                       g_Runners[1].runnerOnFieldOrOutOrScored != 0 && g_Runners[1].furthestBaseForcedToGoToOnWalk != 0) {
+                g->unk50 += g->unk5C;
+                if (g->unk50 > g->unk58) {
+                    g->unk50 = g->unk58;
+                }
+            } else if (t < 60) {
+                g->unk17E = 60 - t;
+                g->unk50 = g->unk68 / g->unk17E;
+            } else {
+                g->unk17E = 0;
+                g->unk50 = 0.0f;
+            }
+            g->unk68 -= g->unk50;
+            if (g->unk50 <= 0.0f) {
+                g->unk50 = 0.0f;
+                g->unk17E = -1;
+            } else if (g->unk68 < 0.0f) {
+                g->unk30 = g->prevPos[0] - g->pos[0];
+                g->unk34 = g->prevPos[2] - g->pos[2];
+                g->pos[0] = g->prevPos[0];
+                g->pos[2] = g->prevPos[2];
+                g->unk68 = 0.0f;
+                g->unk17E = 0;
+            } else {
+                g->unk30 = g->unk50 * (f32)cos(g->unk64);
+                g->unk34 = g->unk50 * (f32)sin(g->unk64);
+                g->pos[0] += g->unk30;
+                g->pos[2] += g->unk34;
+                g->unk17E = g->unk68 / g->unk50;
+            }
+            g->unk1E3 = 0;
+        } else {
+            g->unk30 = g->prevPos[0] - g->pos[0];
+            g->unk34 = g->prevPos[2] - g->pos[2];
+            g->pos[0] = g->prevPos[0];
+            g->pos[2] = g->prevPos[2];
+            g->unk68 = 0.0f;
+            g->unk50 = 0.0f;
+            g->unk1E3 = 1;
+            g->unk17E = -1;
+        }
+    }
+    g_Fielders[0].pos[0] = g_Pitcher.pitcher.x;
+    g_Fielders[0].pos[2] = g_Pitcher.pitcher.z;
 }
 
 // .text:0x000313B0 size:0x1E4 mapped:0x80670444
