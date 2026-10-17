@@ -8,7 +8,7 @@ void fn_2_71EC4(Rep0B08Obj* obj);
 void fn_2_71EFC(void);
 void fn_2_71F20(Rep0B08Obj* obj);
 void fn_2_71F60(void);
-void fn_2_72038(void);
+void fn_2_72038(s32 index, s16 value);
 void fn_2_72054(void);
 void fn_2_7207C(void);
 void fn_2_72594(void);

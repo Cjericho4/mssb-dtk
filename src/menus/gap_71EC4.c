@@ -27,8 +27,9 @@ void fn_2_71F60(void) {
 }
 
 // .text:0x00072038 size:0x1C
-void fn_2_72038(void) {
-    return;
+void fn_2_72038(s32 index, s16 value) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    obj->unkB4 = value;
 }
 
 // .text:0x00072054 size:0x28
