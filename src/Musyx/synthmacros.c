@@ -1520,6 +1520,7 @@ static void macHandleActive(SYNTH_VOICE* svoice) {
 void macHandle(u32 deltaTime) {
   SYNTH_VOICE* sv;     // r31
   SYNTH_VOICE* nextSv; // r30
+  SYNTH_VOICE* next;   // r30
   u64 w;               // r28
 
   for (sv = macTimeQueueRoot; sv != NULL && sv->wait <= macRealTime;) {
@@ -1531,7 +1532,8 @@ void macHandle(u32 deltaTime) {
   }
 
   sv = macActiveMacroRoot;
-  for (; sv != NULL; sv = sv->nextMacActive) {
+  for (; sv != NULL; sv = next) {
+    next = sv->nextMacActive;
     if (HasHWEventTrap(sv) != 0) {
       CheckHWEventTrap(sv);
     }
