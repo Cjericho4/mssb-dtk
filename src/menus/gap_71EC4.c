@@ -3,6 +3,7 @@ extern void (*lbl_2_data_2A2EC[])(Rep0B08Obj*);
 
 extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "UnknownHeaders.h"
+#include "menus/gap_D08.h"
 
 extern void fn_800625A4(s32, s32);
 extern void fn_800626EC(s32);
@@ -577,7 +578,10 @@ void fn_2_82DE8(void) {
 
 // .text:0x00082E58 size:0x68
 void fn_2_82E58(void) {
-    return;
+    if (lbl_803CBBCC->previousSelection != 11 && g_d_GameSettings.GameModeSelected != 5) {
+        fn_800B0A5C_insertQueue(fn_2_82DE8, 0x3000);
+    }
+    fn_800B0A5C_insertQueue(fn_2_8279C, 0x3000);
 }
 
 // .text:0x00082EC0 size:0x630
