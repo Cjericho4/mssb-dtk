@@ -1,4 +1,5 @@
 #include "menus/gap_4B1AC.h"
+#include "menus/rep_10C0.h"
 
 extern s16 lbl_2_data_3ED4[];
 extern s16 lbl_2_data_3EC8[];
@@ -465,7 +466,7 @@ void fn_2_54848(void) {
 
 // .text:0x00054874 size:0x1C
 void fn_2_54874(void) {
-    return;
+    lbl_2_bss_1A824C->unk197754 = 0;
 }
 
 // .text:0x00054890 size:0x124
