@@ -3,6 +3,7 @@
 #include "game/gap_AC9F8.h"
 #include "game/rep_16B8.h"
 #include "game/rep_540.h"
+#include "game/gap_5985C.h"
 
 // .text:0x00157DB8 size:0x70 mapped:0x80796E4C
 void fn_3_157DB8(s32 arg0) {
@@ -357,7 +358,50 @@ void fn_3_15AE34(void) {
 
 // .text:0x0015AF78 size:0x160 mapped:0x8079A00C
 void fn_3_15AF78(void) {
-    return;
+    g_GameLogic.hudElementLoadingInd = 0;
+    g_GameLogic.hudLoadingRelated = 0;
+    if (g_Ball.totalFramesAtPlay < 0x7FFE) {
+        g_Ball.totalFramesAtPlay++;
+    } else {
+        g_Ball.totalFramesAtPlay = 0x7FFF;
+    }
+    if (g_Practice.frames_sinceMovedToFromMenu < 0xFFFE) {
+        g_Practice.frames_sinceMovedToFromMenu++;
+    } else {
+        g_Practice.frames_sinceMovedToFromMenu = 0xFFFF;
+    }
+    switch (g_GameLogic.gameStatus) {
+    case 0:
+        fn_3_5F154();
+        break;
+    case 1:
+        fn_3_5EFEC();
+        break;
+    case 2:
+        fn_3_5EDD8();
+        break;
+    case 7:
+        fn_3_5F3FC();
+        if (g_GameLogic.FrameCountOfCurrentPitch == 1) {
+            fn_3_15AE34();
+        }
+        break;
+    case 8:
+        fn_3_6B870();
+        g_GameLogic._135 = 0;
+        g_GameLogic._136 = 0;
+        if (g_GameLogic.secondaryGameMode == 0xF && g_Strikes.outs >= 3) {
+            g_Strikes.outs = 0;
+        }
+        fn_3_5A6D4(7);
+        break;
+    case 10:
+        fn_3_5CD24();
+        break;
+    }
+    if (g_Practice.practiceLevel != 7 && g_Practice.practiceLevel != 6) {
+        g_Strikes.outs = 0;
+    }
 }
 
 // .text:0x0015B0D8 size:0x12C mapped:0x8079A16C
