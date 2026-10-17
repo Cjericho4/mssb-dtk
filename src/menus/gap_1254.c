@@ -266,8 +266,9 @@ void fn_2_8780(void) {
 }
 
 // .text:0x00008794 size:0x14
-void fn_2_8794(void) {
-    return;
+s32 fn_2_8794(s32 mode, s32 index) {
+    if (mode != 0) index += 10;
+    return index;
 }
 
 // .text:0x000087A8 size:0x194
