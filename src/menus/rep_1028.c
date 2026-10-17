@@ -362,7 +362,29 @@ void fn_2_90428(s32 index) {
 
 // .text:0x000904A8 size:0x90
 void fn_2_904A8(void) {
-    return;
+    Rep1028Obj* obj;
+    s32 i;
+    for (i = 0; i < 29; i++) {
+        obj = &lbl_2_bss_1A8248->rep1028Objects[i];
+        obj->index = i;
+        obj->unk7C = i;
+        obj->unk84 = 0.0f;
+        obj->unk38 = 0.0f;
+        obj->unk3C = 0.0f;
+        obj->unkAA = 0;
+        obj->unk92 = i;
+        obj->unk94 = -1;
+        obj->unkA8 = 0;
+        obj->variant = 0;
+        obj->state = 0;
+        obj->unkAE = -1;
+        obj->unkAC = 0;
+        obj->unkAD = 0;
+        obj->unk80 = 0.0f;
+        obj->unkA6 = 0;
+        obj->unkB2 = 0xFF;
+        obj->unkB4 = 0;
+    }
 }
 
 // .text:0x00090538 size:0xE4
