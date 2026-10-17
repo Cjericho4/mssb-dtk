@@ -3142,10 +3142,7 @@ void fn_3_4D20C(s32 fielderIdx) {
     if (fielderIdx == 1 && g_FieldingLogic.unk118 != 0) {
         return;
     }
-    if (frames < f->unk1D2 - 15 && fielderIdx != 0) {
-        return;
-    }
-    if (frames < f->unk1D2 && fielderIdx == 0) {
+    if ((frames < f->unk1D2 - 15 && fielderIdx != 0) || (frames < f->unk1D2 && fielderIdx == 0)) {
         return;
     }
     if (fn_3_53130(fielderIdx) != 0) {
