@@ -42,7 +42,7 @@ void fn_2_25050(void);
 void fn_2_25200(void);
 void fn_2_253B0(void);
 void fn_2_25524(void);
-void fn_2_2577C(void);
+void fn_2_2577C(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_25850(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_2587C(void);
 void fn_2_25A1C(DrawingSceneStruct* scene, Rep0788Item* item);

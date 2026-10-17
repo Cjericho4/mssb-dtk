@@ -148,8 +148,18 @@ void fn_2_58328(void) {
 }
 
 // .text:0x00058470 size:0xA0
-void fn_2_58470(void) {
-    return;
+void fn_2_58470(s32 unused, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0: slot->state = 0x26; break;
+    case 1: break;
+    case 2: slot->state = 0x25; break;
+    case 5: break;
+    case 8: break;
+    case 0x24: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x00058510 size:0x2C

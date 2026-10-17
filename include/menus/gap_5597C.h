@@ -27,7 +27,7 @@ void fn_2_57F50(void);
 void fn_2_58098(void);
 void fn_2_581E0(void);
 void fn_2_58328(void);
-void fn_2_58470(void);
+void fn_2_58470(s32 unused, MenusResourceSlot* slot);
 void fn_2_58510(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_5853C(void);
 void fn_2_587F8(void);
