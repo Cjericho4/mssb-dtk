@@ -130,7 +130,7 @@ void fn_2_6FB0C(void);
 void fn_2_6FE34(Rep0B08Obj* obj);
 void fn_2_6FE6C(void);
 void fn_2_70110(void);
-void fn_2_7045C(void);
+void fn_2_7045C(Rep0B08Obj* obj);
 void fn_2_70494(Rep0B08Obj* obj);
 void fn_2_704A0(Rep0B08Obj* obj);
 void fn_2_704AC(void);
