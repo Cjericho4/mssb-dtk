@@ -52,7 +52,7 @@ void fn_2_8F838(s32 index, s16 id);
 void fn_2_8F8C0(s32 index, s16 id);
 void fn_2_8F948(s32 index, s16 id);
 void fn_2_8F9D0(s32 index, s16 id);
-void fn_2_8FA58(void);
+void fn_2_8FA58(s32 index, s16 id);
 void fn_2_8FAE0(void);
 void fn_2_8FB68(void);
 void fn_2_8FBF8(void);
