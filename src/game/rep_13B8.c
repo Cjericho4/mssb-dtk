@@ -848,8 +848,44 @@ void fn_3_8781C(void) {
 
 // .text:0x00087AE8 size:0x1E0 mapped:0x806C6B7C
 void fn_3_87AE8(void) {
-    return;
+    InMemRunnerType* runner = g_Runners;
+    s16 frames;
+    runner->batterStayInBattersBoxReason = 0;
+    if (g_GameLogic.secondaryGameMode != 6) {
+        if (g_Minigame.GameMode_MiniGame == 3) {
+            runner->batterStayInBattersBoxReason = 1;
+        } else {
+            frames = g_Ball.framesSinceHit;
+            if (frames < 0) {
+                runner->batterStayInBattersBoxReason = 1;
+            } else if (g_FieldingLogic._107 == 1 || g_FieldingLogic._107 == 2 || g_FieldingLogic._107 == 3) {
+                if (g_Strikes.outs < 3) runner->batterStayInBattersBoxReason = 1;
+            } else if (runner->outType == 0 || runner->runnerOnFieldOrOutOrScored != 2) {
+                if (frames < runner->delayBeforeStartingToRun) {
+                    runner->batterStayInBattersBoxReason = 2;
+                } else if (g_Batter.hitTrajectory == 4 && frames < 90) {
+                    runner->batterStayInBattersBoxReason = 2;
+                } else if (g_Batter.hitTrajectory == 3 || g_Batter.hitTrajectory == 6) {
+                    runner->batterStayInBattersBoxReason = 3;
+                }
+            }
+        }
+    }
+    g_Runners->velocity.x = g_Runners->position.x - g_Runners->positionStored.x;
+    g_Runners->velocity.y = g_Runners->position.y - g_Runners->positionStored.y;
+    g_Runners->velocity.z = g_Runners->position.z - g_Runners->positionStored.z;
+    g_Runners[1].velocity.x = g_Runners[1].position.x - g_Runners[1].positionStored.x;
+    g_Runners[1].velocity.y = g_Runners[1].position.y - g_Runners[1].positionStored.y;
+    g_Runners[1].velocity.z = g_Runners[1].position.z - g_Runners[1].positionStored.z;
+    g_Runners[2].velocity.x = g_Runners[2].position.x - g_Runners[2].positionStored.x;
+    g_Runners[2].velocity.y = g_Runners[2].position.y - g_Runners[2].positionStored.y;
+    g_Runners[2].velocity.z = g_Runners[2].position.z - g_Runners[2].positionStored.z;
+    g_Runners[3].velocity.x = g_Runners[3].position.x - g_Runners[3].positionStored.x;
+    g_Runners[3].velocity.y = g_Runners[3].position.y - g_Runners[3].positionStored.y;
+    g_Runners[3].velocity.z = g_Runners[3].position.z - g_Runners[3].positionStored.z;
 }
+
+
 
 // .text:0x00087CC8 size:0x1B8 mapped:0x806C6D5C
 void fn_3_87CC8(void) {
