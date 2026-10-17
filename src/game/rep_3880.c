@@ -1618,8 +1618,22 @@ void fn_3_1578F8(void) {
 }
 
 // .text:0x0015791C size:0x1A8 mapped:0x807969B0
-void fn_3_15791C(void) {
-    return;
+f32 fn_3_15791C(s32 arg) {
+    s32 cycles = (arg + 48) / 120;
+    s32 frame = (arg + 48) % 120;
+    f32 value;
+    f32 half = 0.5f;
+    if (frame >= 48) {
+        value = (f32)cos(3.1415927f * (1.0f + ((f32)frame - 48.0f) / 72.0f));
+    } else {
+        value = (f32)cos(3.1415927f * ((f32)frame / 48.0f));
+    }
+    value = value * half;
+    value += half;
+    if (cycles != 0 && g_GameLogic.gameStatus != 14 && g_GameLogic.gameStatus != 34 && g_GameLogic.gameStatus != 36 && g_GameLogic.gameStatus != 38) {
+        value += (half * ((f32)arg - 72.0f)) / 120.0f;
+    }
+    return 4.0f * value;
 }
 
 // .text:0x00157AC4 size:0x2F4 mapped:0x80796B58
