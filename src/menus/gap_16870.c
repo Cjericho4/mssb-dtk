@@ -11,8 +11,8 @@ u8 fn_2_16A34(s32 index) {
 }
 
 // .text:0x00016A48 size:0x14
-void fn_2_16A48(void) {
-    return;
+void fn_2_16A48(s32 index, u8 value) {
+    lbl_2_bss_100B8.values[index] = value;
 }
 
 // .text:0x00016A5C size:0x18
