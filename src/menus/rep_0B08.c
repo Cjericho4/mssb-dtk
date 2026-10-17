@@ -230,8 +230,15 @@ void fn_2_6A450(void) {
 }
 
 // .text:0x0006A5A8 size:0x80
-void fn_2_6A5A8(void) {
-    return;
+void fn_2_6A5A8(s32 index) {
+    lbl_2_bss_1A8248->rep0B08Objects[index].previousPosition.x = lbl_2_bss_1A8248->rep0B08Objects[index].position.x;
+    lbl_2_bss_1A8248->rep0B08Objects[index].previousPosition.y = lbl_2_bss_1A8248->rep0B08Objects[index].position.y;
+    lbl_2_bss_1A8248->rep0B08Objects[index].previousPosition.z = lbl_2_bss_1A8248->rep0B08Objects[index].position.z;
+    lbl_2_bss_1A8248->rep0B08Objects[index].velocity.x = 0.0f;
+    lbl_2_bss_1A8248->rep0B08Objects[index].velocity.y = 0.0f;
+    lbl_2_bss_1A8248->rep0B08Objects[index].velocity.z = 0.0f;
+    lbl_2_bss_1A8248->rep0B08Objects[index].unk38 = 0.0f;
+    lbl_2_bss_1A8248->rep0B08Objects[index].unk50 = 0.0f;
 }
 
 // .text:0x0006A628 size:0xE0

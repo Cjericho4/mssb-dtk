@@ -8,7 +8,9 @@
 
 typedef struct Rep0B08Obj {
     /* 0x00 */ Vec position;
-    u8 _padC[0x2C];
+    Vec previousPosition; /* 0x0C */
+    Vec velocity; /* 0x18 */
+    u8 _pad24[0x14];
     f32 unk38;
     f32 unk3C;
     u8 _pad40[0x10];
@@ -108,7 +110,7 @@ void fn_2_698EC(void);
 void fn_2_699D4(void);
 void fn_2_69E1C(s32 index);
 void fn_2_6A450(void);
-void fn_2_6A5A8(void);
+void fn_2_6A5A8(s32 index);
 void fn_2_6A628(void);
 void fn_2_6A708(void);
 void fn_2_6A87C(void);
