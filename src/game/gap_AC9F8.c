@@ -636,7 +636,49 @@ void fn_3_B11D0(void) {
 
 // .text:0x000B12F8 size:0x178 mapped:0x806F038C
 void fn_3_B12F8(void) {
-    return;
+    fn_3_F578();
+    fn_3_753E8(0);
+    setBatterContactConstants();
+    fn_3_8A1D8();
+    fn_3_58E50();
+    fn_3_1E154();
+    fn_3_59A90();
+    fn_3_6C108();
+    g_Strikes.strikes = 0;
+    g_Strikes.balls = 0;
+    g_GameLogic._125 = 1;
+    g_GameLogic.pre_PostMiniGameInd = 1;
+    g_GameLogic.minigameLastTurnSuccessInd = 1;
+    fn_3_5F720();
+    g_Pitcher.handedness = g_Fielders->unk1C7;
+    g_Pitcher.curveBallSpeed = 0x7D;
+    g_Pitcher.fastBallSpeed = 0x91;
+    g_Pitcher.cursedBallStat = 0x64;
+    g_Strikes.unk_C = g_Strikes.outs;
+    g_Strikes.unk_18[0] = -1;
+    g_Strikes.unk_18[1] = -1;
+    g_Strikes.unk_18[2] = -1;
+    g_Strikes.unk_20 = g_Strikes.balls + (g_Strikes.strikes * 0x10);
+    g_Strikes.unk_14 = 0;
+    g_Ball.totalFramesAtPlay = 0;
+    g_FieldingLogic.unk10E = 0;
+    g_FieldingLogic.unkEE = 0;
+    g_FieldingLogic.unk10F = 0;
+    g_FieldingLogic.unk110 = 0;
+    g_FieldingLogic.unk128 = 0;
+    g_FieldingLogic.unk129 = 0;
+    g_RunningLogic.unk13 = 0;
+    g_GameLogic.pre_PostMiniGameInd = 0;
+    g_GameLogic.minigameLastTurnSuccessInd = 0;
+    g_Practice.hitVariablesSetIndicator = 0;
+    g_Practice._1E4[0] = 0;
+    g_Practice._1CB = 0;
+    g_Strikes.outs = 0;
+    g_Practice._152 = 0;
+    changeScene(1, 6);
+    fn_3_5A6D4(1U);
+    fn_3_6C0E0();
+    fn_3_6714C(0);
 }
 
 // .text:0x000B1470 size:0x108 mapped:0x806F0504
