@@ -51,3 +51,4 @@ docs/ghidra_annotations.json
 tags
 decomp_debug.log
 tools/decomp-permuter
+/.scratch/
