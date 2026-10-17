@@ -823,7 +823,9 @@ typedef struct FX_GROUP {
   // total size: 0x8
   u16 gid;       // offset 0x0, size 0x2
   u16 fxNum;     // offset 0x2, size 0x2
-  FX_TAB* fxTab; // offset 0x4, size 0x4
+  u16 refCount;  // offset 0x4: MSSB FX_GROUP is 0xC bytes
+  u16 _pad6;     // offset 0x6
+  FX_TAB* fxTab; // offset 0x8, size 0x4
 } FX_GROUP;
 
 typedef struct PAGE {
