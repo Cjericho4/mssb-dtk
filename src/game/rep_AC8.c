@@ -73,6 +73,23 @@ static inline void aimFielderAt(Fielder* f, f32 x, f32 z) {
     f->unk1D9 = 1;
 }
 
+static inline s32 fielderFramesToReach(Fielder* f, f32 x, f32 z) {
+    f32 dist;
+    f32 speed;
+    u32 delay;
+
+    if (x == f->pos[0] && z == f->pos[2]) {
+        return 1;
+    }
+    dist = dolsqrtf2((x - f->pos[0]) * (x - f->pos[0]) + (z - f->pos[2]) * (z - f->pos[2]));
+    delay = f->unk1D1 / 2;
+    speed = f->unk58;
+    if (speed == 0.0f) {
+        speed = 1.0f;
+    }
+    return delay + (s32)(dist / speed);
+}
+
 // .text:0x000251E4 size:0x1C0 mapped:0x80664278
 void fn_3_251E4(void) {
     return;
@@ -1547,8 +1564,37 @@ void fn_3_42CDC(s32 fielderIdx) {
 }
 
 // .text:0x00043038 size:0x3A8 mapped:0x806820CC
+
 void fn_3_43038(s32 fielderIndex) {
-    return;
+    Fielder* f = &g_Fielders[fielderIndex];
+    s32 frames;
+    s32 i;
+
+    f->unk1DC = 4;
+    frames = 0;
+    i = 5;
+    while (i <= 120) {
+        if (g_Ball.physicsSubstruct.futureCoordsAndDist[i].pos.y > 2.5f) {
+            i++;
+            continue;
+        }
+        frames = fielderFramesToReach(f, g_Ball.physicsSubstruct.futureCoordsAndDist[i].pos.x,
+                                      g_Ball.physicsSubstruct.futureCoordsAndDist[i].pos.z);
+        if (frames < i) {
+            f->unk184 = i;
+            goto found;
+        }
+        i += 5;
+    }
+    f->unk184 = 120;
+found:
+    setFielderTarget(f, g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.x,
+                     g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.z);
+    if (f->unk184 >= 120) {
+        f->unk17E = 120;
+    } else {
+        f->unk17E = frames;
+    }
 }
 
 // .text:0x000433E0 size:0x13E4 mapped:0x80682474
@@ -2084,7 +2130,22 @@ void fn_3_522E0(void) {
 
 // .text:0x00052560 size:0x17C mapped:0x806915F4
 s32 fn_3_52560(s32 fielderIdx, f32 x, f32 z) {
-    return 0;
+    Fielder* f = &g_Fielders[fielderIdx];
+    f32 dist;
+    f32 speed;
+    u32 delay;
+
+    if (x == f->pos[0] && z == f->pos[2]) {
+        return 1;
+    }
+    dist = dolsqrtf2((x - f->pos[0]) * (x - f->pos[0]) + (z - f->pos[2]) * (z - f->pos[2]));
+    delay = f->unk1D1 / 2;
+    if (f->unk58 == 0.0f) {
+        speed = 1.0f;
+    } else {
+        speed = f->unk58;
+    }
+    return delay + (s32)(dist / speed);
 }
 
 // .text:0x000526DC size:0x870 mapped:0x80691770
