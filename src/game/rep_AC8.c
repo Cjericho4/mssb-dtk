@@ -902,6 +902,10 @@ void fn_3_34450(void) {
 }
 
 // .text:0x00034A40 size:0x12E8 mapped:0x80673AD4
+static inline s32 angleGap(s32 a, s32 b) {
+    return __abs(a - b);
+}
+
 void fn_3_34A40(s32 idx) {
     Fielder* f = &g_Fielders[idx];
     f32 dist;
@@ -1013,7 +1017,7 @@ chase:
     setFielderTarget(f, x, z);
     if (f->unk74 < 20.0f && a < 5.0f) {
         if (lbl_3_bss_170[0] >= 0) {
-            if (__abs(lbl_3_bss_170[0] - radToShortAngle(atan2(g_Ball.AtBat_Contact_BallPos.z - f->pos[2],
+            if (angleGap(lbl_3_bss_170[0], radToShortAngle(atan2(g_Ball.AtBat_Contact_BallPos.z - f->pos[2],
                                                                 g_Ball.AtBat_Contact_BallPos.x - f->pos[0]))) > 0x80) {
                 f->unk1D6 = 8;
             }
