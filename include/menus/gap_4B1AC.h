@@ -5,7 +5,10 @@
 
 typedef struct MenusResourceSlot {
     void (*callback)(s32, struct MenusResourceSlot*);
-    u8 _pad4[0x14];
+    s16 state; /* 0x04 */
+    u8 _pad6[6];
+    s16 bank; /* 0x0C */
+    u8 _padE[0xA];
 } MenusResourceSlot;
 
 typedef struct MenusResourceBank {
@@ -125,7 +128,7 @@ void fn_2_53408(void);
 void fn_2_535B0(void);
 void fn_2_5389C(void);
 void fn_2_53AA4(void);
-void fn_2_53BC8(void);
+s32 fn_2_53BC8(MenusResourceSlot* slot);
 void fn_2_53CEC(void);
 void fn_2_53DF8(void);
 void fn_2_53F04(s32 value);

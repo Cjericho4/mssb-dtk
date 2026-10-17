@@ -454,8 +454,8 @@ void fn_2_53AA4(void) {
 }
 
 // .text:0x00053BC8 size:0x124
-void fn_2_53BC8(void) {
-    return;
+s32 fn_2_53BC8(MenusResourceSlot* slot) {
+    return 0;
 }
 
 // .text:0x00053CEC size:0x10C
