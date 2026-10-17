@@ -147,7 +147,7 @@ void fn_2_6B744(void);
 void fn_2_6BA18(Rep0B08Obj* obj);
 void fn_2_6BA50(Rep0B08Obj* obj);
 void fn_2_6BAAC(Rep0B08Obj* obj);
-void fn_2_6BAD8(void);
+void fn_2_6BAD8(Rep0B08Obj* obj);
 void fn_2_6BB7C(Rep0B08Obj* obj);
 void fn_2_6BBC8(Rep0B08Obj* obj);
 void fn_2_6BC00(Rep0B08Obj* obj);
