@@ -14,7 +14,9 @@ typedef struct MenusMenuBuffer {
 } MenusMenuBuffer;
 
 typedef struct MenusPanelState {
-    u8 _pad0[0x1AF0];
+    u8 _pad0[0x80];
+    u16* commands[4]; /* 0x80 */
+    u8 _pad90[0x1A60];
     MenusMenuBuffer* textBuffer;
     u8 _pad1AF4[0xAA];
     union {
@@ -28,7 +30,8 @@ typedef struct MenusPanelState {
     s16 unk1BA6;
     s16 unk1BA8;
     s16 unk1BAA;
-    u8 _pad1BAC[0x2C4];
+    u8 _pad1BAC[0x2BC];
+    s16 commandCounters[4]; /* 0x1E68 */
     s16 unk1E70;
     s16 unk1E72;
     u8 _pad1E74[0x18];
