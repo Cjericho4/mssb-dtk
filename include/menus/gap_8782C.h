@@ -26,7 +26,8 @@ typedef struct MenusRosterState {
 } MenusRosterState;
 
 typedef struct MenusGameChoiceState {
-    u8 _pad0[0x50];
+    u32 unk0;
+    u8 _pad4[0x4C];
     u32 selection;
 } MenusGameChoiceState;
 extern MenusRosterState lbl_80361B20;

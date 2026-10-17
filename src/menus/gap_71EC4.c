@@ -8,6 +8,9 @@ extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 
 extern MenusSceneScript lbl_2_data_2B4DC;
 extern MenusSceneScript lbl_2_data_2AADC;
+extern MenusSceneScript lbl_2_data_2D33C;
+extern s32 lbl_2_bss_A840;
+#include "menus/gap_8782C.h"
 extern void fn_800363D8(DrawingSceneStruct* scene, s32 index, s32 enabled, s32 value, s32 order);
 
 extern void fn_80053FE8(void);
@@ -227,7 +230,17 @@ void fn_2_747FC(void) {
 
 // .text:0x00074CD8 size:0xB4
 void fn_2_74CD8(void) {
-    return;
+    DrawingSceneStruct* scene;
+    s32 i;
+    fn_80034E20(scene = lbl_803CC1B8, &lbl_2_data_2D33C);
+    i = 0;
+    do {
+        fn_800363D8(scene, i + 24, 1, 54, i);
+        i++;
+    } while (i < 7);
+    fn_800363D8(scene, 32, 1, 50, 0);
+    lbl_2_bss_A840 = lbl_2_bss_F410.unk0;
+    lbl_803CC1B8->unk_00 = fn_2_747FC;
 }
 
 // .text:0x00074D8C size:0x2C
