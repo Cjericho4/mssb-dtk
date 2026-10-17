@@ -764,6 +764,53 @@ void fn_3_B7794(void) {
 
 // .text:0x000B77DC size:0x1D0 mapped:0x806F6870
 void fn_3_B77DC(void) {
-    return;
+    switch (g_Practice.tutorialState) {
+    case 0:
+        switch (g_Practice.practiceState) {
+        case 0:
+            g_GameLogic.currentBatterPerTeam[0] = 1;
+            g_GameLogic.currentBatterPerTeam[1] = 1;
+            g_hugeAnimStruct.field272_0x307d = 0;
+            g_Practice.runnerActive[0] = lbl_3_data_FC08[g_Practice.practiceLevel][0];
+            g_Practice.runnerActive[1] = lbl_3_data_FC08[g_Practice.practiceLevel][1];
+            g_Practice.runnerActive[2] = lbl_3_data_FC08[g_Practice.practiceLevel][2];
+            g_Practice.runnerActive[3] = lbl_3_data_FC08[g_Practice.practiceLevel][3];
+            fn_3_B3BD0();
+            lbl_3_common_bss_32724.unk9A = 0;
+            lbl_803CBC3C._2 = 0;
+            g_Practice._1D9[0] = 0;
+            fn_3_B3C94(1);
+            return;
+        case 1:
+            if (fn_3_6BA64()) fn_3_B3C94(4);
+            return;
+        case 4:
+            if (fn_3_B3CD4()) fn_3_B3C94(7);
+            return;
+        case 7:
+            fn_3_B3B70();
+            fn_3_B27A4();
+            g_Practice.commandList = lbl_3_data_10010[g_Practice.practiceLevel];
+            changeScene(1, 6);
+            fn_3_5A6D4(7);
+            fn_3_B3C78(1);
+            return;
+        }
+        break;
+    case 1:
+        fn_3_B7184();
+        return;
+    case 2:
+        if (!fn_3_B254C()) {
+            fn_3_B7184();
+            return;
+        }
+        fn_3_B1DA4(g_Practice.practiceLevel + 0xC, 0);
+        fn_3_5A6D4(7);
+        return;
+    case 3:
+        fn_3_B7184();
+        break;
+    }
 }
 
