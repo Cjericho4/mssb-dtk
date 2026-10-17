@@ -153,11 +153,11 @@ static u32 check_portamento(u8 key, u8 midi, u8 midiSet, u32 newVID, u32* vid) {
   return 1;
 }
 
-static u32 StartKeymap(u16 keymapID, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol,
+static u32 StartKeymap(u16 keymapID, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol,
                        u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                        u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
 
-static u32 StartLayer(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 panning,
+static u32 StartLayer(u16 layerID, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 panning,
                       u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid, u32 vidFlag,
                       u8 vGroup, u8 studio, u32 itd) {
   u16 n;      // r1+0x38
@@ -260,7 +260,7 @@ end:
   return vid;
 }
 
-static u32 StartKeymap(u16 keymapID, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol,
+static u32 StartKeymap(u16 keymapID, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol,
                        u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                        u32 vidFlag, u8 vGroup, u8 studio, u32 itd) {
   u8 o;           // r30
