@@ -22,7 +22,7 @@ extern MenusRuntimePreferences lbl_800E8754;
 void fn_2_194BC(Rep0568Obj* obj);
 void fn_2_194E8(void);
 void fn_2_19520(void);
-void fn_2_19554(void);
+s32 fn_2_19554(void);
 void fn_2_195D8(void);
 void fn_2_195DC(void);
 void fn_2_19778(void);

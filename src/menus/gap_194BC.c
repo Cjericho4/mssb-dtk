@@ -1,6 +1,7 @@
 #include "menus/gap_194BC.h"
 
 extern void fn_80021204(void);
+extern s32 fn_8003AE70(s32 index);
 
 // .text:0x000194BC size:0x2C
 void fn_2_194BC(Rep0568Obj* obj) {
@@ -19,8 +20,12 @@ void fn_2_19520(void) {
 }
 
 // .text:0x00019554 size:0x84
-void fn_2_19554(void) {
-    return;
+s32 fn_2_19554(void) {
+    s8 changed = 0;
+    if (lbl_800EF808.unk398 != fn_8003AE70(0) || lbl_800EF808._pad397 != fn_8003AE70(1) || lbl_80366158.unk1F != fn_8003AE70(2)) {
+        changed = 1;
+    }
+    return changed;
 }
 
 // .text:0x000195D8 size:0x4
