@@ -2009,8 +2009,55 @@ void fn_3_4A9AC(void) {
 }
 
 // .text:0x0004B128 size:0x3EC mapped:0x8068A1BC
-void fn_3_4B128(void) {
-    return;
+void fn_3_4B128(s32 fielderIdx) {
+    s16 base;
+    s32 ang;
+    f32 dx;
+    f32 dz;
+    f32 x;
+    f32 z;
+
+    switch (fn_3_53130(fielderIdx)) {
+    case 2:
+        return;
+    default:
+        base = g_FieldingLogic.unkC4;
+        if (base >= 1 && base <= 3 && g_FieldingLogic.unkE6 == 1 && (base == 2 || fielderIdx != 7)) {
+            ang = fn_3_9FB8C(g_Ball.throwDestination.x - g_Ball.AtBat_Contact_BallPos.x,
+                             g_Ball.throwDestination.z - g_Ball.AtBat_Contact_BallPos.z);
+            fn_3_9F9C8(ang, &dx, &dz);
+            x = 20.0f * dx + lbl_3_data_4444[g_FieldingLogic.unkC4].x;
+            z = 20.0f * dz + lbl_3_data_4444[g_FieldingLogic.unkC4].z;
+            ang = fn_3_9FB8C(x, z);
+            if (ang <= 0x800 &&
+                ((ang < 0x300 && fielderIdx == 8) || (ang > 0x500 && fielderIdx == 6) ||
+                 (ang < 0x400 && (fielderIdx == 7 || fielderIdx == 8)) ||
+                 (ang >= 0x400 && (fielderIdx == 7 || fielderIdx == 6)))) {
+                if (z < lbl_3_data_4444[1].z) {
+                    if (x < 0.0f) {
+                        x = -35.0f;
+                    } else {
+                        x = 35.0f;
+                    }
+                    z = 30.0f;
+                }
+                setFielderTargetIdx(fielderIdx, x, z);
+            }
+        }
+        fn_3_526DC(fielderIdx);
+        if (g_Fielders[fielderIdx].unk68 < 5.0f) {
+            if (fielderIdx != -1) {
+                setFielderReadyAction(fielderIdx, 0xC);
+            }
+        } else if (g_Ball.numberOfThrowsDuringPlay >= 2) {
+            if (fielderIdx != -1) {
+                setFielderReadyAction(fielderIdx, 0xC);
+            }
+        }
+        break;
+    case 1:
+        break;
+    }
 }
 
 // .text:0x0004B514 size:0x3BC mapped:0x8068A5A8
