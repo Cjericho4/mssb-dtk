@@ -2,6 +2,14 @@
 #define __CHALLENGE_rep_7730_H_
 
 #include "mssbTypes.h"
+#include "Dolphin/mtx.h"
+#include "Dolphin/GX/GXGeometry.h"
+#include "Dolphin/GX/GXLight.h"
+#include "Dolphin/GX/GXTev.h"
+#include "Dolphin/GX/GXTransform.h"
+extern Mtx44 lbl_1_bss_47010;
+void fn_80048C14(s32 arg0);
+void fn_80048E00(s32 arg0, s32 arg1);
 #include "challenge/challenge.h"
 #include "game/rep_1C0.h"
 extern CompressedDiskRead lbl_1_data_104F4;
