@@ -1,6 +1,7 @@
 #include "menus/rep_0B08.h"
 #include "string.h"
 #include "math.h"
+#include "menus/rep_08E8.h"
 #include "Dolphin/GX/GXTypes.h"
 
 extern GXColor lbl_800F7478[];
@@ -111,8 +112,13 @@ void fn_2_688A4(void) {
 }
 
 // .text:0x00068940 size:0x8C
-void fn_2_68940(void) {
-    return;
+f32 fn_2_68940(s32 firstIndex, s32 secondIndex) {
+    Rep0B08Obj* first = &lbl_2_bss_1A8248->rep0B08Objects[firstIndex];
+    Rep0B08Obj* second = &lbl_2_bss_1A8248->rep0B08Objects[secondIndex];
+    f32 dx = second->position.x - first->position.x;
+    f32 dz = second->position.z - first->position.z;
+    f32 angle = (f32)atan2(-dx, -dz);
+    return fn_2_4A18C(first->angle) - angle;
 }
 
 // .text:0x000689CC size:0xBC
