@@ -474,9 +474,30 @@ void fn_3_F7B8(void) {
     return;
 }
 
+extern VecXZ lbl_3_data_450C;
+
 // .text:0x0000F9F8 size:0x1B0 mapped:0x8064EA8C
 void fn_3_F9F8(void) {
-    return;
+    s32 i;
+    g_Ball.AtBat_Contact_BallPos.x = lbl_3_data_450C.x;
+    g_Ball.AtBat_Contact_BallPos.y = lbl_3_rodata_590;
+    g_Ball.AtBat_Contact_BallPos.z = lbl_3_data_450C.z;
+    if (g_Minigame.GameMode_MiniGame == 6) {
+        g_Ball.AtBat_Contact_BallPos.x = g_Ball.AtBat_Contact_BallPos.y;
+        g_Ball.AtBat_Contact_BallPos.z = g_Ball.AtBat_Contact_BallPos.y;
+        g_Ball.AtBat_Contact_BallPos.y = lbl_3_rodata_59C;
+    }
+    for (i = 0; i < 60; i++) {
+        g_Ball.coordinateHistory[i].x = g_Ball.AtBat_Contact_BallPos.x;
+        g_Ball.coordinateHistory[i].y = g_Ball.AtBat_Contact_BallPos.y;
+        g_Ball.coordinateHistory[i].z = g_Ball.AtBat_Contact_BallPos.z;
+    }
+    g_Ball.physicsSubstruct.velocity.x = lbl_3_rodata_590;
+    g_Ball.physicsSubstruct.acceleration.x = lbl_3_rodata_590;
+    g_Ball.physicsSubstruct.velocity.y = lbl_3_rodata_590;
+    g_Ball.physicsSubstruct.acceleration.y = lbl_3_rodata_590;
+    g_Ball.physicsSubstruct.velocity.z = lbl_3_rodata_590;
+    g_Ball.physicsSubstruct.acceleration.z = lbl_3_rodata_590;
 }
 
 // .text:0x0000FBA8 size:0x3A4 mapped:0x8064EC3C
