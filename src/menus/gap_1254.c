@@ -190,8 +190,14 @@ void fn_2_323C(void) {
 }
 
 // .text:0x000033BC size:0xD0
-void fn_2_33BC(void) {
-    return;
+s32 fn_2_33BC(void) {
+    MenusLineupView* view = (MenusLineupView*)&starMissionCompletionTracker;
+    s32 result = 1;
+    s32 i;
+    for (i = 1; i < 9; i++) {
+        if (view->lineup[0].value == view->lineup[i].value) result = 0;
+    }
+    return result;
 }
 
 // .text:0x0000348C size:0x144

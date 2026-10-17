@@ -4,6 +4,17 @@
 #include "mssbTypes.h"
 #include "UnknownHeaders.h"
 
+/* Menus view of the challenge save data: the 9-slot lineup of s8 values starting at 0x40BB. */
+typedef struct MenusLineupEntry {
+    s8 value;
+    u8 _pad1[5];
+} MenusLineupEntry;
+
+typedef struct MenusLineupView {
+    u8 _pad0[0x40BB];
+    MenusLineupEntry lineup[9]; /* 0x40BB */
+} MenusLineupView;
+
 typedef struct MenusTeamSelections {
     u8 _pad0[2];
     s8 first[9];
@@ -60,7 +71,7 @@ void fn_2_2D1C(void);
 void fn_2_2FC0(u8 mode, s32 update, s32 reset);
 void fn_2_3204(void);
 void fn_2_323C(void);
-void fn_2_33BC(void);
+s32 fn_2_33BC(void);
 void fn_2_348C(void);
 s32 fn_2_35D0(u8 index);
 void fn_2_3624(void);
