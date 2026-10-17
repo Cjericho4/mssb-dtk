@@ -270,7 +270,7 @@ void fn_3_152794(ListNode_14B9F0* node);
 void fn_3_152AB4(void);
 void fn_3_1531A4(ListNode_14B9F0* node);
 void fn_3_1534C0(ListNode_14B9F0* node);
-void fn_3_1536A8(void);
+void fn_3_1536A8(ListNode_14B9F0* node, u8 count);
 void fn_3_153E8C(ListNode_14B9F0* node, VecXYZ* pos, u8 arg2, u8 arg3, u8 arg4);
 void fn_3_153F8C(struct Struct_800339F0_Result* obj, s32 arg1, s32 arg2, Vec* arg3);
 void fn_3_1540E4(s32 arg0, s32 arg1, Vec* arg2);

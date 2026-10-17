@@ -2232,7 +2232,7 @@ void fn_3_1534C0(ListNode_14B9F0* node) {
 }
 
 // .text:0x001536A8 size:0x7E4 mapped:0x8079273C
-void fn_3_1536A8(void) {
+void fn_3_1536A8(ListNode_14B9F0* node, u8 count) {
     return;
 }
 
@@ -2261,8 +2261,45 @@ void fn_3_153E8C(ListNode_14B9F0* node, VecXYZ* pos, u8 arg2, u8 arg3, u8 arg4) 
 }
 
 // .text:0x00153F8C size:0x158 mapped:0x80793020
-void fn_3_153F8C(struct Struct_800339F0_Result* obj, s32 arg1, s32 arg2, Vec* arg3) {
-    return;
+extern f32 lbl_3_rodata_3A18;
+
+void fn_3_153F8C(struct Struct_800339F0_Result *obj, s32 arg1, s32 arg2, Vec *arg3) {
+    ListNode_14B9F0 *node;
+    f32 heightScale;
+    u8 effectIndex;
+    u8 phase;
+
+    effectIndex = 0;
+    node = obj->listHead;
+    obj->field_0x10 = lbl_3_common_bss_32724.field6C;
+next_node:
+    if (node->field_0x4A == 0) {
+        phase = effectIndex != 0;
+        node->field_0x48 = (phase * lbl_3_data_26BEC.unkC) + ((s32) (effectIndex * lbl_3_data_26BDC.unkC) / (s32) lbl_3_data_26BDC.unk0);
+        node->field_0x4D = (u8) arg2 == 4;
+        node->field_0x4E = 0;
+        node->field_0x4F = (u8) arg1;
+        node->color[2] = 0xFF;
+        node->color[1] = 0xFF;
+        node->color[0] = 0xFF;
+        node->color[3] = (u8) lbl_3_data_26BDC.unk4;
+        node->pos.x = arg3->x;
+        if ((u8) node->field_0x4D != 0) {
+            heightScale = fn_3_119854(2U);
+        } else {
+            heightScale = fn_3_119854(0U);
+        }
+        node->pos.y = -arg3->y - lbl_3_rodata_3A18 * heightScale;
+        node->pos.z = arg3->z;
+        node->field_0x45 = 0;
+        node->field_0x44 = 0;
+        fn_3_1536A8(node, phase + 1);
+        effectIndex += 1;
+    }
+    node = node->next;
+    if ((node != NULL) && ((s32) effectIndex < (s32) lbl_3_data_26BDC.unk0)) {
+        goto next_node;
+    }
 }
 
 // .text:0x001540E4 size:0xE0 mapped:0x80793178
