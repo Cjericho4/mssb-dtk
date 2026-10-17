@@ -3,6 +3,12 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusResourceTables {
+    u8 _pad0[0x798];
+    u32* tables[1]; /* extent unknown */
+} MenusResourceTables;
+extern MenusResourceTables lbl_80366B18;
+
 typedef struct MenusCompletionState {
     u8 _pad0[0xC6];
     u8 completed[5][4];
@@ -92,7 +98,7 @@ void fn_2_513E8(void);
 void fn_2_5146C(void);
 void fn_2_51470(void);
 void fn_2_51568(void);
-void fn_2_5156C(void);
+u32 fn_2_5156C(s32 index, u16 selector);
 void fn_2_515DC(u8 mode);
 void fn_2_5163C(void);
 void fn_2_51890(void);

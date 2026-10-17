@@ -354,8 +354,11 @@ void fn_2_51568(void) {
 }
 
 // .text:0x0005156C size:0x70
-void fn_2_5156C(void) {
-    return;
+u32 fn_2_5156C(s32 index, u16 selector) {
+    if (selector == 0) {
+        return lbl_80366B18.tables[lbl_2_bss_1A824C->panel.mode][index + 1];
+    }
+    return lbl_80366B18.tables[lbl_2_bss_1A824C->panel.mode][index + 1];
 }
 
 // .text:0x000515DC size:0x60
