@@ -170,13 +170,13 @@ void fn_2_4E824(void) {
 }
 
 // .text:0x0004E858 size:0x20
-void fn_2_4E858(u32 arg) {
-    fn_80034CEC(arg);
+void fn_2_4E858(DrawingSceneStruct* scene) {
+    fn_80034CEC((u32)scene);
 }
 
 // .text:0x0004E878 size:0x20
-void fn_2_4E878(u32 arg0, u32 arg1) {
-    fn_80034E20(arg0, arg1);
+void fn_2_4E878(DrawingSceneStruct* scene, struct MenusSceneScript* script) {
+    fn_80034E20(scene, script);
 }
 
 // .text:0x0004E898 size:0x24
@@ -499,7 +499,7 @@ s32 fn_2_53BC8(MenusResourceSlot* slot) {
 }
 
 // .text:0x00053CEC size:0x10C
-void fn_2_53CEC(void) {
+void fn_2_53CEC(DrawingSceneStruct* scene) {
     return;
 }
 
@@ -514,7 +514,7 @@ void fn_2_53F04(s32 value) {
     s32 slot;
     for (bank = 0; bank < 10; bank++) {
         for (slot = 0; slot < 0x360; slot++) {
-            MenusResourceSlot* entry = &lbl_2_bss_1A8230[bank].slots[slot];
+            MenusResourceSlot* entry = &lbl_2_bss_1A8230->banks[bank].slots[slot];
             if (entry->callback != 0) entry->callback(value, entry);
         }
     }

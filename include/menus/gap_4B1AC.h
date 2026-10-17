@@ -15,7 +15,14 @@ typedef struct MenusResourceSlot {
 typedef struct MenusResourceBank {
     MenusResourceSlot slots[0x360];
 } MenusResourceBank;
-extern MenusResourceBank* lbl_2_bss_1A8230;
+typedef struct MenusResourceState {
+    MenusResourceBank banks[10];
+    u8 _pad32A00[0x86];
+    u8 pending;
+} MenusResourceState;
+extern MenusResourceState* lbl_2_bss_1A8230;
+struct DrawingSceneStruct;
+struct MenusSceneScript;
 
 typedef struct MenusResourceTables {
     u8 _pad0[0x798];
@@ -75,8 +82,8 @@ void fn_2_4E1C0(void);
 void fn_2_4E7A4(void);
 void fn_2_4E7EC(void);
 void fn_2_4E824(void);
-void fn_2_4E858(u32 arg);
-void fn_2_4E878(u32 arg0, u32 arg1);
+void fn_2_4E858(struct DrawingSceneStruct* scene);
+void fn_2_4E878(struct DrawingSceneStruct* scene, struct MenusSceneScript* script);
 void fn_2_4E898(void);
 void fn_2_4E8BC(void);
 void fn_2_4E8E0(void);
@@ -133,7 +140,7 @@ void fn_2_535B0(void);
 void fn_2_5389C(void);
 void fn_2_53AA4(void);
 s32 fn_2_53BC8(MenusResourceSlot* slot);
-void fn_2_53CEC(void);
+void fn_2_53CEC(struct DrawingSceneStruct* scene);
 void fn_2_53DF8(void);
 void fn_2_53F04(s32 value);
 void fn_2_53F88(s32 value);
