@@ -104,7 +104,7 @@ s32 fn_2_68670(s32 index);
 s32 fn_2_68690(s32 index);
 s32 fn_2_686B0(s32 index);
 void fn_2_686D0(s32 index, u8 value);
-void fn_2_686EC(void);
+BOOL fn_2_686EC(s32 firstIndex, s32 secondIndex);
 void fn_2_687A4(void);
 f32 fn_2_688A4(s32 index, s32 target);
 f32 fn_2_68940(s32 firstIndex, s32 secondIndex);

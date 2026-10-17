@@ -112,8 +112,15 @@ void fn_2_686D0(s32 index, u8 value) {
 }
 
 // .text:0x000686EC size:0xB8
-void fn_2_686EC(void) {
-    return;
+BOOL fn_2_686EC(s32 firstIndex, s32 secondIndex) {
+    Rep0B08Obj* first = &lbl_2_bss_1A8248->rep0B08Objects[firstIndex];
+    Rep0B08Obj* second = &lbl_2_bss_1A8248->rep0B08Objects[secondIndex];
+    f32 dx = second->position.x - first->position.x;
+    f32 dz = second->position.z - first->position.z;
+    f32 angle = (f32)atan2(-dx, -dz);
+    f32 difference = fn_2_4A18C(first->angle) - angle;
+    if (difference < 1.2217306f && difference > -1.2217306f) return 1;
+    return 0;
 }
 
 // .text:0x000687A4 size:0x100
