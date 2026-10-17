@@ -11,10 +11,13 @@ typedef struct Rep0138Model {
     /* 0x68 */ struct Rep0138ModelData* data;
 } Rep0138Model;
 extern GXCullMode lbl_1_data_8C4;
-extern s32 lbl_1_data_848[4];
+#include "Dolphin/mtx.h"
+typedef struct Rep0138Light Rep0138Light;
+extern Rep0138Light* lbl_1_data_848[4];
+void LITXForm(Rep0138Light* light, Mtx view);
 
 void fn_1_4E98(void);
-void fn_1_54E0(void);
+void fn_1_54E0(Mtx view);
 void fn_1_5540(void);
 void fn_1_5544(void);
 void fn_1_5698(void);

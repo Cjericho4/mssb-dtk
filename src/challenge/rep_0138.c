@@ -6,8 +6,11 @@ void fn_1_4E98(void) {
 }
 
 // .text:0x000054E0 size:0x60
-void fn_1_54E0(void) {
-    return;
+void fn_1_54E0(Mtx view) {
+    s32 i;
+    for (i = 0; i < 3; i++) {
+        LITXForm(lbl_1_data_848[i], view);
+    }
 }
 
 // .text:0x00005540 size:0x4
