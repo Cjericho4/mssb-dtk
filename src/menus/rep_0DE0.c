@@ -1,4 +1,8 @@
 #include "menus/rep_0DE0.h"
+#include "UnknownHeaders.h"
+
+extern hugeAnimStruct* lbl_2_bss_340140;
+extern f32 lbl_2_rodata_E88;
 
 // .text:0x0008563C size:0x268
 void fn_2_8563C(void) {
@@ -61,8 +65,9 @@ void fn_2_86FEC(void) {
 }
 
 // .text:0x000870D4 size:0x40
-void fn_2_870D4(void) {
-    return;
+void fn_2_870D4(f32 value) {
+    if (value != lbl_2_rodata_E88) lbl_2_bss_340140->field269_0x307a = 3;
+    else lbl_2_bss_340140->field269_0x307a = 0;
 }
 
 // .text:0x00087114 size:0x4

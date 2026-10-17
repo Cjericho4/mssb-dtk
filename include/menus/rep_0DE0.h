@@ -15,7 +15,7 @@ void fn_2_86A80(void);
 void fn_2_86DCC(void);
 void fn_2_86F40(void);
 void fn_2_86FEC(void);
-void fn_2_870D4(void);
+void fn_2_870D4(f32 value);
 void fn_2_87114(void);
 void fn_2_87118(void);
 void fn_2_87350(void);
