@@ -283,7 +283,7 @@ void fn_3_155264(void);
 void fn_3_155288(void);
 void fn_3_1552AC(void);
 void fn_3_1559E4(ListNode_14B9F0* node, Vec* pos, Vec* rot);
-void fn_3_155C28(void);
+void fn_3_155C28(struct Struct_800339F0_Result* obj);
 void fn_3_155F08(void);
 void fn_3_156218(void);
 void fn_3_156548(void);
