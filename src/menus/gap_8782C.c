@@ -1,4 +1,8 @@
 #include "menus/gap_8782C.h"
+#include "menus/gap_71EC4.h"
+#include "menus/rep_0438.h"
+
+extern MenusSceneScript lbl_2_data_2ECE4;
 
 // .text:0x0008782C size:0x16C
 void fn_2_8782C(void) {
@@ -56,7 +60,7 @@ void fn_2_89F70(void) {
 }
 
 // .text:0x0008A008 size:0x81C
-void fn_2_8A008(void) {
+void fn_2_8A008(DrawingSceneStruct* scene) {
     return;
 }
 
@@ -67,7 +71,11 @@ void fn_2_8A824(void) {
 
 // .text:0x0008ABFC size:0x88
 void fn_2_8ABFC(void) {
-    return;
+    DrawingSceneStruct* scene;
+    fn_80034E20(scene = lbl_803CC1B8, &lbl_2_data_2ECE4);
+    fn_2_8A008(scene);
+    if (lbl_8034E9A0.unk4756 == 1) lbl_2_bss_F410.selection = lbl_80361B20.mode;
+    lbl_803CC1B8->unk_00 = fn_2_8A824;
 }
 
 // .text:0x0008AC84 size:0x2C

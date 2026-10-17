@@ -4,6 +4,18 @@
 #include "mssbTypes.h"
 #include "UnknownHeaders.h"
 
+typedef struct MenusRosterState {
+    u8 _pad0[0xF6];
+    u8 mode;
+} MenusRosterState;
+
+typedef struct MenusGameChoiceState {
+    u8 _pad0[0x50];
+    u32 selection;
+} MenusGameChoiceState;
+extern MenusRosterState lbl_80361B20;
+extern MenusGameChoiceState lbl_2_bss_F410;
+
 typedef struct MenusVisibilityState {
     u8 _pad0[0x50];
     u8 visible[1]; /* extent unknown */
@@ -22,7 +34,7 @@ void fn_2_89038(void);
 void fn_2_895F8(void);
 void fn_2_8975C(void);
 void fn_2_89F70(void);
-void fn_2_8A008(void);
+void fn_2_8A008(DrawingSceneStruct* scene);
 void fn_2_8A824(void);
 void fn_2_8ABFC(void);
 void fn_2_8AC84(s32 index, u8 visible);
