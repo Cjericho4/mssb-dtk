@@ -22,7 +22,7 @@ void fn_2_20258(void);
 void fn_2_2025C(void);
 void fn_2_20328(void);
 void fn_2_207FC(void);
-void fn_2_20CB0(void);
+s32 fn_2_20CB0(u32 value);
 void fn_2_20D08(void);
 void fn_2_2416C(void);
 void fn_2_24238(void);
