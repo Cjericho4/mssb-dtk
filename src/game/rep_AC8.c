@@ -3969,39 +3969,35 @@ void fn_3_58F58(s32 fielderIdx, f32* x, f32* z) {
 
 // .text:0x000591AC size:0x18C mapped:0x80698240
 void fn_3_591AC(void) {
-    Fielder* f;
-    Fielder* g;
-    s32 j;
     s32 i;
     f32 x;
     f32 z;
 
-    g = g_Fielders;
-    for (i = 0, f = g; i < 9; i++, f++) {
+    for (i = 0; i < 9; i++) {
         if (g_GameLogic.pre_PostMiniGameInd != 0) {
             fn_3_58F58(i, &x, &z);
-            f->pos[0] = x;
-            f->pos[2] = z;
+            g_Fielders[i].pos[0] = x;
+            g_Fielders[i].pos[2] = z;
         }
-        f->prevPos[0] = 0.0f;
-        f->prevPos[1] = 0.0f;
-        f->prevPos[2] = 0.0f;
-        f->unk30 = 0.0f;
-        f->unk34 = 0.0f;
-        f->unkD4 = f->pos[0];
-        f->unkD8 = f->pos[2];
-        f->unk50 = 0.0f;
-        f->unk1D9 = 0;
-        f->unk1F5 = -1;
-        f->unk20F = 0;
-        x = -f->pos[0];
-        z = -f->pos[2];
-        f->unk48 = atan2(z, x);
+        g_Fielders[i].prevPos[0] = 0.0f;
+        g_Fielders[i].prevPos[1] = 0.0f;
+        g_Fielders[i].prevPos[2] = 0.0f;
+        g_Fielders[i].unk30 = 0.0f;
+        g_Fielders[i].unk34 = 0.0f;
+        g_Fielders[i].unkD4 = g_Fielders[i].pos[0];
+        g_Fielders[i].unkD8 = g_Fielders[i].pos[2];
+        g_Fielders[i].unk50 = 0.0f;
+        g_Fielders[i].unk1D9 = 0;
+        g_Fielders[i].unk1F5 = -1;
+        g_Fielders[i].unk20F = 0;
+        x = -g_Fielders[i].pos[0];
+        z = -g_Fielders[i].pos[2];
+        g_Fielders[i].unk48 = atan2(z, x);
     }
     if (g_GameLogic.pre_PostMiniGameInd != 0) {
-        for (j = 0; j < 9; j++, g++) {
-            fn_3_58F58(j, &g->pos[0], &g->pos[2]);
-            g->pos[1] = 0.0f;
+        for (i = 0; i < 9; i++) {
+            fn_3_58F58(i, &g_Fielders[i].pos[0], &g_Fielders[i].pos[2]);
+            g_Fielders[i].pos[1] = 0.0f;
         }
     }
     if (g_Runners[1].runnerOnFieldOrOutOrScored == 1) {
