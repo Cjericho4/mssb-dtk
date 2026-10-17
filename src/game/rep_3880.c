@@ -653,12 +653,14 @@ typedef struct {
     s32 unk00;
     s32 unk04;
     s32 unk08;
-    u8 _padC[0x4];
+    s32 unk0C;
     s32 unk10;
     s32 unk14;
-    u8 _pad18[0x4];
+    s32 unk18;
     s32 unk1C;
-    u8 _pad20[0xC];
+    s32 unk20;
+    s32 unk24;
+    u8 _pad28[4];
 } Struct_26D5C;
 extern Vec lbl_3_data_26D50;
 extern Struct_26D5C lbl_3_data_26D5C;
@@ -679,8 +681,54 @@ void fn_3_14C3BC(ListNode_14B9F0* node) {
 }
 
 // .text:0x0014C4C8 size:0x2D4 mapped:0x8078B55C
-void fn_3_14C4C8(void) {
-    return;
+static inline void positionMinigameEffect(ListNode_14B9F0* node) {
+    Mtx m;
+    Vec v;
+    f32 half;
+
+    PSVECScale(&lbl_3_data_26D50, 0.75f, &v);
+    PSMTXRotRad(m, 'Y', shortAngleToRad(g_Minigame._1AF8));
+    PSMTXMultVec(m, &v, &v);
+    half = 0.5f;
+    node->offset.x = (g_Minigame._1AE0 + v.x) + ((f32)lbl_3_data_26D5C.unk14 / 100000.0f) * half;
+    node->offset.y = v.y - (g_Minigame._1AE4 + ((f32)lbl_3_data_26D5C.unk14 / 100000.0f) * half);
+    node->offset.z = g_Minigame._1AE8 + v.z;
+}
+static inline void advanceMinigameEffect(ListNode_14B9F0* node) {
+    s32 alpha = node->color[3];
+    s32 da;
+    f32 ds;
+    if (lbl_3_data_26D5C.unk08 - lbl_3_data_26D5C.unk0C < node->field_0x4A) {
+        ds = ((f32)(lbl_3_data_26D5C.unk14 - lbl_3_data_26D5C.unk10) / 100000.0f) / (f32)lbl_3_data_26D5C.unk0C;
+        da = (lbl_3_data_26D5C.unk20 - lbl_3_data_26D5C.unk1C) / lbl_3_data_26D5C.unk0C;
+    } else {
+        ds = ((f32)(lbl_3_data_26D5C.unk18 - lbl_3_data_26D5C.unk14) / 100000.0f) / (f32)(lbl_3_data_26D5C.unk08 - lbl_3_data_26D5C.unk0C);
+        da = (lbl_3_data_26D5C.unk24 - lbl_3_data_26D5C.unk20) / (lbl_3_data_26D5C.unk08 - lbl_3_data_26D5C.unk0C);
+    }
+    alpha += da;
+    if (alpha < 0) alpha = 0;
+    if (alpha > 255) alpha = 255;
+    node->scaleX += ds;
+    node->scaleY = node->scaleX;
+    node->color[3] = alpha;
+    node->color[0] = node->color[1] = node->color[2] = node->color[3];
+}
+s32 fn_3_14C4C8(struct Struct_800339F0_Result* obj) {
+    ListNode_14B9F0* node;
+    if (lbl_80366158._28 != 0) return 0;
+    node = obj->listHead;
+    if (node->field_0x4A != 0) {
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+        GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_CLEAR);
+        positionMinigameEffect(node);
+        fn_8003403C(node->scaleX, node->scaleY);
+        fn_80033CC8(node, obj->field_0x10);
+        advanceMinigameEffect(node);
+        node->field_0x4A--;
+    } else {
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x0014C79C size:0x94 mapped:0x8078B830
@@ -702,7 +750,7 @@ void fn_3_14C830(void) {
     Struct_14C79C_Arg* obj;
     ListNode_14B9F0* node;
 
-    obj = (Struct_14C79C_Arg*)fn_80033A24(fn_3_14C4C8, 0x80, 0, lbl_3_data_26D5C.unk04, 1, 10);
+    obj = (Struct_14C79C_Arg*)fn_80033A24((void (*)(void))fn_3_14C4C8, 0x80, 0, lbl_3_data_26D5C.unk04, 1, 10);
     if (obj != NULL) {
         obj->unk10 = lbl_3_common_bss_32724.field6C;
         node = obj->node;
@@ -721,7 +769,7 @@ void fn_3_14C904(void) {
     ListNode_14B9F0* node;
 
     if (g_d_GameSettings.GameModeSelected == GAME_TYPE_MINIGAMES && g_Minigame.GameMode_MiniGame == 4) {
-        obj = (Struct_14C79C_Arg*)fn_80033A24(fn_3_14C4C8, 0x80, 0, lbl_3_data_26D5C.unk04, 1, 10);
+        obj = (Struct_14C79C_Arg*)fn_80033A24((void (*)(void))fn_3_14C4C8, 0x80, 0, lbl_3_data_26D5C.unk04, 1, 10);
         if (obj != NULL) {
             obj->unk10 = lbl_3_common_bss_32724.field6C;
             node = obj->node;

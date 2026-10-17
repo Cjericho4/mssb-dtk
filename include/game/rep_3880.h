@@ -178,7 +178,7 @@ void fn_3_14BECC(void* arg0, void* arg1);
 void fn_3_14C348(void* arg0, void* arg1);
 void fn_3_14C398(void);
 void fn_3_14C3BC(ListNode_14B9F0* node);
-void fn_3_14C4C8(void);
+s32 fn_3_14C4C8(struct Struct_800339F0_Result* obj);
 typedef struct Struct_14C79C_Arg {
     u8 _pad0[0xC];
     ListNode_14B9F0* node;          // 0x0C
