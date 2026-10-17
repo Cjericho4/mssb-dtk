@@ -17,7 +17,8 @@ extern MenusRosterState lbl_80361B20;
 extern MenusGameChoiceState lbl_2_bss_F410;
 
 typedef struct MenusVisibilityState {
-    u8 _pad0[0x50];
+    u8 _pad0[0x30];
+    u32 values[8];
     u8 visible[1]; /* extent unknown */
 } MenusVisibilityState;
 extern hugeAnimStruct* lbl_2_bss_340140;
