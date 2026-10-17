@@ -36,8 +36,8 @@ void fn_2_93C64(void) {
 }
 
 // .text:0x00094604 size:0x18
-void fn_2_94604(void) {
-    return;
+void fn_2_94604(u8 value) {
+    lbl_2_bss_1A824C->unk197856 = value;
 }
 
 // .text:0x0009461C size:0x18
