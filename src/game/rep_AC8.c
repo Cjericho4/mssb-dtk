@@ -1273,7 +1273,34 @@ void fn_3_31678(void) {
 
 // .text:0x00031A3C size:0x214 mapped:0x80670AD0
 void fn_3_31A3C(void) {
-    return;
+    s32 i;
+    s32 a;
+
+    for (i = 0; i < 9; i++) {
+        if (i == 1) {
+            g_Fielders[i].unk182 = 0x400;
+        } else if (g_Fielders[i].pos[0] == 0.0f) {
+            g_Fielders[i].unk182 = 0x400;
+        } else {
+            a = 2048.0f * (f32)atan2(g_Fielders[i].pos[2], g_Fielders[i].pos[0]) / 3.1415927f;
+            if (a < 0) {
+                a += 0x800;
+            }
+            g_Fielders[i].unk182 = a;
+        }
+        g_Fielders[i].unk70 = dolsqrtf2(g_Fielders[i].pos[0] * g_Fielders[i].pos[0] +
+                                        g_Fielders[i].pos[2] * g_Fielders[i].pos[2]);
+    }
+    fn_3_31678();
+    g_Ball.physicsSubstruct.acceleration.x = 0.0f;
+    g_Ball.physicsSubstruct.acceleration.y = 0.0f;
+    g_Ball.physicsSubstruct.acceleration.z = 0.0f;
+    g_Ball.ballState = 3;
+    g_Ball.AtBat_ContactResult = 2;
+    g_Ball.fielderAboutToGetBall_hasBall = -1;
+    g_Ball.fielderBeingThrownTo = -1;
+    g_Ball.ballIsLooseInd_unused = 0;
+    g_Ball.looseBall_codeForHowLongUntilSomeoneWillGetIt = 0;
 }
 
 // .text:0x00031C50 size:0x440 mapped:0x80670CE4
