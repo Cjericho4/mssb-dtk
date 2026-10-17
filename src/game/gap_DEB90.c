@@ -459,27 +459,14 @@ void fn_3_E0668(void) {
 
 // .text:0x000E0758 size:0x84 mapped:0x8071F7EC
 void fn_3_E0758(void) {
-    s32 offset;
-    GapDEB90Entry2D94* entry;
+    HugeAnimEntry2D94* entry;
     s32 i;
 
-    i = 0;
-    offset = 0;
-    do {
-        entry = (GapDEB90Entry2D94*)((u8*)g_hugeAnimStruct.entries_2D94 + offset);
+    for (i = 0; i < 0x1E; i++) {
+        entry = &g_hugeAnimStruct.entries_2D94[i];
         fn_8001D0D0(i, lbl_3_data_18D98[0]);
-        {
-            u32 r = (u32)rand();
-            u32 shifted = r << 20;
-            r >>= 31;
-            shifted -= r;
-            shifted = (shifted << 12) | (shifted >> 20);
-            shifted += r;
-            entry->field_0x14 = shortAngleToRad_Capped((s16)shifted);
-        }
-        i++;
-        offset += 0x28;
-    } while (i < 0x1E);
+        entry->vel.y = shortAngleToRad_Capped(rand() % 4096);
+    }
 }
 
 // .text:0x000E07DC size:0xA04 mapped:0x8071F870
