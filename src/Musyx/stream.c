@@ -5,7 +5,11 @@
 #endif
 
 static STREAM_INFO streamInfo[64];
-static u32 nextPublicID = 0;
+static u32 streamUnk290 = 0;
+static struct {
+  u8 unk0;
+  u32 nextPublicID;
+} streamIDInfo;
 static u8 streamCallDelay = 0;
 static u8 streamCallCnt = 0;
 
@@ -16,7 +20,9 @@ void streamInit() {
   for (i = 0; i < synthInfo.voiceNum; ++i) {
     streamInfo[i].state = 0;
   }
-  nextPublicID = 0;
+  streamUnk290 = 0;
+  streamIDInfo.unk0 = 0;
+  streamIDInfo.nextPublicID = 0;
 }
 
 #if MUSY_VERSION >= MUSY_VERSION_CHECK(1, 5, 4)
@@ -145,9 +151,9 @@ static u32 GeneratePublicID() {
   u32 i;  // r31
 
   do {
-    if ((id = nextPublicID++) == -1) {
-      id = nextPublicID;
-      nextPublicID = id + 1;
+    if ((id = streamIDInfo.nextPublicID++) == -1) {
+      id = streamIDInfo.nextPublicID;
+      streamIDInfo.nextPublicID = id + 1;
     }
     for (i = 0; i < 64; ++i) {
       if (streamInfo[i].state != 0 && id == streamInfo[i].stid) {
