@@ -2257,13 +2257,93 @@ void fn_3_4A124(void) {
 }
 
 // .text:0x0004A408 size:0x5A4 mapped:0x8068949C
-void fn_3_4A408(void) {
+void fn_3_4A408(s32 fielderIdx, f32* x, f32* z) {
     return;
 }
 
 // .text:0x0004A9AC size:0x77C mapped:0x80689A40
-void fn_3_4A9AC(void) {
-    return;
+void fn_3_4A9AC(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    s32 target = g_Ball.fielderAboutToGetBall_hasBall;
+    f32 x;
+    f32 z;
+    s32 i;
+    s32 r;
+
+    switch (fn_3_53130(fielderIdx)) {
+    case 2:
+        return;
+    default:
+        if (f->unk1C5 == 0) {
+            fn_3_4A408(fielderIdx, &x, &z);
+        } else if (target == -1) {
+            x = f->pos[0];
+            z = f->pos[2];
+        } else if (f->unk74 < 5.0f) {
+            x = f->pos[0];
+            z = f->pos[2];
+        } else if (g_Ball.ballState == 3) {
+            x = 10.0f * g_Ball.ballVelocityPercent.x + g_Ball.AtBat_Contact_BallPos.x;
+            z = 10.0f * g_Ball.ballVelocityPercent.z + g_Ball.AtBat_Contact_BallPos.z;
+        } else if (f->unk50 == 0.0f && f->unk84[target] < 15.0f) {
+            x = f->pos[0];
+            z = f->pos[2];
+        } else {
+            x = 10.0f * g_Ball.ballVelocityPercent.x + g_Fielders[target].prevPos[0];
+            z = 10.0f * g_Ball.ballVelocityPercent.z + g_Fielders[target].prevPos[2];
+        }
+        setFielderTarget(f, x, z);
+        if (fielderIdx >= 6) {
+            if (target >= 6 && f->unk68 < 20.0f) {
+                f->unk1D6 = 5;
+            }
+            if (f->unk68 < 15.0f) {
+                f->unk1D6 = 7;
+            } else if (f->unk68 < 20.0f) {
+                f->unk1D6 = 6;
+            }
+            r = fn_3_B7E44(f->unk70, f->unk180);
+            if (r == 2) {
+                f->unk1D6 = 8;
+            }
+            if (r == 1) {
+                f->unk1D6 = 5;
+            }
+        } else if (target <= 5 && f->unk68 < 10.0f) {
+            f->unk1D6 = 7;
+        }
+        for (i = 0; i < 9; i++) {
+            if (i != fielderIdx && f->unk84[i] < 3.0f) {
+                f->unk1D6 = 9;
+                break;
+            }
+        }
+        fn_3_526DC(fielderIdx);
+    case 1:
+        if (g_Ball.ballState != 0 && g_Ball.ballState != 3) {
+            if (fielderIdx != -1) {
+                setFielderReadyAction(fielderIdx, 0xC);
+            }
+            if (fielderIdx <= 5) {
+                f->unk1D6 = 7;
+            } else {
+                f->unk1D6 = 6;
+            }
+        }
+        if (g_Ball.AtBat_ContactResult != 0 && f->unk84[target] > 5.0f + f->unk74) {
+            if (dolsqrtf2((g_Ball.physicsSubstruct.futureCoordsAndDist[5].pos.x - f->pos[0]) *
+                              (g_Ball.physicsSubstruct.futureCoordsAndDist[5].pos.x - f->pos[0]) +
+                          (g_Ball.physicsSubstruct.futureCoordsAndDist[5].pos.z - f->pos[2]) *
+                              (g_Ball.physicsSubstruct.futureCoordsAndDist[5].pos.z - f->pos[2])) < f->unk74 &&
+                f->unk1C5 != 0) {
+                fn_3_43038(fielderIdx);
+                if (fielderIdx != -1) {
+                    setFielderReadyAction(fielderIdx, 0x12);
+                }
+                g_Ball.fielderAboutToGetBall_hasBall = -1;
+            }
+        }
+    }
 }
 
 // .text:0x0004B128 size:0x3EC mapped:0x8068A1BC

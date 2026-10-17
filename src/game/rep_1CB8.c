@@ -83,6 +83,6 @@ s32 fn_3_B7E10(f32 f1, f32 f2) {
 }
 
 // .text:0x000B7E44 size:0xAC mapped:0x806F6ED8
-void fn_3_B7E44(void) {
-    return;
+s32 fn_3_B7E44(f32 arg0, s16 arg1) {
+    return 0;
 }

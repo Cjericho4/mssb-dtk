@@ -9,7 +9,7 @@ BOOL fn_3_B7CDC(f32 x, f32 z);
 s32 fn_3_B7D6C(f32 f1, f32 f2);
 s32 fn_3_B7DD8(f32 f1, f32 f2);
 s32 fn_3_B7E10(f32 f1, f32 f2);
-void fn_3_B7E44(void);
+s32 fn_3_B7E44(f32 arg0, s16 arg1);
 
 extern f32 lbl_3_rodata_1D08;
 extern f32 lbl_3_rodata_1D38;
