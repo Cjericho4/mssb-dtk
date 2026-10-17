@@ -483,8 +483,17 @@ void fn_2_6BDD4(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006BDE0 size:0xA0
-void fn_2_6BDE0(void) {
-    return;
+void fn_2_6BDE0(Rep0B08Obj* obj) {
+    s32 alpha;
+    setMenuObjectActive(obj->index, 1);
+    obj->unk8C += 0.1;
+    alpha = 256.0f * obj->unk8C;
+    if (alpha < 255) {
+        setMenuObjectAlpha(obj->index, alpha);
+    } else {
+        setMenuObjectAlpha(obj->index, 255);
+        obj->state = 2;
+    }
 }
 
 // .text:0x0006BE80 size:0x108
