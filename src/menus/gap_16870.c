@@ -6,8 +6,8 @@ void fn_2_16870(void) {
 }
 
 // .text:0x00016A34 size:0x14
-void fn_2_16A34(void) {
-    return;
+u8 fn_2_16A34(s32 index) {
+    return lbl_2_bss_100B8.values[index];
 }
 
 // .text:0x00016A48 size:0x14
