@@ -1,6 +1,7 @@
 #include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
 #include "menus/rep_0F60.h"
+#include "UnknownHeaders.h"
 #include "string.h"
 
 extern Rep0B08AnimationConfig lbl_2_data_3C84[];
@@ -178,7 +179,17 @@ void fn_2_68DE8(s32 index, Vec* out) {
 
 // .text:0x00068E68 size:0xA0
 void fn_2_68E68(void) {
-    return;
+    Rep0B08Obj* obj;
+    AnimationStruct* anim;
+    s32 i;
+    for (i = 0; i < lbl_2_bss_1A824C->objectCount; i++) {
+        anim = &g_hugeAnimStruct.fielderStructs[i];
+        obj = &lbl_2_bss_1A8248->rep0B08Objects[i];
+        memcpy(&anim->unk34, &obj->position, sizeof(Vec));
+        anim->unk40.y = obj->angle;
+        anim->unk_25D = obj->unkC0;
+        anim->unk277 = obj->unkCA;
+    }
 }
 
 // .text:0x00068F08 size:0x1C

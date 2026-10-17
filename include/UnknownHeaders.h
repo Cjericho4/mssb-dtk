@@ -137,7 +137,8 @@ typedef struct AnimationStruct {
     u8 _pad26E[7];
     u8 unk275;          /* 0x275 */
     u8 unk276;          /* 0x276 */
-    u8 _rest277[0x279 - 0x277];
+    u8 unk277;
+    u8 _pad278;
     u8 unk279;          /* 0x279 */
     u8 _rest27A[0x27C - 0x27A];
 } AnimationStruct; /* size: 0x27C */
