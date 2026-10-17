@@ -1,5 +1,6 @@
 #include "menus/gap_4B1AC.h"
 #include "menus/rep_10C0.h"
+#include "UnknownHeaders.h"
 
 extern s16 lbl_2_data_3ED4[];
 extern s16 lbl_2_data_3EC8[];
@@ -120,8 +121,8 @@ void fn_2_4E824(void) {
 }
 
 // .text:0x0004E858 size:0x20
-void fn_2_4E858(void) {
-    return;
+void fn_2_4E858(u32 arg) {
+    fn_80034CEC(arg);
 }
 
 // .text:0x0004E878 size:0x20
