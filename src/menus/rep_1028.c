@@ -1,5 +1,7 @@
 #include "menus/rep_1028.h"
 
+extern void (*lbl_2_data_30828[])(Rep1028Obj*);
+
 extern void (*lbl_2_data_30834[])(Rep1028Obj*);
 
 extern void (*lbl_2_data_30840[])(Rep1028Obj*);
@@ -401,8 +403,8 @@ void fn_2_919CC(void) {
 }
 
 // .text:0x00091AE4 size:0x38
-void fn_2_91AE4(void) {
-    return;
+void fn_2_91AE4(Rep1028Obj* obj) {
+    lbl_2_data_30828[obj->state](obj);
 }
 
 // .text:0x00091B1C size:0xC
