@@ -246,9 +246,11 @@ s32 fn_3_107B9C(u8* a, u8* b) {
     u8 keyB = g_Minigame.field_1E26[ib];
     u8 keyA = g_Minigame.field_1E26[ia];
     if (keyB == keyA) {
-        return ia - ib;
+        goto same;
     }
     return keyB - keyA;
+same:
+    return ia - ib;
 }
 
 // .text:0x00107BD0 size:0x34 mapped:0x80746C64
@@ -258,9 +260,11 @@ s32 fn_3_107BD0(u8* a, u8* b) {
     u8 keyB = g_Minigame.field_1E22[ib];
     u8 keyA = g_Minigame.field_1E22[ia];
     if (keyB == keyA) {
-        return ia - ib;
+        goto same;
     }
     return keyB - keyA;
+same:
+    return ia - ib;
 }
 
 // .text:0x00107C04 size:0x3C mapped:0x80746C98
@@ -270,9 +274,11 @@ s32 fn_3_107C04(u8* a, u8* b) {
     s16 keyB = g_Minigame.miniGameCurrentPoints[ib];
     s16 keyA = g_Minigame.miniGameCurrentPoints[ia];
     if (keyB == keyA) {
-        return ia - ib;
+        goto same;
     }
     return keyB - keyA;
+same:
+    return ia - ib;
 }
 
 // .text:0x00107C40 size:0x48 mapped:0x80746CD4
