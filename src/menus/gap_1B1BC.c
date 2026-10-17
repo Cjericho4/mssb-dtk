@@ -80,7 +80,14 @@ void fn_2_1C3A8(void) {
 
 // .text:0x0001C41C size:0x74
 void fn_2_1C41C(void) {
-    return;
+    lbl_2_bss_1A8234->panels[0].visible = 1;
+    lbl_2_bss_1A8234->panels[0].controls[0] = 1;
+    lbl_2_bss_1A8234->panels[0].controls[1] = 1;
+    lbl_2_bss_1A8234->panels[0].controls[2] = 1;
+    lbl_2_bss_1A8234->panels[1].visible = 0;
+    lbl_2_bss_1A8234->panels[1].controls[0] = 0;
+    lbl_2_bss_1A8234->panels[1].controls[1] = 0;
+    lbl_2_bss_1A8234->panels[1].controls[2] = 0;
 }
 
 // .text:0x0001C490 size:0x74
