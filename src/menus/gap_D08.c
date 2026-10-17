@@ -1,5 +1,6 @@
 #include "menus/gap_D08.h"
 #include "UnknownHeaders.h"
+extern void (*lbl_2_data_138[])(void);
 
 // .text:0x00000D08 size:0x80
 void fn_2_D08(void) {
@@ -64,5 +65,5 @@ void fn_2_11A0(u16 selection) {
 
 // .text:0x000011D8 size:0x44
 void fn_2_11D8(void) {
-    return;
+    lbl_2_data_138[lbl_803CBBCC->selection]();
 }
