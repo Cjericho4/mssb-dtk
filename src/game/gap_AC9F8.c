@@ -138,8 +138,61 @@ void fn_3_AD3BC(void) {
 }
 
 // .text:0x000AD8CC size:0x170 mapped:0x806EC960
+typedef struct {
+    u8 pad[0xCFA2];
+    u8 menuMode[2];
+} MenuModeTable_AD8CC;
+extern MenuModeTable_AD8CC lbl_803297E0;
+
 void fn_3_AD8CC(void) {
-    return;
+    switch (lbl_3_common_bss_34C90.field_0x1D2) {
+    case 0: {
+        u8 mode = lbl_3_common_bss_34C90.field_0x1D1;
+        lbl_3_common_bss_34C90.field_0x12 = 0;
+        lbl_803297E0.menuMode[lbl_3_common_bss_34C90.field_0x00] = mode != 4;
+        if (mode == 0xE || mode == 7) {
+            lbl_803297E0.menuMode[lbl_3_common_bss_34C90.field_0x00] = 2;
+        } else if (mode == 0xF || mode == 8) {
+            lbl_803297E0.menuMode[lbl_3_common_bss_34C90.field_0x00] = 3;
+        }
+        lbl_3_common_bss_34C90.field_0x1D2 = 2;
+        break;
+    }
+    case 2:
+        lbl_3_common_bss_34C90.field_0x12 = 0;
+        lbl_3_common_bss_34C90.field_0x1D2 = 3;
+        break;
+    case 3:
+        if (lbl_3_common_bss_34C90.field_0x12 > 0x14) {
+            lbl_3_common_bss_34C90.field_0x1D2 = 4;
+        }
+        break;
+    case 4:
+        fn_3_AD3BC();
+        break;
+    case 5:
+        lbl_3_common_bss_34C90.field_0x12 = 0;
+        lbl_3_common_bss_34C90.field_0x1D2 = 6;
+        break;
+    case 6:
+        if (lbl_3_common_bss_34C90.field_0x12 > 0x14) {
+            u8 mode = lbl_3_common_bss_34C90.field_0x1D1;
+            if (mode == 0xB || mode == 0xE || mode == 0xF) {
+                lbl_3_common_bss_34C90.field_0x1D1 = 9;
+                lbl_3_common_bss_34C90.field_0x1D2 = 0;
+                lbl_3_common_bss_34C90.field_0x0C = 0;
+                lbl_3_common_bss_34C90.field_0x0E = 0;
+                lbl_3_common_bss_34C90.field_0x10 = 0;
+            } else {
+                lbl_3_common_bss_34C90.field_0x1D1 = 2;
+                lbl_3_common_bss_34C90.field_0x1D2 = 0;
+                lbl_3_common_bss_34C90.field_0x0C = 0;
+                lbl_3_common_bss_34C90.field_0x0E = 0;
+                lbl_3_common_bss_34C90.field_0x10 = 0;
+            }
+        }
+        break;
+    }
 }
 
 // .text:0x000ADA3C size:0x4A0 mapped:0x806ECAD0
