@@ -1,4 +1,8 @@
 #include "menus/gap_194BC.h"
+#include "menus/gap_1B1BC.h"
+#include "menus/rep_10C0.h"
+#include "menus/rep_0B08.h"
+#include "menus/rep_08E8.h"
 
 extern void fn_80021204(void);
 extern s32 fn_8003AE70(s32 index);
@@ -69,6 +73,17 @@ void fn_2_1A2AC(void) {
 }
 
 // .text:0x0001A420 size:0xA8
-void fn_2_1A420(void) {
-    return;
+BOOL fn_2_1A420(void) {
+    s32 ready = 0;
+    if (lbl_2_bss_1A823C->state == 3) {
+        fn_2_4AB1C();
+        if (lbl_2_bss_1A824C->unk197843 == 0) {
+            if (lbl_2_bss_1A8248->unk441C == 5) {
+                if (fn_2_46D00()) ready = 1;
+            } else {
+                if (lbl_2_bss_1A8248->unk4426 & 0x20) ready = 1;
+            }
+        }
+    }
+    return (u8)(ready != 0);
 }

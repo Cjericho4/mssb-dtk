@@ -31,6 +31,6 @@ void fn_2_19D04(void);
 void fn_2_19F2C(void);
 void fn_2_1A1B4(void);
 void fn_2_1A2AC(void);
-void fn_2_1A420(void);
+BOOL fn_2_1A420(void);
 
 #endif // !__MENUS_gap_194BC_H_

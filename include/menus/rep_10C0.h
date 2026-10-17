@@ -55,7 +55,9 @@ typedef struct Rep10C0State {
     u8 unk19782C;
     u8 _pad19782D[5];
     u8 unk197832;
-    u8 _pad197833[0x16];
+    u8 _pad197833[0x10];
+    s8 unk197843;
+    u8 _pad197844[5];
     u8 unk197849;
     u8 _pad19784A[0xC];
     u8 unk197856;
