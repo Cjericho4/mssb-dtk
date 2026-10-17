@@ -1,5 +1,7 @@
 #include "menus/gap_92394.h"
 
+extern void (*lbl_2_data_307F8[])(Rep1028Obj*);
+
 extern void (*lbl_2_data_30804[])(Rep1028Obj*);
 
 // .text:0x00092394 size:0x38
@@ -23,8 +25,8 @@ void fn_2_923E4(void) {
 }
 
 // .text:0x0009246C size:0x38
-void fn_2_9246C(void) {
-    return;
+void fn_2_9246C(Rep1028Obj* obj) {
+    lbl_2_data_307F8[obj->state](obj);
 }
 
 // .text:0x000924A4 size:0xC
