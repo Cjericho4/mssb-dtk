@@ -262,8 +262,19 @@ void fn_2_6AAB8(void) {
 }
 
 // .text:0x0006AABC size:0x80
-void fn_2_6AABC(void) {
-    return;
+void fn_2_6AABC(s32 index, Vec* position) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    memcpy(&obj->position, position, sizeof(Vec));
+    obj->previousPosition.x = 0.0f;
+    obj->previousPosition.y = 0.0f;
+    obj->previousPosition.z = 0.0f;
+    obj->velocity.x = 0.0f;
+    obj->velocity.y = 0.0f;
+    obj->velocity.z = 0.0f;
+    obj->unk6C = obj->position.x;
+    obj->unk70 = obj->position.z;
+    obj->unk38 = 0.0f;
+    obj->unkBB = 0;
 }
 
 // .text:0x0006AB3C size:0xC0
