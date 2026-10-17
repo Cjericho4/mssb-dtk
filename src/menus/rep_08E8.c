@@ -19,8 +19,11 @@ BOOL fn_2_46D00(void) {
 }
 
 // .text:0x00046D34 size:0x60
-void fn_2_46D34(void) {
-    return;
+void fn_2_46D34(s32 amount) {
+    lbl_2_bss_1A8248->previousCounter = lbl_2_bss_1A8248->counter;
+    lbl_2_bss_1A8248->counter += amount;
+    if (lbl_2_bss_1A8248->counter > 999) lbl_2_bss_1A8248->counter = 999;
+    if (lbl_2_bss_1A8248->counter < 0) lbl_2_bss_1A8248->counter = 0;
 }
 
 // .text:0x00046D94 size:0x530

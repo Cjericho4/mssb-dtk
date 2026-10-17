@@ -10,7 +10,7 @@ typedef struct MenusDisplayConfig {
 
 void fn_2_46C88(void);
 BOOL fn_2_46D00(void);
-void fn_2_46D34(void);
+void fn_2_46D34(s32 amount);
 void fn_2_46D94(void);
 void fn_2_472C4(void);
 void fn_2_474F8(void);

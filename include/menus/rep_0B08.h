@@ -48,7 +48,10 @@ typedef struct MenusSceneState {
     Rep1028Obj rep1028Objects[1]; /* 0x21E0; extent unknown */
     u8 _pad229C[0x1E54];
     MenusChoiceRecord choices[1]; /* 0x40F0; extent unknown */
-    u8 _pad40FA[0x31B];
+    u8 _pad40FA[0x2C2];
+    s16 counter; /* 0x43BC */
+    s16 previousCounter;
+    u8 _pad43C0[0x55];
     u8 unk4415;
     u8 _pad4416[5];
     u8 unk441B;
