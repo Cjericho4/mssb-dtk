@@ -334,8 +334,10 @@ void fn_2_6BA50(void) {
 }
 
 // .text:0x0006BAAC size:0x2C
-void fn_2_6BAAC(void) {
-    return;
+void fn_2_6BAAC(Rep0B08Obj* obj) {
+    Rep0B08Obj* target = &lbl_2_bss_1A8248->rep0B08Objects[obj->index];
+    target->unkCA = 0xFF;
+    obj->state = 3;
 }
 
 // .text:0x0006BAD8 size:0xA4
