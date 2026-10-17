@@ -1540,7 +1540,29 @@ void fn_3_45860(s32 idx) {
 
 // .text:0x0004597C size:0x20C mapped:0x80684A10
 void fn_3_4597C(s32 fielderIdx) {
-    return;
+    VecXZ out;
+    VecXZ path[2];
+    VecXZ perp[2];
+    Fielder* f = &g_Fielders[fielderIdx];
+    f32 nx;
+    f32 nz;
+
+    path[0].x = g_Ball.AtBat_Contact_BallPos.x;
+    path[0].z = g_Ball.AtBat_Contact_BallPos.z;
+    path[1].x = g_Ball.throwTarget.x;
+    path[1].z = g_Ball.throwTarget.z;
+    nx = -(path[1].z - path[0].z);
+    nz = path[1].x - path[0].x;
+    perp[0].x = f->pos[0];
+    perp[0].z = f->pos[2];
+    perp[1].x = f->pos[0] + nx;
+    perp[1].z = f->pos[2] + nz;
+    calculateLineIntersection(&out, path, perp);
+    {
+        f32 x = out.x;
+        f32 z = out.z;
+        setFielderTargetIdx(fielderIdx, x, z);
+    }
 }
 
 // .text:0x00045B88 size:0x310 mapped:0x80684C1C
