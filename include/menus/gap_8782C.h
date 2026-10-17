@@ -26,7 +26,7 @@ void fn_2_8A008(void);
 void fn_2_8A824(void);
 void fn_2_8ABFC(void);
 void fn_2_8AC84(s32 index, u8 visible);
-void fn_2_8ACB0(void);
+void fn_2_8ACB0(s32 index, u8 visible);
 void fn_2_8ACDC(void);
 
 #endif // !__MENUS_gap_8782C_H_

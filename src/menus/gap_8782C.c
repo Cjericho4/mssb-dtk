@@ -78,8 +78,12 @@ void fn_2_8AC84(s32 index, u8 visible) {
 }
 
 // .text:0x0008ACB0 size:0x2C
-void fn_2_8ACB0(void) {
-    return;
+void fn_2_8ACB0(s32 index, u8 visible) {
+    HugeAnimEntry2D94* entries = lbl_2_bss_340140->entries_2D94;
+    HugeAnimEntry2D94* entry;
+    if (entries != 0) return;
+    entry = &entries[index];
+    if (entry != 0) entry->unk_26 = visible;
 }
 
 // .text:0x0008ACDC size:0x4
