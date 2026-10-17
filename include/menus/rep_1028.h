@@ -54,7 +54,7 @@ void fn_2_8F948(s32 index, s16 id);
 void fn_2_8F9D0(s32 index, s16 id);
 void fn_2_8FA58(s32 index, s16 id);
 void fn_2_8FAE0(s32 index, s16 id);
-void fn_2_8FB68(void);
+void fn_2_8FB68(s32 index, s16 id);
 void fn_2_8FBF8(void);
 void fn_2_8FC88(s32 index);
 void fn_2_8FD14(void);
