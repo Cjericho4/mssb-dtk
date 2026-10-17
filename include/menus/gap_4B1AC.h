@@ -129,7 +129,7 @@ void fn_2_53BC8(void);
 void fn_2_53CEC(void);
 void fn_2_53DF8(void);
 void fn_2_53F04(s32 value);
-void fn_2_53F88(void);
+void fn_2_53F88(s32 value);
 void fn_2_5400C(void);
 void fn_2_54120(void);
 void fn_2_54234(MenusResourceEntry* entries, s32 count);

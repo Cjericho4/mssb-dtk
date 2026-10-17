@@ -481,8 +481,15 @@ void fn_2_53F04(s32 value) {
 }
 
 // .text:0x00053F88 size:0x84
-void fn_2_53F88(void) {
-    return;
+void fn_2_53F88(s32 value) {
+    s32 bank;
+    s32 slot;
+    for (bank = 0; bank < 70; bank++) {
+        for (slot = 0; slot < 0x360; slot++) {
+            MenusResourceSlot* entry = &lbl_2_bss_1A8234->banks[bank].slots[slot];
+            if (entry->callback != 0) entry->callback(value, entry);
+        }
+    }
 }
 
 // .text:0x0005400C size:0x114
