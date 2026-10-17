@@ -608,8 +608,21 @@ void fn_2_918E8(Rep1028Obj* obj) {
 }
 
 // .text:0x000918F4 size:0x88
-void fn_2_918F4(void) {
-    return;
+void fn_2_918F4(Rep1028Obj* obj) {
+    s32 index;
+    hugeAnimStruct* render;
+    Rep1028Obj* target;
+    HugeAnimEntry2D94* entries;
+    fn_2_8AC84(obj->index, 1);
+    index = obj->index;
+    render = lbl_2_bss_340140;
+    target = &lbl_2_bss_1A8248->rep1028Objects[index];
+    entries = render->entries_2D94;
+    if (entries != 0) {
+        target->unkA6 = 0;
+        entries[index].callback = lbl_2_data_30900[2];
+    }
+    obj->state = 1;
 }
 
 // .text:0x0009197C size:0x38
