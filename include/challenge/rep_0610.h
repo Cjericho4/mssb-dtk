@@ -13,7 +13,9 @@ typedef struct Rep0610Items {
 typedef struct ChallengeState {
     /* 0x0000 */ u8 _pad0[0xC];
     /* 0x000C */ s32 unkC;
-    /* 0x0010 */ u8 _pad10[0x18];
+    /* 0x0010 */ u8 _pad10;
+    /* 0x0011 */ u8 unk11;
+    /* 0x0012 */ u8 _pad12[0x16];
     /* 0x0028 */ s32 selection;
     /* 0x002C */ u8 _pad2C[0x20];
     /* 0x004C */ s32 queued;

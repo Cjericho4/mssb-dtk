@@ -286,7 +286,20 @@ void fn_1_106B4(void) {
 
 // .text:0x000106C4 size:0x78
 void fn_1_106C4(void) {
-    return;
+    u16 pressed = lbl_803C77B8.pressed;
+    ChallengeState* state = &lbl_1_bss_3070;
+
+    if (pressed & 8) {
+    } else if (pressed & 4) {
+    } else if (pressed & 1) {
+        state->unk11 ^= 1;
+    } else if (pressed & 2) {
+        state->unk11 ^= 1;
+    } else if (pressed & 0x100) {
+    } else if (pressed & 0x200) {
+        state->unkC = 0;
+        state->unk2F01 = 1;
+    }
 }
 
 // .text:0x0001073C size:0x7C
