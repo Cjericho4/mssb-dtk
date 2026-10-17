@@ -25,7 +25,7 @@ void fn_2_8F688(void);
 void fn_2_8F6D0(void);
 u8 fn_2_8F720(s32 index);
 void fn_2_8F73C(s32 index, u8 value);
-void fn_2_8F758(void);
+void fn_2_8F758(s32 index, u8 value);
 void fn_2_8F774(void);
 void fn_2_8F7B0(void);
 void fn_2_8F838(void);

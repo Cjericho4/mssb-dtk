@@ -75,8 +75,9 @@ void fn_2_8F73C(s32 index, u8 value) {
 }
 
 // .text:0x0008F758 size:0x1C
-void fn_2_8F758(void) {
-    return;
+void fn_2_8F758(s32 index, u8 value) {
+    Rep1028Obj* obj = &lbl_2_bss_1A8248->rep1028Objects[index];
+    obj->unkA8 = value;
 }
 
 // .text:0x0008F774 size:0x3C
