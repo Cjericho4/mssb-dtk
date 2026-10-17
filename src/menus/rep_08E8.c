@@ -49,7 +49,11 @@ void fn_2_47540(void) {
 
 // .text:0x0004777C size:0x44
 void fn_2_4777C(void) {
-    return;
+    hugeAnimStruct* anim = &g_hugeAnimStruct;
+    if (anim->modelDataPtr != NULL) {
+        fn_800ACFB0(anim->modelDataPtr);
+        anim->modelDataPtr = NULL;
+    }
 }
 
 // .text:0x000477C0 size:0x134
