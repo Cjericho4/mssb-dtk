@@ -4,6 +4,8 @@
 #include "menus/gap_D08.h"
 #include "menus/gap_71EC4.h"
 #include "string.h"
+
+extern void sndFXRelated(s32 id);
 #include "menus/rep_0568.h"
 #include "menus/gap_16870.h"
 
@@ -198,8 +200,13 @@ void fn_2_348C(void) {
 }
 
 // .text:0x000035D0 size:0x54
-void fn_2_35D0(void) {
-    return;
+s32 fn_2_35D0(u8 index) {
+    if (lbl_2_bss_F468.flags45[index]) {
+        lbl_2_bss_F468.flags45[index] = 0;
+        sndFXRelated(0x200);
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x00003624 size:0x134C

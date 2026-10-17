@@ -499,8 +499,11 @@ void fn_2_79394(void) {
 }
 
 // .text:0x00079634 size:0x54
-void fn_2_79634(void) {
-    return;
+void fn_2_79634(s32 unused, s32 index) {
+    if ((u32)__cntlzw(1 - lbl_803C66B0.flags[index]) >> 5) {
+        fn_80062674(index);
+        lbl_803C66B0.flags[index] = 2;
+    }
 }
 
 // .text:0x00079688 size:0xDC
@@ -659,8 +662,15 @@ void fn_2_805DC(void) {
 }
 
 // .text:0x0008082C size:0xAC
-void fn_2_8082C(void) {
-    return;
+void fn_2_8082C(DrawingSceneStruct* scene, s32 index) {
+    s32 first;
+    if ((u32)__cntlzw(1 - lbl_803C66B0.flags[index]) >> 5) {
+        first = !!fn_80042DA8(scene, index + 0x89, 5);
+        if (first + !!fn_80042DA8(scene, index + 0x8B, 10) == 2) {
+            fn_80062674(index);
+            lbl_803C66B0.flags[index] = 2;
+        }
+    }
 }
 
 // .text:0x000808D8 size:0x284
@@ -669,8 +679,17 @@ void fn_2_808D8(void) {
 }
 
 // .text:0x00080B5C size:0xD0
-void fn_2_80B5C(void) {
-    return;
+void fn_2_80B5C(DrawingSceneStruct* scene, s32 index) {
+    s32 count;
+    if ((u32)__cntlzw(1 - lbl_803C66B0.flags[index]) >> 5) {
+        count = !!fn_80042DA8(scene, index, 0);
+        count += !!fn_80042DA8(scene, index + 2, 0);
+        count += !!fn_80042DA8(scene, index + 0x89, 10);
+        if (count == 3) {
+            fn_80062674(index);
+            lbl_803C66B0.flags[index] = 2;
+        }
+    }
 }
 
 // .text:0x00080C2C size:0x1E0
