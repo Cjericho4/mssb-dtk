@@ -4,6 +4,13 @@
 #include "mssbTypes.h"
 #include "UnknownHeaders.h"
 
+typedef struct MenusTeamSelections {
+    u8 _pad0[2];
+    s8 first[9];
+    s8 second[9];
+} MenusTeamSelections;
+extern MenusTeamSelections lbl_803C6724;
+
 typedef struct Menus1254State {
     s32 states[4];
     u8 _pad10[0x1E];
@@ -87,7 +94,7 @@ void fn_2_A040(void);
 void fn_2_A1A0(void);
 void fn_2_A288(void);
 void fn_2_A50C(void);
-void fn_2_A62C(void);
+BOOL fn_2_A62C(void);
 void fn_2_A6E0(void);
 void fn_2_ABC0(void);
 void fn_2_AEE8(void);
