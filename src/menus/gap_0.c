@@ -1,4 +1,7 @@
 #include "menus/gap_0.h"
+#include "game/rep_1E08.h"
+
+extern BdcArrayElement lbl_2_data_C0;
 #include "menus/gap_D08.h"
 #include "UnknownHeaders.h"
 #include "Dolphin/GX/GXPixel.h"
@@ -12,7 +15,7 @@ void fn_2_0(void) {
 
 // .text:0x0000003C size:0x2C
 void fn_2_3C(void) {
-    return;
+    fn_800A7D4C(0, &lbl_2_data_C0);
 }
 
 // .text:0x00000068 size:0x20
