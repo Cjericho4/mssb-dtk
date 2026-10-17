@@ -1,5 +1,6 @@
 #include "menus/rep_08E8.h"
 #include "stdlib.h"
+#include "menus/rep_0B08.h"
 
 // .text:0x00046C88 size:0x78
 void fn_2_46C88(void) {
@@ -7,8 +8,9 @@ void fn_2_46C88(void) {
 }
 
 // .text:0x00046D00 size:0x34
-void fn_2_46D00(void) {
-    return;
+BOOL fn_2_46D00(void) {
+    if (lbl_2_bss_1A8248->unk441C == 5 && lbl_2_bss_1A8248->unk4422 >= 6) return TRUE;
+    return FALSE;
 }
 
 // .text:0x00046D34 size:0x60

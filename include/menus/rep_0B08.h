@@ -10,6 +10,15 @@ typedef struct Rep0B08Obj {
     /* 0xA2 */ s16 countdown;
 } Rep0B08Obj;
 
+typedef struct MenusSceneState {
+    u8 _pad0[0x441C];
+    u8 unk441C;
+    u8 _pad441D[5];
+    u8 unk4422;
+} MenusSceneState;
+
+extern MenusSceneState* lbl_2_bss_1A8248;
+
 void fn_2_6832C(void);
 void fn_2_683EC(void);
 void fn_2_684D0(void);
