@@ -3,6 +3,13 @@
 
 #include "mssbTypes.h"
 
+typedef struct Menus1254State {
+    u8 _pad0[0x56];
+    u8 unk56;
+} Menus1254State;
+
+extern Menus1254State lbl_2_bss_F468;
+
 void fn_2_1254(void);
 void fn_2_1258(void);
 void fn_2_12A0(void);

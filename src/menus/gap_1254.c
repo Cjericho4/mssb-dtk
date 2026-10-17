@@ -425,7 +425,7 @@ void fn_2_EAE0(void) {
 
 // .text:0x0000EC34 size:0x20
 void fn_2_EC34(void) {
-    return;
+    if (lbl_2_bss_F468.unk56 == 0) lbl_2_bss_F468.unk56 = 1;
 }
 
 // .text:0x0000EC54 size:0x140
