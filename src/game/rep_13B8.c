@@ -311,7 +311,7 @@ void fn_3_7FFD0(void) {
 }
 
 // .text:0x00080028 size:0x109C mapped:0x806BF0BC
-void fn_3_80028(void) {
+void fn_3_80028(s32 idx) {
     return;
 }
 
@@ -338,7 +338,7 @@ void fn_3_810C4(s32 runner, s32 base) {
 }
 
 // .text:0x00081190 size:0x928 mapped:0x806C0224
-void fn_3_81190(void) {
+void fn_3_81190(s32 idx) {
     return;
 }
 
@@ -400,7 +400,7 @@ void fn_3_823B4(void) {
 }
 
 // .text:0x00082670 size:0x910 mapped:0x806C1704
-void fn_3_82670(void) {
+void fn_3_82670(s32 idx) {
     return;
 }
 
@@ -459,13 +459,59 @@ void fn_3_82F80(s32 idx, s16* outBack, s16* outFwd) {
 }
 
 // .text:0x0008307C size:0x370 mapped:0x806C2110
-void fn_3_8307C(void) {
+void fn_3_8307C(s32 idx) {
     return;
 }
 
 // .text:0x000833EC size:0x1C4 mapped:0x806C2480
-void fn_3_833EC(void) {
-    return;
+void fn_3_833EC(s32 idx) {
+    InMemRunnerType* runner;
+    s32 dir;
+
+    fn_3_8307C(idx);
+    runner = &g_Runners[idx];
+    if ((runner->runningToDugoutInd == 0 || runner->runningToDugoutStage == 0) && runner->actionCode == 0) {
+        if (runner->framesSinceLastDirectionChange >= lbl_3_data_4C54[3] ||
+            (runner->runningDirectionCode != 1 && runner->runningDirectionCode != 3)) {
+            if (runner->runningDirectionDesired != 0) {
+                if (g_GameLogic.secondaryGameMode == 6) {
+                    if (runner->runnerOnFieldOrOutOrScored == 1) {
+                        runner->nextDirectionBeingProcessed = runner->runningDirectionDesired;
+                    }
+                } else {
+                    if ((idx != 0 || runner->nextBase != 1) && runner->runnerOnFieldOrOutOrScored == 1) {
+                        runner->nextDirectionBeingProcessed = runner->runningDirectionDesired;
+                    }
+                    if (runner->nextDirectionBeingProcessed == 3 && runner->tagUpInd != 3 && runner->baseStandingOn >= 0) {
+                        runner->nextDirectionBeingProcessed = 0;
+                    }
+                }
+            }
+        }
+        dir = fn_3_7FA78(idx);
+        if (dir != 0) {
+            runner->nextDirectionBeingProcessed = dir;
+        }
+    }
+    if (runner->runningToDugoutInd != 0) {
+        runner->baseRoundingState = 0;
+        runner->actionCode = 0;
+    } else {
+        fn_3_7ECFC(idx);
+        fn_3_7F494(idx);
+        if (g_GameLogic.secondaryGameMode != 6) {
+            if (idx == 0 && runner->nextBase == 1) {
+                fn_3_7F2D8();
+            } else if (runner->baseRoundingState == 1) {
+                runner->baseRoundingState = 0;
+            }
+            fn_3_7EBD4(idx);
+        }
+    }
+    fn_3_82670(idx);
+    fn_3_81190(idx);
+    fn_3_80028(idx);
+    fn_3_8307C(idx);
 }
 
 typedef struct AiMashEntry {
