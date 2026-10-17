@@ -875,8 +875,32 @@ void fn_3_13ADC0(VecXYZ* dst, VecXYZ* a, VecXYZ* b) {
 }
 
 // .text:0x0013AE1C size:0x1C8 mapped:0x80779EB0
+extern void fn_3_157570(void);
+extern void fn_3_DE4FC(void);
+extern void fn_80011578(void);
+
 void fn_3_13AE1C(void) {
-    return;
+    u32 i;
+    fn_3_DE4FC();
+    if (g_Minigame.soloMinigameDifficulty <= 2 && g_Minigame.multiPlayerInd == 0) {
+        if (g_Minigame.players._18E8[(s8)g_Minigame._1908] == 1 &&
+            g_Minigame.challenge_minigame_haven_tWonYetIndicator == 0) {
+            g_Minigame._1A37 = 1;
+        } else {
+            g_Minigame._1A37 = 2;
+        }
+    }
+    fn_3_5A6D4(14);
+    fn_80011578();
+    for (i = 0; i < 100; i++) {
+        g_Minigame.wallBall_coinsVisibleInd[i] = 0;
+    }
+    g_Minigame._1D50 = 30;
+    g_Minigame._1D6C = 0;
+    for (i = 0; i < 4; i++) {
+        g_Minigame.unkBB0[i].unk3D = 0;
+    }
+    g_Minigame._CCE[0] = 0;
 }
 
 // .text:0x0013AFE4 size:0x2A0 mapped:0x8077A078
@@ -890,10 +914,6 @@ void fn_3_13B284(void) {
 }
 
 // .text:0x0013B9C4 size:0x16C mapped:0x8077AA58
-extern void fn_3_157570(void);
-extern void fn_3_DE4FC(void);
-extern void fn_80011578(void);
-
 void fn_3_13B9C4(void) {
     u32 i;
     fn_3_157570();
