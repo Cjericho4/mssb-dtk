@@ -72,7 +72,7 @@ s32 fn_3_6B5D8(void) {
         lbl_3_common_bss_32724.unk9A = lbl_3_common_bss_32724.unk9A + 1;
         break;
     case 1:
-        if (fn_80016344((s8)lbl_80353A90.field_0x103, 9, 0, 0) != 0) {
+        if (fn_80016344(lbl_80353A90.field_0x103, 9, 0, 0) != 0) {
             return 1;
         }
         break;
