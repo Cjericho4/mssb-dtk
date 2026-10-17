@@ -160,7 +160,7 @@ void fn_3_46688(void);
 void fn_3_468DC(void);
 void fn_3_46ABC(s32 fielderIdx);
 s32 fn_3_46E08(s32 fielderIdx, f32* x, f32* z);
-void fn_3_47628(void);
+s32 fn_3_47628(void);
 void fn_3_47778(void);
 void fn_3_480B8(s32 fielderIdx);
 void fn_3_483CC(s32 idx);
