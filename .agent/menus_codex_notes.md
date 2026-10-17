@@ -19,8 +19,6 @@ Gave up fn_2_1258 during asm review: generic byte-offset load dispatch for 1/2/4
 New MenusPreferences pending byte F at lbl_2_bss_1033C for scene-removal helper.
 Gave up fn_2_10AC during asm review: self-relative pointer fixups require interpreting binary offsets; no compliant typed field-only implementation identified. Stub retained.
 New MenusSceneTransition (state 0/current8/previous9) and MenusTransitionConfig (next58) for scene enqueue wrapper.
-Gave up fn_2_35D0 after 3 attempts: byte-index register/base ordering and lbzu vs lbz+addi remain; restored stub.
-Gave up fn_2_79634 after 2 attempts: flag address kept in separate temporary, emits addi/lbz instead of lbzu; restored stub.
 New opaque MenusSceneAsset declaration for external resource passed to fn_8001CB10; no fields inferred.
 New Rep0568State: count2D and per-animation flags40; reused AnimationStruct/AnimationStructPtrs.
 New MenusCompletionState, 5 rows of 4 bytes at C6 and allCompleted F4.
@@ -65,16 +63,13 @@ New Rep0B08AnimationConfig (6 bytes), animation0/time2/flag4 for data3C84; exten
 Consolidated Menus16870State into Rep0568State: active14/counters1C/values46 overlap flags40; established total54.
 New MenusRosterTransition (mode5/pendingE) and MenusRosterScripts (script blocksBAC/CCC/DCC).
 Gave up fn_2_978 after3 attempts: four-case switch becomes compare tree rather than target jump table, including explicit empty cases and s32 local. Restored stub.
-Gave up fn_2_58470 during asm review: redundant empty-case/dead-branch dispatch matches prior512C0 obstacle; stub retained.
 New MenusQueueState with pending47 at lbl_803C50E8; extended MenusTransitionConfig nextC8.
 New MenusCameraConfig (18 bytes), two Vecs; reused in Rep10C0State camera197668 with enabled197855.
-Gave up fn_2_8082C after2 attempts: flag address becomes lbz+addi instead of lbzu, and inline compare folds cntlzw; out-pointer helper fixes register ordering only. Restored stub.
 Gave up fn_2_1FF14 after1 attempt: typed controller held-field access keeps offset4 on lhz, whereas target keeps a shifted array base+4 for lhzx; inline pointer getter does not fix. Restored stub.
 Gave up fn_2_1FFC4 during asm review: identical shifted-controller-array obstacle as1FF14; retained stub.
 Consolidated Rep0788Item into existing MenusResourceSlot, adding signed index atE.
 Gave up fn_2_90DE4 after5 attempts: negative-sine inline fixed zero-clamp copy; three remaining differences are amplitude/negative-sine f2/f3 allocation and fmuls operand order. Restored stub.
 New MenusTeamSelections: signed first/second nine-byte arrays at2/B of lbl_803C6724.
-Gave up fn_2_15104 after2 attempts: lbzu counter-address formation, redundant reload/truncation and scratch-register differences remain even with pointer getter. Restored stub.
 Gave up fn_2_95E80 after3 attempts: inline ==1 predicate folds cntlzw and scene/state saved regs swap; explicit pointer and u8 predicate do not change codegen. Restored stub.
 New MenusResourceState, ten existing5100-byte banks and pending32A86, at lbl_2_bss_1A8230.
 New MenusTransitionEntry (10 bytes) with next8; added array view to existing MenusTransitionConfig preserving named scalar offsets.
@@ -83,12 +78,8 @@ Gave up fn_2_73BF0 after1 attempt: target duplicated return54 branch is folded, 
 New ChallengeLineupEntry (6 bytes), signed value3; extended existing ChallengeSaveData with nine entries at40B8 for menus comparison helper.
 Gave up fn_2_33BC after3 attempts: all operations/unrolling correct, but trackedvalue/base r4/r5 swapped; declaration reorder and explicit state pointer unchanged. Restored stub and removed unused ChallengeLineupEntry.
 New opaque MenusSceneArchive via tagged pointer; extended MenusResourceTables with archive7A8.
-Gave up fn_2_80B5C during asm review: same flags[index] lbzu/cntlzw address-formation obstacle as8082C; retained stub.
-Gave up fn_2_2577C during asm review: same redundant empty-case/dead-branch dispatch as58470; retained stub.
-Gave up fn_2_3735C during asm review: same redundant empty-case/dead-branch dispatch as58470; retained stub.
 New MenusSelectionPair (8 bytes) for value-copy of MenusGameChoiceState selections at10; repeatFlags at Rep0568State10.
 Gave up fn_2_12B60 after3 attempts: pointer induction is hoisted before initial condition, and saved registers differ; restored stub and removed unused pair/repeat layouts and tentative callee signatures.
 Gave up fn_2_8DC00 during asm review: allocates runtime-sized aligned per-animation aux chunks, requiring raw byte slicing/casting to assign opaque aux pointers; no field-only typed representation identified. Stub retained.
 Gave up fn_2_95E80 after5 total attempts: explicit __cntlzw fixes predicate, but state/scene r31/r30 remain swapped; extra scene local unchanged. Stub restored, session limit reached.
-Gave up fn_2_80500 during asm review: same indexed flag lbzu formation obstacle as8082C and79634; retained stub.
 Gave up fn_2_79688 after1 attempt: same index-add web vs temporary-register obstacle as7EF68, plus unrolled iteration constants left separate. Stub restored.
