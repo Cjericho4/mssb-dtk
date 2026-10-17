@@ -2,6 +2,7 @@
 #define __MENUS_rep_0F60_H_
 
 #include "mssbTypes.h"
+#include "menus/rep_0568.h"
 
 void fn_2_8ACE0(void);
 void fn_2_8AEE0(void);
@@ -17,7 +18,7 @@ void fn_2_8CCAC(s32 index, u8 value);
 void fn_2_8CCCC(void);
 void fn_2_8CD58(void);
 void fn_2_8D024(void);
-void fn_2_8D24C(void);
+void fn_2_8D24C(Rep0568Obj* obj);
 void fn_2_8D270(void);
 void fn_2_8D9DC(void);
 void fn_2_8DB14(void);

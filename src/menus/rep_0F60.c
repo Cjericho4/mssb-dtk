@@ -1,5 +1,6 @@
 #include "menus/rep_0F60.h"
 #include "UnknownHeaders.h"
+#include "menus/rep_0568.h"
 
 extern hugeAnimStruct* lbl_2_bss_340140;
 
@@ -75,8 +76,8 @@ void fn_2_8D024(void) {
 }
 
 // .text:0x0008D24C size:0x24
-void fn_2_8D24C(void) {
-    return;
+void fn_2_8D24C(Rep0568Obj* obj) {
+    fn_800B9AA8(obj->context);
 }
 
 // .text:0x0008D270 size:0x76C
