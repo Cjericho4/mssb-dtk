@@ -5,7 +5,8 @@
 #include "Dolphin/mtx.h"
 
 typedef struct Gap3C03CObj {
-    u8 _pad0[5];
+    u8 _pad0[4];
+    s8 unk4;
     s8 unk5;
     u8 _pad6[0x2B];
     s8 unk31;

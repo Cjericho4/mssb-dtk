@@ -486,7 +486,13 @@ void fn_2_466AC(void) {
 
 // .text:0x000467FC size:0xE0
 void fn_2_467FC(void) {
-    return;
+    Gap3C03CObj* obj;
+    s32 i;
+    for (i = 0; i < 54; i++) {
+        obj = &lbl_2_bss_1A8248->gap3C03CObjects[i];
+        if (obj->unk4 == lbl_2_bss_1A8248->unk441C && obj->unk5 <= 3) obj->unk31 = 1;
+        else obj->unk31 = 0;
+    }
 }
 
 // .text:0x000468DC size:0x200

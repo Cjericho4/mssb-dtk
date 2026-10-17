@@ -62,8 +62,8 @@ typedef struct Rep0B08Obj {
 } Rep0B08Obj;
 
 typedef struct MenusSceneState {
-    Gap3C03CObj gap3C03CObjects[1]; /* extent unknown */
-    u8 _pad34[0x15D2];
+    Gap3C03CObj gap3C03CObjects[54];
+    u8 _padAF8[0xB0E];
     u8 unk1606;
     u8 _pad1607[9];
     Rep0B08Obj rep0B08Objects[14];
