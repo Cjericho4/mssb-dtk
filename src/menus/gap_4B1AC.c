@@ -129,7 +129,8 @@ void fn_2_4E7EC(void) {
 
 // .text:0x0004E824 size:0x34
 void fn_2_4E824(void) {
-    return;
+    lbl_2_bss_1A824C->timeHigh = lbl_803C7898.high;
+    lbl_2_bss_1A824C->timeLow = lbl_803C7898.low;
 }
 
 // .text:0x0004E858 size:0x20
