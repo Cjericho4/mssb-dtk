@@ -8,6 +8,14 @@ typedef struct Rep0568Obj {
     u32 context;
 } Rep0568Obj;
 
+typedef struct Rep0568State {
+    u8 _pad0[0x2D];
+    u8 count;
+    u8 _pad2E[0x12];
+    u8 flags[13];
+} Rep0568State;
+extern Rep0568State lbl_2_bss_100B8;
+
 void fn_800B9AA8(u32 context);
 
 void fn_2_16A98(void);

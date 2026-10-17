@@ -1,4 +1,5 @@
 #include "menus/rep_0568.h"
+#include "UnknownHeaders.h"
 
 // .text:0x00016A98 size:0x248
 void fn_2_16A98(void) {
@@ -7,7 +8,12 @@ void fn_2_16A98(void) {
 
 // .text:0x00016CE0 size:0x58
 void fn_2_16CE0(void) {
-    return;
+    AnimationStruct* anim;
+    s32 i;
+    for (i = 0; i < lbl_2_bss_100B8.count; i++) {
+        anim = g_hugeAnimStruct.AnimationStructPtrs[i];
+        if (anim != 0 && anim->animID == 0x6B) lbl_2_bss_100B8.flags[i] = 1;
+    }
 }
 
 // .text:0x00016D38 size:0x70
