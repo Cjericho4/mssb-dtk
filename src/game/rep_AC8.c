@@ -1529,8 +1529,21 @@ void fn_3_42BD0(s32 fielderIndex) {
 }
 
 // .text:0x00042CDC size:0x35C mapped:0x80681D70
-void fn_3_42CDC(void) {
-    return;
+void fn_3_42CDC(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    f32 x;
+    f32 z;
+
+    f->unk28 = 5.0f * g_Ball._19E4 + g_Ball.ballWillHitBallPos.x;
+    f->unk2C = 5.0f * g_Ball._19E8 + g_Ball.ballWillHitBallPos.z;
+    if (f->unk18A != 0) {
+        fn_3_50DD8(fielderIdx, &x, &z, 1);
+        setFielderTarget(f, x, z);
+        f->unk20 = x;
+        f->unk24 = z;
+    } else {
+        setFielderTargetIdx(fielderIdx, f->unk28, f->unk2C);
+    }
 }
 
 // .text:0x00043038 size:0x3A8 mapped:0x806820CC
@@ -1968,7 +1981,7 @@ void fn_3_50C20(void) {
 }
 
 // .text:0x00050DD8 size:0x448 mapped:0x8068FE6C
-void fn_3_50DD8(void) {
+void fn_3_50DD8(s32 fielderIdx, f32* x, f32* z, s32 arg3) {
     return;
 }
 
