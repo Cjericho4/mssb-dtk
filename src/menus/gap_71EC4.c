@@ -7,7 +7,6 @@ extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "menus/rep_0438.h"
 
 extern MenusSceneScript lbl_2_data_2B4DC;
-extern void fn_80034E20(DrawingSceneStruct* scene, MenusSceneScript* script);
 
 extern void fn_800625A4(s32, s32);
 extern void fn_800626EC(s32);

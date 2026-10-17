@@ -1,6 +1,9 @@
 #include "menus/gap_94854.h"
 #include "UnknownHeaders.h"
 #include "menus/gap_71EC4.h"
+#include "game/rep_3448.h"
+
+extern MenusSceneScript lbl_2_data_311E4;
 
 extern void fn_80062674(s32);
 extern void fn_80053FE8(void);
@@ -22,7 +25,11 @@ void fn_2_9486C(void) {
 
 // .text:0x000948B8 size:0x84
 void fn_2_948B8(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    lbl_2_bss_1033C.pending = 0;
+    fn_80034E20(scene, &lbl_2_data_311E4);
+    lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0x280000;
+    lbl_803CC1B8->unk_00 = fn_2_9486C;
 }
 
 // .text:0x0009493C size:0x150
