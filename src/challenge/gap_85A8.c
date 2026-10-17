@@ -2,7 +2,15 @@
 
 // .text:0x000085A8 size:0x7C
 void fn_1_85A8(void) {
-    return;
+    if (lbl_803C77B8.pressed & 1) {
+        if (--lbl_1_common_bss_472B4.cursor < -1) {
+            lbl_1_common_bss_472B4.cursor = lbl_1_common_bss_472B4.count - 1;
+        }
+    } else if (lbl_803C77B8.pressed & 2) {
+        if (++lbl_1_common_bss_472B4.cursor >= lbl_1_common_bss_472B4.count) {
+            lbl_1_common_bss_472B4.cursor = -1;
+        }
+    }
 }
 
 // .text:0x00008624 size:0x98
