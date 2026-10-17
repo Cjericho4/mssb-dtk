@@ -365,8 +365,24 @@ void fn_2_6AABC(s32 index, Vec* position) {
 }
 
 // .text:0x0006AB3C size:0xC0
-void fn_2_6AB3C(void) {
-    return;
+void fn_2_6AB3C(s32 index, Vec* position, f32 angle) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    f32 dx, dz;
+    memcpy(&obj->position, position, sizeof(Vec));
+    obj->previousPosition.x = 0.0f;
+    obj->previousPosition.y = 0.0f;
+    obj->previousPosition.z = 0.0f;
+    obj->velocity.x = 0.0f;
+    obj->velocity.y = 0.0f;
+    obj->velocity.z = 0.0f;
+    obj->unk30 = angle;
+    obj->unk6C = obj->position.x;
+    obj->unk70 = obj->position.z;
+    obj->unk38 = 0.0f;
+    obj->unkBB = 0;
+    dx = -obj->position.x;
+    dz = -obj->position.z;
+    obj->unk30 = obj->unk34 = (f32)atan2(-dx, -dz);
 }
 
 // .text:0x0006ABFC size:0xF4

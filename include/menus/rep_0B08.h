@@ -137,7 +137,7 @@ void fn_2_6A708(void);
 void fn_2_6A87C(void);
 void fn_2_6AAB8(void);
 void fn_2_6AABC(s32 index, Vec* position);
-void fn_2_6AB3C(void);
+void fn_2_6AB3C(s32 index, Vec* position, f32 angle);
 void fn_2_6ABFC(void);
 void fn_2_6ACF0(void);
 void fn_2_6ACF4(void);
