@@ -890,8 +890,25 @@ void fn_3_13B284(void) {
 }
 
 // .text:0x0013B9C4 size:0x16C mapped:0x8077AA58
+extern void fn_3_157570(void);
+extern void fn_3_DE4FC(void);
+extern void fn_80011578(void);
+
 void fn_3_13B9C4(void) {
-    return;
+    u32 i;
+    fn_3_157570();
+    fn_3_DE4FC();
+    fn_3_5A6D4(14);
+    fn_80011578();
+    for (i = 0; i < 100; i++) {
+        g_Minigame.wallBall_coinsVisibleInd[i] = 0;
+    }
+    g_Minigame._1D50 = 30;
+    g_Minigame._1D6C = 0;
+    for (i = 0; i < 4; i++) {
+        g_Minigame.unkBB0[i].unk3D = 0;
+    }
+    g_Minigame._CCE[0] = 0;
 }
 
 // .text:0x0013BB30 size:0xC4 mapped:0x8077ABC4
