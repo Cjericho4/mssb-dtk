@@ -183,8 +183,13 @@ void fn_2_69554(void) {
 }
 
 // .text:0x000696D4 size:0x3C
-void fn_2_696D4(void) {
-    return;
+void fn_2_696D4(s32 index) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    if (obj->unkA0 != 0) {
+        obj->unk38 = obj->unk3C;
+    } else {
+        obj->unk38 = 0.0f;
+    }
 }
 
 // .text:0x00069710 size:0x1DC
