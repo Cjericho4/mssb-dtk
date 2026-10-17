@@ -77,7 +77,7 @@ void fn_2_439D0(void);
 void fn_2_43E8C(void);
 void fn_2_44014(void);
 void fn_2_44184(void);
-void fn_2_44238(void);
+BOOL fn_2_44238(s32 value);
 BOOL fn_2_442E8(void);
 BOOL fn_2_44368(void);
 void fn_2_44414(void);
