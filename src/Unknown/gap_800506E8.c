@@ -32,7 +32,12 @@ void fn_80051D00(void) {
 
 // .text:0x80052188 size:0x28
 void fn_80052188(void) {
-    return;
+    lbl_803C6028.unk8E = 0;
+    lbl_803C6028.unk8F = 0;
+    lbl_803C6028.unk90 = 0;
+    lbl_803C6028.unk7C = 0;
+    lbl_803C6028.unk7D = 0;
+    lbl_803C6028.unk7E = 0;
 }
 
 // .text:0x800521B0 size:0x25C
@@ -71,8 +76,13 @@ void fn_80052768(void) {
 }
 
 // .text:0x80052798 size:0x24
-void fn_80052798(void) {
-    return;
+void fn_80052798(s32 value) {
+    if (value < 1) {
+        value = 1;
+    } else if (value > 2) {
+        value = 2;
+    }
+    lbl_803CB880 = value;
 }
 
 // .text:0x800527BC size:0x8

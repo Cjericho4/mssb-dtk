@@ -76,8 +76,8 @@ void MovStreamThread(void) {
 }
 
 // .text:0x800AED24 size:0x10
-void fn_800AED24(void) {
-    return;
+BOOL fn_800AED24(void) {
+    return lbl_803CC19C == 0;
 }
 
 // .text:0x800AED34 size:0x474
@@ -102,7 +102,7 @@ void fn_800AF9B4(void) {
 
 // .text:0x800AFBF0 size:0x20
 void fn_800AFBF0(void) {
-    return;
+    fn_800A63C8();
 }
 
 // .text:0x800AFC10 size:0x13C
@@ -116,8 +116,8 @@ void fn_800AFD4C(void) {
 }
 
 // .text:0x800AFFB0 size:0x10
-void fn_800AFFB0(void) {
-    return;
+u8 fn_800AFFB0(void) {
+    return lbl_803C79D4.unk28;
 }
 
 // .text:0x800AFFC0 size:0x48
@@ -226,8 +226,9 @@ void RunDrawScripts_with_stack_variables(void) {
 }
 
 // .text:0x800B0D28 size:0x10
-void fn_800B0D28(void) {
-    return;
+void fn_800B0D28(s32 value) {
+    lbl_803CC1D8[0] = value;
+    lbl_803CC1D8[1] = value;
 }
 
 // .text:0x800B0D38 size:0x30

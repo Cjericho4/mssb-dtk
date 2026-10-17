@@ -22,7 +22,10 @@ void fn_800626EC(void) {
 
 // .text:0x80062744 size:0x20
 void fn_80062744(void) {
-    return;
+    lbl_803C663C.unkC = 0;
+    lbl_803C663C.unk8 = 0;
+    lbl_803C663C.unk4 = 0;
+    lbl_803C663C.unk0 = 0;
 }
 
 // .text:0x80062764 size:0x30
@@ -67,7 +70,7 @@ void fn_800628D4(void) {
 
 // .text:0x80062948 size:0x14
 void fn_80062948(void) {
-    return;
+    lbl_803C6714.unkD = 1;
 }
 
 // .text:0x8006295C size:0xF4
@@ -77,12 +80,16 @@ void fn_8006295C(void) {
 
 // .text:0x80062A50 size:0x24
 void initializeUnknown(void) {
-    return;
+    lbl_803C6714.unk0 = 0;
+    lbl_8034E9A0.unk48B3 = 0;
+    lbl_803C6714.unk5 = 0;
+    lbl_803C6714.unk4 = 0;
 }
 
 // .text:0x80062A74 size:0x20
 void fn_80062A74(void) {
-    return;
+    lbl_803C6714.unk5 = 1;
+    lbl_8034E9A0.unk48B3 = 1;
 }
 
 // .text:0x80062A94 size:0x150
@@ -126,8 +133,9 @@ void fn_80062F38(void) {
 }
 
 // .text:0x80063010 size:0x18
-void fn_80063010(void) {
-    return;
+s32 fn_80063010(s32 arg0, Gap80062578Scene** scene) {
+    (*scene)->callback = fn_80062F38;
+    return 0;
 }
 
 // .text:0x80063028 size:0x384
@@ -146,8 +154,9 @@ void fn_80063718(void) {
 }
 
 // .text:0x800637BC size:0x18
-void fn_800637BC(void) {
-    return;
+s32 fn_800637BC(s32 arg0, Gap80062578Scene** scene) {
+    (*scene)->callback = fn_80063718;
+    return 0;
 }
 
 // .text:0x800637D4 size:0x8
@@ -161,8 +170,9 @@ void fn_800637DC(void) {
 }
 
 // .text:0x800638B4 size:0x18
-void fn_800638B4(void) {
-    return;
+s32 fn_800638B4(s32 arg0, Gap80062578Scene** scene) {
+    (*scene)->callback = fn_800637DC;
+    return 0;
 }
 
 // .text:0x800638CC size:0x8C

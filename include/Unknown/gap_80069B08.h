@@ -2,6 +2,12 @@
 #define __UNKNOWN_gap_80069B08_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80069B08Mission {
+    u8 _pad0[0x31];
+    /* 0x31 */ s8 state;
+    u8 _pad32[0x2];
+} Gap80069B08Mission;
+extern Gap80069B08Mission starMissionCompletionTracker[];
 
 extern s32 lbl_803CBD38;
 extern s32 lbl_803CBD3C;
@@ -35,7 +41,7 @@ void fn_8006C488(void);
 void challengeDrawStarsOnMissionMenu(void);
 void fn_8006C5CC(void);
 void fn_8006C6C4(void);
-void fn_8006C79C(void);
+BOOL fn_8006C79C(s32 index);
 void starMissionRelated2(void);
 void fn_8006C9D8(void);
 void fn_8006CA9C(void);

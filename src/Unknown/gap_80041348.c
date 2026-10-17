@@ -11,8 +11,12 @@ void fn_8004153C(void) {
 }
 
 // .text:0x8004157C size:0x24
-void fn_8004157C(void) {
-    return;
+BOOL fn_8004157C(void) {
+    if (lbl_803CBCC0 != 0) {
+        lbl_803CBCC0--;
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x800415A0 size:0x8

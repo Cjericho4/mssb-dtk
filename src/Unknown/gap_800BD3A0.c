@@ -1,18 +1,22 @@
 #include "Unknown/gap_800BD3A0.h"
 
 // .text:0x800BD3A0 size:0xC
-void LITInitColor(void) {
-    return;
+void LITInitColor(Gap800BD3A0Light* light, Gap800BD3A0Color* color) {
+    light->color = *color;
 }
 
 // .text:0x800BD3AC size:0x10
-void LITInitDir(void) {
-    return;
+void LITInitDir(Gap800BD3A0Light* light, f32 x, f32 y, f32 z) {
+    light->dirX = x;
+    light->dirY = y;
+    light->dirZ = z;
 }
 
 // .text:0x800BD3BC size:0x10
-void LITInitPos(void) {
-    return;
+void LITInitPos(Gap800BD3A0Light* light, f32 x, f32 y, f32 z) {
+    light->posX = x;
+    light->posY = y;
+    light->posZ = z;
 }
 
 // .text:0x800BD3CC size:0x20
@@ -66,8 +70,8 @@ void ActorObjectInitTable(void) {
 }
 
 // .text:0x800BDE8C size:0x14
-void fn_800BDE8C(void) {
-    return;
+void fn_800BDE8C(u8 value) {
+    lbl_803009F8.unk4C = (value & 7) << 5;
 }
 
 // .text:0x800BDEA0 size:0xD0
@@ -111,23 +115,23 @@ void fn_800BEB3C(void) {
 }
 
 // .text:0x800BEB80 size:0x20
-void fn_800BEB80(void) {
-    return;
+u8* fn_800BEB80(u8 index) {
+    return &lbl_803009F8.entries[index].unkB0;
 }
 
 // .text:0x800BEBA0 size:0x10
-void fn_800BEBA0(void) {
-    return;
+u8 fn_800BEBA0(void) {
+    return lbl_803009F8.drawShadows;
 }
 
 // .text:0x800BEBB0 size:0x10
-void GetDrawShadows(void) {
-    return;
+u8 GetDrawShadows(void) {
+    return lbl_803009F8.drawShadows;
 }
 
 // .text:0x800BEBC0 size:0xC
-void DrawShadows(void) {
-    return;
+void DrawShadows(u8 enable) {
+    lbl_803009F8.drawShadows = enable;
 }
 
 // .text:0x800BEBCC size:0x34
@@ -151,23 +155,23 @@ void fn_800BF008(void) {
 }
 
 // .text:0x800BF038 size:0x10
-void fn_800BF038(void) {
-    return;
+void fn_800BF038(s32 value) {
+    lbl_803009F8.unk20 = value;
 }
 
 // .text:0x800BF048 size:0x10
-void fn_800BF048(void) {
-    return;
+void fn_800BF048(s32 value) {
+    lbl_803009F8.unk18 = value;
 }
 
 // .text:0x800BF058 size:0x10
-void fn_800BF058(void) {
-    return;
+void fn_800BF058(s32 value) {
+    lbl_803009F8.unk1C = value;
 }
 
 // .text:0x800BF068 size:0xC
-void fn_800BF068(void) {
-    return;
+Gap800BD3A0State* fn_800BF068(void) {
+    return &lbl_803009F8;
 }
 
 // .text:0x800BF074 size:0x130

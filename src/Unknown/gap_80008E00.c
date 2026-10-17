@@ -21,8 +21,10 @@ void fn_8000900C(void) {
 }
 
 // .text:0x80009018 size:0x10
-void fn_80009018(void) {
-    return;
+s32 fn_80009018(s32 value) {
+    s32 old = lbl_803CBBBC;
+    lbl_803CBBBC = value;
+    return old;
 }
 
 // .text:0x80009028 size:0x6C
@@ -32,7 +34,7 @@ void fn_80009028(void) {
 
 // .text:0x80009094 size:0x20
 void fn_80009094(void) {
-    return;
+    fn_80035168();
 }
 
 // .text:0x800090B4 size:0x90
@@ -71,8 +73,10 @@ void BezierInterpolate(void) {
 }
 
 // .text:0x8000A094 size:0x18
-void fn_8000A094(void) {
-    return;
+s32 fn_8000A094(s32 value) {
+    s32 old = lbl_80366188.unk88;
+    lbl_80366188.unk88 = value;
+    return old;
 }
 
 // .text:0x8000A0AC size:0x13C

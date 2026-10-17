@@ -1,13 +1,13 @@
 #include "Unknown/gap_80039AA8.h"
 
 // .text:0x80039AA8 size:0xC
-void GetUITexture(void) {
-    return;
+Gap80039AA8Texture* GetUITexture(void) {
+    return &lbl_8023DD80;
 }
 
 // .text:0x80039AB4 size:0xC
-void fn_80039AB4(void) {
-    return;
+Gap80039AA8Table* fn_80039AB4(void) {
+    return &lbl_800F7A40;
 }
 
 // .text:0x80039AC0 size:0x538
@@ -86,8 +86,10 @@ void fn_8003A6B0(void) {
 }
 
 // .text:0x8003A848 size:0x14
-void fn_8003A848(void) {
-    return;
+void fn_8003A848(u8 a, u8 b, u8 c) {
+    lbl_803CB828[0] = a;
+    lbl_803CB828[1] = b;
+    lbl_803CB828[2] = c;
 }
 
 // .text:0x8003A85C size:0x44

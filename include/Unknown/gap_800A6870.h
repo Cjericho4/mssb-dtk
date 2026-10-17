@@ -2,12 +2,27 @@
 #define __UNKNOWN_gap_800A6870_H_
 
 #include "mssbTypes.h"
+extern u8 lbl_803CC134;
+extern u8 lbl_803CC135;
+extern s32 lbl_803CC12C;
+extern s32 lbl_803CC13C;
+typedef struct Gap800A6870Load {
+    u8 _pad0[0x6D0];
+    /* 0x6D0 */ s32 unk6D0;
+    u8 _pad6D4[0x4];
+    /* 0x6D8 */ u8 unk6D8;
+} Gap800A6870Load;
+extern Gap800A6870Load lbl_803C6CF8;
+typedef struct Gap800A6870File {
+    char* path; /* 0x0 */
+} Gap800A6870File;
+s32 DVDConvertPathToEntrynum(char* path);
 
 extern s32 lbl_803CC140;
 extern s32 lbl_803CC148;
 extern s32 lbl_803CC154;
 
-void fn_800A6870(void);
+s32 fn_800A6870(u8 flag, s32 value);
 void fn_800A6890(void);
 void fn_800A68D4(void);
 void fn_800A6900(void);
@@ -17,7 +32,7 @@ void fn_800A6E24(void);
 void fn_800A6F94(void);
 void ARAMTransfer(void);
 void fn_800A750C(void);
-void ConvertPathToEntryNum(void);
+s32 ConvertPathToEntryNum(Gap800A6870File* file);
 void fn_800A7568(void);
 void fn_800A75EC(void);
 void fn_800A7670(void);
@@ -37,7 +52,7 @@ void initRenderMode(void);
 void fn_800A84C4(void);
 void fn_800A8518(void);
 void fn_800A86B4(void);
-void fn_800A8864(void);
+u16 fn_800A8864(void);
 void fn_800A8878(void);
 s32 fn_800A88C0(void);
 s32 fn_800A88C8(void);
@@ -57,7 +72,7 @@ void fn_800A9168(void);
 void fn_800A91B0(void);
 void fn_800A93AC(void);
 void fn_800A9424(void);
-void fn_800A94A8(void);
+void fn_800A94A8(u8 flag);
 void fn_800A94C4(void);
 void fn_800A9520(void);
 

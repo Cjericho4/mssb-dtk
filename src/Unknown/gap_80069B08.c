@@ -146,8 +146,9 @@ void fn_8006C6C4(void) {
 }
 
 // .text:0x8006C79C size:0x28
-void fn_8006C79C(void) {
-    return;
+BOOL fn_8006C79C(s32 index) {
+    Gap80069B08Mission* mission = &starMissionCompletionTracker[index];
+    return mission->state == 1;
 }
 
 // .text:0x8006C7C4 size:0x214

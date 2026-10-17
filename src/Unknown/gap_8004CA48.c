@@ -1,8 +1,12 @@
 #include "Unknown/gap_8004CA48.h"
 
 // .text:0x8004CA48 size:0x24
-void fn_8004CA48(void) {
-    return;
+void fn_8004CA48(s16 a, s16 b, s16 c, s16 d) {
+    lbl_803C5F74.active = 1;
+    lbl_803C5F74.unkE = a;
+    lbl_803C5F74.unk10 = b;
+    lbl_803C5F74.unk12 = c;
+    lbl_803C5F74.unk14 = d;
 }
 
 // .text:0x8004CA6C size:0x1AC
@@ -12,12 +16,14 @@ void fn_8004CA6C(void) {
 
 // .text:0x8004CC18 size:0x14
 void fn_8004CC18(void) {
-    return;
+    lbl_803C5F74.mode = 4;
 }
 
 // .text:0x8004CC2C size:0x20
 void fn_8004CC2C(void) {
-    return;
+    if (lbl_803C5F74.mode != 4) {
+        lbl_803C5F74.mode = 3;
+    }
 }
 
 // .text:0x8004CC4C size:0x74

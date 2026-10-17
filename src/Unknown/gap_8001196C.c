@@ -227,7 +227,7 @@ void fn_8001AAA4(void) {
 
 // .text:0x8001AAF0 size:0x20
 void fn_8001AAF0(void) {
-    return;
+    fn_8003AC90();
 }
 
 // .text:0x8001AB10 size:0x488

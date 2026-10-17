@@ -1,8 +1,8 @@
 #include "Unknown/gap_800B117C.h"
 
 // .text:0x800B117C size:0xC
-void fn_800B117C(void) {
-    return;
+void fn_800B117C(u8 value) {
+    lbl_803CBB34->unk8C = value;
 }
 
 // .text:0x800B1188 size:0x11C
@@ -56,8 +56,8 @@ void fn_800B1EBC(void) {
 }
 
 // .text:0x800B2160 size:0xC
-void fn_800B2160(void) {
-    return;
+void fn_800B2160(u8 value) {
+    lbl_803CBB34->unk8A = value;
 }
 
 // .text:0x800B216C size:0x3C
@@ -106,8 +106,8 @@ void fn_800B2AC8(void) {
 }
 
 // .text:0x800B2B4C size:0x8
-void fn_800B2B4C(void) {
-    return;
+void fn_800B2B4C(Gap800B117CObj* obj, f32 value) {
+    obj->unk90 = value;
 }
 
 // .text:0x800B2B54 size:0x18
@@ -116,8 +116,8 @@ void fn_800B2B54(void) {
 }
 
 // .text:0x800B2B6C size:0x8
-void Set_FUN_800b2b6c(void) {
-    return;
+void Set_FUN_800b2b6c(Gap800B117CObj* obj, s32 value) {
+    obj->unk88 = value;
 }
 
 // .text:0x800B2B74 size:0x34
@@ -136,13 +136,14 @@ void fn_800B2BE4(void) {
 }
 
 // .text:0x800B2BFC size:0xC
-void fn_800B2BFC(void) {
-    return;
+void fn_800B2BFC(Gap800B117CObj* obj, s16 a, s16 b) {
+    obj->unk80 = a;
+    obj->unk82 = b;
 }
 
 // .text:0x800B2C08 size:0x8
-void fn_800B2C08(void) {
-    return;
+void fn_800B2C08(Gap800B117CObj* obj, s16 value) {
+    obj->unk84 = value;
 }
 
 // .text:0x800B2C10 size:0x34
@@ -226,8 +227,8 @@ void fn_800B43A0(void) {
 }
 
 // .text:0x800B4724 size:0x8
-void fn_800B4724(void) {
-    return;
+void fn_800B4724(Gap800B117CObj* obj, s32 value) {
+    obj->unk7C = value;
 }
 
 // .text:0x800B472C size:0x1DC
@@ -236,8 +237,8 @@ void fn_800B472C(void) {
 }
 
 // .text:0x800B4908 size:0x8
-void haveActLayoutPointToGeoHeader(void) {
-    return;
+void haveActLayoutPointToGeoHeader(Gap800B117CObj* obj, s32 value) {
+    obj->unk10 = value;
 }
 
 // .text:0x800B4910 size:0xD4

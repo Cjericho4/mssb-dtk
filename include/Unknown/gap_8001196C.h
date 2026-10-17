@@ -2,6 +2,7 @@
 #define __UNKNOWN_gap_8001196C_H_
 
 #include "mssbTypes.h"
+void fn_8003AC90(void);
 
 void fn_8001196C(void);
 void fn_80011A60(void);

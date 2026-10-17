@@ -12,7 +12,7 @@ void fn_8002254C(void) {
 
 // .text:0x80022620 size:0x14
 void fn_80022620(void) {
-    return;
+    lbl_803716B8.unk1E8 = 0;
 }
 
 // .text:0x80022634 size:0x16C
@@ -141,8 +141,13 @@ void fn_80023E48(void) {
 }
 
 // .text:0x80023EEC size:0x20
-void fn_80023EEC(void) {
-    return;
+void fn_80023EEC(Gap8002244CObj* obj, s32 a, s32 b) {
+    obj->unk0 = a;
+    obj->unk4 = b;
+    obj->unk8 = 0;
+    obj->unkC = 0;
+    obj->unk10 = 0;
+    obj->unk18 = 0;
 }
 
 // .text:0x80023F0C size:0x278

@@ -2,8 +2,29 @@
 #define __UNKNOWN_gap_800A97D0_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800A97D0Flags {
+    u8 _pad0[0x55];
+    /* 0x55 */ u8 unk55;
+} Gap800A97D0Flags;
+extern Gap800A97D0Flags lbl_803C7838;
+typedef struct Gap800A97D0Pan {
+    u8 _pad0[0x7];
+    /* 0x7 */ u8 unk7;
+    /* 0x8 */ s8 unk8;
+    /* 0x9 */ s8 unk9;
+} Gap800A97D0Pan;
+extern Gap800A97D0Pan lbl_80110080;
+typedef struct Gap800A97D0Heap {
+    /* 0x0 */ s32 size;
+    /* 0x4 */ s32 start;
+    /* 0x8 */ s32 end;
+} Gap800A97D0Heap;
+extern Gap800A97D0Heap lbl_803C7898;
+void CARDInit(void);
+void PADInit(void);
+void SISetSamplingRate(u32 msec);
 
-void fn_800A97D0(void);
+void fn_800A97D0(u8 a, s8 b);
 void fn_800A97EC(void);
 void fn_800A983C(void);
 void fn_800A9864(void);
@@ -34,9 +55,9 @@ void fn_800ACF34(void);
 void fn_800ACF78(void);
 void fn_800ACFB0(void);
 void _OSAllocFromHeap(void);
-void fn_800AD01C(void);
-void fn_800AD038(void);
-void fn_800AD054(void);
+void fn_800AD01C(s32 end);
+void fn_800AD038(s32 start);
+void fn_800AD054(s32 start, s32 end);
 void fn_800AD070(void);
 void fn_800AD490(void);
 void fn_800AD500(void);

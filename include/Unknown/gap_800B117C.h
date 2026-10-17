@@ -2,8 +2,28 @@
 #define __UNKNOWN_gap_800B117C_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800B117CObj {
+    u8 _pad0[0x10];
+    /* 0x10 */ s32 unk10;
+    u8 _pad14[0x68];
+    /* 0x7C */ s32 unk7C;
+    /* 0x80 */ s16 unk80;
+    /* 0x82 */ s16 unk82;
+    /* 0x84 */ s16 unk84;
+    u8 _pad86[0x2];
+    /* 0x88 */ s32 unk88;
+    u8 _pad8C[0x4];
+    /* 0x90 */ f32 unk90;
+} Gap800B117CObj;
+typedef struct Gap800B117CFlags {
+    u8 _pad0[0x8A];
+    /* 0x8A */ u8 unk8A;
+    u8 _pad8B[0x1];
+    /* 0x8C */ u8 unk8C;
+} Gap800B117CFlags;
+extern Gap800B117CFlags* lbl_803CBB34;
 
-void fn_800B117C(void);
+void fn_800B117C(u8 value);
 void fn_800B1188(void);
 void DrawNullSprite(void);
 void fn_800B12DC(void);
@@ -14,7 +34,7 @@ void fn_800B13C0(void);
 void fn_800B1468(void);
 void DrawSprite(void);
 void fn_800B1EBC(void);
-void fn_800B2160(void);
+void fn_800B2160(u8 value);
 void fn_800B216C(void);
 void fn_800B21A8(void);
 void fn_800B2240(void);
@@ -24,14 +44,14 @@ void fn_800B27A4(void);
 void fn_800B27DC(void);
 void fn_800B2854(void);
 void fn_800B2AC8(void);
-void fn_800B2B4C(void);
+void fn_800B2B4C(Gap800B117CObj* obj, f32 value);
 void fn_800B2B54(void);
-void Set_FUN_800b2b6c(void);
+void Set_FUN_800b2b6c(Gap800B117CObj* obj, s32 value);
 void fn_800B2B74(void);
 void fn_800B2BA8(void);
 void fn_800B2BE4(void);
-void fn_800B2BFC(void);
-void fn_800B2C08(void);
+void fn_800B2BFC(Gap800B117CObj* obj, s16 a, s16 b);
+void fn_800B2C08(Gap800B117CObj* obj, s16 value);
 void fn_800B2C10(void);
 void fn_800B2C44(void);
 void fn_800B2C88(void);
@@ -48,9 +68,9 @@ void fn_800B4048(void);
 void fn_800B4084(void);
 void fn_800B4278(void);
 void fn_800B43A0(void);
-void fn_800B4724(void);
+void fn_800B4724(Gap800B117CObj* obj, s32 value);
 void fn_800B472C(void);
-void haveActLayoutPointToGeoHeader(void);
+void haveActLayoutPointToGeoHeader(Gap800B117CObj* obj, s32 value);
 void LoadActorLayout(void);
 void fn_800B49E4(void);
 void fn_800B4A44(void);

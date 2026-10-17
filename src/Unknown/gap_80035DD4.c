@@ -6,8 +6,8 @@ void fn_80035DD4(void) {
 }
 
 // .text:0x80035ED0 size:0x1C
-void fn_80035ED0(void) {
-    return;
+void fn_80035ED0(s32 index) {
+    lbl_8039C3E0[index].unk54 = 0;
 }
 
 // .text:0x80035EEC size:0x34
@@ -97,7 +97,7 @@ void fn_80037768(void) {
 
 // .text:0x80037964 size:0x20
 void fn_80037964(void) {
-    return;
+    fn_800B0A14_removeQueue();
 }
 
 // .text:0x80037984 size:0x11C

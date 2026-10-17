@@ -1,8 +1,15 @@
 #include "Unknown/gap_800A6870.h"
 
 // .text:0x800A6870 size:0x20
-void fn_800A6870(void) {
-    return;
+s32 fn_800A6870(u8 flag, s32 value) {
+    s32 old;
+
+    lbl_803C6CF8.unk6D8 = flag;
+    old = lbl_803C6CF8.unk6D0;
+    if (flag) {
+        lbl_803C6CF8.unk6D0 = value;
+    }
+    return old;
 }
 
 // .text:0x800A6890 size:0x44
@@ -51,8 +58,8 @@ void fn_800A750C(void) {
 }
 
 // .text:0x800A7544 size:0x24
-void ConvertPathToEntryNum(void) {
-    return;
+s32 ConvertPathToEntryNum(Gap800A6870File* file) {
+    return DVDConvertPathToEntrynum(file->path);
 }
 
 // .text:0x800A7568 size:0x84
@@ -151,8 +158,8 @@ void fn_800A86B4(void) {
 }
 
 // .text:0x800A8864 size:0x14
-void fn_800A8864(void) {
-    return;
+u16 fn_800A8864(void) {
+    return (lbl_803CC135 << 8) | lbl_803CC134;
 }
 
 // .text:0x800A8878 size:0x48
@@ -251,8 +258,11 @@ void fn_800A9424(void) {
 }
 
 // .text:0x800A94A8 size:0x1C
-void fn_800A94A8(void) {
-    return;
+void fn_800A94A8(u8 flag) {
+    if (!flag) {
+        lbl_803CC12C = 1;
+        lbl_803CC13C = 0;
+    }
 }
 
 // .text:0x800A94C4 size:0x5C

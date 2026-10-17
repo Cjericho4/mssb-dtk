@@ -2,6 +2,20 @@
 #define __UNKNOWN_gap_8002244C_H_
 
 #include "mssbTypes.h"
+typedef struct Gap8002244CFlags {
+    u8 _pad0[0x1E8];
+    /* 0x1E8 */ u8 unk1E8;
+} Gap8002244CFlags;
+extern Gap8002244CFlags lbl_803716B8;
+typedef struct Gap8002244CObj {
+    /* 0x0 */ s32 unk0;
+    /* 0x4 */ s32 unk4;
+    /* 0x8 */ s32 unk8;
+    /* 0xC */ s32 unkC;
+    /* 0x10 */ s32 unk10;
+    u8 _pad14[0x4];
+    /* 0x18 */ s32 unk18;
+} Gap8002244CObj;
 
 extern s32 lbl_803CBC60;
 
@@ -33,7 +47,7 @@ void fn_80023D4C(void);
 void fn_80023D98(void);
 void fn_80023DFC(void);
 void fn_80023E48(void);
-void fn_80023EEC(void);
+void fn_80023EEC(Gap8002244CObj* obj, s32 a, s32 b);
 void fn_80023F0C(void);
 void gOz_GXSetTexture(void);
 void fn_80024390(void);

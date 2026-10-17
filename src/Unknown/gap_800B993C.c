@@ -11,8 +11,13 @@ void fn_800B9948(s32 value) {
 }
 
 // .text:0x800B9950 size:0x1C
-void fn_800B9950(void) {
-    return;
+void fn_800B9950(u32 flags, f32 a, f32 b) {
+    if (flags & 1) {
+        lbl_803CC1F8 = a;
+    }
+    if (flags & 2) {
+        lbl_803CC1FC = b;
+    }
 }
 
 // .text:0x800B996C size:0x8
@@ -36,8 +41,9 @@ void SetFogNoneAgain(void) {
 }
 
 // .text:0x800B9A9C size:0xC
-void fn_800B9A9C(void) {
-    return;
+void fn_800B9A9C(s32 a, f32 b) {
+    lbl_803CC21C = a;
+    lbl_803CC218 = b;
 }
 
 // .text:0x800B9AA8 size:0x8
@@ -86,8 +92,10 @@ void DOVARenderSkin(void) {
 }
 
 // .text:0x800BC824 size:0x10
-void fn_800BC824(void) {
-    return;
+void fn_800BC824(Gap800B993CObj* obj, s32 value) {
+    if (obj != NULL) {
+        obj->unk50 = value;
+    }
 }
 
 // .text:0x800BC834 size:0x2C
@@ -171,18 +179,26 @@ void GQRSetup5(void) {
 }
 
 // .text:0x800BD2B0 size:0x1C
-void fn_800BD2B0(void) {
-    return;
+u8 fn_800BD2B0(Gap800B993CColor* out) {
+    if (lbl_803CC220 != 0) {
+        *out = lbl_803CC224;
+    }
+    return lbl_803CC220;
 }
 
 // .text:0x800BD2CC size:0x10
-void fn_800BD2CC(void) {
-    return;
+void fn_800BD2CC(u8 enable, Gap800B993CColor* color) {
+    lbl_803CC220 = enable;
+    lbl_803CC224 = *color;
 }
 
 // .text:0x800BD2DC size:0x24
 void fn_800BD2DC(void) {
-    return;
+    lbl_803CC220 = 0;
+    lbl_803CC224.r = 0;
+    lbl_803CC224.b = 0;
+    lbl_803CC224.g = 0;
+    lbl_803CC224.a = 0xFF;
 }
 
 // .text:0x800BD300 size:0xA0

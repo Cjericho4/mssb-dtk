@@ -1,8 +1,10 @@
 #include "Unknown/gap_800A97D0.h"
 
 // .text:0x800A97D0 size:0x1C
-void fn_800A97D0(void) {
-    return;
+void fn_800A97D0(u8 a, s8 b) {
+    lbl_80110080.unk7 = a;
+    lbl_80110080.unk8 = -b;
+    lbl_80110080.unk9 = b;
 }
 
 // .text:0x800A97EC size:0x50
@@ -12,7 +14,8 @@ void fn_800A97EC(void) {
 
 // .text:0x800A983C size:0x28
 void fn_800A983C(void) {
-    return;
+    PADInit();
+    SISetSamplingRate(0);
 }
 
 // .text:0x800A9864 size:0x98
@@ -112,7 +115,7 @@ void fn_800ACC6C(void) {
 
 // .text:0x800ACCD4 size:0x14
 void fn_800ACCD4(void) {
-    return;
+    lbl_803C7838.unk55 = 7;
 }
 
 // .text:0x800ACCE8 size:0x5C
@@ -122,7 +125,7 @@ void fn_800ACCE8(void) {
 
 // .text:0x800ACD44 size:0x20
 void fn_800ACD44(void) {
-    return;
+    CARDInit();
 }
 
 // .text:0x800ACD64 size:0x1B0
@@ -156,18 +159,22 @@ void _OSAllocFromHeap(void) {
 }
 
 // .text:0x800AD01C size:0x1C
-void fn_800AD01C(void) {
-    return;
+void fn_800AD01C(s32 end) {
+    lbl_803C7898.end = end;
+    lbl_803C7898.size = end - lbl_803C7898.start;
 }
 
 // .text:0x800AD038 size:0x1C
-void fn_800AD038(void) {
-    return;
+void fn_800AD038(s32 start) {
+    lbl_803C7898.start = start;
+    lbl_803C7898.size = lbl_803C7898.end - start;
 }
 
 // .text:0x800AD054 size:0x1C
-void fn_800AD054(void) {
-    return;
+void fn_800AD054(s32 start, s32 end) {
+    lbl_803C7898.start = start;
+    lbl_803C7898.end = end;
+    lbl_803C7898.size = end - start;
 }
 
 // .text:0x800AD070 size:0x420

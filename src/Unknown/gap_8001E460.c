@@ -1,13 +1,14 @@
 #include "Unknown/gap_8001E460.h"
 
 // .text:0x8001E460 size:0x14
-void fn_8001E460(void) {
-    return;
+void fn_8001E460(s32 value) {
+    lbl_803CB7AC[lbl_803CBBC0] = value;
 }
 
 // .text:0x8001E474 size:0x14
 void fn_8001E474(void) {
-    return;
+    lbl_803CB7AC[0] = 0;
+    lbl_803CB7AC[1] = 0;
 }
 
 // .text:0x8001E488 size:0x2FC
@@ -126,13 +127,14 @@ void fn_800211BC(void) {
 }
 
 // .text:0x800211F0 size:0x14
-void fn_800211F0(void) {
-    return;
+u8 fn_800211F0(void) {
+    return lbl_800EFBC0.unk18;
 }
 
 // .text:0x80021204 size:0x24
 void fn_80021204(void) {
-    return;
+    lbl_800E8754.unk23 = lbl_800EF808.unk398;
+    lbl_800E8754.unk24 = lbl_800EF808.soundMode;
 }
 
 // .text:0x80021228 size:0x64
@@ -156,8 +158,8 @@ void fn_800213F4(void) {
 }
 
 // .text:0x800213F8 size:0x18
-void fn_800213F8(void) {
-    return;
+void fn_800213F8(u32 size) {
+    lbl_803CBC40 += (size + 0x1F) & ~0x1F;
 }
 
 // .text:0x80021410 size:0x8C
@@ -222,7 +224,7 @@ void f_initSound(void) {
 
 // .text:0x80021AA0 size:0x20
 void fn_80021AA0(void) {
-    return;
+    fn_800ACD44();
 }
 
 // .text:0x80021AC0 size:0x4
@@ -237,7 +239,7 @@ void fn_80021AC4(void) {
 
 // .text:0x80021AC8 size:0x14
 void fn_80021AC8(void) {
-    return;
+    lbl_803716B8.unk55C = 0;
 }
 
 // .text:0x80021ADC size:0xE0

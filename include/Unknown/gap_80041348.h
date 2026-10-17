@@ -2,12 +2,12 @@
 #define __UNKNOWN_gap_80041348_H_
 
 #include "mssbTypes.h"
+extern u16 lbl_803CBCC0;
 
-extern s16 lbl_803CBCC0;
 
 void fn_80041348(void);
 void fn_8004153C(void);
-void fn_8004157C(void);
+BOOL fn_8004157C(void);
 void fn_800415A0(s16 value);
 void fn_800415A8(void);
 void capApplicationFunction(void);

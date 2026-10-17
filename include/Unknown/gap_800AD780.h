@@ -2,6 +2,14 @@
 #define __UNKNOWN_gap_800AD780_H_
 
 #include "mssbTypes.h"
+extern s32 lbl_803CC19C;
+extern s32 lbl_803CC1D8[2];
+typedef struct Gap800AD780State {
+    u8 _pad0[0x28];
+    /* 0x28 */ u8 unk28;
+} Gap800AD780State;
+extern Gap800AD780State lbl_803C79D4;
+void fn_800A63C8(void);
 
 extern u8 lbl_803CC17D;
 
@@ -20,7 +28,7 @@ void YUV2RGB_(void);
 void fn_800AE5B8(void);
 void fn_800AE8B8(void);
 void MovStreamThread(void);
-void fn_800AED24(void);
+BOOL fn_800AED24(void);
 void MovDecodeThread(void);
 void fn_800AF1A8(void);
 void fn_800AF5FC(void);
@@ -28,7 +36,7 @@ void fn_800AF9B4(void);
 void fn_800AFBF0(void);
 void fn_800AFC10(void);
 void fn_800AFD4C(void);
-void fn_800AFFB0(void);
+u8 fn_800AFFB0(void);
 void fn_800AFFC0(void);
 void fn_800B0008(void);
 void fn_800B0134(void);
@@ -50,7 +58,7 @@ void resetAllDrawingStructs(void);
 void fn_800B0C80(void);
 void nop_function(void);
 void RunDrawScripts_with_stack_variables(void);
-void fn_800B0D28(void);
+void fn_800B0D28(s32 value);
 void fn_800B0D38(void);
 void AllocateSprite(void);
 

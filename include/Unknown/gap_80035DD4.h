@@ -2,9 +2,16 @@
 #define __UNKNOWN_gap_80035DD4_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80035DD4Entry {
+    u8 _pad0[0x54];
+    /* 0x54 */ s32 unk54;
+    u8 _pad58[0x68];
+} Gap80035DD4Entry;
+extern Gap80035DD4Entry lbl_8039C3E0[];
+void fn_800B0A14_removeQueue(void);
 
 void fn_80035DD4(void);
-void fn_80035ED0(void);
+void fn_80035ED0(s32 index);
 void fn_80035EEC(void);
 void fn_80035F20(void);
 void fn_80036134(void);

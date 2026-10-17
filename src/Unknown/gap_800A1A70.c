@@ -1,8 +1,11 @@
 #include "Unknown/gap_800A1A70.h"
 
 // .text:0x800A1A70 size:0x18
-void fn_800A1A70(void) {
-    return;
+void fn_800A1A70(Gap800A1A70Range* range, s32 start, s32 length) {
+    range->start = start;
+    range->cur = start;
+    range->end = start + length;
+    range->length = length;
 }
 
 // .text:0x800A1A88 size:0xF8
