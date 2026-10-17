@@ -17,7 +17,9 @@ typedef struct Rep0B08Obj {
     /* 0x00 */ Vec position;
     Vec previousPosition; /* 0x0C */
     Vec velocity; /* 0x18 */
-    u8 _pad24[0x14];
+    u8 _pad24[0xC];
+    f32 unk30;
+    f32 unk34;
     f32 unk38;
     f32 unk3C;
     u8 _pad40[0xC];
@@ -35,7 +37,8 @@ typedef struct Rep0B08Obj {
     /* 0x96 */ u8 _pad96[0xA];
     s16 unkA0;
     /* 0xA2 */ s16 countdown;
-    u8 _padA4[0x10];
+    u8 _padA4[0xE];
+    s16 unkB2;
     s16 unkB4;
     u8 _padB6[4];
     u8 unkBA;

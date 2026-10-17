@@ -62,7 +62,26 @@ static inline void setMenuObjectAlpha(s32 index, u8 value) {
 
 // .text:0x0006832C size:0xC0
 void fn_2_6832C(void) {
-    return;
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[1];
+    memcpy(&obj->position, &lbl_2_data_2EA4[5], sizeof(Vec));
+    obj->previousPosition.x = 0.0f;
+    obj->previousPosition.y = 0.0f;
+    obj->previousPosition.z = 0.0f;
+    obj->velocity.x = 0.0f;
+    obj->velocity.y = 0.0f;
+    obj->velocity.z = 0.0f;
+    obj->unk6C = obj->position.x;
+    obj->unk70 = obj->position.z;
+    obj->unk38 = 0.0f;
+    obj->unkBB = 0;
+    obj->unk30 = obj->unk34 = obj->angle;
+    lbl_2_bss_1A8248->rep0B08Objects[1].unkB2 = 5;
+    {
+        Rep0B08Obj* target = &lbl_2_bss_1A8248->rep0B08Objects[1];
+        target->variant = 6;
+        target->state = 0;
+    }
+    lbl_2_bss_1A8248->unk442F = 1;
 }
 
 // .text:0x000683EC size:0xE4
