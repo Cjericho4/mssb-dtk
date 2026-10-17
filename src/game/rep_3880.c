@@ -1718,8 +1718,44 @@ void fn_3_152AB4(void) {
 }
 
 // .text:0x001531A4 size:0x31C mapped:0x80792238
-void fn_3_1531A4(void) {
-    return;
+extern Struct_26BDC lbl_3_data_26BFC;
+void fn_3_1531A4(ListNode_14B9F0* node) {
+    Mtx m;
+    CameraView* cam = fn_80052734(fn_8005268C());
+    f32 scale = node->field_0x4D != 0 ? fn_3_119854(2) : fn_3_119854(0);
+    Vec fwd = {0.0f, 0.0f, -1.0f};
+    Vec axis;
+    Vec dir;
+    Vec off;
+    f32 angle;
+
+    off.x = 0.0f;
+    off.y = 0.0f;
+    off.z = -0.354f * scale;
+    {
+        off.x += scale * ((rand() % 50 - 25) / 100.0);
+        off.y += scale * ((rand() % 50 - 25) / 100.0);
+        off.z += scale * ((rand() % 50 - 25) / 100.0);
+    }
+    PSVECSubtract(&cam->pos, &node->posVec, &dir);
+    PSVECNormalize(&dir, &dir);
+    angle = acos(PSVECDotProduct(&fwd, &dir));
+    PSVECCrossProduct(&fwd, &dir, &axis);
+    if (PSVECMag(&axis) == 0.0f) {
+        axis.x = 0.0f;
+        axis.z = 0.0f;
+        axis.y = -1.0f;
+    }
+    PSMTXRotAxisRad(m, &axis, angle);
+    PSMTXMultVec(m, &off, &off);
+    node->offset.x = node->pos.x + off.x;
+    node->offset.y = node->pos.y + off.y;
+    node->offset.z = node->pos.z + off.z;
+    node->scaleX = node->scaleY = (f32)lbl_3_data_26BFC.unk0;
+    node->field_0x4C = 2;
+    node->field_0x4A = lbl_3_data_26BFC.unkC;
+    node->velocity.x = node->velocity.z = 0.0f;
+    node->velocity.y = ((f32)lbl_3_data_26BFC.unk8 / 100000.0f);
 }
 
 s32 fn_8005268C(void);
