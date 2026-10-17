@@ -237,6 +237,7 @@ extern VecXZ lbl_3_data_4484[6];
 extern VecXZ lbl_3_data_44B4[11];
 extern f32 lbl_3_data_4780[5];
 extern VecXZ lbl_3_data_18984[3];
+extern u8 lbl_3_data_48F8[];
 extern f32 lbl_3_data_4930[43];
 extern u8 lbl_3_data_46F8[][9];
 extern u8 lbl_3_data_470C[2];

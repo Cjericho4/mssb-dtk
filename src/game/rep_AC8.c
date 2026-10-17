@@ -3544,7 +3544,44 @@ void fn_3_50898(void) {
 
 // .text:0x00050C20 size:0x1B8 mapped:0x8068FCB4
 void fn_3_50C20(s32 fielderIdx, f32* x, f32* z) {
-    return;
+    Fielder* f = &g_Fielders[fielderIdx];
+    s32 ang;
+    f32 nx;
+    f32 nz;
+
+    ang = fn_3_9FB8C(f->unk28 - f->pos[0], f->unk2C - f->pos[2]);
+    if (fielderIdx == 7) {
+        if (ang > 0x200 && ang < 0x600) {
+            *x = f->pos[0];
+            *z = f->unk2C;
+        } else {
+            *x = f->unk28;
+            *z = f->pos[2];
+        }
+        f->unk18A = lbl_3_data_48F8[f->unk1C4];
+    } else if (fielderIdx == 8) {
+        if (ang > 0x100 && ang < 0x600) {
+            nx = f->pos[0] / f->unk70;
+            nz = f->pos[2] / f->unk70;
+            *x = nx * (10.0f + f->unk70);
+            *z = nz * (10.0f + f->unk70);
+        } else {
+            *x = f->unk28;
+            *z = f->pos[2];
+        }
+        f->unk18A = lbl_3_data_48F8[f->unk1C4];
+    } else {
+        if (ang > 0x200 && ang < 0x700) {
+            nx = f->pos[0] / f->unk70;
+            nz = f->pos[2] / f->unk70;
+            *x = nx * (10.0f + f->unk70);
+            *z = nz * (10.0f + f->unk70);
+        } else {
+            *x = f->unk28;
+            *z = f->pos[2];
+        }
+        f->unk18A = lbl_3_data_48F8[f->unk1C4];
+    }
 }
 
 // .text:0x00050DD8 size:0x448 mapped:0x8068FE6C
