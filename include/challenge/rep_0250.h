@@ -2,6 +2,9 @@
 #define __CHALLENGE_rep_0250_H_
 
 #include "mssbTypes.h"
+#include "challenge/challenge.h"
+#include "game/rep_3448.h"
+extern s32 lbl_1_data_B88[];
 #include "UnknownHeaders.h"
 #include "challenge/challenge.h"
 

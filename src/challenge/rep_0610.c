@@ -518,8 +518,9 @@ void fn_1_163FC(void) {
 }
 
 // .text:0x00016400 size:0x4C
-void fn_1_16400(void) {
-    return;
+void fn_1_16400(s8 delta) {
+    u16 count = g_hugeAnimStruct.fielderStructs[lbl_1_bss_5F73].ring->count;
+    lbl_1_bss_5F6C = (lbl_1_bss_5F6C + (count + delta)) % count;
 }
 
 // .text:0x0001644C size:0x10C
@@ -533,8 +534,10 @@ void fn_1_16558(void) {
 }
 
 // .text:0x00016590 size:0x50
-void fn_1_16590(void) {
-    return;
+s32 fn_1_16590(void) {
+    u8 index = lbl_1_bss_5F73;
+    Rep0610Slot* slot = &lbl_1_bss_6940[index];
+    return g_hugeAnimStruct.fielderStructs[index].slots[slot->table]->entries[slot->entry].value;
 }
 
 // .text:0x000165E0 size:0x2E8

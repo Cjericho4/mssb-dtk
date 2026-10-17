@@ -112,13 +112,13 @@ void fn_1_1E290(void) {
 }
 
 // .text:0x0001E5D0 size:0x2F0
-void fn_1_1E5D0(void) {
+void fn_1_1E5D0(Rep7730Unk6BF4* arg0) {
     return;
 }
 
 // .text:0x0001E8C0 size:0x4C
-void fn_1_1E8C0(void) {
-    return;
+void fn_1_1E8C0(s32 arg) {
+    lbl_1_data_1066C[((ChallengeScene*)lbl_803CC1B8)->mode28]((s16)(arg - 8));
 }
 
 // .text:0x0001E90C size:0x6E8
@@ -128,7 +128,11 @@ void fn_1_1E90C(void) {
 
 // .text:0x0001EFF4 size:0x68
 void fn_1_1EFF4(void) {
-    return;
+    fn_1_272DC(&lbl_1_bss_6D48, 0);
+    fn_1_AF4(0x14, 0x14, 1.0f);
+    if (((ChallengeScene*)lbl_803CC1B8)->flags2C & 2) {
+        fn_1_1E5D0(&lbl_1_bss_6BF4);
+    }
 }
 
 // .text:0x0001F05C size:0x1E0

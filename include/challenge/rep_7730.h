@@ -2,6 +2,11 @@
 #define __CHALLENGE_rep_7730_H_
 
 #include "mssbTypes.h"
+#include "challenge/rep_7978.h"
+#include "challenge/rep_0010.h"
+typedef void (*Rep7730ModeFunc)(s16 arg);
+extern Rep7730ModeFunc lbl_1_data_1066C[];
+extern Rep7978Camera lbl_1_bss_6D48;
 #include "Dolphin/mtx.h"
 #include "Dolphin/GX/GXGeometry.h"
 #include "Dolphin/GX/GXLight.h"
@@ -48,8 +53,8 @@ void fn_1_1DE5C(void);
 void fn_1_1DE60(void);
 void fn_1_1E28C(void);
 void fn_1_1E290(void);
-void fn_1_1E5D0(void);
-void fn_1_1E8C0(void);
+void fn_1_1E5D0(Rep7730Unk6BF4* arg0);
+void fn_1_1E8C0(s32 arg);
 void fn_1_1E90C(void);
 void fn_1_1EFF4(void);
 void fn_1_1F05C(void);

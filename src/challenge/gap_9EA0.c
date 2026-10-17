@@ -1,8 +1,13 @@
 #include "challenge/gap_9EA0.h"
 
 // .text:0x00009EA0 size:0x64
-void fn_1_9EA0(void) {
-    return;
+void fn_1_9EA0(u8 value, s32 arg) {
+    ChallengeScene* entry = (ChallengeScene*)fn_800B0A5C_insertQueue(fn_1_9F04, 1);
+
+    entry->byte18 = 0;
+    entry->byte19 = value;
+    entry->arg14 = arg;
+    lbl_803CC1B8->loadingState = 0;
 }
 
 // .text:0x00009F04 size:0x120

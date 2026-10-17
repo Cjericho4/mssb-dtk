@@ -58,7 +58,12 @@ void fn_1_96D4(void) {
 
 // .text:0x0000973C size:0x7C
 void fn_1_973C(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    fn_80034E20(scene, lbl_1_data_B88);
+    lbl_80371C30[scene->unkIndex].obj->field_0x66 = lbl_1_bss_2FAA;
+    scene->unk18 = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_1_96D4;
 }
 
 // .text:0x000097B8 size:0x2C

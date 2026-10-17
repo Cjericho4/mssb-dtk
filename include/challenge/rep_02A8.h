@@ -11,7 +11,7 @@ void fn_1_A348(void);
 void fn_1_A464(void);
 void fn_1_A634(void);
 void fn_1_A714(void);
-void fn_1_A718(void);
+BOOL fn_1_A718(void);
 s32 fn_1_A77C(void);
 void fn_1_A7B0(void);
 extern u8 lbl_1_bss_2FDB;

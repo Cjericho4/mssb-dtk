@@ -18,7 +18,7 @@ typedef struct {
     u32 field_0x5C;
     u8 _pad60[0x4];
     u16 unk64;       /* 0x64 */
-    u8 _pad66;
+    u8 field_0x66;   /* 0x66 */
     u8 field_0x67;   /* 0x67 */
     u8 field_0x68;
     u8 field_0x69;

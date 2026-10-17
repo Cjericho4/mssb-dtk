@@ -21,7 +21,7 @@ typedef struct Gap9EA0Obj {
     /* 0x10 */ s32 unk10;
 } Gap9EA0Obj;
 
-void fn_1_9EA0(void);
+void fn_1_9EA0(u8 value, s32 arg);
 void fn_1_9F04(void);
 void fn_1_A024(void);
 typedef struct Gap9EA0TextEntry {

@@ -2,6 +2,16 @@
 #define __CHALLENGE_rep_0610_H_
 
 #include "mssbTypes.h"
+
+typedef struct Rep0610Slot {
+    /* 0x00 */ u8 _pad0[0x44];
+    /* 0x44 */ u8 table;
+    /* 0x45 */ u8 entry;
+    /* 0x46 */ u8 _pad46[2];
+} Rep0610Slot;
+extern Rep0610Slot lbl_1_bss_6940[];
+extern u8 lbl_1_bss_5F73;
+extern u32 lbl_1_bss_5F6C;
 #include "challenge/challenge.h"
 
 typedef struct Rep0610Items {
@@ -204,10 +214,10 @@ void fn_1_160F8(void);
 void fn_1_161D0(void);
 void fn_1_1620C(void);
 void fn_1_163FC(void);
-void fn_1_16400(void);
+void fn_1_16400(s8 delta);
 void fn_1_1644C(void);
 void fn_1_16558(void);
-void fn_1_16590(void);
+s32 fn_1_16590(void);
 void fn_1_165E0(void);
 void fn_1_168C8(void);
 void fn_1_16978(void);

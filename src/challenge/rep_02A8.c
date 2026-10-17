@@ -36,8 +36,15 @@ void fn_1_A714(void) {
 }
 
 // .text:0x0000A718 size:0x64
-void fn_1_A718(void) {
-    return;
+BOOL fn_1_A718(void) {
+    s8 i;
+
+    for (i = (s8)lbl_800EF808.unk390 - 1; i > 0; i--) {
+        if (fn_800214D0() == 0) {
+            return FALSE;
+        }
+    }
+    return TRUE;
 }
 
 // .text:0x0000A77C size:0x34

@@ -35,7 +35,8 @@ typedef struct {
         };
         void* files[0x2F];      /* 0x04: indexed by file ID */
     };
-    u8 _padC0[0x391 - 0xC0];
+    u8 _padC0[0x390 - 0xC0];
+    s8 unk390;          /* 0x390 */
     u8 musicVolume;     /* 0x391 */
     u8 _pad392[0x396 - 0x392];
     u8 soundMode;       /* 0x396: 1 = positional panning */
@@ -47,7 +48,7 @@ typedef struct {
 } Lbl800EF808; // size: 0x39C
 extern Lbl800EF808 lbl_800EF808;
 BOOL fn_80021518(s32 charID, s32 param_2);
-void fn_800214D0(void);
+s32 fn_800214D0(void);
 
 typedef struct {
     u8 _data0[0xE];
@@ -97,11 +98,27 @@ typedef struct StadiumObjEntry {
 
 /* AnimationStruct - 0x27C bytes, used in arrays within hugeAnimStruct.
  * Full field definitions available in in_game.h. */
+typedef struct AnimRingInfo {
+    u8 _pad0[6];
+    u16 count; /* 0x06 */
+} AnimRingInfo;
+
+typedef struct AnimSlotEntry {
+    s32 value; /* 0x00 */
+    u8 _pad4[8];
+} AnimSlotEntry; /* size 0xC */
+
+typedef struct AnimSlotTable {
+    u8 _pad0[4];
+    AnimSlotEntry* entries; /* 0x04 */
+} AnimSlotTable;
+
 typedef struct AnimationStruct {
-    u8 _pad[8];
+    u8 _pad0[4];
+    AnimRingInfo* ring; /* 0x04 */
     struct MenusAnimationAux* aux; /* 0x08 */
     struct AnimModelData* field3_0xc; /* 0x0C */
-    u8 _pad10[0x24];
+    AnimSlotTable* slots[9]; /* 0x10 */
     VecXYZ unk34;       /* 0x34 */
     VecXYZ unk40;       /* 0x40 */
     u8 _pad4C[0x10];
