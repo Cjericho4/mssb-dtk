@@ -33,6 +33,8 @@ typedef struct Rep10C0State {
     u8 unk197849;
     u8 _pad19784A[0xC];
     u8 unk197856;
+    u8 _pad197857[0xC];
+    s8 inputIndex; /* 0x197863 */
 } Rep10C0State;
 
 extern Rep10C0State* lbl_2_bss_1A824C;

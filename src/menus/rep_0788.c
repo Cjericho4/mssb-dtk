@@ -1,6 +1,7 @@
 #include "menus/rep_0788.h"
 #include "menus/gap_4B1AC.h"
 #include "menus/rep_10C0.h"
+#include "menus/gap_0.h"
 #include "UnknownHeaders.h"
 #include "game/rep_3448.h"
 
@@ -37,8 +38,15 @@ void fn_2_1FFC4(void) {
 }
 
 // .text:0x00020074 size:0x70
-void fn_2_20074(void) {
-    return;
+s32 fn_2_20074(void) {
+    u16 buttons = lbl_803C77B8.controllers[lbl_2_bss_1A824C->inputIndex].buttons;
+    if (buttons & 8) return 0;
+    if (buttons & 4) return 1;
+    if (buttons & 1) return 2;
+    if (!(buttons & 2)) goto no_input;
+    return 3;
+no_input:
+    return -1;
 }
 
 // .text:0x000200E4 size:0x100

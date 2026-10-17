@@ -14,7 +14,7 @@ void fn_2_1FF0C(void);
 void fn_2_1FF10(void);
 void fn_2_1FF14(void);
 void fn_2_1FFC4(void);
-void fn_2_20074(void);
+s32 fn_2_20074(void);
 void fn_2_200E4(void);
 s16 fn_2_201E4(s16 row, s16 column);
 void fn_2_20218(void);

@@ -3,11 +3,22 @@
 
 #include "mssbTypes.h"
 
-typedef struct MenusInputState {
-    u8 _pad0[2];
+typedef struct MenusControllerInput {
     u16 buttons;
-    u8 _pad4[0x1E];
-    u16 otherButtons;
+    u16 pressed;
+    u8 _pad4[0x1C];
+} MenusControllerInput;
+
+typedef struct MenusInputState {
+    union {
+        struct {
+            u8 _pad0[2];
+            u16 buttons;
+            u8 _pad4[0x1E];
+            u16 otherButtons;
+        };
+        MenusControllerInput controllers[4];
+    };
 } MenusInputState;
 extern MenusInputState lbl_803C77B8;
 
