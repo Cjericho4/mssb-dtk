@@ -1,0 +1,191 @@
+#include "Unknown/gap_80032038.h"
+
+// .text:0x80032038 size:0x2C
+void fn_80032038(void) {
+    return;
+}
+
+// .text:0x80032064 size:0x220
+void fn_80032064(void) {
+    return;
+}
+
+// .text:0x80032284 size:0x268
+void fn_80032284(void) {
+    return;
+}
+
+// .text:0x800324EC size:0x3F4
+void fn_800324EC(void) {
+    return;
+}
+
+// .text:0x800328E0 size:0x7EC
+void fn_800328E0(void) {
+    return;
+}
+
+// .text:0x800330CC size:0x1EC
+void fn_800330CC(void) {
+    return;
+}
+
+// .text:0x800332B8 size:0x304
+void fn_800332B8(void) {
+    return;
+}
+
+// .text:0x800335BC size:0x30
+void fn_800335BC(void) {
+    return;
+}
+
+// .text:0x800335EC size:0x34
+void fn_800335EC(void) {
+    return;
+}
+
+// .text:0x80033620 size:0x174
+void fn_80033620(void) {
+    return;
+}
+
+// .text:0x80033794 size:0x38
+void fn_80033794(void) {
+    return;
+}
+
+// .text:0x800337CC size:0x90
+void fn_800337CC(void) {
+    return;
+}
+
+// .text:0x8003385C size:0xCC
+void pitchingMachinePitching(void) {
+    return;
+}
+
+// .text:0x80033928 size:0x3C
+void fn_80033928(void) {
+    return;
+}
+
+// .text:0x80033964 size:0x8C
+void fn_80033964(void) {
+    return;
+}
+
+// .text:0x800339F0 size:0x34
+void fn_800339F0(void) {
+    return;
+}
+
+// .text:0x80033A24 size:0x134
+void fn_80033A24(void) {
+    return;
+}
+
+// .text:0x80033B58 size:0x170
+void fn_80033B58(void) {
+    return;
+}
+
+// .text:0x80033CC8 size:0x29C
+void fn_80033CC8(void) {
+    return;
+}
+
+// .text:0x80033F64 size:0xD8
+void fn_80033F64(void) {
+    return;
+}
+
+// .text:0x8003403C size:0xB8
+void fn_8003403C(void) {
+    return;
+}
+
+// .text:0x800340F4 size:0x2C
+void fn_800340F4(void) {
+    return;
+}
+
+// .text:0x80034120 size:0x2C
+void fn_80034120(void) {
+    return;
+}
+
+// .text:0x8003414C size:0xD4
+void fn_8003414C(void) {
+    return;
+}
+
+// .text:0x80034220 size:0x30C
+void minigamesSetSomePointers(void) {
+    return;
+}
+
+// .text:0x8003452C size:0x39C
+void minigamesGXStuff(void) {
+    return;
+}
+
+// .text:0x800348C8 size:0x304
+void minigamesSetSomePointers2(void) {
+    return;
+}
+
+// .text:0x80034BCC size:0x120
+void fn_80034BCC(void) {
+    return;
+}
+
+// .text:0x80034CEC size:0x134
+void fn_80034CEC(void) {
+    return;
+}
+
+// .text:0x80034E20 size:0x130
+void fn_80034E20(void) {
+    return;
+}
+
+// .text:0x80034F50 size:0x218
+void fn_80034F50(void) {
+    return;
+}
+
+// .text:0x80035168 size:0x550
+void fn_80035168(void) {
+    return;
+}
+
+// .text:0x800356B8 size:0x98
+void fn_800356B8(void) {
+    return;
+}
+
+// .text:0x80035750 size:0xE8
+void fn_80035750(void) {
+    return;
+}
+
+// .text:0x80035838 size:0x1C8
+void fn_80035838(void) {
+    return;
+}
+
+// .text:0x80035A00 size:0x150
+void fn_80035A00(void) {
+    return;
+}
+
+// .text:0x80035B50 size:0x154
+void fn_80035B50(void) {
+    return;
+}
+
+// .text:0x80035CA4 size:0x130
+void fn_80035CA4(void) {
+    return;
+}

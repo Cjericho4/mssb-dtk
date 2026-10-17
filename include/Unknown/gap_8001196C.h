@@ -1,0 +1,55 @@
+#ifndef __UNKNOWN_gap_8001196C_H_
+#define __UNKNOWN_gap_8001196C_H_
+
+#include "mssbTypes.h"
+
+void fn_8001196C(void);
+void fn_80011A60(void);
+void fn_80011B64(void);
+void fn_80011BE4(void);
+void fn_80011CA8(void);
+void fn_800126EC(void);
+void LoadModel(void);
+void fn_80012B90(void);
+void fn_80013680(void);
+void fn_80014204(void);
+void fn_800145F8(void);
+void fn_80014990(void);
+void fn_80014A18(void);
+void fn_80014D4C(void);
+void fn_80014E50(void);
+void fn_80014F40(void);
+void fn_8001500C(void);
+void fn_80015468(void);
+void fn_8001594C(void);
+void fn_80016344(void);
+void fn_80016710(void);
+void fn_80016B60(void);
+void fn_80016F7C(void);
+void fn_80017098(void);
+void fn_80017340(void);
+void fn_8001758C(void);
+void fn_800177B4(void);
+void fn_80017814(void);
+void fn_80017D28(void);
+void fn_80017DBC(void);
+void fn_80018024(void);
+void fn_80018270(void);
+void fn_800188C0(void);
+void fn_800189B8(void);
+void fn_800189E4(void);
+void fn_80018B38(void);
+void fn_80018B74(void);
+void fn_80018DEC(void);
+void fn_800196D8(void);
+void fn_80019A60(void);
+void fn_80019C00(void);
+void fn_8001A25C(void);
+void fn_8001A3FC(void);
+void challengeMapRelated(void);
+void fn_8001AAA4(void);
+void fn_8001AAF0(void);
+void fn_8001AB10(void);
+void fn_8001AF98(void);
+
+#endif // !__UNKNOWN_gap_8001196C_H_

@@ -14,6 +14,121 @@ Sections:
 	.sdata2     type:rodata align:4
 	.sbss2      type:bss align:32
 
+Unknown/gap_80008E00.c:
+	extab       start:0x80005600 end:0x80005660
+	extabindex  start:0x80006C60 end:0x80006CF0
+	.text       start:0x80008E00 end:0x8000B9C8
+
+Unknown/gap_8000B9C8.c:
+	extab       start:0x80005660 end:0x800056F8
+	extabindex  start:0x80006CF0 end:0x80006DD4
+	.text       start:0x8000B9C8 end:0x8000F8F4
+
+Unknown/gap_8000F8F4.c:
+	extab       start:0x800056F8 end:0x80005768
+	extabindex  start:0x80006DD4 end:0x80006E7C
+	.text       start:0x8000F8F4 end:0x8001196C
+
+Unknown/gap_8001196C.c:
+	extab       start:0x80005768 end:0x800058C8
+	extabindex  start:0x80006E7C end:0x8000708C
+	.text       start:0x8001196C end:0x8001B200
+
+Unknown/gap_8001B200.c:
+	extab       start:0x800058C8 end:0x80005998
+	extabindex  start:0x8000708C end:0x800071C4
+	.text       start:0x8001B200 end:0x8001E460
+
+Unknown/gap_8001E460.c:
+	extab       start:0x80005998 end:0x80005AD0
+	extabindex  start:0x800071C4 end:0x80007398
+	.text       start:0x8001E460 end:0x8002244C
+
+Unknown/gap_8002244C.c:
+	extab       start:0x80005AD0 end:0x80005BC0
+	extabindex  start:0x80007398 end:0x80007500
+	.text       start:0x8002244C end:0x80025DDC
+
+Unknown/gap_80025DDC.c:
+	extab       start:0x80005BC0 end:0x80005BF0
+	extabindex  start:0x80007500 end:0x80007548
+	.text       start:0x80025DDC end:0x80027918
+
+Unknown/gap_80027918.c:
+	extab       start:0x80005BF0 end:0x80005D10
+	extabindex  start:0x80007548 end:0x800076F8
+	.text       start:0x80027918 end:0x80032038
+
+Unknown/gap_80032038.c:
+	extab       start:0x80005D10 end:0x80005DE8
+	extabindex  start:0x800076F8 end:0x8000783C
+	.text       start:0x80032038 end:0x80035DD4
+
+Unknown/gap_80035DD4.c:
+	extab       start:0x80005DE8 end:0x80005EE8
+	extabindex  start:0x8000783C end:0x800079BC
+	.text       start:0x80035DD4 end:0x80039AA8
+
+Unknown/gap_80039AA8.c:
+	extab       start:0x80005EE8 end:0x80005F60
+	extabindex  start:0x800079BC end:0x80007A70
+	.text       start:0x80039AA8 end:0x8003AE54
+
+Unknown/gap_8003AE54.c:
+	extab       start:0x80005F60 end:0x80005FC8
+	extabindex  start:0x80007A70 end:0x80007B0C
+	.text       start:0x8003AE54 end:0x80041348
+
+Unknown/gap_80041348.c:
+	extab       start:0x80005FC8 end:0x80005FF8
+	extabindex  start:0x80007B0C end:0x80007B54
+	.text       start:0x80041348 end:0x80042D38
+
+Unknown/gap_80042D38.c:
+	extab       start:0x80005FF8 end:0x80006050
+	extabindex  start:0x80007B54 end:0x80007BD8
+	.text       start:0x80042D38 end:0x80048BEC
+
+Unknown/gap_80048BEC.c:
+	extab       start:0x80006050 end:0x80006158
+	extabindex  start:0x80007BD8 end:0x80007D64
+	.text       start:0x80048BEC end:0x8004CA48
+
+Unknown/gap_8004CA48.c:
+	extab       start:0x80006158 end:0x800061C0
+	extabindex  start:0x80007D64 end:0x80007E00
+	.text       start:0x8004CA48 end:0x800506E8
+
+Unknown/gap_800506E8.c:
+	extab       start:0x800061C0 end:0x80006208
+	extabindex  start:0x80007E00 end:0x80007E6C
+	.text       start:0x800506E8 end:0x800528AC
+
+Unknown/gap_800528AC.c:
+	extab       start:0x80006208 end:0x80006390
+	extabindex  start:0x80007E6C end:0x800080B8
+	.text       start:0x800528AC end:0x80062578
+
+Unknown/gap_80062578.c:
+	extab       start:0x80006390 end:0x80006468
+	extabindex  start:0x800080B8 end:0x800081FC
+	.text       start:0x80062578 end:0x80064754
+
+Unknown/gap_80064754.c:
+	extab       start:0x80006468 end:0x800064A8
+	extabindex  start:0x800081FC end:0x8000825C
+	.text       start:0x80064754 end:0x80067AC8
+
+Unknown/gap_80067AC8.c:
+	extab       start:0x800064A8 end:0x80006510
+	extabindex  start:0x8000825C end:0x800082F8
+	.text       start:0x80067AC8 end:0x80069B08
+
+Unknown/gap_80069B08.c:
+	extab       start:0x80006510 end:0x800065D8
+	extabindex  start:0x800082F8 end:0x80008424
+	.text       start:0x80069B08 end:0x8006D024
+
 Dolphin/base/PPCArch.c:
 	.text       start:0x8006D024 end:0x8006D138
 
@@ -374,6 +489,9 @@ Dolphin/gx/GXPerf.c:
 	.text       start:0x8009079C end:0x80091450
 	.data       start:0x8010E838 end:0x8010E980
 
+Unknown/gap_80091450.c:
+	.text       start:0x80091450 end:0x80091608
+
 Dolphin/TRK_MINNOW_DOLPHIN/mainloop.c:
 	.text       start:0x80091608 end:0x80091700
 
@@ -711,6 +829,9 @@ Dolphin/OdemuExi2/DebuggerDriver.c:
 	.sdata      start:0x803CBA90 end:0x803CBA98
 	.sbss       start:0x803CC0D8 end:0x803CC0F0
 
+Unknown/gap_800A1A70.c:
+	.text       start:0x800A1A70 end:0x800A2B5C
+
 Dolphin/exi/EXIBios.c:
 	.text       start:0x800A2B5C end:0x800A4538
 	.data       start:0x8010F160 end:0x8010F270
@@ -746,6 +867,31 @@ Unknown/File_0x800a64e0.c:
 	.text       start:0x800A64E0 end:0x800A6870
 	.bss        start:0x803C6990 end:0x803C6CF8
 
+Unknown/gap_800A6870.c:
+	extab       start:0x80006608 end:0x80006760
+	extabindex  start:0x8000846C end:0x80008670
+	.text       start:0x800A6870 end:0x800A97D0
+
+Unknown/gap_800A97D0.c:
+	extab       start:0x80006760 end:0x80006820
+	extabindex  start:0x80008670 end:0x80008790
+	.text       start:0x800A97D0 end:0x800AD780
+
+Unknown/gap_800AD780.c:
+	extab       start:0x80006820 end:0x80006920
+	extabindex  start:0x80008790 end:0x80008910
+	.text       start:0x800AD780 end:0x800B117C
+
+Unknown/gap_800B117C.c:
+	extab       start:0x80006920 end:0x80006A50
+	extabindex  start:0x80008910 end:0x80008AD8
+	.text       start:0x800B117C end:0x800B508C
+
+Unknown/gap_800B508C.c:
+	extab       start:0x80006A50 end:0x80006A90
+	extabindex  start:0x80008AD8 end:0x80008B38
+	.text       start:0x800B508C end:0x800B7D3C
+
 C3/control/control.c:
 	extab       start:0x80006A90 end:0x80006AE0
 	extabindex  start:0x80008B38 end:0x80008BB0
@@ -753,6 +899,16 @@ C3/control/control.c:
 	.data       start:0x801116A0 end:0x80111700
 	.bss        start:0x803CB1FC end:0x803CB49C
 	.sdata2     start:0x803CCFD8 end:0x803CCFF8
+
+Unknown/gap_800B993C.c:
+	extab       start:0x80006AE0 end:0x80006B88
+	extabindex  start:0x80008BB0 end:0x80008CAC
+	.text       start:0x800B993C end:0x800BD3A0
+
+Unknown/gap_800BD3A0.c:
+	extab       start:0x80006B88 end:0x80006C48
+	extabindex  start:0x80008CAC end:0x80008DCC
+	.text       start:0x800BD3A0 end:0x800C0A8C
 
 Musyx/seq.c:
 	.text       start:0x800C0A8C end:0x800C4AB4
@@ -856,6 +1012,9 @@ Musyx/chorus_fx.c:
 	.text       start:0x800DF594 end:0x800DFDD4
 	.data       start:0x801177E0 end:0x80117FE0
 	.sdata2     start:0x803CD2E0 end:0x803CD2E8
+
+Unknown/gap_800DFDD4.c:
+	.text       start:0x800DFDD4 end:0x800E6330
 
 Dolphin/Runtime/__mem.c:
 	.init       start:0x8000540C end:0x80005544

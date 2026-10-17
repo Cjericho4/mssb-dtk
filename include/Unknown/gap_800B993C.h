@@ -1,0 +1,45 @@
+#ifndef __UNKNOWN_gap_800B993C_H_
+#define __UNKNOWN_gap_800B993C_H_
+
+#include "mssbTypes.h"
+
+void fn_800B993C(void);
+void fn_800B9948(void);
+void fn_800B9950(void);
+void fn_800B996C(void);
+void SetFogNone(void);
+void SetFog(void);
+void SetFogNoneAgain(void);
+void fn_800B9A9C(void);
+void fn_800B9AA8(void);
+void fn_800B9AB0(void);
+void fn_800B9EA8(void);
+void fn_800BA44C(void);
+void Custom_SetState(void);
+void SetState(void);
+void GetColorFromQuant(void);
+void DOVARender(void);
+void DOVARenderSkin(void);
+void fn_800BC824(void);
+void DOSetWorldMatrix(void);
+void InitDisplayObjWithLayout(void);
+void DOGet(void);
+void LoadGeoPalette(void);
+void convertGeometryAndSknHeader(void);
+void fn_800BCDBC(void);
+void fn_800BCE38(void);
+void fn_800BCEF8(void);
+void fn_800BD190(void);
+void fn_800BD1E8(void);
+void __MTGQR5(void);
+void __MTGQR6(void);
+void __MTGQR7(void);
+void GQRSetup7(void);
+void GQRSetup6(void);
+void GQRSetup5(void);
+void fn_800BD2B0(void);
+void fn_800BD2CC(void);
+void fn_800BD2DC(void);
+void LITXForm(void);
+
+#endif // !__UNKNOWN_gap_800B993C_H_

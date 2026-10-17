@@ -1,0 +1,56 @@
+#ifndef __UNKNOWN_gap_800BD3A0_H_
+#define __UNKNOWN_gap_800BD3A0_H_
+
+#include "mssbTypes.h"
+
+void LITInitColor(void);
+void LITInitDir(void);
+void LITInitPos(void);
+void LITInitAttn(void);
+void LITAlloc(void);
+void fn_800BD478(void);
+void fn_800BD548(void);
+void fn_800BD670(void);
+void fn_800BD8C4(void);
+void fn_800BDA24(void);
+void fn_800BDA94(void);
+void fn_800BDC88(void);
+void ActorObjectInitTable(void);
+void fn_800BDE8C(void);
+void fn_800BDEA0(void);
+void fn_800BDF70(void);
+void fn_800BDFE0(void);
+void fn_800BE09C(void);
+void fn_800BE158(void);
+void fn_800BE498(void);
+void fn_800BEA04(void);
+void fn_800BEB3C(void);
+void fn_800BEB80(void);
+void fn_800BEBA0(void);
+void GetDrawShadows(void);
+void DrawShadows(void);
+void fn_800BEBCC(void);
+void fn_800BEC00(void);
+void fn_800BEC30(void);
+void fn_800BF008(void);
+void fn_800BF038(void);
+void fn_800BF048(void);
+void fn_800BF058(void);
+void fn_800BF068(void);
+void SKNLoadFile(void);
+void SKNFlushByIndex1(void);
+void SKNFlushByIndex2(void);
+void SKNBzero32B(void);
+void SKNInit(void);
+void fn_800BF2A8(void);
+void SKNIt(void);
+void SKN1Vecs16Norms16(void);
+void fn_800BFF9C(void);
+void SKN2Vecs16Norms16NoTouch(void);
+void fn_800C02C8(void);
+void SKNAccVecs16Norms16Iu161(void);
+void SKNAccVecs16Norms16Iu162(void);
+void convertTextureHeader(void);
+void fn_800C07BC(void);
+
+#endif // !__UNKNOWN_gap_800BD3A0_H_
