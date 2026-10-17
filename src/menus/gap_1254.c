@@ -133,13 +133,13 @@ void fn_2_2D1C(void) {
 }
 
 // .text:0x00002FC0 size:0x244
-void fn_2_2FC0(void) {
+void fn_2_2FC0(u8 mode, s32 update, s32 reset) {
     return;
 }
 
 // .text:0x00003204 size:0x38
 void fn_2_3204(void) {
-    return;
+    fn_2_2FC0(lbl_803297E0.mode, 1, 1);
 }
 
 // .text:0x0000323C size:0x180

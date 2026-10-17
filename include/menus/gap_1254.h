@@ -10,6 +10,12 @@ typedef struct Menus1254State {
 
 extern Menus1254State lbl_2_bss_F468;
 
+typedef struct MenusSystemState {
+    u8 _pad0[0xCF5F];
+    u8 mode;
+} MenusSystemState;
+extern MenusSystemState lbl_803297E0;
+
 void fn_2_1254(void);
 void fn_2_1258(void);
 void fn_2_12A0(s16* value, s16 amount);
@@ -34,7 +40,7 @@ void fn_2_1F30(void);
 void fn_2_27E0(void);
 void fn_2_2BB8(void);
 void fn_2_2D1C(void);
-void fn_2_2FC0(void);
+void fn_2_2FC0(u8 mode, s32 update, s32 reset);
 void fn_2_3204(void);
 void fn_2_323C(void);
 void fn_2_33BC(void);
