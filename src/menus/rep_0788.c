@@ -1,4 +1,5 @@
 #include "menus/rep_0788.h"
+#include "menus/rep_10C0.h"
 #include "UnknownHeaders.h"
 #include "game/rep_3448.h"
 
@@ -47,7 +48,10 @@ s16 fn_2_201E4(s16 row, s16 column) {
 
 // .text:0x00020218 size:0x40
 void fn_2_20218(void) {
-    return;
+    lbl_2_bss_1A824C->unk19782B = 0;
+    lbl_2_bss_1A824C->unk19782C = 0;
+    lbl_2_bss_1A824C->unk19782A = 0;
+    lbl_2_bss_1A824C->unk197832 = 0;
 }
 
 // .text:0x00020258 size:0x4
