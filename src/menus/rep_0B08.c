@@ -147,8 +147,15 @@ void fn_2_68DAC(s32 index, Vec* out) {
 }
 
 // .text:0x00068DE8 size:0x80
-void fn_2_68DE8(void) {
-    return;
+void fn_2_68DE8(s32 index, Vec* out) {
+    if (index != -1) {
+        memcpy(out, &lbl_2_bss_1A8248->rep0B08Objects[index].position, sizeof(Vec));
+        PSVECScale(out, 2.0f, out);
+    } else {
+        out->z = 0.0f;
+        out->y = 0.0f;
+        out->x = 0.0f;
+    }
 }
 
 // .text:0x00068E68 size:0xA0
