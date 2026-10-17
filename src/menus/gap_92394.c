@@ -26,8 +26,8 @@ void fn_2_9246C(void) {
 }
 
 // .text:0x000924A4 size:0xC
-void fn_2_924A4(void) {
-    return;
+void fn_2_924A4(Rep1028Obj* obj) {
+    obj->state = 1;
 }
 
 // .text:0x000924B0 size:0x54
