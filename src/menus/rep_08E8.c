@@ -259,8 +259,15 @@ f32 fn_2_4A1E8(f32 x, f32 y) {
 }
 
 // .text:0x0004A234 size:0x90
-void fn_2_4A234(void) {
-    return;
+s32 fn_2_4A234(f32 x, f32 y) {
+    s32 angle;
+    if (0.0f == x) {
+        if (y >= 0.0f) return 0x400;
+        return 0xC00;
+    }
+    angle = (s32)((2048.0f * (f32)atan2(y, x)) / 3.1415927f);
+    if ((s16)angle < 0) return (s16)(angle + 0x1000);
+    return angle;
 }
 
 // .text:0x0004A2C4 size:0x4C
