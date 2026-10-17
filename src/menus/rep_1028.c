@@ -1,5 +1,6 @@
 #include "menus/rep_1028.h"
 #include "menus/rep_0B08.h"
+#include "menus/gap_8782C.h"
 
 extern void (*lbl_2_data_30810[])(Rep1028Obj*);
 
@@ -81,8 +82,9 @@ void fn_2_8F758(s32 index, u8 value) {
 }
 
 // .text:0x0008F774 size:0x3C
-void fn_2_8F774(void) {
-    return;
+f32 fn_2_8F774(s32 index) {
+    HugeAnimEntry68* entry = &lbl_2_bss_340140->entries_68[index];
+    return fn_800B4A94(entry->unk34, (hugeAnimStruct*)lbl_2_bss_340140->entries_68);
 }
 
 // .text:0x0008F7B0 size:0x88
