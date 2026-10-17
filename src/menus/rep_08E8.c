@@ -1,5 +1,5 @@
 #include "menus/rep_08E8.h"
-#include "stdlib.h"
+#include "UnknownHeaders.h"
 #include "menus/rep_0B08.h"
 
 // .text:0x00046C88 size:0x78
@@ -35,7 +35,11 @@ void fn_2_474F8(void) {
 
 // .text:0x000474FC size:0x44
 void fn_2_474FC(void) {
-    return;
+    hugeAnimStruct* anim = &g_hugeAnimStruct;
+    if (anim->animBankPtr != NULL) {
+        fn_800ACFB0(anim->animBankPtr);
+        anim->animBankPtr = NULL;
+    }
 }
 
 // .text:0x00047540 size:0x23C
