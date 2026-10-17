@@ -527,8 +527,59 @@ void fn_3_B6440(void) {
 }
 
 // .text:0x000B6994 size:0x1DC mapped:0x806F5A28
+typedef struct { u8 _0; u8 _1; u8 _2; } B3B70Simulation;
+extern B3B70Simulation lbl_803CBC3C;
+extern u32 lbl_3_data_FC20[];
+s32 fn_8001594C(s32);
+void fn_3_B3A4C(void);
+
 void fn_3_B6994(void) {
-    return;
+    switch (g_Practice.practiceState) {
+    case 0:
+        if (g_Practice.practiceType_2 == 4) {
+            fn_3_B4124(0, 0, g_Minigame.teamEntries[g_Practice.homeAway].fieldA, g_Minigame.battingHandedness[g_Practice.homeAway]);
+            fn_3_6EBB4(0);
+            setFielderValues(0, 0);
+        } else {
+            fn_3_6EBB4(0);
+            setFielderValues(0, 0);
+        }
+        g_GameLogic.currentBatterPerTeam[0] = 1;
+        g_GameLogic.currentBatterPerTeam[1] = 1;
+        g_hugeAnimStruct.field272_0x307d = 1;
+        lbl_3_common_bss_32724.unk9C = 0;
+        g_hugeAnimStruct.field186_0x2d77 = 0;
+        g_hugeAnimStruct.field190_0x2d7b = 0;
+        g_Practice._1D9[0] = 0;
+        if (g_Practice.practiceType_2 == 4) {
+            fn_3_B3C94(1);
+        } else {
+            fn_3_B3C94(2);
+        }
+        break;
+    case 1:
+        if (fn_8001594C(g_GameLogic.teamFielding) != 0) fn_3_B3C94(2);
+        break;
+    case 2:
+        if (fn_3_750DC() != 0) fn_3_B3C94(4);
+        break;
+    case 4:
+        if (fn_3_B3CD4() != 0) fn_3_B3C94(7);
+        break;
+    case 7:
+        fn_3_B3B70();
+        if (g_Practice.practiceType_2 == 4) {
+            fn_3_B3A4C();
+            fn_3_B3C78(3);
+        } else {
+            fn_3_B27A4();
+            g_Practice.commandList = (void*)lbl_3_data_FC20[g_Practice.practiceLevel];
+            fn_3_B3C78(1);
+        }
+        changeScene(1, 6);
+        fn_3_5A6D4(7);
+        break;
+    }
 }
 
 // .text:0x000B6B70 size:0x34 mapped:0x806F5C04
@@ -707,8 +758,7 @@ void fn_3_B7184(void) {
     return;
 }
 
-typedef struct { u8 _0; u8 _1; u8 _2; } B3B70Simulation;
-extern B3B70Simulation lbl_803CBC3C;
+
 extern u8 lbl_3_data_FC08[][4];
 extern void* lbl_3_data_10010[];
 
