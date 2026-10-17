@@ -289,8 +289,17 @@ BOOL fn_2_6AF9C(s32 index) {
 }
 
 // .text:0x0006AFD4 size:0x50
-void fn_2_6AFD4(void) {
-    return;
+s32 fn_2_6AFD4(s32 index) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    if (obj->unkC4 == 1) {
+        obj->unkC4 = 0;
+        return 1;
+    }
+    if (obj->unkC4 == 2) {
+        obj->unkC4 = 0;
+        return 2;
+    }
+    return 0;
 }
 
 // .text:0x0006B024 size:0xFC

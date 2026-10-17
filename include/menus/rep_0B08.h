@@ -102,7 +102,7 @@ void fn_2_6ACF4(void);
 void fn_2_6AE08(void);
 void fn_2_6AF80(s32 index, u8 value);
 BOOL fn_2_6AF9C(s32 index);
-void fn_2_6AFD4(void);
+s32 fn_2_6AFD4(s32 index);
 void fn_2_6B024(void);
 void fn_2_6B120(void);
 void fn_2_6B238(void);
