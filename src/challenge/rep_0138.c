@@ -97,7 +97,14 @@ void fn_1_786C(void) {
 
 // .text:0x000078E4 size:0x7C
 void fn_1_78E4(void) {
-    return;
+    GXSetCopyClear(lbl_1_data_858, 0xFFFFFF);
+    if (lbl_1_bss_C4.cullNone != 0) {
+        GXSetCullMode(GX_CULL_NONE);
+    } else {
+        GXSetCullMode(GX_CULL_BACK);
+    }
+    SetFogNoneAgain();
+    GXSetAlphaCompare(GX_GREATER, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
 // .text:0x00007960 size:0x4A4
