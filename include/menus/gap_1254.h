@@ -2,6 +2,7 @@
 #define __MENUS_gap_1254_H_
 
 #include "mssbTypes.h"
+#include "UnknownHeaders.h"
 
 typedef struct Menus1254State {
     s32 states[4];
@@ -110,7 +111,7 @@ void fn_2_FCB4(void);
 void fn_2_102C8(void);
 void fn_2_104FC(void);
 void fn_2_110B0(void);
-void fn_2_112F4(void);
+BOOL fn_2_112F4(DrawingSceneStruct* scene, s32 offset, s32 index, u16* ids, u16 value);
 void fn_2_11340(void);
 void fn_2_11698(void);
 void fn_2_11EA8(void);

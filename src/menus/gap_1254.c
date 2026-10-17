@@ -1,5 +1,6 @@
 #include "menus/gap_1254.h"
 #include "menus/rep_0438.h"
+#include "game/rep_3448.h"
 
 extern u32 lbl_803CB750;
 extern void fn_800625A4(s32 index, s32 command);
@@ -484,8 +485,13 @@ void fn_2_110B0(void) {
 }
 
 // .text:0x000112F4 size:0x4C
-void fn_2_112F4(void) {
-    return;
+BOOL fn_2_112F4(DrawingSceneStruct* scene, s32 offset, s32 index, u16* ids, u16 value) {
+    Struct_80371C30_Inner* obj = lbl_80371C30[scene->unkIndex + offset].obj;
+    if ((s32)(obj->field_0x5C >> 16) == ids[index + 1] - 1) {
+        obj->unk64 = value;
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x00011340 size:0x358
