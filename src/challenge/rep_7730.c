@@ -42,7 +42,11 @@ f32 fn_1_1DD48(u16 buttons, s32 negate, f32 value, f32 stepA, f32 step, f32 step
 
 // .text:0x0001DD94 size:0x50
 void fn_1_1DD94(void) {
-    return;
+    Vec vec;
+    vec.x = lbl_1_bss_6BE4.value4;
+    vec.y = lbl_1_bss_6BE4.value8;
+    vec.z = lbl_1_bss_6BE4.valueC;
+    fn_80037B18(&lbl_1_bss_6BF4, &vec, lbl_1_bss_6BE4.value0);
 }
 
 // .text:0x0001DDE4 size:0x10

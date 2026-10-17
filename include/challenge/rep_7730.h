@@ -23,6 +23,12 @@ typedef struct Rep7730Values {
 } Rep7730Values;
 extern Rep7730Values lbl_1_bss_6BE4;
 
+typedef struct Rep7730Unk6BF4 {
+    /* 0x0 */ u8 _pad0[0x154];
+} Rep7730Unk6BF4;
+extern Rep7730Unk6BF4 lbl_1_bss_6BF4;
+void fn_80037B18(Rep7730Unk6BF4* arg0, Vec* arg1, f32 arg2);
+
 void fn_1_1D694(void);
 void fn_1_1D944(void);
 void fn_1_1DA54(void);
