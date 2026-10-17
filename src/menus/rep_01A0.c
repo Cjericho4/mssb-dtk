@@ -1,11 +1,19 @@
 #include "menus/rep_01A0.h"
 #include "musyx/musyx.h"
+#include "UnknownHeaders.h"
+extern u8 lbl_2_bss_1C;
 
 extern f32 lbl_2_bss_18;
 
 // .text:0x00000A70 size:0xC8
-void fn_2_A70(void) {
-    return;
+void fn_2_A70(u16 duration) {
+    if (lbl_2_bss_1C == 0 && lbl_2_data_134.voice != 0xFFFFFFFF &&
+        sndFXCheck(lbl_2_data_134.voice) == lbl_2_data_134.voice) {
+        QueueEntry* entry = fn_800B0A5C_insertQueue(fn_2_B38, 0x8000);
+        if (duration == 0) duration = 1;
+        entry->vec.x = -lbl_2_bss_18 / duration;
+        lbl_2_bss_1C = 1;
+    }
 }
 
 // .text:0x00000B38 size:0xE0
