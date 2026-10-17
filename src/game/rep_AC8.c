@@ -3353,7 +3353,40 @@ void fn_3_49F3C(void) {
 
 // .text:0x00049F40 size:0x1E4 mapped:0x80688FD4
 void fn_3_49F40(s32 arg0, s32 arg1) {
-    return;
+    Fielder* f;
+
+    if (g_FieldingLogic.unk_F8[arg0] != 0) {
+        return;
+    }
+    f = &g_Fielders[arg0];
+    f->unk1D4 = arg1;
+    if (arg1 == 0) {
+        if (g_GameLogic.teamAIInd[g_GameLogic.awayTeamBattingInd_battingTeam] != 0) {
+            if (arg0 != -1) {
+                setFielderReadyAction(arg0, 3);
+            }
+        } else if (arg0 != -1) {
+            setFielderReadyAction(arg0, 0x18);
+            g_FieldingLogic.unkBC = arg0;
+        }
+    } else if (arg1 == 1) {
+        if (arg0 != -1) {
+            setFielderReadyAction(arg0, 8);
+        }
+    } else {
+        if (arg0 != -1) {
+            setFielderReadyAction(arg0, 7);
+        }
+        if (arg1 == 2 || arg1 == 4) {
+            g_Fielders[arg0].unk190 = 1;
+        }
+        if (arg1 == 3 || arg1 == 5) {
+            g_Fielders[arg0].unk190 = 3;
+        }
+        if (arg1 == 6 || arg1 == 7) {
+            g_Fielders[arg0].unk190 = 2;
+        }
+    }
 }
 
 // .text:0x0004A124 size:0x2E4 mapped:0x806891B8
