@@ -1,4 +1,5 @@
 #include "menus/rep_1028.h"
+#include "menus/rep_0B08.h"
 
 extern void (*lbl_2_data_30810[])(Rep1028Obj*);
 
@@ -62,8 +63,9 @@ void fn_2_8F6D0(void) {
 }
 
 // .text:0x0008F720 size:0x1C
-void fn_2_8F720(void) {
-    return;
+u8 fn_2_8F720(s32 index) {
+    Rep1028Obj* obj = &lbl_2_bss_1A8248->rep1028Objects[index];
+    return obj->unkB4;
 }
 
 // .text:0x0008F73C size:0x1C
