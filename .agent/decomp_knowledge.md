@@ -327,3 +327,9 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
 *   **fmuls operand order**: for temp*temp the compiler emits the operand it evaluated second first; for web*temp it emits the web first; `dx *= expr` keeps dx first with dest = dx. A web defined by `a - b` is coalesced with `a` when `a` dies there.
 *   **Probe harness** (`.agent/probe/probe.sh file.c` compiles with the game flags and disassembles with `dtk elf disasm`): put dozens of variants of one function in a file and diff the tails in one compile instead of one `try_function.py` per guess.
 
+
+## 8. Merged DOL symbols seen from the RELs (Fable, 2026-10-17)
+
+*   **`lbl_80XXXXXX+0xN@ha/@l` used as a base register with small-offset field accesses is a symbol-boundary bug, not a struct problem.** `symbols.txt` merged a separate DOL object at `sym+N` into its predecessor; no C struct layout reproduces the addend. Fix: split the symbol in `config/GYQE01/symbols.txt` (keep total coverage so dtk doesn't invent gap symbols), rerun `ninja`, and access the new symbol directly. Splitting `lbl_803CBBC2` (0x2 + `lbl_803CBBC4` 0x8) and `lbl_803CBCD0` (0x8 + `lbl_803CBCD8` + `lbl_803CBCE0`) matched 9 menus functions (gap_71EC4). Find more candidates with `grep -rhoE 'lbl_80[0-9A-F]+\+0x[0-9A-F]+@ha' build/GYQE01/*/asm | sort | uniq -c`.
+*   **Two-call "both succeeded" checks:** `first = !!f(a); if (first + !!f(b) == 2)` (or `u8 first` with `!= 0`) parks the first result in r31 and yields `add r0, r31, r0; cmpwi r0, 2`; a `T* p = &global;` local steals r31 from the param, so access the global directly.
+*   **A 4-byte `blr` "function" right after a function that ends in `b .`** is that function's own tail split off by dtk (fn_2_1C33C / fn_2_1C3A4): fold it back into the previous symbol's size.
