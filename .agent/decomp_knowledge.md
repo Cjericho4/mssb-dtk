@@ -319,3 +319,11 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
 *   **Argument load order follows parameter order**: if `f1` loads before `r3`, the prototype is `(f32, s16)`, not `(s16, f32)` (fn_3_B7E44).
 *   **Insights from Fable's batch**: declare an element pointer BEFORE a `Vec v = {...}` initializer (fn_3_FD51C). Use an `s8` field and `s8` local for repeated `extsb` per compare (fn_3_E11E0). Use `sinf_kludge`/`cosf_kludge` instead of out-param `getComponentsFromRad` (fn_3_9F79C). Write `g_hugeAnimStruct.entries_2D94[k]` with k = offset/0x28 instead of "Ext" casts (fn_3_119878). Take `e = &t[i]` as the first loop statement to order strength-reduced walkers, and use `do {} while (++i < N)` to keep a base init before a call (fn_3_1356F8).
 *   **`tools/feedback_diff.py` caps its output at 10 lines**: count the `*` lines from `tools/sbs.py` for a true diff size, and treat a failed build as "no result" (sbs shows the previous build).
+
+## 7. Allocation-order findings from the fable-stuck pass (2026-10-16)
+
+*   **Multi-array `_OSAllocFromHeap` sizes are written in pointer order with `sizeof()`**, and a doubled first region is `n * sizeof(T) * 2` (trailing `* 2`): `n*sizeof(u16) + n*sizeof(u32) + n*sizeof(u32) + n*sizeof(VecXYZ)*2` matched fn_3_E4EF4; the same shape is in fn_3_C82B4, fn_3_E4FC4, fn_3_D6514, fn_3_D67CC, fn_3_FA3C0, fn_3_F6C60, fn_3_E763C.
+*   **A single-def/single-use local is sunk into its use and coloured as an expression temp** (in evaluation order, lowest free register). **A two-step web** (`dz = z; dz -= prevZ;`) is coloured after the block's temps, so it takes the first register no temp uses (fn_3_70768: dz in f4 instead of f0). Use this when a "variable" lands in a too-low register.
+*   **fmuls operand order**: for temp*temp the compiler emits the operand it evaluated second first; for web*temp it emits the web first; `dx *= expr` keeps dx first with dest = dx. A web defined by `a - b` is coalesced with `a` when `a` dies there.
+*   **Probe harness** (`.scratch/probe/probe.sh file.c` compiles with the game flags and disassembles with `dtk elf disasm`): put dozens of variants of one function in a file and diff the tails in one compile instead of one `try_function.py` per guess.
+

@@ -1,28 +1,11 @@
-// Best non-matching shape: 3 mismatched lines (in-tree expression form gives 4).
-// Target add tree: add r0 = n*2 + n*4; add r30 = r0 + n*24; add r30 = n*4 + r30, with count in r4 / mulli in r3.
-// Statement form below gets the operand order right but accumulates in r30 instead of using r0 for the
-// first partial sum. Single-expression forms with the right tree (e.g. ((n*2 + n*4) + n*4) + n*24)
-// swap the count/mulli registers (r3/r4) instead. 60-variant sweeps (all orders x 5 parenthesizations,
-// with and without an n local) never beat 3.
-void fn_3_E4EF4(void) {
-    UnknownStruct_350E4* p = lbl_3_common_bss_350E4;
-    u32 n = p->memcpyCount;
-    u32 size;
-    s32 a;
-    s32 b;
-
-    size = n * 4 + n * 2;
-    size += n * 24;
-    size = n * 4 + size;
-    if (p->unk48 == NULL) {
-        p->unk48 = _OSAllocFromHeap(4, size);
-        lbl_3_common_bss_350E4[0].unk3C = (u32*)&p->unk48[p->memcpyCount * 2];
-        lbl_3_common_bss_350E4[0].unk44 = lbl_3_common_bss_350E4[0].unk3C + p->memcpyCount;
-        lbl_3_common_bss_350E4[0].unk40 = (u16*)(lbl_3_common_bss_350E4[0].unk44 + p->memcpyCount);
-    }
-    memset(p->unk48, 0, size);
-    a = 0;
-    b = 0;
-    fn_3_E4CB0(&a, &b);
-    lbl_3_common_bss_350E4[0].unk64 = a;
-}
+// MATCHED (fable-stuck, 2026-10-16). Kept here because the idiom is shared by the whole family:
+// fn_3_C82B4 (rep_1FD8), fn_3_E4FC4 (rep_2998), fn_3_D6514/fn_3_D67CC (sta_c2), fn_3_FA3C0 (sta_c4),
+// fn_3_F6C60 (sta_c5), fn_3_E763C (sta_c6) all carve the same four arrays out of one _OSAllocFromHeap block
+// with the identical `mulli 0x18 / slwi 2 / slwi 1 / add r0=n*2+n*4 / add=+n*24 / add=n*4+` shape.
+// The size is written in *pointer order* with sizeof() of the element types, u16 first and the
+// VecXYZ pair last as `n * sizeof(VecXYZ) * 2` (the `*2` on the end is what keeps n in r4 / mulli in r3):
+//     u32 n = p->memcpyCount;
+//     u32 size = n * sizeof(u16) + n * sizeof(u32) + n * sizeof(u32) + n * sizeof(VecXYZ) * 2;
+// Plain `n*2 + n*4 + n*4 + n*24` gives the right add tree but swaps r3/r4; any order starting with n*24
+// gives the wrong tree. Pointer setup after the alloc is unchanged:
+//     unk3C = (u32*)&unk48[n*2]; unk44 = unk3C + n; unk40 = (u16*)(unk44 + n);

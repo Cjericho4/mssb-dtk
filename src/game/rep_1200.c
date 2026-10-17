@@ -187,6 +187,7 @@ s32 fn_3_70768(f32* outX, BOOL curve, f32 targetZ) {
     f32 newVz;
     f32 dx;
     f32 dz;
+    f32 t;
     s32 frames = 0;
 
     if (z < targetZ) {
@@ -216,8 +217,10 @@ s32 fn_3_70768(f32* outX, BOOL curve, f32 targetZ) {
             x += curveV;
         }
     } while (!(z < targetZ));
-    dz = z - prevZ;
-    dx = (x - prevX) * (1.0f - (z - targetZ) / dz);
+    dz = z;
+    dz -= prevZ;
+    t = 1.0f - (z - targetZ) / dz;
+    dx = (x - prevX) * t;
     *outX = prevX + dx;
     return frames;
 }
