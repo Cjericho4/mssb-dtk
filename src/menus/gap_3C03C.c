@@ -253,7 +253,8 @@ void fn_2_42490(void) {
 
 // .text:0x00042638 size:0xD0
 void fn_2_42638(void) {
-    return;
+    s32 i;
+    for (i = 0; i < 20; i++) lbl_2_bss_1A824C->copiedFlags[i] = lbl_2_bss_1A8248->copiedFlags[i];
 }
 
 // .text:0x00042708 size:0x4E0
