@@ -1,4 +1,5 @@
 #include "menus/gap_71EC4.h"
+#include "UnknownHeaders.h"
 
 // .text:0x00071EC4 size:0x38
 void fn_2_71EC4(void) {
@@ -42,7 +43,7 @@ void fn_2_72594(void) {
 
 // .text:0x00072630 size:0x2C
 void fn_2_72630(void) {
-    return;
+    fn_800B0A5C_insertQueue(fn_2_72594, 0x3000);
 }
 
 // .text:0x0007265C size:0x1B8
