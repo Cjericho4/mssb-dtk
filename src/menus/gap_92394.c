@@ -1,6 +1,7 @@
 #include "menus/gap_92394.h"
 #include "menus/rep_0B08.h"
 #include "menus/gap_8782C.h"
+#include "menus/rep_10C0.h"
 #include "Dolphin/GX/GXTypes.h"
 
 extern GXColor lbl_800F7478[];
@@ -78,7 +79,17 @@ void fn_2_9253C(Rep1028Obj* obj) {
 
 // .text:0x0009257C size:0xD8
 void fn_2_9257C(void) {
-    return;
+    s32 i;
+    if (lbl_2_bss_1A8248->unk44F2 == 1 || lbl_2_bss_1A8248->unk44F2 == 2 || lbl_2_bss_1A8248->unk44F2 == 3) return;
+    for (i = 0; i < 29; i++) {
+        Rep1028Obj* obj = &lbl_2_bss_1A8248->rep1028Objects[i];
+        obj->callback = lbl_2_data_308B4[obj->variant];
+        obj->callback(obj);
+    }
+    if (lbl_2_bss_1A824C->flag1972C0) {
+        lbl_2_bss_1A824C->flag1972C0 = 0;
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x00092654 size:0x28
