@@ -7,7 +7,7 @@
 extern Fielder g_Fielders[];
 
 
-void fn_3_251E4(void);
+void fn_3_251E4(s32 idx);
 void fn_3_253A4(s8 arg0, s32 arg1);
 void fn_3_25648(void);
 void fn_3_25844(s32 fielderIdx, s32 arg1);
@@ -195,7 +195,7 @@ void fn_3_50C20(s32 fielderIdx, f32* x, f32* z);
 void fn_3_50DD8(s32 fielderIdx, f32* x, f32* z, s32 arg3);
 void fn_3_51220(void);
 s32 fn_3_5164C(s32 idx, VecXYZ* result);
-void fn_3_51798(void);
+s32 fn_3_51798(s32 idx, VecXYZ* out);
 void fn_3_51DF0(void);
 void fn_3_52084(void);
 void fn_3_522E0(void);
@@ -238,6 +238,7 @@ extern VecXZ lbl_3_data_44B4[11];
 extern f32 lbl_3_data_4780[5];
 extern VecXZ lbl_3_data_18984[3];
 extern u8 lbl_3_data_48F8[];
+extern s16 lbl_3_data_49DC[44];
 extern f32 lbl_3_data_4930[43];
 extern u8 lbl_3_data_46F8[][9];
 extern u8 lbl_3_data_470C[2];

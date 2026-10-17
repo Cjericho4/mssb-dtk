@@ -308,8 +308,50 @@ static inline void beginFielderCatchAnim(s32 idx) {
 }
 
 // .text:0x000251E4 size:0x1C0 mapped:0x80664278
-void fn_3_251E4(void) {
-    return;
+void fn_3_251E4(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+    VecXYZ out;
+    s32 r;
+
+    if (f->unk1BE < 0x7FFE) {
+        f->unk1BE++;
+    } else {
+        f->unk1BE = 0x7FFF;
+    }
+    f->unk1C0--;
+    if (f->unk210 == 1) {
+        if (f->unk1C0 <= 0) {
+            f->unk210 = 2;
+            f->unk1BE = 0;
+            f->unk1C0 = lbl_3_data_49DC[34];
+            return;
+        }
+        f->unk174 *= lbl_3_data_4930[35];
+        f->unk50 = f->unk174;
+        fn_3_9F9C8(f->unk1C2, &f->unk38, &f->unk3C);
+        f->unk30 = f->unk38 * f->unk50;
+        f->unk34 = f->unk3C * f->unk50;
+        r = fn_3_51798(idx, &out);
+        if (r != 0) {
+            if (r == 2 && !(out.x > 55.0f) && !(out.x < -55.0f)) {
+                f->unk30 = out.x - f->pos[0];
+                f->unk34 = out.z - f->pos[2];
+                f->pos[0] = out.x;
+                f->pos[2] = out.z;
+            } else {
+                f->unk50 = 0.0f;
+                f->unk30 = 0.0f;
+                f->unk34 = 0.0f;
+            }
+        } else {
+            f->pos[0] += f->unk30;
+            f->pos[2] += f->unk34;
+        }
+        f->prevPos[0] = f->pos[0];
+        f->prevPos[2] = f->pos[2];
+    } else if (f->unk1C0 <= 0) {
+        f->unk210 = 0;
+    }
 }
 
 // .text:0x000253A4 size:0x2A4 mapped:0x80664438
@@ -322,7 +364,6 @@ void fn_3_25648(void) {
     return;
 }
 
-extern s16 lbl_3_data_49DC[44];
 // .text:0x00025844 size:0x94 mapped:0x806648D8
 void fn_3_25844(s32 fielderIdx, s32 arg1) {
     Fielder* f = &g_Fielders[fielderIdx];
@@ -1991,7 +2032,7 @@ void fn_3_3D304(s32 fielderIdx) {
         return;
     }
     if (f->unk210 != 0) {
-        fn_3_251E4();
+        fn_3_251E4(fielderIdx);
         f->unk1EE = 0;
         return;
     }
@@ -3647,8 +3688,8 @@ s32 fn_3_5164C(s32 idx, VecXYZ* result) {
 }
 
 // .text:0x00051798 size:0x658 mapped:0x8069082C
-void fn_3_51798(void) {
-    return;
+s32 fn_3_51798(s32 idx, VecXYZ* out) {
+    return 0;
 }
 
 // .text:0x00051DF0 size:0x294 mapped:0x80690E84
