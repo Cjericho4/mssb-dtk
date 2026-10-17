@@ -1,4 +1,5 @@
 #include "menus/rep_0438.h"
+#include "menus/gap_4B1AC.h"
 
 // .text:0x00012238 size:0x194
 void fn_2_12238(void) {
@@ -12,7 +13,8 @@ void fn_2_123CC(void) {
 
 // .text:0x00012988 size:0x24
 void fn_2_12988(void) {
-    return;
+    lbl_8034E9A0.alternateTimeHigh = lbl_803C7898.high;
+    lbl_8034E9A0.alternateTimeLow = lbl_803C7898.low;
 }
 
 // .text:0x000129AC size:0x24
