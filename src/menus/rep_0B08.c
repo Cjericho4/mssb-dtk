@@ -351,8 +351,13 @@ void fn_2_6BAD8(void) {
 }
 
 // .text:0x0006BB7C size:0x4C
-void fn_2_6BB7C(void) {
-    return;
+void fn_2_6BB7C(Rep0B08Obj* obj) {
+    Rep0B08Obj* target = &lbl_2_bss_1A8248->rep0B08Objects[obj->index];
+    target->unkC0 = 1;
+    target = &lbl_2_bss_1A8248->rep0B08Objects[obj->index];
+    target->unkCA = 255;
+    obj->unk8C = 1.0f;
+    obj->state = 1;
 }
 
 // .text:0x0006BBC8 size:0x38
