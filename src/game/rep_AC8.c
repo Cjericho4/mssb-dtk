@@ -2272,7 +2272,43 @@ void fn_3_48A54(void) {
 
 // .text:0x000494F4 size:0x4D0 mapped:0x80688588
 void fn_3_494F4(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    f32 dz;
+    f32 dx;
+    f32 dist;
+    f32 step;
+
+    if (g_Ball.pauseBallMovementWhenInPlant != 0) {
+        dz = g_Ball.AtBat_Contact_BallPos.z - f->pos[2];
+        dx = g_Ball.AtBat_Contact_BallPos.x - f->pos[0];
+        dist = dolsqrtf2(dx * dx + dz * dz);
+        if (dist < lbl_3_data_4930[37]) {
+            goto stop;
+        }
+        {
+            f32 x = (lbl_3_data_4930[36] - 1.0f) * (dx / dist) + f->pos[0];
+            f32 z = (lbl_3_data_4930[36] - 1.0f) * (dz / dist) + f->pos[2];
+            setFielderTarget(f, x, z);
+        }
+    }
+    if (g_Ball.hitWallInd != 0) {
+        if (f->unk74 < lbl_3_data_4930[1]) {
+            goto stop;
+        }
+    } else if (dolsqrtf2((g_Ball.AtBat_Contact_BallPos.x - g_Ball.ballWillHitBallPos.x) *
+                             (g_Ball.AtBat_Contact_BallPos.x - g_Ball.ballWillHitBallPos.x) +
+                         (g_Ball.AtBat_Contact_BallPos.z - g_Ball.ballWillHitBallPos.z) *
+                             (g_Ball.AtBat_Contact_BallPos.z - g_Ball.ballWillHitBallPos.z)) < lbl_3_data_4930[2] &&
+               f->unk7C < lbl_3_data_4930[3]) {
+        goto stop;
+    }
+    if (g_Ball.hitClassification1 == 2 && f->unk7C < lbl_3_data_4930[3]) {
+        goto stop;
+    }
     return;
+
+stop:
+    stopFielder(fielderIdx);
 }
 
 // .text:0x000499C4 size:0x254 mapped:0x80688A58
