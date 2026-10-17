@@ -2,6 +2,12 @@
 #define __MENUS_rep_0788_H_
 
 #include "mssbTypes.h"
+#include "UnknownHeaders.h"
+
+typedef struct Rep0788Item {
+    u8 _pad0[0xE];
+    s16 index;
+} Rep0788Item;
 
 void fn_2_1D440(void);
 void fn_2_1FF0C(void);
@@ -39,7 +45,7 @@ void fn_2_25200(void);
 void fn_2_253B0(void);
 void fn_2_25524(void);
 void fn_2_2577C(void);
-void fn_2_25850(void);
+void fn_2_25850(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_2587C(void);
 void fn_2_25A1C(void);
 void fn_2_25A48(void);

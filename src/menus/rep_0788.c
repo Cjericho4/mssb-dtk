@@ -1,5 +1,6 @@
 #include "menus/rep_0788.h"
 #include "UnknownHeaders.h"
+#include "game/rep_3448.h"
 
 // .text:0x0001D440 size:0x2ACC
 void fn_2_1D440(void) {
@@ -182,8 +183,8 @@ void fn_2_2577C(void) {
 }
 
 // .text:0x00025850 size:0x2C
-void fn_2_25850(void) {
-    return;
+void fn_2_25850(DrawingSceneStruct* scene, Rep0788Item* item) {
+    lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
 }
 
 // .text:0x0002587C size:0x1A0
