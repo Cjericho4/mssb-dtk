@@ -242,6 +242,22 @@ static inline s32 getLeadRunnerChaseBase(void) {
     return 4;
 }
 
+static inline void readyFielderIfValid(s32 idx, s32 action) {
+    Fielder* f = &g_Fielders[idx];
+
+    if (idx != -1) {
+        f->unk1D3 = action;
+        if (lbl_3_data_3C40.actions[action].unk0 >= 0) {
+            g_FieldingLogic.unk_F8[idx] = lbl_3_data_3C40.actions[action].unk0;
+        }
+        f->unk1D5 = 0;
+        f->unk1D6 = 0;
+        f->unk1A4 = 0;
+        f->unk1AC = 0;
+        f->unk1FF = 0;
+    }
+}
+
 // .text:0x000251E4 size:0x1C0 mapped:0x80664278
 void fn_3_251E4(void) {
     return;
@@ -2048,8 +2064,23 @@ void fn_3_402A8(void) {
 }
 
 // .text:0x00040C04 size:0x150 mapped:0x8067FC98
+
 void fn_3_40C04(void) {
-    return;
+    s32 i;
+
+    for (i = 2; i < 6; i++) {
+        if (g_Fielders[i].unk1DD == 2) {
+            readyFielderIfValid(i, 3);
+            break;
+        }
+    }
+    if (i == 2) {
+        readyFielderIfValid(3, 3);
+    }
+    if (i == 4) {
+        readyFielderIfValid(5, 3);
+    }
+    fn_3_40D88();
 }
 
 // .text:0x00040D54 size:0x34 mapped:0x8067FDE8
