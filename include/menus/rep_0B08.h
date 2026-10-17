@@ -95,7 +95,9 @@ typedef struct MenusSceneState {
     u8 choiceMask; /* 0x4428 */
     u8 _pad4429[6];
     u8 unk442F;
-    u8 _pad4430[0xC2];
+    u8 _pad4430;
+    u8 readyFlags[9]; /* 0x4431; extent unknown */
+    u8 _pad443A[0xB8];
     u8 unk44F2;
     u8 _pad44F3[4];
     u8 unk44F7;

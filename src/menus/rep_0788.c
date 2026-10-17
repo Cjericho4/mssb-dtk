@@ -270,8 +270,13 @@ void fn_2_24724(void) {
 }
 
 // .text:0x00024728 size:0xD8
-void fn_2_24728(void) {
-    return;
+BOOL fn_2_24728(s32 side) {
+    MenusSceneState* scene = lbl_2_bss_1A8248;
+    s32 i;
+    for (i = 0; i < 51; i++) {
+        if (scene->choices[i].state == 0 && scene->choices[i].flag == 1 && scene->choices[i].side == side && scene->readyFlags[side] == 1) return 1;
+    }
+    return 0;
 }
 
 // .text:0x00024800 size:0x69C
