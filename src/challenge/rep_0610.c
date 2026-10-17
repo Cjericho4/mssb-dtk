@@ -410,7 +410,10 @@ void fn_1_14888(void) {
 
 // .text:0x000148CC size:0x5C
 void fn_1_148CC(void) {
-    return;
+    fn_800AD038(lbl_80366158.unk8);
+    lbl_803CC1B8->loadingState = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_1_176EC;
+    lbl_1_bss_30B8 = 1;
 }
 
 // .text:0x00014928 size:0x44
