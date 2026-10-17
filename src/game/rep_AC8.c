@@ -197,8 +197,8 @@ static inline void releaseFielderBase(s32 idx) {
             setFielderReadyAction(idx, 0xC);
         }
     } else if (base == 5) {
-        g_FieldingLogic.unkD8 = -1;
-        g_FieldingLogic.unk105 = 0;
+        g_FieldingLogic.unkD0[4] = -1;
+        g_FieldingLogic.unk101[4] = 0;
         f->unk18C = -1;
         f->unk1D7 = 0;
         if (f->unk1D3 == 0xE && idx != -1) {
@@ -2301,18 +2301,18 @@ void fn_3_3DB78(s32 fielderIdx) {
         if (f->pos[2] < lbl_3_data_4444[4].z) {
             oz = -2.0f;
         }
-        if (g_FieldingLogic.unk105 != 0 && f->unk50 <= 0.03f) {
+        if (g_FieldingLogic.unk101[4] != 0 && f->unk50 <= 0.03f) {
             stopFielder(fielderIdx);
             return;
         }
         setFielderTarget(f, lbl_3_data_4444[4].x + ox, lbl_3_data_4444[4].z + oz);
         fn_3_526DC(fielderIdx);
         if (f->unk68 < 3.0f) {
-            g_FieldingLogic.unk105 = 1;
+            g_FieldingLogic.unk101[4] = 1;
             f->unk68 = 0.0f;
             f->unk1D6 = 8;
         } else {
-            g_FieldingLogic.unk105 = 0;
+            g_FieldingLogic.unk101[4] = 0;
             f->unk1D6 = 0xB;
         }
     } else if (state == 7) {
@@ -3317,7 +3317,7 @@ static inline void claimRunnerChase(s32 idx) {
         setFielderReadyAction(idx, 5);
     }
     fn_3_48480(idx);
-    if (g_FieldingLogic.unkD8 != idx && f->unk18C < 0) {
+    if (g_FieldingLogic.unkD0[4] != idx && f->unk18C < 0) {
         return;
     }
     releaseFielderBase(idx);

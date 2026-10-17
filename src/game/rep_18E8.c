@@ -677,11 +677,11 @@ void fn_3_AAA3C(s32 fielderIdx) {
 
 // .text:0x000AABF8 size:0x8C mapped:0x806E9C8C
 BOOL fn_3_AABF8(void) {
-    s16 idx = g_FieldingLogic.unkD8;
+    s16 idx = g_FieldingLogic.unkD0[4];
     if (idx == -1) {
         return FALSE;
     }
-    if (g_FieldingLogic.unk105 != 1) {
+    if (g_FieldingLogic.unk101[4] != 1) {
         return FALSE;
     }
     if (g_Fielders[idx].unk18C != 5) {
