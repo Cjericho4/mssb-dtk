@@ -903,7 +903,138 @@ void fn_3_34450(void) {
 
 // .text:0x00034A40 size:0x12E8 mapped:0x80673AD4
 void fn_3_34A40(s32 idx) {
-    return;
+    Fielder* f = &g_Fielders[idx];
+    f32 dist;
+    f32 t;
+    f32 a;
+    f32 x;
+    f32 z;
+    s32 frames;
+    s32 n;
+    s32 i;
+
+    if (g_Ball.fielderWBallIndex >= 0 && g_Ball.fielderWBallIndex != idx) {
+        if (f->unk50 == 0.0f) {
+            f->unk68 = 0.0f;
+            f->prevPos[0] = f->pos[0];
+            f->prevPos[1] = f->pos[1];
+            f->prevPos[2] = f->pos[2];
+            f->unk30 = 0.0f;
+            f->unk34 = 0.0f;
+        }
+        goto tail;
+    }
+    f->unk1D6 = 0;
+    f->unk1EB = 0;
+    f->unk1A4 = 0;
+    if (g_Ball.fielderAboutToGetBall_hasBall >= 0) {
+        if (g_Ball.AtBat_ContactResult != 0 || g_Ball.hitClassification1 != 2) {
+            goto chase;
+        }
+        dist = dolsqrtf2((g_Ball.ballWillHitBallPos.x - g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x) *
+                             (g_Ball.ballWillHitBallPos.x - g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x) +
+                         (g_Ball.ballWillHitBallPos.z - g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z) *
+                             (g_Ball.ballWillHitBallPos.z - g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z));
+        if (g_Ball.ballVelocity > 0.0f || dist > 20.0f) {
+            if (g_Ball.physicsSubstruct.hitLandingSpotDistFromHome < 3.0f) {
+                if (f->unk70 < 15.0f) {
+                    setFielderTarget(f, f->pos[0], f->pos[2]);
+                } else {
+                    x = 15.0f * (f->pos[0] / f->unk70);
+                    z = 15.0f * (f->pos[2] / f->unk70);
+                    setFielderTargetIdx(idx, x, z);
+                }
+            } else {
+                x = 15.0f * (g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x /
+                             g_Ball.physicsSubstruct.hitLandingSpotDistFromHome) +
+                    g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x;
+                z = 15.0f * (g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z /
+                             g_Ball.physicsSubstruct.hitLandingSpotDistFromHome) +
+                    g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z;
+                setFielderTargetIdx(idx, x, z);
+            }
+        } else {
+            setFielderTargetIdx(idx, g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x,
+                                g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z);
+        }
+        if (f->unk68 < 10.0f) {
+            f->unk1D6 = 8;
+        }
+        goto tail;
+    }
+    if (g_Ball.AtBat_ContactResult != 0) {
+        goto chase;
+    }
+    frames = fielderFramesToReach(f, g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x,
+                                  g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z);
+    if (g_Ball.framesUntilBallHitsGround - frames > 10) {
+        setFielderTargetIdx(idx, g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x,
+                            g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z);
+    } else {
+        for (i = 10; i < 70; i += 10) {
+            if (i == 60) {
+                setFielderTargetIdx(idx,
+                                    g_Ball.physicsSubstruct.futureCoordsAndDist[g_Ball.framesUntilBallHitsGround + i].pos.x,
+                                    g_Ball.physicsSubstruct.futureCoordsAndDist[g_Ball.framesUntilBallHitsGround + i].pos.z);
+                break;
+            }
+            n = g_Ball.framesUntilBallHitsGround + i;
+            if (n - fielderFramesToReach(f, g_Ball.physicsSubstruct.futureCoordsAndDist[n].pos.x,
+                                         g_Ball.physicsSubstruct.futureCoordsAndDist[n].pos.z) > 5) {
+                setFielderTargetIdx(idx, g_Ball.physicsSubstruct.futureCoordsAndDist[n].pos.x,
+                                    g_Ball.physicsSubstruct.futureCoordsAndDist[n].pos.z);
+                break;
+            }
+        }
+    }
+    if (idx <= 5) {
+        if (f->unk80 < 10.0f) {
+            f->unk1D6 = 8;
+        }
+    } else if (g_FieldingLogic.unkB0 <= 5 &&
+               g_Ball.ballDistanceFromHome < g_Fielders[g_FieldingLogic.unkB0].unk70) {
+        if (f->unk80 < 5.0f) {
+            f->unk1D6 = 8;
+        }
+    } else if (f->unk80 < 10.0f) {
+        f->unk1D6 = 8;
+    }
+    goto tail;
+
+chase:
+    a = f->unk7C;
+    t = 1.0f + ((a - 15.0f) / 100.0f + (g_Ball.ballVelocity - 0.6f));
+    x = t * (f->unk74 * g_Ball.ballVelocityPercent.x) + g_Ball.AtBat_Contact_BallPos.x;
+    z = t * (f->unk74 * g_Ball.ballVelocityPercent.z) + g_Ball.AtBat_Contact_BallPos.z;
+    if (idx >= 6 && f->unk70 < 50.0f) {
+        x = f->pos[0];
+        z = f->pos[2];
+    }
+    setFielderTarget(f, x, z);
+    if (f->unk74 < 20.0f && a < 5.0f) {
+        if (lbl_3_bss_170[0] >= 0) {
+            if (__abs(lbl_3_bss_170[0] - radToShortAngle(atan2(g_Ball.AtBat_Contact_BallPos.z - f->pos[2],
+                                                                g_Ball.AtBat_Contact_BallPos.x - f->pos[0]))) > 0x80) {
+                f->unk1D6 = 8;
+            }
+        } else {
+            f->unk1D6 = 8;
+        }
+    }
+
+tail:
+    if (f->unk50 < 0.01f && f->unk1D6 == 8) {
+        f->unk68 = 0.0f;
+        f->unk50 = 0.0f;
+        f->prevPos[0] = f->pos[0];
+        f->prevPos[2] = f->pos[2];
+        f->unk1A0 = 0;
+        f->unk1D6 = 0;
+    }
+    fn_3_526DC(idx);
+    if (f->unk50 != 0.0f) {
+        f->unk17E = f->unk68 / f->unk50;
+    }
 }
 
 // .text:0x00035D28 size:0xF4 mapped:0x80674DBC
