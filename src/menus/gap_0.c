@@ -62,7 +62,12 @@ void fn_2_2DC(void) {
 
 // .text:0x00000328 size:0x4C
 void fn_2_328(void) {
-    return;
+    MenusCommandQueue* queue = lbl_2_bss_4;
+    u8 next = (queue->writeIndex + 1) % 32;
+    if (next != queue->readIndex) {
+        queue->writeIndex = next;
+        queue->commands[queue->writeIndex] = 1;
+    }
 }
 
 // .text:0x00000374 size:0x150
