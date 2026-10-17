@@ -11,10 +11,12 @@ typedef struct Rep0568Obj {
 } Rep0568Obj;
 
 typedef struct Rep0568State {
-    u8 _pad0[0x14];
+    u8 _pad0[0xC];
+    s32 unkC;
+    u8 _pad10[4];
     u8 active[8];
-    u8 counters[8];
-    u8 _pad24[9];
+    s8 counters[9];
+    u8 _pad25[8];
     u8 count;
     u8 _pad2E[0x12];
     union {

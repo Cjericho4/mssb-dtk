@@ -1,5 +1,7 @@
 #include "menus/rep_0438.h"
 #include "menus/gap_4B1AC.h"
+#include "menus/rep_0568.h"
+#include "string.h"
 
 // .text:0x00012238 size:0x194
 void fn_2_12238(void) {
@@ -25,7 +27,19 @@ void fn_2_129AC(void) {
 
 // .text:0x000129D0 size:0xA0
 void fn_2_129D0(void) {
-    return;
+    Rep0568State* state = &lbl_2_bss_100B8;
+    memset(state->active, 0, state->count);
+    memset(lbl_2_bss_100B8.counters, 0, state->count);
+    memset(&lbl_2_bss_100B8.counters[7], -1, 2);
+    lbl_2_bss_100B8.active[4] = 0;
+    lbl_2_bss_100B8.active[5] = 0;
+    lbl_2_bss_100B8.active[6] = 0;
+    lbl_2_bss_100B8.active[7] = 0;
+    lbl_2_bss_100B8.counters[4] = 0;
+    lbl_2_bss_100B8.counters[5] = -1;
+    lbl_2_bss_100B8.counters[6] = -1;
+    lbl_2_bss_100B8.unkC = -1;
+    state->count = 0;
 }
 
 // .text:0x00012A70 size:0xF0
