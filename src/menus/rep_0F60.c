@@ -49,8 +49,8 @@ void fn_2_8C910(void) {
 }
 
 // .text:0x0008CC88 size:0x24
-void fn_2_8CC88(void) {
-    return;
+BOOL fn_2_8CC88(s32 index) {
+    return g_hugeAnimStruct.AnimationStructPtrs[index]->unk68 == 0;
 }
 
 // .text:0x0008CCAC size:0x20

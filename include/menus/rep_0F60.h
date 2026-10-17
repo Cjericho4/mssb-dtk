@@ -12,7 +12,7 @@ void fn_2_8B418(void);
 void fn_2_8C724(void);
 void fn_2_8C80C(void);
 void fn_2_8C910(void);
-void fn_2_8CC88(void);
+BOOL fn_2_8CC88(s32 index);
 void fn_2_8CCAC(s32 index, u8 value);
 void fn_2_8CCCC(void);
 void fn_2_8CD58(void);
