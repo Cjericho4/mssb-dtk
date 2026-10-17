@@ -1,8 +1,8 @@
 #include "menus/gap_194BC.h"
 
 // .text:0x000194BC size:0x2C
-void fn_2_194BC(void) {
-    return;
+void fn_2_194BC(Rep0568Obj* obj) {
+    if (obj->context != 0) fn_800B9AA8(obj->context);
 }
 
 // .text:0x000194E8 size:0x38

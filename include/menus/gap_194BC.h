@@ -2,8 +2,9 @@
 #define __MENUS_gap_194BC_H_
 
 #include "mssbTypes.h"
+#include "menus/rep_0568.h"
 
-void fn_2_194BC(void);
+void fn_2_194BC(Rep0568Obj* obj);
 void fn_2_194E8(void);
 void fn_2_19520(void);
 void fn_2_19554(void);
