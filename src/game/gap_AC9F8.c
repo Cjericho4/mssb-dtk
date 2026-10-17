@@ -6,7 +6,8 @@
 #include "game/rep_E08.h"
 #include "game/rep_1B70.h"
 #include "game/rep_1188.h"
-extern u8 lbl_803CBC3C;
+typedef struct { u8 value; u8 _pad1; u8 unk2; } MenuFlag_CBC3C;
+extern MenuFlag_CBC3C lbl_803CBC3C;
 void fn_3_BF158(void);
 void fn_3_BF1AC(void);
 #include "musyx/musyx.h"
@@ -265,7 +266,7 @@ void fn_3_AFA64(void) {
     } else {
         lbl_3_common_bss_34C90.field_0x0C = 0x7FFF;
     }
-    lbl_803CBC3C = 1;
+    lbl_803CBC3C.value = 1;
     if (lbl_3_common_bss_34C90.field_0x0C > 0x3C) {
         if (lbl_3_common_bss_34C90.field_0x1D8 == 0) {
             if (g_d_GameSettings.exhibitionMatchInd == 0) {
@@ -804,8 +805,54 @@ void fn_3_B1578(void) {
 }
 
 // .text:0x000B1A30 size:0x19C mapped:0x806F0AC4
+extern u32 lbl_3_data_101E0[];
+s32 fn_3_6BA64(void);
+void fn_3_B27A4(void);
+
 void fn_3_B1A30(void) {
-    return;
+    s32 i;
+    switch (g_Practice.practiceState) {
+    case 0:
+        g_hugeAnimStruct.field272_0x307d = 0;
+        fn_3_6EBB4(0);
+        fn_3_8A350();
+        for (i = 0; i < 9; i++) {
+            setFielderValues(i, i);
+        }
+        setInMemBatterConstants(0);
+        fn_3_6D964(0, 0);
+        g_GameLogic.currentBatterPerTeam[0] = 1;
+        g_GameLogic.currentBatterPerTeam[1] = 1;
+        lbl_3_common_bss_32724.unk9A = 0;
+        lbl_3_common_bss_32724.unk9C = 0;
+        lbl_803CBC3C.unk2 = 0;
+        g_Practice.aIEnabled = 1;
+        g_Practice.practiceBatterHandedness = 1;
+        g_Practice._1D9[0] = 0;
+        fn_80011BE4(9);
+        fn_3_B3C94(1);
+        break;
+    case 1:
+        if (fn_3_6BA64() != 0) fn_3_B3C94(2);
+        break;
+    case 2:
+        if (fn_3_750DC() != 0) fn_3_B3C94(3);
+        break;
+    case 3:
+        if (someAnimationIndFunction() != 0) fn_3_B3C94(4);
+        break;
+    case 4:
+        if (fn_3_B3CD4() != 0) fn_3_B3C94(7);
+        break;
+    case 7:
+        fn_3_B3B70();
+        fn_3_B27A4();
+        g_Practice.commandList = (void*)lbl_3_data_101E0[g_Practice.practiceLevel];
+        changeScene(1, 6);
+        fn_3_5A6D4(7);
+        fn_3_B3C78(1);
+        break;
+    }
 }
 
 // .text:0x000B1BCC size:0x48 mapped:0x806F0C60
