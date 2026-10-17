@@ -251,7 +251,7 @@ void fn_3_544B8(void);
 void fn_3_54900(void);
 void fn_3_54B58(void);
 void fn_3_55370(void);
-void fn_3_555AC(void);
+void fn_3_555AC(s32 idx);
 void fn_3_55710(void);
 void fn_3_55918(void);
 void fn_3_55CC4(void);

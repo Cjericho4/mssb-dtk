@@ -3570,8 +3570,45 @@ void fn_3_55370(void) {
 }
 
 // .text:0x000555AC size:0x164 mapped:0x80694640
-void fn_3_555AC(void) {
-    return;
+void fn_3_555AC(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+    f32 lo;
+    f32 hi;
+
+    f->unk1DE = 0;
+    if (f->pos[2] > 45.0f) {
+        return;
+    }
+    if (f->pos[2] < -5.0f) {
+        return;
+    }
+    if (f->pos[0] > 25.0f) {
+        return;
+    }
+    if (f->pos[0] < -25.0f) {
+        return;
+    }
+    if (f->pos[2] > lbl_3_data_4444[1].z) {
+        lo = lbl_3_data_4444[2].z - 2.0f;
+        hi = 4.0f + lbl_3_data_4444[2].z;
+        if (f->pos[0] > 0.0f) {
+            if (f->pos[2] > -f->pos[0] + lo && f->pos[2] < -f->pos[0] + hi) {
+                f->unk1DE = 2;
+            }
+        } else if (f->pos[2] > f->pos[0] + lo && f->pos[2] < f->pos[0] + hi) {
+            f->unk1DE = 3;
+        }
+    } else {
+        lo = lbl_3_data_4444[0].z - 4.0f;
+        hi = 2.0f + lbl_3_data_4444[0].z;
+        if (f->pos[0] > 0.0f) {
+            if (f->pos[2] > f->pos[0] + lo && f->pos[2] < f->pos[0] + hi) {
+                f->unk1DE = 1;
+            }
+        } else if (f->pos[2] > -f->pos[0] + lo && f->pos[2] < -f->pos[0] + hi) {
+            f->unk1DE = 4;
+        }
+    }
 }
 
 // .text:0x00055710 size:0x208 mapped:0x806947A4
