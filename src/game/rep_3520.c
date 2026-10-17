@@ -309,23 +309,25 @@ extern s8 lbl_3_data_21B88[4];
 // .text:0x001356F8 size:0xAC mapped:0x8077478C
 void fn_3_1356F8(void) {
     MinigameTargetSpeed* t;
-    f32 speed;
+    MinigameTargetSpeed* e;
     u8 strength;
     u32 i;
+    f32 speed;
 
     t = g_Minigame.targetSpeeds;
     memset(g_Minigame._1D7C, 0, 0x78);
-    for (i = 0; i < 4; i++) {
+    i = 0;
+    do {
+        e = &t[i];
         strength = g_Minigame.players.aIStrength[i];
-        t->unk4 = -1;
+        e->unk4 = -1;
         if (RandomInt_Game(100) < lbl_3_data_21B88[strength]) {
             speed = 3.0f;
         } else {
             speed = 1.5f;
         }
-        t->speed = speed;
-        t++;
-    }
+        e->speed = speed;
+    } while (++i < 4);
 }
 
 // .text:0x001357A4 size:0x98 mapped:0x80774838
