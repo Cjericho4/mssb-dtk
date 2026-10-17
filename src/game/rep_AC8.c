@@ -2249,8 +2249,17 @@ void fn_3_411AC(void) {
 }
 
 // .text:0x000417D4 size:0x1A8 mapped:0x80680868
-void fn_3_417D4(void) {
-    return;
+void fn_3_417D4(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    if (dolsqrtf2((g_Ball.physicsSubstruct.futureCoordsAndDist[10].pos.x - f->pos[0]) *
+                      (g_Ball.physicsSubstruct.futureCoordsAndDist[10].pos.x - f->pos[0]) +
+                  (g_Ball.physicsSubstruct.futureCoordsAndDist[10].pos.z - f->pos[2]) *
+                      (g_Ball.physicsSubstruct.futureCoordsAndDist[10].pos.z - f->pos[2])) < 0.7f &&
+        f->unk1DD == 2 && g_Ball.physicsSubstruct.futureCoordsAndDist[10].pos.y > f->unkF4) {
+        f->unk198 = 0;
+        stopFielder(idx);
+    }
 }
 
 // .text:0x0004197C size:0x3FC mapped:0x80680A10
