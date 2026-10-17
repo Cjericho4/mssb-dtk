@@ -3,6 +3,45 @@
 
 #include "mssbTypes.h"
 #include "challenge/challenge.h"
+
+typedef struct Rep0610Items {
+    /* 0x0 */ u8 _pad0[4];
+    /* 0x4 */ DrawingSceneItem* item4;
+    /* 0x8 */ DrawingSceneItem* item8;
+} Rep0610Items;
+
+typedef struct ChallengeState {
+    /* 0x0000 */ u8 _pad0[0xC];
+    /* 0x000C */ s32 unkC;
+    /* 0x0010 */ u8 _pad10[0x18];
+    /* 0x0028 */ s32 selection;
+    /* 0x002C */ u8 _pad2C[0x20];
+    /* 0x004C */ s32 queued;
+    /* 0x0050 */ u8 _pad50[0x2EA9];
+    /* 0x2EF9 */ u8 unk2EF9;
+    /* 0x2EFA */ u8 _pad2EFA[7];
+    /* 0x2F01 */ u8 unk2F01;
+    /* 0x2F02 */ u8 _pad2F02[0x846];
+    /* 0x3748 */ Rep0610Items items;
+} ChallengeState;
+extern ChallengeState lbl_1_bss_3070;
+
+typedef struct Rep0610Triple {
+    /* 0x0 */ s32 values[3];
+} Rep0610Triple;
+extern s32 lbl_80108B90;
+extern u16 lbl_1_data_F17C;
+extern s32 lbl_1_data_F2A0;
+extern Rep0610Triple lbl_1_data_F0A8;
+extern Rep0610Triple lbl_1_data_F0BC;
+extern const Vec lbl_1_rodata_7344;
+extern const Vec lbl_1_rodata_731C;
+extern u16 lbl_1_data_F56C;
+extern u16 lbl_1_data_F56E;
+void fn_800324EC(u16 arg0, s32 arg1, s32 arg2, s32* arg3);
+void fn_80031CA4(Vec* arg0, Rep0610Triple* arg1);
+void fn_8002955C(Vec* arg0, s32 arg1, s32* arg2);
+#include "challenge/challenge.h"
 extern u8 lbl_1_bss_5F71;
 #include "UnknownHeaders.h"
 
@@ -79,7 +118,7 @@ void fn_1_F2F8(void);
 void fn_1_F37C(void);
 void fn_1_F50C(void);
 void fn_1_F6E4(void);
-void fn_1_F798(void);
+void fn_1_F798(Rep0610Triple* dst, Rep0610Triple* src, s32 size);
 void fn_1_FB98(void);
 void fn_1_10044(void);
 void fn_1_10458(void);

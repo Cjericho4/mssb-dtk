@@ -17,7 +17,22 @@ void fn_1_CB9C(void) {
 
 // .text:0x0000CC24 size:0xA4
 void fn_1_CC24(void) {
-    return;
+    DrawingSceneStruct* entry;
+    ChallengeState* state = &lbl_1_bss_3070;
+
+    if (state->queued == 0) {
+        state->queued = 1;
+        entry = (DrawingSceneStruct*)fn_800B0A5C_insertQueue(fn_1_CCC8, (u16)(lbl_803CC1B8->priority + 1));
+        if (state->unk2EF9 != 0) {
+            Rep0610Items* items = &state->items;
+            entry->unk14 = items->item4;
+            entry->unk18 = lbl_1_data_F56C;
+        } else {
+            Rep0610Items* items = &state->items;
+            entry->unk14 = items->item8;
+            entry->unk18 = lbl_1_data_F56E;
+        }
+    }
 }
 
 // .text:0x0000CCC8 size:0x100
@@ -166,7 +181,16 @@ void fn_1_ECF8(void) {
 
 // .text:0x0000F040 size:0x90
 void fn_1_F040(void) {
-    return;
+    ChallengeState* state = &lbl_1_bss_3070;
+    Vec pos = lbl_1_rodata_7344;
+
+    if (lbl_803C77B8.pressed & 0x100) {
+        lbl_1_data_F2A0 = state->selection;
+        fn_8002955C(&pos, 0, &lbl_1_data_F2A0);
+    } else if (lbl_803C77B8.pressed & 0x200) {
+        state->unkC = 0;
+        state->unk2F01 = 10;
+    }
 }
 
 // .text:0x0000F0D0 size:0x108
@@ -181,7 +205,16 @@ void fn_1_F1D8(void) {
 
 // .text:0x0000F2F8 size:0x84
 void fn_1_F2F8(void) {
-    return;
+    ChallengeState* state = &lbl_1_bss_3070;
+
+    if (lbl_803C77B8.pressed & 0x100) {
+        lbl_80108B90 = state->selection;
+        fn_800324EC(lbl_1_data_F17C, 0, -1, &lbl_80108B90);
+    } else if (lbl_803C77B8.pressed & 0x200) {
+        lbl_80108B90 = 0;
+        state->unkC = 0;
+        state->unk2F01 = 10;
+    }
 }
 
 // .text:0x0000F37C size:0x190
@@ -196,11 +229,22 @@ void fn_1_F50C(void) {
 
 // .text:0x0000F6E4 size:0xB4
 void fn_1_F6E4(void) {
-    return;
+    Rep0610Triple* dst = &lbl_1_data_F0BC;
+    ChallengeState* state = &lbl_1_bss_3070;
+    Vec pos = lbl_1_rodata_731C;
+
+    fn_1_F798(dst, &lbl_1_data_F0A8, sizeof(Rep0610Triple));
+    if (lbl_803C77B8.pressed & 0x100) {
+        dst->values[0] = state->selection;
+        fn_80031CA4(&pos, dst);
+    } else if (lbl_803C77B8.pressed & 0x200) {
+        state->unkC = 0;
+        state->unk2F01 = 10;
+    }
 }
 
 // .text:0x0000F798 size:0x400
-void fn_1_F798(void) {
+void fn_1_F798(Rep0610Triple* dst, Rep0610Triple* src, s32 size) {
     return;
 }
 

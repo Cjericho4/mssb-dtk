@@ -2,6 +2,9 @@
 #define __CHALLENGE_rep_7730_H_
 
 #include "mssbTypes.h"
+#include "challenge/challenge.h"
+#include "game/rep_1C0.h"
+extern CompressedDiskRead lbl_1_data_104F4;
 #include "UnknownHeaders.h"
 
 typedef struct Rep7730Values {

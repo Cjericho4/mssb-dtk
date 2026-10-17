@@ -204,7 +204,21 @@ void fn_1_20E00(void) {
 
 // .text:0x00020F8C size:0xB4
 void fn_1_20F8C(void) {
-    return;
+    DrawingSceneStruct* item = lbl_803CC1B8->currentDrawingItem;
+
+    switch (lbl_803CC1B8->loadingState) {
+    case 0:
+        if (lbl_803C6CF8.allowLoad == 1) {
+            item->unk14 = ARAMTransfer(&lbl_1_data_104F4, 0, 0, 0);
+            lbl_803CC1B8->loadingState++;
+        }
+        break;
+    case 1:
+        if (lbl_803C6CF8.allowLoad == 1) {
+            item->loadingState = 1;
+        }
+        break;
+    }
 }
 
 // .text:0x00021040 size:0x140
