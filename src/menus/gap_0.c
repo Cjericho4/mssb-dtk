@@ -4,6 +4,11 @@
 extern BdcArrayElement lbl_2_data_C0;
 #include "menus/gap_D08.h"
 #include "UnknownHeaders.h"
+#include "Dolphin/OS/OSUtil.h"
+
+extern u32 lbl_803CB750;
+extern void fn_8004153C(void);
+extern void fn_800A97D0(s32 first, s32 second);
 #include "Dolphin/GX/GXPixel.h"
 #include "Dolphin/GX/GXTev.h"
 
@@ -107,7 +112,14 @@ void fn_2_664(void) {
 
 // .text:0x00000708 size:0x8C
 void fn_2_708(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    lbl_803CB750 += OSGetTick();
+    fn_8004153C();
+    fn_800A97D0(16, 30);
+    lbl_803CBBCC->unk0 = 0;
+    scene->unkIndex = 0;
+    fn_800B0A5C_insertQueue(fn_2_664, 0x1000);
+    lbl_803CC1B8->unk_00 = fn_2_554;
 }
 
 // .text:0x00000794 size:0x1AC
