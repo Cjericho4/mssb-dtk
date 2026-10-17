@@ -252,8 +252,10 @@ def parse_splits(splits_file):
                     })
     return splits
 
-def find_file_for_address(splits, addr):
+def find_file_for_address(splits, addr, section=None):
     for entry in splits:
+        if section and entry['section'] != section:
+            continue
         if entry['start'] <= addr < entry['end']:
             return entry['file']
     return None
@@ -288,10 +290,10 @@ def find_unit_for_symbol(symbol_name):
     
     if module == "":
         splits = parse_splits(os.path.join(config_base, 'splits.txt'))
-        found_file = find_file_for_address(splits, addr)
+        found_file = find_file_for_address(splits, addr, found_symbol['section'])
     else:
         splits = parse_splits(os.path.join(config_base, module, 'splits.txt'))
-        found_file = find_file_for_address(splits, addr)
+        found_file = find_file_for_address(splits, addr, found_symbol['section'])
 
     if not found_file:
         return None
