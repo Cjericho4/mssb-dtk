@@ -279,12 +279,13 @@ void fn_3_631AC(s32 runnerIdx) {
     return;
 }
 
-// .text:0x00063874 size:0x1C4 mapped:0x806A2908
-void fn_3_63874(s32 runnerIdx) {
-    return;
-}
+typedef struct {
+    s16 turnAroundFrames;
+    s16 _2;
+    s16 _4;
+} RunnerTimingEntry;
+extern RunnerTimingEntry lbl_3_data_7870[];
 
-// .text:0x00063A38 size:0xC0 mapped:0x806A2ACC
 typedef struct {
     f32 groundVelocity; // 0x00
     u8 _pad04[0x17];
@@ -296,6 +297,81 @@ typedef struct {
 
 extern RunnerTrackEntry lbl_3_common_bss_321A0[4];
 
+// .text:0x00063874 size:0x1C4 mapped:0x806A2908
+void fn_3_63874(s32 runnerIdx) {
+    InMemRunnerType* runner = &g_Runners[runnerIdx];
+    RunnerTrackEntry* track = &lbl_3_common_bss_321A0[runnerIdx];
+    u8 value;
+
+    if (g_GameLogic.secondaryGameMode == 6 && g_Minigame._1B15[runnerIdx] == 1) {
+        track->state = 0x11;
+        return;
+    }
+    if (runner->batterStayInBattersBoxReason != 0) {
+        track->state = 1;
+        return;
+    }
+    if (runner->actionCode != 0) {
+        track->state = 8;
+        return;
+    }
+    value = runner->overRun1BStage;
+    if (value >= 2) {
+        if (value == 2) {
+            track->state = 9;
+        } else {
+            track->state = 0xA;
+        }
+        return;
+    }
+    value = runner->overrunBaseStage;
+    if (value >= 2) {
+        if (value == 2) {
+            track->state = 0xB;
+        } else {
+            track->state = 0xC;
+        }
+        return;
+    }
+    value = runner->runningToDugoutInd;
+    if (value == 1) {
+        track->state = 0xD;
+        return;
+    }
+    if (value != 0) {
+        track->state = 0xE;
+        return;
+    }
+    value = runner->leadOffStatus;
+    if (value == 1) {
+        track->state = 0xF;
+        return;
+    }
+    if (value == 2) {
+        track->state = 0x10;
+        return;
+    }
+    if (runner->turnaroundCode != 0) {
+        track->state = 5;
+        return;
+    }
+    value = runner->runningDirectionCode;
+    if (value == 1 || value == 3) {
+        if (runner->turningAroundInd != 0 && runner->framesSinceLastDirectionChange < lbl_3_data_7870[runner->charID].turnAroundFrames) {
+            track->state = 7;
+        } else {
+            track->state = 2;
+        }
+        return;
+    }
+    if (runner->baseStandingOn >= 0) {
+        track->state = 3;
+        return;
+    }
+    track->state = 4;
+}
+
+// .text:0x00063A38 size:0xC0 mapped:0x806A2ACC
 void fn_3_63A38(void) {
     s32 i;
     InMemRunnerType* runner;
