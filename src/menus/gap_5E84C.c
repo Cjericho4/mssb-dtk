@@ -1,5 +1,11 @@
 #include "menus/gap_5E84C.h"
 #include "menus/rep_0B08.h"
+#include "menus/rep_10C0.h"
+#include "menus/gap_4B1AC.h"
+#include "menus/gap_1B1BC.h"
+
+extern void fn_8001F228(void);
+extern void fn_80035B50(s32);
 #include "game/rep_3448.h"
 
 // .text:0x0005E84C size:0x32C
@@ -19,7 +25,15 @@ void fn_2_5ED3C(void) {
 
 // .text:0x0005EE34 size:0x88
 void fn_2_5EE34(void) {
-    return;
+    lbl_2_bss_1A824C->flag1972BC = 1;
+    lbl_2_bss_1A824C->flag1972C0 = 1;
+    fn_8001F228();
+    fn_80035B50(10);
+    if (lbl_80366B18.tables[2] != 0) {
+        fn_800ACFB0(lbl_80366B18.tables[2]);
+        lbl_80366B18.tables[2] = 0;
+    }
+    lbl_2_bss_1A823C->unk34 = 0;
 }
 
 // .text:0x0005EEBC size:0x1D0

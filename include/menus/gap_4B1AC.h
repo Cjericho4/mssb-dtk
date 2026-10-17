@@ -15,7 +15,7 @@ extern MenusResourceBank* lbl_2_bss_1A8230;
 
 typedef struct MenusResourceTables {
     u8 _pad0[0x798];
-    u32* tables[1]; /* extent unknown */
+    u32* tables[3];
 } MenusResourceTables;
 extern MenusResourceTables lbl_80366B18;
 
