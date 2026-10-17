@@ -4,6 +4,7 @@
 #include "game/rep_1C0.h"
 
 extern CompressedDiskRead lbl_2_data_132DC[];
+extern CompressedDiskRead lbl_2_data_1326C[];
 extern s32 fn_80035838(CompressedDiskRead* list, s32 count);
 #include "menus/gap_8782C.h"
 
@@ -177,8 +178,8 @@ void fn_2_4E9A8(void) {
 }
 
 // .text:0x0004EABC size:0x38
-void fn_2_4EABC(void) {
-    return;
+BOOL fn_2_4EABC(void) {
+    return fn_80035838(lbl_2_data_1326C, 23) != 0;
 }
 
 // .text:0x0004EAF4 size:0x38
