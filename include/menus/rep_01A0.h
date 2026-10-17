@@ -11,6 +11,6 @@ extern MenusSoundState lbl_2_data_134;
 void fn_2_A70(void);
 void fn_2_B38(void);
 void fn_2_C18(void);
-void fn_2_C74(void);
+void fn_2_C74(u8 value);
 
 #endif // !__MENUS_rep_01A0_H_
