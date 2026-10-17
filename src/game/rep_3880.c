@@ -671,12 +671,92 @@ void fn_3_14BCB0(struct Struct_800339F0_Result* obj, Vec* pos, s32 arg2) {
 }
 
 // .text:0x0014BECC size:0x47C mapped:0x8078AF60
-void fn_3_14BECC(void* arg0, void* arg1) {
-    return;
+static inline void initRingEffects(struct Struct_800339F0_Result* obj, Vec* pos, s32 arg2) {
+    EffectConfig26D88* config;
+    ListNode_14B9F0* node;
+    u32 i;
+    f32 angle;
+    f32 radius;
+    obj->field_0x10 = lbl_3_common_bss_32724.field6C;
+    i = 0;
+    node = obj->listHead;
+    config = (u8)arg2 != 0 ? &lbl_3_data_26DC4 : &lbl_3_data_26D88;
+    do {
+        if (node->field_0x4A == 0) {
+            node->field_0x4D = config->unk0;
+            node->field_0x4E = 0;
+            node->field_0x4A = config->unk8;
+            node->scaleX = node->scaleY = (f32)config->unk10 / 100000.0f;
+            node->color[3] = config->unk28;
+            node->color[0] = config->unk1C;
+            node->color[1] = config->unk20;
+            node->color[2] = config->unk24;
+            { f32 scale = 2.0f;
+            radius = scale * (2.0 * ((f32)rand() / 32767.0f - 0.5));
+            }
+            angle = 0.017453292f * (f32)((180.0 / config->unk4) * i);
+            node->offset.x = radius * (f32)cos(angle) + pos->x;
+            node->offset.y = (pos->y - radius * (f32)sin(angle)) - 1.0;
+            node->offset.z = pos->z;
+            node->field_0x4F = arg2;
+            i++;
+        }
+        node = node->next;
+    } while (node != NULL && i < lbl_3_data_26D88.unk4);
+}
+static inline void initNewRingEffects(struct Struct_800339F0_Result* obj, Vec* pos, s32 arg2) {
+    EffectConfig26D88* config;
+    ListNode_14B9F0* node;
+    u32 i;
+    f32 radius;
+    f32 angle;
+    obj->field_0x10 = lbl_3_common_bss_32724.field6C;
+    i = 0;
+    node = obj->listHead;
+    config = (u8)arg2 != 0 ? &lbl_3_data_26DC4 : &lbl_3_data_26D88;
+    do {
+        if (node->field_0x4A == 0) {
+            node->field_0x4D = config->unk0;
+            node->field_0x4E = 0;
+            node->field_0x4A = config->unk8;
+            node->scaleX = node->scaleY = (f32)config->unk10 / 100000.0f;
+            node->color[3] = config->unk28;
+            node->color[0] = config->unk1C;
+            node->color[1] = config->unk20;
+            node->color[2] = config->unk24;
+            { f32 scale = 2.0f;
+            radius = scale * (2.0 * ((f32)rand() / 32767.0f - 0.5));
+            }
+            angle = 0.017453292f * (f32)((180.0 / config->unk4) * i);
+            node->offset.x = radius * (f32)cos(angle) + pos->x;
+            node->offset.y = (pos->y - radius * (f32)sin(angle)) - 1.0;
+            node->offset.z = pos->z;
+            node->field_0x4F = arg2;
+            i++;
+        }
+        node = node->next;
+    } while (node != NULL && i < lbl_3_data_26D88.unk4);
+}
+void fn_3_14BECC(Vec* pos, s32 mode) {
+    struct Struct_800339F0_Result* existing;
+    struct Struct_800339F0_Result* obj;
+    ListNode_14B9F0* node;
+    u8 buf[0x60];
+    existing = fn_800339F0(0, 0x22);
+    if (existing != NULL) {
+        obj = fn_800337CC(buf, lbl_3_data_26D88.unk4, 1);
+        initRingEffects(obj, pos, mode);
+        for (node = existing->listHead; node->next != NULL; node = node->next) {}
+        node->next = obj->listHead;
+        existing->count += obj->count;
+    } else {
+        obj = (struct Struct_800339F0_Result*)fn_80033A24((void (*)(void))fn_3_14BA40, 0x80, 0, lbl_3_data_26D88.unk4, 1, 0x22);
+        if (obj != NULL) initNewRingEffects(obj, pos, mode);
+    }
 }
 
 // .text:0x0014C348 size:0x50 mapped:0x8078B3DC
-void fn_3_14C348(void* arg0, void* arg1) {
+void fn_3_14C348(Vec* arg0, s32 arg1) {
     if (g_d_GameSettings.GameModeSelected == GAME_TYPE_MINIGAMES &&
         g_Minigame.GameMode_MiniGame == 2 &&
         arg0 != NULL) {
