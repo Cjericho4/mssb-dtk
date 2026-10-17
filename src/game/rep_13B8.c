@@ -12,9 +12,51 @@
 
 extern f32 lbl_3_rodata_1498;
 
+extern VecXZ lbl_3_data_4A54[2][13];
+extern s16 lbl_3_data_21904[12];
+
 // .text:0x0007D79C size:0x184 mapped:0x806BC830
-void fn_3_7D79C(void) {
-    return;
+void fn_3_7D79C(s32 idx) {
+    InMemRunnerType* runner = &g_Runners[idx];
+    VecXZ pos;
+    s32 start;
+    s32 count;
+
+    if (runner->runningToDugoutFrameCounter <= 0) {
+        f32 dist = runner->fractionalBasesRan;
+        f32 t = runner->percentTowardsNextBase;
+        if (dist < 1.0f) {
+            start = 0;
+            count = 4;
+        } else if (dist < 2.0f) {
+            start = 3;
+            count = 4;
+        } else if (dist < 3.0f) {
+            start = 6;
+            count = 4;
+        } else if (g_GameLogic.secondaryGameMode == 6) {
+            start = 9;
+            count = 4;
+        } else {
+            start = 9;
+            count = 3;
+        }
+        running_roundBasePosition(&pos, &lbl_3_data_4A54[g_GameLogic.secondaryGameMode == 6][start], count,
+                                   t);
+        runner->position.x = pos.x;
+        runner->position.z = pos.z;
+        runner->position.y = 0.0f;
+        runner->velocity.x = 0.0f;
+        runner->velocity.z = 0.0f;
+    }
+    if (runner->runningToDugoutFrameCounter < 0x7FFE) {
+        runner->runningToDugoutFrameCounter++;
+    } else {
+        runner->runningToDugoutFrameCounter = 0x7FFF;
+    }
+    if (runner->runningToDugoutFrameCounter >= lbl_3_data_21904[2]) {
+        g_Minigame._1B15[g_Minigame._18FC[idx]] = 0;
+    }
 }
 
 extern s16 lbl_3_data_21904[12];
