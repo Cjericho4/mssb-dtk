@@ -51,6 +51,15 @@ extern void (*lbl_2_data_2A2D4[])(Rep0B08Obj*);
 
 extern void (*lbl_2_data_2A2E0[])(Rep0B08Obj*);
 
+static inline void setMenuObjectActive(s32 index, u8 value) {
+    Rep0B08Obj* target = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    target->unkC0 = value;
+}
+static inline void setMenuObjectAlpha(s32 index, u8 value) {
+    Rep0B08Obj* target = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    target->unkCA = value;
+}
+
 // .text:0x0006832C size:0xC0
 void fn_2_6832C(void) {
     return;
@@ -445,8 +454,17 @@ void fn_2_6BC00(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006BC0C size:0xA0
-void fn_2_6BC0C(void) {
-    return;
+void fn_2_6BC0C(Rep0B08Obj* obj) {
+    s32 alpha;
+    setMenuObjectActive(obj->index, 1);
+    obj->unk8C += 0.1;
+    alpha = 256.0f * obj->unk8C;
+    if (alpha < 255) {
+        setMenuObjectAlpha(obj->index, alpha);
+    } else {
+        setMenuObjectAlpha(obj->index, 255);
+        obj->state = 2;
+    }
 }
 
 // .text:0x0006BCAC size:0xF0
