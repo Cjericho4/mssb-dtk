@@ -13,6 +13,7 @@ extern s32 fn_80035838(CompressedDiskRead* list, s32 count);
 #include "menus/gap_8782C.h"
 
 extern void fn_80035B50(s32 arg0);
+extern void fn_8003BF54(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void fn_800AD054(u32 high, u32 low);
 extern s16 lbl_2_data_3ED4[];
 extern s16 lbl_2_data_3EC8[];
@@ -119,7 +120,7 @@ void fn_2_4E1C0(void) {
 
 // .text:0x0004E7A4 size:0x48
 void fn_2_4E7A4(void) {
-    return;
+    fn_8003BF54(0, 0, 0, 1, 1, 4, 1, 3, 0);
 }
 
 // .text:0x0004E7EC size:0x38
