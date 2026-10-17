@@ -30,7 +30,11 @@ void _prolog(void) {
 
 // .text:0x00000110 size:0x50
 void fn_2_110(void) {
-    return;
+    u8 i = 0;
+    while (i < 2) {
+        if (lbl_803CBBCC->flags & (1 << i)) lbl_803CBBCC->input[i] = 0;
+        i++;
+    }
 }
 
 // .text:0x00000160 size:0x48
