@@ -35,7 +35,9 @@ typedef struct Rep0568State {
             u8 unk4C;
         };
     };
-    u8 _pad4D[3];
+    u8 _pad4D;
+    u8 unk4E;
+    u8 _pad4F;
     u8 unk50;
     u8 unk51;
     u8 _pad52[2];

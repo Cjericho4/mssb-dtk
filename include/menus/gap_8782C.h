@@ -21,7 +21,8 @@ typedef struct MenusRosterScripts {
 extern MenusRosterScripts lbl_2_data_2E9F8;
 
 typedef struct MenusRosterState {
-    u8 _pad0[0xF6];
+    u8 _pad0[0xF5];
+    u8 unkF5;
     u8 mode;
 } MenusRosterState;
 
