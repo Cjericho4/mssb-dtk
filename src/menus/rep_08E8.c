@@ -179,8 +179,14 @@ void fn_2_4A0C4(void) {
 }
 
 // .text:0x0004A150 size:0x3C
-void fn_2_4A150(void) {
-    return;
+s16 fn_2_4A150(s16 angle) {
+    if (angle < 0) {
+        while (angle < 0) angle += 0x1000;
+    }
+    if (angle >= 0x1000) {
+        while (angle >= 0x1000) angle -= 0x1000;
+    }
+    return angle;
 }
 
 // .text:0x0004A18C size:0x5C

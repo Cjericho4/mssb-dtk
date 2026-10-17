@@ -37,7 +37,7 @@ void fn_2_4A064(void);
 s32 fn_2_4A068(u16* text);
 u16* fn_2_4A094(u16* dst, u16* src);
 void fn_2_4A0C4(void);
-void fn_2_4A150(void);
+s16 fn_2_4A150(s16 angle);
 void fn_2_4A18C(void);
 void fn_2_4A1E8(void);
 void fn_2_4A234(void);
