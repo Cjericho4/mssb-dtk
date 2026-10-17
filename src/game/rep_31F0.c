@@ -286,8 +286,8 @@ extern HighLevelSimulation_31F0 lbl_803CBC3C;
 void fn_3_112450(void) {
     switch (g_GameLogic._125) {
     case 0:
-        g_GameLogic.pre_PostMiniGameInd = 1;
         g_Minigame.rosterID = g_Minigame.players.battingOrder[g_Minigame.turnNumberWithinRound];
+        g_GameLogic.pre_PostMiniGameInd = 1;
         g_Minigame.miniGameTurnCounter = 0;
         g_Minigame.pointsTargetReachedInd = 0;
         g_Minigame.bOD_HRStreak = 0;
