@@ -46,7 +46,7 @@ s16 fn_2_4A150(s16 angle);
 void fn_2_4A18C(void);
 f32 fn_2_4A1E8(f32 x, f32 y);
 void fn_2_4A234(void);
-void fn_2_4A2C4(void);
+s32 fn_2_4A2C4(f32 angle);
 s16 fn_2_4A310(s16 a, s16 b);
 void fn_2_4A340(void);
 void fn_2_4A6E8(void);

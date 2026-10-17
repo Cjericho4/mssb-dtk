@@ -220,8 +220,9 @@ void fn_2_4A234(void) {
 }
 
 // .text:0x0004A2C4 size:0x4C
-void fn_2_4A2C4(void) {
-    return;
+s32 fn_2_4A2C4(f32 angle) {
+    if (angle < 0.0f) angle = 6.2831855f + angle;
+    return (s32)((2048.0f * angle) / 3.1415927f);
 }
 
 // .text:0x0004A310 size:0x30
