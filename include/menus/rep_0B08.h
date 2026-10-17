@@ -100,7 +100,7 @@ void fn_2_6D078(Rep0B08Obj* obj);
 void fn_2_6D088(void);
 void fn_2_6D164(void);
 void fn_2_6D250(void);
-void fn_2_6D288(void);
+void fn_2_6D288(Rep0B08Obj* obj);
 void fn_2_6D298(void);
 void fn_2_6D374(void);
 void fn_2_6D4B0(void);
