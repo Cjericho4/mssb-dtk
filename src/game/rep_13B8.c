@@ -854,8 +854,40 @@ void fn_3_871BC(void) {
 }
 
 // .text:0x000872CC size:0x158 mapped:0x806C6360
+extern f32 lbl_3_rodata_14BC;
+
 void fn_3_872CC(void) {
-    return;
+    s32 count;
+    for (count = 0; count < 4; count++) {
+        InMemRunnerType* runner = &g_Runners[count];
+        if (runner->runnerOnFieldOrOutOrScored != 0) {
+            runner->baseStandingOn_Stored = runner->baseStandingOn;
+            runner->positionStored.x = runner->position.x;
+            runner->positionStored.y = runner->position.y;
+            runner->positionStored.z = runner->position.z;
+            runner->velocityStored.x = runner->velocity.x;
+            runner->velocityStored.y = runner->velocity.y;
+            runner->velocityStored.z = runner->velocity.z;
+            runner->fractionalBasesRan_stored = runner->fractionalBasesRan;
+            runner->percentTowardsNextBase_stored = runner->percentTowardsNextBase;
+            runner->runningDirectionDesired = 0;
+            runner->newButtonThisFrame_forMashPurposes = 0;
+            if (g_Ball.AtBat_ContactResult == 3 && g_Strikes.unk_C < 2 && runner->tagUpInd == 1) {
+                runner->tagUpInd = 2;
+                if (runner->baseStandingOn == runner->startingBase_baseAchieved)
+                    runner->tagUpInd = 0;
+            }
+            if (runner->someCountdown_unused != 0) {
+                runner->someCountdown_unused--;
+                if (runner->someCountdown_unused == 0) runner->_151 = 0;
+            }
+            if (g_GameLogic.gameStatus == 2) runner->leadOffStatus = 0;
+        }
+    }
+    if (g_Ball.framesSinceHit == 1 && g_Ball.maxYOfHit >= lbl_3_rodata_14BC &&
+        g_Ball.landingSpotZoneAwayFromHome >= 2) {
+        g_RunningLogic._pad14[0] = 10;
+    }
 }
 
 // .text:0x00087424 size:0x3F8 mapped:0x806C64B8
