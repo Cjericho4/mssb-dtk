@@ -654,8 +654,10 @@ void fn_2_6F6F4(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006F72C size:0x60
-void fn_2_6F72C(void) {
-    return;
+void fn_2_6F72C(Rep0B08Obj* obj) {
+    if ((f32)fabs(PSVECDistance(&lbl_2_bss_1A8248->rep0B08Objects[0].position, &obj->position)) > 1.6f) {
+        obj->state = 1;
+    }
 }
 
 // .text:0x0006F78C size:0x100
