@@ -1,6 +1,7 @@
 #include "menus/gap_1B1BC.h"
 #include "menus/rep_0B08.h"
 #include "menus/gap_4B1AC.h"
+#include "UnknownHeaders.h"
 
 extern void fn_80068720(s32 state);
 
@@ -16,7 +17,20 @@ void fn_2_1B314(void) {
 
 // .text:0x0001B52C size:0x94
 void fn_2_1B52C(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        if (fn_2_4E970() == 1) scene->field15_0x28 = 1;
+        break;
+    case 1:
+        scene->field15_0x28 = 6;
+        break;
+    case 6:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
 }
 
 // .text:0x0001B5C0 size:0x10C
