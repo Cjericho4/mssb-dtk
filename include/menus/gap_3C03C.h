@@ -17,7 +17,9 @@ typedef struct MenusEffectState {
 } MenusEffectState;
 
 typedef struct MenusChoiceRecord {
-    u8 _pad0[3];
+    u8 id;
+    u8 state;
+    u8 flag;
     u8 choice;
     u8 _pad4[6];
 } MenusChoiceRecord;

@@ -134,8 +134,22 @@ void fn_2_1C490(void) {
 }
 
 // .text:0x0001C504 size:0xC4
-void fn_2_1C504(void) {
-    return;
+void fn_2_1C504(s32 id) {
+    s32 i;
+    for (i = 0; i < 51; i++) {
+        if (id == lbl_2_bss_1A8248->choices[i].id &&
+            (lbl_2_bss_1A8248->choices[i].state == 1 || lbl_2_bss_1A8248->choices[i].state == 0)) {
+            if (lbl_2_bss_1A8248->unk441C == 5) {
+                if (lbl_2_bss_1A8248->choices[i].flag == 1) lbl_2_bss_1A8248->choices[i].state = 3;
+                else lbl_2_bss_1A8248->choices[i].state = 0;
+            } else lbl_2_bss_1A8248->choices[i].state = 0;
+        }
+    }
+    lbl_2_bss_1A8248->choiceFlags[id] = 1;
+    if (!(lbl_2_bss_1A8248->choiceMask & (1 << id))) {
+        lbl_2_bss_1A8248->unk4423++;
+        lbl_2_bss_1A8248->choiceMask |= 1 << id;
+    }
 }
 
 // .text:0x0001C5C8 size:0x14C

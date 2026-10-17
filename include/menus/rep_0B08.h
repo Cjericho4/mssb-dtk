@@ -70,11 +70,12 @@ typedef struct MenusSceneState {
     u8 _pad372C[0x98C];
     s16 choiceGrid[9][3]; /* 0x40B8 */
     u8 _pad40EE[2];
-    MenusChoiceRecord choices[1]; /* 0x40F0; extent unknown */
-    u8 _pad40FA[0x2C2];
+    MenusChoiceRecord choices[51]; /* 0x40F0 */
+    u8 _pad42EE[0xCE];
     s16 counter; /* 0x43BC */
     s16 previousCounter;
-    u8 _pad43C0[0x55];
+    u8 _pad43C0[0x4C];
+    u8 choiceFlags[9];
     u8 unk4415;
     u8 unk4416;
     u8 _pad4417[4];
@@ -84,11 +85,13 @@ typedef struct MenusSceneState {
     u8 unk4420;
     u8 _pad4421;
     u8 unk4422;
-    u8 _pad4423;
+    u8 unk4423;
     u8 unk4424;
     u8 unk4425;
     u8 unk4426;
-    u8 _pad4427[8];
+    u8 _pad4427;
+    u8 choiceMask; /* 0x4428 */
+    u8 _pad4429[6];
     u8 unk442F;
     u8 _pad4430[0xC2];
     u8 unk44F2;
