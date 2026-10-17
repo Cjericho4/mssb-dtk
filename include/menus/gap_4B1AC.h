@@ -108,7 +108,7 @@ void fn_2_50D40(void);
 void fn_2_50DB4(s32 index, s32 id, u16* source);
 void fn_2_50E5C(s32 index);
 void fn_2_50F20(s32 index, s32 id, u16* source);
-void fn_2_50FC8(void);
+void fn_2_50FC8(s32 index);
 void fn_2_510A8(void);
 void fn_2_5118C(void);
 void fn_2_51190(void);
