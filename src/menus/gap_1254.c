@@ -400,7 +400,8 @@ void fn_2_CA60(void) {
 
 // .text:0x0000CCBC size:0x24
 void fn_2_CCBC(void) {
-    return;
+    fn_2_7DDC();
+    fn_2_7504();
 }
 
 // .text:0x0000CCE0 size:0x164
