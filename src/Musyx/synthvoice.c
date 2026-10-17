@@ -280,7 +280,7 @@ void voiceSetPriority(SYNTH_VOICE* svoice, u8 prio) {
 }
 
 #pragma dont_inline on
-u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag) {
+u32 voiceAllocate(u8 priority, u8 maxVoices, u32 allocId, u8 fxFlag) {
   long i;               // r31
   long num;             // r26
   long voice;           // r30
