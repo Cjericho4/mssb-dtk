@@ -6,8 +6,10 @@ void fn_1_26D28(void) {
 }
 
 // .text:0x000272DC size:0x54
-void fn_1_272DC(void) {
-    return;
+void fn_1_272DC(Rep7978Camera* camera, u32 mtxId) {
+    GXSetProjection(camera->projection, GX_PERSPECTIVE);
+    GXLoadPosMtxImm(camera->view, mtxId);
+    GXSetCurrentMtx(mtxId);
 }
 
 // .text:0x00027330 size:0xA8
