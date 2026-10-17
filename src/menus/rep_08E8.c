@@ -5,6 +5,7 @@
 #include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
 #include "menus/gap_3C03C.h"
+#include "menus/gap_4B1AC.h"
 
 extern u32 lbl_803CBD0C;
 extern MenusEffectState* lbl_2_data_13374[];
@@ -170,7 +171,7 @@ void fn_2_4906C(void) {
 }
 
 // .text:0x0004917C size:0xC3C
-void fn_2_4917C(void) {
+void fn_2_4917C(u16* text, s32 value, s32 flags, s32 mode, s32 extra) {
     return;
 }
 
@@ -180,8 +181,11 @@ void fn_2_49DB8(void) {
 }
 
 // .text:0x00049E5C size:0xA0
-void fn_2_49E5C(void) {
-    return;
+void fn_2_49E5C(s32 x, s32 y, s32 value, s32 flags, s32 mode, s32 extra, s32 a, s32 b, s32 c) {
+    u16* text = _OSAllocFromHeap(16, 64);
+    fn_2_4917C(text, value, flags, mode, extra);
+    fn_2_513E0(text, x, y, 0, extra, a, b, c);
+    if (text != 0) fn_800ACFB0(text);
 }
 
 // .text:0x00049EFC size:0x80

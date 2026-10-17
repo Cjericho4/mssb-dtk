@@ -108,7 +108,7 @@ void fn_2_512C0(void);
 void fn_2_51358(void);
 void fn_2_5135C(void);
 void fn_2_513DC(void);
-void fn_2_513E0(void);
+void fn_2_513E0(u16* text, s32 x, s32 y, s32 zero, s32 extra, s32 a, s32 b, s32 c);
 void fn_2_513E4(void);
 void fn_2_513E8(void);
 void fn_2_5146C(void);

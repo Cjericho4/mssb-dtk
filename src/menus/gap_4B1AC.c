@@ -333,7 +333,7 @@ void fn_2_513DC(void) {
 }
 
 // .text:0x000513E0 size:0x4
-void fn_2_513E0(void) {
+void fn_2_513E0(u16* text, s32 x, s32 y, s32 zero, s32 extra, s32 a, s32 b, s32 c) {
     return;
 }
 
