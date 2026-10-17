@@ -397,8 +397,28 @@ s32 fn_3_258D8(s32 idx) {
 }
 
 // .text:0x00025A68 size:0x1D8 mapped:0x80664AFC
-void fn_3_25A68(void) {
-    return;
+void fn_3_25A68(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+    VecXYZ out;
+
+    f->unk228 *= 0.95f;
+    f->unk230 *= 0.95f;
+    f->unk30 = f->unk228;
+    f->unk34 = f->unk230;
+    f->unk50 = dolsqrtf2(f->unk30 * f->unk30 + f->unk34 * f->unk34);
+    if (fn_3_51798(idx, &out) != 0) {
+        f->pos[0] = f->unkD4;
+        f->pos[2] = f->unkD8;
+        f->unk50 = 0.0f;
+        f->unk30 = 0.0f;
+        f->unk34 = 0.0f;
+    } else {
+        f->pos[0] += f->unk30;
+        f->pos[2] += f->unk34;
+    }
+    f->prevPos[0] = f->pos[0];
+    f->prevPos[2] = f->pos[2];
+    f->unk1F0 = 1;
 }
 
 // .text:0x00025C40 size:0x5A8 mapped:0x80664CD4
@@ -696,8 +716,20 @@ void fn_3_2D47C(s32 idx) {
 }
 
 // .text:0x0002D768 size:0x1C4 mapped:0x8066C7FC
-void fn_3_2D768(void) {
-    return;
+void fn_3_2D768(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    if (f->unk208 == 0) {
+        if (f->unk1DB == 0) {
+            f->unk208 = 1;
+        } else {
+            f->unk208 = 3;
+        }
+    }
+    f->unk1D6 = 0;
+    fn_3_2D47C(idx);
+    updateFielderHeading(idx);
+    fn_3_3A584(idx);
 }
 
 // .text:0x0002D92C size:0x198 mapped:0x8066C9C0
