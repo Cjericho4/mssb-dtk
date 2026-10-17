@@ -1635,8 +1635,8 @@ void fn_3_46ABC(void) {
 }
 
 // .text:0x00046E08 size:0x820 mapped:0x80685E9C
-void fn_3_46E08(void) {
-    return;
+s32 fn_3_46E08(s32 fielderIdx, f32* x, f32* z) {
+    return 0;
 }
 
 // .text:0x00047628 size:0x150 mapped:0x806866BC
@@ -1650,8 +1650,54 @@ void fn_3_47778(void) {
 }
 
 // .text:0x000480B8 size:0x314 mapped:0x8068714C
-void fn_3_480B8(void) {
-    return;
+static inline s32 getRunnerChaseBase(s32 i) {
+    f32 frac = g_Runners[i].fractionalBasesRan;
+
+    if (frac >= 3.0f) {
+        return 0;
+    }
+    if (g_Runners[i].tagUpInd == 2 && g_Runners[i].percentTowardsNextBase >= 0.7f) {
+        return g_Runners[i].startingBase_baseAchieved;
+    }
+    if (frac >= 2.0f) {
+        if (frac >= 2.7f && g_Runners[i].runningDirectionCode == 1) {
+            return 0;
+        }
+        return 3;
+    }
+    if (frac >= 1.7f && g_Runners[i].runningDirectionCode == 1) {
+        return 3;
+    }
+    return 2;
+}
+
+static inline s32 getLeadRunnerChaseBase(void) {
+    s32 i;
+
+    for (i = 3; i >= 0; i--) {
+        if (g_Runners[i].runnerOnFieldOrOutOrScored == 1) {
+            if (!(g_Runners[i].fractionalBasesRan >= 3.7f) || g_Runners[i].runningDirectionCode != 1 ||
+                g_Runners[i].tagUpInd == 2) {
+                return getRunnerChaseBase(i);
+            }
+        }
+    }
+    return 4;
+}
+
+void fn_3_480B8(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    s32 base;
+    f32 x;
+    f32 z;
+
+    base = getLeadRunnerChaseBase();
+    if (base != -1) {
+        f->unk18E = base;
+        if (fn_3_46E08(fielderIdx, &x, &z) != 0) {
+            setFielderTarget(f, x, z);
+        }
+    }
 }
 
 // .text:0x000483CC size:0xB4 mapped:0x80687460
