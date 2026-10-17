@@ -46,7 +46,68 @@ void fn_3_AC9F8(void) {
 
 // .text:0x000ACAF8 size:0x240 mapped:0x806EBB8C
 void fn_3_ACAF8(void) {
-    return;
+    Bss34C90Item* state = &lbl_3_common_bss_34C90;
+
+    switch (state->field_0x1D2) {
+    case 0:
+        state->field_0x12 = 0;
+        state->unk_221 = 1;
+        state->field_0x222 = 3;
+        state->field_0x1D2 = 2;
+        break;
+    case 1:
+        break;
+    case 2:
+        state->field_0x12 = 0;
+        state->field_0x1D2 = 3;
+        break;
+    case 3:
+        changeScene(1, 6);
+        if (lbl_3_common_bss_34C90.field_0x12 > 20) {
+            state->field_0x1D2 = 4;
+        }
+        break;
+    case 4:
+        if (lbl_3_common_bss_32724.unk_C3 == 0) {
+            if (state->field_0x06 & 0x200) {
+                state->field_0x1D2 = 5;
+                sndFXStartEx(0x1B9, lbl_800EFBA4.alertVolume, 0x3F, 0);
+            } else if (g_d_GameSettings.GameModeSelected != 6) {
+                if ((state->field_0x08 & 1) && state->unk_221 != 0) {
+                    state->unk_221--;
+                    sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+                } else if ((state->field_0x08 & 2) && lbl_3_common_bss_34C90.unk_221 < lbl_3_common_bss_34C90.field_0x222 - 1) {
+                    lbl_3_common_bss_34C90.unk_221++;
+                    sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+                }
+            }
+        }
+        lbl_3_common_bss_34C90.field_0x12 = 0;
+        break;
+    case 5:
+        if (state->field_0x12 > 20 && lbl_3_common_bss_32724.unk_C3 == 0) {
+            state->field_0x1D2 = 6;
+        }
+        break;
+    case 6:
+        if (g_d_GameSettings.GameModeSelected == 6) {
+            state->field_0x1D2 = 0;
+            fn_3_5A6D4(0xB);
+        } else if (state->field_0x1D8 == 0) {
+            state->field_0x1D1 = 2;
+            state->field_0x1D2 = 0;
+            state->field_0x0C = 0;
+            state->field_0x0E = 0;
+            state->field_0x10 = 0;
+        } else {
+            state->field_0x1D1 = 9;
+            state->field_0x1D2 = 0;
+            state->field_0x0C = 0;
+            state->field_0x0E = 0;
+            state->field_0x10 = 0;
+        }
+        break;
+    }
 }
 
 // .text:0x000ACD38 size:0x42C mapped:0x806EBDCC
