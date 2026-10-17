@@ -641,20 +641,18 @@ f32 fn_3_119854(u32 index) {
 }
 // .text:0x00119878 size:0xBC mapped:0x8075890C
 void fn_3_119878(void) {
-    Rep3310Entry2D94Ext* entry;
-    MiniGameStruct* minigame;
+    MiniGameStruct* minigame = &g_Minigame;
+    HugeAnimEntry2D94* obj = &g_hugeAnimStruct.entries_2D94[166];
 
-    minigame = &g_Minigame;
-    entry = (Rep3310Entry2D94Ext*)g_hugeAnimStruct.entries_2D94;
-    entry->field_0x1A16 = 0;
-    entry->field_0x19F0 = NULL;
+    obj->unk_26 = 0;
+    obj->callback = NULL;
     if (minigame->_CCE[0] != 0 &&
         (minigame->_CCC > 60 || minigame->_CCC % 2 != 0 || minigame->_1B19 == 2 || minigame->_1B19 == 3)) {
-        entry->field_0x1A16 = 1;
-        entry->field_0x19F0 = fn_3_11741C;
-        entry->field_0x19F4 = minigame->_CB0;
-        entry->field_0x19F8 = -minigame->_CB4;
-        entry->field_0x19FC = minigame->_CB8;
+        obj->unk_26 = 1;
+        obj->callback = (void (*)(s32))fn_3_11741C;
+        obj->pos.x = minigame->_CB0;
+        obj->pos.y = -minigame->_CB4;
+        obj->pos.z = minigame->_CB8;
         fn_8001D0D0(0xA6, 3.5f);
     }
 }
