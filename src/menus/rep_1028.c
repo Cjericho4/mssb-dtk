@@ -221,8 +221,12 @@ void fn_2_9082C(Rep1028Obj* obj) {
 }
 
 // .text:0x00090838 size:0x50
-void fn_2_90838(void) {
-    return;
+void fn_2_90838(Rep1028Obj* obj) {
+    if (obj->unkA0 == 1) {
+        fn_2_8AC84(obj->index, 0);
+        obj->unkA0 = 2;
+    }
+    obj->state = 2;
 }
 
 // .text:0x00090888 size:0x74
