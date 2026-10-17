@@ -8,7 +8,8 @@ typedef struct MenusResourceSlot {
     s16 state; /* 0x04 */
     u8 _pad6[6];
     s16 bank; /* 0x0C */
-    u8 _padE[0xA];
+    s16 index; /* 0x0E */
+    u8 _pad10[8];
 } MenusResourceSlot;
 
 typedef struct MenusResourceBank {

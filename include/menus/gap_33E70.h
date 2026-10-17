@@ -33,7 +33,7 @@ void fn_2_36B30(void);
 void fn_2_36D04(void);
 void fn_2_36F44(void);
 void fn_2_370F8(void);
-void fn_2_372AC(void);
+void fn_2_372AC(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_3735C(void);
 void fn_2_37430(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_3745C(void);

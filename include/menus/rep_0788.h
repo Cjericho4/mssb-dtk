@@ -4,10 +4,8 @@
 #include "mssbTypes.h"
 #include "UnknownHeaders.h"
 
-typedef struct Rep0788Item {
-    u8 _pad0[0xE];
-    s16 index;
-} Rep0788Item;
+#include "menus/gap_4B1AC.h"
+typedef MenusResourceSlot Rep0788Item;
 
 void fn_2_1D440(void);
 void fn_2_1FF0C(void);
