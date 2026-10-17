@@ -10,7 +10,8 @@ typedef struct Rep1028Obj {
     /* 0x90 */ s16 state;
     u8 _pad92[0xE];
     s16 unkA0;
-    u8 _padA2[6];
+    u8 _padA2[4];
+    s16 unkA6;
     u8 unkA8;
     u8 _padA9[2];
     u8 variant; /* 0xAB */
@@ -26,7 +27,7 @@ void fn_2_8F3D4(void);
 void fn_2_8F528(void);
 void fn_2_8F640(void);
 void fn_2_8F688(void);
-void fn_2_8F6D0(void);
+void fn_2_8F6D0(s32 index, s32 action);
 u8 fn_2_8F720(s32 index);
 void fn_2_8F73C(s32 index, u8 value);
 void fn_2_8F758(s32 index, u8 value);
