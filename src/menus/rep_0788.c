@@ -1,9 +1,14 @@
 #include "menus/rep_0788.h"
+#include "menus/gap_4B1AC.h"
 #include "menus/rep_10C0.h"
 #include "UnknownHeaders.h"
 #include "game/rep_3448.h"
 
 extern s16 lbl_2_data_3D30[][4];
+extern MenusResourceEntry lbl_2_data_1073C[];
+extern MenusResourceEntry lbl_2_data_105FC[];
+extern MenusResourceEntry lbl_2_data_F0EC[];
+extern MenusResourceEntry lbl_2_data_9FC8[];
 
 // .text:0x0001D440 size:0x2ACC
 void fn_2_1D440(void) {
@@ -111,7 +116,9 @@ void fn_2_24488(void) {
 
 // .text:0x000245C8 size:0x44
 void fn_2_245C8(void) {
-    return;
+    QueueEntry* task = fn_800B0A5C_insertQueue(fn_2_2416C, 2);
+    task->unk1C = 0;
+    fn_2_54354(lbl_2_data_1073C, 8);
 }
 
 // .text:0x0002460C size:0x44

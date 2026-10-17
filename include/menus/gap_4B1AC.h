@@ -3,6 +3,16 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusResourceEntry {
+    u32 resource;
+    s16 index;
+    s16 unk6;
+    s16 bank;
+    s16 unkA;
+    s16 unkC;
+    u8 _padE[2];
+} MenusResourceEntry;
+
 typedef struct MenusTimeState {
     u32 unk0;
     u32 high;
@@ -99,7 +109,7 @@ void fn_2_53F88(void);
 void fn_2_5400C(void);
 void fn_2_54120(void);
 void fn_2_54234(void);
-void fn_2_54354(void);
+void fn_2_54354(MenusResourceEntry* entries, s32 count);
 void fn_2_54474(void);
 void fn_2_54844(void);
 void fn_2_54848(void);
