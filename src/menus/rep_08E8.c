@@ -1,5 +1,6 @@
 #include "menus/rep_08E8.h"
 #include "game/rep_1E08.h"
+#include "math.h"
 #include "UnknownHeaders.h"
 #include "menus/rep_0B08.h"
 
@@ -208,8 +209,9 @@ void fn_2_4A18C(void) {
 }
 
 // .text:0x0004A1E8 size:0x4C
-void fn_2_4A1E8(void) {
-    return;
+f32 fn_2_4A1E8(f32 x, f32 y) {
+    if (x == 0.0f && y == 0.0f) return 0.0f;
+    return (f32)atan2(y, x);
 }
 
 // .text:0x0004A234 size:0x90
