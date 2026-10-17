@@ -759,8 +759,12 @@ void fn_2_6D4E8(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006D4F8 size:0xDC
-void fn_2_6D4F8(void) {
-    return;
+void fn_2_6D4F8(Rep0B08Obj* obj) {
+    if (fn_2_8CC88(obj->animationIndex)) {
+        menuChangeAnimation(obj->index, 5);
+        obj->countdown = 30;
+        obj->state = 2;
+    }
 }
 
 // .text:0x0006D5D4 size:0x13C
