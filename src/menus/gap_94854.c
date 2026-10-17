@@ -50,7 +50,11 @@ void fn_2_95654(void) {
 
 // .text:0x00095B28 size:0x50
 void fn_2_95B28(void) {
-    return;
+    MenusInputFlags* input = &lbl_803C66B0;
+    if ((u32)__cntlzw(1 - input->state4F) >> 5) {
+        fn_80062674(0);
+        input->state4F = 2;
+    }
 }
 
 // .text:0x00095B78 size:0x308
