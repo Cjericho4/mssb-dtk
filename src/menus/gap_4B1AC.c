@@ -300,8 +300,10 @@ void fn_2_50DB4(s32 index, s32 id, u16* source) {
 }
 
 // .text:0x00050E5C size:0xC4
-void fn_2_50E5C(void) {
-    return;
+void fn_2_50E5C(s32 index) {
+    s32 i;
+    lbl_2_bss_9600[index] = 0;
+    for (i = 0; i < 256; i++) lbl_2_bss_9608[index][i] = 0;
 }
 
 // .text:0x00050F20 size:0xA8
