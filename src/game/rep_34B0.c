@@ -316,8 +316,8 @@ static inline void barrelSettle(s32 idx) {
     VecXYZ pos;
     f32 desiredY;
 
-    g_Minigame.barrels[idx].currentPos.y += lbl_3_data_21770[1];
-    if (g_Minigame.barrels[idx].currentPos.y < (desiredY = g_Minigame.barrels[idx].desiredPos.y)) {
+    b->currentPos.y += lbl_3_data_21770[1];
+    if (b->currentPos.y < (desiredY = b->desiredPos.y)) {
         b->currentPos.y = desiredY;
         if (b->posAtStartOfTurn.y != b->desiredPos.y) {
             pos.x = b->currentPos.x;
