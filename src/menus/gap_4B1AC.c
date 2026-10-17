@@ -1,6 +1,7 @@
 #include "menus/gap_4B1AC.h"
 #include "menus/rep_10C0.h"
 #include "UnknownHeaders.h"
+#include "menus/gap_8782C.h"
 
 extern void fn_80035B50(s32 arg0);
 extern s16 lbl_2_data_3ED4[];
@@ -343,7 +344,7 @@ void fn_2_51890(void) {
 
 // .text:0x000519F0 size:0x2C
 void fn_2_519F0(void) {
-    return;
+    fn_800B0A5C_insertQueue(fn_2_89F70, 0x3000);
 }
 
 // .text:0x00051A1C size:0x23C
