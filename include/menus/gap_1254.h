@@ -55,7 +55,7 @@ void fn_2_7504(void);
 void fn_2_7D44(void);
 void fn_2_7DDC(void);
 void fn_2_86EC(void);
-void fn_2_8780(void);
+s32 fn_2_8780(s32 mode);
 s32 fn_2_8794(s32 mode, s32 index);
 void fn_2_87A8(void);
 void fn_2_893C(void);

@@ -261,8 +261,10 @@ void fn_2_86EC(void) {
 }
 
 // .text:0x00008780 size:0x14
-void fn_2_8780(void) {
-    return;
+s32 fn_2_8780(s32 mode) {
+    s32 result = 9;
+    if (mode != 0) result = 19;
+    return result;
 }
 
 // .text:0x00008794 size:0x14
