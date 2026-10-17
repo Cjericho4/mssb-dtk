@@ -2,6 +2,7 @@
 #include "menus/rep_0438.h"
 
 extern u32 lbl_803CB750;
+extern void fn_800625A4(s32 index, s32 command);
 
 // .text:0x00001254 size:0x4
 void fn_2_1254(void) {
@@ -203,8 +204,9 @@ void fn_2_5F80(void) {
 }
 
 // .text:0x00006098 size:0x3C
-void fn_2_6098(void) {
-    return;
+void fn_2_6098(u8 index) {
+    lbl_2_bss_F468.states[index] = 9;
+    fn_800625A4(index, 0x17);
 }
 
 // .text:0x000060D4 size:0x64

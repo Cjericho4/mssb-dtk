@@ -4,7 +4,8 @@
 #include "mssbTypes.h"
 
 typedef struct Menus1254State {
-    u8 _pad0[0x56];
+    s32 states[4];
+    u8 _pad10[0x46];
     u8 unk56;
 } Menus1254State;
 
@@ -54,7 +55,7 @@ void fn_2_5444(void);
 s32 fn_2_57E8(s32 arg0, s32 arg1);
 void fn_2_57F0(void);
 void fn_2_5F80(void);
-void fn_2_6098(void);
+void fn_2_6098(u8 index);
 void fn_2_60D4(void);
 void fn_2_6138(void);
 void fn_2_61A0(void);
