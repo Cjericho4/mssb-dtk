@@ -6,6 +6,7 @@
 #include "menus/rep_10C0.h"
 
 extern MenusDisplayConfig lbl_2_data_13228[];
+extern void LITXForm(MenusLight* light, Mtx matrix);
 
 // .text:0x00046C88 size:0x78
 void fn_2_46C88(void) {
@@ -139,7 +140,12 @@ void fn_2_48D08(void) {
 
 // .text:0x00048D54 size:0x60
 void fn_2_48D54(void) {
-    return;
+    s32 i = 0;
+    do {
+        Fn52768Result* camera = fn_80052768(0);
+        LITXForm(g_hugeAnimStruct.menuLights[i], camera->mtx);
+        i++;
+    } while (i < 4);
 }
 
 // .text:0x00048DB4 size:0x2B8

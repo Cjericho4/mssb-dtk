@@ -355,10 +355,15 @@ typedef struct hugeAnimStruct {
     /* 0x006C */ struct StadiumAnimTable* animTable;
     /* 0x0070 */ struct HugeAnimCtrlObj* field28_0x70;
     /* 0x0074 */ u8 pad_0x74[56];
-    /* 0x00AC */ void* field30_0xac;
-    /* 0x00B0 */ void* field31_0xb0;
-    /* 0x00B4 */ void* field32_0xb4;
-    /* 0x00B8 */ void* field33_0xb8;
+    union {
+        struct {
+            /* 0x00AC */ void* field30_0xac;
+            /* 0x00B0 */ void* field31_0xb0;
+            /* 0x00B4 */ void* field32_0xb4;
+            /* 0x00B8 */ void* field33_0xb8;
+        };
+        struct MenusLight* menuLights[4];
+    };
     /* 0x00BC */ u8 pad2_0xbc[128];
     /* 0x013C */ void* field35_0x13c;
     /* 0x0140 */ struct ActLayout** field36_0x140;

@@ -3,6 +3,8 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusLight MenusLight;
+
 typedef struct MenusDisplayConfig {
     u32 unk0;
     u32 unk4;
