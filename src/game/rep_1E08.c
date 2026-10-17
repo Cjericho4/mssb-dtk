@@ -279,7 +279,6 @@ void fn_3_BD504(s32 flag, f32 f1, f32 f2, f32 f3) {
 
 // .text:0x000BD6AC size:0xAC mapped:0x806FC740
 void fn_3_BD6AC(s32 arg0, f32 f1, f32 f2, f32 f3) {
-    // Almost matches - bge+b+bl branch direction mismatch (CW codegen, not fixable from C)
     s32 starType;
     lbl_3_common_bss_35154.someFlag = 1;
     lbl_3_common_bss_35154.unk_440 = f1;
@@ -288,17 +287,21 @@ void fn_3_BD6AC(s32 arg0, f32 f1, f32 f2, f32 f3) {
     lbl_3_common_bss_35154.unk_464 = 0;
     if (arg0 != 0) {
         starType = g_Ball.currentStarSwing;
-        if (starType >= 0xd)
-            return;
-        if (starType >= 0xb)
+        switch (starType) {
+        case 0xB:
+        case 0xC:
             fn_3_15BAA0(starType == 0xc);
+            break;
+        }
         return;
     }
     starType = g_Pitcher.starPitchType;
-    if (starType >= 0xd)
-        return;
-    if (starType >= 0xb)
+    switch (starType) {
+    case 0xB:
+    case 0xC:
         fn_3_15BAA0(starType == 0xc);
+        break;
+    }
 }
 
 // .text:0x000BD758 size:0x78 mapped:0x806FC7EC
