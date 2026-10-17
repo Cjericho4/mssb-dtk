@@ -504,7 +504,7 @@ void fn_2_53CEC(DrawingSceneStruct* scene) {
 }
 
 // .text:0x00053DF8 size:0x10C
-void fn_2_53DF8(void) {
+void fn_2_53DF8(DrawingSceneStruct* scene) {
     return;
 }
 

@@ -141,7 +141,7 @@ void fn_2_5389C(void);
 void fn_2_53AA4(void);
 s32 fn_2_53BC8(MenusResourceSlot* slot);
 void fn_2_53CEC(struct DrawingSceneStruct* scene);
-void fn_2_53DF8(void);
+void fn_2_53DF8(struct DrawingSceneStruct* scene);
 void fn_2_53F04(s32 value);
 void fn_2_53F88(s32 value);
 void fn_2_5400C(void);

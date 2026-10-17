@@ -14,6 +14,9 @@ extern MenusResourceEntry lbl_2_data_104EC[];
 
 #include "menus/gap_71EC4.h"
 extern MenusSceneScript lbl_2_data_1048C;
+extern MenusSceneScript lbl_2_data_1059C;
+extern void fn_8000FE54(void);
+#include "menus/gap_1B1BC.h"
 
 // .text:0x0001D440 size:0x2ACC
 void fn_2_1D440(void) {
@@ -117,7 +120,25 @@ void fn_2_2416C(void) {
 
 // .text:0x00024238 size:0xC4
 void fn_2_24238(void) {
-    return;
+    DrawingSceneStruct* scene;
+    switch ((s32)(scene = lbl_803CC1B8)->eventID) {
+    case 0:
+        fn_2_4E878(scene, &lbl_2_data_1059C);
+        scene->eventID = 1;
+        scene->unk18 = 0;
+        break;
+    case 1: break;
+    }
+    fn_2_53F88((s32)scene);
+    fn_2_54120();
+    if (lbl_2_bss_1A8234->panels[1].pending) {
+        fn_8000FE54();
+        fn_2_53DF8(scene);
+        fn_2_4E858(scene);
+        fn_800B0A14_removeQueue();
+        scene->eventID = 0;
+        lbl_2_bss_1A8234->panels[1].pending = 0;
+    }
 }
 
 // .text:0x000242FC size:0xC0
