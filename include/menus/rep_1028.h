@@ -6,6 +6,10 @@
 typedef struct Rep1028Obj {
     /* 0x00 */ u8 _pad0[0x90];
     /* 0x90 */ s16 state;
+    u8 _pad92[0x19];
+    u8 variant; /* 0xAB */
+    u8 _padAC[0xC];
+    void (*callback)(struct Rep1028Obj*); /* 0xB8 */
 } Rep1028Obj;
 
 void fn_2_8F0F4(void);

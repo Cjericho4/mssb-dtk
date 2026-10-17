@@ -1,4 +1,5 @@
 #include "menus/gap_92394.h"
+extern void (*lbl_2_data_308B4[])(Rep1028Obj*);
 
 extern void (*lbl_2_data_307F0[])(Rep1028Obj*);
 
@@ -47,8 +48,9 @@ void fn_2_92504(Rep1028Obj* obj) {
 }
 
 // .text:0x0009253C size:0x40
-void fn_2_9253C(void) {
-    return;
+void fn_2_9253C(Rep1028Obj* obj) {
+    obj->callback = lbl_2_data_308B4[obj->variant];
+    obj->callback(obj);
 }
 
 // .text:0x0009257C size:0xD8
