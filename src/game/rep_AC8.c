@@ -4,6 +4,7 @@
 #include "header_rep_data.h"
 #include "game/rep_1188.h"
 #include "game/rep_1838.h"
+#include "game/rep_18E8.h"
 
 static inline void setFielderReadyAction(s32 idx, s32 action) {
     Fielder* f = &g_Fielders[idx];
@@ -525,7 +526,7 @@ void fn_3_2F484(void) {
 }
 
 // .text:0x0002F574 size:0x260 mapped:0x8066E608
-void fn_3_2F574(void) {
+void fn_3_2F574(s32 fielderIdx) {
     return;
 }
 
@@ -1299,8 +1300,63 @@ void fn_3_3CCB0(void) {
 }
 
 // .text:0x0003D304 size:0x3A8 mapped:0x8067C398
-void fn_3_3D304(void) {
-    return;
+void fn_3_3D304(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    f32 x;
+    f32 z;
+    f32 offX;
+    f32 offZ;
+
+    if (f->unk20F != 0) {
+        g_FieldingLogic.unk111 = 0;
+        return;
+    }
+    if (f->unk210 != 0) {
+        fn_3_251E4();
+        f->unk1EE = 0;
+        return;
+    }
+    if (fn_3_53130(fielderIdx) != 0) {
+        return;
+    }
+    if (f->unk211 != 0) {
+        fn_3_A96FC(fielderIdx);
+        return;
+    }
+    if (f->unk1EE != 0) {
+        fn_3_A9984(fielderIdx);
+        return;
+    }
+    if (f->unk1EF != 0) {
+        return;
+    }
+    if (f->unk203 != 0) {
+        fn_3_2F574(fielderIdx);
+        return;
+    }
+    if (g_Ball.fielderWBallIndex == fielderIdx && f->unk1EC == 0) {
+        g_Ball.fielderWBallIndex = -1;
+    }
+    x = lbl_3_data_4290[g_d_GameSettings.StadiumID][g_GameLogic.awayTeamBattingInd_battingTeam].x;
+    z = lbl_3_data_4290[g_d_GameSettings.StadiumID][g_GameLogic.awayTeamBattingInd_battingTeam].z;
+    if (f->unk178 != g_GameLogic.Team_CaptainRosterLoc[g_GameLogic.teamFielding]) {
+        fn_3_9F79C(lbl_3_data_4348[g_d_GameSettings.StadiumID][g_GameLogic.teamFielding], lbl_3_data_4300[fielderIdx].x,
+                   lbl_3_data_4300[fielderIdx].z, &offX, &offZ);
+        x += offX;
+        z += offZ;
+    }
+    f->unk1D6 = 0xD;
+    setFielderTarget(f, x, z);
+    fn_3_526DC(fielderIdx);
+    if (f->unk68 <= 0.5f) {
+        if (fielderIdx != -1) {
+            setFielderReadyAction(fielderIdx, 0);
+        }
+        f->unk1FA = 1;
+    }
+    if (fielderIdx == g_Ball.fielderWBallIndex) {
+        g_FieldingLogic.unkC4 = -1;
+    }
 }
 
 // .text:0x0003D6AC size:0x128 mapped:0x8067C740

@@ -52,7 +52,7 @@ void fn_3_2EA24(void);
 void fn_3_2EA88(s32 idx);
 void fn_3_2EEC4(s32 idx);
 void fn_3_2F484(void);
-void fn_3_2F574(void);
+void fn_3_2F574(s32 fielderIdx);
 void fn_3_2F7D4(void);
 void fn_3_2F924(void);
 void fn_3_2FB9C(void);
@@ -121,7 +121,7 @@ void fn_3_3C484(void);
 void fn_3_3C594(void);
 BOOL fn_3_3CB8C(s32 idx);
 void fn_3_3CCB0(void);
-void fn_3_3D304(void);
+void fn_3_3D304(s32 fielderIdx);
 void fn_3_3D6AC(s32 idx);
 s16 fn_3_3D7D4(s32 idx);
 void fn_3_3DB78(void);
@@ -230,6 +230,9 @@ typedef union {
     };
 } Struct_3C40;
 extern Struct_3C40 lbl_3_data_3C40;
+extern VecXZ lbl_3_data_4290[7][2]; /* [stadium][battingTeam] */
+extern VecXZ lbl_3_data_4300[9];    /* per fielder */
+extern f32 lbl_3_data_4348[7][2];   /* [stadium][fieldingTeam] */
 void fn_3_53EE8(s32 idx);
 void fn_3_53F48(void);
 void fn_3_544B8(void);

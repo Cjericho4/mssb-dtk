@@ -596,12 +596,12 @@ void fn_3_A9354(void) {
 }
 
 // .text:0x000A96FC size:0x288 mapped:0x806E8790
-void fn_3_A96FC(void) {
+void fn_3_A96FC(s32 fielderIdx) {
     return;
 }
 
 // .text:0x000A9984 size:0x2F0 mapped:0x806E8A18
-void fn_3_A9984(void) {
+void fn_3_A9984(s32 fielderIdx) {
     return;
 }
 
