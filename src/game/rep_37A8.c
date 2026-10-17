@@ -184,7 +184,7 @@ void fn_3_143FAC(s32 arg0) {
 }
 
 // .text:0x0014402C size:0x210 mapped:0x807830C0
-void fn_3_14402C(void) {
+void fn_3_14402C(s32 idx) {
     return;
 }
 
@@ -261,8 +261,35 @@ void fn_3_145EB8(void) {
 }
 
 // .text:0x00145FF4 size:0x1B0 mapped:0x80785088
+extern void fn_3_157570(void);
+extern void fn_3_DE4FC(void);
+extern void fn_3_154214(void);
+
 void fn_3_145FF4(void) {
-    return;
+    u32 i;
+    fn_3_157570();
+    fn_3_DE4FC();
+    if (g_Minigame.soloMinigameDifficulty <= 2 && g_Minigame.multiPlayerInd == 0) {
+        if (g_Minigame.players._18E8[(s8)g_Minigame._1908] == 1 &&
+            g_Minigame.challenge_minigame_haven_tWonYetIndicator == 0) {
+            g_Minigame._1A37 = 1;
+        } else {
+            g_Minigame._1A37 = 2;
+        }
+    }
+    fn_3_5A6D4(14);
+    for (i = 0; i < 50; i++) {
+        g_Minigame.wallBall_coinsVisibleInd[i] = 0;
+        g_Minigame.wallBall_coinGroup[i] = -1;
+    }
+    g_Minigame._1B4C = 60;
+    for (i = 0; i < 3; i++) {
+        fn_3_14402C(i);
+        g_Minigame.progressItems[i].field_0x2A = 2;
+        g_Minigame.progressItems[i].field_0x1C = 1;
+        g_Minigame.progressItems[i].field_0x2B = 0;
+    }
+    fn_3_154214();
 }
 
 // .text:0x001461A4 size:0x264 mapped:0x80785238
