@@ -409,8 +409,9 @@ void fn_2_46418(void) {
 }
 
 // .text:0x0004668C size:0x20
-void fn_2_4668C(void) {
-    return;
+void fn_2_4668C(s32 index) {
+    Gap3C03CObj* obj = &lbl_2_bss_1A8248->gap3C03CObjects[index];
+    obj->unk31 = 1;
 }
 
 // .text:0x000466AC size:0x150

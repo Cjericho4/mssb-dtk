@@ -92,7 +92,7 @@ void fn_2_460F0(void);
 void fn_2_460F4(void);
 void fn_2_460F8(void);
 void fn_2_46418(void);
-void fn_2_4668C(void);
+void fn_2_4668C(s32 index);
 void fn_2_466AC(void);
 void fn_2_467FC(void);
 void fn_2_468DC(void);
