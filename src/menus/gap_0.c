@@ -1,0 +1,101 @@
+#include "menus/gap_0.h"
+
+// .text:0x00000000 size:0x3C
+void fn_2_0(void) {
+    return;
+}
+
+// .text:0x0000003C size:0x2C
+void fn_2_3C(void) {
+    return;
+}
+
+// .text:0x00000068 size:0x20
+void _epilog(void) {
+    return;
+}
+
+// .text:0x00000088 size:0x88
+void _prolog(void) {
+    return;
+}
+
+// .text:0x00000110 size:0x50
+void fn_2_110(void) {
+    return;
+}
+
+// .text:0x00000160 size:0x48
+void fn_2_160(void) {
+    return;
+}
+
+// .text:0x000001A8 size:0x130
+void fn_2_1A8(void) {
+    return;
+}
+
+// .text:0x000002D8 size:0x4
+void fn_2_2D8(void) {
+    return;
+}
+
+// .text:0x000002DC size:0x4C
+void fn_2_2DC(void) {
+    return;
+}
+
+// .text:0x00000328 size:0x4C
+void fn_2_328(void) {
+    return;
+}
+
+// .text:0x00000374 size:0x150
+void fn_2_374(void) {
+    return;
+}
+
+// .text:0x000004C4 size:0x4C
+void fn_2_4C4(void) {
+    return;
+}
+
+// .text:0x00000510 size:0x44
+void fn_2_510(void) {
+    return;
+}
+
+// .text:0x00000554 size:0x110
+void fn_2_554(void) {
+    return;
+}
+
+// .text:0x00000664 size:0xA4
+void fn_2_664(void) {
+    return;
+}
+
+// .text:0x00000708 size:0x8C
+void fn_2_708(void) {
+    return;
+}
+
+// .text:0x00000794 size:0x1AC
+void fn_2_794(void) {
+    return;
+}
+
+// .text:0x00000940 size:0x38
+void fn_2_940(void) {
+    return;
+}
+
+// .text:0x00000978 size:0x9C
+void fn_2_978(void) {
+    return;
+}
+
+// .text:0x00000A14 size:0x5C
+void fn_2_A14(void) {
+    return;
+}
