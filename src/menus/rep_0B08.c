@@ -128,8 +128,9 @@ void fn_2_68C80(void) {
 }
 
 // .text:0x00068D90 size:0x1C
-void fn_2_68D90(void) {
-    return;
+void fn_2_68D90(s32 index, u8 value) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    obj->unkCA = value;
 }
 
 // .text:0x00068DAC size:0x3C
