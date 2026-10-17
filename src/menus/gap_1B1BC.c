@@ -1,4 +1,5 @@
 #include "menus/gap_1B1BC.h"
+#include "menus/rep_0B08.h"
 
 // .text:0x0001B1BC size:0x158
 void fn_2_1B1BC(void) {
@@ -47,7 +48,8 @@ void fn_2_1C0D4(void) {
 
 // .text:0x0001C21C size:0x28
 void fn_2_1C21C(void) {
-    return;
+    Vec position;
+    fn_2_68DAC(0, &position);
 }
 
 // .text:0x0001C244 size:0xF8
