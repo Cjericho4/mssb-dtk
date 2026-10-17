@@ -147,8 +147,8 @@ s16 fn_2_24E9C(void) {
 }
 
 // .text:0x00024EB0 size:0x14
-void fn_2_24EB0(void) {
-    return;
+void fn_2_24EB0(s16 state) {
+    lbl_803CC1B8->loadingState = state;
 }
 
 // .text:0x00024EC4 size:0x18C
