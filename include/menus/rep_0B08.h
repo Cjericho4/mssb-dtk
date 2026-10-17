@@ -60,7 +60,7 @@ void fn_2_6AFD4(void);
 void fn_2_6B024(void);
 void fn_2_6B120(void);
 void fn_2_6B238(void);
-void fn_2_6B4C4(void);
+void fn_2_6B4C4(Rep0B08Obj* obj);
 void fn_2_6B4FC(void);
 void fn_2_6B620(void);
 void fn_2_6B744(void);
