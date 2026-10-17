@@ -649,7 +649,7 @@ void fn_3_119878(void) {
     if (minigame->_CCE[0] != 0 &&
         (minigame->_CCC > 60 || minigame->_CCC % 2 != 0 || minigame->_1B19 == 2 || minigame->_1B19 == 3)) {
         obj->unk_26 = 1;
-        obj->callback = (void (*)(s32))fn_3_11741C;
+        obj->callback = fn_3_11741C;
         obj->pos.x = minigame->_CB0;
         obj->pos.y = -minigame->_CB4;
         obj->pos.z = minigame->_CB8;
