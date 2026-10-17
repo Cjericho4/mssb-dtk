@@ -4,6 +4,10 @@ extern void (*lbl_2_data_2A2EC[])(Rep0B08Obj*);
 extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "UnknownHeaders.h"
 #include "menus/gap_D08.h"
+#include "menus/rep_0438.h"
+
+extern MenusSceneScript lbl_2_data_2B4DC;
+extern void fn_80034E20(DrawingSceneStruct* scene, MenusSceneScript* script);
 
 extern void fn_800625A4(s32, s32);
 extern void fn_800626EC(s32);
@@ -573,7 +577,13 @@ void fn_2_82CF0(void) {
 
 // .text:0x00082DE8 size:0x70
 void fn_2_82DE8(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    lbl_8034E9A0.scene = scene;
+    lbl_8034E9A0.unk48AF = 0;
+    lbl_803C5EA4.unk37 = 0;
+    lbl_803C5EA4.unk38 = 0;
+    fn_80034E20(scene, &lbl_2_data_2B4DC);
+    lbl_803CC1B8->unk_00 = fn_2_82CF0;
 }
 
 // .text:0x00082E58 size:0x68

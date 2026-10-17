@@ -14,6 +14,14 @@ typedef struct MenusInputFlags {
 } MenusInputFlags;
 extern MenusInputFlags lbl_803C66B0;
 
+typedef struct MenusSceneScript MenusSceneScript;
+typedef struct MenusSceneFlags {
+    u8 _pad0[0x37];
+    u8 unk37;
+    u8 unk38;
+} MenusSceneFlags;
+extern MenusSceneFlags lbl_803C5EA4;
+
 typedef struct MenusSceneTransition {
     u8 state;
     u8 _pad1[7];
