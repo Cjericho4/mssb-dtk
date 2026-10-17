@@ -174,7 +174,11 @@ void fn_2_73EFC(void) {
 
 // .text:0x000744C8 size:0x50
 void fn_2_744C8(void) {
-    return;
+    MenusInputFlags* input = &lbl_803C66B0;
+    if ((u32)__cntlzw(1 - input->state) >> 5) {
+        fn_80062674(0);
+        input->state = 2;
+    }
 }
 
 // .text:0x00074518 size:0x4C
