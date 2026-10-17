@@ -439,8 +439,12 @@ void fn_3_14A62C(Vec* pos) {
 }
 
 // .text:0x0014A90C size:0x310 mapped:0x807899A0
-void fn_3_14A90C(void) {
-    return;
+void fn_3_14A90C(Vec* pos) {
+    struct Struct_800339F0_Result* obj;
+    if (g_d_GameSettings.GameModeSelected == GAME_TYPE_MINIGAMES && g_Minigame.GameMode_MiniGame == 3 && pos != NULL) {
+        obj = (struct Struct_800339F0_Result*)fn_80033A24((void (*)(void))fn_3_14A188, 0x80, 0, lbl_3_data_26E40.unk4, 1, 0x24);
+        if (obj != NULL) initRadialEffects(obj, pos);
+    }
 }
 
 // .text:0x0014AC1C size:0x24 mapped:0x80789CB0
