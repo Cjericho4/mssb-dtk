@@ -98,7 +98,7 @@ u8 fn_3_6E1D4(u8 arg0) {
 }
 
 // .text:0x0006E24C size:0x968 mapped:0x806AD2E0
-void setFielderValues(s8 rosterID, s32 fielderIndex) {
+void setFielderValues(s32 rosterID, s32 fielderIndex) {
     return;
 }
 
