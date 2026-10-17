@@ -95,7 +95,7 @@ void fn_2_50B0C(void);
 void fn_2_50BF4(void);
 void fn_2_50CC0(s16 value);
 void fn_2_50D40(void);
-void fn_2_50DB4(void);
+void fn_2_50DB4(s32 index, s32 id, u16* source);
 void fn_2_50E5C(void);
 void fn_2_50F20(void);
 void fn_2_50FC8(void);

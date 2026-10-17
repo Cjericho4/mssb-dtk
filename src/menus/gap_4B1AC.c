@@ -23,6 +23,18 @@ extern void fn_800AD054(u32 high, u32 low);
 extern s16 lbl_2_data_3ED4[];
 extern s16 lbl_2_data_3EC8[];
 
+extern u16 lbl_2_bss_9600[2];
+extern u16 lbl_2_bss_9608[2][256];
+
+static inline u32* menuStringTable(void) {
+    return &lbl_80366B18.tables[lbl_2_bss_1A824C->panel.mode][1];
+}
+
+static inline u16* resolveMenuString(u32* table, s32 id, u16* source) {
+    if (id == -1) return source;
+    return (u16*)table[id];
+}
+
 // .text:0x0004B1AC size:0x124
 void fn_2_4B1AC(void) {
     return;
@@ -268,8 +280,21 @@ void fn_2_50D40(void) {
 }
 
 // .text:0x00050DB4 size:0xA8
-void fn_2_50DB4(void) {
-    return;
+void fn_2_50DB4(s32 index, s32 id, u16* source) {
+    u32* table = menuStringTable();
+    u16* output;
+    u16 code;
+    s32 old;
+    if (lbl_2_bss_9600[index] != 0) lbl_2_bss_9600[index]--;
+    source = resolveMenuString(table, id, source);
+    output = lbl_2_bss_9608[index];
+    do {
+        code = *source++;
+        old = lbl_2_bss_9600[index];
+        lbl_2_bss_9600[index] = old + 1;
+        output[old] = code;
+        if (lbl_2_bss_9600[index] == 256) return;
+    } while (!(code & 0x4000) || (code & 0x3FFF));
 }
 
 // .text:0x00050E5C size:0xC4
