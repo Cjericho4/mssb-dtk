@@ -294,6 +294,22 @@ typedef struct GSTACK {
   void* prjAddr;       // offset 0x8, size 0x4
 } GSTACK;
 
+typedef struct DATA_STACK_HEAP {
+  // total size: 0xC
+  void* base; // offset 0x0, size 0x4
+  void* end;  // offset 0x4, size 0x4
+  void* cur;  // offset 0x8, size 0x4
+} DATA_STACK_HEAP;
+
+typedef struct DATA_STACK {
+  // total size: 0x618
+  struct DATA_STACK* next; // offset 0x0, size 0x4
+  s32 unk4;                // offset 0x4, size 0x4
+  s16 sp;                  // offset 0x8, size 0x2
+  GSTACK gs[128];          // offset 0xC, size 0x600
+  DATA_STACK_HEAP heap;    // offset 0x60C, size 0xC
+} DATA_STACK;
+
 typedef struct VSampleInfo {
   // total size: 0xC
   void* loopBufferAddr; // offset 0x0, size 0x4

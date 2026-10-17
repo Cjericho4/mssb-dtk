@@ -2,10 +2,23 @@
 #include "musyx/musyx_priv.h"
 #include "musyx/synth.h"
 
-static GSTACK gs[128];
-static s16 sp;
+static DATA_STACK dataStack;
+static u32 dataStackUnk328;
+static DATA_STACK* dataStackCur;
+static DATA_STACK* dataStackRoot;
 
-void dataInitStack() { sp = 0; }
+void dataInitStack(unsigned long aramBase, unsigned long aramSize) {
+  dataStackRoot = NULL;
+  dataStack.unk4 = -2;
+  dataStack.sp = 0;
+  dataStack.heap.base = (void*)aramBase;
+  dataStack.heap.cur = (void*)aramBase;
+  dataStack.heap.end = (void*)(aramBase + aramSize);
+  dataStack.next = NULL;
+  dataStackRoot = &dataStack;
+  dataStackUnk328 = 0;
+  dataStackCur = &dataStack;
+}
 
 static MEM_DATA* GetPoolAddr(u16 id, MEM_DATA* m) {
   while (m->nextOff != 0xFFFFFFFF) {
@@ -183,14 +196,14 @@ void sndSetSampleDataUploadCallback(void* (*callback)(unsigned long, unsigned lo
 u32 sndPushGroup(void* prj_data, u16 gid, void* samples, void* sdir, void* pool) {
   GROUP_DATA* g; // r31
 
-  if (sndActive && sp < 128) {
+  if (sndActive && dataStackCur->sp < 128) {
     g = prj_data;
 
     while (g->nextOff != 0xFFFFFFFF) {
       if (g->id == gid) {
-        gs[sp].gAddr = g;
-        gs[sp].prjAddr = prj_data;
-        gs[sp].sdirAddr = sdir;
+        dataStackCur->gs[dataStackCur->sp].gAddr = g;
+        dataStackCur->gs[dataStackCur->sp].prjAddr = prj_data;
+        dataStackCur->gs[dataStackCur->sp].sdirAddr = sdir;
         InsertSamples((u16*)((u8*)prj_data + g->sampleOff), samples, sdir);
         InsertMacros((u16*)((u8*)prj_data + g->macroOff), pool);
         InsertCurves((u16*)((u8*)prj_data + g->curveOff), pool);
@@ -200,7 +213,7 @@ u32 sndPushGroup(void* prj_data, u16 gid, void* samples, void* sdir, void* pool)
           InsertFXTab(gid, (FX_DATA*)((u8*)prj_data + g->data.song.normpageOff));
         }
         hwSyncSampleMem();
-        ++sp;
+        ++dataStackCur->sp;
         return 1;
       }
 
@@ -230,9 +243,9 @@ unsigned long sndPopGroup() {
   void* prj;
   struct FX_DATA* fd;
 
-  g = gs[--sp].gAddr;
-  prj = gs[sp].prjAddr;
-  sdir = gs[sp].sdirAddr;
+  g = dataStackCur->gs[--dataStackCur->sp].gAddr;
+  prj = dataStackCur->gs[dataStackCur->sp].prjAddr;
+  sdir = dataStackCur->gs[dataStackCur->sp].sdirAddr;
   hwDisableIrq();
 
   if (g->type == 1) {
@@ -243,6 +256,7 @@ unsigned long sndPopGroup() {
   }
 
   synthKillVoicesByMacroReferences((u16*)((u8*)prj + g->macroOff));
+  synthKillVoicesBySampleReferences((u16*)((u8*)prj + g->sampleOff));
   hwEnableIrq();
   RemoveSamples((u16*)((u8*)prj + g->sampleOff), sdir);
   RemoveMacros((u16*)((u8*)prj + g->macroOff));
@@ -279,14 +293,14 @@ u32 seqPlaySong(u16 sgid, u16 sid, void* arrfile, SND_PLAYPARA* para, u8 irq_cal
   u32 seqId;
   void* prj;
 
-  for (i = 0; i < sp; ++i) {
-    if (sgid != gs[i].gAddr->id) {
+  for (i = 0; i < dataStackCur->sp; ++i) {
+    if (sgid != dataStackCur->gs[i].gAddr->id) {
       continue;
     }
 
-    if (gs[i].gAddr->type == 0) {
-      g = gs[i].gAddr;
-      prj = gs[i].prjAddr;
+    if (dataStackCur->gs[i].gAddr->type == 0) {
+      g = dataStackCur->gs[i].gAddr;
+      prj = dataStackCur->gs[i].prjAddr;
       norm = (PAGE*)((u32)prj + g->data.song.normpageOff);
       drum = (PAGE*)((u32)prj + g->data.song.drumpageOff);
       midiSetup = (MIDISETUP*)((u32)prj + g->data.song.midiSetupOff);
