@@ -45,7 +45,7 @@ void fn_2_6832C(void);
 void fn_2_683EC(void);
 void fn_2_684D0(void);
 void fn_2_68638(s32 index, u8 value);
-void fn_2_68654(void);
+void fn_2_68654(s32 index, u8 value);
 void fn_2_68670(void);
 void fn_2_68690(void);
 void fn_2_686B0(void);
