@@ -18,9 +18,14 @@ typedef struct MenusInputFlags {
         };
         u8 resetData[0x54];
     };
-    u8 unk55;
-    u8 unk56;
-    u8 _pad57[2];
+    union {
+        struct {
+            u8 unk55;
+            u8 unk56;
+            u8 _pad57[2];
+        };
+        u8 disabled[4];
+    };
     u8 unk59;
     u8 unk5A;
 } MenusInputFlags;

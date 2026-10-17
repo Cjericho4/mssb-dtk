@@ -6,7 +6,8 @@
 typedef struct MenusControllerInput {
     u16 buttons;
     u16 pressed;
-    u8 _pad4[0x1C];
+    u16 held;
+    u8 _pad6[0x1A];
 } MenusControllerInput;
 
 typedef struct MenusInputState {

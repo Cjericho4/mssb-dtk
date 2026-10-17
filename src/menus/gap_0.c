@@ -3,6 +3,8 @@
 
 extern BdcArrayElement lbl_2_data_C0;
 #include "menus/gap_D08.h"
+#include "menus/rep_0438.h"
+#include "menus/gap_71EC4.h"
 #include "UnknownHeaders.h"
 #include "Dolphin/OS/OSUtil.h"
 
@@ -107,7 +109,18 @@ void fn_2_554(void) {
 
 // .text:0x00000664 size:0xA4
 void fn_2_664(void) {
-    return;
+    s32 i;
+    for (i = 0; i < 4; i++) {
+        if (lbl_803C66B0.disabled[i] == 1 || (s8)lbl_8034E9A0.controllerIndices[i] == -1) {
+            lbl_8034E9A0.input[i].unk0 = 0;
+            lbl_8034E9A0.input[i].unk2 = 0;
+            lbl_8034E9A0.input[i].buttons = 0;
+        } else {
+            lbl_8034E9A0.input[i].unk0 = lbl_803C77B8.controllers[(s8)lbl_8034E9A0.controllerIndices[i]].buttons;
+            lbl_8034E9A0.input[i].unk2 = lbl_803C77B8.controllers[(s8)lbl_8034E9A0.controllerIndices[i]].pressed;
+            lbl_8034E9A0.input[i].buttons = lbl_803C77B8.controllers[(s8)lbl_8034E9A0.controllerIndices[i]].held;
+        }
+    }
 }
 
 // .text:0x00000708 size:0x8C

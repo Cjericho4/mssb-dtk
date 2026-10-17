@@ -16,7 +16,7 @@ typedef struct MenusSaveState {
     u32 timeLow;
     u32 alternateTimeHigh;
     u32 alternateTimeLow;
-    u8 _pad46F8[4];
+    u8 controllerIndices[4];
     u8 unk46FC;
     s8 unk46FD;
     s8 unk46FE;
@@ -25,8 +25,8 @@ typedef struct MenusSaveState {
     u8 unk4729;
     u8 unk472A;
     u8 unk472B;
-    MenusPlayerInput input[2];
-    u8 _pad4738[0x10];
+    MenusPlayerInput input[4];
+    u8 _pad4744[4];
     struct DrawingSceneStruct* scene; /* 0x4748 */
     u8 _pad474C[8];
     u8 unk4754;
