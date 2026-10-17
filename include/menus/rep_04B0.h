@@ -3,6 +3,8 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusSceneAsset MenusSceneAsset;
+
 void fn_2_14574(void);
 void fn_2_14790(void);
 void fn_2_14BB8(void);

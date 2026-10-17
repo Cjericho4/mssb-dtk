@@ -1,6 +1,11 @@
 #include "menus/rep_04B0.h"
 #include "menus/rep_0438.h"
 #include "menus/gap_1254.h"
+#include "static/UnknownHomes_Static.h"
+
+extern MenusSceneAsset lbl_2_data_1DD4;
+extern void fn_8001CB10(MenusSceneAsset* asset, s32 mode);
+extern void fn_8001CCC8(void);
 #include "menus/gap_16870.h"
 
 // .text:0x00014574 size:0x21C
@@ -88,7 +93,12 @@ void fn_2_16664(void) {
 
 // .text:0x000166CC size:0x58
 void fn_2_166CC(void) {
-    return;
+    GameInitVariables* settings = &g_d_GameSettings;
+    u8 stadium = settings->StadiumID;
+    settings->StadiumID = 0;
+    fn_8001CB10(&lbl_2_data_1DD4, 4);
+    fn_8001CCC8();
+    settings->StadiumID = stadium;
 }
 
 // .text:0x00016724 size:0x14C
