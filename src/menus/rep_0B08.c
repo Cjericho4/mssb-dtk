@@ -4,6 +4,7 @@
 #include "string.h"
 
 extern Rep0B08AnimationConfig lbl_2_data_3C84[];
+extern Vec lbl_2_data_2EA4[];
 #include "math.h"
 #include "menus/rep_08E8.h"
 #include "Dolphin/GX/GXTypes.h"
@@ -111,8 +112,15 @@ void fn_2_687A4(void) {
 }
 
 // .text:0x000688A4 size:0x9C
-void fn_2_688A4(void) {
-    return;
+f32 fn_2_688A4(s32 index, s32 target) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    Vec pos;
+    f32 x, z, angle;
+    memcpy(&pos, &lbl_2_data_2EA4[target], sizeof(Vec));
+    x = pos.x - obj->position.x;
+    z = pos.z - obj->position.z;
+    angle = (f32)atan2(-x, -z);
+    return fn_2_4A18C(obj->angle) - angle;
 }
 
 // .text:0x00068940 size:0x8C
