@@ -4,9 +4,39 @@
 #include "game/UnknownHomes_Game.h"
 #include "static/UnknownHomes_Static.h"
 
+extern f32 lbl_3_data_4BC4[10];
+extern f32 lbl_3_data_4BEC[22];
+extern s16 lbl_3_data_4C54[12];
+extern f32 lbl_3_rodata_11D8;
+extern f32 lbl_3_rodata_11DC;
+extern f32 lbl_3_rodata_11E0;
+
 // .text:0x0006D6D4 size:0x290 mapped:0x806AC768
-void fn_3_6D6D4(void) {
-    return;
+void fn_3_6D6D4(s32 runnerIndex) {
+    InMemRunnerType* runner = &g_Runners[runnerIndex];
+    u32 bucket = runner->speed / 10;
+    s32 lower = bucket * 10;
+    s32 upper = lower + 10;
+
+    runner->maximumBaseVelocity = LinearInterpolateToNewRange(
+        (f32)runner->speed, (f32)lower, (f32)upper,
+        lbl_3_data_4BEC[(s32)(bucket * 10) / 10], lbl_3_data_4BEC[upper / 10]);
+    runner->baseAcceleration = LinearInterpolateToNewRange(
+        (f32)runner->speed, lbl_3_rodata_11D8, lbl_3_rodata_11DC,
+        lbl_3_data_4BC4[0], lbl_3_data_4BC4[1]);
+    runner->baseAccelerationWhileChaingingDirection = LinearInterpolateToNewRange(
+        (f32)runner->speed, lbl_3_rodata_11D8, lbl_3_rodata_11DC,
+        lbl_3_data_4BC4[2], lbl_3_data_4BC4[3]);
+    runner->maxMashVeloAdjustment = LinearInterpolateToNewRange(
+        (f32)runner->speed, lbl_3_rodata_11D8, lbl_3_rodata_11DC,
+        lbl_3_data_4BC4[4], lbl_3_data_4BC4[5]);
+    runner->percentAddedPerMash = lbl_3_rodata_11E0 / LinearInterpolateToNewRange(
+        (f32)runner->speed, lbl_3_rodata_11D8, lbl_3_rodata_11DC,
+        lbl_3_data_4BC4[6], lbl_3_data_4BC4[7]);
+    runner->stamina_MashPercentTakenAwayPerFrame = lbl_3_rodata_11E0 /
+        LinearInterpolateToNewRange((f32)runner->speed, lbl_3_rodata_11D8, lbl_3_rodata_11DC,
+                                    lbl_3_data_4BC4[8], lbl_3_data_4BC4[9]);
+    runner->FramesUntilNotSprinting = (u8)lbl_3_data_4C54[7];
 }
 
 // .text:0x0006D964 size:0x4FC mapped:0x806AC9F8

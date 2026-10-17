@@ -5,7 +5,7 @@
 
 extern u8 aILevel[4];
 
-void fn_3_6D6D4(void);
+void fn_3_6D6D4(s32 runnerIndex);
 void fn_3_6D964(s32 rosterIdx, s32 runnerIdx);
 void setInMemBatterConstants(int rosterID);
 u8 fn_3_6E1D4(u8 arg0);
