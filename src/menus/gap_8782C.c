@@ -56,7 +56,20 @@ void fn_2_8975C(void) {
 
 // .text:0x00089F70 size:0x98
 void fn_2_89F70(void) {
-    return;
+    u8* script;
+    s32 mode = lbl_2_bss_33FBCC.mode;
+    DrawingSceneStruct* scene;
+    MenusRosterScripts* scripts = &lbl_2_data_2E9F8;
+    scene = lbl_803CC1B8;
+    switch (mode) {
+    case 0: script = scripts->mode0; break;
+    case 1:
+    case 2: script = scripts->mode12; break;
+    case 3: script = scripts->mode3; break;
+    }
+    fn_80034E20(scene, (MenusSceneScript*)script);
+    lbl_2_bss_33FBCC.pending = 0;
+    lbl_803CC1B8->unk_00 = fn_2_8975C;
 }
 
 // .text:0x0008A008 size:0x81C

@@ -4,6 +4,22 @@
 #include "mssbTypes.h"
 #include "UnknownHeaders.h"
 
+typedef struct MenusRosterTransition {
+    u8 _pad0[5];
+    u8 mode;
+    u8 _pad6[8];
+    u8 pending;
+} MenusRosterTransition;
+extern MenusRosterTransition lbl_2_bss_33FBCC;
+
+typedef struct MenusRosterScripts {
+    u8 _pad0[0xBAC];
+    u8 mode3[0x120];
+    u8 mode12[0x100];
+    u8 mode0[1];
+} MenusRosterScripts;
+extern MenusRosterScripts lbl_2_data_2E9F8;
+
 typedef struct MenusRosterState {
     u8 _pad0[0xF6];
     u8 mode;
