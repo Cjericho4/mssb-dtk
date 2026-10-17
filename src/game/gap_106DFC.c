@@ -356,7 +356,7 @@ u32 fn_3_107DF8(s8 arg0) {
 }
 
 // .text:0x00107E3C size:0x44 mapped:0x80746ED0
-u8 minigame_checkIfAIInputIs_Algorithmic_Or_ControllerBased(s8 arg0) {
+u32 minigame_checkIfAIInputIs_Algorithmic_Or_ControllerBased(s8 arg0) {
     if (g_d_GameSettings.GameModeSelected == GAME_TYPE_MINIGAMES && arg0 >= 0 && arg0 < 4) {
         return g_Minigame._1DBC[arg0];
     }

@@ -2441,7 +2441,7 @@ typedef struct _BatterReachStruct {
 
 extern BatterReachStruct BatterHitbox[54];
 
-extern u8 minigame_checkIfAIInputIs_Algorithmic_Or_ControllerBased(s8 arg0);
+extern u32 minigame_checkIfAIInputIs_Algorithmic_Or_ControllerBased(s8 arg0);
 
 extern u8 swingSoundFrame[2][4];
 
