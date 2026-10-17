@@ -10,6 +10,7 @@ extern MenusSceneScript lbl_2_data_2B4DC;
 extern MenusSceneScript lbl_2_data_2AADC;
 extern void fn_800363D8(DrawingSceneStruct* scene, s32 index, s32 enabled, s32 value, s32 order);
 
+extern void fn_80053FE8(void);
 extern void fn_800625A4(s32, s32);
 extern void fn_800626EC(s32);
 extern void fn_80062674(s32);
@@ -616,7 +617,12 @@ void fn_2_834F0(void) {
 
 // .text:0x000836A4 size:0xA0
 void fn_2_836A4(void) {
-    return;
+    if (lbl_803C50E8.pending) fn_800B0A5C_insertQueue(fn_80053FE8, 0);
+    lbl_8034E978.previous = lbl_8034E978.current;
+    lbl_8034E978.state = 12;
+    lbl_8034E978.current = lbl_800FEF70.nextC8;
+    if (lbl_803CBBCC->previousSelection != 9) fn_800B0A5C_insertQueue(fn_2_82DE8, 0x3000);
+    fn_800B0A5C_insertQueue(fn_2_834F0, 0x3000);
 }
 
 // .text:0x00083744 size:0x94

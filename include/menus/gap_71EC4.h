@@ -37,6 +37,12 @@ typedef struct MenusSceneFlags {
 } MenusSceneFlags;
 extern MenusSceneFlags lbl_803C5EA4;
 
+typedef struct MenusQueueState {
+    u8 _pad0[0x47];
+    u8 pending;
+} MenusQueueState;
+extern MenusQueueState lbl_803C50E8;
+
 typedef struct MenusSceneTransition {
     u8 state;
     u8 _pad1[7];
@@ -50,7 +56,9 @@ typedef struct MenusSceneTransition {
 typedef struct MenusTransitionConfig {
     u8 _pad0[0x58];
     u16 next;
-    u8 _pad5A[0x55E];
+    u8 _pad5A[0x6E];
+    u16 nextC8;
+    u8 _padCA[0x4EE];
     u16 next5B8;
 } MenusTransitionConfig;
 extern MenusSceneTransition lbl_8034E978;
