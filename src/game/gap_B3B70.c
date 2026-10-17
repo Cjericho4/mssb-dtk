@@ -13,6 +13,7 @@
 #include "game/rep_1188.h"
 #include "game/rep_13B8.h"
 #include "game/gap_6D4A0.h"
+#include "game/gap_6B4C8.h"
 #include <string.h>
 #include "game/rep_1C0.h"
 
@@ -74,8 +75,8 @@ void fn_3_B3CAC(u8 arg0) {
 }
 
 // .text:0x000B3CD4 size:0x314 mapped:0x806F2D68
-void fn_3_B3CD4(void) {
-    return;
+s32 fn_3_B3CD4(void) {
+    return 0;
 }
 
 // .text:0x000B3FE8 size:0x13C mapped:0x806F307C
@@ -706,9 +707,43 @@ void fn_3_B7184(void) {
     return;
 }
 
+typedef struct { u8 _0; u8 _1; u8 _2; } B3B70Simulation;
+extern B3B70Simulation lbl_803CBC3C;
+extern u8 lbl_3_data_FC08[][4];
+extern void* lbl_3_data_10010[];
+
 // .text:0x000B7620 size:0x15C mapped:0x806F66B4
 void fn_3_B7620(void) {
-    return;
+    switch (g_Practice.practiceState) {
+    case 0:
+        g_GameLogic.currentBatterPerTeam[0] = 1;
+        g_GameLogic.currentBatterPerTeam[1] = 1;
+        g_hugeAnimStruct.field272_0x307d = 0;
+        g_Practice.runnerActive[0] = lbl_3_data_FC08[g_Practice.practiceLevel][0];
+        g_Practice.runnerActive[1] = lbl_3_data_FC08[g_Practice.practiceLevel][1];
+        g_Practice.runnerActive[2] = lbl_3_data_FC08[g_Practice.practiceLevel][2];
+        g_Practice.runnerActive[3] = lbl_3_data_FC08[g_Practice.practiceLevel][3];
+        fn_3_B3BD0();
+        lbl_3_common_bss_32724.unk9A = 0;
+        lbl_803CBC3C._2 = 0;
+        g_Practice._1D9[0] = 0;
+        fn_3_B3C94(1);
+        break;
+    case 1:
+        if (fn_3_6BA64()) fn_3_B3C94(4);
+        break;
+    case 4:
+        if (fn_3_B3CD4()) fn_3_B3C94(7);
+        break;
+    case 7:
+        fn_3_B3B70();
+        fn_3_B27A4();
+        g_Practice.commandList = lbl_3_data_10010[g_Practice.practiceLevel];
+        changeScene(1, 6);
+        fn_3_5A6D4(7);
+        fn_3_B3C78(1);
+        break;
+    }
 }
 
 // .text:0x000B777C size:0x18 mapped:0x806F6810

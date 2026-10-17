@@ -12,7 +12,7 @@ void fn_3_B3C64(void);
 void fn_3_B3C78(u8 arg0);
 void fn_3_B3C94(u8 arg0);
 void fn_3_B3CAC(u8 arg0);
-void fn_3_B3CD4(void);
+s32 fn_3_B3CD4(void);
 void fn_3_B3FE8(void);
 typedef struct LineUpEntry {
     s8 unk0;
