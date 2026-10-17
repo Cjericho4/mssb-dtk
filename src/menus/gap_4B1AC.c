@@ -126,8 +126,8 @@ void fn_2_4E858(u32 arg) {
 }
 
 // .text:0x0004E878 size:0x20
-void fn_2_4E878(void) {
-    return;
+void fn_2_4E878(u32 arg0, u32 arg1) {
+    fn_80034E20(arg0, arg1);
 }
 
 // .text:0x0004E898 size:0x24

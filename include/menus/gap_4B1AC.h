@@ -27,7 +27,7 @@ void fn_2_4E7A4(void);
 void fn_2_4E7EC(void);
 void fn_2_4E824(void);
 void fn_2_4E858(u32 arg);
-void fn_2_4E878(void);
+void fn_2_4E878(u32 arg0, u32 arg1);
 void fn_2_4E898(void);
 void fn_2_4E8BC(void);
 void fn_2_4E8E0(void);
