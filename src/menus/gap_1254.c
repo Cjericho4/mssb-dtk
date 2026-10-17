@@ -1,4 +1,5 @@
 #include "menus/gap_1254.h"
+#include "menus/rep_0438.h"
 
 extern u32 lbl_803CB750;
 
@@ -89,7 +90,11 @@ void fn_2_1C34(void) {
 
 // .text:0x00001D28 size:0x2C
 void fn_2_1D28(void) {
-    return;
+    lbl_8034E9A0.unk472A = 0xFF;
+    lbl_8034E9A0.unk4756 = 0;
+    lbl_8034E9A0.unk4754 = 0;
+    lbl_8034E9A0.unk4755 = 3;
+    lbl_8034E9A0.unk48B3 = 0;
 }
 
 // .text:0x00001D54 size:0x70
