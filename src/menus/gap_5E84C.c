@@ -1,4 +1,5 @@
 #include "menus/gap_5E84C.h"
+#include "menus/rep_0B08.h"
 #include "game/rep_3448.h"
 
 // .text:0x0005E84C size:0x32C
@@ -383,5 +384,8 @@ void fn_2_68260(void) {
 
 // .text:0x00068308 size:0x24
 void fn_2_68308(void) {
-    return;
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[1];
+    obj->variant = 0;
+    obj->state = 0;
+    lbl_2_bss_1A8248->unk442F = 0;
 }
