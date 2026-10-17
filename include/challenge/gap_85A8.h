@@ -2,6 +2,16 @@
 #define __CHALLENGE_gap_85A8_H_
 
 #include "mssbTypes.h"
+#include "challenge/challenge.h"
+#include "game/rep_3448.h"
+
+typedef struct Gap85A8State {
+    /* 0x00 */ u8 _pad0[0xC];
+    /* 0x0C */ u8 unkC;
+    /* 0x0D */ u8 _padD[2];
+    /* 0x0F */ u8 unkF;
+} Gap85A8State;
+extern Gap85A8State lbl_1_common_bss_47674;
 #include "UnknownHeaders.h"
 
 void fn_1_85A8(void);

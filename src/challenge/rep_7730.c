@@ -192,7 +192,9 @@ void fn_1_20BD8(void) {
 
 // .text:0x00020DC8 size:0x38
 void fn_1_20DC8(void) {
-    return;
+    DrawingSceneStruct* entry = (DrawingSceneStruct*)fn_800B0A5C_insertQueue(fn_1_20BD8, 1);
+    entry->field14_0x24[1] = 0;
+    entry->loadingState = 0;
 }
 
 // .text:0x00020E00 size:0x18C
@@ -232,7 +234,22 @@ void fn_1_21CE8(void) {
 
 // .text:0x000225B8 size:0x8C
 void fn_1_225B8(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    DrawingSceneStruct* entry;
+
+    switch (scene->field14_0x24[1]) {
+    case 0:
+        entry = (DrawingSceneStruct*)fn_800B0A5C_insertQueue(fn_1_20BD8, 1);
+        entry->field14_0x24[1] = 0;
+        entry->loadingState = 0;
+        scene->field14_0x24[1]++;
+        break;
+    case 1:
+        if (scene->loadingState != 0) {
+            scene->aFunctionPointer = fn_1_21408;
+        }
+        break;
+    }
 }
 
 // .text:0x00022644 size:0x230

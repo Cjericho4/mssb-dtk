@@ -2,6 +2,8 @@
 #define __CHALLENGE_rep_0610_H_
 
 #include "mssbTypes.h"
+#include "challenge/challenge.h"
+extern u8 lbl_1_bss_5F71;
 #include "UnknownHeaders.h"
 
 typedef struct Rep0610Globals80366158 {

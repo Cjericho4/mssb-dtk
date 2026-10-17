@@ -7,7 +7,17 @@ void fn_1_85A8(void) {
 
 // .text:0x00008624 size:0x98
 void fn_1_8624(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+
+    if (lbl_803C77B8.held & 0x100) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0;
+        scene->unk18 = 0;
+    }
+    if (lbl_1_common_bss_47674.unkF != 0 || lbl_1_common_bss_47674.unkC == 0) {
+        fn_80034CEC((u32)scene);
+        fn_800B0A14_removeQueue();
+    }
+    scene->unk18++;
 }
 
 // .text:0x000086BC size:0x28

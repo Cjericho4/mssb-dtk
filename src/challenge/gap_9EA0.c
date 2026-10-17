@@ -47,5 +47,11 @@ char* fn_1_A210(char* path) {
 
 // .text:0x0000A250 size:0x94
 void fn_1_A250(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 11; i++) {
+        lbl_1_common_bss_49A78.slots[i] = -1;
+    }
+    lbl_1_common_bss_49A78.unkC = -1;
+    lbl_803CC1B8->aFunctionPointer = fn_1_A348;
 }

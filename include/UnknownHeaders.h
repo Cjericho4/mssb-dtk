@@ -936,7 +936,12 @@ typedef struct DrawingSceneStruct {
             u16 unkIndex2;
         };
         DrawingSceneItem *unk14;
-        u8 flag14;
+        struct {
+            u8 flag14;
+            u8 flag15;
+            u8 flag16;
+            u8 flag17;
+        };
     };
     union {
         u16 unk18;
@@ -957,13 +962,24 @@ typedef struct DrawingSceneStruct {
     union {
         s16 unk_1E;
         u16 fielderIndex;
+        struct {
+            u8 byte1E;
+            u8 byte1F;
+        };
     };
     union {
         s16 unk_20;
         s16 unk20;
         u16 unk20_u16;
+        struct {
+            u8 byte20;
+            u8 byte21;
+        };
     };
-    short drawingState;
+    union {
+        short drawingState;
+        u8 byte22;
+    };
     u8 field14_0x24[4];
     u8 field15_0x28;
     u8 field16_0x29;

@@ -387,7 +387,14 @@ void fn_1_14FB8(void) {
 
 // .text:0x00015170 size:0x88
 void fn_1_15170(void) {
-    return;
+    if (lbl_803C77B8.pressed & 0x200) {
+        fn_800AD038(lbl_80366158.unk8);
+        lbl_803CC1B8->loadingState = 0;
+        lbl_803CC1B8->aFunctionPointer = fn_1_176EC;
+        lbl_1_bss_30B8 = 1;
+    } else if (lbl_803C77B8.pressed & 0x100) {
+        lbl_1_bss_5F71 = 1;
+    }
 }
 
 // .text:0x000151F8 size:0x214

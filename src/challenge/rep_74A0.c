@@ -153,7 +153,14 @@ void fn_1_1D450(void) {
 
 // .text:0x0001D470 size:0xA4
 void fn_1_1D470(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 i;
+
+    for (i = 0; i < 0x18; i++) {
+        lbl_1_bss_69FC.flags[i] = 0;
+    }
+    scene->flag15 = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_1_1D450;
 }
 
 // .text:0x0001D514 size:0x7C
