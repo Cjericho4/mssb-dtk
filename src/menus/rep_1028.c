@@ -446,8 +446,13 @@ void fn_2_916C0(Rep1028Obj* obj) {
 }
 
 // .text:0x000916F8 size:0x84
-void fn_2_916F8(void) {
-    return;
+void fn_2_916F8(Rep1028Obj* obj) {
+    HugeAnimEntry68* entry = &lbl_2_bss_340140->entries_68[obj->index];
+    if (0.0f == fn_800B4A94(entry->unk34, (hugeAnimStruct*)lbl_2_bss_340140->entries_68)) {
+        Rep1028Obj* target = &lbl_2_bss_1A8248->rep1028Objects[obj->index];
+        target->variant = 2;
+        target->state = 0;
+    }
 }
 
 // .text:0x0009177C size:0xC
