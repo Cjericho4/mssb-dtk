@@ -2,6 +2,12 @@
 #define __MENUS_rep_10C0_H_
 
 #include "mssbTypes.h"
+#include "Dolphin/mtx.h"
+
+typedef struct MenusCameraConfig {
+    Vec position;
+    Vec target;
+} MenusCameraConfig;
 
 typedef struct MenusMenuBuffer {
     u8 data[0x4000];
@@ -29,7 +35,9 @@ typedef struct Rep10C0State {
     u8 flag1972BC;
     u8 _pad1972BD[3];
     u8 flag1972C0;
-    u8 _pad1972C1[0x3C3];
+    u8 _pad1972C1[0x3A7];
+    MenusCameraConfig camera; /* 0x197668 */
+    u8 _pad197680[4];
     MenusMenuBuffer* buffer; /* 0x197684 */
     u8 _pad197688[4];
     u32 unk19768C;
@@ -59,7 +67,8 @@ typedef struct Rep10C0State {
     s8 unk197843;
     u8 _pad197844[5];
     u8 unk197849;
-    u8 _pad19784A[0xC];
+    u8 _pad19784A[0xB];
+    u8 cameraEnabled; /* 0x197855 */
     u8 unk197856;
     u8 _pad197857[0xC];
     s8 inputIndex; /* 0x197863 */
@@ -78,7 +87,7 @@ void fn_2_93BF8(void);
 void fn_2_93C64(void);
 void fn_2_94604(u8 value);
 void fn_2_9461C(s16 value);
-void fn_2_94634(void);
+void fn_2_94634(s32 index);
 void fn_2_946DC(void);
 
 #endif // !__MENUS_rep_10C0_H_

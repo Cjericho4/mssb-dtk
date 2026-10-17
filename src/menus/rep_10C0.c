@@ -1,5 +1,7 @@
 #include "menus/rep_10C0.h"
 
+extern MenusCameraConfig lbl_2_data_3BB0[];
+
 // .text:0x000927C8 size:0x26C
 void fn_2_927C8(void) {
     return;
@@ -46,8 +48,15 @@ void fn_2_9461C(s16 value) {
 }
 
 // .text:0x00094634 size:0xA8
-void fn_2_94634(void) {
-    return;
+void fn_2_94634(s32 index) {
+    lbl_2_bss_1A824C->camera.position.x = lbl_2_data_3BB0[index].position.x;
+    lbl_2_bss_1A824C->camera.position.y = lbl_2_data_3BB0[index].position.y;
+    lbl_2_bss_1A824C->camera.position.z = lbl_2_data_3BB0[index].position.z;
+    lbl_2_bss_1A824C->camera.target.x = lbl_2_data_3BB0[index].target.x;
+    lbl_2_bss_1A824C->camera.target.y = lbl_2_data_3BB0[index].target.y;
+    lbl_2_bss_1A824C->camera.target.z = lbl_2_data_3BB0[index].target.z;
+    if (index == 0) lbl_2_bss_1A824C->cameraEnabled = 0;
+    else lbl_2_bss_1A824C->cameraEnabled = 1;
 }
 
 // .text:0x000946DC size:0x178
