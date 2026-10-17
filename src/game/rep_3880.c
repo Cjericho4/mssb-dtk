@@ -780,19 +780,21 @@ void fn_3_14CB28(s8 arg0) {
 }
 
 typedef struct {
-    u8 _pad0[0xC];
+    s32 unk0;
+    s32 unk4;
+    u8 _pad8[4];
     s32 unkC;  // 0x0C
-    u8 _pad10[0x4];
+    s32 unk10;
     s32 unk14; // 0x14
     s32 unk18; // 0x18
-    u8 _pad1C[0x4];
+    s32 unk1C;
     s32 unk20; // 0x20
     s32 unk24; // 0x24
     s32 unk28; // 0x28
-    u8 _pad2C[0x4];
+    s32 unk2C;
     s32 unk30; // 0x30
     s32 unk34; // 0x34
-    u8 _pad38[0x4];
+    s32 unk38;
     s32 unk3C; // 0x3C
     s32 unk40; // 0x40
     s32 unk44; // 0x44
@@ -888,8 +890,51 @@ void fn_3_14D318(ListNode_14B9F0* node) {
 }
 
 // .text:0x0014D44C size:0x288 mapped:0x8078C4E0
-void fn_3_14D44C(void) {
-    return;
+static inline void positionBarrelSmoke(ListNode_14B9F0* node) {
+    u8 idx;
+    BB_barrelStruct* barrel;
+    f32 half = 0.5f;
+
+    idx = node->field_0x45;
+    barrel = &g_Minigame.barrels[idx];
+
+    node->offset.x = barrel->currentPos.x;
+    node->offset.y = -(lbl_3_data_21770[3] * half + barrel->currentPos.y);
+    node->offset.z = barrel->currentPos.z;
+    node->offset.x += (rand() % 100 - 50) / 100.0;
+    node->offset.y += (rand() % 100 - 50) / 100.0;
+}
+void fn_3_14D44C(struct Struct_800339F0_Result* obj, s32 arg1) {
+    u8 index = arg1;
+    ListNode_14B9F0* node = obj->listHead;
+    s32 i = 0;
+    do {
+        if (node->field_0x44 == 0 && node->field_0x4A == 0) {
+            if (i < 3) {
+                node->field_0x44 = 1;
+                node->field_0x45 = index;
+                node->unk46 = 255;
+                node->field_0x4D = lbl_3_data_26D00.unk0;
+                node->scaleX = node->scaleY = (f32)lbl_3_data_26D00.unk10;
+                node->color[3] = lbl_3_data_26D00.unk1C;
+                positionBarrelSmoke(node);
+                node->field_0x4A = lbl_3_data_26D00.unk44;
+                node->field_0x48 = 0;
+            } else {
+                node->field_0x44 = 2;
+                node->field_0x45 = index;
+                node->unk46 = (i - 3) / 5;
+                node->field_0x4D = lbl_3_data_26D00.unk4;
+                node->scaleX = node->scaleY = (f32)lbl_3_data_26D00.unk2C;
+                node->color[3] = lbl_3_data_26D00.unk38;
+                node->field_0x48 = ((i - 3) % 5) * 4 + 1;
+                node->field_0x4A = lbl_3_data_26D00.unk48;
+            }
+            node->color[0] = node->color[1] = node->color[2] = 255;
+            i++;
+        }
+        node = node->next;
+    } while (node != NULL && i < 43);
 }
 
 // .text:0x0014D6D4 size:0x3C mapped:0x8078C768

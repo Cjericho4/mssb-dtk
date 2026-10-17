@@ -31,7 +31,8 @@ typedef struct ListNode_14B9F0 {
     };
     u8 field_0x44;                  // 0x44
     u8 field_0x45;                  // 0x45
-    u8 _pad46[0x2];                 // 0x46
+    u8 unk46;                     // 0x46
+    u8 _pad47;                 // 0x46
     s16 field_0x48;                 // 0x48
     s16 field_0x4A;                 // 0x4A
     u8 field_0x4C;                  // 0x4C
@@ -195,7 +196,7 @@ void fn_3_14CD40(Struct_14C79C_Arg* arg0, ListNode_14B9F0* node);
 void fn_3_14CECC(void);
 void fn_3_14D2C0(void);
 void fn_3_14D318(ListNode_14B9F0* node);
-void fn_3_14D44C(void);
+void fn_3_14D44C(struct Struct_800339F0_Result* obj, s32 arg1);
 void fn_3_14D6D4(Struct_14D6D4_Input* in);
 void fn_3_14D710(void);
 void fn_3_14DC80(s32 arg);
