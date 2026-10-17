@@ -2,6 +2,7 @@
 #include "menus/rep_0438.h"
 #include "menus/rep_0B08.h"
 #include "menus/rep_08E8.h"
+#include "menus/gap_1B1BC.h"
 #include "string.h"
 #include "Dolphin/GX/GXPixel.h"
 #include "menus/rep_10C0.h"
@@ -468,8 +469,15 @@ void fn_2_53DF8(void) {
 }
 
 // .text:0x00053F04 size:0x84
-void fn_2_53F04(void) {
-    return;
+void fn_2_53F04(s32 value) {
+    s32 bank;
+    s32 slot;
+    for (bank = 0; bank < 10; bank++) {
+        for (slot = 0; slot < 0x360; slot++) {
+            MenusResourceSlot* entry = &lbl_2_bss_1A8230[bank].slots[slot];
+            if (entry->callback != 0) entry->callback(value, entry);
+        }
+    }
 }
 
 // .text:0x00053F88 size:0x84

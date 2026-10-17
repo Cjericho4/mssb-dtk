@@ -3,6 +3,7 @@
 
 #include "mssbTypes.h"
 #include "menus/rep_10C0.h"
+#include "menus/gap_4B1AC.h"
 
 typedef struct MenusLoadingState {
     u8 _pad0[0x30];
@@ -22,7 +23,8 @@ typedef struct MenusDisplayPanel {
 } MenusDisplayPanel;
 
 typedef struct MenusDisplayState {
-    u8 _pad0[0x162657];
+    MenusResourceBank banks[70];
+    u8 _pad162600[0x57];
     MenusDisplayPanel panels[2];
 } MenusDisplayState;
 extern MenusDisplayState* lbl_2_bss_1A8234;

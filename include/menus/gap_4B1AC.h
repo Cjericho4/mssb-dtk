@@ -3,6 +3,16 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusResourceSlot {
+    void (*callback)(s32, struct MenusResourceSlot*);
+    u8 _pad4[0x14];
+} MenusResourceSlot;
+
+typedef struct MenusResourceBank {
+    MenusResourceSlot slots[0x360];
+} MenusResourceBank;
+extern MenusResourceBank* lbl_2_bss_1A8230;
+
 typedef struct MenusResourceTables {
     u8 _pad0[0x798];
     u32* tables[1]; /* extent unknown */
@@ -118,7 +128,7 @@ void fn_2_53AA4(void);
 void fn_2_53BC8(void);
 void fn_2_53CEC(void);
 void fn_2_53DF8(void);
-void fn_2_53F04(void);
+void fn_2_53F04(s32 value);
 void fn_2_53F88(void);
 void fn_2_5400C(void);
 void fn_2_54120(void);
