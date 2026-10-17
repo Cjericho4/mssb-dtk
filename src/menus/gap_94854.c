@@ -1,8 +1,8 @@
 #include "menus/gap_94854.h"
 
 // .text:0x00094854 size:0x18
-void fn_2_94854(void) {
-    return;
+void fn_2_94854(u8 value) {
+    lbl_2_bss_1A824C->unk197849 = value;
 }
 
 // .text:0x0009486C size:0x4C

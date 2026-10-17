@@ -2,8 +2,9 @@
 #define __MENUS_gap_94854_H_
 
 #include "mssbTypes.h"
+#include "menus/rep_10C0.h"
 
-void fn_2_94854(void);
+void fn_2_94854(u8 value);
 void fn_2_9486C(void);
 void fn_2_948B8(void);
 void fn_2_9493C(void);
