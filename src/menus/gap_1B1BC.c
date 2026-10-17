@@ -80,14 +80,22 @@ void fn_2_1C244(void) {
     return;
 }
 
-// .text:0x0001C33C size:0x68
+// .text:0x0001C33C size:0x6C
 void fn_2_1C33C(void) {
-    return;
-}
+    MenusSceneState* scene = lbl_2_bss_1A8248;
 
-// .text:0x0001C3A4 size:0x4
-void fn_2_1C3A4(void) {
-    return;
+    if (scene->unk441C >= 6) {
+        while (1) {}
+    }
+    if (scene->unk4415 >= 4) {
+        while (1) {}
+    }
+    if (scene->counter < 0 || scene->counter > 999) {
+        while (1) {}
+    }
+    if (lbl_2_bss_1A823C->state == 5 && scene->unk4420 >= 5) {
+        while (1) {}
+    }
 }
 
 // .text:0x0001C3A8 size:0x74
