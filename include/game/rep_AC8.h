@@ -157,7 +157,7 @@ void fn_3_4597C(s32 fielderIdx);
 void fn_3_45B88(s32 fielderIdx);
 void fn_3_45E98(void);
 void fn_3_46688(void);
-void fn_3_468DC(void);
+s32 fn_3_468DC(f32* x, f32* z);
 void fn_3_46ABC(s32 fielderIdx);
 s32 fn_3_46E08(s32 fielderIdx, f32* x, f32* z);
 s32 fn_3_47628(void);

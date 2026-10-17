@@ -2889,8 +2889,57 @@ void fn_3_46688(void) {
 }
 
 // .text:0x000468DC size:0x1E0 mapped:0x80685970
-void fn_3_468DC(void) {
-    return;
+s32 fn_3_468DC(f32* x, f32* z) {
+    if (g_Ball.fielderWBallIndex >= 0) {
+        *x = g_Ball.AtBat_Contact_BallPos.x;
+        *z = g_Ball.AtBat_Contact_BallPos.z;
+    } else if (g_Ball.fielderAboutToGetBall_hasBall >= 0) {
+        *x = g_Fielders[g_Ball.fielderAboutToGetBall_hasBall].prevPos[0];
+        *z = g_Fielders[g_Ball.fielderAboutToGetBall_hasBall].prevPos[2];
+    } else if (g_FieldingLogic.unk_F8[7] == 1) {
+        if (g_FieldingLogic.unk_F8[8] == 1) {
+            if (g_Fielders[7].unk17E == -1 || g_Fielders[8].unk17E == -1) {
+                return 0;
+            }
+            if (g_Fielders[7].unk17E < g_Fielders[8].unk17E) {
+                *x = g_Fielders[7].prevPos[0];
+                *z = g_Fielders[7].prevPos[2];
+            } else {
+                *x = g_Fielders[8].prevPos[0];
+                *z = g_Fielders[8].prevPos[2];
+            }
+        } else if (g_FieldingLogic.unk_F8[6] == 1) {
+            if (g_Fielders[7].unk17E == -1 || g_Fielders[6].unk17E == -1) {
+                return 0;
+            }
+            if (g_Fielders[7].unk17E < g_Fielders[6].unk17E) {
+                *x = g_Fielders[7].prevPos[0];
+                *z = g_Fielders[7].prevPos[2];
+            } else {
+                *x = g_Fielders[6].prevPos[0];
+                *z = g_Fielders[6].prevPos[2];
+            }
+        } else {
+            if (g_Fielders[7].unk17E == -1) {
+                return 0;
+            }
+            *x = g_Fielders[7].prevPos[0];
+            *z = g_Fielders[7].prevPos[2];
+        }
+    } else if (g_FieldingLogic.unk_F8[8] == 1) {
+        if (g_Fielders[8].unk17E == -1) {
+            return 0;
+        }
+        *x = g_Fielders[8].prevPos[0];
+        *z = g_Fielders[8].prevPos[2];
+    } else {
+        if (g_Fielders[6].unk17E == -1) {
+            return 0;
+        }
+        *x = g_Fielders[6].prevPos[0];
+        *z = g_Fielders[6].prevPos[2];
+    }
+    return 1;
 }
 
 // .text:0x00046ABC size:0x34C mapped:0x80685B50
