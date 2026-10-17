@@ -213,7 +213,7 @@ void fn_2_699D4(void) {
 }
 
 // .text:0x00069E1C size:0x634
-void fn_2_69E1C(void) {
+void fn_2_69E1C(s32 index) {
     return;
 }
 
@@ -459,8 +459,13 @@ void fn_2_6C2C4(void) {
 }
 
 // .text:0x0006C2E8 size:0x60
-void fn_2_6C2E8(void) {
-    return;
+void fn_2_6C2E8(Rep0B08Obj* obj) {
+    fn_2_69E1C(obj->index);
+    if (obj->unk50 <= 0.0f) {
+        obj->unkBA = 4;
+        obj->unkC4 = 1;
+        obj->state = 3;
+    }
 }
 
 // .text:0x0006C348 size:0x298
