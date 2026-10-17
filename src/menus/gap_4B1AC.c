@@ -250,8 +250,15 @@ void fn_2_50BF4(void) {
 }
 
 // .text:0x00050CC0 size:0x80
-void fn_2_50CC0(void) {
-    return;
+void fn_2_50CC0(s16 value) {
+    QueueEntry* task;
+    lbl_2_bss_1A824C->panel.unk1BAA = value;
+    lbl_2_bss_1A824C->panel.unk1BA0 = 0;
+    lbl_2_bss_1A824C->panel.unk1B9E = 0;
+    lbl_2_bss_1A824C->panel.unk1E72 = 0;
+    lbl_2_bss_1A824C->panel.unk1E70 = 0;
+    task = fn_800B0A5C_insertQueue(fn_2_509A4, 4);
+    task->unk28 = 0;
 }
 
 // .text:0x00050D40 size:0x74

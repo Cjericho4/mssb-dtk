@@ -759,6 +759,7 @@ typedef struct QueueEntry {
     };
     s32 unk20;     /* 0x20 */
     u8* unk24;     /* 0x24 */
+    u8 unk28;      /* 0x28 */
 } QueueEntry;
 /* extern function with proper types */
 QueueEntry* fn_800B0A5C_insertQueue(QueueCallback callback, s32 priority);

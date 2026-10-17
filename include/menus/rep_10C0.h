@@ -4,7 +4,15 @@
 #include "mssbTypes.h"
 
 typedef struct MenusPanelState {
-    u8 _pad0[0x1E8C];
+    u8 _pad0[0x1B9E];
+    s16 unk1B9E;
+    s16 unk1BA0;
+    u8 _pad1BA2[8];
+    s16 unk1BAA;
+    u8 _pad1BAC[0x2C4];
+    s16 unk1E70;
+    s16 unk1E72;
+    u8 _pad1E74[0x18];
     u8 mode;
     u8 _pad1E8D[3];
 } MenusPanelState;
