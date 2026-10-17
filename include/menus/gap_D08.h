@@ -9,6 +9,9 @@ typedef struct MenusD08State {
     u16 state;
     u16 previousSelection;
     u16 previousState;
+    u8 _padA[2];
+    u16 input[2];
+    u8 flags;
 } MenusD08State;
 
 extern MenusD08State* lbl_803CBBCC;

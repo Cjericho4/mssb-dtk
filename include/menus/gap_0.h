@@ -3,6 +3,14 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusInputState {
+    u8 _pad0[2];
+    u16 buttons;
+    u8 _pad4[0x1E];
+    u16 otherButtons;
+} MenusInputState;
+extern MenusInputState lbl_803C77B8;
+
 typedef struct MenusCommandQueue {
     u8 _pad0[0x15];
     u8 writeIndex;

@@ -35,7 +35,9 @@ void fn_2_110(void) {
 
 // .text:0x00000160 size:0x48
 void fn_2_160(void) {
-    return;
+    lbl_803CBBCC->input[0] |= lbl_803C77B8.buttons;
+    lbl_803CBBCC->input[1] |= lbl_803C77B8.otherButtons;
+    lbl_803CBBCC->flags = 0;
 }
 
 // .text:0x000001A8 size:0x130
