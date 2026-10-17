@@ -1,4 +1,5 @@
 #include "menus/gap_13BA4.h"
+#include "menus/rep_0568.h"
 
 // .text:0x00013BA4 size:0xFC
 void fn_2_13BA4(void) {
@@ -21,8 +22,21 @@ void fn_2_1406C(void) {
 }
 
 // .text:0x00014164 size:0xBC
-void fn_2_14164(void) {
-    return;
+void fn_2_14164(MenusPlayerInput* input) {
+    if (input->buttons & 8) {
+        lbl_2_bss_100B8.unk51--;
+        if ((s8)lbl_2_bss_100B8.unk51 == 0) lbl_2_bss_100B8.unk51 = 4;
+    } else if (input->buttons & 4) {
+        lbl_2_bss_100B8.unk51++;
+        if ((s8)lbl_2_bss_100B8.unk51 == 5) lbl_2_bss_100B8.unk51 = 1;
+    } else if (input->unk2 & 0x100) {
+        lbl_2_bss_100B8.unk50 = lbl_2_bss_100B8.unk51;
+    } else if (input->unk2 & 0x200) {
+        lbl_2_bss_100B8.unk4C = 0;
+        lbl_2_bss_100B8.unk50 = 0;
+        lbl_2_bss_100B8.unk51 = 1;
+        lbl_2_bss_100B8.unk4B = 0;
+    }
 }
 
 // .text:0x00014220 size:0x354

@@ -31,9 +31,14 @@ typedef struct Rep0568State {
             u8 _pad40[6];
             u8 values[4];
             u8 unk4A;
+            u8 unk4B;
+            u8 unk4C;
         };
     };
-    u8 _pad4D[7];
+    u8 _pad4D[3];
+    u8 unk50;
+    u8 unk51;
+    u8 _pad52[2];
 } Rep0568State;
 extern Rep0568State lbl_2_bss_100B8;
 
