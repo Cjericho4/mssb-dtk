@@ -15,6 +15,7 @@ extern s32 lbl_2_bss_A840;
 extern void fn_800363D8(DrawingSceneStruct* scene, s32 index, s32 enabled, s32 value, s32 order);
 
 extern void fn_80053FE8(void);
+extern s32 fn_80042DA8(DrawingSceneStruct* scene, s32 index, s32 value);
 extern void fn_8004E2EC(void);
 extern void fn_8004F964(void);
 extern void fn_800625A4(s32, s32);
@@ -240,8 +241,25 @@ void fn_2_74518(void) {
 }
 
 // .text:0x00074564 size:0xD8
-void fn_2_74564(void) {
-    return;
+void fn_2_74564(DrawingSceneStruct* scene) {
+    s32 i, total, count;
+    s32 selected = lbl_2_bss_F410.unk0;
+    if ((u32)__cntlzw(1 - lbl_803C66B0.state) >> 5) {
+        total = 0;
+        count = 0;
+        for (i = 0; i < 7; i++) {
+            if (selected == i) {
+                count++;
+                total += fn_80042DA8(scene, i + 3, 14) != 0;
+            }
+        }
+        total += fn_80042DA8(scene, 32, 10) != 0;
+        if (total == count + 1) {
+            fn_80062674(0);
+            lbl_803C66B0.state = 2;
+            fn_800625A4(0, 87);
+        }
+    }
 }
 
 // .text:0x0007463C size:0x1C0

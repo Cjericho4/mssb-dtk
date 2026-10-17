@@ -117,7 +117,7 @@ void fn_2_73CBC(void);
 void fn_2_73EFC(void);
 void fn_2_744C8(void);
 void fn_2_74518(void);
-void fn_2_74564(void);
+void fn_2_74564(struct DrawingSceneStruct* scene);
 void fn_2_7463C(void);
 void fn_2_747FC(void);
 void fn_2_74CD8(void);
