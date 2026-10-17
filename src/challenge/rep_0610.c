@@ -79,17 +79,28 @@ void fn_1_D67C(u8 value) {
 
 // .text:0x0000D688 size:0x2C
 void fn_1_D688(void) {
-    return;
+    if (++lbl_1_bss_3216 == 3) {
+        lbl_1_bss_3216 = 0;
+    }
 }
 
 // .text:0x0000D6B4 size:0x30
 void fn_1_D6B4(void) {
-    return;
+    if (lbl_1_bss_3216 == 0) {
+        lbl_1_bss_3216 = 3;
+    }
+    lbl_1_bss_3216--;
 }
 
 // .text:0x0000D6E4 size:0x38
-void fn_1_D6E4(void) {
-    return;
+s32 fn_1_D6E4(void) {
+    switch (lbl_1_bss_3216) {
+    case 0:
+    case 1:
+    case 2:
+        return lbl_1_data_F4DC[lbl_1_bss_3216];
+    }
+    return 0;
 }
 
 // .text:0x0000D71C size:0x88
@@ -215,7 +226,8 @@ void fn_1_10560(void) {
 
 // .text:0x00010670 size:0x34
 void fn_1_10670(void) {
-    return;
+    QueueEntry* entry = fn_800B0A5C_insertQueue(fn_1_10560, 0xB);
+    entry->unk10 = 0;
 }
 
 // .text:0x000106A4 size:0x10
@@ -359,7 +371,8 @@ void fn_1_148CC(void) {
 
 // .text:0x00014928 size:0x44
 void fn_1_14928(void) {
-    return;
+    fn_800AD038(lbl_80366158.unk8);
+    lbl_803CC1B8->currentDrawingItem->loadingState = 1;
 }
 
 // .text:0x0001496C size:0x64C
@@ -412,7 +425,8 @@ void fn_1_160F8(void) {
 
 // .text:0x000161D0 size:0x3C
 void fn_1_161D0(void) {
-    return;
+    lbl_1_bss_5F78 ^= 1;
+    fn_800B9A9C(lbl_1_bss_5F78, lbl_1_bss_5F74);
 }
 
 // .text:0x0001620C size:0x1F0

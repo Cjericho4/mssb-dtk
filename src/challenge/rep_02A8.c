@@ -31,8 +31,9 @@ void fn_1_A718(void) {
 }
 
 // .text:0x0000A77C size:0x34
-void fn_1_A77C(void) {
-    return;
+s32 fn_1_A77C(void) {
+    fn_80021518(0x31, (s32)lbl_800EF808.files[0x29]);
+    return 0;
 }
 
 // .text:0x0000A7B0 size:0x34
@@ -46,13 +47,16 @@ void fn_1_A7E4(void) {
 }
 
 // .text:0x0000A838 size:0x48
-void fn_1_A838(void) {
-    return;
+s32 fn_1_A838(void) {
+    fn_80021518(0x1C, (s32)lbl_800EF808.files[3]);
+    fn_80021518(0x36, (s32)lbl_800EF808.files[3]);
+    return 0;
 }
 
 // .text:0x0000A880 size:0x34
-void fn_1_A880(void) {
-    return;
+s32 fn_1_A880(void) {
+    fn_80021518(0x1C, (s32)lbl_800EF808.files[1]);
+    return 0;
 }
 
 // .text:0x0000A8B4 size:0x54
@@ -96,8 +100,9 @@ void fn_1_BDD8(void) {
 }
 
 // .text:0x0000BEF4 size:0x40
-void fn_1_BEF4(void) {
-    return;
+void fn_1_BEF4(s16 voiceID) {
+    sndFXKeyOff(voiceID);
+    sndFXCtrl(voiceID, 7, 0);
 }
 
 // .text:0x0000BF34 size:0x7C

@@ -16,7 +16,7 @@ void fn_1_18EE4(void);
 void fn_1_191DC(void);
 void fn_1_1957C(void);
 void fn_1_1994C(void);
-void fn_1_19D1C(void);
+s32 fn_1_19D1C(u32 flags);
 void fn_1_19D60(void);
 void fn_1_1A1EC(void);
 void fn_1_1A290(void);

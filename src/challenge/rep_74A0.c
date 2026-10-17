@@ -36,8 +36,19 @@ void fn_1_1994C(void) {
 }
 
 // .text:0x00019D1C size:0x44
-void fn_1_19D1C(void) {
-    return;
+s32 fn_1_19D1C(u32 flags) {
+    switch ((flags >> 4) & 0xF) {
+    case 0:
+    case 1:
+        return 1;
+    case 2:
+    case 3:
+        return 2;
+    case 4:
+        return 4;
+    default:
+        return 0;
+    }
 }
 
 // .text:0x00019D60 size:0x48C

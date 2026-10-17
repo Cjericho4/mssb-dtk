@@ -9,7 +9,7 @@
 void fn_1_0(ANIMBank** animBank, char* name);
 void fn_1_20(void);
 void fn_1_E8(void);
-void fn_1_1B0(void);
+void fn_1_1B0(u32* table, s32 count);
 void fn_1_1E0(void);
 void fn_1_568(void);
 void fn_1_58C(void);

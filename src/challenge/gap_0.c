@@ -16,8 +16,16 @@ void fn_1_E8(void) {
 }
 
 // .text:0x000001B0 size:0x30
-void fn_1_1B0(void) {
-    return;
+void fn_1_1B0(u32* table, s32 count) {
+    u32* entry = table;
+    s32 i;
+
+    for (i = 0; i < count; i++) {
+        if (*entry != 0) {
+            *entry += (u32)table;
+        }
+        entry++;
+    }
 }
 
 // .text:0x000001E0 size:0x388

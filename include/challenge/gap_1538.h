@@ -2,6 +2,13 @@
 #define __CHALLENGE_gap_1538_H_
 
 #include "mssbTypes.h"
+
+typedef struct Gap1538Entry {
+    /* 0x0 */ u8 _pad0[8];
+} Gap1538Entry;
+extern Gap1538Entry lbl_1_data_298[];
+extern u8 lbl_803CBBC0;
+void fn_800A7D4C(s32 arg0, Gap1538Entry* entry);
 #include "UnknownHeaders.h"
 #include "challenge/rep_0010.h"
 

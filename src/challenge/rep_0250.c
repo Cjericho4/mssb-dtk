@@ -17,7 +17,7 @@ void fn_1_8F34(void) {
 
 // .text:0x000090B8 size:0x2C
 void fn_1_90B8(void) {
-    return;
+    fn_800B0A5C_insertQueue(fn_1_8F34, 2);
 }
 
 // .text:0x000090E4 size:0x1AC
@@ -37,7 +37,7 @@ void fn_1_9380(void) {
 
 // .text:0x000096A4 size:0x2C
 void fn_1_96A4(void) {
-    return;
+    fn_800B0A5C_insertQueue(fn_1_9380, 2);
 }
 
 // .text:0x000096D0 size:0x4
@@ -57,7 +57,7 @@ void fn_1_973C(void) {
 
 // .text:0x000097B8 size:0x2C
 void fn_1_97B8(void) {
-    return;
+    fn_800B0A5C_insertQueue(fn_1_973C, 2);
 }
 
 // .text:0x000097E4 size:0x2CC

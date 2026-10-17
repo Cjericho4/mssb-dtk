@@ -30,8 +30,19 @@ void fn_1_A1F4(Gap9EA0Obj* obj, s32 arg1, s32 arg2, s32 arg3) {
 }
 
 // .text:0x0000A210 size:0x40
-void fn_1_A210(void) {
-    return;
+char* fn_1_A210(char* path) {
+    char c;
+    char* last = path;
+
+    if (path == NULL) {
+        return NULL;
+    }
+    while ((c = *path++) != 0) {
+        if (c == '/') {
+            last = path;
+        }
+    }
+    return last;
 }
 
 // .text:0x0000A250 size:0x94

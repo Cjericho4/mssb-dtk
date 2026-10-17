@@ -1,8 +1,14 @@
 #include "challenge/gap_17EFC.h"
 
 // .text:0x00017EFC size:0x2C
-void fn_1_17EFC(void) {
-    return;
+s32 fn_1_17EFC(Gap17EFCEntry* a, Gap17EFCEntry* b) {
+    if (a->sortKey < b->sortKey) {
+        return 1;
+    }
+    if (a->sortKey > b->sortKey) {
+        return -1;
+    }
+    return 0;
 }
 
 // .text:0x00017F28 size:0xC8

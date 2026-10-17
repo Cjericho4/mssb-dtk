@@ -16,7 +16,7 @@ void fn_1_9F04(void);
 void fn_1_A024(void);
 void fn_1_A184(void);
 void fn_1_A1F4(Gap9EA0Obj* obj, s32 arg1, s32 arg2, s32 arg3);
-void fn_1_A210(void);
+char* fn_1_A210(char* path);
 void fn_1_A250(void);
 
 #endif // !__CHALLENGE_gap_9EA0_H_

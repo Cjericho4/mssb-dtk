@@ -3,7 +3,12 @@
 
 #include "mssbTypes.h"
 
-void fn_1_17EFC(void);
+typedef struct Gap17EFCEntry {
+    /* 0x0 */ u8 _pad0[4];
+    /* 0x4 */ f32 sortKey;
+} Gap17EFCEntry;
+
+s32 fn_1_17EFC(Gap17EFCEntry* a, Gap17EFCEntry* b);
 void fn_1_17F28(void);
 void fn_1_17FF0(void);
 void fn_1_18174(void);

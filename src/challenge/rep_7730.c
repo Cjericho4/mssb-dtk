@@ -287,7 +287,8 @@ void fn_1_246AC(void) {
 
 // .text:0x00024778 size:0x28
 void fn_1_24778(void) {
-    return;
+    lbl_803CC1B8->flag14 = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_1_246AC;
 }
 
 // .text:0x000247A0 size:0x11C
@@ -327,7 +328,9 @@ void fn_1_25F98(void) {
 
 // .text:0x000267BC size:0x38
 void fn_1_267BC(void) {
-    return;
+    if (lbl_803CC1B8->loadingState != 0) {
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x000267F4 size:0x134

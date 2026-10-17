@@ -2,6 +2,19 @@
 #define __CHALLENGE_rep_0610_H_
 
 #include "mssbTypes.h"
+#include "UnknownHeaders.h"
+
+typedef struct Rep0610Globals80366158 {
+    /* 0x0 */ u8 _pad0[8];
+    /* 0x8 */ s32 unk8;
+} Rep0610Globals80366158;
+extern Rep0610Globals80366158 lbl_80366158;
+extern u8 lbl_1_bss_3216;
+extern u8 lbl_1_bss_5F78;
+extern f32 lbl_1_bss_5F74;
+extern s32 lbl_1_data_F4DC[3];
+void fn_800AD038(s32 arg0);
+void fn_800B9A9C(u8 enabled, f32 value);
 struct TextureHeader;
 void SetDisplayStateTexture(struct TextureHeader* tex, s32 texMap, s32 tlutName);
 
@@ -45,7 +58,7 @@ BOOL fn_1_D660(void);
 void fn_1_D67C(u8 value);
 void fn_1_D688(void);
 void fn_1_D6B4(void);
-void fn_1_D6E4(void);
+s32 fn_1_D6E4(void);
 void fn_1_D71C(void);
 void fn_1_D7A4(void);
 void fn_1_D8A0(void);

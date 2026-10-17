@@ -936,6 +936,7 @@ typedef struct DrawingSceneStruct {
             u16 unkIndex2;
         };
         DrawingSceneItem *unk14;
+        u8 flag14;
     };
     union {
         u16 unk18;

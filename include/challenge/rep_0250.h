@@ -2,6 +2,7 @@
 #define __CHALLENGE_rep_0250_H_
 
 #include "mssbTypes.h"
+#include "UnknownHeaders.h"
 
 void fn_1_8CD4(void);
 void fn_1_8DBC(void);
