@@ -8,6 +8,10 @@ extern void fn_8001F228(void);
 extern void fn_80035B50(s32);
 #include "game/rep_3448.h"
 
+#include "UnknownHeaders.h"
+extern s16 lbl_2_data_2E80[][3];
+extern void fn_80062890(s32 value);
+
 // .text:0x0005E84C size:0x32C
 void fn_2_5E84C(void) {
     return;
@@ -400,8 +404,18 @@ void fn_2_68234(DrawingSceneStruct* scene, Rep0788Item* item) {
 }
 
 // .text:0x00068260 size:0xA8
-void fn_2_68260(void) {
-    return;
+void fn_2_68260(Rep0B08Obj* obj) {
+    u32 mode = lbl_2_bss_1A8248->unk441C;
+    s32 full = lbl_2_data_2E80[mode][0] * 2;
+    s32 end = full - lbl_2_data_2E80[mode][2] * 2;
+    s32 start = full - lbl_2_data_2E80[mode][1] * 2;
+    if (obj->index == 0) {
+        AnimationStruct* anim = &g_hugeAnimStruct.fielderStructs[0];
+        if (anim && (anim->unk68 == end || anim->unk68 == start)) {
+            if (mode == 5) fn_80062890(1);
+            else fn_80062890(0);
+        }
+    }
 }
 
 // .text:0x00068308 size:0x24

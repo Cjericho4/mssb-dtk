@@ -2,6 +2,7 @@
 #define __MENUS_gap_5E84C_H_
 
 #include "mssbTypes.h"
+#include "menus/rep_0B08.h"
 #include "menus/gap_4B1AC.h"
 #include "menus/rep_0788.h"
 
@@ -80,7 +81,7 @@ void fn_2_67D48(void);
 void fn_2_67FEC(void);
 void fn_2_681A0(s32 unused, MenusResourceSlot* slot);
 void fn_2_68234(DrawingSceneStruct* scene, Rep0788Item* item);
-void fn_2_68260(void);
+void fn_2_68260(Rep0B08Obj* obj);
 void fn_2_68308(void);
 
 #endif // !__MENUS_gap_5E84C_H_
