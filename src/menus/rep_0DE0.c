@@ -1,5 +1,9 @@
 #include "menus/rep_0DE0.h"
 #include "UnknownHeaders.h"
+#include "menus/rep_08E8.h"
+#include "game/rep_1E08.h"
+
+extern void LITXForm(MenusLight* light, Mtx matrix);
 
 extern hugeAnimStruct* lbl_2_bss_340140;
 extern f32 lbl_2_rodata_E88;
@@ -50,7 +54,12 @@ void fn_2_869B4(void) {
 
 // .text:0x00086A0C size:0x74
 void fn_2_86A0C(void) {
-    return;
+    s32 i = 0;
+    do {
+        Fn52768Result* camera = fn_80052768(0);
+        LITXForm(lbl_2_bss_340140->menuLights[i], camera->mtx);
+        i++;
+    } while (i < 3);
 }
 
 // .text:0x00086A80 size:0x34C
