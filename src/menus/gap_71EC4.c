@@ -3,6 +3,8 @@ extern void (*lbl_2_data_2A2EC[])(Rep0B08Obj*);
 
 extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "UnknownHeaders.h"
+
+extern void fn_800625A4(s32, s32);
 #include "menus/gap_1254.h"
 
 // .text:0x00071EC4 size:0x38
@@ -593,7 +595,10 @@ void fn_2_8515C(void) {
 
 // .text:0x00085160 size:0x48
 void fn_2_85160(void) {
-    return;
+    if (--lbl_803CC1B8->loadingState == 0) {
+        fn_800625A4(0, 4);
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x000851A8 size:0x168
