@@ -193,6 +193,7 @@ typedef struct _PB {
   _PBSRC src;             // offset 0xA6, size 0xE
   _PBADPCMLOOP adpcmLoop; // offset 0xB4, size 0x6
   u16 streamLoopCnt;      // offset 0xBA, size 0x2
+  u16 _padBC[4];          // offset 0xBC: MSSB PB is 0xC4 bytes
 } _PB;
 
 typedef struct SAMPLE_INFO {
@@ -467,6 +468,7 @@ typedef struct VS_BUFFER {
   u32 finalGoodSamples;        // offset 0x8, size 0x4
   u32 finalLast;               // offset 0xC, size 0x4
   SND_VIRTUALSAMPLE_INFO info; // offset 0x10, size 0x14
+  u32 _unk24[2];               // offset 0x24: MSSB VS_BUFFER is 0x2C bytes
 } VS_BUFFER;
 
 typedef struct _VS {
@@ -1066,6 +1068,7 @@ typedef struct STREAM_INFO {
   u8 hwStreamHandle;
   u32 nextStreamHandle;
 #endif
+  u32 _unk64; /* MSSB: STREAM_INFO is 0x68 bytes */
 } STREAM_INFO;
 
 #if MUSY_VERSION >= MUSY_VERSION_CHECK(1, 5, 4)
