@@ -122,8 +122,10 @@ void fn_1_BEF4(s16 voiceID) {
 }
 
 // .text:0x0000BF34 size:0x7C
-void fn_1_BF34(void) {
-    return;
+SND_VOICEID fn_1_BF34(u32 fxId) {
+    SND_VOICEID voice = sndFXStartEx(fxId, 0x7F, 0x3F, 0);
+    OSReport("sndFXReverb was %s.\n", sndFXCtrl(voice, 0x5B, fn_800211F0()) ? "succeed" : "failed");
+    return voice;
 }
 
 // .text:0x0000BFB0 size:0x1D8

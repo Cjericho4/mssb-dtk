@@ -32,7 +32,8 @@ void fn_1_BA64(void);
 void fn_1_BC00(void);
 void fn_1_BDD8(void);
 void fn_1_BEF4(s16 voiceID);
-void fn_1_BF34(void);
+u8 fn_800211F0(void);
+SND_VOICEID fn_1_BF34(u32 fxId);
 void fn_1_BFB0(void);
 void fn_1_C188(void);
 
