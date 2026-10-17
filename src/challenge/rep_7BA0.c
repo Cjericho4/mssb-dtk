@@ -23,5 +23,9 @@ void fn_1_284A8(void) {
 
 // .text:0x0002852C size:0x60
 void fn_1_2852C(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    fn_800AD038(lbl_80366158.unk8);
+    scene->flag14 = 0;
+    scene->flag15 = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_1_284A8;
 }
