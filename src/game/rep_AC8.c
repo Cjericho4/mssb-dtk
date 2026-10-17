@@ -2371,7 +2371,35 @@ void fn_3_3E34C(s32 idx) {
 
 // .text:0x0003E468 size:0x228 mapped:0x8067D4FC
 void fn_3_3E468(void) {
-    return;
+    s32 i;
+    s32 j;
+    s32 k;
+    s32 best;
+    f32 min;
+
+    for (i = 0; i < 9; i++) {
+        g_Fielders[i].unk18C = -1;
+        g_Fielders[i].unk1D7 = 0;
+    }
+    for (i = 0; i < 5; i++) {
+        g_FieldingLogic.unkD0[i] = -1;
+        g_FieldingLogic.unk101[i] = 0;
+    }
+    for (j = 0; j < 4; j++) {
+        min = 9999.9f;
+        for (k = 0; k < 6; k++) {
+            if (g_FieldingLogic.unk_F8[k] == 0 && g_Fielders[k].unkA8[j] < min) {
+                min = g_Fielders[k].unkA8[j];
+                best = k;
+            }
+        }
+        g_Fielders[best].unk18C = j;
+        g_Fielders[best].unk1D7 = 1;
+        if (best != -1) {
+            setFielderReadyAction(best, 1);
+        }
+        g_FieldingLogic.unkD0[j] = best;
+    }
 }
 
 // .text:0x0003E690 size:0x4DC mapped:0x8067D724
