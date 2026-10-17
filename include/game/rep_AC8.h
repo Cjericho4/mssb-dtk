@@ -9,7 +9,7 @@ extern Fielder g_Fielders[];
 
 void fn_3_251E4(s32 idx);
 void fn_3_253A4(s8 arg0, s32 arg1);
-void fn_3_25648(void);
+void fn_3_25648(s32 idx);
 void fn_3_25844(s32 fielderIdx, s32 arg1);
 s32 fn_3_258D8(s32 idx);
 void fn_3_25A68(s32 idx);

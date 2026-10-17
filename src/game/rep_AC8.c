@@ -360,8 +360,50 @@ void fn_3_253A4(s8 arg0, s32 arg1) {
 }
 
 // .text:0x00025648 size:0x1FC mapped:0x806646DC
-void fn_3_25648(void) {
-    return;
+void fn_3_25648(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+    VecXYZ out;
+    s32 r;
+
+    f->unk1BA--;
+    if (f->unk1BA <= 0) {
+        f->unk20F = 0;
+        f->unk50 = 0.0f;
+        f->unk30 = 0.0f;
+        f->unk34 = 0.0f;
+        return;
+    }
+    f->unk1B8++;
+    f->unk1BC = fn_3_9FE6C_normalizeAngle(f->unk1BC + lbl_3_data_49DC[32]);
+    f->unk50 = lbl_3_data_4930[33];
+    fn_3_9F9C8(f->unk1BC, &f->unk38, &f->unk3C);
+    f->unk30 = f->unk38 * f->unk50;
+    f->unk34 = f->unk3C * f->unk50;
+    r = fn_3_51798(idx, &out);
+    if (r != 0) {
+        if (r == 2 && !(out.x > 55.0f) && !(out.x < -55.0f)) {
+            f->unk30 = out.x - f->pos[0];
+            f->unk34 = out.z - f->pos[2];
+            f->pos[0] = out.x;
+            f->pos[2] = out.z;
+        } else {
+            f->unk50 = 0.0f;
+            f->unk30 = 0.0f;
+            f->unk34 = 0.0f;
+        }
+    } else {
+        f->pos[0] += f->unk30;
+        f->pos[2] += f->unk34;
+    }
+    f->prevPos[0] = f->pos[0];
+    f->prevPos[2] = f->pos[2];
+    if (g_d_GameSettings.minigamesEnabled) {
+        if (g_Minigame.players.battingHandedness[f->unk20D] == 0) {
+            fn_3_6C854(g_Minigame.players.characterIndex[f->unk20D], 0);
+        }
+    } else if (g_GameLogic._13E[g_GameLogic.teamFielding] == 0) {
+        fn_3_6C854(g_GameLogic.teamFielding, 0);
+    }
 }
 
 // .text:0x00025844 size:0x94 mapped:0x806648D8
