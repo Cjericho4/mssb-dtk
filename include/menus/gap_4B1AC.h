@@ -34,7 +34,7 @@ void fn_2_4E8E0(void);
 void fn_2_4E904(void);
 void fn_2_4E928(void);
 void fn_2_4E94C(void);
-void fn_2_4E970(void);
+BOOL fn_2_4E970(void);
 void fn_2_4E9A8(void);
 void fn_2_4EABC(void);
 void fn_2_4EAF4(void);

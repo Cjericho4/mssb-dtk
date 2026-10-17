@@ -1,6 +1,10 @@
 #include "menus/gap_4B1AC.h"
 #include "menus/rep_10C0.h"
 #include "UnknownHeaders.h"
+#include "game/rep_1C0.h"
+
+extern CompressedDiskRead lbl_2_data_132DC[];
+extern s32 fn_80035838(CompressedDiskRead* list, s32 count);
 #include "menus/gap_8782C.h"
 
 extern void fn_80035B50(s32 arg0);
@@ -163,8 +167,8 @@ void fn_2_4E94C(void) {
 }
 
 // .text:0x0004E970 size:0x38
-void fn_2_4E970(void) {
-    return;
+BOOL fn_2_4E970(void) {
+    return fn_80035838(lbl_2_data_132DC, 23) != 0;
 }
 
 // .text:0x0004E9A8 size:0x114
