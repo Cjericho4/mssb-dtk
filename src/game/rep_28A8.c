@@ -335,9 +335,60 @@ void fn_3_DD9A4(void) {
     return;
 }
 
+typedef struct {
+    s16 initialCountdown;
+    s16 minimumCountdown;
+    s16 _4;
+    s16 _6;
+} ToyFieldCountdownParams;
+extern ToyFieldCountdownParams lbl_3_data_1899C;
+
 // .text:0x000DDD60 size:0x1BC mapped:0x8071CDF4
 void fn_3_DDD60(void) {
-    return;
+    s16 selectedTurns;
+    s16 turnNumber;
+
+    if (g_Minigame.turnOverStatus == 1) {
+        g_Minigame.turnOverStatus = 2;
+        g_GameLogic.CountdownUntilFade = lbl_3_data_1899C.initialCountdown;
+    }
+    g_GameLogic.CountdownUntilFade--;
+    if (g_Minigame._19A0 != 0 && g_GameLogic.CountdownUntilFade < lbl_3_data_1899C.minimumCountdown) {
+        g_GameLogic.CountdownUntilFade = lbl_3_data_1899C.minimumCountdown;
+    }
+    if (g_GameLogic.CountdownUntilFade == lbl_3_data_1899C.minimumCountdown - 10) {
+        turnNumber = g_Minigame.toyField_turnNumber;
+        selectedTurns = g_Minigame.toyField_selectedTurns;
+        if (turnNumber >= selectedTurns &&
+            g_Minigame.players._18E8[(s8)g_Minigame.rosterID] == 1) {
+            fn_3_59918(0xD, 0);
+        } else if ((u8)g_Minigame.rosterID != (s8)g_Minigame._19C6) {
+            if (turnNumber >= selectedTurns) {
+                fn_3_59918(0xD, 0);
+            } else {
+                fn_3_59918(5, 0);
+            }
+        }
+    }
+    if (g_GameLogic.CountdownUntilFade == 7) {
+        changeScene(3, 6);
+    }
+    if (g_GameLogic.CountdownUntilFade <= 0) {
+        if (g_Minigame._19CE != 0) {
+            fn_3_FBD70();
+            fn_3_FBD58();
+        }
+        g_GameLogic.pre_PostMiniGameInd = 1;
+        g_GameLogic.minigameLastTurnSuccessInd = 1;
+        g_GameLogic.hudLoadingRelated = 1;
+        fn_3_1DD48();
+        if (g_Minigame.pointsTargetReachedInd == 0) {
+            fn_3_2E87C();
+            fn_3_5A6D4(0);
+            return;
+        }
+        fn_3_5A6D4(8);
+    }
 }
 
 // .text:0x000DDF1C size:0x84 mapped:0x8071CFB0
