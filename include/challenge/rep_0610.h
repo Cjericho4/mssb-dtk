@@ -54,10 +54,21 @@ extern Rep0610Globals80366158 lbl_80366158;
 typedef struct Rep0610Camera68FC {
     /* 0x00 */ u8 _pad0[0x10];
     /* 0x10 */ Mtx view;
-    /* 0x40 */ u8 _pad40[4];
+    /* 0x40 */ u8 unk40;
+    /* 0x41 */ u8 _pad41[3];
 } Rep0610Camera68FC;
 extern Rep0610Camera68FC lbl_1_bss_68FC;
 void LITXForm(struct MenusLight* light, Mtx view);
+extern s16 lbl_1_data_A978[0x6E];
+typedef struct Rep0610Ctrl5F7C {
+    /* 0x000 */ HugeAnimCtrlObj* obj;
+    /* 0x004 */ u8 _pad4[0x838];
+} Rep0610Ctrl5F7C;
+extern Rep0610Ctrl5F7C lbl_1_bss_5F7C;
+typedef struct Rep0610Obj12F18 {
+    /* 0x00 */ u8 _pad0[8];
+    /* 0x08 */ Mtx mtx;
+} Rep0610Obj12F18;
 extern u8 lbl_1_bss_3216;
 extern u8 lbl_1_bss_5F78;
 extern f32 lbl_1_bss_5F74;
@@ -149,9 +160,9 @@ void fn_1_11D00(void);
 void fn_1_11F08(void);
 void fn_1_121D4(void);
 void fn_1_126CC(void);
-void fn_1_12820(void);
+void fn_1_12820(HugeAnimEntry68* entry, Mtx mtx);
 void fn_1_129D0(void);
-void fn_1_12F18(void);
+void fn_1_12F18(Rep0610Obj12F18* obj);
 void fn_1_12F8C(void);
 void fn_1_131E4(void);
 void fn_1_1347C(void);

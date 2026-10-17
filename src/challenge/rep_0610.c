@@ -367,7 +367,7 @@ void fn_1_126CC(void) {
 }
 
 // .text:0x00012820 size:0x1B0
-void fn_1_12820(void) {
+void fn_1_12820(HugeAnimEntry68* entry, Mtx mtx) {
     return;
 }
 
@@ -377,8 +377,11 @@ void fn_1_129D0(void) {
 }
 
 // .text:0x00012F18 size:0x74
-void fn_1_12F18(void) {
-    return;
+void fn_1_12F18(Rep0610Obj12F18* obj) {
+    fn_1_12820(g_hugeAnimStruct.ctrlOrBonePtr, obj->mtx);
+    if (lbl_1_data_A978[lbl_1_bss_68FC.unk40] >= 0) {
+        fn_800BD670(lbl_1_bss_5F7C.obj, (s32)obj->mtx);
+    }
 }
 
 // .text:0x00012F8C size:0x258
