@@ -629,7 +629,9 @@ typedef struct FieldingLogic {
     /* 0x119 */ u8 unk119;
     /* 0x11A */ u8 _pad11A[0x11C - 0x11A];
     /* 0x11C */ u8 unk11C;
-    /* 0x11D */ u8 _pad11D[0x128 - 0x11D];
+    /* 0x11D */ u8 _pad11D[0x123 - 0x11D];
+    /* 0x123 */ u8 unk123;
+    /* 0x124 */ u8 _pad124[0x128 - 0x124];
     /* 0x128 */ u8 unk128;
     /* 0x129 */ u8 unk129;
     /* 0x12A */ u8 _pad12A[0x12E - 0x12A];

@@ -148,7 +148,7 @@ void fn_3_42A00(s32 fielderIdx);
 void fn_3_42BD0(s32 fielderIndex);
 void fn_3_42CDC(s32 fielderIdx);
 void fn_3_43038(s32 fielderIndex);
-void fn_3_433E0(void);
+void fn_3_433E0(s32 fielderIdx);
 void fn_3_447C4(s32 idx);
 void fn_3_45394(s32 idx);
 void fn_3_455B4(void);

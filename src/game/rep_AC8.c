@@ -2103,8 +2103,142 @@ found:
 }
 
 // .text:0x000433E0 size:0x13E4 mapped:0x80682474
-void fn_3_433E0(void) {
-    return;
+static inline void aimAtBallFuture(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    setFielderTargetIdx(idx, g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.x,
+                        g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.z);
+    if (f->unk184 <= 1) {
+        f->unk1DC = 5;
+    }
+}
+
+static inline void aimAtBall(s32 idx) {
+    setFielderTargetIdx(idx, g_Ball.AtBat_Contact_BallPos.x, g_Ball.AtBat_Contact_BallPos.z);
+}
+
+void fn_3_433E0(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    f32 x;
+    f32 z;
+    f32 dist;
+    f32 step;
+    f32 v;
+
+    if (g_Ball.ballBounceState == 3) {
+        fn_3_43038(fielderIdx);
+    }
+    v = g_Ball.ballVelocity;
+    if (v < 0.05f && g_Ball.ballState != 0 && g_Ball.ballState != 1) {
+        if (g_Ball.AtBat_ContactResult != 0) {
+            f->unk1DC = 5;
+        }
+    } else if (v < 0.1f && g_Ball.ballZoneAwayFromHome >= 3 && g_Ball.AtBat_ContactResult >= 1 &&
+               g_Ball.AtBat_ContactResult <= 3 && f->unk1DC != 4 && f->unk1DC != 5) {
+        fn_3_43038(fielderIdx);
+    } else if (g_FieldingLogic._107 == 3 && g_Ball.framesSinceHit <= 180 && fielderIdx == 1 && f->unk1DC != 4) {
+        fn_3_43038(fielderIdx);
+    }
+    if (g_Ball.pauseBallMovementWhenInPlant != 0) {
+        x = g_Ball.AtBat_Contact_BallPos.x - f->pos[0];
+        z = g_Ball.AtBat_Contact_BallPos.z - f->pos[2];
+        dist = dolsqrtf2(x * x + z * z);
+        if (dist < lbl_3_data_4930[36]) {
+            setFielderTarget(f, f->pos[0], f->pos[2]);
+        } else {
+            step = lbl_3_data_4930[36] - 1.0f;
+            x = step * (x / dist) + f->pos[0];
+            z = step * (z / dist) + f->pos[2];
+            setFielderTargetIdx(fielderIdx, x, z);
+        }
+    } else if (g_FieldingLogic.unk123 != 0) {
+        if (f->unk184 <= 1) {
+            goto end;
+        }
+        dist = dolsqrtf2(g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.x *
+                             g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.x +
+                         g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.z *
+                             g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.z);
+        x = 0.5f * (g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.x / dist) +
+            g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.x;
+        z = 0.5f * (g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.z / dist) +
+            g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.z;
+        if (x < 0.0f) {
+            x += 10.0f;
+        } else {
+            x -= 10.0f;
+        }
+        z += 8.0f;
+        setFielderTargetIdx(fielderIdx, x, z);
+    } else if (f->unk1DC == 0) {
+        if (f->unk184 > 1) {
+            if (f->unk18A != 0) {
+                fn_3_50DD8(fielderIdx, &x, &z, 1);
+                f->unk20 = x;
+                f->unk24 = z;
+            } else {
+                dist = dolsqrtf2(g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.x *
+                                     g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.x +
+                                 g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.z *
+                                     g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.z);
+                x = 0.5f * (g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.x / dist) +
+                    g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.x;
+                z = 0.5f * (g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.z / dist) +
+                    g_Ball.physicsSubstruct.futureCoordsAndDist[f->unk184].pos.z;
+                if (g_Ball.warioWaluGarlicIsActive != 0) {
+                    if (g_AiLogic._79[0] != 0) {
+                        x = g_Ball.peachDaisyStarHitFielderLoc.x;
+                        z = g_Ball.peachDaisyStarHitFielderLoc.z;
+                    } else {
+                        x = g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x;
+                        z = g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z;
+                    }
+                } else if (g_Ball.autoFielderAvoidDropSpotForPeachesStarHit != 0) {
+                    x = g_Ball.peachDaisyStarHitFielderLoc.x;
+                    z = g_Ball.peachDaisyStarHitFielderLoc.z;
+                }
+            }
+            setFielderTargetIdx(fielderIdx, x, z);
+        } else {
+            f->unk1DC = 5;
+        }
+        if (fielderIdx >= 6 && g_Ball.ballState == 0 && f->unk184 < -5) {
+            fn_3_43038(fielderIdx);
+        }
+    } else if (f->unk1DC == 1) {
+        f->unk28 = g_Ball.ballWillHitBallPos.x;
+        f->unk2C = g_Ball.ballWillHitBallPos.z;
+        if (f->unk18A != 0) {
+            fn_3_50DD8(fielderIdx, &x, &z, 1);
+            setFielderTargetIdx(fielderIdx, x, z);
+            f->unk20 = x;
+            f->unk24 = z;
+        } else {
+            setFielderTargetIdx(fielderIdx, f->unk28, f->unk2C);
+        }
+    } else if (f->unk1DC == 2) {
+        fn_3_42CDC(fielderIdx);
+    } else if (f->unk1DC == 3) {
+        fn_3_42BD0(fielderIdx);
+    } else if (f->unk1DC == 4) {
+        aimAtBallFuture(fielderIdx);
+    } else if (f->unk1DC == 5) {
+        aimAtBall(fielderIdx);
+    }
+end:
+    f->unk184--;
+    fn_3_526DC(fielderIdx);
+    if (f->unk50 != 0.0f) {
+        f->unk17E = f->unk68 / f->unk50;
+    }
+    if ((f->unk1DC == 1 || f->unk1DC == 2 || f->unk1DC == 3) && g_Ball.AtBat_ContactResult == 0) {
+        if (g_Ball.framesUntilBallHitsGround >
+            fielderFramesToReach(f, g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x,
+                                 g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z)) {
+            f->unk1DC = 0;
+            f->unk184 = g_Ball.framesUntilBallHitsGround - 2;
+        }
+    }
 }
 
 // .text:0x000447C4 size:0xBD0 mapped:0x80683858
