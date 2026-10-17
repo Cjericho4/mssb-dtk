@@ -13,6 +13,7 @@ void fn_80048E00(s32 arg0, s32 arg1);
 #include "challenge/challenge.h"
 #include "game/rep_1C0.h"
 extern CompressedDiskRead lbl_1_data_104F4;
+extern CompressedDiskRead lbl_1_data_10674;
 #include "UnknownHeaders.h"
 
 typedef struct Rep7730Values {

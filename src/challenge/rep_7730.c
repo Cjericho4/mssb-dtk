@@ -17,7 +17,9 @@ void fn_1_1DA54(void) {
 
 // .text:0x0001DCE4 size:0x64
 void fn_1_1DCE4(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    scene->unk14 = ARAMTransfer(&lbl_1_data_10674, 0, 0, 0);
+    lbl_803CC1B8->aFunctionPointer = fn_1_1DA54;
 }
 
 // .text:0x0001DD48 size:0x4C
