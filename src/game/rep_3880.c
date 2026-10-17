@@ -1511,8 +1511,68 @@ void fn_3_14F8D0(struct Struct_800339F0_Result* arg) {
 }
 
 // .text:0x0014F930 size:0x6E0 mapped:0x8078E9C4
-void fn_3_14F930(void) {
-    return;
+static inline void initStarGroup(struct Struct_800339F0_Result* obj, s32 group) {
+    s32 target = (s8)group + 1;
+    ListNode_14B9F0* node = obj->listHead;
+    u32 i = 0;
+    do {
+        if (node->field_0x4C == target) {
+            node->field_0x4A = lbl_3_data_26C94.field_0x1C;
+            node->color[3] = lbl_3_data_26C94.field_0x14;
+            node->scaleX = node->scaleY = (f32)lbl_3_data_26C94.field_0x8 / 100000.0f;
+            node->field_0x48 = ((f32)node->field_0x4A / 18.0f) * (f32)i;
+            if (node->field_0x48 == 0) initEffectGroupPosition(node);
+            node->color[0] = node->color[1] = node->color[2] = 255;
+            node->unk34 = 0.0f;
+            i++;
+        }
+        node = node->next;
+    } while (node != NULL);
+}
+static inline void initNewStarGroup(struct Struct_800339F0_Result* obj, s32 group) {
+    ListNode_14B9F0* node = obj->listHead;
+    u32 i = 0;
+    s32 target = (s8)group + 1;
+    do {
+        if (node->field_0x4C == target) {
+            node->field_0x4A = lbl_3_data_26C94.field_0x1C;
+            node->color[3] = lbl_3_data_26C94.field_0x14;
+            node->scaleX = node->scaleY = (f32)lbl_3_data_26C94.field_0x8 / 100000.0f;
+            node->field_0x48 = ((f32)node->field_0x4A / 18.0f) * (f32)i;
+            if (node->field_0x48 == 0) initEffectGroupPosition(node);
+            node->color[0] = node->color[1] = node->color[2] = 255;
+            node->unk34 = 0.0f;
+            i++;
+        }
+        node = node->next;
+    } while (node != NULL);
+}
+static inline void clearStarGroups(struct Struct_800339F0_Result* arg) {
+    ListNode_14B9F0* node;
+    u32 i = 0;
+    arg->field_0x10 = lbl_3_common_bss_32724.field6C;
+    node = arg->listHead;
+    do {
+        node->field_0x4F = 0;
+        node->field_0x4D = lbl_3_data_26C94.field_0x0;
+        node->field_0x4E = 0;
+        node->field_0x4C = i / 18 + 1;
+        i++;
+        node = node->next;
+    } while (node != NULL);
+}
+void fn_3_14F930(s32 group) {
+    struct Struct_800339F0_Result* obj;
+    obj = fn_800339F0(0, 0x1E);
+    if (obj != NULL) {
+        initStarGroup(obj, group);
+    } else {
+        obj = (struct Struct_800339F0_Result*)fn_80033A24(fn_3_14ED24, 0x80, 0, lbl_3_data_26C94.unk4, 1, 0x1E);
+        if (obj != NULL) {
+            clearStarGroups(obj);
+            initNewStarGroup(obj, group);
+        }
+    }
 }
 
 // .text:0x00150010 size:0x60 mapped:0x8078F0A4
@@ -1520,7 +1580,7 @@ void fn_3_150010(s32 arg) {
     if (g_d_GameSettings.GameModeSelected != GAME_TYPE_MINIGAMES) return;
     if (g_Minigame.GameMode_MiniGame != MINI_GAME_ID_STAR_DASH) return;
     if ((s8)arg > 4 || (s8)arg < 0) return;
-    fn_3_14F930();
+    fn_3_14F930(arg);
 }
 
 // .text:0x00150070 size:0x58 mapped:0x8078F104

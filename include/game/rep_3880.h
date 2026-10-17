@@ -226,7 +226,7 @@ typedef struct {
 
 typedef struct {
     u32 field_0x0;   // 0x0
-    u8 _pad0[0x4];
+    s32 unk4;
     s32 field_0x8;
     u8 _pad1[0x8];
     u32 field_0x14;
@@ -240,7 +240,7 @@ extern f32 lbl_3_rodata_3930;
 void fn_3_14F544(Struct_14F544_Arg* arg);
 void fn_3_14F5A4(struct Struct_800339F0_Result* obj, s32 group);
 void fn_3_14F8D0(struct Struct_800339F0_Result* arg);
-void fn_3_14F930(void);
+void fn_3_14F930(s32 group);
 void fn_3_150010(s32 arg);
 void fn_3_150070(void);
 void fn_3_1500C8(void);
