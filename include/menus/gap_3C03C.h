@@ -3,6 +3,14 @@
 
 #include "mssbTypes.h"
 
+typedef struct Gap3C03CObj {
+    u8 _pad0[5];
+    s8 unk5;
+    u8 _pad6[0x2B];
+    u8 unk31;
+    u8 _pad32[2];
+} Gap3C03CObj;
+
 void fn_2_3C03C(void);
 void fn_2_3C168(void);
 void fn_2_3C3EC(void);
@@ -64,7 +72,7 @@ void fn_2_44368(void);
 void fn_2_44414(void);
 void fn_2_44504(void);
 void fn_2_44E2C(void);
-void fn_2_44F14(void);
+s32 fn_2_44F14(s32 index);
 void fn_2_44F34(void);
 void fn_2_44F64(void);
 void fn_2_450E4(void);

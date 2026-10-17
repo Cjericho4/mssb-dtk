@@ -1,4 +1,5 @@
 #include "menus/gap_3C03C.h"
+#include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
 
 // .text:0x0003C03C size:0x12C
@@ -307,8 +308,9 @@ void fn_2_44E2C(void) {
 }
 
 // .text:0x00044F14 size:0x20
-void fn_2_44F14(void) {
-    return;
+s32 fn_2_44F14(s32 index) {
+    Gap3C03CObj* obj = &lbl_2_bss_1A8248->gap3C03CObjects[index];
+    return obj->unk5;
 }
 
 // .text:0x00044F34 size:0x30

@@ -4,6 +4,7 @@
 #include "mssbTypes.h"
 #include "Dolphin/mtx.h"
 #include "menus/rep_1028.h"
+#include "menus/gap_3C03C.h"
 
 typedef struct Rep0B08Obj {
     /* 0x00 */ Vec position;
@@ -32,7 +33,8 @@ typedef struct Rep0B08Obj {
 } Rep0B08Obj;
 
 typedef struct MenusSceneState {
-    u8 _pad0[0x1610];
+    Gap3C03CObj gap3C03CObjects[1]; /* extent unknown */
+    u8 _pad34[0x15DC];
     Rep0B08Obj rep0B08Objects[14];
     Rep1028Obj rep1028Objects[1]; /* 0x21E0; extent unknown */
     u8 _pad229C[0x2180];
