@@ -29,8 +29,8 @@ s16 fn_2_4C3C4(s32 index) {
 }
 
 // .text:0x0004C3D8 size:0x14
-void fn_2_4C3D8(void) {
-    return;
+s16 fn_2_4C3D8(s32 index) {
+    return lbl_2_data_3EC8[index];
 }
 
 // .text:0x0004C3EC size:0x2BC
