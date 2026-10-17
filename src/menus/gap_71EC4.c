@@ -153,8 +153,12 @@ s32 fn_2_73B54(s32 value) {
 }
 
 // .text:0x00073B94 size:0x5C
-void fn_2_73B94(void) {
-    return;
+s32 fn_2_73B94(s32 value) {
+    extern s32 lbl_2_bss_A840;
+    if (lbl_2_bss_A840 == 0 && value == 6) return 0x2D;
+    if (lbl_2_bss_A840 == 6 && value == 0) return 0xE;
+    if (lbl_2_bss_A840 <= value) return 0x1D;
+    if (lbl_2_bss_A840 > value) return 0x2C;
 }
 
 // .text:0x00073BF0 size:0xCC
@@ -216,8 +220,46 @@ void fn_2_74D8C(void) {
 }
 
 // .text:0x00074DB8 size:0x5C
-void fn_2_74DB8(void) {
-    return;
+s32 fn_2_74DB8(s32 value) {
+    switch (value) {
+    case 13:
+    case 16:
+    case 20:
+    case 22:
+    case 25:
+    case 34:
+    case 42:
+    case 50:
+    case 52:
+        return 1;
+    case 21:
+    case 24:
+    case 29:
+    case 33:
+    case 44:
+    case 51:
+    case 53:
+        return 2;
+    case 23:
+    case 30:
+    case 36:
+    case 45:
+        return 3;
+    case 12:
+    case 26:
+    case 27:
+    case 31:
+    case 35:
+    case 43:
+    case 46:
+    case 49:
+        return 4;
+    case 32:
+        return 5;
+    case 47:
+        return 6;
+    default: return 0;
+    }
 }
 
 // .text:0x00074E14 size:0x12C
