@@ -39,7 +39,7 @@ void fn_3_2C698(void);
 BOOL fn_3_2CBE0(s32 idx);
 void fn_3_2CEF4(void);
 void fn_3_2D080(void);
-void fn_3_2D308(void);
+void fn_3_2D308(s32 idx);
 void fn_3_2D47C(void);
 void fn_3_2D768(void);
 void fn_3_2D92C(void);

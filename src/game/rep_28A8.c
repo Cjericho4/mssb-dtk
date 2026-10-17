@@ -56,7 +56,7 @@ void fn_3_DC240(void) {
         }
         g_Minigame._19C6 = g_Minigame.minigamePlayerSelectedOrder;
         if ((s16) g_Ball.fielderWBallIndex >= 0) {
-            g_Minigame._19C6 = g_Fielders[g_Ball.fielderWBallIndex]._pad208[5];
+            g_Minigame._19C6 = g_Fielders[g_Ball.fielderWBallIndex].unk20D;
         }
     } else {
         if (g_Minigame.toyFieldBallStateResult2 == 1) {

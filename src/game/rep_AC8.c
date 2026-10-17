@@ -584,8 +584,23 @@ void fn_3_2D080(void) {
 }
 
 // .text:0x0002D308 size:0x174 mapped:0x8066C39C
-void fn_3_2D308(void) {
-    return;
+void fn_3_2D308(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+    f32 dx;
+    f32 dz;
+    f32 dist;
+
+    f->unk19E = -1;
+    dz = f->prevPos[2] - f->pos[2];
+    dx = f->prevPos[0] - f->pos[0];
+    dist = dolsqrtf2(dx * dx + dz * dz);
+    if (dist < 0.5f) {
+        f->unk68 = dist;
+        f->unk209 = 0;
+    } else {
+        f->unk19E = fn_3_9FB8C(dx, dz);
+        f->unk209 = 0;
+    }
 }
 
 // .text:0x0002D47C size:0x2EC mapped:0x8066C510
