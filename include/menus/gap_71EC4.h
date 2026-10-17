@@ -30,7 +30,9 @@ typedef struct MenusSceneScript MenusSceneScript;
 struct DrawingSceneStruct;
 void fn_80034E20(struct DrawingSceneStruct* scene, MenusSceneScript* script);
 typedef struct MenusSceneFlags {
-    u8 _pad0[0x37];
+    u8 _pad0[5];
+    u8 unk5;
+    u8 _pad6[0x31];
     u8 unk37;
     u8 unk38;
     u8 _pad39;

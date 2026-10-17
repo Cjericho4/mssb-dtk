@@ -15,7 +15,13 @@ typedef struct Rep0568State {
     s32 unkC;
     u8 _pad10[4];
     u8 active[8];
-    s8 counters[9];
+    union {
+        s8 counters[9];
+        struct {
+            u8 _pad1C[4];
+            u8 unk20;
+        };
+    };
     u8 _pad25[8];
     u8 count;
     u8 _pad2E[0x12];
@@ -24,6 +30,7 @@ typedef struct Rep0568State {
         struct {
             u8 _pad40[6];
             u8 values[4];
+            u8 unk4A;
         };
     };
     u8 _pad4D[7];

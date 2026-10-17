@@ -2,6 +2,9 @@
 #include "menus/gap_4B1AC.h"
 #include "menus/rep_0568.h"
 #include "string.h"
+#include "menus/gap_71EC4.h"
+#include "UnknownHeaders.h"
+extern u16 lbl_2_bss_AE0;
 
 // .text:0x00012238 size:0x194
 void fn_2_12238(void) {
@@ -54,7 +57,20 @@ void fn_2_12B60(void) {
 
 // .text:0x00012C34 size:0xA4
 void fn_2_12C34(void) {
-    return;
+    u8 count;
+    s32 i, value;
+    if (lbl_2_bss_100B8.unk4A) return;
+    if (lbl_2_bss_100B8.unk20 == 1 || !lbl_803C5EA4.unk5) {
+        if (lbl_2_bss_AE0 == 60000) lbl_2_bss_AE0 = 0;
+        lbl_2_bss_AE0++;
+    }
+    count = 12;
+    value = 4;
+    if (g_d_GameSettings.GameModeSelected == 5) count = 6;
+    for (i = 0; i < count; i++) {
+        value++;
+        if (value == 21) value = 5;
+    }
 }
 
 // .text:0x00012CD8 size:0x2B0
