@@ -12,7 +12,10 @@ void fn_1_15CC(void) {
 
 // .text:0x00001634 size:0x6C
 void fn_1_1634(void) {
-    return;
+    if (lbl_803C6CF8.allowLoad == 1) {
+        lbl_803CC1B8->unk14 = ARAMTransfer(&lbl_1_data_0[3], 0, 0, 0);
+        lbl_803CC1B8->aFunctionPointer = fn_1_15CC;
+    }
 }
 
 // .text:0x000016A0 size:0x2A8

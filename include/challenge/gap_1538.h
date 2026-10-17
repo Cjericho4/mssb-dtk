@@ -11,6 +11,9 @@ extern u8 lbl_803CBBC0;
 void fn_800A7D4C(s32 arg0, Gap1538Entry* entry);
 #include "UnknownHeaders.h"
 #include "challenge/rep_0010.h"
+#include "game/rep_1C0.h"
+
+extern CompressedDiskRead lbl_1_data_0[];
 
 void fn_1_1538(void);
 void fn_1_15CC(void);
