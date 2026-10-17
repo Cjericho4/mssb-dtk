@@ -1113,6 +1113,25 @@ static inline void setFielderReadyAction(s32 idx, s32 action) {
     f->unk1FF = 0;
 }
 
+static inline void setFielderTargetIdx(s32 fielderIdx, f32 x, f32 z) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    f32 dx;
+    f32 dz;
+
+    f->prevPos[0] = x;
+    f->prevPos[2] = z;
+    dx = x - f->pos[0];
+    dz = z - f->pos[2];
+    if (dx == 0.0f && dz == 0.0f) {
+        f->unk50 = 0.0f;
+        f->unk68 = 0.0f;
+    } else {
+        f->unk64 = atan2(dz, dx);
+        f->unk68 = dolsqrtf2(dx * dx + dz * dz);
+    }
+    f->unk1D9 = 1;
+}
+
 static inline void setFielderTarget(Fielder* f, f32 x, f32 z) {
     f32 dx;
     f32 dz;
@@ -1401,8 +1420,8 @@ void fn_3_4207C(s32 idx) {
 }
 
 // .text:0x00042850 size:0x1B0 mapped:0x806818E4
-void fn_3_42850(void) {
-    return;
+void fn_3_42850(s32 fielderIdx) {
+    setFielderTargetIdx(fielderIdx, g_Ball.AtBat_Contact_BallPos.x, g_Ball.AtBat_Contact_BallPos.z);
 }
 
 // .text:0x00042A00 size:0x1D0 mapped:0x80681A94
@@ -1520,7 +1539,7 @@ void fn_3_45860(s32 idx) {
 }
 
 // .text:0x0004597C size:0x20C mapped:0x80684A10
-void fn_3_4597C(void) {
+void fn_3_4597C(s32 fielderIdx) {
     return;
 }
 
