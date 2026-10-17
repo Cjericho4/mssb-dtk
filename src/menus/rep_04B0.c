@@ -1,4 +1,6 @@
 #include "menus/rep_04B0.h"
+#include "menus/rep_0438.h"
+#include "menus/gap_1254.h"
 #include "menus/gap_16870.h"
 
 // .text:0x00014574 size:0x21C
@@ -66,7 +68,12 @@ void fn_2_15E80(void) {
 
 // .text:0x0001641C size:0x44
 void fn_2_1641C(void) {
-    return;
+    fn_2_1A88();
+    lbl_8034E9A0.unk46FC = 0;
+    lbl_8034E9A0.unk46FD = -1;
+    lbl_8034E9A0.unk46FE = -1;
+    lbl_8034E9A0.unk46FF = -1;
+    lbl_8034E9A0.unk4729 = 0;
 }
 
 // .text:0x00016460 size:0x204
