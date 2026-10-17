@@ -68,7 +68,8 @@ void fn_2_478F4(void) {
 
 // .text:0x00047AFC size:0x28
 void fn_2_47AFC(void) {
-    return;
+    s32 i;
+    for (i = 0; i < 13; i++) {}
 }
 
 // .text:0x00047B24 size:0x1D8
