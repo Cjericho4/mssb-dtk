@@ -19,7 +19,8 @@ void fn_2_12988(void) {
 
 // .text:0x000129AC size:0x24
 void fn_2_129AC(void) {
-    return;
+    lbl_8034E9A0.timeHigh = lbl_803C7898.high;
+    lbl_8034E9A0.timeLow = lbl_803C7898.low;
 }
 
 // .text:0x000129D0 size:0xA0

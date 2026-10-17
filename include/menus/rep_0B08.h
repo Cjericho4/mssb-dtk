@@ -12,7 +12,9 @@ typedef struct Rep0B08Obj {
     s32 index;
     u8 _pad84[0x10];
     /* 0x94 */ s16 state;
-    /* 0x96 */ u8 _pad96[0xC];
+    /* 0x96 */ u8 _pad96[0x6];
+    s16 unk9C;
+    u8 _pad9E[4];
     /* 0xA2 */ s16 countdown;
     u8 _padA4[0x10];
     s16 unkB4;
@@ -42,6 +44,8 @@ typedef struct MenusSceneState {
     u8 unk441C;
     u8 _pad441D[5];
     u8 unk4422;
+    u8 _pad4423[0xC];
+    u8 unk442F;
 } MenusSceneState;
 
 extern MenusSceneState* lbl_2_bss_1A8248;
