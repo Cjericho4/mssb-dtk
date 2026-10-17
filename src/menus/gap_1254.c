@@ -11,8 +11,9 @@ void fn_2_1258(void) {
 }
 
 // .text:0x000012A0 size:0x2C
-void fn_2_12A0(void) {
-    return;
+void fn_2_12A0(s16* value, s16 amount) {
+    if (*value < 0x7FFF - amount) *value += amount;
+    else *value = 0x7FFF;
 }
 
 // .text:0x000012CC size:0x2C

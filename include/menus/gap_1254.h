@@ -12,7 +12,7 @@ extern Menus1254State lbl_2_bss_F468;
 
 void fn_2_1254(void);
 void fn_2_1258(void);
-void fn_2_12A0(void);
+void fn_2_12A0(s16* value, s16 amount);
 void fn_2_12CC(void);
 void fn_2_12F8(void);
 void fn_2_1328(void);
