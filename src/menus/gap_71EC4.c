@@ -1,10 +1,12 @@
 #include "menus/gap_71EC4.h"
+
+extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "UnknownHeaders.h"
 #include "menus/gap_1254.h"
 
 // .text:0x00071EC4 size:0x38
-void fn_2_71EC4(void) {
-    return;
+void fn_2_71EC4(Rep0B08Obj* obj) {
+    lbl_2_data_2A1E8[obj->state](obj);
 }
 
 // .text:0x00071EFC size:0x24
