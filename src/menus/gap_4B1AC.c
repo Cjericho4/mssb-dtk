@@ -1,4 +1,5 @@
 #include "menus/gap_4B1AC.h"
+#include "menus/rep_0438.h"
 #include "menus/rep_10C0.h"
 #include "UnknownHeaders.h"
 #include "game/rep_1C0.h"
@@ -384,8 +385,9 @@ void fn_2_52260(void) {
 }
 
 // .text:0x00052648 size:0x44
-void fn_2_52648(void) {
-    return;
+void fn_2_52648(s32 priority) {
+    fn_800B0A5C_insertQueue(fn_2_52690, priority);
+    lbl_8034E9A0.unk472B = g_d_GameSettings._06;
 }
 
 // .text:0x0005268C size:0x4
