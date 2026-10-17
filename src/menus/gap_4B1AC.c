@@ -18,6 +18,9 @@ extern s32 fn_80035838(CompressedDiskRead* list, s32 count);
 #include "menus/gap_8782C.h"
 
 extern void fn_80035B50(s32 arg0);
+#include "menus/gap_71EC4.h"
+#include "menus/gap_D08.h"
+extern void fn_80053FE8(void);
 extern void fn_8003BF54(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void fn_800AD054(u32 high, u32 low);
 extern s16 lbl_2_data_3ED4[];
@@ -451,7 +454,20 @@ void fn_2_520A4(void) {
 
 // .text:0x00052198 size:0xC8
 void fn_2_52198(void) {
-    return;
+    s32 mode;
+    if (lbl_803CBBCC->previousSelection == 5 || lbl_803CBBCC->previousSelection == 16) {
+        fn_800B0A5C_insertQueue(fn_80053FE8, 0);
+        fn_800B0A5C_insertQueue(fn_2_82DE8, 0x3000);
+    }
+    if (lbl_8034E9A0.unk4756 == 0) mode = 11;
+    else {
+        lbl_8034E978.unk3 = lbl_8034E9A0.unk4711;
+        mode = 16;
+    }
+    lbl_8034E978.state = mode;
+    lbl_8034E978.previous = lbl_8034E978.current;
+    lbl_8034E978.current = lbl_800FEF70.entries[mode].next;
+    fn_800B0A5C_insertQueue(fn_2_8ABFC, 0x3000);
 }
 
 // .text:0x00052260 size:0x3E8

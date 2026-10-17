@@ -52,7 +52,9 @@ extern MenusQueueState lbl_803C50E8;
 
 typedef struct MenusSceneTransition {
     u8 state;
-    u8 _pad1[7];
+    u8 _pad1[2];
+    u8 unk3;
+    u8 _pad4[4];
     u8 current;
     u8 previous;
     u8 _padA[0x1C];
@@ -60,13 +62,24 @@ typedef struct MenusSceneTransition {
     u8 _pad27;
 } MenusSceneTransition;
 
-typedef struct MenusTransitionConfig {
-    u8 _pad0[0x58];
+typedef struct MenusTransitionEntry {
+    u8 _pad0[8];
     u16 next;
-    u8 _pad5A[0x6E];
-    u16 nextC8;
-    u8 _padCA[0x4EE];
-    u16 next5B8;
+    u8 _padA[6];
+} MenusTransitionEntry;
+
+typedef struct MenusTransitionConfig {
+    union {
+        struct {
+            u8 _pad0[0x58];
+            u16 next;
+            u8 _pad5A[0x6E];
+            u16 nextC8;
+            u8 _padCA[0x4EE];
+            u16 next5B8;
+        };
+        MenusTransitionEntry entries[92];
+    };
 } MenusTransitionConfig;
 extern MenusSceneTransition lbl_8034E978;
 extern MenusTransitionConfig lbl_800FEF70;
