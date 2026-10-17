@@ -1351,16 +1351,58 @@ void fn_3_14DF6C(struct Struct_800339F0_Result* obj, Vec* pos) {
 }
 
 // .text:0x0014E234 size:0x58C mapped:0x8078D2C8
-void fn_3_14E234(void) {
-    return;
+static inline void initRisingEffects(struct Struct_800339F0_Result* obj, Vec* pos) {
+    ListNode_14B9F0* node = obj->listHead;
+    obj->field_0x10 = lbl_3_common_bss_32724.field6C;
+    do {
+        f32 speed;
+        f32 half;
+        f32 quarter;
+        node->field_0x4D = lbl_3_data_26CD0.unk0;
+        node->field_0x4E = 0;
+        node->offset.x = pos->x + (f32)(rand() % 1000 - 500) / 1000.0f;
+        node->offset.y = -(0.75f + pos->y);
+        node->offset.z = pos->z + (f32)(rand() % 1000 - 500) / 1000.0f;
+        node->velocity.x = node->velocity.z = 0.0f;
+        node->velocity.y = (f32)lbl_3_data_26CD0.unk24 / 100000.0f;
+        speed = node->velocity.y;
+        half = 0.5f;
+        quarter = 0.25f;
+        node->velocity.y += ((f32)(rand() % (s32)(1000.0f * (speed * half))) - 1000.0f * (speed * quarter)) / 1000.0f;
+        node->color[0] = node->color[1] = node->color[2] = 255;
+        node->color[3] = lbl_3_data_26CD0.unk18;
+        node->pos.x = (f32)(rand() % 1000 + 500) / 1000.0f;
+        node->scaleX = node->scaleY = ((f32)lbl_3_data_26CD0.unkC / 100000.0f) * node->pos.x;
+        node->field_0x4A = lbl_3_data_26CD0.unk8;
+        node->field_0x48 = 0;
+        node = node->next;
+    } while (node != NULL);
+}
+void fn_3_14E234(Vec* pos) {
+    struct Struct_800339F0_Result* existing;
+    struct Struct_800339F0_Result* obj;
+    ListNode_14B9F0* node;
+    u8 buf[0x60];
+    existing = fn_800339F0(0, 0x1F);
+    if (existing != NULL) {
+        obj = fn_800337CC(buf, lbl_3_data_26CD0.unk4, 1);
+        if (obj == NULL) return;
+        initRisingEffects(obj, pos);
+        for (node = existing->listHead; node->next != NULL; node = node->next) {}
+        node->next = obj->listHead;
+        existing->count += obj->count;
+    } else {
+        obj = (struct Struct_800339F0_Result*)fn_80033A24((void (*)(void))fn_3_14DD04, 0x80, 0, lbl_3_data_26CD0.unk4, 1, 0x1F);
+        if (obj != NULL) initRisingEffects(obj, pos);
+    }
 }
 
 // .text:0x0014E7C0 size:0x50 mapped:0x8078D854
-void fn_3_14E7C0(void* arg0) {
+void fn_3_14E7C0(Vec* arg0) {
     if (g_d_GameSettings.GameModeSelected == GAME_TYPE_MINIGAMES &&
         g_Minigame.GameMode_MiniGame == 6 &&
         arg0 != NULL) {
-        fn_3_14E234();
+        fn_3_14E234(arg0);
     }
 }
 
