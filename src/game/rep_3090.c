@@ -322,7 +322,27 @@ void fn_3_1045A8(void) {
 
 // .text:0x00104740 size:0x1A0 mapped:0x807437D4
 void fn_3_104740(void) {
-    return;
+    if ((u8) lbl_3_common_bss_DE94->_pad4[0x87F] == 2) {
+        lbl_3_common_bss_DE94->cameraBoundsNear.x = (f32) (0.00001f + g_pCamera->unk284C);
+        lbl_3_common_bss_DE94->cameraBoundsNear.y = (f32) (0.00001f + g_pCamera->unk2850);
+        lbl_3_common_bss_DE94->cameraBoundsNear.z = (f32) (0.00001f + g_pCamera->unk2854);
+        lbl_3_common_bss_DE94->cameraBoundsFar.x = (f32) (0.00002f + g_pCamera->unk284C);
+        lbl_3_common_bss_DE94->cameraBoundsFar.y = (f32) (0.00002f + g_pCamera->unk2850);
+        lbl_3_common_bss_DE94->cameraBoundsFar.z = (f32) (0.00002f + g_pCamera->unk2854);
+    } else {
+        lbl_3_common_bss_DE94->cameraBoundsNear.x = (f32) (0.00001f + g_pCamera->unk2870);
+        lbl_3_common_bss_DE94->cameraBoundsNear.y = (f32) (0.00001f + g_pCamera->unk2874);
+        lbl_3_common_bss_DE94->cameraBoundsNear.z = (f32) 0.0f;
+        lbl_3_common_bss_DE94->cameraBoundsFar.x = (f32) (0.00001f + g_pCamera->unk2870);
+        lbl_3_common_bss_DE94->cameraBoundsFar.y = (f32) (0.00001f + g_pCamera->unk2874);
+        lbl_3_common_bss_DE94->cameraBoundsFar.z = (f32) 0.0f;
+    }
+    lbl_3_common_bss_DE94->cameraPosition.x = (f32) g_pCamera->unk2840;
+    lbl_3_common_bss_DE94->cameraPosition.y = (f32) g_pCamera->unk2844;
+    lbl_3_common_bss_DE94->cameraPosition.z = (f32) g_pCamera->unk2848;
+    lbl_3_common_bss_DE94->cameraPositionOffset.x = (f32) (0.00001f + g_pCamera->unk2840);
+    lbl_3_common_bss_DE94->cameraPositionOffset.y = (f32) (0.00001f + g_pCamera->unk2844);
+    lbl_3_common_bss_DE94->cameraPositionOffset.z = (f32) (0.00001f + g_pCamera->unk2848);
 }
 
 // .text:0x001048E0 size:0x15C mapped:0x80743974

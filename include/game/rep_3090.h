@@ -29,7 +29,12 @@ typedef struct Struct_DE94_Inner {
     /* 0x098 */ VecXYZ* field_0x98;
     /* 0x09C */ u8 _pad2e[0x04];
     /* 0x0A0 */ f32 fov;
-    /* 0x0A4 */ u8 _pad2d[0x74];
+    /* 0x0A4 */ u8 _pad2d[0x08];
+    /* 0x0AC */ VecXYZ cameraPosition;
+    /* 0x0B8 */ VecXYZ cameraPositionOffset;
+    /* 0x0C4 */ VecXYZ cameraBoundsNear;
+    /* 0x0D0 */ VecXYZ cameraBoundsFar;
+    /* 0x0DC */ u8 _pad2d_tail[0x118 - 0x0DC];
     /* 0x118 */ u32 field_0x118;   // 0x118
     /* 0x11C */ u32 field_0x11C;   // 0x11C (Replaced _pad3)
     /* 0x120 */ u8 _pad3[0x04];    // (Adjusted padding)
