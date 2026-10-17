@@ -76,8 +76,12 @@ void fn_2_374(void) {
 }
 
 // .text:0x000004C4 size:0x4C
-void fn_2_4C4(void) {
-    return;
+BOOL fn_2_4C4(MenusCommandQueue* queue, u8 command) {
+    u8 next = (queue->writeIndex + 1) % 32;
+    if (next == queue->readIndex) return FALSE;
+    queue->writeIndex = next;
+    queue->commands[queue->writeIndex] = command;
+    return TRUE;
 }
 
 // .text:0x00000510 size:0x44

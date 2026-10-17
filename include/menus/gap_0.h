@@ -31,7 +31,7 @@ void fn_2_2D8(void);
 void fn_2_2DC(void);
 void fn_2_328(void);
 void fn_2_374(void);
-void fn_2_4C4(void);
+BOOL fn_2_4C4(MenusCommandQueue* queue, u8 command);
 u8 fn_2_510(MenusCommandQueue* queue);
 void fn_2_554(void);
 void fn_2_664(void);
