@@ -660,8 +660,15 @@ void fn_3_2D768(void) {
 }
 
 // .text:0x0002D92C size:0x198 mapped:0x8066C9C0
-void fn_3_2D92C(void) {
-    return;
+void fn_3_2D92C(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+
+    if (f->unk1EC != 0) {
+        return;
+    }
+    fn_3_2D47C(idx);
+    updateFielderHeading(idx);
+    fn_3_3A584(idx);
 }
 
 // .text:0x0002DAC4 size:0x230 mapped:0x8066CB58
@@ -1090,7 +1097,22 @@ BOOL fn_3_327F4(void) {
 
 // .text:0x00032810 size:0x194 mapped:0x806718A4
 void fn_3_32810(void) {
-    return;
+    setFielderReadyAction(0, 0x15);
+    g_FieldingLogic.unkB0 = 0;
+    if (g_Ball.Hit_HorizontalAngle < 0x400) {
+        g_FieldingLogic.unkB2 = 3;
+    } else {
+        g_FieldingLogic.unkB2 = 5;
+    }
+    setFielderReadyAction(3, 0x16);
+    setFielderReadyAction(5, 0x16);
+    g_FieldingLogic.unk13A = 1;
+    setFielderReadyAction(7, 0x17);
+    g_FieldingLogic.unkB4 = 7;
+    g_FieldingLogic.unk139 = 1;
+    fn_3_4C9C8();
+    fn_3_47778();
+    fn_3_4A124();
 }
 
 // .text:0x000329A4 size:0x6E4 mapped:0x80671A38

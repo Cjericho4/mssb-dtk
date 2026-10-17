@@ -647,7 +647,7 @@ typedef struct FieldingLogic {
     /* 0x137 */ u8 unk137;
     /* 0x138 */ u8 _pad138;
     /* 0x139 */ u8 unk139;
-    /* 0x13A */ u8 _pad13A;
+    /* 0x13A */ u8 unk13A;
     /* 0x13B */ u8 unk_13B;           // Preserving your previous find
     
     /* 0x13C */ u8 unk13C;

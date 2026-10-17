@@ -42,7 +42,7 @@ void fn_3_2D080(void);
 void fn_3_2D308(s32 idx);
 void fn_3_2D47C(s32 idx);
 void fn_3_2D768(void);
-void fn_3_2D92C(void);
+void fn_3_2D92C(s32 idx);
 void fn_3_2DAC4(void);
 void fn_3_2DCF4(s32 idx);
 void fn_3_2DDB4(void);
