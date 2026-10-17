@@ -203,8 +203,8 @@ void fn_2_25A48(void) {
 }
 
 // .text:0x00025D6C size:0x2C
-void fn_2_25D6C(void) {
-    return;
+void fn_2_25D6C(DrawingSceneStruct* scene, Rep0788Item* item) {
+    lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
 }
 
 // .text:0x00025D98 size:0x118
