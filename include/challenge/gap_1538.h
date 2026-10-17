@@ -2,6 +2,8 @@
 #define __CHALLENGE_gap_1538_H_
 
 #include "mssbTypes.h"
+#include "UnknownHeaders.h"
+#include "challenge/rep_0010.h"
 
 void fn_1_1538(void);
 void fn_1_15CC(void);

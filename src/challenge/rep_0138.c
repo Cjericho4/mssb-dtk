@@ -82,7 +82,8 @@ void fn_1_77EC(void) {
 
 // .text:0x00007848 size:0x24
 void fn_1_7848(void) {
-    return;
+    fn_80048C28();
+    fn_80048C1C();
 }
 
 // .text:0x0000786C size:0x78

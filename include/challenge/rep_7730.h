@@ -2,6 +2,15 @@
 #define __CHALLENGE_rep_7730_H_
 
 #include "mssbTypes.h"
+#include "UnknownHeaders.h"
+
+typedef struct Rep7730Values {
+    /* 0x0 */ f32 value0;
+    /* 0x4 */ f32 value4;
+    /* 0x8 */ f32 value8;
+    /* 0xC */ f32 valueC;
+} Rep7730Values;
+extern Rep7730Values lbl_1_bss_6BE4;
 
 void fn_1_1D694(void);
 void fn_1_1D944(void);
@@ -9,14 +18,14 @@ void fn_1_1DA54(void);
 void fn_1_1DCE4(void);
 void fn_1_1DD48(void);
 void fn_1_1DD94(void);
-void fn_1_1DDE4(void);
-void fn_1_1DDF4(void);
-void fn_1_1DE04(void);
-void fn_1_1DE14(void);
-void fn_1_1DE20(void);
-void fn_1_1DE30(void);
-void fn_1_1DE40(void);
-void fn_1_1DE50(void);
+void fn_1_1DDE4(f32 value);
+void fn_1_1DDF4(f32 value);
+void fn_1_1DE04(f32 value);
+void fn_1_1DE14(f32 value);
+f32 fn_1_1DE20(void);
+f32 fn_1_1DE30(void);
+f32 fn_1_1DE40(void);
+f32 fn_1_1DE50(void);
 void fn_1_1DE5C(void);
 void fn_1_1DE60(void);
 void fn_1_1E28C(void);

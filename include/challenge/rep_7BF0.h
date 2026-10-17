@@ -2,6 +2,7 @@
 #define __CHALLENGE_rep_7BF0_H_
 
 #include "mssbTypes.h"
+#include "challenge/rep_7978.h"
 
 void fn_1_2858C(void);
 void fn_1_289C0(void);

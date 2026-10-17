@@ -2,8 +2,11 @@
 #define __CHALLENGE_gap_0_H_
 
 #include "mssbTypes.h"
+#include "C3/anim.h"
+#include "UnknownHeaders.h"
+#include "challenge/gap_1538.h"
 
-void fn_1_0(void);
+void fn_1_0(ANIMBank** animBank, char* name);
 void fn_1_20(void);
 void fn_1_E8(void);
 void fn_1_1B0(void);

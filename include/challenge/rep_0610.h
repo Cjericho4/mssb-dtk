@@ -2,6 +2,31 @@
 #define __CHALLENGE_rep_0610_H_
 
 #include "mssbTypes.h"
+struct TextureHeader;
+void SetDisplayStateTexture(struct TextureHeader* tex, s32 texMap, s32 tlutName);
+
+typedef struct Rep0610Linked {
+    /* 0x0 */ u8 _pad0[4];
+    /* 0x4 */ f32 value;
+} Rep0610Linked;
+
+typedef struct Rep0610Obj {
+    /* 0x00 */ u8 _pad0[0x54];
+    /* 0x54 */ f32 value;
+    /* 0x58 */ u8 _pad58[2];
+    /* 0x5A */ u8 active;
+} Rep0610Obj;
+
+typedef struct Rep0610Ring {
+    /* 0x0 */ u8 _pad0[6];
+    /* 0x6 */ u16 count;
+} Rep0610Ring;
+
+extern u8 lbl_1_bss_30B8;
+extern u8 lbl_1_bss_3214;
+extern u8 lbl_1_bss_3215;
+extern s32 lbl_1_bss_3098;
+extern Rep0610Linked* lbl_1_bss_67B8;
 
 void fn_1_C5AC(void);
 void fn_1_C9E0(void);
@@ -14,10 +39,10 @@ void fn_1_D2F0(void);
 void fn_1_D300(void);
 void fn_1_D4BC(void);
 void fn_1_D590(void);
-void fn_1_D638(void);
+u8 fn_1_D638(void);
 void fn_1_D650(void);
-void fn_1_D660(void);
-void fn_1_D67C(void);
+BOOL fn_1_D660(void);
+void fn_1_D67C(u8 value);
 void fn_1_D688(void);
 void fn_1_D6B4(void);
 void fn_1_D6E4(void);
@@ -29,7 +54,7 @@ void fn_1_DE1C(void);
 void fn_1_DF14(void);
 void fn_1_E098(void);
 void fn_1_E8D4(void);
-void fn_1_E9F8(void);
+void fn_1_E9F8(Rep0610Ring* ring, s32 index, s32 steps);
 void fn_1_EA20(void);
 void fn_1_ECF8(void);
 void fn_1_F040(void);
@@ -45,17 +70,17 @@ void fn_1_10044(void);
 void fn_1_10458(void);
 void fn_1_10560(void);
 void fn_1_10670(void);
-void fn_1_106A4(void);
+s32 fn_1_106A4(void);
 void fn_1_106B4(void);
 void fn_1_106C4(void);
 void fn_1_1073C(void);
 void fn_1_107B8(void);
-void fn_1_10AA4(void);
+void fn_1_10AA4(Rep0610Obj* obj, f32 value);
 void fn_1_10ACC(void);
 void fn_1_10CEC(void);
 void fn_1_10E2C(void);
 void fn_1_1125C(void);
-void fn_1_116EC(void);
+void fn_1_116EC(struct TextureHeader* tex);
 void fn_1_11714(void);
 void fn_1_11C98(void);
 void fn_1_11D00(void);
@@ -80,7 +105,7 @@ void fn_1_151F8(void);
 void fn_1_1540C(void);
 void fn_1_15760(void);
 void fn_1_15CE0(void);
-void fn_1_160D8(void);
+s32 fn_1_160D8(s8 a, s8 b);
 void fn_1_160F8(void);
 void fn_1_161D0(void);
 void fn_1_1620C(void);

@@ -21,8 +21,12 @@ void fn_1_A184(void) {
 }
 
 // .text:0x0000A1F4 size:0x1C
-void fn_1_A1F4(void) {
-    return;
+void fn_1_A1F4(Gap9EA0Obj* obj, s32 arg1, s32 arg2, s32 arg3) {
+    obj->unk0 = arg1;
+    obj->unk10 = arg2;
+    obj->unkC = arg3;
+    obj->unk8 = 0;
+    obj->unk4 = 0;
 }
 
 // .text:0x0000A210 size:0x40

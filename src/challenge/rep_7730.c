@@ -31,43 +31,43 @@ void fn_1_1DD94(void) {
 }
 
 // .text:0x0001DDE4 size:0x10
-void fn_1_1DDE4(void) {
-    return;
+void fn_1_1DDE4(f32 value) {
+    lbl_1_bss_6BE4.valueC = value;
 }
 
 // .text:0x0001DDF4 size:0x10
-void fn_1_1DDF4(void) {
-    return;
+void fn_1_1DDF4(f32 value) {
+    lbl_1_bss_6BE4.value8 = value;
 }
 
 // .text:0x0001DE04 size:0x10
-void fn_1_1DE04(void) {
-    return;
+void fn_1_1DE04(f32 value) {
+    lbl_1_bss_6BE4.value4 = value;
 }
 
 // .text:0x0001DE14 size:0xC
-void fn_1_1DE14(void) {
-    return;
+void fn_1_1DE14(f32 value) {
+    lbl_1_bss_6BE4.value0 = value;
 }
 
 // .text:0x0001DE20 size:0x10
-void fn_1_1DE20(void) {
-    return;
+f32 fn_1_1DE20(void) {
+    return lbl_1_bss_6BE4.valueC;
 }
 
 // .text:0x0001DE30 size:0x10
-void fn_1_1DE30(void) {
-    return;
+f32 fn_1_1DE30(void) {
+    return lbl_1_bss_6BE4.value8;
 }
 
 // .text:0x0001DE40 size:0x10
-void fn_1_1DE40(void) {
-    return;
+f32 fn_1_1DE40(void) {
+    return lbl_1_bss_6BE4.value4;
 }
 
 // .text:0x0001DE50 size:0xC
-void fn_1_1DE50(void) {
-    return;
+f32 fn_1_1DE50(void) {
+    return lbl_1_bss_6BE4.value0;
 }
 
 // .text:0x0001DE5C size:0x4

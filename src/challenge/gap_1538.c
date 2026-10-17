@@ -22,7 +22,9 @@ void fn_1_16A0(void) {
 
 // .text:0x00001948 size:0x24
 void fn_1_1948(void) {
-    return;
+    if (lbl_803CC1B8->loadingState != 0) {
+        lbl_803CC1B8->aFunctionPointer = fn_1_11D0;
+    }
 }
 
 // .text:0x0000196C size:0x40

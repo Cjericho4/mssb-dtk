@@ -1,8 +1,8 @@
 #include "challenge/gap_0.h"
 
 // .text:0x00000000 size:0x20
-void fn_1_0(void) {
-    return;
+void fn_1_0(ANIMBank** animBank, char* name) {
+    ANIMGet(animBank, name);
 }
 
 // .text:0x00000020 size:0xC8
@@ -27,7 +27,9 @@ void fn_1_1E0(void) {
 
 // .text:0x00000568 size:0x24
 void fn_1_568(void) {
-    return;
+    if (lbl_803CC1B8->loadingState == 1) {
+        lbl_803CC1B8->aFunctionPointer = fn_1_16A0;
+    }
 }
 
 // .text:0x0000058C size:0x5C

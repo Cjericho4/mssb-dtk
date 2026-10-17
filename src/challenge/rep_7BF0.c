@@ -7,7 +7,7 @@ void fn_1_2858C(void) {
 
 // .text:0x000289C0 size:0x20
 void fn_1_289C0(void) {
-    return;
+    fn_1_273D8();
 }
 
 // .text:0x000289E0 size:0x100

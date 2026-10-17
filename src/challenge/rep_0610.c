@@ -37,7 +37,7 @@ void fn_1_D13C(void) {
 
 // .text:0x0000D2F0 size:0x10
 void fn_1_D2F0(void) {
-    return;
+    lbl_1_bss_30B8 = 1;
 }
 
 // .text:0x0000D300 size:0x1BC
@@ -56,23 +56,25 @@ void fn_1_D590(void) {
 }
 
 // .text:0x0000D638 size:0x18
-void fn_1_D638(void) {
-    return;
+u8 fn_1_D638(void) {
+    u8 value = lbl_1_bss_3214;
+    lbl_1_bss_3214 = 0;
+    return value;
 }
 
 // .text:0x0000D650 size:0x10
 void fn_1_D650(void) {
-    return;
+    lbl_1_bss_3214 = 1;
 }
 
 // .text:0x0000D660 size:0x1C
-void fn_1_D660(void) {
-    return;
+BOOL fn_1_D660(void) {
+    return lbl_1_bss_3215 != 0;
 }
 
 // .text:0x0000D67C size:0xC
-void fn_1_D67C(void) {
-    return;
+void fn_1_D67C(u8 value) {
+    lbl_1_bss_3215 = value;
 }
 
 // .text:0x0000D688 size:0x2C
@@ -131,8 +133,14 @@ void fn_1_E8D4(void) {
 }
 
 // .text:0x0000E9F8 size:0x28
-void fn_1_E9F8(void) {
-    return;
+void fn_1_E9F8(Rep0610Ring* ring, s32 index, s32 steps) {
+    s32 i;
+    for (i = 0; i < steps; i++) {
+        index++;
+        if (index == ring->count) {
+            index = 0;
+        }
+    }
 }
 
 // .text:0x0000EA20 size:0x2D8
@@ -211,13 +219,13 @@ void fn_1_10670(void) {
 }
 
 // .text:0x000106A4 size:0x10
-void fn_1_106A4(void) {
-    return;
+s32 fn_1_106A4(void) {
+    return lbl_1_bss_3098;
 }
 
 // .text:0x000106B4 size:0x10
 void fn_1_106B4(void) {
-    return;
+    lbl_1_bss_3098 = 0;
 }
 
 // .text:0x000106C4 size:0x78
@@ -236,8 +244,12 @@ void fn_1_107B8(void) {
 }
 
 // .text:0x00010AA4 size:0x28
-void fn_1_10AA4(void) {
-    return;
+void fn_1_10AA4(Rep0610Obj* obj, f32 value) {
+    obj->value = value;
+    obj->active = 1;
+    if (lbl_1_bss_67B8 != NULL) {
+        lbl_1_bss_67B8->value = value;
+    }
 }
 
 // .text:0x00010ACC size:0x220
@@ -261,8 +273,8 @@ void fn_1_1125C(void) {
 }
 
 // .text:0x000116EC size:0x28
-void fn_1_116EC(void) {
-    return;
+void fn_1_116EC(struct TextureHeader* tex) {
+    SetDisplayStateTexture(tex, 0, 0);
 }
 
 // .text:0x00011714 size:0x584
@@ -386,8 +398,11 @@ void fn_1_15CE0(void) {
 }
 
 // .text:0x000160D8 size:0x20
-void fn_1_160D8(void) {
-    return;
+s32 fn_1_160D8(s8 a, s8 b) {
+    if (a == b) {
+        return 0xFF0F;
+    }
+    return 0xFFFF;
 }
 
 // .text:0x000160F8 size:0xD8
@@ -447,7 +462,7 @@ void fn_1_16978(void) {
 
 // .text:0x000176EC size:0x20
 void fn_1_176EC(void) {
-    return;
+    fn_1_1496C();
 }
 
 // .text:0x0001770C size:0x248

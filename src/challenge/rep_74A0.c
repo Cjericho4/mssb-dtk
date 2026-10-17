@@ -121,8 +121,8 @@ void fn_1_1CBE4(void) {
 }
 
 // .text:0x0001D0E8 size:0x24
-void fn_1_1D0E8(void) {
-    return;
+void fn_1_1D0E8(Rep74A0Obj* obj) {
+    fn_800B9AA8(obj->context);
 }
 
 // .text:0x0001D10C size:0x4
@@ -137,7 +137,7 @@ void fn_1_1D110(void) {
 
 // .text:0x0001D450 size:0x20
 void fn_1_1D450(void) {
-    return;
+    fn_1_1CBE4();
 }
 
 // .text:0x0001D470 size:0xA4

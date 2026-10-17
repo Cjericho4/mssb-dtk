@@ -2,6 +2,8 @@
 #define __CHALLENGE_rep_0138_H_
 
 #include "mssbTypes.h"
+void fn_80048C28(void);
+void fn_80048C1C(void);
 
 void fn_1_4E98(void);
 void fn_1_54E0(void);

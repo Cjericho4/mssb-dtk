@@ -12,7 +12,8 @@ void fn_1_8624(void) {
 
 // .text:0x000086BC size:0x28
 void fn_1_86BC(void) {
-    return;
+    lbl_803CC1B8->unk18 = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_1_8624;
 }
 
 // .text:0x000086E4 size:0x8C
