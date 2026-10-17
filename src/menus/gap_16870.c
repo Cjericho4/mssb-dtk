@@ -1,4 +1,5 @@
 #include "menus/gap_16870.h"
+#include "UnknownHeaders.h"
 
 // .text:0x00016870 size:0x1C4
 void fn_2_16870(void) {
@@ -16,8 +17,8 @@ void fn_2_16A48(s32 index, u8 value) {
 }
 
 // .text:0x00016A5C size:0x18
-void fn_2_16A5C(void) {
-    return;
+u8 fn_2_16A5C(s32 index) {
+    return g_hugeAnimStruct.fielderStructs[index].unk_25D;
 }
 
 // .text:0x00016A74 size:0x24
