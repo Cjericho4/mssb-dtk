@@ -5,6 +5,74 @@
 #include "game/rep_1188.h"
 #include "game/rep_1838.h"
 
+static inline void setFielderReadyAction(s32 idx, s32 action) {
+    Fielder* f = &g_Fielders[idx];
+    f->unk1D3 = action;
+    if (lbl_3_data_3C40.actions[action].unk0 >= 0) {
+        g_FieldingLogic.unk_F8[idx] = lbl_3_data_3C40.actions[action].unk0;
+    }
+    f->unk1D5 = 0;
+    f->unk1D6 = 0;
+    f->unk1A4 = 0;
+    f->unk1AC = 0;
+    f->unk1FF = 0;
+}
+
+static inline void setFielderTargetIdx(s32 fielderIdx, f32 x, f32 z) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    f32 dx;
+    f32 dz;
+
+    f->prevPos[0] = x;
+    f->prevPos[2] = z;
+    dx = x - f->pos[0];
+    dz = z - f->pos[2];
+    if (dx == 0.0f && dz == 0.0f) {
+        f->unk50 = 0.0f;
+        f->unk68 = 0.0f;
+    } else {
+        f->unk64 = atan2(dz, dx);
+        f->unk68 = dolsqrtf2(dx * dx + dz * dz);
+    }
+    f->unk1D9 = 1;
+}
+
+static inline void setFielderTarget(Fielder* f, f32 x, f32 z) {
+    f32 dx;
+    f32 dz;
+
+    f->prevPos[0] = x;
+    f->prevPos[2] = z;
+    dx = x - f->pos[0];
+    dz = z - f->pos[2];
+    if (dx == 0.0f && dz == 0.0f) {
+        f->unk50 = 0.0f;
+        f->unk68 = 0.0f;
+    } else {
+        f->unk64 = atan2(dz, dx);
+        f->unk68 = dolsqrtf2(dx * dx + dz * dz);
+    }
+    f->unk1D9 = 1;
+}
+
+static inline void aimFielderAt(Fielder* f, f32 x, f32 z) {
+    f32 dx;
+    f32 dz;
+
+    f->prevPos[0] = x;
+    f->prevPos[2] = z;
+    dx = x - f->pos[0];
+    dz = z - f->pos[2];
+    if (dx == 0.0f && dz == 0.0f) {
+        f->unk50 = 0.0f;
+        f->unk68 = 0.0f;
+        return;
+    }
+    f->unk64 = atan2(dz, dx);
+    f->unk68 = dolsqrtf2(dx * dx + dz * dz);
+    f->unk1D9 = 1;
+}
+
 // .text:0x000251E4 size:0x1C0 mapped:0x80664278
 void fn_3_251E4(void) {
     return;
@@ -523,8 +591,21 @@ void fn_3_308B8(s32 fielderIdx, f32 x, f32 z) {
 }
 
 // .text:0x00030A58 size:0x31C mapped:0x8066FAEC
+
 void fn_3_30A58(void) {
-    return;
+    Fielder* f;
+    s32 i;
+    f32 x;
+    f32 z;
+
+    for (i = 2, f = &g_Fielders[2]; i < 9; i++, f++) {
+        fn_3_58F58(i, &x, &z);
+        if (dolsqrtf2((f->pos[0] - x) * (f->pos[0] - x) + (f->pos[2] - z) * (f->pos[2] - z)) < 0.1f) {
+            x = f->pos[0];
+            z = f->pos[2];
+        }
+        aimFielderAt(f, x, z);
+    }
 }
 
 // .text:0x00030D74 size:0x63C mapped:0x8066FE08
@@ -1100,55 +1181,8 @@ void fn_3_3C220(s32 index) {
     }
 }
 
-static inline void setFielderReadyAction(s32 idx, s32 action) {
-    Fielder* f = &g_Fielders[idx];
-    f->unk1D3 = action;
-    if (lbl_3_data_3C40.actions[action].unk0 >= 0) {
-        g_FieldingLogic.unk_F8[idx] = lbl_3_data_3C40.actions[action].unk0;
-    }
-    f->unk1D5 = 0;
-    f->unk1D6 = 0;
-    f->unk1A4 = 0;
-    f->unk1AC = 0;
-    f->unk1FF = 0;
-}
 
-static inline void setFielderTargetIdx(s32 fielderIdx, f32 x, f32 z) {
-    Fielder* f = &g_Fielders[fielderIdx];
-    f32 dx;
-    f32 dz;
 
-    f->prevPos[0] = x;
-    f->prevPos[2] = z;
-    dx = x - f->pos[0];
-    dz = z - f->pos[2];
-    if (dx == 0.0f && dz == 0.0f) {
-        f->unk50 = 0.0f;
-        f->unk68 = 0.0f;
-    } else {
-        f->unk64 = atan2(dz, dx);
-        f->unk68 = dolsqrtf2(dx * dx + dz * dz);
-    }
-    f->unk1D9 = 1;
-}
-
-static inline void setFielderTarget(Fielder* f, f32 x, f32 z) {
-    f32 dx;
-    f32 dz;
-
-    f->prevPos[0] = x;
-    f->prevPos[2] = z;
-    dx = x - f->pos[0];
-    dz = z - f->pos[2];
-    if (dx == 0.0f && dz == 0.0f) {
-        f->unk50 = 0.0f;
-        f->unk68 = 0.0f;
-    } else {
-        f->unk64 = atan2(dz, dx);
-        f->unk68 = dolsqrtf2(dx * dx + dz * dz);
-    }
-    f->unk1D9 = 1;
-}
 
 // .text:0x0003C270 size:0x214 mapped:0x8067B304
 s32 fn_3_3C270(s32 idx) {
@@ -2223,7 +2257,7 @@ void fn_3_58E50(void) {
 }
 
 // .text:0x00058F58 size:0x254 mapped:0x80697FEC
-void fn_3_58F58(void) {
+void fn_3_58F58(s32 fielderIdx, f32* x, f32* z) {
     return;
 }
 
