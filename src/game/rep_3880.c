@@ -1528,8 +1528,88 @@ void fn_3_14EAF4(ListNode_14B9F0* node) {
 }
 
 // .text:0x0014ED24 size:0x6A8 mapped:0x8078DDB8
-void fn_3_14ED24(void) {
-    return;
+static inline void updateStarGroupPosition(ListNode_14B9F0* node) {
+    VecXYZ delta;
+    s32 r;
+    u8 type;
+
+    if (node->field_0x4C < 5) {
+        type = lbl_3_data_26CB8[(u32)rand() % 23];
+        delta.z = 0.0f;
+        delta.y = 0.0f;
+        delta.x = 0.0f;
+        if (fn_8001B728(node->field_0x4C - 1, type, &delta) == 0) {
+            memset(&delta, 0, sizeof(VecXYZ));
+            fn_8001B728(node->field_0x4C - 1, 4, &delta);
+        }
+    } else {
+        delta.x = g_Minigame._6E8;
+        delta.y = -g_Minigame._6EC;
+        delta.z = g_Minigame._6F0;
+    }
+    node->offset.x += delta.x;
+    node->offset.y += delta.y;
+    node->offset.z += delta.z;
+}
+static inline void restartStarGroupPosition(ListNode_14B9F0* node) {
+    Vec v = {0.0f, 0.0f, 0.0f};
+    if (node->field_0x4C == 5) {
+        v.x += (f32)(rand() % 10000 - 5000) / 10000.0f;
+        v.y += (f32)(rand() % 10000 - 5000) / 10000.0f;
+        node->offset.x = v.x;
+        node->offset.y = v.y - 0.5f;
+        node->offset.z = v.z;
+    } else {
+        node->offset.x = node->offset.y = node->offset.z = 0.0f;
+    }
+    updateStarGroupPosition(node);
+}
+static inline void advanceStarGroupFrame(ListNode_14B9F0* node) {
+    s32 alpha;
+    if ((s32)lbl_3_data_26C94.field_0x1C / node->field_0x4A < 2) {
+        s32 peak = lbl_3_data_26C94.unk18;
+        alpha = node->color[3];
+        alpha += peak / ((s32)lbl_3_data_26C94.field_0x1C / 2);
+        if (alpha > peak) alpha = peak;
+        node->color[3] = alpha;
+        node->scaleX += ((f32)(lbl_3_data_26C94.unkC - lbl_3_data_26C94.field_0x8) / 100000.0f) / (f32)((s32)lbl_3_data_26C94.field_0x1C / 2);
+        node->scaleY = node->scaleX;
+    } else {
+        alpha = node->color[3];
+        alpha -= lbl_3_data_26C94.unk18 / ((s32)lbl_3_data_26C94.field_0x1C / 2);
+        if (alpha < (s32)lbl_3_data_26C94.field_0x14) alpha = lbl_3_data_26C94.field_0x14;
+        node->color[3] = alpha;
+        node->scaleX += ((f32)(lbl_3_data_26C94.unk10 - lbl_3_data_26C94.unkC) / 100000.0f) / (f32)((s32)lbl_3_data_26C94.field_0x1C / 2);
+        node->scaleY = node->scaleX;
+    }
+}
+s32 fn_3_14ED24(Struct_14C79C_Arg* obj) {
+    ListNode_14B9F0* node;
+    fn_80033620(obj);
+    node = obj->node;
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+    do {
+        if (node->field_0x4A != 0) {
+            if (node->field_0x48 <= 0) {
+                GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_DSTALPHA, GX_LO_CLEAR);
+                fn_8003403C(node->scaleX, node->scaleY);
+                fn_80033CC8(node, obj->unk10);
+                advanceStarGroupFrame(node);
+                node->field_0x4A--;
+                if (node->field_0x4A == 0) {
+                    node->field_0x4A = lbl_3_data_26C94.field_0x1C;
+                    node->color[3] = lbl_3_data_26C94.field_0x14;
+                    node->scaleX = node->scaleY = (f32)lbl_3_data_26C94.field_0x8 / 100000.0f;
+                    restartStarGroupPosition(node);
+                }
+            } else {
+                node->field_0x48--;
+                if (node->field_0x48 == 0) restartStarGroupPosition(node);
+            }
+        }
+        node = node->next;
+    } while (node != NULL);
+    return 0;
 }
 
 // .text:0x0014F3CC size:0x178 mapped:0x8078E460
@@ -1689,7 +1769,7 @@ void fn_3_14F930(s32 group) {
     if (obj != NULL) {
         initStarGroup(obj, group);
     } else {
-        obj = (struct Struct_800339F0_Result*)fn_80033A24(fn_3_14ED24, 0x80, 0, lbl_3_data_26C94.unk4, 1, 0x1E);
+        obj = (struct Struct_800339F0_Result*)fn_80033A24((void (*)(void))fn_3_14ED24, 0x80, 0, lbl_3_data_26C94.unk4, 1, 0x1E);
         if (obj != NULL) {
             clearStarGroups(obj);
             initNewStarGroup(obj, group);

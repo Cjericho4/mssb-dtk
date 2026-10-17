@@ -212,7 +212,7 @@ void fn_3_14E920(s8 arg0);
 void fn_3_14E988(s8 arg0);
 void fn_3_14E9F0(ListNode_14B9F0* node);
 void fn_3_14EAF4(ListNode_14B9F0* node);
-void fn_3_14ED24(void);
+s32 fn_3_14ED24(Struct_14C79C_Arg* obj);
 void fn_3_14F3CC(ListNode_14B9F0* node);
 typedef struct {
     u8 _pad0[0x38];
@@ -228,9 +228,10 @@ typedef struct {
     u32 field_0x0;   // 0x0
     s32 unk4;
     s32 field_0x8;
-    u8 _pad1[0x8];
+    s32 unkC;
+    s32 unk10;
     u32 field_0x14;
-    u8 _pad2[0x4];
+    s32 unk18;
     u32 field_0x1C;
     u8 _pad3[0x4];
 } Struct_26C94;
