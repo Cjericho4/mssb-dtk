@@ -32,6 +32,8 @@ compile_commands.json
 
 # Miscellaneous
 /*.txt
+!/requirements-dev.txt
+*.iso
 *.exe
 report.json
 logs/**
