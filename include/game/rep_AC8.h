@@ -191,7 +191,7 @@ void fn_3_4EFC8(void);
 void fn_3_4F504(void);
 void fn_3_4FB34(void);
 void fn_3_50898(void);
-void fn_3_50C20(void);
+void fn_3_50C20(s32 fielderIdx, f32* x, f32* z);
 void fn_3_50DD8(s32 fielderIdx, f32* x, f32* z, s32 arg3);
 void fn_3_51220(void);
 s32 fn_3_5164C(s32 idx, VecXYZ* result);

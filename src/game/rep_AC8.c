@@ -1978,7 +1978,120 @@ void fn_3_433E0(void) {
 
 // .text:0x000447C4 size:0xBD0 mapped:0x80683858
 void fn_3_447C4(s32 idx) {
-    return;
+    Fielder* f = &g_Fielders[idx];
+    s32 frame;
+    s32 minigame;
+    f32 x;
+    f32 z;
+    f32 r;
+    f32 w;
+    f32 d;
+    f32 k;
+    f32 tx;
+    f32 tz;
+
+    frame = f->unk186 - g_Ball.framesSinceHit + 1;
+    minigame = 0;
+    if (frame < 0) {
+        frame *= -1;
+    }
+    if (frame >= 360) {
+        frame = 359;
+    }
+    x = g_Ball.physicsSubstruct.futureCoordsAndDist[frame].pos.x;
+    z = g_Ball.physicsSubstruct.futureCoordsAndDist[frame].pos.z;
+    if (g_Ball.warioWaluGarlicIsActive != 0) {
+        if (g_AiLogic._79[0] != 0) {
+            x = g_Ball.peachDaisyStarHitFielderLoc.x;
+            z = g_Ball.peachDaisyStarHitFielderLoc.z;
+        } else {
+            x = g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.x;
+            z = g_Ball.physicsSubstruct.ballLandingSpotOrHeldSpot.z;
+        }
+    } else if (g_Ball.autoFielderAvoidDropSpotForPeachesStarHit != 0) {
+        x = g_Ball.peachDaisyStarHitFielderLoc.x;
+        z = g_Ball.peachDaisyStarHitFielderLoc.z;
+    }
+    if (g_d_GameSettings.minigamesEnabled && idx >= 2) {
+        minigame = 1;
+    }
+    if (idx >= 6 || minigame != 0) {
+        r = dolsqrtf2(x * x + z * z);
+        if (g_Ball._1BC0 != 0 && g_Ball.someCollisionInd == 0) {
+            w = dolsqrtf2(g_Ball.ballWillHitBallPos.x * g_Ball.ballWillHitBallPos.x +
+                          g_Ball.ballWillHitBallPos.z * g_Ball.ballWillHitBallPos.z);
+            if (g_Ball.someCollisionVariable >= 2) {
+                tx = f->pos[0] - g_Ball.ballWillHitBallPos.x;
+                tz = f->pos[2] - g_Ball.ballWillHitBallPos.z;
+                d = dolsqrtf2(tx * tx + tz * tz);
+                k = 5.0f / d;
+                tx = tx * k + g_Ball.ballWillHitBallPos.x;
+                tz = tz * k + g_Ball.ballWillHitBallPos.z;
+                f->unk28 = tx;
+                f->unk2C = tz;
+                fn_3_50C20(idx, &tx, &tz);
+                f->unk1DC = 2;
+                goto end;
+            }
+            if (r > w) {
+                if (f->unk1DD != 1 || (f->unk1C5 != 0 && f->unk1C4 >= 3)) {
+                    tx = 5.0f * g_Ball._19E4 + g_Ball.ballWillHitBallPos.x;
+                    tz = 5.0f * g_Ball._19E8 + g_Ball.ballWillHitBallPos.z;
+                    f->unk28 = tx;
+                    f->unk2C = tz;
+                    fn_3_50C20(idx, &tx, &tz);
+                    f->unk1DC = 2;
+                } else {
+                    tx = g_Ball.ballWillHitBallPos.x;
+                    tz = g_Ball.ballWillHitBallPos.z;
+                    f->unk28 = tx;
+                    f->unk2C = tz;
+                    fn_3_50C20(idx, &tx, &tz);
+                    f->unk1DC = 1;
+                }
+                setFielderTarget(f, tx, tz);
+                goto end;
+            }
+        }
+        if (f->unk1DD == 3 || f->unk1DD == 4) {
+            if (fn_3_B7E44(r, g_Ball.ballAngleFromHome) != 0) {
+                tx = 5.0f * g_Ball._19E4 + g_Ball.ballWillHitBallPos.x;
+                tz = 5.0f * g_Ball._19E8 + g_Ball.ballWillHitBallPos.z;
+                f->unk28 = tx;
+                f->unk2C = tz;
+                fn_3_50C20(idx, &tx, &tz);
+                f->unk1DC = 2;
+            } else {
+                tx = g_Ball.physicsSubstruct.futureCoordsAndDist[frame + 30].pos.x;
+                tz = g_Ball.physicsSubstruct.futureCoordsAndDist[frame + 30].pos.z;
+                f->unk28 = tx;
+                f->unk2C = tz;
+                fn_3_50C20(idx, &tx, &tz);
+                f->unk1DC = 3;
+            }
+            setFielderTargetIdx(idx, tx, tz);
+            goto end;
+        }
+    }
+    d = dolsqrtf2(x * x + z * z);
+    if (d <= 0.1f) {
+        tx = x;
+        tz = z;
+    } else {
+        tx = 0.5f * (x / d) + x;
+        tz = 0.5f * (z / d) + z;
+    }
+    if (g_Ball.warioWaluGarlicIsActive == 0 && g_Ball.currentStarSwing != 9 && g_Ball.currentStarSwing != 10 &&
+        g_Ball.someCollisionInd == 0 && g_Ball.numFieldersWhoHandledBallDuringPlay == 0) {
+        fn_3_50DD8(idx, &tx, &tz, 0);
+    }
+    setFielderTargetIdx(idx, tx, tz);
+    f->unk1DC = 0;
+end:
+    f->unk20 = f->prevPos[0];
+    f->unk24 = f->prevPos[2];
+    fn_3_526DC(idx);
+    f->unk184 = frame;
 }
 
 // .text:0x00045394 size:0x220 mapped:0x80684428
@@ -2901,7 +3014,7 @@ void fn_3_50898(void) {
 }
 
 // .text:0x00050C20 size:0x1B8 mapped:0x8068FCB4
-void fn_3_50C20(void) {
+void fn_3_50C20(s32 fielderIdx, f32* x, f32* z) {
     return;
 }
 
