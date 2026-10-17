@@ -11,8 +11,9 @@ void fn_2_71EC4(Rep0B08Obj* obj) {
 }
 
 // .text:0x00071EFC size:0x24
-void fn_2_71EFC(void) {
-    return;
+void fn_2_71EFC(Rep0B08Obj* obj) {
+    Rep0B08Obj* target = &lbl_2_bss_1A8248->rep0B08Objects[obj->index];
+    target->unkC0 = 0;
 }
 
 // .text:0x00071F20 size:0x40
