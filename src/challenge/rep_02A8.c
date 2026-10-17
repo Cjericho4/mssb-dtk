@@ -2,7 +2,17 @@
 
 // .text:0x0000A2E4 size:0x64
 void fn_1_A2E4(void) {
-    return;
+    switch (lbl_1_bss_2FDA) {
+    case 0:
+        lbl_1_bss_2FDA++;
+        break;
+    case 1:
+        lbl_1_bss_2FDA++;
+        break;
+    case 2:
+        lbl_803CC1B8->aFunctionPointer = fn_1_A250;
+        break;
+    }
 }
 
 // .text:0x0000A348 size:0x11C
