@@ -354,8 +354,23 @@ void fn_2_90C14(Rep1028Obj* obj) {
 }
 
 // .text:0x00090C4C size:0x84
-void fn_2_90C4C(void) {
-    return;
+void fn_2_90C4C(Rep1028Obj* obj) {
+    s32 index;
+    hugeAnimStruct* render;
+    Rep1028Obj* target;
+    HugeAnimEntry2D94* entries;
+    if (obj->countdown-- != 0) return;
+    obj->unk8C = 0.06f;
+    obj->unkA0 = 0;
+    index = obj->index;
+    render = lbl_2_bss_340140;
+    target = &lbl_2_bss_1A8248->rep1028Objects[index];
+    entries = render->entries_2D94;
+    if (entries != 0) {
+        target->unkA6 = 0;
+        entries[index].callback = lbl_2_data_30900[3];
+    }
+    obj->state = 2;
 }
 
 // .text:0x00090CD0 size:0xDC
