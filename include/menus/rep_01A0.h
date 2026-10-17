@@ -3,6 +3,11 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusSoundState {
+    u32 voice;
+} MenusSoundState;
+extern MenusSoundState lbl_2_data_134;
+
 void fn_2_A70(void);
 void fn_2_B38(void);
 void fn_2_C18(void);
