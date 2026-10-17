@@ -127,5 +127,8 @@ void fn_2_978(void) {
 
 // .text:0x00000A14 size:0x5C
 void fn_2_A14(void) {
-    return;
+    fn_800B0A5C_insertQueue(fn_2_160, 0x1000);
+    fn_800B0A5C_insertQueue(fn_2_110, 0xF000);
+    lbl_803CBBCC->state = 0;
+    lbl_803CBBCC->selection = 0;
 }
