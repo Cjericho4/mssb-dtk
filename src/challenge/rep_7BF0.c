@@ -57,7 +57,10 @@ void fn_1_295E8(void) {
 
 // .text:0x00029A48 size:0x54
 void fn_1_29A48(void) {
-    return;
+    fn_800AD038(lbl_80366158.unk8);
+    fn_800A97D0(0x10, 0x1E);
+    lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+    fn_800B0A14_removeQueue();
 }
 
 // .text:0x00029A9C size:0x1C0
