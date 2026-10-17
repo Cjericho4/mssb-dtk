@@ -1,6 +1,10 @@
 #include "menus/rep_1028.h"
 #include "menus/rep_0B08.h"
 #include "menus/gap_8782C.h"
+#include "Dolphin/GX/GXTypes.h"
+
+extern GXColor lbl_800F7478[];
+extern void fn_800BD2CC(s32 enabled, GXColor color);
 
 extern void (*lbl_2_data_30810[])(Rep1028Obj*);
 
@@ -50,7 +54,9 @@ void fn_2_8F528(void) {
 
 // .text:0x0008F640 size:0x48
 void fn_2_8F640(void) {
-    return;
+    GXColor color = lbl_800F7478[10];
+    color.a = 255;
+    fn_800BD2CC(1, color);
 }
 
 // .text:0x0008F688 size:0x48
