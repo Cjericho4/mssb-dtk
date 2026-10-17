@@ -10,7 +10,7 @@ extern VecXYZ lbl_3_data_18DD4[4];
 void fn_3_E11E0(void) {
     AnimationStruct* anim;
     s32 i;
-    u8 v;
+    s8 v;
 
     g_hugeAnimStruct.characterRelated = -1;
     for (i = 0; i < 4; i++) {
@@ -29,15 +29,15 @@ void fn_3_E11E0(void) {
             continue;
         }
         v = g_Minigame._19DA[i];
-        if ((s8)v < 0) {
+        if (v < 0) {
             continue;
         }
         if (g_d_GameSettings.exhibitionMatchInd == 0) {
-            if ((s8)v >= 1) {
+            if (v >= 1) {
                 continue;
             }
         } else if (g_Minigame._19E6 == 1 && g_d_GameSettings.GameModeSelected != 6 && g_Minigame._1A3C == 0 &&
-                   (s8)v >= 1) {
+                   v >= 1) {
             continue;
         }
         anim->unk_25D = 1;

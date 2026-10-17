@@ -1962,7 +1962,7 @@ typedef struct _MiniGameStruct {
     /*0x19CF*/ u8 _19CF;
     /*0x19D0*/ s16 _19D0;
     /*0x19D2*/ s16 _19D2[4];
-    /*0x19DA*/ u8 _19DA[4];
+    /*0x19DA*/ s8 _19DA[4];
     /*0x19DE*/ u8 _19DE;
     /*0x19DF*/ u8 _19DF;
     /*0x19E0*/ u8 _19E0;
