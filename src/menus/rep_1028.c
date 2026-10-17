@@ -296,8 +296,10 @@ void fn_2_90DE4(void) {
 }
 
 // .text:0x00090E98 size:0x2C
-void fn_2_90E98(void) {
-    return;
+void fn_2_90E98(Rep1028Obj* obj) {
+    Rep1028Obj* target = &lbl_2_bss_1A8248->rep1028Objects[obj->index];
+    target->variant = 0;
+    target->state = 0;
 }
 
 // .text:0x00090EC4 size:0x194

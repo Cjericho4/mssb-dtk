@@ -4,9 +4,13 @@
 #include "mssbTypes.h"
 
 typedef struct Rep1028Obj {
-    /* 0x00 */ u8 _pad0[0x90];
+    /* 0x00 */ u8 _pad0[0x78];
+    s32 index;
+    u8 _pad7C[0x14];
     /* 0x90 */ s16 state;
-    u8 _pad92[0x16];
+    u8 _pad92[0xE];
+    s16 unkA0;
+    u8 _padA2[6];
     u8 unkA8;
     u8 _padA9[2];
     u8 variant; /* 0xAB */
@@ -69,7 +73,7 @@ void fn_2_90C4C(void);
 void fn_2_90CD0(void);
 void fn_2_90DAC(Rep1028Obj* obj);
 void fn_2_90DE4(void);
-void fn_2_90E98(void);
+void fn_2_90E98(Rep1028Obj* obj);
 void fn_2_90EC4(void);
 void fn_2_91058(void);
 void fn_2_911E0(Rep1028Obj* obj);
