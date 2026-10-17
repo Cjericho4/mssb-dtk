@@ -2,6 +2,8 @@
 #include "UnknownHeaders.h"
 #include "game/rep_3448.h"
 
+extern s16 lbl_2_data_3D30[][4];
+
 // .text:0x0001D440 size:0x2ACC
 void fn_2_1D440(void) {
     return;
@@ -38,8 +40,9 @@ void fn_2_200E4(void) {
 }
 
 // .text:0x000201E4 size:0x34
-void fn_2_201E4(void) {
-    return;
+s16 fn_2_201E4(s16 row, s16 column) {
+    if (column < 0) return -1;
+    return lbl_2_data_3D30[row][column];
 }
 
 // .text:0x00020218 size:0x40
