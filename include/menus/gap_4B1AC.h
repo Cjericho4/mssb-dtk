@@ -27,6 +27,8 @@ struct MenusSceneScript;
 typedef struct MenusResourceTables {
     u8 _pad0[0x798];
     u32* tables[3];
+    u8 _pad7A4[4];
+    struct MenusSceneArchive* archive;
 } MenusResourceTables;
 extern MenusResourceTables lbl_80366B18;
 

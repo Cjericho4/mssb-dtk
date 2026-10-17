@@ -2,6 +2,10 @@
 #include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
 #include "string.h"
+#include "menus/gap_4B1AC.h"
+#include "game/rep_1C0.h"
+extern CompressedDiskRead lbl_2_data_12298;
+extern void fn_800111B4(struct MenusSceneArchive* archive);
 
 extern MenusMenuBuffer lbl_2_bss_15B8;
 extern MenusMenuBuffer* lbl_2_data_12CE8[];
@@ -179,7 +183,24 @@ void fn_2_408BC(void) {
 
 // .text:0x000409CC size:0xD0
 void fn_2_409CC(void) {
-    return;
+    DrawingSceneStruct* scene;
+    switch ((s8)(scene = lbl_803CC1B8)->field15_0x28) {
+    case 0:
+        lbl_80366B18.archive = ARAMTransfer(&lbl_2_data_12298, 0, 1, 0);
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        if ((s32)(u8)lbl_803C6CF8.allowLoad == 1) {
+            fn_800111B4(lbl_80366B18.archive);
+            scene->field15_0x28 = 2;
+        }
+        break;
+    case 2:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
 }
 
 // .text:0x00040A9C size:0xF4
