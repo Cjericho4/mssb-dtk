@@ -258,6 +258,25 @@ static inline void readyFielderIfValid(s32 idx, s32 action) {
     }
 }
 
+static inline void updateFielderHeading(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+    f32 dx;
+    f32 dz;
+    f32 dist;
+
+    f->unk19E = -1;
+    dz = f->prevPos[2] - f->pos[2];
+    dx = f->prevPos[0] - f->pos[0];
+    dist = dolsqrtf2(dx * dx + dz * dz);
+    if (dist < 0.5f) {
+        f->unk68 = dist;
+        f->unk209 = 0;
+    } else {
+        f->unk19E = fn_3_9FB8C(dx, dz);
+        f->unk209 = 0;
+    }
+}
+
 // .text:0x000251E4 size:0x1C0 mapped:0x80664278
 void fn_3_251E4(void) {
     return;
@@ -574,8 +593,10 @@ BOOL fn_3_2CBE0(s32 idx) {
 }
 
 // .text:0x0002CEF4 size:0x18C mapped:0x8066BF88
-void fn_3_2CEF4(void) {
-    return;
+void fn_3_2CEF4(s32 idx) {
+    fn_3_2D47C(idx);
+    updateFielderHeading(idx);
+    fn_3_3A584(idx);
 }
 
 // .text:0x0002D080 size:0x288 mapped:0x8066C114
@@ -585,26 +606,11 @@ void fn_3_2D080(void) {
 
 // .text:0x0002D308 size:0x174 mapped:0x8066C39C
 void fn_3_2D308(s32 idx) {
-    Fielder* f = &g_Fielders[idx];
-    f32 dx;
-    f32 dz;
-    f32 dist;
-
-    f->unk19E = -1;
-    dz = f->prevPos[2] - f->pos[2];
-    dx = f->prevPos[0] - f->pos[0];
-    dist = dolsqrtf2(dx * dx + dz * dz);
-    if (dist < 0.5f) {
-        f->unk68 = dist;
-        f->unk209 = 0;
-    } else {
-        f->unk19E = fn_3_9FB8C(dx, dz);
-        f->unk209 = 0;
-    }
+    updateFielderHeading(idx);
 }
 
 // .text:0x0002D47C size:0x2EC mapped:0x8066C510
-void fn_3_2D47C(void) {
+void fn_3_2D47C(s32 idx) {
     return;
 }
 
@@ -1459,7 +1465,7 @@ void fn_3_3A234(void) {
 }
 
 // .text:0x0003A584 size:0x574 mapped:0x80679618
-void fn_3_3A584(void) {
+void fn_3_3A584(s32 idx) {
     return;
 }
 
