@@ -1139,8 +1139,31 @@ void fn_3_3B9E4(void) {
 }
 
 // .text:0x0003BE50 size:0x358 mapped:0x8067AEE4
-void fn_3_3BE50(void) {
-    return;
+void fn_3_3BE50(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    f32 t;
+    f32 x;
+    f32 z;
+
+    if (f->unk1EC != 0) {
+        return;
+    }
+    if (g_Ball.framesSinceThrowStarted == 5 && g_Ball.ballVelocity != 0.0f) {
+        t = f->unk74 / g_Ball.ballVelocity;
+        x = g_Ball.physicsSubstruct.velocity.x * t + g_Ball.AtBat_Contact_BallPos.x;
+        z = g_Ball.physicsSubstruct.velocity.z * t + g_Ball.AtBat_Contact_BallPos.z;
+        if (dolsqrtf2((f->pos[0] - x) * (f->pos[0] - x) + (f->pos[2] - z) * (f->pos[2] - z)) > f->unkE8) {
+            f->unk1E9 = 1;
+            setFielderTarget(f, x, z);
+        }
+    }
+    fn_3_526DC(fielderIdx);
+    if (f->unk1E9 != 0 && f->unk50 == 0.0f) {
+        f->unk1E9 = 0;
+    }
+    if (g_Ball.fielderBeingThrownTo == fielderIdx) {
+        fn_3_4E638();
+    }
 }
 
 // .text:0x0003C1A8 size:0x78 mapped:0x8067B23C
