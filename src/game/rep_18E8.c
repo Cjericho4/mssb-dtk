@@ -479,8 +479,53 @@ void fn_3_A6D48(void) {
 }
 
 // .text:0x000A6E98 size:0x1A8 mapped:0x806E5F2C
-void fn_3_A6E98(void) {
-    return;
+void fn_3_A6E98(s32 fielderIdx) {
+    InMemRunnerType* runner;
+    s8 ballFielder;
+
+    if (g_FieldingLogic.unkEC > 0) {
+        g_FieldingLogic.unkEC--;
+    }
+    ballFielder = g_FieldingLogic.unk125;
+    if (ballFielder >= 0) {
+        g_Ball.baseBallAndFielderAreOn = ballFielder;
+        if (g_FieldingLogic.unkCC == ballFielder) {
+            g_FieldingLogic.unkCC = -1;
+        }
+    }
+    if (g_FieldingLogic.unkEC <= 0) {
+        g_FieldingLogic._pad111 = 2;
+    }
+    if (g_FieldingLogic.unk111 == 2 && g_FieldingLogic._pad111 == 1) {
+        fn_3_52F4C(fielderIdx, g_Runners[g_FieldingLogic.unkE8].position.x,
+                   g_Runners[g_FieldingLogic.unkE8].position.z);
+        if (g_FieldingLogic.unkCC == 9) {
+            g_FieldingLogic.unkDE = g_FieldingLogic.unkE8;
+        }
+        fn_3_A3CC0();
+        return;
+    }
+    if (g_FieldingLogic.unk111 == 1) {
+        if (g_FieldingLogic.unkE8 >= 0) {
+            runner = &g_Runners[g_FieldingLogic.unkE8];
+            if (runner->runnerOnFieldOrOutOrScored == 1) {
+                if (runner->baseStandingOn >= 0) {
+                    g_FieldingLogic.unk111 = 0;
+                } else if (runner->actionCode == 0 &&
+                           (runner->runningDirectionCode == 1 || runner->runningDirectionCode == 3)) {
+                    g_FieldingLogic.unk111 = 0;
+                }
+            } else {
+                g_FieldingLogic.unk111 = 0;
+            }
+        } else {
+            g_FieldingLogic.unk111 = 0;
+        }
+        if (g_FieldingLogic.unkDE >= 0) {
+            g_FieldingLogic.unkDE = -1;
+            g_FieldingLogic.unkCC = -1;
+        }
+    }
 }
 
 // .text:0x000A7040 size:0x674 mapped:0x806E60D4
