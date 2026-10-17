@@ -18,6 +18,7 @@ extern MenusSceneScript lbl_2_data_1059C;
 extern void fn_8000FE54(void);
 extern void fn_8000F8F4(DrawingSceneStruct* scene);
 extern MenusSceneScript lbl_2_data_1061C;
+extern MenusSceneScript lbl_2_data_C96C;
 #include "menus/rep_0F60.h"
 #include "menus/rep_08E8.h"
 #include "menus/rep_0B08.h"
@@ -200,7 +201,26 @@ void fn_2_242FC(void) {
 
 // .text:0x000243BC size:0xCC
 void fn_2_243BC(void) {
-    return;
+    DrawingSceneStruct* scene;
+    switch ((s32)(scene = lbl_803CC1B8)->eventID) {
+    case 0:
+        fn_2_4E878(scene, &lbl_2_data_C96C);
+        scene->eventID = 1;
+        scene->unk18 = 0;
+        break;
+    case 1: break;
+    }
+    fn_2_53F88((s32)scene);
+    fn_2_54120();
+    if (lbl_2_bss_1A8234->panels[1].pending) {
+        fn_8000FE54();
+        fn_2_53DF8(scene);
+        fn_8000F8F4(scene);
+        fn_2_4E858(scene);
+        fn_800B0A14_removeQueue();
+        scene->eventID = 0;
+        lbl_2_bss_1A8234->panels[1].pending = 0;
+    }
 }
 
 // .text:0x00024488 size:0x140
