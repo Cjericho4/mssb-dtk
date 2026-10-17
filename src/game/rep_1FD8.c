@@ -825,15 +825,15 @@ void fn_3_C7444(ActorObject* arg0) {
     AnimLevel4* level4 = level2->ptr10;
     AnimObject* obj = level4->ptr04;
 
-    if (state == 0) {
+    switch (state) {
+    case 0:
         obj->flags &= ~0x1FFF;
         obj->flags |= 2;
         return;
-    } else {
+    default:
         obj->flags &= ~0x1FFF;
         return;
     }
-    return;
 }
 
 // .text:0x000C749C size:0x11C mapped:0x80706530
