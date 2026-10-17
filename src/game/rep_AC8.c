@@ -2908,7 +2908,55 @@ void fn_3_57A14(void) {
 
 // .text:0x00057BB4 size:0x804 mapped:0x80696C48
 void fn_3_57BB4(void) {
-    return;
+    Fielder* f;
+    s32 idx;
+    f32 x;
+    f32 z;
+    f32 dist;
+    f32 step;
+
+    idx = g_FieldingLogic.unkB0;
+    if (g_d_GameSettings.minigamesEnabled) {
+        idx = g_Minigame.minigameRelatedIndex;
+    }
+    if (idx < 0) {
+        return;
+    }
+    f = &g_Fielders[idx];
+    if (g_Ball.framesSinceHit < f->unk1D2) {
+        return;
+    }
+    fn_3_57488();
+    if (g_Ball.pauseBallMovementWhenInPlant != 0) {
+        x = g_Ball.AtBat_Contact_BallPos.x - f->pos[0];
+        z = g_Ball.AtBat_Contact_BallPos.z - f->pos[2];
+        dist = dolsqrtf2(x * x + z * z);
+        if (dist < lbl_3_data_4930[37]) {
+            setFielderTarget(f, f->pos[0], f->pos[2]);
+        } else {
+            step = lbl_3_data_4930[36] - 1.0f;
+            x = step * (x / dist) + f->pos[0];
+            z = step * (z / dist) + f->pos[2];
+            setFielderTargetIdx(idx, x, z);
+        }
+        f->unk20 = f->prevPos[0];
+        f->unk24 = f->prevPos[2];
+    } else if (f->unk18A != 0) {
+        fn_3_50DD8(idx, &x, &z, 1);
+        setFielderTargetIdx(idx, x, z);
+        f->unk20 = f->prevPos[0];
+        f->unk24 = f->prevPos[2];
+    }
+    x = f->unk20 - f->pos[0];
+    z = f->unk24 - f->pos[2];
+    dist = dolsqrtf2(x * x + z * z);
+    if (!(dist < 0.5f)) {
+        if (f->unk1B6 == 0 && lbl_3_data_49DC[25] * f->unk58 < dist) {
+            g_FieldingLogic.unk148 |= 0x200;
+        }
+        lbl_3_bss_170[0] = fn_3_9FB8C(x, z);
+    }
+    lbl_3_bss_16C = lbl_3_bss_170[0];
 }
 
 // .text:0x000583B8 size:0x2D0 mapped:0x8069744C
