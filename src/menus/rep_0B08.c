@@ -79,8 +79,9 @@ s32 fn_2_68690(s32 index) {
 }
 
 // .text:0x000686B0 size:0x20
-void fn_2_686B0(void) {
-    return;
+s32 fn_2_686B0(s32 index) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    return obj->unkCB;
 }
 
 // .text:0x000686D0 size:0x1C
