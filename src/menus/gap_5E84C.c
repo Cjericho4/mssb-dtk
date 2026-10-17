@@ -1,4 +1,5 @@
 #include "menus/gap_5E84C.h"
+#include "game/rep_3448.h"
 
 // .text:0x0005E84C size:0x32C
 void fn_2_5E84C(void) {
@@ -371,8 +372,8 @@ void fn_2_681A0(void) {
 }
 
 // .text:0x00068234 size:0x2C
-void fn_2_68234(void) {
-    return;
+void fn_2_68234(DrawingSceneStruct* scene, Rep0788Item* item) {
+    lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
 }
 
 // .text:0x00068260 size:0xA8
