@@ -708,7 +708,51 @@ void fn_3_2E41C(void) {
 
 // .text:0x0002E87C size:0x1A8 mapped:0x8066D910
 void fn_3_2E87C(void) {
-    return;
+    s32 i;
+    f32 x;
+    f32 z;
+    u8 n;
+
+    fn_3_58F58(0, &x, &z);
+    g_Fielders[0].pos[0] = x;
+    g_Fielders[0].pos[2] = z;
+    g_Fielders[0].prevPos[0] = 0.0f;
+    g_Fielders[0].prevPos[1] = 0.0f;
+    g_Fielders[0].prevPos[2] = 0.0f;
+    g_Fielders[0].unk30 = 0.0f;
+    g_Fielders[0].unk34 = 0.0f;
+    g_Fielders[0].unk38 = 0.0f;
+    n = g_Minigame.miniGameNumberOfParticipants;
+    if (n >= 4) {
+        g_Fielders[3].pos[0] = lbl_3_data_18984[1].x;
+        g_Fielders[3].pos[2] = lbl_3_data_18984[1].z;
+    } else if (n >= 3) {
+        g_Fielders[3].pos[0] = lbl_3_data_18984[0].x;
+        g_Fielders[3].pos[2] = lbl_3_data_18984[0].z;
+    }
+    if (n >= 4) {
+        g_Fielders[4].pos[0] = lbl_3_data_18984[2].x;
+        g_Fielders[4].pos[2] = lbl_3_data_18984[2].z;
+    }
+    for (i = 0; i < 9; i++) {
+        g_Fielders[i].prevPos[0] = 0.0f;
+        g_Fielders[i].prevPos[1] = 0.0f;
+        g_Fielders[i].prevPos[2] = 0.0f;
+        g_Fielders[i].unk30 = 0.0f;
+        g_Fielders[i].unk34 = 0.0f;
+        g_Fielders[i].unkD4 = g_Fielders[i].pos[0];
+        g_Fielders[i].unkD8 = g_Fielders[i].pos[2];
+        g_Fielders[i].unk50 = 0.0f;
+        g_Fielders[i].unk1D9 = 0;
+        g_Fielders[i].unk1F5 = -1;
+        x = -g_Fielders[i].pos[0];
+        z = -g_Fielders[i].pos[2];
+        g_Fielders[i].unk48 = atan2(z, x);
+    }
+    for (i = 0; i < 4; i++) {
+        g_AiLogic._B4[i] = 0;
+        g_AiLogic._B8[i] = 0;
+    }
 }
 
 // .text:0x0002EA24 size:0x64 mapped:0x8066DAB8
