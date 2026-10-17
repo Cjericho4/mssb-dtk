@@ -207,8 +207,12 @@ void fn_2_42270(s32 index) {
 }
 
 // .text:0x000422FC size:0x8C
-void fn_2_422FC(void) {
-    return;
+void fn_2_422FC(s32 index) {
+    lbl_2_bss_1A824C->unk197694 = 0;
+    lbl_2_bss_1A824C->unk19768C = 0;
+    lbl_2_bss_1A824C->unk197690 = 0;
+    memcpy(&lbl_2_bss_15B8, lbl_2_data_12C0C[index], sizeof(MenusMenuBuffer));
+    lbl_2_bss_1A824C->buffer = &lbl_2_bss_15B8;
 }
 
 // .text:0x00042388 size:0xEC
