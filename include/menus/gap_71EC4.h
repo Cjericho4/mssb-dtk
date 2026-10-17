@@ -5,11 +5,14 @@
 #include "menus/rep_0B08.h"
 
 typedef struct MenusInputFlags {
-    u8 _pad0[0xD];
+    u8 _pad0[7];
+    u8 state;
+    u8 _pad8[5];
     u8 flags[4];
+    u8 _pad11[0x3E];
+    u8 state4F;
 } MenusInputFlags;
 extern MenusInputFlags lbl_803C66B0;
-
 
 void fn_2_71EC4(Rep0B08Obj* obj);
 void fn_2_71EFC(Rep0B08Obj* obj);

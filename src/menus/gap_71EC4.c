@@ -5,6 +5,8 @@ extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "UnknownHeaders.h"
 
 extern void fn_800625A4(s32, s32);
+extern void fn_800626EC(s32);
+extern void fn_80062674(s32);
 #include "menus/gap_1254.h"
 
 // .text:0x00071EC4 size:0x38
@@ -177,7 +179,11 @@ void fn_2_744C8(void) {
 
 // .text:0x00074518 size:0x4C
 void fn_2_74518(void) {
-    return;
+    MenusInputFlags* input = &lbl_803C66B0;
+    if ((u32)__cntlzw(input->state) >> 5) {
+        fn_800626EC(0);
+        input->state = 1;
+    }
 }
 
 // .text:0x00074564 size:0xD8
