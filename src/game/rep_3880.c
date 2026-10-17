@@ -476,8 +476,53 @@ void fn_3_14BA40(void) {
 }
 
 // .text:0x0014BCB0 size:0x21C mapped:0x8078AD44
-void fn_3_14BCB0(void) {
-    return;
+typedef struct {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    u8 _padC[4];
+    s32 unk10;
+    u8 _pad14[8];
+    s32 unk1C;
+    s32 unk20;
+    s32 unk24;
+    s32 unk28;
+    u8 _pad2C[0x10];
+} EffectConfig26D88;
+extern EffectConfig26D88 lbl_3_data_26D88;
+extern EffectConfig26D88 lbl_3_data_26DC4;
+void fn_3_14BCB0(struct Struct_800339F0_Result* obj, Vec* pos, s32 arg2) {
+    EffectConfig26D88* config;
+    ListNode_14B9F0* node;
+    u32 i;
+    f32 angle;
+    f32 radius;
+    obj->field_0x10 = lbl_3_common_bss_32724.field6C;
+    i = 0;
+    node = obj->listHead;
+    config = (u8)arg2 != 0 ? &lbl_3_data_26DC4 : &lbl_3_data_26D88;
+    do {
+        if (node->field_0x4A == 0) {
+            node->field_0x4D = config->unk0;
+            node->field_0x4E = 0;
+            node->field_0x4A = config->unk8;
+            node->scaleX = node->scaleY = (f32)config->unk10 / 100000.0f;
+            node->color[3] = config->unk28;
+            node->color[0] = config->unk1C;
+            node->color[1] = config->unk20;
+            node->color[2] = config->unk24;
+            { f32 scale = 2.0f;
+            radius = scale * (2.0 * ((f32)rand() / 32767.0f - 0.5));
+            }
+            angle = 0.017453292f * (f32)((180.0 / config->unk4) * i);
+            node->offset.x = radius * (f32)cos(angle) + pos->x;
+            node->offset.y = (pos->y - radius * (f32)sin(angle)) - 1.0;
+            node->offset.z = pos->z;
+            node->field_0x4F = arg2;
+            i++;
+        }
+        node = node->next;
+    } while (node != NULL && i < lbl_3_data_26D88.unk4);
 }
 
 // .text:0x0014BECC size:0x47C mapped:0x8078AF60
