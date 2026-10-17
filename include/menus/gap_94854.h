@@ -4,6 +4,12 @@
 #include "mssbTypes.h"
 #include "menus/rep_10C0.h"
 
+typedef struct MenusPreferences {
+    u8 _pad0[0xF];
+    u8 pending;
+} MenusPreferences;
+extern MenusPreferences lbl_2_bss_1033C;
+
 void fn_2_94854(u8 value);
 void fn_2_9486C(void);
 void fn_2_948B8(void);
