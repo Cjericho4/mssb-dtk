@@ -202,8 +202,10 @@ void fn_2_4A2C4(void) {
 }
 
 // .text:0x0004A310 size:0x30
-void fn_2_4A310(void) {
-    return;
+s16 fn_2_4A310(s16 a, s16 b) {
+    s16 result = __abs(a - b);
+    if (result > 0x800) result = 0x1000 - result;
+    return result;
 }
 
 // .text:0x0004A340 size:0x3A8

@@ -42,7 +42,7 @@ void fn_2_4A18C(void);
 void fn_2_4A1E8(void);
 void fn_2_4A234(void);
 void fn_2_4A2C4(void);
-void fn_2_4A310(void);
+s16 fn_2_4A310(s16 a, s16 b);
 void fn_2_4A340(void);
 void fn_2_4A6E8(void);
 void fn_2_4AB1C(void);
