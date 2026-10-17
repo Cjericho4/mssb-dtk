@@ -128,7 +128,43 @@ void fn_3_1158F8(void) {
 
 // .text:0x00115978 size:0x13C mapped:0x80754A0C
 void fn_3_115978(void) {
-    return;
+    s32 selected;
+    selected = g_Minigame.minigamePlayerSelectedOrder;
+    fn_3_6EBB4(selected);
+    fn_3_F1DC();
+    fn_3_751B4();
+    fn_3_58870();
+    memset(g_Minigame._1D7C, 0, 0x78U);
+    Set_803cb848(1);
+    g_FieldingLogic.unkAE = 0;
+    g_UnkSimulation_31AC0.unk5 = 0;
+    g_UnkSimulation_31AC0.unk6 = 4;
+    g_Minigame.turnOverStatus = 0;
+    g_Minigame.ballStoppedBreakingWallsInd = 0;
+    g_Minigame.postBallStoppedCounter = 0;
+    g_Minigame.wallBallPitchPower = 0;
+    g_Minigame.wallBallPitchPowerRemaining = 0;
+    g_Minigame.wallBall_hitNoteBlock = 0;
+    g_Minigame.wallBall_hitBowserWall = 0;
+    g_Minigame._1A8B = -1;
+    g_Ball.totalFramesAtPlay = 0;
+    if ((u8) g_Minigame.miniGameTurnCounter == 0) {
+        if ((u8) g_GameLogic.pre_PostMiniGameInd != 0) {
+            g_GameLogic.minigameLastTurnSuccessInd = 1;
+            g_GameLogic.hudElementLoadingInd = 1;
+        } else {
+            g_GameLogic.minigameLastTurnSuccessInd = 0;
+        }
+        g_GameLogic.pre_PostMiniGameInd = 0;
+    } else if ((u8) g_Minigame.soloMinigameDifficulty != 3) {
+        g_Minigame.wallBallPitcherRotationCounter = 0;
+        g_Minigame.wallBallRotatePitchersInd = 1;
+        fn_3_114A88(0);
+    } else {
+        g_GameLogic.minigameLastTurnSuccessInd = 0;
+    }
+    changeScene(1, 6);
+    fn_3_5A6D4(1U);
 }
 
 // .text:0x00115AB4 size:0xA8 mapped:0x80754B48

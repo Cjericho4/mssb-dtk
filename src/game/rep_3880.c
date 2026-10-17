@@ -12,6 +12,7 @@
 #include "Dolphin/gx.h"
 #include "C3/control.h"
 #include "game/rep_1D58.h"
+#include "game/rep_3310.h"
 
 extern f32 lbl_3_data_21770[6];
 extern Vec lbl_3_bss_B860[4];
@@ -406,8 +407,27 @@ void fn_3_14B248(Struct_14B248_Arg* arg0, ListNode_14B9F0* node) {
 }
 
 // .text:0x0014B3F4 size:0x148 mapped:0x8078A488
-void fn_3_14B3F4(void) {
-    return;
+extern VecXYZ lbl_3_data_26E00[3];
+void fn_3_14B3F4(PositionEffect* effect) {
+    VecXYZ* start;
+    VecXYZ* end;
+    f32 progress;
+    f32 amplitude;
+    f32 inverse;
+    s32 elapsed = effect->totalFrames - effect->remainingFrames;
+    if ((f32)elapsed < effect->phaseFrames) {
+        start = &lbl_3_data_26E00[0];
+        end = &lbl_3_data_26E00[1];
+        progress = (f32)elapsed / effect->phaseFrames;
+    } else {
+        start = &lbl_3_data_26E00[1];
+        end = &lbl_3_data_26E00[2];
+        progress = (f32)elapsed / ((f32)effect->totalFrames - effect->phaseFrames);
+    }
+    amplitude = fn_3_119D28();
+    effect->pos.x = amplitude * (start->x * (1.0f - progress) + end->x * progress) + effect->origin.x;
+    effect->pos.y = amplitude * (start->y * (1.0f - progress) + end->y * progress) + effect->origin.y;
+    effect->pos.z = amplitude * (start->z * (1.0f - progress) + end->z * progress) + effect->origin.z;
 }
 
 // .text:0x0014B53C size:0x3F0 mapped:0x8078A5D0

@@ -85,7 +85,8 @@ typedef struct Rep3520Obj136CF4 {
 
 void fn_3_136CF4(Rep3520Obj136CF4* obj);
 void fn_3_136EA4(void);
-void fn_3_1370A0(void);
+struct CameraView;
+void fn_3_1370A0(struct CameraView* camera);
 void fn_3_1371E8(void);
 void fn_3_137224(Vec* center);
 void fn_3_1373E0(void);

@@ -2,6 +2,7 @@
 #include "game/rep_3448.h"
 #include "game/gap_AC9F8.h"
 #include "game/rep_16B8.h"
+#include "game/rep_540.h"
 
 // .text:0x00157DB8 size:0x70 mapped:0x80796E4C
 void fn_3_157DB8(s32 arg0) {
@@ -298,7 +299,46 @@ void fn_3_15AF78(void) {
 
 // .text:0x0015B0D8 size:0x12C mapped:0x8079A16C
 void fn_3_15B0D8(void) {
-    return;
+    g_GameLogic._13E[0] = 0;
+    g_GameLogic._140[0] = 0;
+    g_GameLogic.teamAIInd[0] = 0;
+    g_GameLogic.autoFielding[0] = 0;
+    g_GameLogic.batterHandedness[0] = 0;
+    g_GameLogic.battingAIInd[0] = 0;
+    g_GameLogic._13E[1] = 0;
+    g_GameLogic._140[1] = 0;
+    g_GameLogic.teamAIInd[1] = 0;
+    g_GameLogic.autoFielding[1] = 0;
+    g_GameLogic.batterHandedness[1] = 0;
+    g_GameLogic.battingAIInd[1] = 0;
+    g_Practice.aIEnabled = 0;
+    g_Practice.practiceBatterHandedness = 0;
+    g_Practice.freePracticeInd_writeOnly = 0;
+    g_Practice.__0x1aapadding[0] = 0;
+    if ((u8) g_GameLogic.secondaryGameMode == 0xF) {
+        g_Practice.aIEnabled = 1;
+        g_GameLogic._13E[g_GameLogic.teamFielding] = 1;
+        g_Practice.freePracticeInd_writeOnly = 1;
+        g_GameLogic._140[g_GameLogic.awayTeamBattingInd_battingTeam] = 1;
+        g_Practice.rosterID = 1;
+        g_GameLogic.teamAIInd[g_GameLogic.awayTeamBattingInd_battingTeam] = 1;
+        g_GameLogic.autoFielding[g_GameLogic.awayTeamBattingInd_battingTeam] = 1;
+    } else {
+        g_Practice.practiceBatterHandedness = 1;
+        g_GameLogic._13E[g_GameLogic.teamBatting] = 1;
+        g_Practice.__0x1aapadding[0] = 1;
+        g_GameLogic.batterHandedness[g_GameLogic.homeTeamBattingInd_fieldingTeam] = 1;
+        g_GameLogic.battingAIInd[g_GameLogic.homeTeamBattingInd_fieldingTeam] = 1;
+    }
+    g_Practice._186 = 0;
+    fn_3_5A684();
+    fn_3_8A350();
+    fn_3_F7B8();
+    fn_3_75434();
+    fn_3_59338();
+    g_GameLogic.EventTriggers_GameHasStarted = 0;
+    g_GameLogic.currentBatterPerTeam[0] = 1;
+    g_GameLogic.currentBatterPerTeam[1] = 1;
 }
 
 // .text:0x0015B204 size:0x290 mapped:0x8079A298

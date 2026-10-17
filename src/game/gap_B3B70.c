@@ -11,6 +11,7 @@
 #include "game/rep_13B8.h"
 #include "game/gap_6D4A0.h"
 #include <string.h>
+#include "game/rep_1C0.h"
 
 // .text:0x000B3B70 size:0x60 mapped:0x806F2C04
 void fn_3_B3B70(void) {
@@ -76,7 +77,34 @@ void fn_3_B3CD4(void) {
 
 // .text:0x000B3FE8 size:0x13C mapped:0x806F307C
 void fn_3_B3FE8(void) {
-    return;
+    fn_800B0A5C_insertQueue(possiblyTransitionBlackScreen, 2);
+    fn_800B0A5C_insertQueue(fn_3_5BAC, 4);
+    g_hugeAnimStruct.renderStadiumFlag = 0;
+    g_Practice.practiceType = 0;
+    g_Practice.runnerActive[0] = 0;
+    g_Practice.runnerActive[1] = 0;
+    g_Practice.runnerActive[2] = 0;
+    g_Practice.__0x1aapadding[2] = 0;
+    g_Practice.__0x1aapadding[4] = 0;
+    g_Practice.__0x1aapadding[5] = 0;
+    g_Practice._19F = 0;
+    g_Practice.aIEnabled = 0;
+    g_Practice.practiceBatterHandedness = 0;
+    g_Practice.freePracticeInd_writeOnly = 0;
+    g_Practice.__0x1aapadding[0] = 0;
+    g_Practice.instructionNumber = -1;
+    g_Practice.transitioningIndicator = 0;
+    g_Practice.loadingGuidedPractice = 0;
+    g_Practice._1D5 = 0;
+    {
+        s32 i;
+        s32 j;
+        for (i = 0; i < 4; i++) {
+            for (j = 0; j < 4; j++) {
+                g_Practice.practiceCompleted[i][j] = lbl_80354768.practiceCompleted[i][j];
+            }
+        }
+    }
 }
 
 // .text:0x000B4124 size:0x184 mapped:0x806F31B8

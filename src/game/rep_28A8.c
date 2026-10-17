@@ -9,6 +9,7 @@
 #include "game/game_batter.h"
 #include "game/rep_868.h"
 #include "musyx/musyx.h"
+#include "game/gap_E587C.h"
 
 extern void Set_803cb848(s32 arg0);
 extern void fn_3_BF158(void);
@@ -33,7 +34,37 @@ void fn_3_DA834(void) {
 
 // .text:0x000DC240 size:0x140 mapped:0x8071B2D4
 void fn_3_DC240(void) {
-    return;
+    g_Minigame.toyFieldBallStateResult2 = g_Minigame.toyFieldBallStateResult;
+    if (fn_3_E5924() != 0) {
+        if (g_Minigame._19CF == 0) {
+            g_Minigame.toyFieldBallStateResult2 = 0xC;
+        }
+        if (g_Minigame._19CF > 0x3CU) {
+            g_Minigame._19CE = 1;
+            return;
+        }
+        if (g_Minigame._19CF < 0xFEU) {
+            g_Minigame._19CF += 1;
+            return;
+        }
+        g_Minigame._19CF = 0xFF;
+        return;
+    }
+    if ((g_Minigame.toyFieldBallStateResult2 == 2) || (g_Ball.maybebuntOn2Strikes != 0)) {
+        if (g_Ball.maybebuntOn2Strikes == 0) {
+            fn_3_59918(1, 0);
+        }
+        g_Minigame._19C6 = g_Minigame.minigamePlayerSelectedOrder;
+        if ((s16) g_Ball.fielderWBallIndex >= 0) {
+            g_Minigame._19C6 = g_Fielders[g_Ball.fielderWBallIndex]._pad208[5];
+        }
+    } else {
+        if (g_Minigame.toyFieldBallStateResult2 == 1) {
+            fn_3_A0F0();
+        } else if (g_Minigame.toyFieldBallStateResult2 == 6) {
+            fn_3_59918(0xF, 0);
+        }
+    }
 }
 
 // .text:0x000DC380 size:0x224 mapped:0x8071B414
@@ -372,7 +403,26 @@ void fn_3_DE4FC(void) {
 
 // .text:0x000DE610 size:0x134 mapped:0x8071D6A4
 void fn_3_DE610(void) {
-    return;
+    g_Minigame.panelHitInd = 0;
+    if (g_Minigame._19A6 != 0) {
+        g_Minigame._19A6--;
+        if (g_Pitcher.strikeOutOrWalk == 2 || g_Pitcher.strikeOutOrWalk == 3) {
+            g_Minigame._19A6 = 3;
+        }
+    }
+    g_Strikes.outs = 0;
+    g_Strikes.unk_C = 0;
+    g_Minigame._19A5 = 1;
+    if ((((s8) (u8) g_Minigame.rosterID != (s8) g_Minigame._19C6) || ((u8) g_Minigame.players._18E8[(s8)g_Minigame.rosterID] == 1)) && ((s16) g_Minigame.toyField_turnNumber >= (s16) g_Minigame.toyField_selectedTurns)) {
+        lbl_3_common_bss_34C90.field_0x1D2 = 0;
+        fn_3_5A6D4(0xEU);
+        return;
+    }
+    if (((s16) g_Minigame.toyField_turnNumber < (s16) g_Minigame.toyField_selectedTurns) && ((g_Minigame.toyField_turnNumber % 10) == 0)) {
+        fn_3_5A6D4(3U);
+        return;
+    }
+    fn_3_5A6D4(7U);
 }
 
 // .text:0x000DE744 size:0x44C mapped:0x8071D7D8

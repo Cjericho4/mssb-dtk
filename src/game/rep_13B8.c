@@ -136,7 +136,48 @@ void fn_3_7EA68(void) {
 
 // .text:0x0007EBD4 size:0x128 mapped:0x806BDC68
 void fn_3_7EBD4(s32 runnerIdx) {
-    return;
+    InMemRunnerType* runner = &g_Runners[runnerIdx];
+    if (g_GameLogic.gameStatus == 1) return;
+    if (runner->runnerOnFieldOrOutOrScored == 2) {
+        if (runner->runningToDugoutInd != 0) return;
+        if (runner->actionCode != 0) {
+            if (runner->actionStage == 3) {
+                runner->actionCode = 0;
+                runner->actionStage = 0;
+                goto check;
+            }
+            return;
+        }
+check:
+        if (runner->forceOutCd == 2) {
+            if (runner->overRun1BStage != 0) {
+                if (runner->overRun1BStage == 3) {
+                    runner->baseRoundingState = 0;
+                    runner->overRun1BStage = 0;
+                    goto dugout;
+                }
+                return;
+            }
+            if (runner->percentTowardsNextBase < 0.8f || runner->runningDirectionCode == 2) goto dugout;
+            return;
+        }
+dugout:
+        runner->runningToDugoutInd = 1;
+        runner->runningToDugoutStage = 0;
+        runner->overRun1BStage = 0;
+    } else if (g_Strikes.outs >= 3) {
+        if (runner->actionCode != 0) {
+            if (runner->actionStage == 3) {
+                runner->actionCode = 0;
+                runner->actionStage = 0;
+                goto finish;
+            }
+            return;
+        }
+finish:
+        runner->runningToDugoutInd = 1;
+        runner->runningToDugoutStage = 0;
+    }
 }
 
 // .text:0x0007ECFC size:0x5DC mapped:0x806BDD90

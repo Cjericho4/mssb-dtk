@@ -520,8 +520,29 @@ void fn_3_136EA4(void) {
 }
 
 // .text:0x001370A0 size:0x148 mapped:0x80776134
-void fn_3_1370A0(void) {
-    return;
+void fn_800528B4(void);
+extern f32 lbl_3_data_21AF4;
+extern s16 lbl_3_bss_B702;
+void fn_3_1370A0(CameraView* camera) {
+    Mtx inverse;
+    Vec offset;
+    s32 frames;
+    memset(&offset, 0, sizeof(offset));
+    offset.y = (f64)lbl_3_data_21AF4 * (2.0 * ((f64)((f32)rand() / 32767.0f) - 0.5));
+    PSMTXInverse(camera->viewMtx, inverse);
+    PSMTXMultVecSR(inverse, &offset, &offset);
+    camera->pos.x += offset.x;
+    camera->pos.y += offset.y;
+    camera->pos.z += offset.z;
+    camera->target.x += offset.x;
+    camera->target.y += offset.y;
+    camera->target.z += offset.z;
+    frames = lbl_3_bss_B702 - 1;
+    lbl_3_bss_B702 = frames;
+    if ((s16)frames <= 0) {
+        lbl_3_bss_B702 = 0;
+        fn_800528B4();
+    }
 }
 
 // .text:0x001371E8 size:0x3C mapped:0x8077627C
@@ -535,7 +556,7 @@ void fn_3_1371E8(void) {
     s16 val = *dataAddr;
     
     // lis r3, fn_3_1370A0@ha -> Overwrites r3, leaving r5 intact
-    void (*callback)(void) = fn_3_1370A0;
+    void (*callback)(void) = (void (*)(void))fn_3_1370A0;
 
     // sth r0, lbl_3_bss_B702@l(r4)
     *bssAddr = val;

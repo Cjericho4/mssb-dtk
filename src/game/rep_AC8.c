@@ -1156,8 +1156,46 @@ void fn_3_3D304(void) {
 }
 
 // .text:0x0003D6AC size:0x128 mapped:0x8067C740
-void fn_3_3D6AC(void) {
-    return;
+void fn_3_3D6AC(s32 idx) {
+    Fielder *temp_r31;
+    s32 temp_r30;
+
+    temp_r30 = idx;
+    temp_r31 = &g_Fielders[temp_r30];
+    if ((fn_3_53130(idx) == 0) && ((u8) temp_r31->unk1EC == 0)) {
+        temp_r31->unk50 = 0.0f;
+        temp_r31->unk1E3 = 1;
+        temp_r31->unk1D5 = 0;
+        temp_r31->prevPos[0] = temp_r31->pos[0];
+        temp_r31->prevPos[2] = temp_r31->pos[2];
+        if (g_Ball.ballState == 0) {
+            if (temp_r30 == 6) {
+                if (g_Ball.ballAngleFromHome < 0x400) goto finish;
+                if (g_Ball.ballAngleFromHome < 0xC00) goto action;
+                goto finish;
+            }
+            if (temp_r30 == 8) {
+                if (g_Ball.ballAngleFromHome < 0x400) goto action;
+                if (g_Ball.ballAngleFromHome < 0xC00) goto finish;
+            }
+        }
+        {
+        action:
+            if (temp_r30 != -1) {
+                temp_r31->unk1D3 = 9;
+                if ((s32) lbl_3_data_3C40.actions[9].unk0 >= 0) {
+                    g_FieldingLogic.unk_F8[temp_r30] = (s8) lbl_3_data_3C40.actions[9].unk0;
+                }
+                temp_r31->unk1D5 = 0;
+                temp_r31->unk1D6 = 0;
+                temp_r31->unk1A4 = 0;
+                temp_r31->unk1AC = 0;
+                temp_r31->unk1FF = 0;
+            }
+        }
+finish:
+        temp_r31->unk1F0 = 1;
+    }
 }
 
 // .text:0x0003D7D4 size:0x3A4 mapped:0x8067C868
@@ -1233,8 +1271,28 @@ void fn_3_3F034(void) {
 }
 
 // .text:0x0003F124 size:0x128 mapped:0x8067E1B8
+static inline void setFielderReadyAction(s32 idx, s32 action) {
+    Fielder* f = &g_Fielders[idx];
+    f->unk1D3 = action;
+    if (lbl_3_data_3C40.actions[action].unk0 >= 0) {
+        g_FieldingLogic.unk_F8[idx] = lbl_3_data_3C40.actions[action].unk0;
+    }
+    f->unk1D5 = 0;
+    f->unk1D6 = 0;
+    f->unk1A4 = 0;
+    f->unk1AC = 0;
+    f->unk1FF = 0;
+}
 void fn_3_3F124(void) {
-    return;
+    setFielderReadyAction(0, 0x14);
+    if ((g_Fielders[3].unk182 + g_Fielders[5].unk182) / 2 > g_Ball.Hit_HorizontalAngle) {
+        setFielderReadyAction(3, 3);
+    } else {
+        setFielderReadyAction(5, 3);
+    }
+    fn_3_4C9C8();
+    fn_3_47778();
+    fn_3_4A124();
 }
 
 // .text:0x0003F24C size:0x514 mapped:0x8067E2E0
@@ -1646,8 +1704,55 @@ void fn_3_51220(void) {
 }
 
 // .text:0x0005164C size:0x14C mapped:0x806906E0
-void fn_3_5164C(void) {
-    return;
+s32 fn_3_5164C(s32 idx, VecXYZ* result) {
+    Fielder* f = &g_Fielders[idx];
+    f32 x = f->pos[0] + f->unk30;
+    f32 z = f->pos[2] + f->unk34;
+    f32 limit;
+    f32 negativeX;
+    f32 delta;
+    f32 product;
+    s32 status = 0;
+    if (x > 0.0f) {
+        if (x > z) {
+            product = 0.5f * (x - z);
+            x = z + product;
+            z = x;
+            status = 2;
+        }
+    } else {
+        delta = -x;
+        if (delta > z) {
+            product = 0.5f * (delta - z);
+            z += product;
+            x = -z;
+            status = 2;
+        }
+    }
+    limit = lbl_3_data_4444[2].z;
+    delta = z - limit;
+    if (!(delta > x)) {
+        negativeX = -x;
+        if (!(delta > negativeX)) {
+            if (x > 0.0f) {
+                delta = limit - z;
+                product = 0.5f * (x - delta);
+                x = delta + product;
+                z = -x + limit;
+                status = 2;
+            } else {
+                delta = limit - z;
+                product = 0.5f * (negativeX - delta);
+                x = -delta - product;
+                z = x + limit;
+                status = 2;
+            }
+        }
+    }
+    if (z <= lbl_3_data_4444[2].x) return 1;
+    result->x = x;
+    result->z = z;
+    return status;
 }
 
 // .text:0x00051798 size:0x658 mapped:0x8069082C

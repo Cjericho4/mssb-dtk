@@ -277,8 +277,13 @@ typedef struct _matchShorts {
 typedef struct _InMemBallType {
     /*0x0000*/ VecXYZ AtBat_Contact_BallPos;
     /*0x000C*/ VecXYZ offsetWhilePickedUpHistory[4];
-    /*0x003C*/ VecXYZ pastCoordinates[27];
-    /*0x0180*/ pastAndFutureCoordsWallJumpRelated physicsSubstruct;
+    /*0x003C*/ union {
+        VecXYZ coordinateHistory[60];
+        struct {
+            VecXYZ pastCoordinates[27];
+            /*0x0180*/ pastAndFutureCoordsWallJumpRelated physicsSubstruct;
+        };
+    };
     /*0x19D4*/ f32 maxYOfHit;
     /*0x19D8*/ VecXZ ballWillHitBallPos;
     /*0x19E0*/ f32 wallAndBallIntersectionDistFromHome;
@@ -2015,7 +2020,7 @@ typedef struct _MiniGameStruct {
     /*0x1A82*/ u8 wallIndexTracker[7];
     /*0x1A89*/ u8 wallBall_hitNoteBlock;
     /*0x1A8A*/ u8 wallBall_hitBowserWall;
-    /*0x1A8B*/ u8 _1A8B;
+    /*0x1A8B*/ s8 _1A8B;
     /*0x1A8C*/ u8 _1A8C[2];
     /*0x1A8E*/ s16 bOD_HitPowerOfEachChar[4];
     /*0x1A96*/ u8 bODRelated5[10];
@@ -2232,7 +2237,8 @@ typedef struct Fielder {
     /* 0x17A */ u8 _pad17A[0x17E - 0x17A];
     /* 0x17E */ s16 unk17E;
     /* 0x180 */ s16 unk180;
-    /* 0x182 */ u8 _pad182[0x18C - 0x182];
+    /* 0x182 */ s16 unk182;
+    /* 0x184 */ u8 _pad184[0x18C - 0x184];
     /* 0x18C */ s16 unk18C;
     /* 0x18E */ u8 _pad18E[0x190 - 0x18E];
     /* 0x190 */ s16 unk190;

@@ -766,7 +766,34 @@ void fn_3_11A20C(void) {
 
 // .text:0x0011A210 size:0x140 mapped:0x807592A4
 void fn_3_11A210(void) {
-    return;
+    HugeAnimEntry2D94* coin;
+    HugeAnimEntry2D94* shadow;
+    s32 i;
+    for (i = 0; i < 100; i++) {
+        coin = &g_hugeAnimStruct.entries_2D94[i + 130];
+        coin->unk_26 = 0;
+        coin->stadiumFileHeaderPointer = NULL;
+        shadow = &g_hugeAnimStruct.entries_2D94[i];
+        shadow->unk_26 = 0;
+        shadow->stadiumFileHeaderPointer = NULL;
+        if (g_Minigame.wallBall_coinsVisibleInd[i] != 0) {
+            coin->unk_26 = 1;
+            coin->pos.x = g_Minigame.wallBall_coinCoordinates[i].x;
+            coin->pos.y = -g_Minigame.wallBall_coinCoordinates[i].y;
+            coin->pos.z = g_Minigame.wallBall_coinCoordinates[i].z;
+            fn_8001D0D0(i + 130, 1.75f);
+            if (g_Minigame.wallBall_coinsVisibleFrameCounter[i] <= 1) {
+                coin->vel.y = RandomF32_Game_Range(-3.1415927f, 3.1415927f);
+            } else {
+                coin->vel.y = fn_3_9FEA8(0.05f + coin->vel.y);
+            }
+            shadow->unk_26 = 1;
+            shadow->pos.x = g_Minigame.wallBall_coinCoordinates[i].x;
+            shadow->pos.y = -0.05f;
+            shadow->pos.z = g_Minigame.wallBall_coinCoordinates[i].z;
+            fn_8001D0D0(i, 4.325f);
+        }
+    }
 }
 
 // .text:0x0011A350 size:0x3C mapped:0x807593E4

@@ -373,8 +373,43 @@ void fn_3_B025C(void) {
 }
 
 // .text:0x000B02A8 size:0x148 mapped:0x806EF33C
+extern s16 lbl_3_data_FC1C[2];
 void fn_3_B02A8(void) {
-    return;
+    fn_3_5F720();
+    if ((u8) g_Practice.practiceLevel == 4) {
+        g_Pitcher.windupCountdownUntilBallReleased = lbl_3_data_FC1C[1];
+    }
+    g_Strikes.unk_C = g_Strikes.outs;
+    g_Strikes.unk_18[0] = -1;
+    g_Strikes.unk_18[1] = -1;
+    g_Strikes.unk_18[2] = -1;
+    g_Strikes.unk_20 = g_Strikes.balls + (g_Strikes.strikes * 0x10);
+    g_Strikes.unk_14 = 0;
+    g_Ball.totalFramesAtPlay = 0;
+    g_FieldingLogic.unk10E = 0;
+    g_FieldingLogic.unkEE = 0;
+    g_FieldingLogic.unk10F = 0;
+    g_FieldingLogic.unk110 = 0;
+    g_FieldingLogic.unk128 = 0;
+    g_FieldingLogic.unk129 = 0;
+    g_RunningLogic.unk13 = 0;
+    if ((u8) g_GameLogic.pre_PostMiniGameInd != 0) {
+        g_GameLogic.minigameLastTurnSuccessInd = 1;
+        g_GameLogic.hudElementLoadingInd = 1;
+    } else {
+        g_GameLogic.minigameLastTurnSuccessInd = 0;
+    }
+    g_GameLogic.pre_PostMiniGameInd = 0;
+    g_GameLogic.minigameLastTurnSuccessInd = 0;
+    g_Practice.guidedPracticeCompletionRelated2 = 0;
+    g_Practice._1B0 = 0;
+    changeScene(1, 6);
+    fn_3_5A6D4(1U);
+    fn_3_6C0E0();
+    if ((u8) lbl_3_common_bss_34C58._2A != 0) {
+        lbl_3_common_bss_34C58._2A = 2;
+        lbl_3_common_bss_34C58._24 = 0x78;
+    }
 }
 
 // .text:0x000B03F0 size:0x74 mapped:0x806EF484
@@ -568,7 +603,35 @@ void fn_3_B116C(void) {
 
 // .text:0x000B11D0 size:0x128 mapped:0x806F0264
 void fn_3_B11D0(void) {
-    return;
+    fn_3_5F720();
+    g_Pitcher.handedness = g_Fielders->unk1C7;
+    g_Pitcher.curveBallSpeed = 0x7D;
+    g_Pitcher.fastBallSpeed = 0x91;
+    g_Pitcher.cursedBallStat = 0x64;
+    g_Strikes.unk_C = g_Strikes.outs;
+    g_Strikes.unk_18[0] = -1;
+    g_Strikes.unk_18[1] = -1;
+    g_Strikes.unk_18[2] = -1;
+    g_Strikes.unk_20 = g_Strikes.balls + (g_Strikes.strikes * 0x10);
+    g_Strikes.unk_14 = 0;
+    g_Ball.totalFramesAtPlay = 0;
+    g_FieldingLogic.unk10E = 0;
+    g_FieldingLogic.unkEE = 0;
+    g_FieldingLogic.unk10F = 0;
+    g_FieldingLogic.unk110 = 0;
+    g_FieldingLogic.unk128 = 0;
+    g_FieldingLogic.unk129 = 0;
+    g_RunningLogic.unk13 = 0;
+    g_GameLogic.pre_PostMiniGameInd = 0;
+    g_GameLogic.minigameLastTurnSuccessInd = 0;
+    g_Practice.hitVariablesSetIndicator = 0;
+    g_Practice._1E4[0] = 0;
+    g_Practice._1CB = 0;
+    g_Strikes.outs = 0;
+    g_Practice._152 = 0;
+    changeScene(1, 6);
+    fn_3_5A6D4(1U);
+    fn_3_6C0E0();
 }
 
 // .text:0x000B12F8 size:0x178 mapped:0x806F038C

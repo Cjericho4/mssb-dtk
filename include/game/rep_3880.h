@@ -158,7 +158,15 @@ typedef struct {
     Vec pos; // 0x24
 } Struct_14B248_Arg;
 void fn_3_14B248(Struct_14B248_Arg* arg0, ListNode_14B9F0* node);
-void fn_3_14B3F4(void);
+typedef struct PositionEffect {
+    u8 _pad0[0x18];
+    VecXYZ origin; /* 0x18 */
+    VecXYZ pos; /* 0x24 */
+    f32 phaseFrames; /* 0x30 */
+    s16 totalFrames; /* 0x34 */
+    s16 remainingFrames; /* 0x36 */
+} PositionEffect;
+void fn_3_14B3F4(PositionEffect* effect);
 void fn_3_14B53C(void* arg0, void* arg1, void* arg2);
 void fn_3_14B92C(void* arg0, void* arg1);
 void fn_3_14B9A0(void* arg0, void* arg1);
