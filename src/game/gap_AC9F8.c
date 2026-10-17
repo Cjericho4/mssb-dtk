@@ -555,8 +555,64 @@ void fn_3_B056C(void) {
 }
 
 // .text:0x000B0874 size:0x214 mapped:0x806EF908
+extern u32 lbl_3_data_FDE4[];
+s32 fn_3_6BA64(void);
+void fn_3_B27A4(void);
+
 void fn_3_B0874(void) {
-    return;
+    switch (g_Practice.practiceState) {
+    case 0:
+        g_hugeAnimStruct.field272_0x307d = 0;
+        fn_3_8A350();
+        if (g_Practice.practiceType_2 == 4) {
+            fn_3_B4124(1, 0, g_Minigame.teamEntries[g_Practice.homeAway].fieldA, g_Minigame.battingHandedness[g_Practice.homeAway]);
+            setInMemBatterConstants(0);
+            fn_3_6D964(0, 0);
+        } else {
+            fn_3_6EBB4(0);
+            setFielderValues(0, 0);
+            setInMemBatterConstants(0);
+            fn_3_6D964(0, 0);
+        }
+        g_GameLogic.currentBatterPerTeam[0] = 1;
+        g_GameLogic.currentBatterPerTeam[1] = 1;
+        lbl_3_common_bss_32724.unk9A = 0;
+        lbl_3_common_bss_32724.unk9C = 0;
+        lbl_803CBC3C.unk2 = 0;
+        g_Practice._1D9[0] = 0;
+        fn_80011BE4(9);
+        fn_3_B3C94(1);
+        break;
+    case 1:
+        if (fn_3_6BA64() != 0) fn_3_B3C94(2);
+        break;
+    case 2:
+        if (g_Practice.practiceType_2 == 4) {
+            fn_3_B3C94(3);
+        } else if (fn_3_750DC() != 0) {
+            fn_3_B3C94(3);
+        }
+        break;
+    case 3:
+        if (someAnimationIndFunction() != 0) fn_3_B3C94(4);
+        break;
+    case 4:
+        if (fn_3_B3CD4() != 0) fn_3_B3C94(7);
+        break;
+    case 7:
+        fn_3_B3B70();
+        if (g_Practice.practiceType_2 == 4) {
+            fn_3_B3A4C();
+            fn_3_B3C78(3);
+        } else {
+            fn_3_B27A4();
+            g_Practice.commandList = (void*)lbl_3_data_FDE4[g_Practice.practiceLevel];
+            fn_3_B3C78(1);
+        }
+        changeScene(1, 6);
+        fn_3_5A6D4(7);
+        break;
+    }
 }
 
 // .text:0x000B0A88 size:0x24 mapped:0x806EFB1C
