@@ -149,7 +149,7 @@ void fn_3_149BA8(void);
 void fn_3_14A070(s32* arr, s32 count);
 void fn_3_14A164(void);
 s32 fn_3_14A188(struct Struct_14C79C_Arg* arg);
-void fn_3_14A37C(void);
+void fn_3_14A37C(struct Struct_800339F0_Result* obj, Vec* pos);
 void fn_3_14A62C(void);
 void fn_3_14A90C(void);
 void fn_3_14AC1C(void);

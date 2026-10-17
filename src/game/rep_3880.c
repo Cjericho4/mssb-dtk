@@ -291,17 +291,21 @@ void fn_3_14A164(void) {
 }
 
 typedef struct {
-    u8 _pad0[0x8];
+    s32 unk0;
+    s32 unk4;
     s32 unk8;   // 0x08
-    u8 _padC[0x4];
+    s32 unkC;
     s32 unk10;  // 0x10
     s32 unk14;  // 0x14
-    u8 _pad18[0x8];
+    s32 unk18;
+    s32 unk1C;
     s32 unk20;  // 0x20
     s32 unk24;  // 0x24
     s32 unk28;  // 0x28
     s32 unk2C;  // 0x2C
-    u8 _pad30[0xC];
+    s32 unk30;
+    s32 unk34;
+    u8 _pad38[4];
 } Struct_26E40;
 extern Struct_26E40 lbl_3_data_26E40;
 void fn_80033620(struct Struct_14C79C_Arg* arg);
@@ -357,8 +361,40 @@ s32 fn_3_14A188(Struct_14C79C_Arg* arg) {
 }
 
 // .text:0x0014A37C size:0x2B0 mapped:0x80789410
-void fn_3_14A37C(void) {
-    return;
+static inline f32 radialOffset(s32 radius, f32 wave) {
+    return (f32)radius * wave / 100000.0f;
+}
+void fn_3_14A37C(struct Struct_800339F0_Result* obj, Vec* pos) {
+    ListNode_14B9F0* node;
+    u32 i;
+    f32 angle;
+    obj->field_0x10 = lbl_3_common_bss_32724.field6C;
+    node = obj->listHead;
+    i = 0;
+    do {
+        node->field_0x4D = lbl_3_data_26E40.unk0;
+        node->field_0x4E = 0;
+        node->field_0x4A = lbl_3_data_26E40.unk8;
+        node->field_0x48 = 0;
+        node->offset.x = pos->x;
+        node->offset.y = -pos->y;
+        node->offset.z = pos->z;
+        angle = (f32)((360 / lbl_3_data_26E40.unk4) * i);
+        angle = 0.017453292f * angle;
+        node->offset.x = radialOffset(lbl_3_data_26E40.unkC, (f32)cos(angle)) + node->offset.x;
+        node->offset.y = radialOffset(lbl_3_data_26E40.unkC, (f32)sin(angle)) + node->offset.y;
+        node->scaleX = node->scaleY = (f32)lbl_3_data_26E40.unk14 / 100000.0f;
+        node->color[0] = node->color[1] = node->color[2] = 255;
+        node->color[3] = lbl_3_data_26E40.unk24;
+        node->velocity.x = 0.0f;
+        node->velocity.y = (f32)(lbl_3_data_26E40.unk30 - rand() % lbl_3_data_26E40.unk34);
+        node->velocity.y /= 100000.0f;
+        node->velocity.y *= (f32)(-((rand() % 2) * 2) + 1);
+        node->velocity.z = (f32)(lbl_3_data_26E40.unk18 - rand() % lbl_3_data_26E40.unk1C);
+        node->velocity.z /= 100000.0f;
+        i++;
+        node = node->next;
+    } while (node != NULL);
 }
 
 // .text:0x0014A62C size:0x2E0 mapped:0x807896C0
