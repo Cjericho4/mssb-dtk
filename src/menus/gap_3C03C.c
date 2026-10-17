@@ -1,4 +1,5 @@
 #include "menus/gap_3C03C.h"
+#include "menus/rep_10C0.h"
 
 // .text:0x0003C03C size:0x12C
 void fn_2_3C03C(void) {
@@ -202,7 +203,7 @@ void fn_2_42388(void) {
 
 // .text:0x00042474 size:0x1C
 void fn_2_42474(void) {
-    return;
+    lbl_2_bss_1A824C->unk1976E4 = 120;
 }
 
 // .text:0x00042490 size:0x1A8
