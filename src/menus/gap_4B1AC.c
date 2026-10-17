@@ -457,7 +457,7 @@ void fn_2_54120(void) {
 }
 
 // .text:0x00054234 size:0x120
-void fn_2_54234(void) {
+void fn_2_54234(MenusResourceEntry* entries, s32 count) {
     return;
 }
 

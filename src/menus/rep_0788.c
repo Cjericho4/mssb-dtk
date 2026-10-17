@@ -9,6 +9,7 @@ extern MenusResourceEntry lbl_2_data_1073C[];
 extern MenusResourceEntry lbl_2_data_105FC[];
 extern MenusResourceEntry lbl_2_data_F0EC[];
 extern MenusResourceEntry lbl_2_data_9FC8[];
+extern MenusResourceEntry lbl_2_data_104EC[];
 
 // .text:0x0001D440 size:0x2ACC
 void fn_2_1D440(void) {
@@ -130,7 +131,10 @@ void fn_2_2460C(void) {
 
 // .text:0x00024650 size:0x4C
 void fn_2_24650(void) {
-    return;
+    QueueEntry* task = fn_800B0A5C_insertQueue(fn_2_242FC, 2);
+    task->unk1C = 0;
+    task->unk1E = 0;
+    fn_2_54234(lbl_2_data_104EC, 2);
 }
 
 // .text:0x0002469C size:0x44

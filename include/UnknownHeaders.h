@@ -748,6 +748,7 @@ typedef struct QueueEntry {
             s16 unk18; /* 0x18 */
             s16 unk1A; /* 0x1A */
             s16 unk1C; /* 0x1C */
+            s16 unk1E; /* 0x1E */
         };
     };
     s32 unk20;     /* 0x20 */
