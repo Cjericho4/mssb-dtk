@@ -1,4 +1,5 @@
 #include "menus/rep_08E8.h"
+#include "game/rep_1E08.h"
 #include "UnknownHeaders.h"
 #include "menus/rep_0B08.h"
 
@@ -89,7 +90,8 @@ void fn_2_47FF8(void) {
 
 // .text:0x000481B8 size:0x3C
 void fn_2_481B8(void) {
-    return;
+    Fn52768Result* camera = fn_80052768(0);
+    fn_800BD670((HugeAnimCtrlObj*)g_hugeAnimStruct.ctrlOrBonePtr, (s32)camera->mtx);
 }
 
 // .text:0x000481F4 size:0x5AC
