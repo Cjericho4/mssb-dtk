@@ -184,7 +184,29 @@ void fn_3_7E2BC(void) {
 
 // .text:0x0007EA68 size:0x16C mapped:0x806BDAFC
 void fn_3_7EA68(void) {
-    return;
+    InputStruct* input = &g_Controls[g_GameLogic.teams[g_GameLogic.teamBatting]];
+    s16 angle;
+    if (g_Pitcher.pitcherActionState != 1 && g_Pitcher.pitcherActionState != 2 &&
+        g_Pitcher.pitcherActionState != 3) return;
+    if (g_d_GameSettings.GameModeSelected == 2 && (s8)g_Practice.instructionNumber >= 0) {
+        input = &g_Practice.inputs[g_GameLogic.teamBatting];
+    }
+    if (!(input->newButtonInput & 0x800)) return;
+    angle = input->controlStickAngle;
+    if (angle < 0) {
+        InMemRunnerType* runner = &g_Runners[1];
+        int i;
+        for (i = 0; i < 3; i++, runner++) {
+            if (runner->runnerOnFieldOrOutOrScored != 0 && runner->stealingStatus == 0)
+                runner->stealingStatus = 1;
+        }
+    } else {
+        if (angle >= 0x1C0 && angle <= 0x640) g_Runners[1].stealingStatus = 1;
+        angle = input->controlStickAngle;
+        if (angle >= 0x5C0 && angle <= 0xA40) g_Runners[2].stealingStatus = 1;
+        angle = input->controlStickAngle;
+        if (angle >= 0x9C0 && angle <= 0xE40) g_Runners[3].stealingStatus = 1;
+    }
 }
 
 // .text:0x0007EBD4 size:0x128 mapped:0x806BDC68
