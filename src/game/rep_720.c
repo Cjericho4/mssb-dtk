@@ -747,9 +747,58 @@ void fn_3_17804(void) {
 }
 
 // .text:0x0001785C size:0x294 mapped:0x806568F0
+extern f32 lbl_3_rodata_7B0;
+
 void fn_3_1785C(void) {
-    return;
+    Data3A40Entry *var_r5;
+    f32 cosB, dist, angA, sinA, angB, sinB, dx, dy, dz;
+
+    if (g_GameLogic.secondaryGameMode == 9) {
+        var_r5 = &lbl_3_data_A40[81];
+    } else if (g_GameLogic.secondaryGameMode == 6) {
+        var_r5 = &lbl_3_data_A40[82];
+    } else if (g_GameLogic.secondaryGameMode == 7) {
+        var_r5 = &lbl_3_data_A40[83];
+    } else if (g_GameLogic.secondaryGameMode == 8) {
+        var_r5 = &lbl_3_data_A40[84];
+    } else if (g_GameLogic.secondaryGameMode == 5) {
+        var_r5 = &lbl_3_data_A40[85];
+    } else {
+        var_r5 = &lbl_3_data_A40[86];
+    }
+    g_pCamera->unk2858 = var_r5->unk0;
+    g_pCamera->unk285C = var_r5->unk4;
+    g_pCamera->unk2860 = var_r5->unk8;
+    g_pCamera->unk289C = var_r5->unk10[0];
+    g_pCamera->unk289E = var_r5->unk10[1];
+    g_pCamera->unk2878 = var_r5->unkC;
+    angA = shortAngleToRad_Capped(g_pCamera->unk289E);
+    dist = 20.0f * (f32)cos(angA);
+    sinA = sin(angA);
+    angB = shortAngleToRad_Capped(g_pCamera->unk289C);
+    cosB = cos(angB);
+    sinB = sin(angB);
+    dx = cosB * dist;
+    dy = 20.0f * sinA;
+    dz = sinB * dist;
+    g_pCamera->unk2890 = g_pCamera->unk2840;
+    g_pCamera->unk2894 = g_pCamera->unk2844;
+    g_pCamera->unk2898 = g_pCamera->unk2848;
+    g_pCamera->unk2858 += cosB * g_pCamera->unk287C;
+    g_pCamera->unk2860 += sinB * g_pCamera->unk287C;
+    g_pCamera->unk2858 += sinB * g_pCamera->unk2880;
+    g_pCamera->unk2860 -= cosB * g_pCamera->unk2880;
+    g_pCamera->unk284C = dx + g_pCamera->unk2858;
+    g_pCamera->unk2850 = dy + g_pCamera->unk285C;
+    g_pCamera->unk2854 = dz + g_pCamera->unk2860;
+    g_pCamera->unk2840 = g_pCamera->unk2858;
+    g_pCamera->unk2844 = g_pCamera->unk285C;
+    g_pCamera->unk2848 = g_pCamera->unk2860;
+    g_pCamera->unk287C = 0.0f;
+    g_pCamera->unk2880 = 0.0f;
 }
+
+
 
 // .text:0x00017AF0 size:0x3C mapped:0x80656B84
 
