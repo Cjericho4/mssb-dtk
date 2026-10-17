@@ -61,7 +61,7 @@ void fn_2_8FE9C(void);
 void fn_2_9007C(void);
 void fn_2_9033C(s32 index, Vec* position, f32 value);
 void fn_2_903A8(s32 index);
-void fn_2_90428(void);
+void fn_2_90428(s32 index);
 void fn_2_904A8(void);
 void fn_2_90538(void);
 void fn_2_9061C(Rep1028Obj* obj);

@@ -193,8 +193,11 @@ void fn_2_903A8(s32 index) {
 }
 
 // .text:0x00090428 size:0x80
-void fn_2_90428(void) {
-    return;
+void fn_2_90428(s32 index) {
+    Rep1028Obj* obj = &lbl_2_bss_1A8248->rep1028Objects[index];
+    memcpy(&obj->position, &lbl_2_data_3198[index].position, sizeof(Vec));
+    obj->unk30 = 0.0f;
+    obj->unk28 = lbl_2_data_3198[index].value;
 }
 
 // .text:0x000904A8 size:0x90
