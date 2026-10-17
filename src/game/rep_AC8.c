@@ -1642,18 +1642,50 @@ void fn_3_48A54(void) {
 }
 
 // .text:0x000494F4 size:0x4D0 mapped:0x80688588
-void fn_3_494F4(void) {
+void fn_3_494F4(s32 fielderIdx) {
     return;
 }
 
 // .text:0x000499C4 size:0x254 mapped:0x80688A58
-void fn_3_499C4(void) {
+void fn_3_499C4(s32 fielderIdx, VecXYZ* out) {
     return;
 }
 
 // .text:0x00049C18 size:0x290 mapped:0x80688CAC
-void fn_3_49C18(void) {
-    return;
+void fn_3_49C18(s32 fielderIdx) {
+    Fielder* f = &g_Fielders[fielderIdx];
+    VecXYZ target;
+
+    switch (fn_3_53130(fielderIdx)) {
+    case 2:
+        return;
+    default:
+        if (f->unk1FF == 0) {
+            fn_3_499C4(fielderIdx, &target);
+            {
+                f32 x = target.x;
+                f32 z = target.z;
+                setFielderTargetIdx(fielderIdx, x, z);
+            }
+            f->unk1FF = 1;
+        }
+        if (f->unk1FF == 1) {
+            fn_3_526DC(fielderIdx);
+            fn_3_494F4(fielderIdx);
+        }
+    case 1:
+        if (g_Ball.ballState != 0 && g_Ball.ballState != 3) {
+            if (fielderIdx != -1) {
+                setFielderReadyAction(fielderIdx, 0xC);
+            }
+            if (fielderIdx <= 5) {
+                f->unk1D6 = 7;
+            } else {
+                f->unk1D6 = 6;
+            }
+        }
+        break;
+    }
 }
 
 // .text:0x00049EA8 size:0x94 mapped:0x80688F3C
@@ -1876,7 +1908,7 @@ s32 fn_3_52560(s32 fielderIdx, f32 x, f32 z) {
 }
 
 // .text:0x000526DC size:0x870 mapped:0x80691770
-void fn_3_526DC(void) {
+void fn_3_526DC(s32 fielderIdx) {
     return;
 }
 
