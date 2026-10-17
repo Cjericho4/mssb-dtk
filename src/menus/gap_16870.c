@@ -22,6 +22,6 @@ u8 fn_2_16A5C(s32 index) {
 }
 
 // .text:0x00016A74 size:0x24
-void fn_2_16A74(void) {
-    return;
+void fn_2_16A74(s32 index, s32 value) {
+    g_hugeAnimStruct.fielderStructs[index].unk_25D = value != 0;
 }
