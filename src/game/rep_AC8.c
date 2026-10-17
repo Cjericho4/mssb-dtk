@@ -178,6 +178,34 @@ static inline s32 tryCoverNearBase(s32 fielderIdx) {
     return 1;
 }
 
+static inline void releaseFielderBase(s32 idx) {
+    Fielder* f = &g_Fielders[idx];
+    s16 base = f->unk18C;
+
+    if (base < 0) {
+        return;
+    }
+    if (base <= 3) {
+        if (g_FieldingLogic.unkD0[base] == idx) {
+            g_FieldingLogic.unkD0[base] = -1;
+            g_FieldingLogic.unk101[base] = 0;
+        }
+        f->unk18C = -1;
+        f->unk1D7 = 0;
+        if (f->unk1D3 == 1 && idx != -1) {
+            setFielderReadyAction(idx, 0xC);
+        }
+    } else if (base == 5) {
+        g_FieldingLogic.unkD8 = -1;
+        g_FieldingLogic.unk105 = 0;
+        f->unk18C = -1;
+        f->unk1D7 = 0;
+        if (f->unk1D3 == 0xE && idx != -1) {
+            setFielderReadyAction(idx, 0xC);
+        }
+    }
+}
+
 // .text:0x000251E4 size:0x1C0 mapped:0x80664278
 void fn_3_251E4(void) {
     return;
@@ -2742,7 +2770,6 @@ void fn_3_48480(s32 fielderIdx) {
 // .text:0x00048A54 size:0xAA0 mapped:0x80687AE8
 static inline void claimRunnerChase(s32 idx) {
     Fielder* f = &g_Fielders[idx];
-    s16 base;
 
     g_FieldingLogic.unkBE = idx;
     if (idx != -1) {
@@ -2752,29 +2779,7 @@ static inline void claimRunnerChase(s32 idx) {
     if (g_FieldingLogic.unkD8 != idx && f->unk18C < 0) {
         return;
     }
-    base = f->unk18C;
-    if (base < 0) {
-        return;
-    }
-    if (base <= 3) {
-        if (g_FieldingLogic.unkD0[base] == idx) {
-            g_FieldingLogic.unkD0[base] = -1;
-            g_FieldingLogic.unk101[base] = 0;
-        }
-        f->unk18C = -1;
-        f->unk1D7 = 0;
-        if (f->unk1D3 == 1 && idx != -1) {
-            setFielderReadyAction(idx, 0xC);
-        }
-    } else if (base == 5) {
-        f->unk18C = -1;
-        f->unk1D7 = 0;
-        g_FieldingLogic.unkD8 = -1;
-        g_FieldingLogic.unk105 = 0;
-        if (f->unk1D3 == 0xE && idx != -1) {
-            setFielderReadyAction(idx, 0xC);
-        }
-    }
+    releaseFielderBase(idx);
 }
 
 void fn_3_48A54(s32 fielderIdx) {
@@ -3098,8 +3103,8 @@ void fn_3_4B514(s32 fielderIdx) {
 }
 
 // .text:0x0004B8D0 size:0x13C mapped:0x8068A964
-void fn_3_4B8D0(void) {
-    return;
+void fn_3_4B8D0(s32 idx) {
+    releaseFielderBase(idx);
 }
 
 // .text:0x0004BA0C size:0xFBC mapped:0x8068AAA0

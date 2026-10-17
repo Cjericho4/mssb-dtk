@@ -177,7 +177,7 @@ void fn_3_4A408(s32 fielderIdx, f32* x, f32* z);
 void fn_3_4A9AC(s32 fielderIdx);
 void fn_3_4B128(s32 fielderIdx);
 void fn_3_4B514(s32 fielderIdx);
-void fn_3_4B8D0(void);
+void fn_3_4B8D0(s32 idx);
 void fn_3_4BA0C(void);
 void fn_3_4C9C8(void);
 void fn_3_4CFB0(void);
