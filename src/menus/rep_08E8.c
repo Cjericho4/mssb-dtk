@@ -4,13 +4,23 @@
 #include "UnknownHeaders.h"
 #include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
+#include "menus/gap_3C03C.h"
+
+extern u32 lbl_803CBD0C;
+extern MenusEffectState* lbl_2_data_13374[];
+extern void fn_80031CA4(Vec* position, MenusEffectState* state);
 
 extern MenusDisplayConfig lbl_2_data_13228[];
 extern void LITXForm(MenusLight* light, Mtx matrix);
 
 // .text:0x00046C88 size:0x78
-void fn_2_46C88(void) {
-    return;
+void fn_2_46C88(s32 index) {
+    Vec position;
+    fn_2_68690(0);
+    fn_2_68DAC(index, &position);
+    PSVECScale(&position, 2.0f, &position);
+    lbl_2_data_13374[0]->type = lbl_803CBD0C;
+    fn_80031CA4(&position, lbl_2_data_13374[0]);
 }
 
 // .text:0x00046D00 size:0x34
