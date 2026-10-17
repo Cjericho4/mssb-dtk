@@ -2139,7 +2139,11 @@ void fn_3_155F08(void) {
 
 // .text:0x00156218 size:0x330 mapped:0x807952AC
 void fn_3_156218(void) {
-    return;
+    struct Struct_800339F0_Result* obj;
+    if (g_d_GameSettings.GameModeSelected == GAME_TYPE_MINIGAMES && g_Minigame.GameMode_MiniGame == 1) {
+        obj = (struct Struct_800339F0_Result*)fn_80033A24(fn_3_1552AC, 0x80, 0, lbl_3_data_26BC0.unk4, 1, 0x1B);
+        if (obj != NULL) initBallRotatedEffects(obj);
+    }
 }
 
 // .text:0x00156548 size:0x428 mapped:0x807955DC
