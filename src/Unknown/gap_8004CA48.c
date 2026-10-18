@@ -119,8 +119,14 @@ s32 fn_8004FD64(s32 index) {
 }
 
 // .text:0x8004FDA0 size:0x48
-void fn_8004FDA0(void) {
-    return;
+void fn_8004FDA0(s32 value) {
+    s32 i;
+    for (i = 0; i < 36; i++) {
+        if (lbl_800FDE84[i] == value) {
+            lbl_803C6028.busy[i] = 1;
+            return;
+        }
+    }
 }
 
 // .text:0x8004FDE8 size:0x350
