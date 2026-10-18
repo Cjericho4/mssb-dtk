@@ -519,8 +519,8 @@ void fn_1_163FC(void) {
 
 // .text:0x00016400 size:0x4C
 void fn_1_16400(s8 delta) {
-    u16 count = g_hugeAnimStruct.fielderStructs[lbl_1_bss_5F73].ring->count;
-    lbl_1_bss_5F6C = (lbl_1_bss_5F6C + (count + delta)) % count;
+    lbl_1_bss_5F6C = (lbl_1_bss_5F6C + g_hugeAnimStruct.fielderStructs[lbl_1_bss_5F73].ring->count + delta) %
+                     g_hugeAnimStruct.fielderStructs[lbl_1_bss_5F73].ring->count;
 }
 
 // .text:0x0001644C size:0x10C
