@@ -1,8 +1,14 @@
 #include "menus/gap_5E84C.h"
+#include "game/rep_1C0.h"
 #include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
 #include "menus/gap_4B1AC.h"
 #include "menus/gap_1B1BC.h"
+
+extern CompressedDiskRead lbl_2_data_20C00;
+extern CompressedDiskRead lbl_2_data_20BF0[];
+extern s32 fn_80035838(CompressedDiskRead* list, s32 count);
+extern void fn_800111B4(struct MenusSceneArchive* archive);
 
 extern void fn_8001F228(void);
 extern void fn_80035B50(s32);
@@ -24,7 +30,27 @@ void fn_2_5EB78(void) {
 
 // .text:0x0005ED3C size:0xF8
 void fn_2_5ED3C(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        lbl_80366B18.archives[2] = ARAMTransfer(&lbl_2_data_20C00, NULL, 1, NULL);
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        if ((s32)(u8)lbl_803C6CF8.allowLoad == 1) {
+            fn_800111B4(lbl_80366B18.archives[2]);
+            scene->field15_0x28 = 2;
+        }
+        break;
+    case 2:
+        if (fn_80035838(lbl_2_data_20BF0, 10) != 0) scene->field15_0x28 = 3;
+        break;
+    case 3:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
 }
 
 // .text:0x0005EE34 size:0x88
