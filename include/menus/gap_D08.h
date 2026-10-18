@@ -26,7 +26,7 @@ extern u8** lbl_2_bss_D984;
 extern MenusD08State* lbl_803CBBCC;
 
 void fn_2_D08(u16 index, u16 time, u8 mode);
-void fn_2_D88(void);
+void fn_2_D88(u16 index, s16 sound);
 void fn_2_E84(u16 index, s16 sound);
 void fn_2_F64(void);
 void fn_2_1018(u16 index);
