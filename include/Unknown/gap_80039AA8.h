@@ -48,5 +48,12 @@ void fn_8003AC90(void);
 void fn_8003AD84(void);
 
 u8* memset(u8* memory, s32 value, u32 size);
+u8 GetDrawShadows(void);
+void GXSetTexCopySrc(u16 left, u16 top, u16 width, u16 height);
+void GXSetTexCopyDst(u16 width, u16 height, s32 format, BOOL mipmap);
+void GXCopyTex(Gap80039AA8Texture* dest, BOOL clear);
+void GXPixModeSync(void);
+void fn_800BEB3C(void);
+void fn_800BD1E8(void (*callback)(void));
 
 #endif // !__UNKNOWN_gap_80039AA8_H_

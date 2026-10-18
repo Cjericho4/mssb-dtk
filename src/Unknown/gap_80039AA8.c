@@ -51,9 +51,18 @@ void fn_8003A37C(void) {
 }
 
 // .text:0x8003A4C8 size:0x70
+#pragma dont_inline on
 void fn_8003A4C8(void) {
-    return;
+    if (GetDrawShadows()) {
+        GXSetTexCopySrc(0, 0, 640, 448);
+        GXSetTexCopyDst(640, 448, 4, 0);
+        GXCopyTex(GetUITexture(), 1);
+        GXPixModeSync();
+        fn_800BEB3C();
+        fn_800BD1E8(fn_8003A37C);
+    }
 }
+#pragma dont_inline reset
 
 // .text:0x8003A538 size:0x8
 s32 fn_8003A538(void) {
