@@ -10,6 +10,8 @@ extern MenusSceneAsset lbl_2_data_1DD4;
 extern void fn_8001CB10(MenusSceneAsset* asset, s32 mode);
 extern void fn_8001CCC8(void);
 #include "menus/gap_16870.h"
+#include "menus/gap_8782C.h"
+extern u8 lbl_80108EC4[];
 
 // .text:0x00014574 size:0x21C
 void fn_2_14574(void) {
@@ -32,8 +34,18 @@ void fn_2_14CA0(void) {
 }
 
 // .text:0x00014FB8 size:0x118
-void fn_2_14FB8(void) {
-    return;
+void fn_2_14FB8(s32 index) {
+    s32 values[2];
+    s32 i;
+    values[0] = lbl_80108EC4[lbl_2_bss_F410.selections[0]];
+    values[1] = lbl_80108EC4[lbl_2_bss_F410.selections[1]];
+    do {
+        values[index] = fn_2_14F8(0, 19);
+        for (i = 0; i < 12; i++) {
+            if (lbl_80108EC4[i] == values[index]) break;
+        }
+    } while (i == 12 || values[0] == values[1]);
+    lbl_2_bss_F410.selections[index] = i;
 }
 
 // .text:0x000150D0 size:0x34

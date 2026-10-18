@@ -57,7 +57,7 @@ void fn_2_1328(u32* value, u16 amount);
 void fn_2_1354(MenusSortEntry* entries, s32 count, s32 descending);
 void fn_2_145C(void);
 s32 fn_2_148C(u16* text);
-void fn_2_14F8(void);
+s32 fn_2_14F8(s32 first, s32 second);
 u32 fn_2_1554(void);
 void fn_2_1578(void);
 void fn_2_1800(void);

@@ -34,7 +34,9 @@ typedef struct MenusRosterState {
 
 typedef struct MenusGameChoiceState {
     u32 unk0;
-    u8 _pad4[0x4C];
+    u8 _pad4[0xC];
+    s32 selections[2];
+    u8 _pad18[0x38];
     u32 selection;
 } MenusGameChoiceState;
 extern MenusRosterState lbl_80361B20;

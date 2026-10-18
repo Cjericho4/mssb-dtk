@@ -16,7 +16,7 @@ void fn_2_14574(void);
 void fn_2_14790(void);
 void fn_2_14BB8(void);
 void fn_2_14CA0(void);
-void fn_2_14FB8(void);
+void fn_2_14FB8(s32 index);
 void fn_2_150D0(u8 index);
 s32 fn_2_15104(s32 previous, s32 current, u8 index, u8 value);
 void fn_2_151BC(void);

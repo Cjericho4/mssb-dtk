@@ -110,8 +110,8 @@ done:
 }
 
 // .text:0x000014F8 size:0x5C
-void fn_2_14F8(void) {
-    return;
+s32 fn_2_14F8(s32 first, s32 second) {
+    return first;
 }
 
 // .text:0x00001554 size:0x24
