@@ -65,6 +65,19 @@ typedef struct Gap800B117CFlags {
     /* 0x8C */ u8 unk8C;
 } Gap800B117CFlags;
 extern Gap800B117CFlags* lbl_803CBB34;
+typedef struct Gap800B117CFlagBanks {
+    Gap800B117CFlags current[24];
+    Gap800B117CFlags previous[24];
+} Gap800B117CFlagBanks;
+typedef struct Gap800B117CTextureSlot { u8 _pad0[0x1C]; } Gap800B117CTextureSlot;
+typedef struct Gap800B117CCommandBuffer { u32 words[4]; } Gap800B117CCommandBuffer;
+extern Gap800B117CFlagBanks lbl_802FEBF8;
+extern Gap800B117CTextureSlot lbl_802FE918[];
+extern Gap800B117CCommandBuffer* lbl_803CC1E4;
+extern s32 lbl_803CC1D4;
+extern Gap800B117CFlags* lbl_803CBB38;
+extern Gap800B117CTextureSlot* lbl_803CBB40;
+extern Gap800B117CCommandBuffer* lbl_803CC1C0;
 
 void fn_800B117C(u8 value);
 void fn_800B1188(void);
@@ -81,7 +94,7 @@ void fn_800B2160(u8 value);
 BOOL fn_800B216C(u8 a, u32 b, u8 c);
 void fn_800B21A8(void);
 void fn_800B2240(void);
-void fn_800B24D4(void);
+void fn_800B24D4(s32 index);
 void fn_800B251C(void);
 void fn_800B27A4(s32 index);
 void fn_800B27DC(void);

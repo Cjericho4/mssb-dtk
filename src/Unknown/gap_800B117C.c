@@ -82,8 +82,12 @@ void fn_800B2240(void) {
 }
 
 // .text:0x800B24D4 size:0x48
-void fn_800B24D4(void) {
-    return;
+void fn_800B24D4(s32 index) {
+    lbl_803CC1D4 = index;
+    lbl_803CBB34 = &lbl_802FEBF8.current[index];
+    lbl_803CBB38 = &lbl_802FEBF8.previous[index];
+    lbl_803CBB40 = &lbl_802FE918[index];
+    lbl_803CC1C0 = &lbl_803CC1E4[index];
 }
 
 // .text:0x800B251C size:0x288
