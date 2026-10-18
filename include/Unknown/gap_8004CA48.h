@@ -53,7 +53,14 @@ BOOL fn_8004D93C(BOOL special);
 void fn_8004D990(void);
 void fn_8004DB90(void);
 void fn_8004E2EC(void);
-void fn_8004E504(void);
+typedef struct Gap8004CA48CharInfo {
+    u8 unk0;
+    /* 0x1 */ u8 id;
+    u8 _pad2[0x4];
+} Gap8004CA48CharInfo;
+extern Gap8004CA48CharInfo lbl_800E8558[54];
+extern u8 lbl_800FE5D4[0x350];
+void fn_8004E504(s32 convert, s32 a, s32 b, s32 c, s32 d);
 void fn_8004E5B4(void);
 void fn_8004E62C(void);
 BOOL fn_8004EE84(s32 kind);
