@@ -31,7 +31,7 @@ void fn_80033B58(void);
 void fn_80033CC8(void);
 void fn_80033F64(void);
 void fn_8003403C(void);
-void fn_800340F4(void);
+void fn_800340F4(f32 matrix[3][4]);
 void fn_80034120(void);
 void fn_8003414C(void);
 void minigamesSetSomePointers(void);
