@@ -82,7 +82,9 @@ typedef struct MenusSceneState {
     u8 choiceFlags[9];
     u8 unk4415;
     u8 unk4416;
-    u8 _pad4417[4];
+    u8 _pad4417;
+    u8 unk4418;
+    u8 _pad4419[2];
     u8 unk441B;
     u8 unk441C;
     u8 _pad441D;
