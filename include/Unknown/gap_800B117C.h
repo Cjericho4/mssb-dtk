@@ -114,7 +114,7 @@ void fn_800B4A44(void);
 void fn_800B4A94(void);
 void fn_800B4AFC(Gap800B117CObj* obj, u8 value);
 void AnimateActorBones(void);
-void fn_800B4BC8(void);
+void fn_800B4BC8(Gap800B117CObj* obj, u8 value);
 void fn_800B4C04(void);
 void fn_800B4C40(void);
 void fn_800B4CA0(void);
