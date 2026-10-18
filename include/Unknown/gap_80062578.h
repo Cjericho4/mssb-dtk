@@ -2,6 +2,8 @@
 #define __UNKNOWN_gap_80062578_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80062578Settings { u8 _pad0[0x10]; u8 mode; } Gap80062578Settings;
+extern Gap80062578Settings g_d_GameSettings;
 extern u16 lbl_80108E38[];
 extern u8 lbl_80108B3C[];
 u32 sndFXStartEx(u16 effect, u8 volume, u8 pan, u32 studio);
@@ -34,7 +36,8 @@ typedef struct Gap80062578Sound {
 extern Gap80062578Sound lbl_800EF808;
 void fn_80021518(s32 id, u32 sound);
 typedef struct Gap80062578Status {
-    u8 _pad0[0x5D];
+    u8 _pad0[0x55];
+    u8 flags[8];
     u8 busy; /* 0x5D */
     u8 pending; /* 0x5E */
 } Gap80062578Status;
@@ -47,11 +50,9 @@ typedef struct Gap80062578Flags {
     /* 0xD */ u8 unkD;
 } Gap80062578Flags;
 extern Gap80062578Flags lbl_803C6714;
-typedef struct Gap80062578Words {
-    /* 0x0 */ s32 unk0;
-    /* 0x4 */ s32 unk4;
-    /* 0x8 */ s32 unk8;
-    /* 0xC */ s32 unkC;
+typedef union Gap80062578Words {
+    struct { s32 unk0, unk4, unk8, unkC; };
+    s32 values[4];
 } Gap80062578Words;
 extern Gap80062578Words lbl_803C663C;
 typedef struct Gap80062578Stats {
@@ -67,7 +68,7 @@ typedef struct Gap80062578Scene {
 BOOL fn_80062578(void);
 void fn_800625A4(void);
 void fn_80062674(void);
-void fn_800626EC(void);
+void fn_800626EC(s32 index);
 void fn_80062744(void);
 void fn_80062764(s32 value);
 BOOL fn_80062794(u32 handle);

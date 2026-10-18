@@ -16,8 +16,10 @@ void fn_80062674(void) {
 }
 
 // .text:0x800626EC size:0x58
-void fn_800626EC(void) {
-    return;
+void fn_800626EC(s32 index) {
+    if (g_d_GameSettings.mode == 0) lbl_803C66B0.flags[0] = 1;
+    else lbl_803C66B0.flags[index] = 1;
+    lbl_803C663C.values[index]++;
 }
 
 // .text:0x80062744 size:0x20
