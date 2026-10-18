@@ -129,8 +129,11 @@ void fn_8003819C(void) {
 }
 
 // .text:0x800383BC size:0x5C
-void fn_800383BC(void) {
-    return;
+f32 (*fn_800383BC(Gap80035DD4Xform* xf))[4] {
+    PSMTXQuat(xf->rot, &xf->quat);
+    PSMTXInverse(xf->rot, xf->inv);
+    PSMTXTransApply(xf->rot, xf->result, xf->x, xf->y, xf->z);
+    return xf->result;
 }
 
 // .text:0x80038418 size:0x1D8
@@ -184,5 +187,10 @@ void fn_80039310(void) {
 
 // .text:0x80039A4C size:0x5C
 void fn_80039A4C(void) {
-    return;
+    lbl_800F79B8.index = -1;
+    lbl_803CBCA2[0] = 0;
+    memset(lbl_800F79A0.bytes, 0, 0xC);
+    lbl_803CB818 = -1;
+    lbl_803CB820 = -1;
+    lbl_803CBCA1 = 0;
 }
