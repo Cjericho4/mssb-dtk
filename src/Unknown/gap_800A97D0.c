@@ -8,8 +8,13 @@ void fn_800A97D0(u8 a, s8 b) {
 }
 
 // .text:0x800A97EC size:0x50
-void fn_800A97EC(void) {
-    return;
+void fn_800A97EC(s32 index, u32 command, u8 value) {
+    Gap800A97D0Pad* pad = &lbl_803C77B8[index];
+    if (lbl_80110080.disabledPads & (1 << index)) return;
+    pad->command = command;
+    pad->value = 0;
+    if (command != 0) pad->value = value;
+    pad->pending = 1;
 }
 
 // .text:0x800A983C size:0x28

@@ -2,6 +2,14 @@
 #define __UNKNOWN_gap_800A97D0_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800A97D0Pad {
+    u8 _pad0[9];
+    u8 pending;
+    u8 command;
+    u8 value;
+    u8 _padC[0x14];
+} Gap800A97D0Pad;
+extern Gap800A97D0Pad lbl_803C77B8[4];
 extern u16 lbl_800E7800[256];
 typedef struct Gap800A97D0Flags {
     u8 _pad0[0x55];
@@ -9,7 +17,8 @@ typedef struct Gap800A97D0Flags {
 } Gap800A97D0Flags;
 extern Gap800A97D0Flags lbl_803C7838;
 typedef struct Gap800A97D0Pan {
-    u8 _pad0[0x7];
+    u8 _pad0[6];
+    u8 disabledPads;
     /* 0x7 */ u8 unk7;
     /* 0x8 */ s8 unk8;
     /* 0x9 */ s8 unk9;
@@ -26,7 +35,7 @@ void PADInit(void);
 void SISetSamplingRate(u32 msec);
 
 void fn_800A97D0(u8 a, s8 b);
-void fn_800A97EC(void);
+void fn_800A97EC(s32 index, u32 command, u8 value);
 void fn_800A983C(void);
 void fn_800A9864(void);
 void fn_800A98FC(void);
