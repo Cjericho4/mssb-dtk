@@ -536,8 +536,7 @@ void fn_1_16558(void) {
 // .text:0x00016590 size:0x50
 s32 fn_1_16590(void) {
     u8 index = lbl_1_bss_5F73;
-    Rep0610Slot* slot = &lbl_1_bss_6940[index];
-    return g_hugeAnimStruct.fielderStructs[index].slots[slot->table]->entries[slot->entry].value;
+    return g_hugeAnimStruct.fielderStructs[index].slots[lbl_1_bss_6940[index].table]->entries[lbl_1_bss_6940[index].entry].value;
 }
 
 // .text:0x000165E0 size:0x2E8
