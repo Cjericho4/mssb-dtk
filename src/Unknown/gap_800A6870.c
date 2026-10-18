@@ -29,8 +29,20 @@ void fn_800A6900(void) {
 }
 
 // .text:0x800A6C80 size:0x90
+typedef void (*CancelCallback)(s32 result, Gap800A6870CommandBlock* block);
+static inline CancelCallback cancelCallback(u8 state) {
+    if (state == 0 || state == 3) return fn_800A75EC;
+    return fn_800A7670;
+}
 void fn_800A6C80(void) {
-    return;
+    lbl_803C6CF8.stateBytes[0] = 0;
+    lbl_803C6CF8.unk722 = 0;
+    if ((s32)lbl_803C6CF8.stateBytes[1] != 1) {
+        DVDCancelAsync(lbl_803C6CF8.block, cancelCallback(lbl_803C6CF8.state3));
+        ARQRemoveOwnerRequest(2000);
+    }
+    lbl_803C6CF8.running = 0;
+    lbl_803C6CF8.unk710 = 0;
 }
 
 // .text:0x800A6D10 size:0x114
