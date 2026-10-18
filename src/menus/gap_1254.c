@@ -54,8 +54,33 @@ void fn_2_1328(u32* value, u16 amount) {
 }
 
 // .text:0x00001354 size:0x108
-void fn_2_1354(void) {
-    return;
+void fn_2_1354(MenusSortEntry* entries, s32 count, s32 descending) {
+    u32 i;
+    u32 j;
+    if (count < 2) return;
+    if (descending == 0) {
+        MenusSortEntry temp;
+        for (i = 0; i < (u32)count; i++) {
+            j = i;
+            while (j >= 1 && entries[j - 1].value > entries[j].value) {
+                temp = entries[j - 1];
+                entries[j - 1] = entries[j];
+                entries[j] = temp;
+                j--;
+            }
+        }
+    } else {
+        MenusSortEntry temp;
+        for (i = 0; i < (u32)count; i++) {
+            j = i;
+            while (j >= 1 && entries[j - 1].value < entries[j].value) {
+                temp = entries[j - 1];
+                entries[j - 1] = entries[j];
+                entries[j] = temp;
+                j--;
+            }
+        }
+    }
 }
 
 // .text:0x0000145C size:0x30
