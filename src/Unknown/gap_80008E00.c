@@ -28,8 +28,21 @@ s32 fn_80009018(s32 value) {
 }
 
 // .text:0x80009028 size:0x6C
-void fn_80009028(void) {
-    return;
+u8 fn_80009028(void) {
+    switch (lbl_803C6CF8.unk722) {
+    case 0:
+        lbl_803CBBA4 = 0;
+        break;
+    case -1:
+    case 4:
+    case 5:
+    case 6:
+    case 11:
+        lbl_803CBBA0 = lbl_803C6CF8.unk722;
+        lbl_803CBBA4 = 1;
+        break;
+    }
+    return lbl_803CBBA4;
 }
 
 // .text:0x80009094 size:0x20

@@ -15,13 +15,20 @@ void fn_80035168(void);
 
 extern s32 lbl_803CBBAC;
 extern s32 lbl_803CBBB8;
+extern s32 lbl_803CBBA0;
+extern u8 lbl_803CBBA4;
+typedef struct Gap80008E00Load {
+    u8 _pad0[0x722];
+    /* 0x722 */ s8 unk722;
+} Gap80008E00Load;
+extern Gap80008E00Load lbl_803C6CF8;
 
 void fn_80008E00(s32 value);
 void fn_80008E08(void);
 void PostRetraceCallback(void);
 void fn_8000900C(void);
 s32 fn_80009018(s32 value);
-void fn_80009028(void);
+u8 fn_80009028(void);
 void fn_80009094(void);
 void fn_800090B4(void);
 void fn_80009144(void);
