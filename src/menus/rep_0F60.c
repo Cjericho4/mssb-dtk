@@ -1,6 +1,7 @@
 #include "menus/rep_0F60.h"
 #include "UnknownHeaders.h"
 #include "menus/rep_0568.h"
+#include "menus/rep_10C0.h"
 
 extern hugeAnimStruct* lbl_2_bss_340140;
 extern f32 lbl_2_rodata_FB4;
@@ -118,7 +119,18 @@ void fn_2_8D9DC(void) {
 
 // .text:0x0008DB14 size:0xEC
 void fn_2_8DB14(void) {
-    return;
+    u32 maxSize = 0;
+    s32 i;
+    for (i = 0; i < lbl_2_bss_1A824C->objectCount; i++) {
+        u32 size = lbl_2_data_2F990[i].size & 0x0FFFFFFF;
+        if (maxSize < size) maxSize = size;
+    }
+    maxSize = (maxSize + 31) & ~31;
+    lbl_2_bss_340140->field112_0x2c90 = maxSize;
+    lbl_2_bss_340140->animBankPtr = _OSAllocFromHeap(0x20, maxSize * lbl_2_bss_1A824C->objectCount);
+    for (i = 0; i < lbl_2_bss_1A824C->objectCount; i++) {
+        lbl_2_bss_340140->fielderStructs[i].slots[0] = NULL;
+    }
 }
 
 // .text:0x0008DC00 size:0xD8

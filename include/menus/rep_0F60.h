@@ -4,6 +4,13 @@
 #include "mssbTypes.h"
 #include "menus/rep_0568.h"
 
+typedef struct MenusAnimationResource {
+    u32 resource;
+    u32 size;
+    u8 _pad8[8];
+} MenusAnimationResource;
+extern MenusAnimationResource lbl_2_data_2F990[];
+
 void fn_2_8ACE0(void);
 void fn_2_8AEE0(void);
 void fn_2_8B118(f32 value);
