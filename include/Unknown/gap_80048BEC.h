@@ -46,6 +46,18 @@ void fn_80049220(void);
 void fn_800494CC(void);
 void possiblyTransferDataBetweenDifferentRels(void);
 void fn_80049C80(void);
+typedef struct Gap80048BECSettings {
+    u8 _pad0[0x7];
+    /* 0x07 */ u8 mode;
+    u8 _pad8[0x50];
+} Gap80048BECSettings;
+extern Gap80048BECSettings g_d_GameSettings;
+typedef struct Gap80048BECState {
+    u8 _pad0[0x36];
+    /* 0x36 */ u8 enabled;
+    u8 _pad37[0x39];
+} Gap80048BECState;
+extern Gap80048BECState lbl_803C5F04;
 void fn_80049D3C(void);
 void fn_80049D8C(void);
 void fn_8004A0FC(void);

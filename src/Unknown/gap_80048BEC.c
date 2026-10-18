@@ -64,7 +64,12 @@ void fn_80049C80(void) {
 
 // .text:0x80049D3C size:0x50
 void fn_80049D3C(void) {
-    return;
+    s32 i;
+    u8 mode = g_d_GameSettings.mode;
+    if (mode == 6) return;
+    if (lbl_803C5F04.enabled == 0) return;
+    for (i = 0; i < (mode == 6 ? 4 : 2); i++) {
+    }
 }
 
 // .text:0x80049D8C size:0x370
