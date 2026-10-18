@@ -129,7 +129,10 @@ void fn_800ACCD4(void) {
 
 // .text:0x800ACCE8 size:0x5C
 void fn_800ACCE8(void) {
-    return;
+    memset((u8*)&lbl_803C7838, 0, sizeof(Gap800A97D0Flags));
+    lbl_803C7838.unk54 = 0xF;
+    lbl_803C7838.unk30 = lbl_803C7838.unk8 = -1;
+    fn_800B0A5C_insertQueue(fn_800ABB60, 0xF0);
 }
 
 // .text:0x800ACD44 size:0x20

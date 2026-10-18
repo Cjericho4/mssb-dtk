@@ -12,9 +12,17 @@ typedef struct Gap800A97D0Pad {
 extern Gap800A97D0Pad lbl_803C77B8[4];
 extern u16 lbl_800E7800[256];
 typedef struct Gap800A97D0Flags {
-    u8 _pad0[0x55];
+    u8 _pad0[0x8];
+    /* 0x08 */ s32 unk8;
+    u8 _padC[0x24];
+    /* 0x30 */ s32 unk30;
+    u8 _pad34[0x20];
+    /* 0x54 */ u8 unk54;
     /* 0x55 */ u8 unk55;
+    u8 _pad56[0xA];
 } Gap800A97D0Flags;
+u8* memset(u8* memory, s32 value, u32 size);
+void fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
 extern Gap800A97D0Flags lbl_803C7838;
 typedef struct Gap800A97D0Pan {
     u8 _pad0[6];
