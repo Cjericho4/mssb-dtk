@@ -1,8 +1,11 @@
 #include "Unknown/gap_80042D38.h"
 
 // .text:0x80042D38 size:0x30
-void fn_80042D38(void) {
-    return;
+void fn_80042D38(u16 state) {
+    lbl_803CBBCC->previous = lbl_803CBBCC->current;
+    lbl_803CBBCC->previousTimer = lbl_803CBBCC->timer;
+    lbl_803CBBCC->current = state;
+    lbl_803CBBCC->timer = 0;
 }
 
 // .text:0x80042D68 size:0x40
