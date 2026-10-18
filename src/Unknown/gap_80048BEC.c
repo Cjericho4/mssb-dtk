@@ -272,6 +272,6 @@ void fn_8004CA08(s32 value) {
 }
 
 // .text:0x8004CA14 size:0x34
-void fn_8004CA14(void) {
-    return;
+void fn_8004CA14(s32 a, s32 b) {
+    fn_8000FE08(lbl_803C5F74.id, a, b);
 }

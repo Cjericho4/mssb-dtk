@@ -2,6 +2,12 @@
 #define __UNKNOWN_gap_80048BEC_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80048BECMenu {
+    u8 _pad0[0x16];
+    u16 id;
+} Gap80048BECMenu;
+extern Gap80048BECMenu lbl_803C5F74;
+void fn_8000FE08(u16 id, s32 a, s32 b);
 typedef struct Gap80048BECTiming {
     s32 unk0;
     s32 requested;
@@ -74,6 +80,6 @@ void fn_8004C510(void);
 void fn_8004C5F8(void);
 void fn_8004C9FC(void);
 void fn_8004CA08(s32 value);
-void fn_8004CA14(void);
+void fn_8004CA14(s32 a, s32 b);
 
 #endif // !__UNKNOWN_gap_80048BEC_H_
