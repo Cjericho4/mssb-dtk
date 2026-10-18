@@ -2,6 +2,11 @@
 #define __UNKNOWN_gap_80041348_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80041348Allocation Gap80041348Allocation;
+extern Gap80041348Allocation* lbl_803CBC48;
+extern s32 lbl_803CBC4C;
+extern s32 lbl_803CBC50;
+Gap80041348Allocation* fn_800ACC6C(s32 heap, u32 size, u32 alignment);
 extern u16 lbl_803CBCC0;
 
 
