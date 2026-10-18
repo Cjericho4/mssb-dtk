@@ -147,8 +147,13 @@ void fn_80023D98(void) {
 }
 
 // .text:0x80023DFC size:0x4C
-void fn_80023DFC(void) {
-    return;
+BOOL fn_80023DFC(Gap8002244CObj* obj, Gap8002244CVector* out) {
+    if (obj->unk8 != 0) {
+        obj->current = obj->unkC;
+        *out = obj->vectors[obj->current];
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x80023E48 size:0xA4

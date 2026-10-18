@@ -50,7 +50,7 @@ s32 fn_80023D3C(void);
 void fn_80023D44(s32 value);
 BOOL fn_80023D4C(Gap8002244CObj* obj, Gap8002244CVector* out);
 void fn_80023D98(void);
-void fn_80023DFC(void);
+BOOL fn_80023DFC(Gap8002244CObj* obj, Gap8002244CVector* out);
 void fn_80023E48(void);
 void fn_80023EEC(Gap8002244CObj* obj, s32 a, s32 b);
 void fn_80023F0C(void);
