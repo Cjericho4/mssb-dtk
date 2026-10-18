@@ -144,6 +144,6 @@ void OSWakeupThread(Gap800A6870SleepQueue* queue);
 void AISetStreamPlayState(u32 state);
 BOOL OSDisableInterrupts(void);
 BOOL OSRestoreInterrupts(BOOL enabled);
-extern u32 lbl_803CC144;
+extern volatile u32 lbl_803CC144;
 
 #endif // !__UNKNOWN_gap_800A6870_H_
