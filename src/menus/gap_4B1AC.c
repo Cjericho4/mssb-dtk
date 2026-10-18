@@ -223,7 +223,28 @@ BOOL fn_2_4E970(void) {
 
 // .text:0x0004E9A8 size:0x114
 BOOL fn_2_4E9A8(void) {
-    return FALSE;
+    MenusResourceLoads* loads = &lbl_2_data_12EA8;
+    switch ((s32)lbl_2_bss_1A8248->unk441C) {
+    case 0:
+        if (fn_80035838(&loads->modes[0], 24) == 0) return FALSE;
+        break;
+    case 1:
+        if (fn_80035838(&loads->modes[1], 24) == 0) return FALSE;
+        break;
+    case 2:
+        if (fn_80035838(&loads->modes[2], 24) == 0) return FALSE;
+        break;
+    case 3:
+        if (fn_80035838(&loads->modes[3], 24) == 0) return FALSE;
+        break;
+    case 4:
+        if (fn_80035838(&loads->modes[4], 24) == 0) return FALSE;
+        break;
+    case 5:
+        if (fn_80035838(&loads->modes[5], 24) == 0) return FALSE;
+        break;
+    }
+    return TRUE;
 }
 
 // .text:0x0004EABC size:0x38

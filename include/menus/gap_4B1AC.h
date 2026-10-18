@@ -2,6 +2,13 @@
 #define __MENUS_gap_4B1AC_H_
 
 #include "mssbTypes.h"
+#include "game/rep_1C0.h"
+
+typedef struct MenusResourceLoads {
+    u8 _pad0[0x3D4];
+    CompressedDiskRead modes[6];
+} MenusResourceLoads;
+extern MenusResourceLoads lbl_2_data_12EA8;
 
 typedef struct MenusResourceSlot {
     void (*callback)(s32, struct MenusResourceSlot*);
