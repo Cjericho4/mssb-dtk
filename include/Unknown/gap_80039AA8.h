@@ -2,6 +2,12 @@
 #define __UNKNOWN_gap_80039AA8_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80039AA8Position { f32 x, y; } Gap80039AA8Position;
+typedef struct Gap80039AA8State {
+    u8 _pad0[0xCD0];
+    Gap80039AA8Position positions[4]; /* 0xCD0 */
+} Gap80039AA8State;
+extern Gap80039AA8State lbl_802D3D80;
 void fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
 typedef struct Gap80039AA8Texture Gap80039AA8Texture;
 extern Gap80039AA8Texture lbl_8023DD80;
@@ -27,7 +33,7 @@ s32 fn_8003A538(void);
 void fn_8003A540(s32 value);
 void fn_8003A548(s32 value);
 void fn_8003A550(void);
-void fn_8003A688(void);
+void fn_8003A688(s32 index, f32 x, f32 y);
 void fn_8003A6B0(void);
 void fn_8003A848(u8 a, u8 b, u8 c);
 void fn_8003A85C(void);

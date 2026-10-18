@@ -76,8 +76,10 @@ void fn_8003A550(void) {
 }
 
 // .text:0x8003A688 size:0x28
-void fn_8003A688(void) {
-    return;
+void fn_8003A688(s32 index, f32 x, f32 y) {
+    f32 half = 0.5f;
+    lbl_802D3D80.positions[index].x = x * half;
+    lbl_802D3D80.positions[index].y = y * half;
 }
 
 // .text:0x8003A6B0 size:0x198
