@@ -104,7 +104,19 @@ extern Gap8001E460Entry lbl_800EF508[48];
 void fn_80022CB4(Gap8001E460Entry* entry, s32 a, s32 b, s32 c, Gap8001E460LoadCallback cb, Gap8001E460Load* load);
 void fn_800215F8(Gap8001E460Load* load);
 void fn_80021650(void);
-void fn_800216F8(void);
+typedef struct Gap8001E460Task {
+    u8 _pad0[0x14];
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ u8 unk18;
+    /* 0x19 */ u8 unk19;
+} Gap8001E460Task;
+typedef struct Gap8001E460QueueNode {
+    u8 _pad0[0x10];
+    /* 0x10 */ s16 unk10;
+} Gap8001E460QueueNode;
+extern Gap8001E460QueueNode* lbl_803CC1B8;
+Gap8001E460Task* fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
+void fn_800216F8(u8 a, s32 b);
 void fn_80021758(void);
 void fn_80021954(struct Gap8001E460Resource** resource);
 void fn_80021980(void);

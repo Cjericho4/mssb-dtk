@@ -214,8 +214,12 @@ void fn_80021650(void) {
 }
 
 // .text:0x800216F8 size:0x60
-void fn_800216F8(void) {
-    return;
+void fn_800216F8(u8 a, s32 b) {
+    Gap8001E460Task* task = fn_800B0A5C_insertQueue(fn_80021758, 1);
+    task->unk18 = 0;
+    task->unk19 = a;
+    task->unk14 = b;
+    lbl_803CC1B8->unk10 = 0;
 }
 
 // .text:0x80021758 size:0x1FC
