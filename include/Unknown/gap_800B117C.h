@@ -75,7 +75,8 @@ typedef struct Gap800B117CObj {
 typedef struct Gap800B117CFlags {
     u8 _pad0[0x78];
     u32 renderMode;
-    u8 _pad7C[0xE];
+    /* 0x7C */ u32 savedRenderMode;
+    u8 _pad80[0xA];
     /* 0x8A */ u8 unk8A;
     u8 _pad8B[0x1];
     /* 0x8C */ u8 unk8C;
@@ -108,7 +109,7 @@ void DrawSprite(s32 primitive, Gap800B117CVertex* vertices, s32 count, Gap800B11
 void fn_800B1EBC(void);
 void fn_800B2160(u8 value);
 BOOL fn_800B216C(u8 a, u32 b, u8 c);
-void fn_800B21A8(void);
+void fn_800B21A8(s32 mode);
 void fn_800B2240(void);
 void fn_800B24D4(s32 index);
 void fn_800B251C(void);

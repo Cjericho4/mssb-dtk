@@ -72,8 +72,17 @@ BOOL fn_800B216C(u8 a, u32 b, u8 c) {
 }
 
 // .text:0x800B21A8 size:0x98
-void fn_800B21A8(void) {
-    return;
+void fn_800B21A8(s32 mode) {
+    if (mode == 2) {
+        u32 old = lbl_803CBB34->renderMode;
+        if (fn_800B216C(1, 1, 1)) {
+            lbl_803CBB34->savedRenderMode = old;
+        }
+    } else if (mode != 0) {
+        fn_800B216C(1, 3, 1);
+    } else {
+        fn_800B216C(1, 7, 1);
+    }
 }
 
 // .text:0x800B2240 size:0x294
