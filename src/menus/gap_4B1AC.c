@@ -8,6 +8,7 @@
 #include "menus/rep_10C0.h"
 #include "UnknownHeaders.h"
 #include "game/rep_1C0.h"
+#include "game/rep_3448.h"
 
 extern CompressedDiskRead lbl_2_data_132DC[];
 extern CompressedDiskRead lbl_2_data_1326C[];
@@ -574,7 +575,18 @@ s32 fn_2_53BC8(MenusResourceSlot* slot) {
 
 // .text:0x00053CEC size:0x10C
 void fn_2_53CEC(DrawingSceneStruct* scene) {
-    return;
+    MenusResourceSlot* entry;
+    s32 bank;
+    s32 slot;
+    for (bank = 0; bank < 10; bank++) {
+        for (slot = 0; slot < 0x360; slot++) {
+            entry = &lbl_2_bss_1A8230->banks[bank].slots[slot];
+            if (entry->callback != 0) {
+                lbl_80371C30[scene->unkIndex + entry->index].obj->field_0x68 = 0;
+                lbl_80371C30[scene->unkIndex + entry->index].obj->flags &= ~2;
+            }
+        }
+    }
 }
 
 // .text:0x00053DF8 size:0x10C
