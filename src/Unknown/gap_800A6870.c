@@ -200,7 +200,7 @@ void fn_800A8878(u8 left, u8 right) {
 }
 
 // .text:0x800A88C0 size:0x8
-s32 fn_800A88C0(void) {
+Gap800A6870Stream* fn_800A88C0(void) {
     return lbl_803CC154;
 }
 
@@ -215,9 +215,12 @@ s32 fn_800A88D0(void) {
 }
 
 // .text:0x800A88D8 size:0x1D8
-void fn_800A88D8(void) {
+#pragma dont_inline on
+void fn_800A88D8(u32 value) {
     return;
 }
+
+#pragma dont_inline reset
 
 // .text:0x800A8AB0 size:0x8
 void fn_800A8AB0(s32 value) {
@@ -251,17 +254,38 @@ void fn_800A8F68(void) {
 
 // .text:0x800A8FDC size:0x58
 void fn_800A8FDC(void) {
-    return;
+    BOOL enabled;
+    Gap800A6870Stream* stream;
+    AISetStreamPlayState(0);
+    enabled = OSDisableInterrupts();
+    stream = lbl_803CC154;
+    if (stream != NULL && stream->previous != NULL) lbl_803CC154 = stream->previous;
+    OSRestoreInterrupts(enabled);
+    lbl_803CC148 = 0;
+    fn_800A88D8(lbl_803CC144);
 }
 
 // .text:0x800A9034 size:0x58
 void fn_800A9034(void) {
-    return;
+    BOOL enabled;
+    Gap800A6870Stream* stream;
+    AISetStreamPlayState(0);
+    enabled = OSDisableInterrupts();
+    stream = lbl_803CC154;
+    if (stream != NULL && stream->next != NULL) lbl_803CC154 = stream->next;
+    OSRestoreInterrupts(enabled);
+    lbl_803CC148 = 0;
+    fn_800A88D8(lbl_803CC144);
 }
 
 // .text:0x800A908C size:0x58
 void fn_800A908C(void) {
-    return;
+    u32 flags;
+    AISetStreamPlayState(0);
+    if (lbl_803CC154 != NULL && lbl_803CC154->callback != NULL) {
+        if ((flags = lbl_803CC154->flags & 2) != 0) lbl_803CC154->callback(flags);
+    }
+    lbl_803CC148 = 0;
 }
 
 // .text:0x800A90E4 size:0x84

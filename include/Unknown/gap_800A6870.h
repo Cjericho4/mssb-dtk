@@ -64,7 +64,13 @@ s32 DVDConvertPathToEntrynum(char* path);
 
 extern s32 lbl_803CC140;
 extern volatile u32 lbl_803CC148;
-extern s32 lbl_803CC154;
+typedef struct Gap800A6870Stream {
+    struct Gap800A6870Stream* previous;
+    struct Gap800A6870Stream* next;
+    u32 flags;
+    void (*callback)(u32 flags);
+} Gap800A6870Stream;
+extern Gap800A6870Stream* lbl_803CC154;
 
 s32 fn_800A6870(u8 flag, s32 value);
 void fn_800A6890(void);
@@ -98,10 +104,10 @@ void fn_800A8518(void);
 void fn_800A86B4(void);
 u16 fn_800A8864(void);
 void fn_800A8878(u8 left, u8 right);
-s32 fn_800A88C0(void);
+Gap800A6870Stream* fn_800A88C0(void);
 s32 fn_800A88C8(void);
 s32 fn_800A88D0(void);
-void fn_800A88D8(void);
+void fn_800A88D8(u32 value);
 void fn_800A8AB0(s32 value);
 void fn_800A8AB8(void);
 void fn_800A8B78(void);
@@ -134,5 +140,10 @@ void GXDrawDone(void);
 void GXCopyDisp(u8* destination, u8 clear);
 
 void OSWakeupThread(Gap800A6870SleepQueue* queue);
+
+void AISetStreamPlayState(u32 state);
+BOOL OSDisableInterrupts(void);
+BOOL OSRestoreInterrupts(BOOL enabled);
+extern u32 lbl_803CC144;
 
 #endif // !__UNKNOWN_gap_800A6870_H_
