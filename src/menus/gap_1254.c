@@ -1,4 +1,5 @@
 #include "menus/gap_1254.h"
+#include "menus/gap_0.h"
 #include "game/gap_B3B70.h"
 #include "musyx/musyx.h"
 #include "menus/rep_0438.h"
@@ -132,7 +133,15 @@ void fn_2_1800(void) {
 
 // .text:0x00001A88 size:0x124
 void fn_2_1A88(void) {
-    return;
+    s32 i;
+    s32 count = 1;
+    lbl_8034E9A0.controllerIndices[0] = 0;
+    for (i = 1; i < 4; i++) {
+        if (lbl_803C77B8.controllers[i].status != -1) {
+            lbl_8034E9A0.controllerIndices[count++] = i;
+        }
+    }
+    while (count < 4) lbl_8034E9A0.controllerIndices[count++] = -1;
 }
 
 // .text:0x00001BAC size:0x88
