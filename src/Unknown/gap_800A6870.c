@@ -114,7 +114,7 @@ void fn_800A7C08(void) {
 
 // .text:0x800A7D4C size:0x30
 void fn_800A7D4C(s32 index, Gap800A6870PoolNode* node) {
-    node->next = (node->next & 3) | (lbl_803C7420.heads[index] & ~3);
+    node->pointer = lbl_803C7420.heads[index] >> 2;
     lbl_803C7420.heads[index] = (u32)node | 1;
 }
 

@@ -2,7 +2,10 @@
 #define __UNKNOWN_gap_800A6870_H_
 
 #include "mssbTypes.h"
-typedef struct Gap800A6870PoolNode { u32 next; } Gap800A6870PoolNode;
+typedef union Gap800A6870PoolNode {
+    u32 next;
+    struct { u32 pointer : 30; u32 flags : 2; };
+} Gap800A6870PoolNode;
 typedef struct Gap800A6870Pools {
     u8 _pad0[0x4C];
     u32* heads;
