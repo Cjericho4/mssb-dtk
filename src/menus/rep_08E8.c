@@ -16,7 +16,7 @@ extern u16 lbl_2_data_13238[];
 extern void LITXForm(MenusLight* light, Mtx matrix);
 
 // .text:0x00046C88 size:0x78
-void fn_2_46C88(s32 index) {
+void fn_2_46C88(s32 index, s32 mode) {
     Vec position;
     fn_2_68690(0);
     fn_2_68DAC(index, &position);
