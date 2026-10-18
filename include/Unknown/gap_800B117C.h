@@ -154,7 +154,18 @@ void fn_800ACFB0(Gap800B117CAnimation* anim);
 void ACTSetAnimation(void);
 void ANIMGetKeyFrameFromTrack(void);
 Gap800B117CTrack* ANIMGetTrackFromSequence(Gap800B117CSequence* sequence, u16 id);
-void ANIMGetSequence(void);
+typedef struct Gap800B117CAnimSequence {
+    /* 0x0 */ char* name;
+    u8 _pad4[0x8];
+} Gap800B117CAnimSequence;
+typedef struct Gap800B117CAnimBank {
+    u32 unk0;
+    /* 0x4 */ Gap800B117CAnimSequence* sequences;
+    u16 unk8;
+    /* 0xA */ u16 numSequences;
+} Gap800B117CAnimBank;
+s8 Strcmp(char* a, char* b);
+Gap800B117CAnimSequence* ANIMGetSequence(Gap800B117CAnimBank* bank, char* name, u16 index);
 
 void DSInsertListObject(Gap800B117CList* list, Gap800B117CObj* tail, Gap800B117CObj* entry);
 void PSMTXMultVec(f32 matrix[3][4], Gap800B117CVec* src, Gap800B117CVec* dst);

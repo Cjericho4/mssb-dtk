@@ -393,6 +393,16 @@ Gap800B117CTrack* ANIMGetTrackFromSequence(Gap800B117CSequence* sequence, u16 id
 }
 
 // .text:0x800B4FEC size:0xA0
-void ANIMGetSequence(void) {
-    return;
+Gap800B117CAnimSequence* ANIMGetSequence(Gap800B117CAnimBank* bank, char* name, u16 index) {
+    u32 i;
+    if (name != NULL) {
+        for (i = 0; i < bank->numSequences; i++) {
+            if (Strcmp(bank->sequences[i].name, name) == 0) {
+                return &bank->sequences[i];
+            }
+        }
+    } else if (bank == NULL) {
+        return NULL;
+    }
+    return &bank->sequences[index];
 }
