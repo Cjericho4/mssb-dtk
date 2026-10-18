@@ -66,15 +66,17 @@ void fn_80052694(void) {
 }
 
 // .text:0x80052734 size:0x34
-void fn_80052734(void) {
-    return;
+Gap800506E8Camera* fn_80052734(s32 index) {
+    if (index < 0) index = 0;
+    else if (index >= 2) index = 1;
+    return &lbl_803C639C.alternate[index];
 }
 
 // .text:0x80052768 size:0x30
 Gap800506E8Camera* fn_80052768(s32 index) {
     if (index < 0) index = 0;
     else if (index >= 2) index = 1;
-    return &lbl_803C639C[index];
+    return &lbl_803C639C.slots[index];
 }
 
 // .text:0x80052798 size:0x24

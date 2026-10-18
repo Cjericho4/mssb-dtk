@@ -3,7 +3,11 @@
 
 #include "mssbTypes.h"
 typedef struct Gap800506E8Camera { u8 _pad0[0xA8]; } Gap800506E8Camera;
-extern Gap800506E8Camera lbl_803C639C[2];
+typedef struct Gap800506E8Cameras {
+    Gap800506E8Camera slots[2];
+    Gap800506E8Camera alternate[2];
+} Gap800506E8Cameras;
+extern Gap800506E8Cameras lbl_803C639C;
 extern s32 lbl_803CB880;
 typedef struct Gap800506E8State {
     u8 _pad0[0x7C];
@@ -32,7 +36,7 @@ void fn_8005240C(void);
 void fn_80052634(void);
 s32 fn_8005268C(void);
 void fn_80052694(void);
-void fn_80052734(void);
+Gap800506E8Camera* fn_80052734(s32 index);
 Gap800506E8Camera* fn_80052768(s32 index);
 void fn_80052798(s32 value);
 s32 fn_800527BC(void);
