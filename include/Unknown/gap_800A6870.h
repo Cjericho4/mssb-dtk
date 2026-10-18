@@ -20,6 +20,10 @@ typedef struct Gap800A6870Pools {
     u32* heads;
     u8 _pad50[0xC];
     Gap800A6870SleepQueue waiters; /* 0x5C */
+    u8 _pad64[0x330];
+    u8 period; /* 0x394 */
+    u8 counter;
+    u8 paused;
 } Gap800A6870Pools;
 extern Gap800A6870Pools lbl_803C7420;
 extern volatile u8 lbl_803CC134;
@@ -41,7 +45,8 @@ typedef struct Gap800A6870Load {
     /* 0x6D8 */ u8 unk6D8;
     u8 _pad6D9[0x17];
     s32 running; /* 0x6F0 */
-    u8 _pad6F4[8];
+    s32 pending; /* 0x6F4 */
+    u8 _pad6F8[4];
     u8* memory; /* 0x6FC */
     u8 _pad700[0x14];
     union {
@@ -77,7 +82,7 @@ void fn_800A75EC(void);
 void fn_800A7670(void);
 void fn_800A76BC(void);
 void fn_800A77A0(void);
-void fn_800A7A80(void);
+void fn_800A7A80(s32 result);
 void fn_800A7AD4(void);
 void fn_800A7AD8(void);
 void fn_800A7BAC(void);
@@ -127,5 +132,7 @@ void GXSetColorUpdate(u8 enable);
 void VIFlush(void);
 void GXDrawDone(void);
 void GXCopyDisp(u8* destination, u8 clear);
+
+void OSWakeupThread(Gap800A6870SleepQueue* queue);
 
 #endif // !__UNKNOWN_gap_800A6870_H_

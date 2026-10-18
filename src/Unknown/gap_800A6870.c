@@ -94,8 +94,13 @@ void fn_800A77A0(void) {
 }
 
 // .text:0x800A7A80 size:0x54
-void fn_800A7A80(void) {
-    return;
+void fn_800A7A80(s32 result) {
+    if (result == -3) {
+        lbl_803C6CF8.running = 0;
+        lbl_803C6CF8.pending = 0;
+    } else if (result != -1) {
+        OSResumeThread(&lbl_803C6CF8.thread);
+    }
 }
 
 // .text:0x800A7AD4 size:0x4
