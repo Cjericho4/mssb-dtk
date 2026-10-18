@@ -123,8 +123,22 @@ void fn_8004E62C(void) {
 }
 
 // .text:0x8004EE84 size:0x70
-void fn_8004EE84(void) {
-    return;
+BOOL fn_8004EE84(s32 kind) {
+    if (lbl_803C6028.unk7D == 0) {
+        if (kind == 2) {
+            lbl_803C6028.unk7D = 4;
+            lbl_803C6028.unk8F = 1;
+        } else if (kind != 0) {
+            lbl_803C6028.unk7D = 3;
+        } else {
+            lbl_803C6028.unk7D = 1;
+        }
+    }
+    if (lbl_803C6028.unk7D == 2) {
+        lbl_803C6028.unk7D = 0;
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x8004EEF4 size:0x218
