@@ -57,8 +57,16 @@ void fn_8004D57C(void) {
 }
 
 // .text:0x8004D93C size:0x54
-void fn_8004D93C(void) {
-    return;
+BOOL fn_8004D93C(BOOL special) {
+    if (lbl_803C6028.transition == 0) {
+        if (special) lbl_803C6028.transition = 3;
+        else lbl_803C6028.transition = 1;
+    }
+    if (lbl_803C6028.transition == 2) {
+        lbl_803C6028.transition = 0;
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x8004D990 size:0x200

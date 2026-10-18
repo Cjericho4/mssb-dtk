@@ -6,6 +6,8 @@ typedef struct Gap8004CA48Selection {
     u8 _pad0[0x18];
     s16 indices[26];
     s8 busy[36]; /* 0x4C */
+    u8 _pad70[0xE];
+    u8 transition; /* 0x7E */
 } Gap8004CA48Selection;
 extern Gap8004CA48Selection lbl_803C6028;
 extern u8 lbl_800FDE84[];
@@ -32,7 +34,7 @@ void fn_8004D0F0(void);
 void fn_8004D460(void);
 void fn_8004D4F0(void);
 void fn_8004D57C(void);
-void fn_8004D93C(void);
+BOOL fn_8004D93C(BOOL special);
 void fn_8004D990(void);
 void fn_8004DB90(void);
 void fn_8004E2EC(void);
