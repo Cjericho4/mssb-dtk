@@ -2,7 +2,12 @@
 
 // .text:0x80069B08 size:0x60
 void fn_80069B08(void) {
-    return;
+    Gap80069B08Queue* queue = lbl_803CC1B8;
+    if (lbl_80366158.unk2A != 0) {
+        lbl_80371C30[queue->slot].obj->unk5C = 0;
+        lbl_80371C30[queue->slot].obj->flags |= 2;
+        lbl_803CC1B8->callback = fn_80069AD4;
+    }
 }
 
 // .text:0x80069B68 size:0x74

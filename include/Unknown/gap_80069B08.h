@@ -10,12 +10,14 @@ void VIConfigure(Gap80069B08RenderMode* mode);
 void VIFlush(void);
 void VIWaitForRetrace(void);
 typedef void (*Gap80069B08Callback)(s32 a, s32 b, s32 c);
-typedef struct Gap80069B08Game { u8 _pad0[0x28]; u8 mode; } Gap80069B08Game;
+typedef struct Gap80069B08Game { u8 _pad0[0x28]; u8 mode; u8 _pad29; u8 unk2A; } Gap80069B08Game;
 extern Gap80069B08Game lbl_80366158;
 typedef struct Gap80069B08Queue {
-    u8 _pad0[0x12];
-    u16 priority;
-    u8 _pad14[0x27];
+    /* 0x00 */ void (*callback)(void);
+    u8 _pad4[0xE];
+    /* 0x12 */ u16 priority;
+    /* 0x14 */ u16 slot;
+    u8 _pad16[0x25];
     u8 active;
 } Gap80069B08Queue;
 extern Gap80069B08Queue* lbl_803CC1B8;
@@ -40,6 +42,18 @@ extern f32 lbl_8010B590[][7];
 extern Gap80069B08Callback lbl_803CBD38;
 extern Gap80069B08Callback lbl_803CBD3C;
 
+typedef struct Gap80069B08SlotObj {
+    u8 _pad0[0x54];
+    /* 0x54 */ u32 flags;
+    u8 _pad58[0x4];
+    /* 0x5C */ u32 unk5C;
+} Gap80069B08SlotObj;
+typedef struct Gap80069B08Slot {
+    /* 0x0 */ Gap80069B08SlotObj* obj;
+    u8 _pad4[0x4];
+} Gap80069B08Slot;
+extern Gap80069B08Slot lbl_80371C30[];
+void fn_80069AD4(void);
 void fn_80069B08(void);
 void fn_80069B68(void);
 void fn_80069BDC(void);
