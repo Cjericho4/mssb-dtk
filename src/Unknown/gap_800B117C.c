@@ -311,8 +311,12 @@ void fn_800B4C40(void) {
 }
 
 // .text:0x800B4CA0 size:0x3C
-void fn_800B4CA0(void) {
-    return;
+void fn_800B4CA0(Gap800B117CObj* obj, f32 value) {
+    u32 i;
+    for (i = 0; i < obj->count; i++) {
+        Gap800B117CAnimation* animation = obj->entries[i]->animation;
+        if (animation != NULL) animation->time = value;
+    }
 }
 
 // .text:0x800B4CDC size:0x88
