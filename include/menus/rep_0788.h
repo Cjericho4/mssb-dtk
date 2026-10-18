@@ -150,7 +150,7 @@ void fn_2_325E8(void);
 void fn_2_327D4(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_328C4(void);
 void fn_2_32A78(void);
-void fn_2_32C64(void);
+void fn_2_32C64(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_32D54(void);
 void fn_2_32F08(void);
 void fn_2_331C8(void);
