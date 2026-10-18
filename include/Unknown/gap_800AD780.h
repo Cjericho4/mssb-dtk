@@ -2,6 +2,17 @@
 #define __UNKNOWN_gap_800AD780_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800AD780DrawEntry {
+    void (*callback)(void);
+    u32 unk4;
+    u32 unk8;
+} Gap800AD780DrawEntry;
+typedef struct Gap800AD780DrawLists {
+    Gap800AD780DrawEntry current[24];
+    Gap800AD780DrawEntry previous[24];
+} Gap800AD780DrawLists;
+extern Gap800AD780DrawLists lbl_80111340;
+extern s32 lbl_803CBB30;
 extern s32 lbl_803CC19C;
 extern s32 lbl_803CC1D8[2];
 typedef struct Gap800AD780State {
@@ -59,7 +70,7 @@ void fn_800B0C80(void);
 void nop_function(void);
 void RunDrawScripts_with_stack_variables(void);
 void fn_800B0D28(s32 value);
-void fn_800B0D38(void);
+void fn_800B0D38(s32 index, void (*callback)(void));
 void AllocateSprite(void);
 
 #endif // !__UNKNOWN_gap_800AD780_H_

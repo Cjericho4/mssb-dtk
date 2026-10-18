@@ -232,8 +232,11 @@ void fn_800B0D28(s32 value) {
 }
 
 // .text:0x800B0D38 size:0x30
-void fn_800B0D38(void) {
-    return;
+void fn_800B0D38(s32 index, void (*callback)(void)) {
+    if (index < 0) return;
+    if (index >= lbl_803CBB30) return;
+    lbl_80111340.previous[index].callback = callback;
+    lbl_80111340.current[index].callback = callback;
 }
 
 // .text:0x800B0D68 size:0x414
