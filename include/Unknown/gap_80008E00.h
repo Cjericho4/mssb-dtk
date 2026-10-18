@@ -29,6 +29,7 @@ void PostRetraceCallback(void);
 void fn_8000900C(void);
 s32 fn_80009018(s32 value);
 u8 fn_80009028(void);
+void fn_8001D2D4(void);
 void fn_80009094(void);
 void fn_800090B4(void);
 void fn_80009144(void);
