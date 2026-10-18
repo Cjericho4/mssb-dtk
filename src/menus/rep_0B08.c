@@ -858,8 +858,16 @@ void fn_2_6D840(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006D878 size:0xF0
-void fn_2_6D878(void) {
-    return;
+void fn_2_6D878(Rep0B08Obj* obj) {
+    s32 index = obj->index;
+    if (lbl_2_bss_1A8248->rep0B08Objects[0].unkCD == 0) {
+        obj->countdown = 120;
+        menuChangeAnimation(index, 1);
+        obj->unkBA = 9;
+        obj->unk50 = 0.0f;
+        obj->unk38 = 0.0f;
+        obj->state = 2;
+    }
 }
 
 // .text:0x0006D968 size:0x1C8
