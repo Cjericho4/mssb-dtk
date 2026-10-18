@@ -27,7 +27,7 @@ typedef struct Gap8001E460Sound {
     u8 groupCount; /* 0x390 */
     u8 _pad391[5];
     /* 0x396 */ u8 soundMode;
-    u8 _pad397[0x1];
+    /* 0x397 */ u8 unk397;
     /* 0x398 */ u8 unk398;
 } Gap8001E460Sound;
 extern Gap8001E460Sound lbl_800EF808;
@@ -78,7 +78,9 @@ s32 fn_80021188(void);
 s32 fn_800211BC(void);
 u8 fn_800211F0(void);
 void fn_80021204(void);
-void fn_80021228(void);
+void sndOutputMode(u32 mode);
+void OSSetSoundMode(u32 mode);
+void fn_80021228(u8 mode);
 void fn_8002128C(void);
 void fn_80021308(void);
 void fn_800213F4(void);
