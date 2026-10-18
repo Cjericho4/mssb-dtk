@@ -2,8 +2,19 @@
 #define __MENUS_rep_0568_H_
 
 #include "mssbTypes.h"
+#include "UnknownHeaders.h"
 
 typedef struct MenusAnimationAux MenusAnimationAux;
+
+typedef union MenusAnimationTask {
+    QueueEntry queue;
+    struct {
+        u8 _pad0[0x1C];
+        u8 current;
+        u8 state;
+    };
+} MenusAnimationTask;
+extern MenusAnimationTask* lbl_2_bss_1224;
 
 typedef struct Rep0568Obj {
     u8 _pad0[0x70];
@@ -11,7 +22,9 @@ typedef struct Rep0568Obj {
 } Rep0568Obj;
 
 typedef struct Rep0568State {
-    u8 _pad0[0xC];
+    s8 writeIndex;
+    s8 readIndex;
+    u8 commands[10];
     s32 unkC;
     u8 actionFlags[2]; /* 0x10 */
     u8 pendingActions[2]; /* 0x12 */
@@ -60,7 +73,7 @@ void fn_2_17C88(void);
 void fn_2_17ED8(void);
 void fn_2_18148(void);
 void fn_2_18398(void);
-void fn_2_18650(void);
+s32 fn_2_18650(s32 index);
 void fn_2_18748(void);
 void fn_2_188EC(void);
 void fn_2_18FBC(void);

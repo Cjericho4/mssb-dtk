@@ -71,8 +71,24 @@ void fn_2_18398(void) {
 }
 
 // .text:0x00018650 size:0xF8
-void fn_2_18650(void) {
-    return;
+s32 fn_2_18650(s32 index) {
+    s32 next = (lbl_2_bss_100B8.writeIndex + 1) % 10;
+    if (next != lbl_2_bss_100B8.readIndex) {
+        if (lbl_2_bss_1224 == NULL) {
+            lbl_2_bss_1224 = (MenusAnimationTask*)fn_800B0A5C_insertQueue(fn_2_18398, 0xFFFF);
+            if (lbl_2_bss_1224 != NULL) {
+                lbl_2_bss_1224->current = 0;
+                lbl_2_bss_1224->state = 0;
+            } else {
+                return 0;
+            }
+        }
+        lbl_2_bss_100B8.commands[lbl_2_bss_100B8.writeIndex] = index;
+        lbl_2_bss_100B8.writeIndex = next;
+        lbl_2_bss_100B8.flags[index + 2] = 1;
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x00018748 size:0x1A4
