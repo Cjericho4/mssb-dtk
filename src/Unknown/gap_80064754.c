@@ -105,7 +105,15 @@ void fn_800670A0(void) {
 
 // .text:0x800671FC size:0x68
 void fn_800671FC(void) {
-    return;
+    u8 stadium;
+    if (lbl_80361B20.unkF5 != 0) {
+        stadium = randRange_FUN_80042bf0(0, 5);
+    } else {
+        do {
+            stadium = randRange_FUN_80042bf0(0, 5);
+        } while (stadium == 1);
+    }
+    g_d_GameSettings.stadium = stadium;
 }
 
 // .text:0x80067264 size:0x360
