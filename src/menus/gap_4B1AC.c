@@ -251,8 +251,15 @@ void fn_2_4EB9C(void) {
 }
 
 // .text:0x00050898 size:0x10C
-void fn_2_50898(void) {
-    return;
+void fn_2_50898(s32 value) {
+    s32 i;
+    lbl_2_bss_1A824C->panel.unk1B8C = value;
+    lbl_2_bss_1A824C->panel.unk1BB4 = 1;
+    lbl_2_bss_1A824C->panel.unk1BB8 = 1;
+    for (i = 0; i < 168; i++) lbl_2_bss_1A824C->panel.values[i] = 0;
+    lbl_2_bss_1A824C->panel.unk1BA6 = 1;
+    lbl_2_bss_1A824C->panel.unk1B04 = 1;
+    lbl_2_bss_1A824C->panel.commandCounters[2] = 0;
 }
 
 // .text:0x000509A4 size:0x168

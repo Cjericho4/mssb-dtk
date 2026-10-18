@@ -102,7 +102,7 @@ BOOL fn_2_4EAF4(void);
 BOOL fn_2_4EB2C(void);
 BOOL fn_2_4EB64(void);
 void fn_2_4EB9C(void);
-void fn_2_50898(void);
+void fn_2_50898(s32 value);
 void fn_2_509A4(void);
 void fn_2_50B0C(void);
 void fn_2_50BF4(s16 index);
