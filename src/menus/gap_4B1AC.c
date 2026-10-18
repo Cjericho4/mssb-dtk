@@ -348,7 +348,15 @@ void fn_2_50FC8(s32 index) {
 
 // .text:0x000510A8 size:0xE4
 void fn_2_510A8(void) {
-    return;
+    s32 i = 0;
+    lbl_2_bss_9604[1] = 0;
+    lbl_2_bss_9604[0] = 0;
+    lbl_2_bss_1A824C->panel.bufferFlags[1] = 1;
+    lbl_2_bss_1A824C->panel.bufferFlags[0] = 1;
+    for (; i < 256; i++) {
+        lbl_2_bss_9A08[0][i] = 0;
+        lbl_2_bss_9A08[1][i] = 0;
+    }
 }
 
 // .text:0x0005118C size:0x4
