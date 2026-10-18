@@ -121,8 +121,8 @@ void Set_FUN_800b2b6c(Gap800B117CObj* obj, s32 value) {
 }
 
 // .text:0x800B2B74 size:0x34
-void fn_800B2B74(void) {
-    return;
+void fn_800B2B74(Gap800B117CObj* obj, u16 index) {
+    DSInsertListObject(&obj->list, obj->list.tail, obj->entries[index]);
 }
 
 // .text:0x800B2BA8 size:0x3C
@@ -147,8 +147,8 @@ void fn_800B2C08(Gap800B117CObj* obj, s16 value) {
 }
 
 // .text:0x800B2C10 size:0x34
-void fn_800B2C10(void) {
-    return;
+void fn_800B2C10(Gap800B117CObj* obj, u16 index, Gap800B117CVec* src, Gap800B117CVec* dst) {
+    PSMTXMultVec(obj->matrices[index], src, dst);
 }
 
 // .text:0x800B2C44 size:0x44
@@ -157,8 +157,8 @@ void fn_800B2C44(void) {
 }
 
 // .text:0x800B2C88 size:0x34
-void fn_800B2C88(void) {
-    return;
+void fn_800B2C88(Gap800B117CObj* obj, u16 index, f32 matrix[3][4]) {
+    PSMTXCopy(obj->matrices[index], matrix);
 }
 
 // .text:0x800B2CBC size:0xA0
