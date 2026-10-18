@@ -2,6 +2,12 @@
 #define __UNKNOWN_gap_80067AC8_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80067AC8Status {
+    u8 _pad0[0x2A];
+    u8 state;
+} Gap80067AC8Status;
+extern Gap80067AC8Status lbl_80366158;
+void fn_800B0A14_removeQueue(void);
 typedef struct Gap80067AC8Sound {
     u8 _pad0[0xC0];
     u32 soundC0;

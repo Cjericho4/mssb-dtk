@@ -77,5 +77,5 @@ void fn_80069A98(void) {
 
 // .text:0x80069AD4 size:0x34
 void fn_80069AD4(void) {
-    return;
+    if (lbl_80366158.state == 2) fn_800B0A14_removeQueue();
 }
