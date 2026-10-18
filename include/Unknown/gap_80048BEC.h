@@ -148,7 +148,7 @@ typedef struct Gap80048BECRGB {
     u8 g;
     u8 b;
 } Gap80048BECRGB;
-extern Gap80048BECRGB lbl_803CB864[4];
+extern Gap80048BECRGB lbl_803CB864[2];
 typedef struct Gap80048BECEffectTarget Gap80048BECEffectTarget;
 extern Gap80048BECEffectParams* lbl_803CB860;
 void* memcpy(void* dst, const void* src, unsigned long n);

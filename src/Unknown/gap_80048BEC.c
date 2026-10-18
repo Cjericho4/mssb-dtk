@@ -321,7 +321,14 @@ void fn_8004C094(Gap80048BECEffectTarget* target) {
 
 // .text:0x8004C108 size:0x94
 void fn_8004C108(Gap80048BECEffectTarget* target, u8 index) {
-    return;
+    Gap80048BECEffectParams params;
+    Gap80048BECEffectParams* p = &params;
+    if (target != NULL) {
+        memcpy(p, lbl_803CB860, sizeof(params));
+        p->unk0 = lbl_803CBD0C;
+        p->color = (lbl_803CB864[index].r << 24) | (((u32)lbl_803CB864[index].g << 24) >> 8) | (lbl_803CB864[index].b << 8);
+        fn_80031CA4(target, p);
+    }
 }
 
 // .text:0x8004C19C size:0x374
