@@ -15,7 +15,10 @@ typedef struct Gap3C03CObj {
         u8 currentValues[10][2]; /* 0x09 */
         s8 signedValues[10][2];
     };
-    u8 previousValues[10][2]; /* 0x1D */
+    union {
+        u8 previousValues[10][2]; /* 0x1D */
+        s8 previousSignedValues[10][2];
+    };
     s8 unk31;
     u8 _pad32[2];
 } Gap3C03CObj;
@@ -128,7 +131,7 @@ void fn_2_454E8(void);
 void fn_2_45810(void);
 BOOL fn_2_45938(s32 index);
 void fn_2_45978(void);
-void fn_2_45A84(void);
+BOOL fn_2_45A84(void);
 void fn_2_45BA4(void);
 void fn_2_45D38(void);
 void fn_2_45E48(void);

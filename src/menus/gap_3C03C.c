@@ -729,8 +729,20 @@ void fn_2_45978(void) {
 }
 
 // .text:0x00045A84 size:0x120
-void fn_2_45A84(void) {
-    return;
+BOOL fn_2_45A84(void) {
+    s32 i;
+    s32 j;
+    s32 found = 0;
+    for (i = 0; i < 54; i++) {
+        Gap3C03CObj* obj = &lbl_2_bss_1A8248->gap3C03CObjects[i];
+        for (j = 0; j < 10; j++) {
+            if (obj->previousSignedValues[j][0] >= 0 && obj->signedValues[j][0] < 0) {
+                found = 1;
+                lbl_2_bss_1A8248->resetFlags[2][i] = 1;
+            }
+        }
+    }
+    return (u32)__cntlzw(1 - found) >> 5;
 }
 
 // .text:0x00045BA4 size:0x194
