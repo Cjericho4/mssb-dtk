@@ -2,6 +2,7 @@
 #define __UNKNOWN_gap_80032038_H_
 
 #include "mssbTypes.h"
+extern f32 lbl_8017ED68[];
 typedef struct Gap80032038SortEntry {
     u32 unk0;
     f32 key;
@@ -17,7 +18,7 @@ void fn_800324EC(void);
 void fn_800328E0(void);
 void fn_800330CC(void);
 void fn_800332B8(void);
-void fn_800335BC(void);
+f32 fn_800335BC(s32 angle);
 void fn_800335EC(void);
 void fn_80033620(void);
 void fn_80033794(void);
