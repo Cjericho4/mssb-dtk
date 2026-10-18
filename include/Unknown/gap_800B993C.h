@@ -62,7 +62,8 @@ typedef struct Gap800B993CGeoFile {
 Gap800B993CGeo* LoadGeoPalette(Gap800B993CGeoFile* file);
 void SKNLoadFile(Gap800B993CSkin* skin, Gap800B993CGeo* geo);
 void convertGeometryAndSknHeader(Gap800B993CGeoFile* file, Gap800B993CSkin* skin);
-void fn_800BCDBC(void);
+struct Gap800B993CModel;
+void fn_800BCDBC(struct Gap800B993CModel* model);
 void fn_800BCE38(void);
 void fn_800BCEF8(void);
 typedef struct Gap800B993CSubEntry {
@@ -84,6 +85,8 @@ typedef struct Gap800B993CModel {
     /* 0x0C */ u32 count;
     /* 0x10 */ Gap800B993CPartRef* parts;
 } Gap800B993CModel;
+typedef struct Gap800B993CAllocation Gap800B993CAllocation;
+void fn_800ACFB0(Gap800B993CAllocation* allocation);
 void fn_800BD190(Gap800B993CModel* model, u32 value);
 void fn_800BD1E8(s32 value);
 void __MTGQR5(void);

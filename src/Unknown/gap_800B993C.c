@@ -147,8 +147,14 @@ void convertGeometryAndSknHeader(Gap800B993CGeoFile* file, Gap800B993CSkin* skin
 }
 
 // .text:0x800BCDBC size:0x7C
-void fn_800BCDBC(void) {
-    return;
+void fn_800BCDBC(Gap800B993CModel* model) {
+    s32 i;
+    for (i = model->count - 1; i >= 0; i--) {
+        if (model->parts[i].part->entries != NULL) {
+            fn_800ACFB0((Gap800B993CAllocation*)model->parts[i].part->entries);
+        }
+    }
+    fn_800ACFB0((Gap800B993CAllocation*)model->parts[0].part);
 }
 
 // .text:0x800BCE38 size:0xC0
