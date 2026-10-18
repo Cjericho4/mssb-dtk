@@ -80,6 +80,7 @@ void AIRegisterStreamCallback(void (*callback)(u32 trigger));
 void AIResetStreamSampleCount(void);
 typedef struct Gap800A6870CommandBlock Gap800A6870CommandBlock;
 extern Gap800A6870CommandBlock lbl_802EF260;
+extern Gap800A6870CommandBlock lbl_802EF290;
 BOOL DVDStopStreamAtEndAsync(Gap800A6870CommandBlock* block, void (*callback)(s32 result, Gap800A6870CommandBlock* block));
 
 s32 fn_800A6870(u8 flag, s32 value);
