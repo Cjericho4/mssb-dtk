@@ -4,7 +4,8 @@
 #include "mssbTypes.h"
 typedef struct Gap8004CA48Selection {
     u8 _pad0[0x18];
-    s16 indices[26];
+    s16 indices[8];
+    s8 picks[36]; /* 0x28 */
     s8 busy[36]; /* 0x4C */
     u8 _pad70[0xD];
     /* 0x7D */ u8 unk7D;
@@ -64,7 +65,7 @@ typedef struct Gap8004CA48CharInfo {
 extern Gap8004CA48CharInfo lbl_800E8558[54];
 extern u8 lbl_800FE5D4[0x350];
 void fn_8004E504(s32 convert, s32 a, s32 b, s32 c, s32 d);
-void fn_8004E5B4(void);
+void fn_8004E5B4(s8 value, s32 charIndex, s32 enable);
 void fn_8004E62C(void);
 BOOL fn_8004EE84(s32 kind);
 void fn_8004EEF4(void);

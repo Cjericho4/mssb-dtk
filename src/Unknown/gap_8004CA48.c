@@ -158,8 +158,20 @@ void fn_8004E504(s32 convert, s32 a, s32 b, s32 c, s32 d) {
 }
 
 // .text:0x8004E5B4 size:0x78
-void fn_8004E5B4(void) {
-    return;
+void fn_8004E5B4(s8 value, s32 charIndex, s32 enable) {
+    s32 j;
+    s32 key = lbl_800E8558[charIndex].id;
+
+    for (j = 0; j < 36; j++) {
+        if (lbl_800FE5D4[j] == key) {
+            if (enable) {
+                lbl_803C6028.picks[j] = value;
+            } else {
+                lbl_803C6028.picks[j] = -1;
+            }
+            return;
+        }
+    }
 }
 
 // .text:0x8004E62C size:0x858
