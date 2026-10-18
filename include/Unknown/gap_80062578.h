@@ -60,7 +60,7 @@ BOOL fn_80062794(u32 handle);
 s32 fn_800627C4(void);
 s32 fn_800627F8(void);
 void fn_8006282C(void);
-void fn_8006285C(void);
+s32 fn_8006285C(void);
 void fn_80062890(void);
 void fn_800628D4(void);
 void fn_80062948(void);

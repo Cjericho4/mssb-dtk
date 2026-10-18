@@ -57,8 +57,9 @@ void fn_8006282C(void) {
 }
 
 // .text:0x8006285C size:0x34
-void fn_8006285C(void) {
-    return;
+s32 fn_8006285C(void) {
+    fn_80021518(32, lbl_800EF808.sound98);
+    return 0;
 }
 
 // .text:0x80062890 size:0x44
