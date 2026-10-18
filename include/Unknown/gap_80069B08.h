@@ -22,9 +22,8 @@ typedef struct Gap80069B08Queue {
 } Gap80069B08Queue;
 extern Gap80069B08Queue* lbl_803CC1B8;
 void fn_800B0A14_removeQueue(void);
-typedef struct Gap80069B08Scene Gap80069B08Scene;
 typedef struct Gap80069B08Script Gap80069B08Script;
-Gap80069B08Scene* fn_800B0A5C_insertQueue(void (*callback)(void), u16 priority);
+Gap80069B08Queue* fn_800B0A5C_insertQueue(void (*callback)(void), u16 priority);
 typedef struct Gap80069B08Mission {
     u8 _pad0[0x31];
     /* 0x31 */ s8 state;
@@ -59,9 +58,9 @@ void fn_80069AD4(void);
 void fn_80069B08(void);
 extern char lbl_801092E8[0x10];
 extern Gap80069B08Script lbl_80109378;
-extern Gap80069B08Scene* lbl_803CBD30;
+extern Gap80069B08Queue* lbl_803CBD30;
 BOOL fn_80035838(char* name, s32 id);
-void fn_80034E20(Gap80069B08Scene* scene, Gap80069B08Script* script);
+void fn_80034E20(Gap80069B08Queue* scene, Gap80069B08Script* script);
 BOOL fn_80069B68(void);
 void fn_80069BDC(void);
 void fn_8006A194(void);
@@ -119,6 +118,14 @@ void fn_8000FEE8(u8 handle);
 void fn_8000F8F4(Gap80069B08Queue* queue);
 void fn_80034CEC(Gap80069B08Queue* queue);
 void fn_8006CEBC(void);
+typedef struct Gap80069B08Sound {
+    u8 _pad0[0x2F];
+    /* 0x2F */ u8 active;
+    u8 _pad30[0x8];
+} Gap80069B08Sound;
+extern Gap80069B08Sound lbl_80366B18[];
+extern Gap80069B08Script lbl_801075A8;
+u8 fn_8000F988(Gap80069B08Queue* queue, s32 id, s32 a, s32 b, s32 sound, s32 c);
 void fn_8006CF6C(void);
 
 #endif // !__UNKNOWN_gap_80069B08_H_

@@ -246,5 +246,13 @@ void fn_8006CEBC(void) {
 
 // .text:0x8006CF6C size:0xB8
 void fn_8006CF6C(void) {
-    return;
+    Gap80069B08Queue* queue;
+    s32 i;
+    lbl_803297E0.pending = 0;
+    fn_80034E20(queue = lbl_803CC1B8, &lbl_801075A8);
+    for (i = 0; i < 4; i++) {
+        lbl_803297E0.handles[i] = fn_8000F988(queue, i + 2, 0, 0, i + 0x1C1, 0);
+        lbl_80366B18[lbl_803297E0.handles[i]].active = 1;
+    }
+    lbl_803CC1B8->callback = fn_8006CEBC;
 }
