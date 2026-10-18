@@ -1,4 +1,9 @@
 #include "menus/gap_194BC.h"
+#include "Dolphin/GX/GXFrameBuffer.h"
+#include "musyx/musyx.h"
+#include "menus/gap_D08.h"
+extern s32 lbl_2_bss_1598;
+extern GXColor lbl_2_data_2E3C;
 #include "menus/gap_1B1BC.h"
 #include "menus/rep_10C0.h"
 #include "menus/rep_0B08.h"
@@ -64,7 +69,27 @@ void fn_2_19F2C(void) {
 
 // .text:0x0001A1B4 size:0xF8
 void fn_2_1A1B4(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch (lbl_2_bss_1598) {
+    case 0:
+        fn_2_19F2C();
+        scene->loadingState = 0;
+        GXSetCopyClear(lbl_2_data_2E3C, 0xFFFFFF);
+        lbl_2_bss_1598 = 1;
+        break;
+    case 1:
+        sndVolume(0x7F, 10, 0xFF);
+        lbl_2_bss_1598 = 4;
+        break;
+    case 2:
+        lbl_2_bss_1598 = 4;
+        break;
+    case 4:
+        changeScene(3, 6);
+        if (g_d_GameSettings.GameModeSelected != 5) fn_2_11A0(5);
+        else fn_2_11A0(0x10);
+        break;
+    }
 }
 
 // .text:0x0001A2AC size:0x174
