@@ -349,3 +349,12 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
 *   **Short store-only functions:** register choice (which reg holds 0 / the global base) follows statement order; permute stores with `.agent/probe/probe.sh`.
 *   **One-case `switch`** gives `cmpwi; beq L; b skip` where an `if` gives `bne skip` (fn_3_10FB74, fn_3_C7444, fn_3_BD6AC with `case 0xB: case 0xC:`).
 *   **MSSB MusyX vs stock 2.0.3** (version setting is right; layouts differ): SND_EMITTER has no paraInfo; STREAM_INFO 0x68; _PB 0xC4; VS_BUFFER 0x2C; FX_GROUP has u16 refCount (0xC); allocId is u32 through macStart/voiceAllocate/StartKeymap/StartLayer; group stack is a `DATA_STACK` (0x618) reached through pointer `lbl_803CC32C`; SDIR ref_cnt sentinel checks are `!= 0`. Open: vidMakeNew (r6/r7 swap; needs `if (vid < nvl->vid) break;` + decl order vl,vid,nvl,lvl), dataAddSampleReference, seqPlaySong (walks the DATA_STACK list from `lbl_803CC330`).
+
+## 11. Fable near-miss batch (2026-10-18)
+
+*   **`mr r30,r5; mr r29,r6` then `stw r29,4(x); stw r30,0(x)`** is a `u64` parameter in r5:r6 stored to a `u64` array element (fn_800A9864, fn_800A9E34).
+*   **Global-pointer temp in r4 (not r3) right after `mr r31,r3`, and calls without `mr r3,r31`:** the callees take the r3 param, which keeps r3 live through a dispatch (fn_2_93BF8).
+*   **Float clamp `ble L; b end` with the quotient in f0, result in f1:** one ternary chain repeating the quotient expression (CSE'd); a named local for the multiply operand flips `fmadds` operand order (LinearInterpolateToNewRange).
+*   **Two bss symbols indexed by the same byte with swapped `lis` pairing:** inline `B[idx]` at each use instead of a pointer local (fn_1_16400, fn_1_16590).
+*   **`volatile` local pointer** pins load order when the compiler forward-substitutes a value into its store (fn_3_104B20).
+*   **Negative results (don't retry):** `i = count = 0` always folds to `li` (target `li; mr` is a strength-reduced induction variable); `(a + b) + 12` as an index never yields `add; addi; slwi`; a store-zero and a call-arg zero are never shared in one register; constant-arm ternaries/if-else go branchless.
