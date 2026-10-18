@@ -16,7 +16,16 @@ typedef struct Gap80069B08Mission {
     /* 0x31 */ s8 state;
     u8 _pad32[0x2];
 } Gap80069B08Mission;
-extern Gap80069B08Mission starMissionCompletionTracker[];
+typedef struct Gap80069B08Tracker {
+    Gap80069B08Mission missions[335];
+    u8 _pad440C[9];
+    u8 row; /* 0x4415 */
+    u8 _pad4416[0xC];
+    u8 column; /* 0x4422 */
+    u8 _pad4423[0xE5];
+} Gap80069B08Tracker;
+extern Gap80069B08Tracker starMissionCompletionTracker;
+extern f32 lbl_8010B590[][7];
 
 extern s32 lbl_803CBD38;
 extern s32 lbl_803CBD3C;
@@ -53,7 +62,7 @@ void fn_8006C6C4(void);
 BOOL fn_8006C79C(s32 index);
 void starMissionRelated2(void);
 void fn_8006C9D8(void);
-void fn_8006CA9C(void);
+f32 fn_8006CA9C(void);
 void starMissionMenu(void);
 void challengeRelated(void);
 void determineIfMissionDescriptionIsShown(void);
