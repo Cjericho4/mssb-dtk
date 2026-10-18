@@ -132,8 +132,13 @@ void fn_80023D44(s32 value) {
 }
 
 // .text:0x80023D4C size:0x4C
-void fn_80023D4C(void) {
-    return;
+BOOL fn_80023D4C(Gap8002244CObj* obj, Gap8002244CVector* out) {
+    if (obj->unk8 != 0) {
+        obj->current = obj->unk10;
+        *out = obj->vectors[obj->current];
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x80023D98 size:0x64

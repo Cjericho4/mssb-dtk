@@ -11,13 +11,14 @@ typedef struct Gap8002244CFlags {
     u8 flags;
 } Gap8002244CFlags;
 extern Gap8002244CFlags lbl_803716B8;
+typedef struct Gap8002244CVector { f32 x, y, z; } Gap8002244CVector;
 typedef struct Gap8002244CObj {
-    /* 0x0 */ s32 unk0;
+    union { s32 unk0; Gap8002244CVector* vectors; };
     /* 0x4 */ s32 unk4;
     /* 0x8 */ s32 unk8;
     /* 0xC */ s32 unkC;
     /* 0x10 */ s32 unk10;
-    u8 _pad14[0x4];
+    volatile s32 current; /* 0x14 */
     /* 0x18 */ s32 unk18;
 } Gap8002244CObj;
 
@@ -47,7 +48,7 @@ void fn_80023B90(void);
 void fn_80023CF4(BOOL enabled);
 s32 fn_80023D3C(void);
 void fn_80023D44(s32 value);
-void fn_80023D4C(void);
+BOOL fn_80023D4C(Gap8002244CObj* obj, Gap8002244CVector* out);
 void fn_80023D98(void);
 void fn_80023DFC(void);
 void fn_80023E48(void);
