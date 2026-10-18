@@ -22,7 +22,9 @@ typedef struct Gap80069B08Queue {
 } Gap80069B08Queue;
 extern Gap80069B08Queue* lbl_803CC1B8;
 void fn_800B0A14_removeQueue(void);
-void fn_800B0A5C_insertQueue(void (*callback)(void), u16 priority);
+typedef struct Gap80069B08Scene Gap80069B08Scene;
+typedef struct Gap80069B08Script Gap80069B08Script;
+Gap80069B08Scene* fn_800B0A5C_insertQueue(void (*callback)(void), u16 priority);
 typedef struct Gap80069B08Mission {
     u8 _pad0[0x31];
     /* 0x31 */ s8 state;
@@ -55,7 +57,12 @@ typedef struct Gap80069B08Slot {
 extern Gap80069B08Slot lbl_80371C30[];
 void fn_80069AD4(void);
 void fn_80069B08(void);
-void fn_80069B68(void);
+extern char lbl_801092E8[0x10];
+extern Gap80069B08Script lbl_80109378;
+extern Gap80069B08Scene* lbl_803CBD30;
+BOOL fn_80035838(char* name, s32 id);
+void fn_80034E20(Gap80069B08Scene* scene, Gap80069B08Script* script);
+BOOL fn_80069B68(void);
 void fn_80069BDC(void);
 void fn_8006A194(void);
 void fn_8006A500(void);

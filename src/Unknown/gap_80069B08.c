@@ -11,8 +11,13 @@ void fn_80069B08(void) {
 }
 
 // .text:0x80069B68 size:0x74
-void fn_80069B68(void) {
-    return;
+BOOL fn_80069B68(void) {
+    if (fn_80035838(lbl_801092E8, 0x16) != 0) {
+        fn_80034E20(lbl_803CBD30 = fn_800B0A5C_insertQueue(fn_80069B08, lbl_803CC1B8->priority), &lbl_80109378);
+        lbl_80366158.unk2A = 0;
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x80069BDC size:0x5B8
