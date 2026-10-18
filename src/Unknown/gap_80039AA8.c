@@ -16,8 +16,19 @@ void fn_80039AC0(void) {
 }
 
 // .text:0x80039FF8 size:0x98
-void fn_80039FF8(void) {
-    return;
+void fn_80039FF8(Gap80039AA8RenderMode* mode) {
+    u32 width;
+    u32 height;
+    if (mode->flags & 1) {
+        height = mode->height;
+        width = mode->width;
+        GXSetTexCopySrc(0, 0, 640, 448);
+        GXSetTexCopyDst(width, height, 4, width != 640);
+        GXCopyTex(&lbl_8023DD80, 0);
+        GXPixModeSync();
+        lbl_800F7A40.width = width;
+        lbl_800F7A40.height = height;
+    }
 }
 
 // .text:0x8003A090 size:0xB4
