@@ -14,7 +14,8 @@ s32 fn_800A6870(u8 flag, s32 value) {
 
 // .text:0x800A6890 size:0x44
 void fn_800A6890(void) {
-    return;
+    if (lbl_803C6CF8.running == 0) lbl_803C6CF8.state = 3;
+    else OSSignalSemaphore(&lbl_803C6CF8.semaphore);
 }
 
 // .text:0x800A68D4 size:0x2C

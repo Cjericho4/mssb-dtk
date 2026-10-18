@@ -18,13 +18,22 @@ extern s32 lbl_803CC13C;
 typedef struct Gap800A6870Thread {
     u8 _pad0[0x318];
 } Gap800A6870Thread;
+typedef struct Gap800A6870Semaphore { u8 _pad0[0xC]; } Gap800A6870Semaphore;
+typedef struct Gap800A6870DVDFile Gap800A6870DVDFile;
 typedef struct Gap800A6870Load {
     u8 _pad0[0x318];
     Gap800A6870Thread thread; /* 0x318 */
-    u8 _pad630[0xA0];
+    Gap800A6870Semaphore semaphore; /* 0x630 */
+    u8 _pad63C[0x94];
     /* 0x6D0 */ s32 unk6D0;
     u8 _pad6D4[0x4];
     /* 0x6D8 */ u8 unk6D8;
+    u8 _pad6D9[0x17];
+    s32 running; /* 0x6F0 */
+    u8 _pad6F4[0x20];
+    u8 state; /* 0x714 */
+    u8 _pad715[3];
+    s32 entryNumber; /* 0x718 */
 } Gap800A6870Load;
 extern Gap800A6870Load lbl_803C6CF8;
 typedef struct Gap800A6870File {
@@ -91,5 +100,8 @@ void fn_800A94C4(void);
 void fn_800A9520(void);
 
 s32 OSResumeThread(Gap800A6870Thread* thread);
+
+s32 OSSignalSemaphore(Gap800A6870Semaphore* semaphore);
+BOOL DVDFastOpen(s32 entryNumber, Gap800A6870DVDFile* file);
 
 #endif // !__UNKNOWN_gap_800A6870_H_
