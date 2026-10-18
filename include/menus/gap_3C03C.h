@@ -42,7 +42,8 @@ typedef struct MenusChoiceRecord {
     u8 choice;
     u8 unk4;
     u8 side;
-    u8 _pad6[4];
+    u8 unk6;
+    u8 _pad7[3];
 } MenusChoiceRecord;
 
 void fn_2_3C03C(void);

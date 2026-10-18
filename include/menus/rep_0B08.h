@@ -38,7 +38,8 @@ typedef struct Rep0B08Obj {
     /* 0x96 */ u8 _pad96[0xA];
     s16 unkA0;
     /* 0xA2 */ s16 countdown;
-    u8 _padA4[0xE];
+    u8 _padA4[0xC];
+    s16 unkB0;
     s16 unkB2;
     s16 unkB4;
     u8 _padB6[4];
@@ -96,7 +97,9 @@ typedef struct MenusSceneState {
     u8 unk4426;
     u8 _pad4427;
     u8 choiceMask; /* 0x4428 */
-    u8 _pad4429[6];
+    u8 _pad4429[2];
+    u8 unk442B;
+    u8 _pad442C[3];
     u8 unk442F;
     u8 _pad4430;
     u8 readyFlags[9]; /* 0x4431; extent unknown */

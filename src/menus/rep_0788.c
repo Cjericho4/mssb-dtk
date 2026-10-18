@@ -5,6 +5,7 @@
 #include "UnknownHeaders.h"
 #include "game/rep_3448.h"
 
+extern s16 lbl_2_data_2E44[][4];
 extern s16 lbl_2_data_3D30[][4];
 extern MenusResourceEntry lbl_2_data_1073C[];
 extern MenusResourceEntry lbl_2_data_105FC[];
@@ -63,8 +64,18 @@ no_input:
 }
 
 // .text:0x000200E4 size:0x100
-void fn_2_200E4(void) {
-    return;
+s32 fn_2_200E4(void) {
+    s32 count;
+    if (lbl_2_bss_1A8248->choices[lbl_2_bss_1A8248->rep0B08Objects[0].unkB0].unk6 == 1) return 0;
+    if (lbl_2_bss_1A8248->choices[lbl_2_bss_1A8248->rep0B08Objects[0].unkB0].id == 5) return 0;
+    count = lbl_2_bss_1A8248->unk442B;
+    if (count > 3) count = 3;
+    if (lbl_2_data_2E44[lbl_2_bss_1A8248->unk4415][count] >= rand() % 100 && lbl_2_bss_1A8248->unk441C != 5) {
+        if (lbl_2_bss_1A8248->unk4422 == 0) return 0;
+        if (lbl_2_bss_1A8248->unk442B < 3) lbl_2_bss_1A8248->unk442B++;
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x000201E4 size:0x34
