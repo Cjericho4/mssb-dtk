@@ -18,6 +18,31 @@ typedef struct Gap80035DD4Entry {
 extern Gap80035DD4Entry lbl_8039C3E0[];
 typedef struct Gap80035DD4Quat { f32 x, y, z, w; } Gap80035DD4Quat;
 typedef struct Gap80035DD4Vec { f32 x, y, z; } Gap80035DD4Vec;
+typedef struct Gap80035DD4Task { u8 _pad0[0x14]; /* 0x14 */ u16 baseIndex; } Gap80035DD4Task;
+typedef struct Gap80035DD4Node {
+    u8 _pad0[0x64];
+    /* 0x64 */ u16 frame;
+    /* 0x66 */ u8 model;
+} Gap80035DD4Node;
+typedef struct Gap80035DD4Slot {
+    Gap80035DD4Node* node;
+    u32 unk4;
+} Gap80035DD4Slot;
+extern Gap80035DD4Slot lbl_80371C30[];
+typedef struct Gap80035DD4Model {
+    u8 _pad0[0x38];
+    /* 0x38 */ s32 data;
+} Gap80035DD4Model;
+extern Gap80035DD4Model lbl_803C4BE0[20];
+typedef struct Gap80035DD4Query {
+    u8 _pad0[0x14];
+    /* 0x14 */ s16 x;
+    /* 0x16 */ s16 y;
+    /* 0x18 */ u8 _pad18[0x4];
+    /* 0x1C */ s32 result;
+    u8 _pad20[0x30];
+} Gap80035DD4Query;
+void fn_8000CEF0(s32 data, s32 frame, s32 a, s32 b, Gap80035DD4Query* out);
 typedef struct Gap80035DD4Xform {
     u8 _pad0[0xC];
     /* 0x0C */ Gap80035DD4Vec vel;
@@ -68,8 +93,8 @@ void fn_80035ED0(s32 index);
 void fn_80035EEC(s32 value, s32 index);
 void fn_80035F20(void);
 void fn_80036134(void);
-void fn_80036214(void);
-void fn_80036270(void);
+s32 fn_80036214(Gap80035DD4Task* task, s32 index, s32 a, s32 b);
+void fn_80036270(Gap80035DD4Task* task, s32 index, s32 a, s32 b, s16* x, s16* y);
 void fn_800362F0(void);
 void fn_800363D8(void);
 void fn_8003649C(void);

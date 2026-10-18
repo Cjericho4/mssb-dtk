@@ -29,13 +29,20 @@ void fn_80036134(void) {
 }
 
 // .text:0x80036214 size:0x5C
-void fn_80036214(void) {
-    return;
+s32 fn_80036214(Gap80035DD4Task* task, s32 index, s32 a, s32 b) {
+    Gap80035DD4Query query;
+    Gap80035DD4Node* node = lbl_80371C30[task->baseIndex + index].node;
+    fn_8000CEF0(lbl_803C4BE0[node->model].data, node->frame, a, b, &query);
+    return query.result;
 }
 
 // .text:0x80036270 size:0x80
-void fn_80036270(void) {
-    return;
+void fn_80036270(Gap80035DD4Task* task, s32 index, s32 a, s32 b, s16* x, s16* y) {
+    Gap80035DD4Query query;
+    Gap80035DD4Node* node = lbl_80371C30[task->baseIndex + index].node;
+    fn_8000CEF0(lbl_803C4BE0[node->model].data, node->frame, a, b, &query);
+    *x = query.x;
+    *y = query.y;
 }
 
 // .text:0x800362F0 size:0xE8
