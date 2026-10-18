@@ -2,6 +2,7 @@
 #define __UNKNOWN_gap_8001E460_H_
 
 #include "mssbTypes.h"
+struct Gap8001E460Object;
 extern s32 lbl_803CB7AC[2];
 extern u8 lbl_803CBBC0;
 extern u32 lbl_803CBC40;
@@ -42,7 +43,7 @@ void challengeMapMaybe(void);
 void fn_8001F5E8(void);
 void fn_8001F8A4(void);
 void fn_8001FC4C(void);
-void fn_8001FDD4(void);
+void fn_8001FDD4(struct Gap8001E460Object* obj);
 void fn_8001FE00(void);
 void calledWhenStartingMatch(void);
 void fn_80020218(void);
@@ -84,5 +85,18 @@ void fn_80021ADC(void);
 void fn_80021BBC(void);
 void fn_80021CA4(void);
 void fn_8002204C(void);
+
+typedef struct Gap8001E460Object {
+    u8 _pad0[0x70];
+    u32 fog; /* 0x70 */
+} Gap8001E460Object;
+void fn_800B9AA8(u32 value);
+typedef struct Gap8001E460Resource Gap8001E460Resource;
+typedef struct Gap8001E460ResourceState {
+    Gap8001E460Resource* resource;
+    u8 _pad4[0x18];
+} Gap8001E460ResourceState;
+extern Gap8001E460ResourceState lbl_8037169C;
+void fn_800ACF14(Gap8001E460Resource* resource);
 
 #endif // !__UNKNOWN_gap_8001E460_H_

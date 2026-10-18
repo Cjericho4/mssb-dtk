@@ -52,8 +52,10 @@ void fn_8001FC4C(void) {
 }
 
 // .text:0x8001FDD4 size:0x2C
-void fn_8001FDD4(void) {
-    return;
+void fn_8001FDD4(Gap8001E460Object* obj) {
+    if (obj->fog != 0) {
+        fn_800B9AA8(obj->fog);
+    }
 }
 
 // .text:0x8001FE00 size:0x248
