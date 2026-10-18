@@ -6,7 +6,8 @@
 #include "UnknownHeaders.h"
 
 typedef struct MenusPreferences {
-    u8 _pad0[0xF];
+    u8 _pad0[0xE];
+    u8 unkE;
     u8 pending;
 } MenusPreferences;
 extern MenusPreferences lbl_2_bss_1033C;
@@ -20,7 +21,7 @@ void fn_2_95604(void);
 void fn_2_95654(void);
 void fn_2_95B28(void);
 void fn_2_95B78(void);
-void fn_2_95E80(void);
+void fn_2_95E80(DrawingSceneStruct* scene);
 void fn_2_95F3C(DrawingSceneStruct* scene);
 void fn_2_95FE0(void);
 void fn_2_96118(void);

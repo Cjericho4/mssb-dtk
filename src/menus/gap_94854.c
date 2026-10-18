@@ -6,6 +6,7 @@
 extern MenusSceneScript lbl_2_data_311E4;
 
 extern void fn_80062674(s32);
+extern s32 fn_80042DA8(DrawingSceneStruct* scene, s32 index, s32 value);
 extern void fn_800626EC(s32);
 extern void fn_80053FE8(void);
 
@@ -76,8 +77,20 @@ void fn_2_95B78(void) {
 }
 
 // .text:0x00095E80 size:0xBC
-void fn_2_95E80(void) {
-    return;
+void fn_2_95E80(DrawingSceneStruct* scene) {
+    BOOL ready = (u32)__cntlzw(1 - lbl_803C66B0.state4F) >> 5;
+    BOOL ok;
+    if (ready) {
+        ok = !!fn_80042DA8(scene, 0, 0);
+        if ((lbl_80371C30[scene->unkIndex].obj->field_0x5C >> 16) == 3) {
+            changeScene(3, 6);
+        }
+        if (ok == 1) {
+            lbl_2_bss_1033C.unkE = 1;
+            fn_80062674(0);
+            lbl_803C66B0.state4F = 2;
+        }
+    }
 }
 
 // .text:0x00095F3C size:0xA4
