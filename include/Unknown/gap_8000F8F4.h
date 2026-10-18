@@ -16,7 +16,8 @@ typedef struct Gap8000F8F4Entry {
     /* 0x26 */ s16 unk26;
     s16 state; /* 0x28 */
     /* 0x2A */ u8 unk2A;
-    u8 _pad2B[6];
+    u8 condition; /* 0x2B */
+    u8 _pad2C[5];
     /* 0x31 */ u8 unk31;
     /* 0x32 */ u8 unk32;
     u8 _pad33;
@@ -44,8 +45,8 @@ void fn_8000FE54(void);
 void fn_8000FEE8(s32 index);
 void fn_8000FF04(void);
 void fn_800100A4(void);
-void DrawText(void);
-void DrawTextOnCondition(void);
+void DrawText(s32 index);
+void DrawTextOnCondition(s32 condition);
 void fn_80010FA0(void);
 void fn_80011000(void);
 void fn_80011140(void);

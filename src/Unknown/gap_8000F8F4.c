@@ -82,13 +82,18 @@ void fn_800100A4(void) {
 }
 
 // .text:0x80010498 size:0xA94
-void DrawText(void) {
+#pragma dont_inline on
+void DrawText(s32 index) {
     return;
 }
+#pragma dont_inline reset
 
 // .text:0x80010F2C size:0x74
-void DrawTextOnCondition(void) {
-    return;
+void DrawTextOnCondition(s32 condition) {
+    s32 i;
+    for (i = 0; i < 30; i++) {
+        if (lbl_80366B18.entries[i].unk2A == 2 && condition == lbl_80366B18.entries[i].condition) DrawText(i);
+    }
 }
 
 // .text:0x80010FA0 size:0x60
