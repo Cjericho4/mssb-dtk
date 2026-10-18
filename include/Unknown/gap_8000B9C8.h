@@ -15,6 +15,14 @@ typedef struct Gap8000B9C8LightState {
     u8 _pad7FF;
 } Gap8000B9C8LightState;
 extern Gap8000B9C8LightState lbl_80366B18;
+typedef struct Gap8000B9C8PoolNode {
+    u8 _pad0[0x8];
+    /* 0x8 */ s32 value;
+} Gap8000B9C8PoolNode;
+extern Gap8000B9C8PoolNode lbl_800E9908[2];
+extern u8 lbl_803CBBC0;
+extern u8 lbl_803CB760[8];
+void fn_800A7D4C(s32 index, Gap8000B9C8PoolNode* node);
 
 void fn_8000B9C8(void);
 void fn_8000BA3C(void);
@@ -33,7 +41,7 @@ void SetSpriteRect(void);
 void fn_8000EC0C(void);
 void AddVec2iToQuad(void);
 void fn_8000F150(void);
-void fn_8000F3E8(void);
+void fn_8000F3E8(s32 type);
 void somethingSetTexturePointer(void);
 void fn_8000F4B8(s32 a, s32 b, s32 c, s32 d);
 void fn_8000F534(void);

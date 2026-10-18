@@ -87,8 +87,26 @@ void fn_8000F150(void) {
 }
 
 // .text:0x8000F3E8 size:0xA4
-void fn_8000F3E8(void) {
-    return;
+void fn_8000F3E8(s32 type) {
+    Gap8000B9C8PoolNode* node = &lbl_800E9908[lbl_803CBBC0];
+    switch (type) {
+    case -1:
+        node->value = lbl_803CB760[4];
+        break;
+    case 4:
+        node->value = lbl_803CB760[1];
+        break;
+    case 5:
+        node->value = lbl_803CB760[0];
+        break;
+    case 6:
+        node->value = lbl_803CB760[2];
+        break;
+    case 11:
+        node->value = lbl_803CB760[3];
+        break;
+    }
+    fn_800A7D4C(0, node);
 }
 
 // .text:0x8000F48C size:0x2C
