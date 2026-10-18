@@ -30,8 +30,20 @@ void fn_2_13D70(void) {
 }
 
 // .text:0x0001406C size:0xF8
-void fn_2_1406C(void) {
-    return;
+void fn_2_1406C(MenusPlayerInput* input) {
+    if (input->buttons & 8) {
+        lbl_2_bss_100B8.unk4C--;
+        if ((s8)lbl_2_bss_100B8.unk4C < 0) lbl_2_bss_100B8.unk4C = 5;
+    } else if (input->buttons & 4) {
+        lbl_2_bss_100B8.unk4C++;
+        if ((s8)lbl_2_bss_100B8.unk4C == 6) lbl_2_bss_100B8.unk4C = 0;
+    } else if (input->buttons & 1) {
+        g_d_GameSettings.miniGameLevels[(s8)lbl_2_bss_100B8.unk4C + 7] ^= 1;
+    } else if (input->buttons & 2) {
+        g_d_GameSettings.miniGameLevels[(s8)lbl_2_bss_100B8.unk4C + 7] ^= 1;
+    } else if (input->unk2 & 0x200) {
+        lbl_2_bss_100B8.unk50 = 0;
+    }
 }
 
 // .text:0x00014164 size:0xBC

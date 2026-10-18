@@ -7,7 +7,7 @@
 void fn_2_13BA4(void);
 void fn_2_13CA0(MenusPlayerInput* input);
 void fn_2_13D70(void);
-void fn_2_1406C(void);
+void fn_2_1406C(MenusPlayerInput* input);
 void fn_2_14164(MenusPlayerInput* input);
 void fn_2_14220(void);
 
