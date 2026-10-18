@@ -24,7 +24,7 @@ typedef struct Rep0568Obj {
 typedef struct Rep0568State {
     s8 writeIndex;
     s8 readIndex;
-    u8 commands[10];
+    s8 commands[10];
     s32 unkC;
     u8 actionFlags[2]; /* 0x10 */
     u8 pendingActions[2]; /* 0x12 */
@@ -37,7 +37,8 @@ typedef struct Rep0568State {
             u8 unk20;
         };
     };
-    u8 _pad25[8];
+    u8 _pad25[2];
+    s8 selections[6];
     u8 count;
     u8 _pad2E[0x12];
     union {

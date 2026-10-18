@@ -1,4 +1,5 @@
 #include "menus/rep_0568.h"
+#include "menus/rep_0438.h"
 #include "UnknownHeaders.h"
 #include "string.h"
 
@@ -103,7 +104,20 @@ void fn_2_188EC(void) {
 
 // .text:0x00018FBC size:0xFC
 void fn_2_18FBC(void) {
-    return;
+    MenusAnimationTask* task = (MenusAnimationTask*)fn_800B0A5C_insertQueue(fn_2_188EC, 0x6000);
+    s32 i;
+    lbl_2_bss_100B8.active[5] = 0;
+    lbl_2_bss_100B8.active[7] = 1;
+    if (lbl_8034E9A0.unk4701 == 0) {
+        for (i = 0; i < lbl_2_bss_100B8.count; i++) lbl_2_bss_100B8.selections[i] = -1;
+        task->current = 0;
+    } else {
+        for (i = 0; i < lbl_2_bss_100B8.count; i++) lbl_2_bss_100B8.active[i] = 0;
+        task->current = 0;
+    }
+    lbl_2_bss_100B8.writeIndex = 0;
+    lbl_2_bss_100B8.readIndex = 0;
+    for (i = 0; i < 10; i++) lbl_2_bss_100B8.commands[i] = -1;
 }
 
 // .text:0x000190B8 size:0x24
