@@ -85,7 +85,21 @@ void fn_800A7568(void) {
 
 // .text:0x800A75EC size:0x84
 void fn_800A75EC(s32 result, struct Gap800A6870CommandBlock* block) {
-    return;
+    Gap800A6870Decompressor* dec;
+    Gap800A6870Load* load;
+    OSCancelThread(&gDataDecompressorValues.thread);
+    StartThreadForReadingFromDisk();
+    dec = &gDataDecompressorValues;
+    lbl_803C6CF8.stateWord = 1;
+    if (dec->buffer != NULL) {
+        fn_800ACF14(dec->buffer);
+        dec->buffer = NULL;
+    }
+    load = &lbl_803C6CF8;
+    if (load->memory != NULL) {
+        fn_800ACF14(load->memory);
+        load->memory = NULL;
+    }
 }
 
 // .text:0x800A7670 size:0x4C

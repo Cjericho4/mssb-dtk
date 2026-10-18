@@ -65,6 +65,15 @@ typedef struct Gap800A6870Load {
     /* 0x722 */ s8 unk722;
 } Gap800A6870Load;
 extern Gap800A6870Load lbl_803C6CF8;
+typedef struct Gap800A6870Decompressor {
+    Gap800A6870Thread thread; /* 0x0 */
+    u8 _pad318[0x44];
+    u8* buffer; /* 0x35C */
+    u8 _pad360[0x8];
+} Gap800A6870Decompressor;
+extern Gap800A6870Decompressor gDataDecompressorValues;
+void OSCancelThread(Gap800A6870Thread* thread);
+void StartThreadForReadingFromDisk(void);
 typedef struct Gap800A6870File {
     char* path; /* 0x0 */
 } Gap800A6870File;
