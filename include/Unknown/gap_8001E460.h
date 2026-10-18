@@ -89,7 +89,7 @@ void fn_800213F8(u32 size);
 void fn_80021410(void);
 void fn_8002149C(s32 index);
 BOOL fn_800214D0(void);
-void fn_80021518(void);
+BOOL fn_80021518(u16 gid, struct Gap8001E460Resource* res);
 s32 fn_8002158C(void);
 typedef struct Gap8001E460LoadSub {
     u8 _pad0[0x10];

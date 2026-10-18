@@ -193,8 +193,12 @@ BOOL fn_800214D0(void) {
 }
 
 // .text:0x80021518 size:0x74
-void fn_80021518(void) {
-    return;
+BOOL fn_80021518(u16 gid, Gap8001E460Resource* res) {
+    if (!sndPushGroup(res->project, gid, res->end, res->sdir, res->pool)) {
+        return FALSE;
+    }
+    lbl_800EF808.groups[lbl_800EF808.groupCount++] = gid;
+    return TRUE;
 }
 
 // .text:0x8002158C size:0x6C
