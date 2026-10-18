@@ -217,8 +217,16 @@ s32 fn_8004ACDC(BOOL clear) {
 }
 
 // .text:0x8004ACF4 size:0x60
-void fn_8004ACF4(void) {
-    return;
+void fn_8004ACF4(Gap80048BECObj* obj, f32 value, s32 b, s32 c) {
+    switch (obj->id) {
+    case 0x30:
+    case 0x31:
+    case 0x32:
+    case 0x33:
+        if (value < 0.5f) lbl_803CBD04 = 1;
+        break;
+    }
+    lbl_800FBE64[2].actor(obj, value, b, c);
 }
 
 // .text:0x8004AD54 size:0xC4
@@ -243,7 +251,7 @@ void fn_8004B1B8(s32 value) {
 
 // .text:0x8004B1C0 size:0x48
 void fn_8004B1C0(s32 index, s32 a, s32 b, s32 c) {
-    if (index != 11) lbl_800FBE64[index](a, b, c);
+    if (index != 11) lbl_800FBE64[index].integer(a, b, c);
 }
 
 // .text:0x8004B208 size:0x68
@@ -251,7 +259,7 @@ void fn_8004B208(s32 a, s32 index, s32 c) {
     s32 slot;
     if (lbl_803CB848 != 0 && index >= 0 && index < 0x75) {
         slot = lbl_800FBDEC[index];
-        if (slot != 11) lbl_800FBE64[slot](a, index, c);
+        if (slot != 11) lbl_800FBE64[slot].integer(a, index, c);
     }
 }
 
