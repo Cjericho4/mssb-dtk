@@ -19,6 +19,7 @@ typedef struct Gap800B993CObj {
     /* 0x18 */ f32 worldMatrix[3][4];
     u8 _pad48[0x8];
     /* 0x50 */ s32 unk50;
+    u8 _pad54[0x18];
 } Gap800B993CObj;
 
 extern s32 lbl_803CC1F0;
@@ -51,8 +52,13 @@ void DOVARender(Gap800B993CObj* obj, f32 matrix[3][4], u32 a, u32 b);
 void DOVARenderSkin(Gap800B993CObj* obj, f32 matrix[3][4], f32 skinMatrices[][3][4], u16* indices, u32 a, u32 b);
 void fn_800BC824(Gap800B993CObj* obj, s32 value);
 void DOSetWorldMatrix(Gap800B993CObj* obj, f32 matrix[3][4]);
-void InitDisplayObjWithLayout(void);
-void DOGet(void);
+struct Gap800B993CPart;
+struct Gap800B993CModel;
+void InitDisplayObjWithLayout(Gap800B993CObj* obj, struct Gap800B993CPart* part);
+void DOGet(Gap800B993CObj** out, struct Gap800B993CModel* model, u16 index);
+Gap800B993CObj* _OSAllocFromHeap(s32 alignment, u32 size);
+void OSReport(char* format, ...);
+extern char lbl_800E7F8C[];
 typedef struct Gap800B993CGeo Gap800B993CGeo;
 typedef struct Gap800B993CSkin Gap800B993CSkin;
 typedef struct Gap800B993CGeoFile {

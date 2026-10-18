@@ -120,13 +120,23 @@ void DOSetWorldMatrix(Gap800B993CObj* obj, f32 matrix[3][4]) {
 }
 
 // .text:0x800BC860 size:0x258
-void InitDisplayObjWithLayout(void) {
+#pragma dont_inline on
+void InitDisplayObjWithLayout(Gap800B993CObj* obj, Gap800B993CPart* part) {
     return;
 }
+#pragma dont_inline reset
 
 // .text:0x800BCAB8 size:0x8C
-void DOGet(void) {
-    return;
+void DOGet(Gap800B993CObj** out, Gap800B993CModel* model, u16 index) {
+    Gap800B993CPart* part;
+    if (index >= model->count) {
+        OSReport(lbl_800E7F8C, index, model->count);
+        *out = NULL;
+    } else {
+        part = model->parts[index].part;
+        *out = _OSAllocFromHeap(32, sizeof(Gap800B993CObj));
+        InitDisplayObjWithLayout(*out, part);
+    }
 }
 
 // .text:0x800BCB44 size:0x21C
