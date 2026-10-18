@@ -140,8 +140,9 @@ void fn_800BEBCC(void) {
 }
 
 // .text:0x800BEC00 size:0x30
-void fn_800BEC00(void) {
-    return;
+void fn_800BEC00(BOOL enable) {
+    if (enable) lbl_803009F8.unk4D = -1;
+    else lbl_803009F8.unk4D = 1;
 }
 
 // .text:0x800BEC30 size:0x3D8

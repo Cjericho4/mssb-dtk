@@ -24,13 +24,16 @@ typedef struct Gap800BD3A0Entry {
 } Gap800BD3A0Entry;
 typedef struct Gap800BD3A0State {
     /* 0x0 */ u8 drawShadows;
-    u8 _pad1[0x13];
+    u8 _pad1[0xB];
+    struct Gap800BD3A0Tlut* tlut; /* 0xC */
+    u8 _pad10[0x4];
     /* 0x14 */ Gap800BD3A0Entry* entries;
     /* 0x18 */ s32 unk18;
     /* 0x1C */ s32 unk1C;
     /* 0x20 */ s32 unk20;
     u8 _pad24[0x28];
     /* 0x4C */ u8 unk4C;
+    /* 0x4D */ s8 unk4D;
 } Gap800BD3A0State;
 extern Gap800BD3A0State lbl_803009F8;
 
@@ -61,7 +64,7 @@ u8 fn_800BEBA0(void);
 u8 GetDrawShadows(void);
 void DrawShadows(u8 enable);
 void fn_800BEBCC(void);
-void fn_800BEC00(void);
+void fn_800BEC00(BOOL enable);
 void fn_800BEC30(void);
 void fn_800BF008(void);
 void fn_800BF038(s32 value);
@@ -85,5 +88,7 @@ void convertTextureHeader(void);
 void fn_800C07BC(void);
 
 void GXInitLightAttn(Gap800BD3A0Light* light, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
+
+void GXLoadTlut(struct Gap800BD3A0Tlut* tlut, u32 slot);
 
 #endif // !__UNKNOWN_gap_800BD3A0_H_
