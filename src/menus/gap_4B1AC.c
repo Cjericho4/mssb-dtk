@@ -591,7 +591,18 @@ void fn_2_53CEC(DrawingSceneStruct* scene) {
 
 // .text:0x00053DF8 size:0x10C
 void fn_2_53DF8(DrawingSceneStruct* scene) {
-    return;
+    MenusResourceSlot* entry;
+    s32 bank;
+    s32 slot;
+    for (bank = 0; bank < 70; bank++) {
+        for (slot = 0; slot < 0x360; slot++) {
+            entry = &lbl_2_bss_1A8234->banks[bank].slots[slot];
+            if (entry->callback != 0) {
+                lbl_80371C30[scene->unkIndex + entry->index].obj->field_0x68 = 0;
+                lbl_80371C30[scene->unkIndex + entry->index].obj->flags &= ~2;
+            }
+        }
+    }
 }
 
 // .text:0x00053F04 size:0x84
