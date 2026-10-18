@@ -113,8 +113,8 @@ void fn_800340F4(f32 matrix[3][4]) {
 }
 
 // .text:0x80034120 size:0x2C
-void fn_80034120(void) {
-    return;
+void fn_80034120(f32 matrix[3][4]) {
+    PSMTXCopy(lbl_8017FFE0, matrix);
 }
 
 // .text:0x8003414C size:0xD4
