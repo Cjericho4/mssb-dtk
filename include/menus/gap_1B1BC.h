@@ -21,7 +21,9 @@ typedef struct MenusDisplayPanel {
     u8 active;
     u8 _pad34[0x11D];
     u8 pending;
-    u8 _pad152[0x98];
+    u8 _pad152[0x8F];
+    u8 flag1E1;
+    u8 _pad1E2[8];
 } MenusDisplayPanel;
 
 typedef struct MenusDisplayState {
