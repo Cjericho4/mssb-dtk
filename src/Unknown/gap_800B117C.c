@@ -349,8 +349,12 @@ void ANIMGetKeyFrameFromTrack(void) {
 }
 
 // .text:0x800B4F9C size:0x50
-void ANIMGetTrackFromSequence(void) {
-    return;
+Gap800B117CTrack* ANIMGetTrackFromSequence(Gap800B117CSequence* sequence, u16 id) {
+    u32 i;
+    for (i = 0; i < sequence->count; i++) {
+        if (id == sequence->tracks[i].id) return &sequence->tracks[i];
+    }
+    return NULL;
 }
 
 // .text:0x800B4FEC size:0xA0

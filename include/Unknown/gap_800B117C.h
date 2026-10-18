@@ -2,6 +2,16 @@
 #define __UNKNOWN_gap_800B117C_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800B117CTrack {
+    u8 _pad0[0xA];
+    u16 id;
+    u8 _padC[4];
+} Gap800B117CTrack;
+typedef struct Gap800B117CSequence {
+    u32 unk0;
+    Gap800B117CTrack* tracks;
+    u16 count;
+} Gap800B117CSequence;
 typedef struct Gap800B117CRequest {
     u32 unk0;
     u16 type;
@@ -140,7 +150,7 @@ void fn_800B4CA0(Gap800B117CObj* obj, f32 value);
 void fn_800B4CDC(void);
 void ACTSetAnimation(void);
 void ANIMGetKeyFrameFromTrack(void);
-void ANIMGetTrackFromSequence(void);
+Gap800B117CTrack* ANIMGetTrackFromSequence(Gap800B117CSequence* sequence, u16 id);
 void ANIMGetSequence(void);
 
 void DSInsertListObject(Gap800B117CList* list, Gap800B117CObj* tail, Gap800B117CObj* entry);
