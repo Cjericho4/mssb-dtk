@@ -25,10 +25,16 @@ typedef struct Gap8000F8F4Entry {
     u8 _pad36[2];
 } Gap8000F8F4Entry;
 typedef struct Gap8000F8F4Table { u32 unk0; u32 values[256]; } Gap8000F8F4Table;
+typedef struct Gap8000F8F4Slot { u32 value, unk4; } Gap8000F8F4Slot;
 typedef struct Gap8000F8F4State {
-    Gap8000F8F4Entry entries[34];
-    u8 _pad770[0x28];
+    union {
+        Gap8000F8F4Entry entries[34];
+        struct { u8 _pad0[0x690]; Gap8000F8F4Slot slots[30]; };
+    };
+    u8 _pad780[0x18];
     Gap8000F8F4Table* tables[8];
+    u8 _pad7B8[0x46];
+    u8 flag7FE;
 } Gap8000F8F4State;
 extern Gap8000F8F4State lbl_80366B18;
 
