@@ -51,8 +51,11 @@ void fn_8005240C(void) {
 }
 
 // .text:0x80052634 size:0x58
-void fn_80052634(void) {
-    return;
+void fn_80052634(Gap800506E8Actor* actor, s32 index) {
+    Gap800506E8Task* task = fn_800B0A5C_insertQueue(fn_800521B0, 4);
+    task->actor = actor;
+    task->index = index;
+    task->id = actor->id;
 }
 
 // .text:0x8005268C size:0x8
