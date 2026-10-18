@@ -58,7 +58,7 @@ void fn_8006C088(BOOL alternate);
 void fn_8006C0D0(void);
 void fn_8006C100(void);
 void fn_8006C13C(void);
-void fn_8006C268(void);
+s16 fn_8006C268(s16* values);
 void fn_8006C2B4(void);
 void fn_8006C398(void);
 void fn_8006C3F0(Gap80069B08Callback value);

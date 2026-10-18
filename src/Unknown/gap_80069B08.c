@@ -97,8 +97,18 @@ void fn_8006C13C(void) {
 }
 
 // .text:0x8006C268 size:0x4C
-void fn_8006C268(void) {
-    return;
+s16 fn_8006C268(s16* values) {
+    s16 total = 0;
+    s16* entry = values;
+    u32 i = 0;
+    do {
+        ++i;
+        total += *entry++;
+    } while (i < 6);
+    total += values[6];
+    total += values[7];
+    if (total > 9999) total = 9999;
+    return total;
 }
 
 // .text:0x8006C2B4 size:0xE4
