@@ -3,6 +3,8 @@
 #include "menus/rep_0568.h"
 #include "menus/rep_10C0.h"
 
+extern void fn_800BDC88(HugeAnimEntry68* entries, u16 first, u16 last, s32 resource, s32 mode, s32 flags);
+
 extern hugeAnimStruct* lbl_2_bss_340140;
 extern f32 lbl_2_rodata_FB4;
 
@@ -54,8 +56,15 @@ void fn_2_8C724(void) {
 }
 
 // .text:0x0008C80C size:0x104
-void fn_2_8C80C(void) {
-    return;
+void fn_2_8C80C(s32 resource, s32 start, s32 count, s32 mode, s32 flags) {
+    s32 i;
+    for (i = start; i < start + count; i++) {
+        fn_800BDC88(lbl_2_bss_340140->entries_68, i, i, lbl_2_bss_340140->slots_2DA0[resource].unk0, mode, flags);
+        lbl_2_bss_340140->entries_68[i].unk34->unk99 = 1;
+        fn_800BD548((HugeAnimSubObj34*)&lbl_2_bss_340140->entries_68[i].unk34, 4, lbl_2_bss_340140->menuLights[0], lbl_2_bss_340140->menuLights[1], lbl_2_bss_340140->menuLights[2], lbl_2_bss_340140->menuLights[3]);
+        CTRLSetTranslation(&((HugeAnimCtrlEntry*)lbl_2_bss_340140->entries_68)[i].ctrl, lbl_2_rodata_FB4, lbl_2_rodata_FB4, lbl_2_rodata_FB4);
+        CTRLSetRotation(&((HugeAnimCtrlEntry*)lbl_2_bss_340140->entries_68)[i].ctrl, lbl_2_rodata_FB4, lbl_2_rodata_FB4, lbl_2_rodata_FB4);
+    }
 }
 
 // .text:0x0008C910 size:0x378

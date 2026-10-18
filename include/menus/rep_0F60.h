@@ -18,7 +18,7 @@ void fn_2_8B158(void);
 void fn_2_8B2C0(void);
 void fn_2_8B418(void);
 void fn_2_8C724(void);
-void fn_2_8C80C(void);
+void fn_2_8C80C(s32 resource, s32 start, s32 count, s32 mode, s32 flags);
 void fn_2_8C910(void);
 BOOL fn_2_8CC88(s32 index);
 void fn_2_8CCAC(s32 index, u8 value);
