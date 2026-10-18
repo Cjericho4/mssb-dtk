@@ -51,7 +51,7 @@ extern Gap800B117CFlags* lbl_803CBB34;
 void fn_800B117C(u8 value);
 void fn_800B1188(void);
 void DrawNullSprite(Gap800B117CVertex* vertices, s32 count);
-void fn_800B12DC(void);
+void fn_800B12DC(Gap800B117CVertex* vertices, s32 count);
 void fn_800B1314(void);
 void DrawSprite_TexObj(void);
 void fn_800B1388(void);
