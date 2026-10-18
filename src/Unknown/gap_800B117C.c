@@ -167,8 +167,11 @@ void fn_800B2C10(Gap800B117CObj* obj, u16 index, Gap800B117CVec* vec) {
 }
 
 // .text:0x800B2C44 size:0x44
-void fn_800B2C44(void) {
-    return;
+void fn_800B2C44(Gap800B117CObj* obj, u16 index, Gap800B117CVec* vec) {
+    vec->x = 0.0f;
+    vec->y = 0.0f;
+    vec->z = 0.0f;
+    PSMTXMultVec(obj->matrices[index], vec, vec);
 }
 
 // .text:0x800B2C88 size:0x34
