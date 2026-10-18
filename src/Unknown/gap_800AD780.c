@@ -211,8 +211,16 @@ void resetAllDrawingStructs(void) {
 }
 
 // .text:0x800B0C80 size:0x34
-void fn_800B0C80(void) {
-    return;
+void fn_800B0C80(void (*callback)(void)) {
+    s32 count;
+    Gap800AD780DrawScript* script;
+    if (callback == NULL) callback = nop_function;
+    count = 3;
+    script = lbl_803C7A24;
+    do {
+        script->callback = callback;
+        script++;
+    } while (--count != 0);
 }
 
 // .text:0x800B0CB4 size:0x4

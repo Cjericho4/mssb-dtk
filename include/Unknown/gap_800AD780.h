@@ -2,6 +2,11 @@
 #define __UNKNOWN_gap_800AD780_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800AD780DrawScript {
+    void (*callback)(void);
+    u8 _pad4[0x7C];
+} Gap800AD780DrawScript;
+extern Gap800AD780DrawScript lbl_803C7A24[3];
 typedef struct Gap800AD780DrawEntry {
     void (*callback)(void);
     u32 unk4;
@@ -66,7 +71,7 @@ void fn_800B0A14_removeQueue(void);
 void fn_800B0A5C_insertQueue(void);
 void resetAllDrawingStructs_tonop(void);
 void resetAllDrawingStructs(void);
-void fn_800B0C80(void);
+void fn_800B0C80(void (*callback)(void));
 void nop_function(void);
 void RunDrawScripts_with_stack_variables(void);
 void fn_800B0D28(s32 value);
