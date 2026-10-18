@@ -19,6 +19,7 @@ extern s32 fn_80035838(CompressedDiskRead* list, s32 count);
 #include "menus/gap_8782C.h"
 
 extern void fn_80035B50(s32 arg0);
+extern void starMissionRelated2(void);
 #include "menus/gap_71EC4.h"
 #include "menus/gap_D08.h"
 extern void fn_80053FE8(void);
@@ -46,7 +47,25 @@ static inline u16* resolveMenuString(u32* table, s32 id, u16* source) {
 
 // .text:0x0004B1AC size:0x124
 void fn_2_4B1AC(void) {
-    return;
+    s32 delta;
+    fn_2_4B2D0();
+    if (lbl_2_bss_1A824C->unk197843 == 0) {
+        lbl_2_bss_1A824C->unk197778 = 0;
+        lbl_2_bss_1A824C->unk197798 = 0;
+    } else if (lbl_2_bss_1A824C->unk197843 == 1) {
+        if (lbl_2_bss_1A8248->counter == 1) delta = -1;
+        else delta = -lbl_2_bss_1A8248->counter / 2;
+        lbl_2_bss_1A8248->previousCounter = lbl_2_bss_1A8248->counter;
+        lbl_2_bss_1A8248->counter += delta;
+        if (lbl_2_bss_1A8248->counter > 999) lbl_2_bss_1A8248->counter = 999;
+        if (lbl_2_bss_1A8248->counter < 0) lbl_2_bss_1A8248->counter = 0;
+        lbl_2_bss_1A824C->unk19777A = delta;
+        lbl_2_bss_1A824C->unk197798 = delta;
+    } else if (lbl_2_bss_1A824C->unk197843 == 2) {
+        lbl_2_bss_1A824C->unk197796 = 0;
+        lbl_2_bss_1A824C->unk197798 = 0;
+    }
+    starMissionRelated2();
 }
 
 // .text:0x0004B2D0 size:0x1044
