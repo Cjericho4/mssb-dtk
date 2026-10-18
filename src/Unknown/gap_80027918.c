@@ -86,8 +86,20 @@ void fn_8002C56C(void) {
 }
 
 // .text:0x8002CDD0 size:0x7C
-void fn_8002CDD0(void) {
-    return;
+void fn_8002CDD0(Gap80027918Vec* v) {
+    Gap80027918Node* node = (Gap80027918Node*)&lbl_803CBC84;
+
+    while ((node = node->next) != NULL) {
+        if (node->type == 10) {
+            break;
+        }
+    }
+    if (node != NULL && node->unk40 != 0) {
+        node->prevPos.x = v->x;
+        node->prevPos.y = v->y;
+        node->prevPos.z = v->z;
+        PSVECSubtract(&node->prevPos, &node->pos, &node->delta);
+    }
 }
 
 // .text:0x8002CE4C size:0x9E0
@@ -101,8 +113,18 @@ void fn_8002D82C(void) {
 }
 
 // .text:0x8002DC68 size:0x7C
-void fn_8002DC68(void) {
-    return;
+void fn_8002DC68(Gap80027918Vec* v) {
+    Gap80027918Node* node = (Gap80027918Node*)&lbl_803CBC84;
+
+    while ((node = node->next) != NULL) {
+        if (node->type == 9) {
+            break;
+        }
+    }
+    if (node != NULL) {
+        memcpy(&node->prevPos, &node->pos, sizeof(Gap80027918Vec));
+        memcpy(&node->pos, v, sizeof(Gap80027918Vec));
+    }
 }
 
 // .text:0x8002DCE4 size:0x6F8
