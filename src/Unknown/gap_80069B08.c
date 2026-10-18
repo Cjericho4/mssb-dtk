@@ -71,8 +71,14 @@ void fn_8006BE00(void) {
 }
 
 // .text:0x8006C088 size:0x48
-void fn_8006C088(void) {
-    return;
+void fn_8006C088(BOOL alternate) {
+    Gap80069B08RenderMode* mode;
+    mode = alternate ? &lbl_8010928C : &lbl_80109250;
+    lbl_803CBD34 = mode;
+    VIConfigure(mode);
+    VIFlush();
+    VIWaitForRetrace();
+    VIWaitForRetrace();
 }
 
 // .text:0x8006C0D0 size:0x30

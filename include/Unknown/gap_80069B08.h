@@ -2,6 +2,13 @@
 #define __UNKNOWN_gap_80069B08_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80069B08RenderMode Gap80069B08RenderMode;
+extern Gap80069B08RenderMode lbl_80109250;
+extern Gap80069B08RenderMode lbl_8010928C;
+extern Gap80069B08RenderMode* lbl_803CBD34;
+void VIConfigure(Gap80069B08RenderMode* mode);
+void VIFlush(void);
+void VIWaitForRetrace(void);
 typedef void (*Gap80069B08Callback)(s32 a, s32 b, s32 c);
 typedef struct Gap80069B08Game { u8 _pad0[0x28]; u8 mode; } Gap80069B08Game;
 extern Gap80069B08Game lbl_80366158;
@@ -47,7 +54,7 @@ void fn_8006B668(void);
 void fn_8006B78C(void);
 void fn_8006BB60(void);
 void fn_8006BE00(void);
-void fn_8006C088(void);
+void fn_8006C088(BOOL alternate);
 void fn_8006C0D0(void);
 void fn_8006C100(void);
 void fn_8006C13C(void);
