@@ -67,12 +67,19 @@ s32 DVDConvertPathToEntrynum(char* path);
 
 extern s32 lbl_803CC140;
 extern volatile u32 lbl_803CC148;
+typedef struct Gap800A6870StreamFile {
+    u8 _pad0[0x3C];
+} Gap800A6870StreamFile;
 typedef struct Gap800A6870Stream {
     struct Gap800A6870Stream* previous;
     struct Gap800A6870Stream* next;
     u32 flags;
     void (*callback)(u32 flags);
+    Gap800A6870StreamFile file; /* 0x10 */
 } Gap800A6870Stream;
+BOOL DVDClose(Gap800A6870StreamFile* file);
+extern void (*lbl_803CC128)(void);
+extern s32 lbl_803CC130;
 extern Gap800A6870Stream* lbl_803CC154;
 extern Gap800A6870Stream* lbl_803CC150;
 extern Gap800A6870Stream* lbl_803CC14C;
