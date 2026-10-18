@@ -9,14 +9,18 @@ extern Gap80035DD4RenderState lbl_800F79B8;
 typedef struct Gap80035DD4Entry {
     u8 _pad0[0x54];
     /* 0x54 */ s32 unk54;
-    u8 _pad58[0x68];
+    u8 _pad58[0x4];
+    /* 0x5C */ u32 unk5C;
+    u8 _pad60[0x8];
+    /* 0x68 */ u8 unk68;
+    u8 _pad69[0x57];
 } Gap80035DD4Entry;
 extern Gap80035DD4Entry lbl_8039C3E0[];
 void fn_800B0A14_removeQueue(void);
 
 void fn_80035DD4(void);
 void fn_80035ED0(s32 index);
-void fn_80035EEC(void);
+void fn_80035EEC(s32 value, s32 index);
 void fn_80035F20(void);
 void fn_80036134(void);
 void fn_80036214(void);

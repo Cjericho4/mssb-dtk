@@ -11,8 +11,11 @@ void fn_80035ED0(s32 index) {
 }
 
 // .text:0x80035EEC size:0x34
-void fn_80035EEC(void) {
-    return;
+void fn_80035EEC(s32 value, s32 index) {
+    if (lbl_8039C3E0[index].unk5C > (u32)(value << 16)) {
+        lbl_8039C3E0[index].unk5C = value << 16;
+        lbl_8039C3E0[index].unk68 = 0;
+    }
 }
 
 // .text:0x80035F20 size:0x214
