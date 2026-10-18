@@ -28,8 +28,21 @@ void fn_80048D4C(void) {
 }
 
 // .text:0x80048E00 size:0xA8
-void fn_80048E00(void) {
-    return;
+s32 fn_80048E00(s32 which, s32 value) {
+    s32 max = 0x23;
+    if (which != 0) max = 0x17;
+    if (value >= max) {
+        value = 0;
+    } else if (value < 0) {
+        value = max - 1;
+    }
+    if (value != lbl_803CB83C[which]) {
+        lbl_803CB83C[which] = value;
+        memset(lbl_802E4B28.unk58, 0, 0x2C);
+        memset(lbl_802E4B28.unk2C, 0xFF, 0x2C);
+        lbl_803CB838 = 300;
+    }
+    return value;
 }
 
 // .text:0x80048EA8 size:0x10

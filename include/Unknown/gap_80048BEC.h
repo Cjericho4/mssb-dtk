@@ -39,7 +39,16 @@ void fn_80048C14(s32 value);
 void fn_80048C1C(void);
 void fn_80048C28(void);
 void fn_80048D4C(void);
-void fn_80048E00(void);
+typedef struct Gap80048BECSelection {
+    u8 unk0[0x2C];
+    /* 0x2C */ u8 unk2C[0x2C];
+    /* 0x58 */ u8 unk58[0x2C];
+    u8 _pad84[0x4];
+} Gap80048BECSelection;
+extern Gap80048BECSelection lbl_802E4B28;
+extern s32 lbl_803CB838;
+void* memset(void* dst, int value, unsigned long count);
+s32 fn_80048E00(s32 which, s32 value);
 s32 fn_80048EA8(s32 index);
 void startGameRelated(void);
 void fn_80049220(void);
