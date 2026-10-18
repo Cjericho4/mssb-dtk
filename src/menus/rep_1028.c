@@ -92,8 +92,31 @@ void fn_2_8F3D4(void) {
 }
 
 // .text:0x0008F528 size:0x118
-void fn_2_8F528(void) {
-    return;
+void fn_2_8F528(s32 index) {
+    Rep1028Obj* obj = &lbl_2_bss_1A8248->rep1028Objects[index];
+    GXColor color = lbl_800F7478[10];
+    s32 alpha;
+    switch (obj->unkA6) {
+    case 0:
+        obj->unk84 = 0.0f;
+        obj->unkA6 = 1;
+    case 1:
+        obj->unk84 += 0.02;
+        alpha = 256.0f * obj->unk84;
+        if (alpha < 255) {
+            color.a = 1;
+            color.a = alpha;
+            fn_800BD2CC(1, color);
+        } else {
+            color.a = 255;
+            fn_800BD2CC(0, color);
+            obj->unkA6 = 2;
+        }
+        break;
+    case 2:
+        obj->unk84 = 0.0f;
+        break;
+    }
 }
 
 // .text:0x0008F640 size:0x48
