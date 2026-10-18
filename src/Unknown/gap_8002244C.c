@@ -248,8 +248,17 @@ void LinearInterpolateToNewRange(void) {
 }
 
 // .text:0x80024C04 size:0x68
-void fn_80024C04(void) {
-    return;
+BOOL fn_80024C04(s32 index) {
+    s32 i;
+    for (i = 0; i < 6; i++) {
+        if (lbl_803CB748[i] == lbl_800E8558[index].id) {
+            if (g_d_GameSettings.unlocked[i] == 0) {
+                return FALSE;
+            }
+            break;
+        }
+    }
+    return TRUE;
 }
 
 // .text:0x80024C6C size:0xC0

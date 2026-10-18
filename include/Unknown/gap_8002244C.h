@@ -8,6 +8,19 @@ void fn_800B0A14_removeQueue(void);
 u8* memset(u8* memory, s32 value, u32 size);
 void OSSetProgressiveMode(u32 enable);
 void fn_800A7E00(void);
+typedef struct Gap8002244CStageEntry {
+    u8 _pad0[2];
+    /* 0x2 */ u8 id;
+    u8 _pad3[3];
+} Gap8002244CStageEntry;
+extern Gap8002244CStageEntry lbl_800E8558[54];
+extern u8 lbl_803CB748[8];
+typedef struct Gap8002244CGameSettings {
+    u8 _pad0[0x1A];
+    /* 0x1A */ u8 unlocked[6];
+    u8 _pad20[0x38];
+} Gap8002244CGameSettings;
+extern Gap8002244CGameSettings g_d_GameSettings;
 void fn_800A7568(void);
 void fn_800A6304(void);
 typedef struct Gap8002244CFlags {
@@ -77,7 +90,7 @@ void multBottomBits_asFloat(void);
 void byteWiseMultiply(void);
 void LERPToNewRange_Float(void);
 void LinearInterpolateToNewRange(void);
-void fn_80024C04(void);
+BOOL fn_80024C04(s32 index);
 void fn_80024C6C(void);
 void fn_80024D2C(void);
 void fn_80024DB0(void);
