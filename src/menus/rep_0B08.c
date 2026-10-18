@@ -524,7 +524,35 @@ void fn_2_6ACF0(void) {
 
 // .text:0x0006ACF4 size:0x114
 void fn_2_6ACF4(void) {
-    return;
+    Rep0B08Obj* obj;
+    s32 i;
+    for (i = 0; i < 8; i++) {
+        obj = &lbl_2_bss_1A8248->rep0B08Objects[i];
+        obj->index = i;
+        obj->animationIndex = i;
+        obj->unk8C = 0.0f;
+        obj->unkB6 = 10;
+        obj->unk40 = 0.0003f * obj->unkB6 + 0.1f;
+        obj->unkB8 = 10;
+        obj->unkB7 = 15;
+        obj->unk44 = obj->unk40 / obj->unkB7;
+        obj->unkBB = 0;
+        obj->unkC0 = 0;
+        obj->unk96 = i;
+        obj->unk98 = -1;
+        obj->unkBC = 1;
+        obj->variant = 0;
+        obj->state = 0;
+        obj->unkC6 = -1;
+        obj->unkC4 = 0;
+        obj->unkC5 = 0;
+        obj->unk88 = 0.0f;
+        obj->unkC1 = 0;
+        obj->unkAC = 0;
+        obj->unkCA = 255;
+        obj->unkCB = -1;
+        obj->unkCC = -1;
+    }
 }
 
 // .text:0x0006AE08 size:0x178

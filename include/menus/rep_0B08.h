@@ -22,7 +22,9 @@ typedef struct Rep0B08Obj {
     f32 unk34;
     f32 unk38;
     f32 unk3C;
-    u8 _pad40[0xC];
+    f32 unk40;
+    f32 unk44;
+    u8 _pad48[4];
     f32 angle; /* 0x4C */
     f32 unk50;
     u8 _pad54[0x18];
@@ -31,26 +33,37 @@ typedef struct Rep0B08Obj {
     u8 _pad74[0xC];
     s32 index;
     s32 animationIndex; /* 0x84 */
-    u8 _pad88[4];
+    f32 unk88;
     f32 unk8C;
     u8 _pad90[4];
     /* 0x94 */ s16 state;
-    /* 0x96 */ u8 _pad96[0xA];
+    s16 unk96;
+    s16 unk98;
+    u8 _pad9A[6];
     s16 unkA0;
     /* 0xA2 */ s16 countdown;
-    u8 _padA4[0xC];
+    u8 _padA4[8];
+    s16 unkAC;
+    u8 _padAE[2];
     s16 unkB0;
     s16 unkB2;
     s16 unkB4;
-    u8 _padB6[4];
+    u8 unkB6;
+    u8 unkB7;
+    u8 unkB8;
+    u8 _padB9;
     u8 unkBA;
     u8 unkBB;
-    u8 _padBC[4];
+    u8 unkBC;
+    u8 _padBD[3];
     u8 unkC0;
-    u8 _padC1[2];
+    u8 unkC1;
+    u8 _padC2;
     u8 variant; /* 0xC3 */
     u8 unkC4;
-    u8 _padC5[5];
+    u8 unkC5;
+    s8 unkC6;
+    u8 _padC7[3];
     u8 unkCA;
     s8 unkCB;
     s8 unkCC;
