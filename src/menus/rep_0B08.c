@@ -694,8 +694,18 @@ void fn_2_6BFC0(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006C020 size:0x100
-void fn_2_6C020(void) {
-    return;
+void fn_2_6C020(Rep0B08Obj* obj) {
+    f32 difference;
+    obj->angle = (f32)atan2(-(lbl_2_bss_1A8248->rep0B08Objects[0].position.x - obj->position.x), -(lbl_2_bss_1A8248->rep0B08Objects[0].position.z - obj->position.z));
+    difference = fn_2_4A18C(obj->unk34 - obj->angle);
+    if ((difference < 0.02 && difference > 0.0f) || (difference > -0.02 && difference < 0.0f)) {
+        obj->state = 3;
+    } else if (difference < 0.0f) {
+        obj->unk34 += 0.05235988f;
+    } else {
+        obj->unk34 -= 0.05235988f;
+    }
+    obj->angle = obj->unk34;
 }
 
 // .text:0x0006C120 size:0x70

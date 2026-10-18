@@ -180,7 +180,7 @@ void fn_2_6BDE0(Rep0B08Obj* obj);
 void fn_2_6BE80(void);
 void fn_2_6BF88(Rep0B08Obj* obj);
 void fn_2_6BFC0(Rep0B08Obj* obj);
-void fn_2_6C020(void);
+void fn_2_6C020(Rep0B08Obj* obj);
 void fn_2_6C120(Rep0B08Obj* obj);
 void fn_2_6C190(Rep0B08Obj* obj);
 void fn_2_6C28C(Rep0B08Obj* obj);
