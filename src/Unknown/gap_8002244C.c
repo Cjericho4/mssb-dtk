@@ -127,7 +127,13 @@ void fn_8002399C(void) {
 
 // .text:0x80023AA4 size:0x60
 void fn_80023AA4(void) {
-    return;
+    u32 i;
+    lbl_8017EB40[0] = _OSAllocFromHeap(32, 28 * sizeof(Gap8002244CActor));
+    i = 1;
+    do {
+        lbl_8017EB40[i] = lbl_8017EB40[i - 1] + 1;
+    } while (++i < 28);
+    ActorObjectInitTable(28);
 }
 
 // .text:0x80023B04 size:0x8C
