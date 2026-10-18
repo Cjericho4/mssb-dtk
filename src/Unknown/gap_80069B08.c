@@ -37,7 +37,7 @@ void fn_8006AC24(void) {
 
 // .text:0x8006AF6C size:0x30
 void fn_8006AF6C(void) {
-    return;
+    if (lbl_803CC1B8->active == 0) fn_800B0A14_removeQueue();
 }
 
 // .text:0x8006AF9C size:0x294

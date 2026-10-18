@@ -2,6 +2,15 @@
 #define __UNKNOWN_gap_80069B08_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80069B08Queue {
+    u8 _pad0[0x12];
+    u16 priority;
+    u8 _pad14[0x27];
+    u8 active;
+} Gap80069B08Queue;
+extern Gap80069B08Queue* lbl_803CC1B8;
+void fn_800B0A14_removeQueue(void);
+void fn_800B0A5C_insertQueue(void (*callback)(void), u16 priority);
 typedef struct Gap80069B08Mission {
     u8 _pad0[0x31];
     /* 0x31 */ s8 state;
