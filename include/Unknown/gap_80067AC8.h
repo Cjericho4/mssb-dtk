@@ -67,6 +67,13 @@ extern Gap80067AC8LoadStatus lbl_803C6CF8;
 u32 ARAMTransfer(char* name, s32 a, s32 b, s32 c);
 void fn_800111B4(u32 aramAddr);
 BOOL fn_800697B0(void);
+typedef struct Gap80067AC8Stats {
+    u8 _pad0[0x46E0]; s32 selected[2];
+    u8 _pad46E8[0x21]; u8 indices[2];
+} Gap80067AC8Stats;
+typedef struct Gap80067AC8RosterEntry { u8 _pad0[0x24]; s16 id; u8 _pad26[0x7A]; } Gap80067AC8RosterEntry;
+extern Gap80067AC8Stats lbl_8034E9A0;
+extern Gap80067AC8RosterEntry inMemRoster[2][9];
 void fn_80069854(void);
 void fn_800698F8(void);
 void fn_80069A68(void);

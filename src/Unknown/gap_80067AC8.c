@@ -95,7 +95,15 @@ BOOL fn_800697B0(void) {
 
 // .text:0x80069854 size:0xA4
 void fn_80069854(void) {
-    return;
+    s32 side;
+    s32 i;
+    for (side = 0; side < 2; side++) {
+        for (i = 0; i < 9; i++) {
+            if (lbl_8034E9A0.selected[side] == inMemRoster[side][i].id) {
+                lbl_8034E9A0.indices[side] = i;
+            }
+        }
+    }
 }
 
 // .text:0x800698F8 size:0x170
