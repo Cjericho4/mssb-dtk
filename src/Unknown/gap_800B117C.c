@@ -31,8 +31,8 @@ void DrawSprite_TexObj(Gap800B117CVertex* vertices, Gap800B117CTexture* texture)
 }
 
 // .text:0x800B1388 size:0x38
-void fn_800B1388(void) {
-    return;
+void fn_800B1388(Gap800B117CVertex* vertices) {
+    DrawSprite(0x80, vertices, 4, NULL, 0, 0);
 }
 
 // .text:0x800B13C0 size:0xA8
