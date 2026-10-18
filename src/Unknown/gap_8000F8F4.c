@@ -59,7 +59,11 @@ void fn_8000FE08(s32 index, s32 table, s32 value) {
 
 // .text:0x8000FE54 size:0x94
 void fn_8000FE54(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 30; i++) {
+        lbl_80366B18.entries[i].unk2A = 0;
+    }
 }
 
 // .text:0x8000FEE8 size:0x1C
