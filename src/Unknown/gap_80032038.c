@@ -173,8 +173,23 @@ void fn_80033F64(void) {
 }
 
 // .text:0x8003403C size:0xB8
-void fn_8003403C(void) {
-    return;
+void fn_8003403C(f32 width, f32 height) {
+    s32 i;
+    lbl_80180010[0].x = 0.5f * -width;
+    lbl_80180010[0].y = 0.5f * -height;
+    lbl_80180010[0].z = 0.0f;
+    lbl_80180010[1].x = 0.5f * width;
+    lbl_80180010[1].y = 0.5f * -height;
+    lbl_80180010[1].z = 0.0f;
+    lbl_80180010[2].x = 0.5f * width;
+    lbl_80180010[2].y = 0.5f * height;
+    lbl_80180010[2].z = 0.0f;
+    lbl_80180010[3].x = 0.5f * -width;
+    lbl_80180010[3].y = 0.5f * height;
+    lbl_80180010[3].z = 0.0f;
+    for (i = 0; i < 4; i++) {
+        PSMTXMultVec(lbl_8017FF78, &lbl_80180010[i], &lbl_80180010[i]);
+    }
 }
 
 // .text:0x800340F4 size:0x2C

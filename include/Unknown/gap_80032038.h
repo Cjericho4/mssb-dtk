@@ -30,6 +30,9 @@ typedef struct Gap80032038SortEntry {
 extern f32 lbl_8017FF78[3][4];
 extern f32 lbl_8017FFE0[3][4];
 void PSMTXCopy(f32 src[3][4], f32 dst[3][4]);
+typedef struct Gap80032038Vec { f32 x, y, z; } Gap80032038Vec;
+extern Gap80032038Vec lbl_80180010[4];
+void PSMTXMultVec(f32 m[3][4], Gap80032038Vec* src, Gap80032038Vec* dst);
 
 s32 fn_80032038(Gap80032038SortEntry* a, Gap80032038SortEntry* b);
 void fn_80032064(void);
@@ -51,7 +54,7 @@ void fn_80033A24(void);
 void fn_80033B58(void);
 void fn_80033CC8(void);
 void fn_80033F64(void);
-void fn_8003403C(void);
+void fn_8003403C(f32 width, f32 height);
 void fn_800340F4(f32 matrix[3][4]);
 void fn_80034120(f32 matrix[3][4]);
 void fn_8003414C(void);
