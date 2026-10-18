@@ -26,7 +26,21 @@ typedef struct Gap800A97D0Flags {
     u8 _pad56[0xA];
 } Gap800A97D0Flags;
 u8* memset(u8* memory, s32 value, u32 size);
-void fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
+typedef struct Gap800A97D0Request {
+    u8 _pad0[4];
+    /* 0x4 */ u8 chan;
+    /* 0x5 */ u8 slot;
+    u8 _pad6[0x26];
+} Gap800A97D0Request;
+typedef struct Gap800A97D0Queue {
+    u8 _pad0[0x10];
+    /* 0x10 */ u16 unk10;
+    u8 _pad12[2];
+    /* 0x14 */ Gap800A97D0Request request;
+} Gap800A97D0Queue;
+extern Gap800A97D0Queue* lbl_803CC1B8;
+extern u64 lbl_802EF2C0[2];
+Gap800A97D0Queue* fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
 void fn_800B0A14_removeQueue(void);
 s32 CARDProbeEx(s32 chan, s32* memSize, s32* sectorSize);
 extern Gap800A97D0Flags lbl_803C7838;
@@ -55,10 +69,10 @@ void SISetSamplingRate(u32 msec);
 void fn_800A97D0(u8 a, s8 b);
 void fn_800A97EC(s32 index, u32 command, u8 value);
 void fn_800A983C(void);
-void fn_800A9864(void);
+void fn_800A9864(u8 chan, u8 slot, u64 value);
 void fn_800A98FC(void);
 void fn_800A9CF8(void);
-void fn_800A9E34(void);
+void fn_800A9E34(u8 chan, u8 slot, u64 value);
 void fn_800A9ECC(void);
 void fn_800AA34C(void);
 void fn_800AA44C(void);

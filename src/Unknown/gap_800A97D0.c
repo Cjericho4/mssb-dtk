@@ -24,8 +24,15 @@ void fn_800A983C(void) {
 }
 
 // .text:0x800A9864 size:0x98
-void fn_800A9864(void) {
-    return;
+void fn_800A9864(u8 chan, u8 slot, u64 value) {
+    Gap800A97D0Queue* queue;
+    lbl_803C7838.unk55 = 6;
+    queue = fn_800B0A5C_insertQueue(fn_800A98FC, 0xFF);
+    memset((u8*)&queue->request, 0, sizeof(Gap800A97D0Request));
+    queue->request.chan = chan;
+    queue->request.slot = slot;
+    lbl_802EF2C0[chan] = value;
+    lbl_803CC1B8->unk10 = 0;
 }
 
 // .text:0x800A98FC size:0x3FC
@@ -39,8 +46,15 @@ void fn_800A9CF8(void) {
 }
 
 // .text:0x800A9E34 size:0x98
-void fn_800A9E34(void) {
-    return;
+void fn_800A9E34(u8 chan, u8 slot, u64 value) {
+    Gap800A97D0Queue* queue;
+    lbl_803C7838.unk55 = 4;
+    queue = fn_800B0A5C_insertQueue(fn_800A9ECC, 0xFF);
+    memset((u8*)&queue->request, 0, sizeof(Gap800A97D0Request));
+    queue->request.chan = chan;
+    queue->request.slot = slot;
+    lbl_802EF2C0[chan] = value;
+    lbl_803CC1B8->unk10 = 0;
 }
 
 // .text:0x800A9ECC size:0x480
