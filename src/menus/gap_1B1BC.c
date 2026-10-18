@@ -101,7 +101,14 @@ void fn_2_1C21C(void) {
 
 // .text:0x0001C244 size:0xF8
 void fn_2_1C244(void) {
-    return;
+    MenusDisplayState* state = lbl_2_bss_1A8234;
+    s32 bank;
+    s32 slot;
+    for (bank = 0; bank < 70; bank++) {
+        for (slot = 0; slot < 864; slot++) {
+            if (bank >= 35 && slot >= 100 && state->banks[bank].slots[slot].callback != NULL) return;
+        }
+    }
 }
 
 // .text:0x0001C33C size:0x6C
