@@ -33,7 +33,6 @@ New MenusLightMatrixState: Mtx at14, lbl_2_bss_10164; reused MenusLight and huge
 New MenusLoadingState with state halfword30 at lbl_2_bss_1A823C; extended existing scene with byte4420.
 New MenusPlayerInput (6 bytes), used at MenusSaveState472C for controller-button words.
 Gave up fn_2_16F0C during asm review: needs reconciliation of hugeAnimStruct header slot at140 and nine following D4 actor records; retained stub.
-Gave up fn_2_93BF8 after 3 attempts: scene-base address/lwz/addis uses r3 instead of target r4 while preserving argument in r31. Restored stub.
 New opaque MenusAnimationAux; extended existing AnimationStruct with aux pointer8, preserving fieldC and size27C.
 New MenusControllerInput (20 bytes), added controller-array union view to existing MenusInputState; Rep10C0State inputIndex signed byte197863.
 New MenusResourceTables with table pointers at798, lbl_80366B18.
@@ -70,7 +69,6 @@ Gave up fn_2_1FFC4 during asm review: identical shifted-controller-array obstacl
 Consolidated Rep0788Item into existing MenusResourceSlot, adding signed index atE.
 Gave up fn_2_90DE4 after5 attempts: negative-sine inline fixed zero-clamp copy; three remaining differences are amplitude/negative-sine f2/f3 allocation and fmuls operand order. Restored stub.
 New MenusTeamSelections: signed first/second nine-byte arrays at2/B of lbl_803C6724.
-Gave up fn_2_95E80 after3 attempts: inline ==1 predicate folds cntlzw and scene/state saved regs swap; explicit pointer and u8 predicate do not change codegen. Restored stub.
 New MenusResourceState, ten existing5100-byte banks and pending32A86, at lbl_2_bss_1A8230.
 New MenusTransitionEntry (10 bytes) with next8; added array view to existing MenusTransitionConfig preserving named scalar offsets.
 Gave up fn_2_7EF68 after4 attempts: split index web gets within6 register differences (first sum r4 vsr0); expression and inline getter reassociate index additions and shift all scratch regs. Restored stub.
@@ -80,7 +78,6 @@ New opaque MenusSceneArchive via tagged pointer; extended MenusResourceTables wi
 New MenusSelectionPair (8 bytes) for value-copy of MenusGameChoiceState selections at10; repeatFlags at Rep0568State10.
 Gave up fn_2_12B60 after3 attempts: pointer induction is hoisted before initial condition, and saved registers differ; restored stub and removed unused pair/repeat layouts and tentative callee signatures.
 Gave up fn_2_8DC00 during asm review: allocates runtime-sized aligned per-animation aux chunks, requiring raw byte slicing/casting to assign opaque aux pointers; no field-only typed representation identified. Stub retained.
-Gave up fn_2_95E80 after5 total attempts: explicit __cntlzw fixes predicate, but state/scene r31/r30 remain swapped; extra scene local unchanged. Stub restored, session limit reached.
 Gave up fn_2_79688 after1 attempt: same index-add web vs temporary-register obstacle as7EF68, plus unrolled iteration constants left separate. Stub restored.
 Correction: fn_2_4E970 already had a matched BOOL prototype/body; no return-zero placeholder was introduced.
 Correction: fn_2_53BC8 returns s32, with caller explicitly checking its low s16 before storing; prototype and typed stub reflect that.
@@ -100,3 +97,8 @@ Gave up fn_2_51470 after2 attempts: every target instruction matches with s32 re
 Gave up fn_2_6B024 after1 attempt: same negative-sine/amplitude f2/f3 allocation obstacle as698EC/90DE4 (4 remaining diffs), despite inlined bounce and sine helpers. Restored stub/unused phase.
 Gave up fn_2_6784 after4 attempts: struct-member table base folds +C into lbz instead of target relocation addend; explicit pointer hoists into extra saved register. Also first-save readiness store reuses r31 instead of reloading global. Restored stub and unused types.
 New MenusExitTransition: state halfword10/step18 at lbl_2_bss_340234; extended MenusQueueState with active byte0.
+Gave up fn_2_4906C after 5 attempts: source index+1 is hoisted into separate unrolled offsets/lwzx, adding saved registers; pointer/struct/inline forms do not reproduce target add+lwz. Stub restored.
+New MenusResourceLoads: six CompressedDiskRead mode descriptors at offset3D4 of lbl_2_data_12EA8, reusing the existing disk descriptor type.
+Gave up fn_2_432EC after 5 attempts: direct tables reproduce instructions with saved-register permutation; explicit bases fix some saved regs but reassociate table offsets and reorder comparisons. Stub restored.
+Gave up fn_2_6B120 during asm review: repeats negative-sine/amplitude f2/f3 allocation obstacle documented for 6B024/698EC/90DE4; retained stub.
+Gave up fn_2_450E4 after 5 attempts: all instructions match except six cmpw operand orders in unrolled child-choice checks; swapping expressions, casts and int/s8 locals failed. Stub restored and unused fields removed.

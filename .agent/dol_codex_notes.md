@@ -99,3 +99,52 @@ Introduced Gap80062578Settings (mode at 0x10); extended Status flags at 0x55 and
 Introduced Gap800A6870Stream with previous/next/flags/callback at 0/4/8/C; refined stream-head pointer and out-of-line restart stub signature.
 Introduced Gap80069B08Scores, 0x16-byte score configuration with order at C and mode at 0x12.
 fn_8006C398: score-order loop allocation differs; restored stub.
+fn_80027918: inline node search matches except store through r4 instead of loop-carried r3; restored stub after four attempts.
+Skipped fn_80011578/fn_8001B308/fn_8001D074/fn_800177B4/fn_8001C528: need g_hugeAnimStruct; fn_800B49E4: stored offset relocation.
+fn_800247E4: tiled-index arithmetic has extensive quotient/remainder scheduling and register differences; restored stub after three attempts.
+Introduced Gap8002244CActor, a 0x1BC0-byte actor allocation view.
+Introduced Gap80048BECCallback union for integer and actor callbacks; extended Gap80048BECObj with signed ID at 0x252.
+Extended Gap800AD780State with ring cursors/counts at 0..0x24 and busy byte at 0x29.
+fn_800B0390: ring-count stores/reloads reorder and base registers differ; restored stub after three attempts; reverted unused State extension.
+multBottomBits_asFloat: conversion stack slots and multiply/divide float allocation differ; restored stub after five attempts.
+Skipped SndFree: allocation prefix at negative offsets; fn_800E591C: older ABI prologue.
+fn_800ACC6C: switch and ceil-division match but sum instruction operands/allocation differ; restored stub after five attempts.
+Introduced Gap800B993CFog with type/four float distances/color at 0..0x14.
+SetFog: raw float stores versus rounded call arguments require fmr/frsp copies missing in four variants; restored stub.
+Introduced Gap80067AC8Stats with random selections at 0x46E0/46E4.
+fn_800684A4: first store reloads global base instead of using r30; four variants failed, restored stub and removed unused Stats view.
+Extended Gap80062578Stats with soundActive byte at 0x48AE.
+fn_800628D4: sound lookup table and volume address scheduling differ in five variants; restored stub and unused declarations.
+Introduced Gap800A97D0Movie (flags at 0x1BA) and Gap800A97D0Load (signed status at 0x722).
+fn_800AD490: only final flag branch differs (compiler hoists clrlwi and emits beqlr); restored stub after five attempts, removed unused Movie/Load views.
+Skipped fn_8000B9C8: stored offset relocation. Extended Gap8000F8F4Entry with condition byte at 0x2B.
+Introduced Gap80062578RenderObject (type at 0, state at 0x137) and RenderGroup (count at 6, objects at 0x18).
+Introduced opaque Gap800B993CAllocation for freeing model allocation blocks.
+Introduced Gap8000F8F4TableHeader overlay on table values; extended State with header pointer at 0x7B4 and values at 0x7EC..7F8.
+fn_80010FA0: structure/copy behavior matches, but table/state register allocation and extra output-pointer mr differ; restored after five attempts, removed unused TableHeader/State extensions.
+Introduced Gap800B117CSkinHeader (data and format at 0/6), opaque SkinData/SkinOutput; added Obj union pointer views at 0x14/7C.
+Introduced Gap8000F8F4Slot (8-byte entries); State overlay slots at 0x690 and flag7FE.
+Introduced Gap800AD780DrawContext (five words) and callback/previous/next views in DrawScript, callback union in QueueNode.
+fn_800B0580: same count-reload/store-order and base allocation issue as fn_800B0390; restored stub after one attempt.
+fn_8000D838: unresolved renderer argument/stack-context types; left stub for later continuation.
+Skipped DSInsertListObject/DSInsertBranchBelow: runtime member offsets require excluded pointer arithmetic.
+fn_800E4B1C: optimizer range-reduces or duplicates signed quarter divisions and changes branch scheduling; restored after two attempts.
+Extended Gap800B117CFlags with seven projection floats at 0x30..48.
+fn_800B27DC: integer-to-float scheduling, indexed versus direct float load, and base registers differ; restored after two attempts and removed unused projection view.
+Extended Gap800B993CObj trailing padding to its 0x6C allocation size.
+Introduced Gap8003AE54SaveBlock (0x450C, checksum/data) and Save (checksum0x44, data0x48, blocks0x5F8).
+Corrected Gap80048BEC RGB extern to two RGB entries (small-data view) for fn_8004C108.
+Introduced Gap8001E460Stage (status0x69)/StageRef (stride8); extended QueueNode index0x14 and ResourceState pending0x12/ready0x16.
+Introduced Gap8000F8F4Object (flags0x54)/Range (first/count0x14/16); added Slot object-pointer union.
+Introduced Gap8002244CKey union (word/time), KeyTrack (8-byte count/keys), and KeyAnimation (time0, trackIndexA, tracks18).
+Extended Gap800B117CObj with volatile blend float at 0x8C and tickMode byte0x99.
+AnimateActorBones uses a plain blend float (volatile was unnecessary).
+Introduced Gap800B117CDisplay/DisplayRef/Model, DisplayRecord (stride1C,index14,flags1A), DisplayAnimation (model10,records20), SkinState (value8).
+Extended Gap800AD780Movie with elapsed ticks0x198 and mode byte0x1B9.
+Introduced Gap80039AA8RenderMode (width/height0x18/1A, flags0x25).
+Introduced Gap80032038Actor (strideC0,matrixC,flags54) and ActorRef (stride8).
+Introduced Gap800B993CVec, Control (0x44), and Light (position/direction views0x40..64, control74, parentMatrixB8).
+Introduced Gap80062578Control (0x44) and Transform with current/target controls at0x60/A4.
+Skipped fn_80021650: stored offset relocation.
+Introduced Gap80067AC8Stats (selected46E0,indices4709) and RosterEntry (strideA0,id24).
+Introduced Gap80008E00Vec2 for cubic interpolation.
