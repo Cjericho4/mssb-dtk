@@ -70,12 +70,23 @@ typedef struct Gap80048BECSettings {
     u8 _pad8[0x50];
 } Gap80048BECSettings;
 extern Gap80048BECSettings g_d_GameSettings;
+typedef struct Gap80048BECQuad {
+    u8 a;
+    u8 b;
+    u8 c;
+    u8 d;
+} Gap80048BECQuad;
 typedef struct Gap80048BECState {
     u8 _pad0[0x2C];
     /* 0x2C */ u16 unk2C;
     u8 _pad2E[0x8];
     /* 0x36 */ u8 enabled;
-    u8 _pad37[0x39];
+    u8 _pad37[0x4];
+    /* 0x3B */ u8 groupA[5];
+    /* 0x40 */ u8 groupB[5];
+    /* 0x45 */ Gap80048BECQuad quadsA[4];
+    /* 0x55 */ Gap80048BECQuad quadsB[4];
+    u8 _pad65[0xB];
 } Gap80048BECState;
 extern Gap80048BECState lbl_803C5F04;
 void fn_80049D3C(void);
