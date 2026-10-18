@@ -374,8 +374,23 @@ void fn_2_25D6C(DrawingSceneStruct* scene, Rep0788Item* item) {
 }
 
 // .text:0x00025D98 size:0x118
-void fn_2_25D98(void) {
-    return;
+void fn_2_25D98(DrawingSceneStruct* scene, Rep0788Item* item) {
+    s32 result = fn_2_53BC8(item);
+    if ((s16)result != -1) item->state = result;
+    switch (item->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
+        item->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x5C = lbl_2_bss_1A8248->unk441C << 16;
+        item->state = 0x25;
+        break;
+    case 5: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x00025EB0 size:0x160
