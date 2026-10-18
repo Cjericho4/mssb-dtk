@@ -248,6 +248,13 @@ void fn_800BD2DC(void) {
 }
 
 // .text:0x800BD300 size:0xA0
-void LITXForm(void) {
-    return;
+void LITXForm(Gap800B993CLight* light, f32 view[3][4]) {
+    f32 matrix[3][4];
+    CTRLBuildMatrix(&light->control, matrix);
+    if (light->parentMatrix != NULL) PSMTXConcat(light->parentMatrix, matrix, matrix);
+    PSMTXConcat(view, matrix, matrix);
+    PSMTXMultVec(matrix, &light->position, &light->worldPosition);
+    PSMTXInverse(matrix, matrix);
+    PSMTXTranspose(matrix, matrix);
+    PSMTXMultVec(matrix, &light->direction, &light->worldDirection);
 }

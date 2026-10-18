@@ -104,7 +104,21 @@ void GQRSetup5(void);
 u8 fn_800BD2B0(Gap800B993CColor* out);
 void fn_800BD2CC(u8 enable, Gap800B993CColor* color);
 void fn_800BD2DC(void);
-void LITXForm(void);
+typedef struct Gap800B993CVec { f32 x, y, z; } Gap800B993CVec;
+typedef struct Gap800B993CControl { u8 _pad0[0x44]; } Gap800B993CControl;
+typedef struct Gap800B993CLight {
+    u8 _pad0[0x40];
+    Gap800B993CVec position, worldPosition, direction, worldDirection;
+    u8 _pad70[4];
+    Gap800B993CControl control;
+    f32 (*parentMatrix)[4];
+} Gap800B993CLight;
+void CTRLBuildMatrix(Gap800B993CControl* control, f32 matrix[3][4]);
+void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
+void PSMTXMultVec(f32 matrix[3][4], Gap800B993CVec* src, Gap800B993CVec* dst);
+u32 PSMTXInverse(f32 src[3][4], f32 dst[3][4]);
+void PSMTXTranspose(f32 src[3][4], f32 dst[3][4]);
+void LITXForm(Gap800B993CLight* light, f32 view[3][4]);
 
 void PSMTXCopy(f32 src[3][4], f32 dst[3][4]);
 
