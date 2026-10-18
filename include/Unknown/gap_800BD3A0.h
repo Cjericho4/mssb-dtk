@@ -31,7 +31,10 @@ typedef struct Gap800BD3A0State {
     /* 0x18 */ s32 unk18;
     /* 0x1C */ s32 unk1C;
     /* 0x20 */ s32 unk20;
-    u8 _pad24[0x28];
+    u16 boundCount; /* 0x24 */
+    u8 _pad26[2];
+    f32 minX, maxX, minY, maxY, minZ, maxZ; /* 0x28 */
+    f32 x, y, z; /* 0x40 */
     /* 0x4C */ u8 unk4C;
     /* 0x4D */ s8 unk4D;
 } Gap800BD3A0State;

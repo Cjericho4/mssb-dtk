@@ -111,7 +111,10 @@ void fn_800BEA04(void) {
 
 // .text:0x800BEB3C size:0x44
 void fn_800BEB3C(void) {
-    return;
+    lbl_803009F8.boundCount = 0;
+    lbl_803009F8.minX = lbl_803009F8.minY = lbl_803009F8.minZ = 100000000.0f;
+    lbl_803009F8.maxX = lbl_803009F8.maxY = lbl_803009F8.maxZ = -100000000.0f;
+    lbl_803009F8.x = lbl_803009F8.y = lbl_803009F8.z = 0.0f;
 }
 
 // .text:0x800BEB80 size:0x20
