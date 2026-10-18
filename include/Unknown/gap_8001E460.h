@@ -23,7 +23,8 @@ extern Gap8001E460Flags lbl_803716B8;
 typedef struct Gap8001E460Sound {
     u32 unk0;
     struct Gap8001E460Resource* resources[64]; /* 0x4 */
-    u8 _pad104[0x28C];
+    u8 _pad104[0x23C];
+    /* 0x340 */ u8 groups[0x50];
     u8 groupCount; /* 0x390 */
     u8 _pad391[5];
     /* 0x396 */ u8 soundMode;
@@ -89,7 +90,7 @@ void fn_80021410(void);
 void fn_8002149C(s32 index);
 BOOL fn_800214D0(void);
 void fn_80021518(void);
-void fn_8002158C(void);
+s32 fn_8002158C(void);
 typedef struct Gap8001E460LoadSub {
     u8 _pad0[0x10];
     /* 0x10 */ s16 unk10;
@@ -136,9 +137,15 @@ typedef struct Gap8001E460Object {
 } Gap8001E460Object;
 void fn_800B9AA8(u32 value);
 typedef struct Gap8001E460Resource {
-    u8 _pad0[0x18];
+    /* 0x00 */ u8* project;
+    u8 _pad4[0x4];
+    /* 0x08 */ u8* sdir;
+    u8 _padC[0x4];
+    /* 0x10 */ u8* pool;
+    u8 _pad14[0x4];
     struct Gap8001E460Resource* end;
 } Gap8001E460Resource;
+u32 sndPushGroup(u8* project, u16 gid, Gap8001E460Resource* samples, u8* sdir, u8* pool);
 typedef struct Gap8001E460ResourceState {
     Gap8001E460Resource* resource;
     u8 _pad4[0xC];

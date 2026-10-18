@@ -198,8 +198,13 @@ void fn_80021518(void) {
 }
 
 // .text:0x8002158C size:0x6C
-void fn_8002158C(void) {
-    return;
+s32 fn_8002158C(void) {
+    Gap8001E460Resource* res = lbl_800EF808.resources[0];
+
+    if (sndPushGroup(res->project, 0x1E, res->end, res->sdir, res->pool)) {
+        lbl_800EF808.groups[lbl_800EF808.groupCount++] = 0x1E;
+    }
+    return 0;
 }
 
 // .text:0x800215F8 size:0x58
