@@ -102,8 +102,11 @@ void fn_80062A94(void) {
 }
 
 // .text:0x80062BE4 size:0x40
-void fn_80062BE4(void) {
-    return;
+void fn_80062BE4(Gap80062578Object* obj) {
+    if (lbl_80366158.mode != 1) {
+        lbl_80108B90.value = lbl_803CBD0C;
+        fn_80032064(obj, &lbl_80108B90);
+    }
 }
 
 // .text:0x80062C24 size:0x3C

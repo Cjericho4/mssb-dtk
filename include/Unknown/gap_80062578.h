@@ -79,7 +79,7 @@ void fn_8006295C(void);
 void initializeUnknown(void);
 void fn_80062A74(void);
 void fn_80062A94(void);
-void fn_80062BE4(void);
+void fn_80062BE4(Gap80062578Object* obj);
 void fn_80062C24(Gap80062578Object* obj);
 void fn_80062C60(void);
 void fn_80062D94(void);
