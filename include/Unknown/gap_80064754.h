@@ -13,7 +13,7 @@ typedef struct Gap80064754Unlocks { u8 _pad0[0xF5]; /* 0xF5 */ u8 unkF5; } Gap80
 extern Gap80064754Unlocks lbl_80361B20;
 s32 randRange_FUN_80042bf0(s32 low, s32 high);
 
-void translateStarPitchHitIndex(void);
+s32 translateStarPitchHitIndex(u8 id);
 void translateStarPitch(void);
 void translateStarSwing(void);
 s32 fn_80064918(s16 id);
