@@ -37,7 +37,10 @@ void fn_800ADB04(void) {
 
 // .text:0x800ADBFC size:0x44
 void fn_800ADBFC(void) {
-    return;
+    if (lbl_803CC17F != 0) {
+        lbl_803CC17C = 1;
+        OSSendMessage(&lbl_802FB870, 4, 0);
+    }
 }
 
 // .text:0x800ADC40 size:0x130

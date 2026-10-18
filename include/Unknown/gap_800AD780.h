@@ -2,6 +2,11 @@
 #define __UNKNOWN_gap_800AD780_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800AD780MessageQueue Gap800AD780MessageQueue;
+extern Gap800AD780MessageQueue lbl_802FB870;
+extern u8 lbl_803CC17F;
+extern u8 lbl_803CC17C;
+BOOL OSSendMessage(Gap800AD780MessageQueue* queue, u32 message, s32 flags);
 typedef struct Gap800AD780Hooks {
     u8* (*alloc)(u32 size);
     void (*free)(u8* memory);
