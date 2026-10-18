@@ -46,8 +46,9 @@ s32 fn_800627C4(void) {
 }
 
 // .text:0x800627F8 size:0x34
-void fn_800627F8(void) {
-    return;
+s32 fn_800627F8(void) {
+    fn_80021518(49, lbl_800EF808.sound9C);
+    return 0;
 }
 
 // .text:0x8006282C size:0x30

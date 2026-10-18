@@ -58,7 +58,7 @@ void fn_80062744(void);
 void fn_80062764(s32 value);
 BOOL fn_80062794(u32 handle);
 s32 fn_800627C4(void);
-void fn_800627F8(void);
+s32 fn_800627F8(void);
 void fn_8006282C(void);
 void fn_8006285C(void);
 void fn_80062890(void);
