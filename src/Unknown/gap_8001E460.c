@@ -173,8 +173,8 @@ void fn_80021410(void) {
 }
 
 // .text:0x8002149C size:0x34
-void fn_8002149C(void) {
-    return;
+void fn_8002149C(s32 index) {
+    fn_800ACFB0(lbl_800EF808.resources[index]);
 }
 
 // .text:0x800214D0 size:0x48
