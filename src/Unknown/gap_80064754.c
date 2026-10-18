@@ -32,13 +32,77 @@ s32 translateStarPitchHitIndex(u8 id) {
 }
 
 // .text:0x800647E0 size:0x9C
-void translateStarPitch(void) {
-    return;
+u8 translateStarPitch(u8 id) {
+    switch (id) {
+    case 0:
+        return 133;
+    case 1:
+        return 135;
+    case 2:
+        return 145;
+    case 3:
+        return 147;
+    case 4:
+        return 153;
+    case 5:
+        return 155;
+    case 6:
+        return 141;
+    case 7:
+        return 143;
+    case 8:
+        return 137;
+    case 9:
+        return 139;
+    case 10:
+        return 149;
+    case 11:
+        return 151;
+    case 12:
+        return 161;
+    case 13:
+        return 160;
+    case 14:
+        return 162;
+    }
+    return id;
 }
 
 // .text:0x8006487C size:0x9C
-void translateStarSwing(void) {
-    return;
+u8 translateStarSwing(u8 id) {
+    switch (id) {
+    case 0:
+        return 132;
+    case 1:
+        return 134;
+    case 2:
+        return 144;
+    case 3:
+        return 146;
+    case 4:
+        return 152;
+    case 5:
+        return 154;
+    case 6:
+        return 140;
+    case 7:
+        return 142;
+    case 8:
+        return 136;
+    case 9:
+        return 138;
+    case 10:
+        return 148;
+    case 11:
+        return 150;
+    case 12:
+        return 157;
+    case 13:
+        return 158;
+    case 14:
+        return 159;
+    }
+    return id;
 }
 
 // .text:0x80064918 size:0x54

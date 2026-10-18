@@ -14,8 +14,8 @@ extern Gap80064754Unlocks lbl_80361B20;
 s32 randRange_FUN_80042bf0(s32 low, s32 high);
 
 s32 translateStarPitchHitIndex(u8 id);
-void translateStarPitch(void);
-void translateStarSwing(void);
+u8 translateStarPitch(u8 id);
+u8 translateStarSwing(u8 id);
 s32 fn_80064918(s16 id);
 void fn_8006496C(void);
 void fn_800649BC(void);
