@@ -145,8 +145,19 @@ void fn_80062E6C(Gap80062578Actor* actor, s32 a, s32 b) {
 }
 
 // .text:0x80062ED4 size:0x64
-void fn_80062ED4(void) {
-    return;
+s32 fn_80062ED4(s32 unused, Gap80062578RenderGroup** group) {
+    Gap80062578RenderObject* obj;
+    Gap80062578RenderGroup* owner = *group;
+    s32 i;
+    for (i = 0; i < owner->count; i++) {
+        obj = owner->objects[i];
+        switch (obj->type) {
+        case 0x41: case 0x43: case 0x45: case 0x47: case 0x49: case 0x4B:
+            obj->state = 2;
+            break;
+        }
+    }
+    return 0;
 }
 
 // .text:0x80062F38 size:0xD8

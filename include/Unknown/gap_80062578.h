@@ -93,7 +93,18 @@ typedef struct Gap80062578Actor {
 extern s8 lbl_80108BF0[5][0x36];
 void fn_8004B1C0(s32 index, Gap80062578Actor* actor, s32 a, s32 b);
 void fn_80062E6C(Gap80062578Actor* actor, s32 a, s32 b);
-void fn_80062ED4(void);
+typedef struct Gap80062578RenderObject {
+    u16 type;
+    u8 _pad2[0x135];
+    u8 state;
+} Gap80062578RenderObject;
+typedef struct Gap80062578RenderGroup {
+    u8 _pad0[6];
+    u16 count;
+    u8 _pad8[0x10];
+    Gap80062578RenderObject** objects;
+} Gap80062578RenderGroup;
+s32 fn_80062ED4(s32 unused, Gap80062578RenderGroup** group);
 void fn_80062F38(void);
 s32 fn_80063010(s32 arg0, Gap80062578Scene** scene);
 void fn_80063028(void);
