@@ -5,10 +5,14 @@
 #include "UnknownHeaders.h"
 
 typedef struct MenusRosterTransition {
-    u8 _pad0[5];
+    u8 _pad0[2];
+    u16 state;
+    u8 _pad4;
     u8 mode;
     u8 _pad6[8];
     u8 pending;
+    u8 _padF[0x13];
+    u8 command;
 } MenusRosterTransition;
 extern MenusRosterTransition lbl_2_bss_33FBCC;
 

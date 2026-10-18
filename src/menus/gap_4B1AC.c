@@ -28,6 +28,7 @@ extern s16 lbl_2_data_3EC8[];
 
 extern MenusMenuBuffer lbl_2_bss_5600;
 extern MenusMenuBuffer* lbl_2_data_1E99C[];
+extern s16 lbl_2_bss_9E08;
 extern u16 lbl_2_bss_9600[2];
 extern u16 lbl_2_bss_9604[2];
 extern u16 lbl_2_bss_9A08[2][256];
@@ -471,7 +472,33 @@ void fn_2_51C58(void) {
 
 // .text:0x000520A4 size:0xF4
 void fn_2_520A4(void) {
-    return;
+    MenusRosterTransition* state = &lbl_2_bss_33FBCC;
+    switch ((s32)state->state) {
+    case 0:
+        fn_2_51890();
+        fn_800B0A5C_insertQueue(fn_2_89F70, 0x3000);
+        lbl_2_bss_33FBCC.command = 0x51;
+        state->state = 1;
+        break;
+    case 1:
+        if (state->command != 0x51) fn_2_51C58();
+        break;
+    case 2:
+        state->command = 0x52;
+        state->pending = 1;
+        state->state = 0;
+        lbl_2_bss_9E08 = 10;
+        break;
+    case 3:
+        state->command = 0x52;
+        lbl_2_bss_9E08 = 5;
+        state->pending = 1;
+        state->state = 0;
+        break;
+    case 4:
+        fn_2_51A1C();
+        break;
+    }
 }
 
 // .text:0x00052198 size:0xC8
