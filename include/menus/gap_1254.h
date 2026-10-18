@@ -28,12 +28,15 @@ typedef struct Menus1254State {
     u8 _pad20[0xE];
     u8 unk2E;
     s8 teamIndices[2];
-    u8 _pad31[0x14];
+    u8 _pad31[0x10];
+    u8 flags41[4];
     u8 flags45[4];
     u8 _pad49[6];
     u8 unk4F;
     u8 _pad50[6];
     u8 unk56;
+    u8 _pad57[2];
+    u8 flags59[4];
 } Menus1254State;
 
 extern Menus1254State lbl_2_bss_F468;

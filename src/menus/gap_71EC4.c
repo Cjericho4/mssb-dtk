@@ -402,7 +402,7 @@ void fn_2_74E14(void) {
 }
 
 // .text:0x00074F40 size:0xC18
-void fn_2_74F40(void) {
+void fn_2_74F40(DrawingSceneStruct* scene, s32 index) {
     return;
 }
 
@@ -608,8 +608,25 @@ void fn_2_7E974(void) {
 }
 
 // .text:0x0007EE7C size:0xEC
-void fn_2_7EE7C(void) {
-    return;
+void fn_2_7EE7C(DrawingSceneStruct* scene, s32 index) {
+    s32 value = lbl_2_bss_F468.states[index];
+    if (lbl_2_bss_F468.flags41[index] != 0) {
+        s32 slot = scene->unkIndex + value;
+        slot += index * 9;
+        slot += 0x22;
+        lbl_80371C30[slot].obj->flags &= ~2;
+    } else {
+        s32 slot = scene->unkIndex + value;
+        slot += index * 9;
+        slot += 0x22;
+        lbl_80371C30[slot].obj->flags |= 2;
+    }
+    fn_2_74F40(scene, index);
+    {
+        u8 flag = lbl_2_bss_F468.flags59[index];
+        lbl_803C66B0.flags5D[index] = 0;
+        if (flag != 0) fn_800625A4(index, 0x1A);
+    }
 }
 
 // .text:0x0007EF68 size:0xC8

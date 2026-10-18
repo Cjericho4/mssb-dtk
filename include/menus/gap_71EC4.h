@@ -30,6 +30,8 @@ typedef struct MenusInputFlags {
     };
     u8 unk59;
     u8 unk5A;
+    u8 _pad5B[2];
+    u8 flags5D[4];
 } MenusInputFlags;
 extern MenusInputFlags lbl_803C66B0;
 
@@ -149,7 +151,7 @@ void fn_2_74CD8(void);
 void fn_2_74D8C(void);
 s32 fn_2_74DB8(s32 value);
 void fn_2_74E14(void);
-void fn_2_74F40(void);
+void fn_2_74F40(struct DrawingSceneStruct* scene, s32 index);
 void fn_2_75B58(void);
 void fn_2_75BE4(void);
 void fn_2_76098(void);
@@ -189,7 +191,7 @@ void fn_2_7E194(void);
 void fn_2_7E380(void);
 void fn_2_7E860(void);
 void fn_2_7E974(void);
-void fn_2_7EE7C(void);
+void fn_2_7EE7C(struct DrawingSceneStruct* scene, s32 index);
 void fn_2_7EF68(void);
 void fn_2_7F030(void);
 void fn_2_7F2BC(void);
