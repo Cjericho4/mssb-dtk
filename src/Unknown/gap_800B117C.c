@@ -11,8 +11,8 @@ void fn_800B1188(void) {
 }
 
 // .text:0x800B12A4 size:0x38
-void DrawNullSprite(void) {
-    return;
+void DrawNullSprite(Gap800B117CVertex* vertices, s32 count) {
+    DrawSprite(152, vertices, count, NULL, 0, 0);
 }
 
 // .text:0x800B12DC size:0x38
@@ -46,9 +46,12 @@ void fn_800B1468(void) {
 }
 
 // .text:0x800B1500 size:0x9BC
-void DrawSprite(void) {
+#pragma dont_inline on
+void DrawSprite(s32 primitive, Gap800B117CVertex* vertices, s32 count, Gap800B117CTexture* texture, u16 height, u16 width) {
     return;
 }
+
+#pragma dont_inline reset
 
 // .text:0x800B1EBC size:0x2A4
 void fn_800B1EBC(void) {

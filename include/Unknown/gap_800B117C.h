@@ -2,6 +2,12 @@
 #define __UNKNOWN_gap_800B117C_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800B117CVertex Gap800B117CVertex;
+typedef struct Gap800B117CTexture {
+    u8 _pad0[8];
+    u16 width;
+    u16 height;
+} Gap800B117CTexture;
 typedef struct Gap800B117CMasks {
     u8 _pad0[6];
     u16 mask6, mask8, maskA, maskC;
@@ -44,14 +50,14 @@ extern Gap800B117CFlags* lbl_803CBB34;
 
 void fn_800B117C(u8 value);
 void fn_800B1188(void);
-void DrawNullSprite(void);
+void DrawNullSprite(Gap800B117CVertex* vertices, s32 count);
 void fn_800B12DC(void);
 void fn_800B1314(void);
 void DrawSprite_TexObj(void);
 void fn_800B1388(void);
 void fn_800B13C0(void);
 void fn_800B1468(void);
-void DrawSprite(void);
+void DrawSprite(s32 primitive, Gap800B117CVertex* vertices, s32 count, Gap800B117CTexture* texture, u16 height, u16 width);
 void fn_800B1EBC(void);
 void fn_800B2160(u8 value);
 void fn_800B216C(void);
