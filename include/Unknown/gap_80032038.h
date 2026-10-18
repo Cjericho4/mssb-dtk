@@ -4,6 +4,19 @@
 #include "mssbTypes.h"
 typedef struct Gap80032038Chain { struct Gap80032038Chain* next; } Gap80032038Chain;
 extern Gap80032038Chain* lbl_803CBC74;
+typedef struct Gap80032038Obj {
+    /* 0x00 */ u32 unk0;
+    /* 0x04 */ struct Gap80032038Obj* next;
+    /* 0x08 */ u8 _pad8[0xC];
+    /* 0x14 */ u32 _pad14 : 24;
+    /* 0x17 */ u32 flag : 1;
+    /* 0x17 */ u32 id : 7;
+} Gap80032038Obj;
+typedef struct Gap80032038ObjList {
+    /* 0x0 */ u32 unk0;
+    /* 0x4 */ Gap80032038Obj* next;
+} Gap80032038ObjList;
+extern Gap80032038ObjList lbl_803CBC84;
 extern f32 lbl_8017ED68[];
 typedef struct Gap80032038SortEntry {
     u32 unk0;
@@ -26,9 +39,9 @@ void fn_80033620(void);
 void fn_80033794(Gap80032038Chain* head);
 void fn_800337CC(void);
 void pitchingMachinePitching(void);
-void fn_80033928(void);
+BOOL fn_80033928(u8 id);
 void fn_80033964(void);
-void fn_800339F0(void);
+Gap80032038Obj* fn_800339F0(Gap80032038Obj* obj, u8 id);
 void fn_80033A24(void);
 void fn_80033B58(void);
 void fn_80033CC8(void);

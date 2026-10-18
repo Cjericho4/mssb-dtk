@@ -77,8 +77,14 @@ void pitchingMachinePitching(void) {
 }
 
 // .text:0x80033928 size:0x3C
-void fn_80033928(void) {
-    return;
+BOOL fn_80033928(u8 id) {
+    Gap80032038Obj* obj;
+    for (obj = lbl_803CBC84.next; obj != NULL; obj = obj->next) {
+        if (obj->id == id) {
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 // .text:0x80033964 size:0x8C
@@ -87,8 +93,16 @@ void fn_80033964(void) {
 }
 
 // .text:0x800339F0 size:0x34
-void fn_800339F0(void) {
-    return;
+Gap80032038Obj* fn_800339F0(Gap80032038Obj* obj, u8 id) {
+    if (obj == NULL) {
+        obj = (Gap80032038Obj*)&lbl_803CBC84;
+    }
+    while ((obj = obj->next) != NULL) {
+        if (obj->id == id) {
+            break;
+        }
+    }
+    return obj;
 }
 
 // .text:0x80033A24 size:0x134
