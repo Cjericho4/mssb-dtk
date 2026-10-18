@@ -136,8 +136,11 @@ void fn_800E4AC8(void) {
 }
 
 // .text:0x800E4AE8 size:0x34
-void fn_800E4AE8(void) {
-    return;
+void fn_800E4AE8(Gap800DFDD4Header* header, u8* bytes) {
+    header->width = (bytes[0] << 8) | bytes[1];
+    header->height = (bytes[2] << 8) | bytes[3];
+    header->format = bytes[4];
+    header->flags = bytes[5];
 }
 
 // .text:0x800E4B1C size:0x74

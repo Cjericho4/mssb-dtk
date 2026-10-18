@@ -2,6 +2,13 @@
 #define __UNKNOWN_gap_800DFDD4_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800DFDD4Header {
+    u32 unk0;
+    u16 width;
+    u16 height;
+    u8 format;
+    u8 flags;
+} Gap800DFDD4Header;
 
 void fn_800DFDD4(void);
 void fn_800E0488(void);
@@ -30,7 +37,7 @@ void fn_800E40E4(void);
 void fn_800E423C(void);
 void fn_800E46D4(void);
 void fn_800E4AC8(void);
-void fn_800E4AE8(void);
+void fn_800E4AE8(Gap800DFDD4Header* header, u8* bytes);
 void fn_800E4B1C(void);
 void fn_800E4B90(void);
 void fn_800E4FF4(void);
