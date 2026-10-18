@@ -5,9 +5,11 @@
 typedef struct Gap80032038Chain { struct Gap80032038Chain* next; } Gap80032038Chain;
 extern Gap80032038Chain* lbl_803CBC74;
 typedef struct Gap80032038Obj {
-    /* 0x00 */ u32 unk0;
+    /* 0x00 */ struct Gap80032038Obj* prev;
     /* 0x04 */ struct Gap80032038Obj* next;
-    /* 0x08 */ u8 _pad8[0xC];
+    /* 0x08 */ u32 active;
+    /* 0x0C */ Gap80032038Chain* chain;
+    /* 0x10 */ u8 _pad10[0x4];
     /* 0x14 */ u32 _pad14 : 24;
     /* 0x17 */ u32 flag : 1;
     /* 0x17 */ u32 id : 7;
@@ -17,6 +19,7 @@ typedef struct Gap80032038ObjList {
     /* 0x4 */ Gap80032038Obj* next;
 } Gap80032038ObjList;
 extern Gap80032038ObjList lbl_803CBC84;
+extern Gap80032038Obj* lbl_803CBC80;
 extern f32 lbl_8017ED68[];
 typedef struct Gap80032038SortEntry {
     u32 unk0;
@@ -40,7 +43,7 @@ void fn_80033794(Gap80032038Chain* head);
 void fn_800337CC(void);
 void pitchingMachinePitching(void);
 BOOL fn_80033928(u8 id);
-void fn_80033964(void);
+void fn_80033964(Gap80032038Obj* obj);
 Gap80032038Obj* fn_800339F0(Gap80032038Obj* obj, u8 id);
 void fn_80033A24(void);
 void fn_80033B58(void);

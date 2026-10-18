@@ -88,8 +88,31 @@ BOOL fn_80033928(u8 id) {
 }
 
 // .text:0x80033964 size:0x8C
-void fn_80033964(void) {
-    return;
+void fn_80033964(Gap80032038Obj* obj) {
+    Gap80032038Chain* last;
+    Gap80032038Chain* chain;
+    if (obj->active == 0) {
+        return;
+    }
+    if (obj->prev != NULL) {
+        obj->prev->next = obj->next;
+    }
+    if (obj->next != NULL) {
+        obj->next->prev = obj->prev;
+    }
+    obj->active = 0;
+    chain = obj->chain;
+    last = chain;
+    while (last != NULL && last->next != NULL) {
+        last = last->next;
+    }
+    if (last != NULL) {
+        last->next = lbl_803CBC74;
+        lbl_803CBC74 = chain;
+    }
+    obj->prev = NULL;
+    obj->next = lbl_803CBC80;
+    lbl_803CBC80 = obj;
 }
 
 // .text:0x800339F0 size:0x34
