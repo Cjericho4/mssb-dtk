@@ -46,18 +46,23 @@ typedef struct Gap800A6870Load {
     /* 0x6D0 */ s32 unk6D0;
     u8 _pad6D4[0x4];
     /* 0x6D8 */ u8 unk6D8;
-    u8 _pad6D9[0x17];
+    u8 _pad6D9[0x3];
+    /* 0x6DC */ struct Gap800A6870CommandBlock* block;
+    u8 _pad6E0[0x10];
     s32 running; /* 0x6F0 */
     s32 pending; /* 0x6F4 */
     u8 _pad6F8[4];
     u8* memory; /* 0x6FC */
-    u8 _pad700[0x14];
+    u8 _pad700[0x10];
+    /* 0x710 */ s32 unk710;
     union {
         u16 stateWord; /* 0x714 */
-        struct { u8 state; u8 stateLow; };
+        struct { u8 state; u8 stateLow; u8 state2; u8 state3; };
+        volatile u8 stateBytes[4];
     };
-    u8 _pad716[2];
     s32 entryNumber; /* 0x718 */
+    u8 _pad71C[6];
+    /* 0x722 */ s8 unk722;
 } Gap800A6870Load;
 extern Gap800A6870Load lbl_803C6CF8;
 typedef struct Gap800A6870File {
@@ -102,8 +107,10 @@ void ARAMTransfer(void);
 BOOL fn_800A750C(s32 unused, Gap800A6870DVDFile* file);
 s32 ConvertPathToEntryNum(Gap800A6870File* file);
 void fn_800A7568(void);
-void fn_800A75EC(void);
-void fn_800A7670(void);
+void fn_800A75EC(s32 result, struct Gap800A6870CommandBlock* block);
+void fn_800A7670(s32 result, struct Gap800A6870CommandBlock* block);
+BOOL DVDCancelAsync(struct Gap800A6870CommandBlock* block, void (*callback)(s32 result, struct Gap800A6870CommandBlock* block));
+void ARQRemoveOwnerRequest(u32 owner);
 void fn_800A76BC(void);
 void fn_800A77A0(void);
 void fn_800A7A80(s32 result);

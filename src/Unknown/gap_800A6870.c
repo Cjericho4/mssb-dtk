@@ -65,16 +65,31 @@ s32 ConvertPathToEntryNum(Gap800A6870File* file) {
 
 // .text:0x800A7568 size:0x84
 void fn_800A7568(void) {
-    return;
+    void (*callback)(s32 result, struct Gap800A6870CommandBlock* block);
+    lbl_803C6CF8.stateBytes[0] = 0;
+    lbl_803C6CF8.unk722 = 0;
+    switch (lbl_803C6CF8.stateBytes[1]) {
+    case 1:
+        break;
+    default:
+        if (lbl_803C6CF8.state3 == 0 || lbl_803C6CF8.state3 == 3) {
+            callback = fn_800A75EC;
+        } else {
+            callback = fn_800A7670;
+        }
+        DVDCancelAsync(lbl_803C6CF8.block, callback);
+        ARQRemoveOwnerRequest(2000);
+        break;
+    }
 }
 
 // .text:0x800A75EC size:0x84
-void fn_800A75EC(void) {
+void fn_800A75EC(s32 result, struct Gap800A6870CommandBlock* block) {
     return;
 }
 
 // .text:0x800A7670 size:0x4C
-void fn_800A7670(void) {
+void fn_800A7670(s32 result, struct Gap800A6870CommandBlock* block) {
     Gap800A6870Load* load = &lbl_803C6CF8;
     load->stateWord = 1;
     if (load->memory != NULL) {
