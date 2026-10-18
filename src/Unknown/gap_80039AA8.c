@@ -95,8 +95,11 @@ void fn_8003A848(u8 a, u8 b, u8 c) {
 }
 
 // .text:0x8003A85C size:0x44
-void fn_8003A85C(void) {
-    return;
+void fn_8003A85C(u8 mode) {
+    lbl_802D3D80.mode = mode;
+    lbl_802D3D80.countA00 = 0;
+    lbl_802D3D80.countA02 = 0;
+    memset(lbl_802D3D80.flags, 0, 13);
 }
 
 // .text:0x8003A8A0 size:0x3F0

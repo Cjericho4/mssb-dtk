@@ -4,8 +4,14 @@
 #include "mssbTypes.h"
 typedef struct Gap80039AA8Position { f32 x, y; } Gap80039AA8Position;
 typedef struct Gap80039AA8State {
-    u8 _pad0[0xCD0];
+    u8 _pad0[0xA00];
+    u16 countA00, countA02;
+    u8 _padA04[0x2BC];
+    u8 flags[13]; /* 0xCC0 */
+    u8 _padCCD[3];
     Gap80039AA8Position positions[4]; /* 0xCD0 */
+    u8 _padCF0[0x48];
+    u8 mode; /* 0xD38 */
 } Gap80039AA8State;
 extern Gap80039AA8State lbl_802D3D80;
 void fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
@@ -36,9 +42,11 @@ void fn_8003A550(void);
 void fn_8003A688(s32 index, f32 x, f32 y);
 void fn_8003A6B0(void);
 void fn_8003A848(u8 a, u8 b, u8 c);
-void fn_8003A85C(void);
+void fn_8003A85C(u8 mode);
 void fn_8003A8A0(void);
 void fn_8003AC90(void);
 void fn_8003AD84(void);
+
+u8* memset(u8* memory, s32 value, u32 size);
 
 #endif // !__UNKNOWN_gap_80039AA8_H_
