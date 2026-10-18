@@ -188,8 +188,9 @@ u8 fn_800BD2B0(Gap800B993CColor* out) {
 
 // .text:0x800BD2CC size:0x10
 void fn_800BD2CC(u8 enable, Gap800B993CColor* color) {
+    u32 value = color->word;
     lbl_803CC220 = enable;
-    lbl_803CC224 = *color;
+    lbl_803CC224.word = value;
 }
 
 // .text:0x800BD2DC size:0x24

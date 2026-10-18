@@ -6,8 +6,9 @@ extern s32 lbl_803CC21C;
 extern f32 lbl_803CC218;
 extern f32 lbl_803CC1F8;
 extern f32 lbl_803CC1FC;
-typedef struct Gap800B993CColor {
-    u8 r, g, b, a;
+typedef union Gap800B993CColor {
+    struct { u8 r, g, b, a; };
+    u32 word;
 } Gap800B993CColor;
 extern u8 lbl_803CC220;
 extern Gap800B993CColor lbl_803CC224;
