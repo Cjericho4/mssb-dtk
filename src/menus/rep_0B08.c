@@ -610,8 +610,20 @@ void fn_2_6BC0C(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006BCAC size:0xF0
-void fn_2_6BCAC(void) {
-    return;
+static inline void menuForceAnimation(s32 index, s32 animation) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    Rep0B08AnimationConfig* configs = lbl_2_data_3C84;
+    fn_2_8CD58(obj->index, configs[animation].animation, configs[animation].flag, 1, configs[animation].time, 0, 0);
+    lbl_2_bss_1A824C->animations[obj->index] = animation;
+}
+void fn_2_6BCAC(Rep0B08Obj* obj) {
+    setMenuObjectActive(obj->index, 0);
+    menuForceAnimation(obj->index, 9);
+    obj->angle = 0.0f;
+    obj->unk34 = 0.0f;
+    setMenuObjectAlpha(obj->index, 255);
+    obj->unk8C = 0.0f;
+    obj->state = 1;
 }
 
 // .text:0x0006BD9C size:0x38
