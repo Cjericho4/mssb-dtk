@@ -18,7 +18,9 @@ typedef struct Gap800506E8Cameras {
 extern Gap800506E8Cameras lbl_803C639C;
 extern s32 lbl_803CB880;
 typedef struct Gap800506E8State {
-    u8 _pad0[0x7C];
+    u8 _pad0[0x28];
+    /* 0x28 */ s8 slots[0x24];
+    u8 _pad4C[0x30];
     /* 0x7C */ u8 unk7C;
     /* 0x7D */ u8 unk7D;
     /* 0x7E */ u8 unk7E;
@@ -32,7 +34,14 @@ extern Gap800506E8State lbl_803C6028;
 extern s32 lbl_803CB880;
 extern s32 lbl_803CBD14;
 
-void fn_800506E8(void);
+typedef struct Gap800506E8Character {
+    u8 unk0;
+    /* 0x1 */ u8 id;
+    u8 _pad2[0x4];
+} Gap800506E8Character;
+extern Gap800506E8Character lbl_800E8558[54];
+extern u8 lbl_800FDE84[0x744];
+void fn_800506E8(s8 value, s32 index, BOOL set);
 void fn_80050760(void);
 BOOL fn_80050F78(s32 mode);
 void fn_80050FE8(void);

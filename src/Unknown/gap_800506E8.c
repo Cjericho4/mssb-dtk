@@ -1,8 +1,19 @@
 #include "Unknown/gap_800506E8.h"
 
 // .text:0x800506E8 size:0x78
-void fn_800506E8(void) {
-    return;
+void fn_800506E8(s8 value, s32 index, BOOL set) {
+    s32 i;
+    s32 id = lbl_800E8558[index].id;
+    for (i = 0; i < 0x24; i++) {
+        if (lbl_800FDE84[i] == id) {
+            if (set) {
+                lbl_803C6028.slots[i] = value;
+            } else {
+                lbl_803C6028.slots[i] = -1;
+            }
+            return;
+        }
+    }
 }
 
 // .text:0x80050760 size:0x818
