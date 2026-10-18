@@ -45,7 +45,9 @@ typedef struct Gap800B117CAnimation {
     u8 flags18;
 } Gap800B117CAnimation;
 typedef struct Gap800B117CObj {
-    u8 _pad0[6];
+    u8 _pad0[3];
+    /* 0x3 */ u8 priority;
+    u8 _pad4[2];
     u16 count;
     u8 _pad8[8];
     /* 0x10 */ s32 unk10;
@@ -65,7 +67,9 @@ typedef struct Gap800B117CObj {
     /* 0x90 */ f32 unk90;
     u8 _pad94[0x54];
     Gap800B117CAnimation* animation; /* 0xE8 */
-    u8 _padEC[0x48];
+    u8 _padEC[0x14];
+    /* 0x100 */ struct Gap800B117CObj* next;
+    u8 _pad104[0x30];
     /* 0x134 */ u16 unk134;
 } Gap800B117CObj;
 typedef struct Gap800B117CFlags {
@@ -123,7 +127,7 @@ void fn_800B2C08(Gap800B117CObj* obj, s16 value);
 void fn_800B2C10(Gap800B117CObj* obj, u16 index, Gap800B117CVec* vec);
 void fn_800B2C44(Gap800B117CObj* obj, u16 index, Gap800B117CVec* vec);
 void fn_800B2C88(Gap800B117CObj* obj, u16 index, f32 matrix[3][4]);
-void ACTSort(void);
+void ACTSort(Gap800B117CObj* obj);
 void fn_800B2D5C(void);
 void fn_800B2DD0(void);
 void fn_800B313C(void);

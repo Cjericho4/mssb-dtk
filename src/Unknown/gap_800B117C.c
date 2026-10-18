@@ -184,8 +184,23 @@ void fn_800B2C88(Gap800B117CObj* obj, u16 index, f32 matrix[3][4]) {
 }
 
 // .text:0x800B2CBC size:0xA0
-void ACTSort(void) {
-    return;
+void ACTSort(Gap800B117CObj* obj) {
+    u16 i;
+    Gap800B117CObj* cursor;
+    obj->list.head = NULL;
+    obj->list.tail = NULL;
+    for (i = 0; i < obj->count; i++) {
+        if ((u32)obj->entries[i]->unk14 != 0) {
+            cursor = obj->list.head;
+            while (cursor != NULL) {
+                if (cursor->priority > obj->entries[i]->priority) {
+                    break;
+                }
+                cursor = cursor->next;
+            }
+            DSInsertListObject(&obj->list, cursor, obj->entries[i]);
+        }
+    }
 }
 
 // .text:0x800B2D5C size:0x74
