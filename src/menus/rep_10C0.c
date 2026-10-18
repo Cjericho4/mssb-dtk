@@ -1,6 +1,7 @@
 #include "menus/rep_10C0.h"
 
 extern MenusCameraConfig lbl_2_data_3BB0[];
+extern void fn_80011640(DrawingSceneStruct* src, DrawingSceneStruct* dst);
 
 // .text:0x000927C8 size:0x26C
 void fn_2_927C8(void) {
@@ -18,18 +19,26 @@ void fn_2_92CB0(void) {
 }
 
 // .text:0x00092F2C size:0x3B0
-void fn_2_92F2C(void) {
+void fn_2_92F2C(DrawingSceneStruct* scene) {
     return;
 }
 
 // .text:0x000932DC size:0x91C
-void fn_2_932DC(void) {
+void fn_2_932DC(DrawingSceneStruct* scene) {
     return;
 }
 
 // .text:0x00093BF8 size:0x6C
-void fn_2_93BF8(void) {
-    return;
+void fn_2_93BF8(DrawingSceneStruct* scene) {
+    switch (lbl_2_bss_1A824C->unk197845) {
+        case 0:
+            fn_2_932DC(scene);
+            break;
+        case 1:
+            fn_2_92F2C(scene);
+            break;
+    }
+    fn_80011640(scene, scene);
 }
 
 // .text:0x00093C64 size:0x9A0

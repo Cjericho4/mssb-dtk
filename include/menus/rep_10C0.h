@@ -3,6 +3,7 @@
 
 #include "mssbTypes.h"
 #include "Dolphin/mtx.h"
+#include "UnknownHeaders.h"
 
 typedef struct MenusCameraConfig {
     Vec position;
@@ -83,7 +84,9 @@ typedef struct Rep10C0State {
     u8 unk19783F;
     u8 _pad197840[3];
     s8 unk197843;
-    u8 _pad197844[5];
+    u8 _pad197844;
+    u8 unk197845;
+    u8 _pad197846[3];
     u8 unk197849;
     u8 _pad19784A[0xB];
     u8 cameraEnabled; /* 0x197855 */
@@ -104,9 +107,9 @@ extern Rep10C0State* lbl_2_bss_1A824C;
 void fn_2_927C8(void);
 void fn_2_92A34(void);
 void fn_2_92CB0(void);
-void fn_2_92F2C(void);
-void fn_2_932DC(void);
-void fn_2_93BF8(void);
+void fn_2_92F2C(DrawingSceneStruct* scene);
+void fn_2_932DC(DrawingSceneStruct* scene);
+void fn_2_93BF8(DrawingSceneStruct* scene);
 void fn_2_93C64(void);
 void fn_2_94604(u8 value);
 void fn_2_9461C(s16 value);
