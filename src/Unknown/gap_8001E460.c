@@ -85,8 +85,8 @@ void fn_80020278(void) {
 }
 
 // .text:0x80020388 size:0x58
-void fn_80020388(void) {
-    return;
+BOOL fn_80020388(void) {
+    return fn_80035838(&lbl_800EEFD0[lbl_803CB7CC[g_d_GameSettings.unk9] + 0x26], 0xD) != 0;
 }
 
 // .text:0x800203E0 size:0xEC

@@ -38,6 +38,18 @@ typedef struct Gap8001E460Settings {
 } Gap8001E460Settings;
 extern Gap8001E460Settings lbl_800E8754;
 void fn_800ACD44(void);
+typedef struct Gap8001E460GameSettings {
+    u8 _pad0[0x9];
+    /* 0x09 */ u8 unk9;
+    u8 _padA[0x4E];
+} Gap8001E460GameSettings;
+extern Gap8001E460GameSettings g_d_GameSettings;
+typedef struct Gap8001E460Entry {
+    u8 _pad0[0x10];
+} Gap8001E460Entry;
+extern Gap8001E460Entry lbl_800EEFD0[62];
+extern u8 lbl_803CB7CC[8];
+s32 fn_80035838(Gap8001E460Entry* entry, s32 arg1);
 
 void fn_8001E460(s32 value);
 void fn_8001E474(void);
@@ -55,7 +67,7 @@ void calledWhenStartingMatch(void);
 BOOL fn_80020218(void);
 void fn_8002024C(void);
 void fn_80020278(void);
-void fn_80020388(void);
+BOOL fn_80020388(void);
 void fn_800203E0(void);
 void changeScene(void);
 void fn_8002059C(void);
