@@ -32,11 +32,22 @@ typedef struct Gap8002244CGameSettings {
 extern Gap8002244CGameSettings g_d_GameSettings;
 void fn_800A7568(void);
 void fn_800A6304(void);
+typedef struct Gap8002244CRecord {
+    s32 unk0;
+    u32 unk4;
+    s32 unk8, unkC;
+    u32 unk10;
+    s32 unk14;
+} Gap8002244CRecord;
 typedef struct Gap8002244CFlags {
     u8 header[0x18];
-    u8 records[0x1B0];
-    u8 flag1C8, flag1C9;
-    u8 _pad1CA[2];
+    union {
+        u8 records[0x1B0];
+        Gap8002244CRecord recs[18];
+    };
+    s8 flag1C8, flag1C9;
+    /* 0x1CA */ u8 pending1CA;
+    u8 _pad1CB;
     u32 current; /* 0x1CC */
     u32 pending; /* 0x1D0 */
     u8 _pad1D4[0x14];
@@ -68,7 +79,7 @@ void fn_800229CC(void);
 void fn_80022A24(void);
 void fn_80022B14(void);
 void fn_80022B68(void);
-void fn_80022CB4(void);
+BOOL fn_80022CB4(s32 a, u32 b, s32 c, s32 d, u32 e, s32 f);
 void fn_80022D58(void);
 void f_InitBone(void);
 void fn_80023078(void);

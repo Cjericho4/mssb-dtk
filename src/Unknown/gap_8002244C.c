@@ -70,8 +70,22 @@ void fn_80022B68(void) {
 }
 
 // .text:0x80022CB4 size:0xA4
-void fn_80022CB4(void) {
-    return;
+BOOL fn_80022CB4(s32 a, u32 b, s32 c, s32 d, u32 e, s32 f) {
+    Gap8002244CRecord* rec;
+    s8 next = (lbl_803716B8.flag1C8 + 1) % 18;
+    if (next == lbl_803716B8.flag1C9 || (b == 0 && e == 0)) {
+        return FALSE;
+    }
+    lbl_803716B8.pending1CA = 1;
+    rec = &lbl_803716B8.recs[lbl_803716B8.flag1C8];
+    rec->unk0 = a;
+    rec->unk4 = b;
+    rec->unk8 = c;
+    rec->unkC = d;
+    rec->unk10 = e;
+    rec->unk14 = f;
+    lbl_803716B8.flag1C8 = next;
+    return TRUE;
 }
 
 // .text:0x80022D58 size:0x54
