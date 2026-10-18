@@ -52,7 +52,26 @@ void convertGeometryAndSknHeader(void);
 void fn_800BCDBC(void);
 void fn_800BCE38(void);
 void fn_800BCEF8(void);
-void fn_800BD190(void);
+typedef struct Gap800B993CSubEntry {
+    u8 _pad0[0xC];
+    /* 0x0C */ u32 value;
+} Gap800B993CSubEntry;
+typedef struct Gap800B993CPart {
+    u8 _pad0[0x8];
+    /* 0x08 */ Gap800B993CSubEntry* entries;
+    u8 _padC[0x8];
+    /* 0x14 */ u8 count;
+} Gap800B993CPart;
+typedef struct Gap800B993CPartRef {
+    /* 0x0 */ Gap800B993CPart* part;
+    u8 _pad4[0x4];
+} Gap800B993CPartRef;
+typedef struct Gap800B993CModel {
+    u8 _pad0[0xC];
+    /* 0x0C */ u32 count;
+    /* 0x10 */ Gap800B993CPartRef* parts;
+} Gap800B993CModel;
+void fn_800BD190(Gap800B993CModel* model, u32 value);
 void fn_800BD1E8(s32 value);
 void __MTGQR5(void);
 void __MTGQR6(void);

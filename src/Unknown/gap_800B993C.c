@@ -148,8 +148,14 @@ void fn_800BCEF8(void) {
 }
 
 // .text:0x800BD190 size:0x58
-void fn_800BD190(void) {
-    return;
+void fn_800BD190(Gap800B993CModel* model, u32 value) {
+    u32 i;
+    s32 j;
+    for (i = 0; i < model->count; i++) {
+        for (j = 0; j < model->parts[i].part->count; j++) {
+            model->parts[i].part->entries[j].value = value;
+        }
+    }
 }
 
 // .text:0x800BD1E8 size:0x8
