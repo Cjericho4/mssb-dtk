@@ -1,8 +1,20 @@
 #include "Unknown/gap_8000F8F4.h"
 
 // .text:0x8000F8F4 size:0x94
-void fn_8000F8F4(void) {
-    return;
+void fn_8000F8F4(Gap8000F8F4Range* range) {
+    s32 first = range->first;
+    s32 i;
+    s32 j;
+    for (i = 0; i < range->count; i++) {
+        if (lbl_80371C30[first + i].object != NULL && (lbl_80371C30[first + i].object->flags & 4)) {
+            for (j = 0; j < 30; j++) {
+                if (lbl_80366B18.slots[j].object == lbl_80371C30[first + i].object) {
+                    lbl_80366B18.slots[j].object = NULL;
+                    break;
+                }
+            }
+        }
+    }
 }
 
 // .text:0x8000F988 size:0x114
