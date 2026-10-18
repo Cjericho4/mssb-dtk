@@ -198,8 +198,15 @@ void gOz_GXSetTexture(void) {
 }
 
 // .text:0x80024390 size:0x74
-void fn_80024390(void) {
-    return;
+void fn_80024390(f32 m[3][4], Gap8002244CProjParams* out, s32 type) {
+    s32 col = (type == 0) ? 2 : 3;
+    out->type = type;
+    out->m00 = m[0][0];
+    out->m0x = m[0][col];
+    out->m11 = m[1][1];
+    out->m1x = m[1][col];
+    out->m22 = m[2][2];
+    out->m23 = m[2][3];
 }
 
 // .text:0x80024404 size:0x1E8

@@ -8,6 +8,15 @@ void fn_800B0A14_removeQueue(void);
 u8* memset(u8* memory, s32 value, u32 size);
 void OSSetProgressiveMode(u32 enable);
 void fn_800A7E00(void);
+typedef struct Gap8002244CProjParams {
+    /* 0x00 */ f32 type;
+    /* 0x04 */ f32 m00;
+    /* 0x08 */ f32 m0x;
+    /* 0x0C */ f32 m11;
+    /* 0x10 */ f32 m1x;
+    /* 0x14 */ f32 m22;
+    /* 0x18 */ f32 m23;
+} Gap8002244CProjParams;
 typedef struct Gap8002244CStageEntry {
     u8 _pad0[2];
     /* 0x2 */ u8 id;
@@ -80,7 +89,7 @@ void fn_80023E48(void);
 void fn_80023EEC(Gap8002244CObj* obj, s32 a, s32 b);
 void fn_80023F0C(void);
 void gOz_GXSetTexture(void);
-void fn_80024390(void);
+void fn_80024390(f32 m[3][4], Gap8002244CProjParams* out, s32 type);
 void SetDisplayStateTexture(void);
 void fn_800245EC(void);
 void fn_800246D4(void);
