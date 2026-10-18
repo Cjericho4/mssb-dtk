@@ -3,7 +3,9 @@
 
 #include "mssbTypes.h"
 typedef struct Gap8000F8F4Entry {
-    u8 _pad0[0x18];
+    u32 unk0;
+    u32 data;
+    u8 _pad8[0x10];
     /* 0x18 */ s16 unk18;
     /* 0x1A */ s16 unk1A;
     /* 0x1C */ s16 unk1C;
@@ -12,11 +14,19 @@ typedef struct Gap8000F8F4Entry {
     /* 0x22 */ s16 unk22;
     /* 0x24 */ s16 unk24;
     /* 0x26 */ s16 unk26;
-    u8 _pad28[0x2];
+    s16 state; /* 0x28 */
     /* 0x2A */ u8 unk2A;
-    u8 _pad2B[0xD];
+    u8 _pad2B[9];
+    u8 flags34, flags35;
+    u8 _pad36[2];
 } Gap8000F8F4Entry;
-extern Gap8000F8F4Entry lbl_80366B18[];
+typedef struct Gap8000F8F4Table { u32 unk0; u32 values[256]; } Gap8000F8F4Table;
+typedef struct Gap8000F8F4State {
+    Gap8000F8F4Entry entries[34];
+    u8 _pad770[0x28];
+    Gap8000F8F4Table* tables[8];
+} Gap8000F8F4State;
+extern Gap8000F8F4State lbl_80366B18;
 
 extern s32 lbl_803CBC18;
 
@@ -26,7 +36,7 @@ void fn_8000FA9C(void);
 void fn_8000FD54(s32 index, s16 a, s16 b, s16 c, s16 d);
 void fn_8000FD78(s32 index, s16 a, s16 b, s16 c, s16 d);
 void fn_8000FD9C(void);
-void fn_8000FE08(void);
+void fn_8000FE08(s32 index, s32 table, s32 value);
 void fn_8000FE54(void);
 void fn_8000FEE8(s32 index);
 void fn_8000FF04(void);
