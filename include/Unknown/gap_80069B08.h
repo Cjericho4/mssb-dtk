@@ -106,6 +106,18 @@ void starMissionMenu(void);
 void challengeRelated(void);
 void determineIfMissionDescriptionIsShown(void);
 void fn_8006CDC0(void);
+typedef struct Gap80069B08Audio {
+    u8 _pad0[0xCF69];
+    /* 0xCF69 */ u8 unkCF69;
+    /* 0xCF6A */ u8 unkCF6A;
+    /* 0xCF6B */ u8 pending;
+    /* 0xCF6C */ u8 handles[4];
+    u8 _padCF70[0x17D28];
+} Gap80069B08Audio;
+extern Gap80069B08Audio lbl_803297E0;
+void fn_8000FEE8(u8 handle);
+void fn_8000F8F4(Gap80069B08Queue* queue);
+void fn_80034CEC(Gap80069B08Queue* queue);
 void fn_8006CEBC(void);
 void fn_8006CF6C(void);
 

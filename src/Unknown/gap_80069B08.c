@@ -227,7 +227,21 @@ void fn_8006CDC0(void) {
 
 // .text:0x8006CEBC size:0xB0
 void fn_8006CEBC(void) {
-    return;
+    Gap80069B08Queue* queue = lbl_803CC1B8;
+    s32 i;
+    if (lbl_803297E0.pending != 0) {
+        lbl_803297E0.pending = 0;
+        for (i = 0; i < 4; i++) {
+            fn_8000FEE8(lbl_803297E0.handles[i]);
+        }
+        fn_8000F8F4(queue);
+        fn_80034CEC(queue);
+        fn_800B0A14_removeQueue();
+    }
+    if (lbl_803297E0.unkCF69 == 0) {
+        lbl_803297E0.unkCF69 = 1;
+        lbl_803297E0.unkCF6A = 1;
+    }
 }
 
 // .text:0x8006CF6C size:0xB8
