@@ -63,8 +63,8 @@ s32 fn_8006285C(void) {
 }
 
 // .text:0x80062890 size:0x44
-void fn_80062890(void) {
-    return;
+u32 fn_80062890(s32 index) {
+    return sndFXStartEx(lbl_80108E38[index], lbl_80108B3C[index], 63, 0);
 }
 
 // .text:0x800628D4 size:0x74

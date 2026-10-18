@@ -2,6 +2,9 @@
 #define __UNKNOWN_gap_80062578_H_
 
 #include "mssbTypes.h"
+extern u16 lbl_80108E38[];
+extern u8 lbl_80108B3C[];
+u32 sndFXStartEx(u16 effect, u8 volume, u8 pan, u32 studio);
 typedef struct Gap80062578GameState {
     u8 _pad0[0x28];
     u8 mode;
@@ -72,7 +75,7 @@ s32 fn_800627C4(void);
 s32 fn_800627F8(void);
 void fn_8006282C(void);
 s32 fn_8006285C(void);
-void fn_80062890(void);
+u32 fn_80062890(s32 index);
 void fn_800628D4(void);
 void fn_80062948(void);
 void fn_8006295C(void);
