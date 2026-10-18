@@ -91,8 +91,20 @@ void fn_8004D460(s32 convert, s32 value) {
 }
 
 // .text:0x8004D4F0 size:0x8C
-void fn_8004D4F0(void) {
-    return;
+void fn_8004D4F0(s8 value, s32 charIndex, s32 enable) {
+    s32 j;
+    s32 key = lbl_800E8558[charIndex].id;
+
+    for (j = 0; j < 36; j++) {
+        if (lbl_800FE930[lbl_803C6028.unk8C][j] == key) {
+            if (enable) {
+                lbl_803C6028.picks[j] = value;
+            } else {
+                lbl_803C6028.picks[j] = -1;
+            }
+            return;
+        }
+    }
 }
 
 // .text:0x8004D57C size:0x3C0

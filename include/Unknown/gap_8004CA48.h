@@ -51,7 +51,7 @@ void fn_8004CCC0(void);
 void fn_8004D0F0(void);
 extern u8 lbl_800FE930[][6];
 void fn_8004D460(s32 convert, s32 value);
-void fn_8004D4F0(void);
+void fn_8004D4F0(s8 value, s32 charIndex, s32 enable);
 void fn_8004D57C(void);
 BOOL fn_8004D93C(BOOL special);
 void fn_8004D990(void);
