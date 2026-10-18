@@ -2,6 +2,13 @@
 #define __UNKNOWN_gap_800A6870_H_
 
 #include "mssbTypes.h"
+void AISetStreamVolLeft(u32 volume);
+void AISetStreamVolRight(u32 volume);
+void AISetStreamTrigger(u32 trigger);
+extern u32 lbl_803CC138;
+struct Gap800A6870DVDFile;
+extern struct Gap800A6870DVDFile lbl_802EF200;
+BOOL DVDGetStreamPlayAddrAsync(struct Gap800A6870DVDFile* file, void (*callback)(void));
 typedef union Gap800A6870PoolNode {
     u32 next;
     struct { u32 pointer : 30; u32 flags : 2; };
@@ -76,7 +83,7 @@ void fn_800A84C4(void);
 void fn_800A8518(void);
 void fn_800A86B4(void);
 u16 fn_800A8864(void);
-void fn_800A8878(void);
+void fn_800A8878(u32 left, u32 right);
 s32 fn_800A88C0(void);
 s32 fn_800A88C8(void);
 s32 fn_800A88D0(void);
@@ -91,7 +98,7 @@ void fn_800A8FDC(void);
 void fn_800A9034(void);
 void fn_800A908C(void);
 void fn_800A90E4(void);
-void fn_800A9168(void);
+void fn_800A9168(u32 trigger);
 void fn_800A91B0(void);
 void fn_800A93AC(void);
 void fn_800A9424(void);

@@ -171,8 +171,13 @@ u16 fn_800A8864(void) {
 }
 
 // .text:0x800A8878 size:0x48
-void fn_800A8878(void) {
-    return;
+void fn_800A8878(u32 left, u32 right) {
+    lbl_803CC135 = left;
+    lbl_803CC134 = right;
+    if ((u32)lbl_803CC148 == 1) {
+        AISetStreamVolLeft(left);
+        AISetStreamVolRight(right);
+    }
 }
 
 // .text:0x800A88C0 size:0x8
@@ -246,8 +251,9 @@ void fn_800A90E4(void) {
 }
 
 // .text:0x800A9168 size:0x48
-void fn_800A9168(void) {
-    return;
+void fn_800A9168(u32 trigger) {
+    AISetStreamTrigger(trigger + lbl_803CC138);
+    if ((u32)lbl_803CC154 != 0) DVDGetStreamPlayAddrAsync(&lbl_802EF200, fn_800A91B0);
 }
 
 // .text:0x800A91B0 size:0x1FC
