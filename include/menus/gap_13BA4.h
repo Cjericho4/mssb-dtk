@@ -4,7 +4,7 @@
 #include "mssbTypes.h"
 #include "menus/rep_0438.h"
 
-void fn_2_13BA4(void);
+void fn_2_13BA4(MenusPlayerInput* input);
 void fn_2_13CA0(MenusPlayerInput* input);
 void fn_2_13D70(void);
 void fn_2_1406C(MenusPlayerInput* input);

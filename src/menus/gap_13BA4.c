@@ -3,8 +3,21 @@
 #include "menus/gap_8782C.h"
 
 // .text:0x00013BA4 size:0xFC
-void fn_2_13BA4(void) {
-    return;
+void fn_2_13BA4(MenusPlayerInput* input) {
+    if (input->buttons & 8) {
+        lbl_2_bss_100B8.unk4F--;
+        if ((s8)lbl_2_bss_100B8.unk4F < 0) lbl_2_bss_100B8.unk4F = 3;
+    } else if (input->buttons & 4) {
+        lbl_2_bss_100B8.unk4F++;
+        if ((s8)lbl_2_bss_100B8.unk4F == 4) lbl_2_bss_100B8.unk4F = 0;
+    } else if (input->buttons & 1) {
+        lbl_80361B20.options[(s8)lbl_2_bss_100B8.unk4F] ^= 1;
+    } else if (input->buttons & 2) {
+        lbl_80361B20.options[(s8)lbl_2_bss_100B8.unk4F] ^= 1;
+    } else if (input->unk2 & 0x200) {
+        lbl_2_bss_100B8.unk4F = 0;
+        lbl_2_bss_100B8.unk50 = 0;
+    }
 }
 
 // .text:0x00013CA0 size:0xD0
