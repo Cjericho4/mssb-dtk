@@ -2,8 +2,8 @@
 #define __UNKNOWN_gap_800A6870_H_
 
 #include "mssbTypes.h"
-void AISetStreamVolLeft(u32 volume);
-void AISetStreamVolRight(u32 volume);
+void AISetStreamVolLeft(u8 volume);
+void AISetStreamVolRight(u8 volume);
 void AISetStreamTrigger(u32 trigger);
 extern u32 lbl_803CC138;
 struct Gap800A6870DVDFile;
@@ -18,8 +18,8 @@ typedef struct Gap800A6870Pools {
     u32* heads;
 } Gap800A6870Pools;
 extern Gap800A6870Pools lbl_803C7420;
-extern u8 lbl_803CC134;
-extern u8 lbl_803CC135;
+extern volatile u8 lbl_803CC134;
+extern volatile u8 lbl_803CC135;
 extern s32 lbl_803CC12C;
 extern s32 lbl_803CC13C;
 typedef struct Gap800A6870Thread {
@@ -49,7 +49,7 @@ typedef struct Gap800A6870File {
 s32 DVDConvertPathToEntrynum(char* path);
 
 extern s32 lbl_803CC140;
-extern s32 lbl_803CC148;
+extern volatile u32 lbl_803CC148;
 extern s32 lbl_803CC154;
 
 s32 fn_800A6870(u8 flag, s32 value);
@@ -83,7 +83,7 @@ void fn_800A84C4(void);
 void fn_800A8518(void);
 void fn_800A86B4(void);
 u16 fn_800A8864(void);
-void fn_800A8878(u32 left, u32 right);
+void fn_800A8878(u8 left, u8 right);
 s32 fn_800A88C0(void);
 s32 fn_800A88C8(void);
 s32 fn_800A88D0(void);

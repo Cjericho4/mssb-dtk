@@ -171,7 +171,7 @@ u16 fn_800A8864(void) {
 }
 
 // .text:0x800A8878 size:0x48
-void fn_800A8878(u32 left, u32 right) {
+void fn_800A8878(u8 left, u8 right) {
     lbl_803CC135 = left;
     lbl_803CC134 = right;
     if ((u32)lbl_803CC148 == 1) {
