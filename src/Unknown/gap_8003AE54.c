@@ -64,7 +64,21 @@ void fn_8003E8D8(void) {
 
 // .text:0x8003F23C size:0x7C
 void fn_8003F23C(void) {
-    return;
+    Gap8003AE54Task* task = fn_800B0A5C_insertQueue(fn_8003F2B8, 0x8000);
+    task->unk14 = 0;
+    task->unk15 = 0;
+    task->unk16 = 0;
+    task->unk17 = 0;
+    task->unk18 = 0;
+    task->unk1A = 0;
+    task->unk1B = 7;
+    task->unk1D = 0;
+    task->unk21 = 0;
+    lbl_803CC1B8[0]->unk10 = 0;
+    lbl_802D4AE0.unkC = 0;
+    lbl_802D4AE0.unk8 = 0;
+    lbl_802D4AE0.unk4 = 0;
+    lbl_802D4AE0.unk0 = 0;
 }
 
 // .text:0x8003F2B8 size:0x1284

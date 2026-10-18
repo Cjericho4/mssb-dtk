@@ -14,6 +14,33 @@ typedef struct Gap8003AE54Buffer {
 } Gap8003AE54Buffer;
 extern Gap8003AE54Buffer lbl_802D4B00;
 
+typedef struct Gap8003AE54Task {
+    u8 _pad0[0x14];
+    /* 0x14 */ u8 unk14;
+    /* 0x15 */ u8 unk15;
+    /* 0x16 */ u8 unk16;
+    /* 0x17 */ u8 unk17;
+    /* 0x18 */ u8 unk18;
+    u8 _pad19;
+    /* 0x1A */ u8 unk1A;
+    /* 0x1B */ u8 unk1B;
+    u8 _pad1C;
+    /* 0x1D */ u8 unk1D;
+    u8 _pad1E[3];
+    /* 0x21 */ u8 unk21;
+} Gap8003AE54Task;
+Gap8003AE54Task* fn_800B0A5C_insertQueue(void (*callback)(void), u16 priority);
+typedef struct Gap8003AE54Counter {
+    u8 _pad0[0x10];
+    /* 0x10 */ s16 unk10;
+} Gap8003AE54Counter;
+extern Gap8003AE54Counter* lbl_803CC1B8[2];
+typedef struct Gap8003AE54Words {
+    s32 unk0, unk4, unk8, unkC;
+    u8 _pad10[0x10];
+} Gap8003AE54Words;
+extern Gap8003AE54Words lbl_802D4AE0;
+
 u8 fn_8003AE54(void);
 void fn_8003AE5C(u8 value);
 void fn_8003AE64(void);
