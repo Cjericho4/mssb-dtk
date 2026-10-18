@@ -101,7 +101,17 @@ void changeScene(void) {
 
 // .text:0x8002059C size:0x88
 void fn_8002059C(void) {
-    return;
+    Gap8001E460QueueNode* task = lbl_803CC1B8;
+    if (lbl_8037169C.state == 7 && lbl_80371C30[task->index].stage->status == 2) {
+        lbl_8037169C.pending = 1;
+        lbl_8037169C.state = 0;
+    } else {
+        lbl_8037169C.pending = 0;
+        return;
+    }
+    lbl_8037169C.ready = 0;
+    fn_80034CEC(task);
+    fn_800B0A14_removeQueue();
 }
 
 // .text:0x80020624 size:0xD8

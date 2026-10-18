@@ -115,6 +115,8 @@ typedef struct Gap8001E460Task {
 typedef struct Gap8001E460QueueNode {
     u8 _pad0[0x10];
     /* 0x10 */ s16 unk10;
+    u8 _pad12[2];
+    u16 index;
 } Gap8001E460QueueNode;
 extern Gap8001E460QueueNode* lbl_803CC1B8;
 Gap8001E460Task* fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
@@ -151,9 +153,17 @@ typedef struct Gap8001E460ResourceState {
     Gap8001E460Resource* resource;
     u8 _pad4[0xC];
     u8 state; /* 0x10 */
-    u8 _pad11[0xB];
+    u8 unk11, pending;
+    u8 _pad13[3];
+    u8 ready;
+    u8 _pad17[5];
 } Gap8001E460ResourceState;
 extern Gap8001E460ResourceState lbl_8037169C;
+typedef struct Gap8001E460Stage { u8 _pad0[0x69]; u8 status; } Gap8001E460Stage;
+typedef struct Gap8001E460StageRef { Gap8001E460Stage* stage; u32 unk4; } Gap8001E460StageRef;
+extern Gap8001E460StageRef lbl_80371C30[];
+void fn_80034CEC(Gap8001E460QueueNode* task);
+void fn_800B0A14_removeQueue(void);
 void fn_800ACF14(Gap8001E460Resource* resource);
 
 void fn_800ACFB0(struct Gap8001E460Resource* resource);
