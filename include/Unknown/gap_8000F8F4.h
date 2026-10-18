@@ -58,7 +58,12 @@ s32 fn_80011570(void);
 void fn_80011578(void);
 void fn_800115C8(void);
 void fn_80011604(void);
-void fn_80011640(void);
+typedef struct Gap8000F8F4Mtx {
+    f32 m[3][4];
+} Gap8000F8F4Mtx;
+extern Gap8000F8F4Mtx lbl_800E6630;
+void PSMTXConcat(Gap8000F8F4Mtx* a, Gap8000F8F4Mtx* b, Gap8000F8F4Mtx* out);
+void fn_80011640(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* dst);
 void fn_800116DC(void);
 void fn_800117CC(void);
 void fn_800118AC(void);

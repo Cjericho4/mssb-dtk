@@ -152,8 +152,10 @@ void fn_80011604(void) {
 }
 
 // .text:0x80011640 size:0x9C
-void fn_80011640(void) {
-    return;
+void fn_80011640(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* dst) {
+    Gap8000F8F4Mtx mtx = lbl_800E6630;
+
+    PSMTXConcat(&mtx, src, dst);
 }
 
 // .text:0x800116DC size:0xF0
