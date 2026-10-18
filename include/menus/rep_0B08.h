@@ -121,7 +121,7 @@ s32 fn_2_68690(s32 index);
 s32 fn_2_686B0(s32 index);
 void fn_2_686D0(s32 index, u8 value);
 BOOL fn_2_686EC(s32 firstIndex, s32 secondIndex);
-void fn_2_687A4(void);
+s32 fn_2_687A4(s32 index, s32 otherIndex, s32 positionIndex);
 f32 fn_2_688A4(s32 index, s32 target);
 f32 fn_2_68940(s32 firstIndex, s32 secondIndex);
 s16 fn_2_689CC(s32 index);

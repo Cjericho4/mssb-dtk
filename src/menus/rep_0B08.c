@@ -187,8 +187,15 @@ BOOL fn_2_686EC(s32 firstIndex, s32 secondIndex) {
 }
 
 // .text:0x000687A4 size:0x100
-void fn_2_687A4(void) {
-    return;
+s32 fn_2_687A4(s32 index, s32 otherIndex, s32 positionIndex) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    Rep0B08Obj* other = &lbl_2_bss_1A8248->rep0B08Objects[otherIndex];
+    Vec position;
+    f32 angle = (f32)atan2(-(other->position.x - obj->position.x), -(other->position.z - obj->position.z));
+    memcpy(&position, &lbl_2_data_2EA4[positionIndex], sizeof(Vec));
+    angle -= (f32)atan2(-(position.x - obj->position.x), -(position.z - obj->position.z));
+    if (angle < 1.2217306f && angle > -1.2217306f) return 1;
+    return 0;
 }
 
 // .text:0x000688A4 size:0x9C
