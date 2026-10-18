@@ -598,8 +598,19 @@ void fn_2_7E380(void) {
 }
 
 // .text:0x0007E860 size:0x114
-void fn_2_7E860(void) {
-    return;
+void fn_2_7E860(DrawingSceneStruct* scene, s32 index) {
+    s32 count;
+    if ((u32)__cntlzw(1 - lbl_803C66B0.flags[index]) >> 5) {
+        count = !!fn_80042DA8(scene, index + 12, 10);
+        count += !!fn_80042DA8(scene, index + 14, 14);
+        count += !!fn_80042DA8(scene, index + 18, 10);
+        count += !!fn_80042DA8(scene, index + 28, 20);
+        count += !!fn_80042DA8(scene, index + 106, 30);
+        if (count == 5) {
+            fn_80062674(index);
+            lbl_803C66B0.flags[index] = 2;
+        }
+    }
 }
 
 // .text:0x0007E974 size:0x508

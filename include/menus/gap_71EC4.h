@@ -191,7 +191,7 @@ void fn_2_7D85C(void);
 void fn_2_7DAB8(void);
 void fn_2_7E194(void);
 void fn_2_7E380(void);
-void fn_2_7E860(void);
+void fn_2_7E860(struct DrawingSceneStruct* scene, s32 index);
 void fn_2_7E974(void);
 void fn_2_7EE7C(struct DrawingSceneStruct* scene, s32 index);
 void fn_2_7EF68(void);
