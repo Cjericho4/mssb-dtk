@@ -86,8 +86,13 @@ void fn_800B251C(void) {
 }
 
 // .text:0x800B27A4 size:0x38
-void fn_800B27A4(void) {
-    return;
+void fn_800B27A4(s32 index) {
+    u16 mask;
+    if (index < 0) return;
+    if (index > 14) return;
+    lbl_803CC1C8 = index;
+    mask = 1 << index;
+    lbl_801115A0.mask6 = lbl_801115A0.mask8 = lbl_801115A0.maskA = lbl_801115A0.maskC = mask;
 }
 
 // .text:0x800B27DC size:0x78

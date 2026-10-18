@@ -2,6 +2,12 @@
 #define __UNKNOWN_gap_800B117C_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800B117CMasks {
+    u8 _pad0[6];
+    u16 mask6, mask8, maskA, maskC;
+} Gap800B117CMasks;
+extern Gap800B117CMasks lbl_801115A0;
+extern s32 lbl_803CC1C8;
 typedef struct Gap800B117CVec { f32 x, y, z; } Gap800B117CVec;
 typedef struct Gap800B117CList {
     u32 size;
@@ -53,7 +59,7 @@ void fn_800B21A8(void);
 void fn_800B2240(void);
 void fn_800B24D4(void);
 void fn_800B251C(void);
-void fn_800B27A4(void);
+void fn_800B27A4(s32 index);
 void fn_800B27DC(void);
 void fn_800B2854(void);
 void fn_800B2AC8(void);
