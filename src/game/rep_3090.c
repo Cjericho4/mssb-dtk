@@ -412,12 +412,17 @@ void fn_3_104AD4(Vec *dst, Mtx44 mtx) {
 
 // .text:0x00104B20 size:0x1C mapped:0x80743BB4
 void fn_3_104B20(VecXYZ* dst, SourceObj_104B20* src) {
-    f32 z = src->pos.z;
-    f32 y = src->pos.y;
-    f32 x = src->pos.x;
-    dst->z = z;
-    dst->y = y;
+    volatile VecXYZ* pos = &src->pos;
+    f32 z;
+    f32 y;
+    f32 x;
+
+    x = pos->x;
+    y = pos->y;
+    z = pos->z;
     dst->x = x;
+    dst->y = y;
+    dst->z = z;
 }
 
 // .text:0x00104B3C size:0x990 mapped:0x80743BD0
