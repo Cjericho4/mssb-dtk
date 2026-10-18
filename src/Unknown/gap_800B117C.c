@@ -64,8 +64,11 @@ void fn_800B2160(u8 value) {
 }
 
 // .text:0x800B216C size:0x3C
-void fn_800B216C(void) {
-    return;
+BOOL fn_800B216C(u8 a, u32 b, u8 c) {
+    u32 mode = a | (b << 1) | (c << 4) | 0x40000000;
+    if (lbl_803CBB34->renderMode == mode) return 0;
+    lbl_803CBB34->renderMode = mode;
+    return 1;
 }
 
 // .text:0x800B21A8 size:0x98
