@@ -69,8 +69,16 @@ void pauseMenuSelection(void) {
 }
 
 // .text:0x800486E0 size:0x84
-void fn_800486E0(void) {
-    return;
+void fn_800486E0(s32 priority, s8 team, u8 player) {
+    fn_800B0A5C_insertQueue(pauseMenuSelection, priority);
+    lbl_803297E0.selection = 0;
+    lbl_803297E0.team = team;
+    lbl_803297E0.unkCF42 = 0;
+    if (g_d_GameSettings.mode != 2) {
+        lbl_803297E0.player = 0;
+    } else {
+        lbl_803297E0.player = player;
+    }
 }
 
 // .text:0x80048764 size:0xBC
