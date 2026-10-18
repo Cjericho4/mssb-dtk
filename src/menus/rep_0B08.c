@@ -103,7 +103,33 @@ void fn_2_6832C(void) {
 
 // .text:0x000683EC size:0xE4
 void fn_2_683EC(void) {
-    return;
+    Rep0B08Obj* obj;
+    {
+        MenusSceneState* scene = lbl_2_bss_1A8248;
+        scene->rep0B08Objects[1].position.x = scene->rep0B08Objects[0].position.x;
+        scene->rep0B08Objects[1].position.y = scene->rep0B08Objects[0].position.y;
+        scene->rep0B08Objects[1].position.z = scene->rep0B08Objects[0].position.z;
+    }
+    obj = &lbl_2_bss_1A8248->rep0B08Objects[1];
+    memcpy(&obj->position, &lbl_2_data_2EA4[lbl_2_bss_1A8248->rep0B08Objects[0].unkB2], sizeof(Vec));
+    obj->previousPosition.x = 0.0f;
+    obj->previousPosition.y = 0.0f;
+    obj->previousPosition.z = 0.0f;
+    obj->velocity.x = 0.0f;
+    obj->velocity.y = 0.0f;
+    obj->velocity.z = 0.0f;
+    obj->unk6C = obj->position.x;
+    obj->unk70 = obj->position.z;
+    obj->unk38 = 0.0f;
+    obj->unkBB = 0;
+    obj->unk30 = obj->unk34 = obj->angle;
+    lbl_2_bss_1A8248->rep0B08Objects[1].unkB2 = lbl_2_bss_1A8248->rep0B08Objects[0].unkB2;
+    {
+        Rep0B08Obj* target = &lbl_2_bss_1A8248->rep0B08Objects[1];
+        target->variant = 6;
+        target->state = 0;
+    }
+    lbl_2_bss_1A8248->unk442F = 1;
 }
 
 // .text:0x000684D0 size:0x168
