@@ -199,7 +199,16 @@ s32 fn_800638B4(s32 arg0, Gap80062578Scene** scene) {
 
 // .text:0x800638CC size:0x8C
 void fn_800638CC(void) {
-    return;
+    Gap80062578Slot* slot;
+    u32 i;
+
+    for (i = 0; i < 9; i++) {
+        slot = &lbl_802E4BC0.slots[(s8)i];
+        memset(slot->unk0, 0, 0xC);
+        memset(slot->unkC, 0, 0xC);
+        slot->unk18 = 0;
+        slot->unk1C = 0;
+    }
 }
 
 // .text:0x80063958 size:0x64
