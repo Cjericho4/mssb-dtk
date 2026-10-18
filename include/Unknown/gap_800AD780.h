@@ -2,6 +2,23 @@
 #define __UNKNOWN_gap_800AD780_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800AD780QueueNode {
+    u32 active;
+    struct Gap800AD780QueueNode* previous;
+    struct Gap800AD780QueueNode* next;
+} Gap800AD780QueueNode;
+extern Gap800AD780QueueNode* lbl_803CC1B8;
+extern u16 lbl_803CC1B2;
+typedef struct Gap800AD780Ring {
+    u8 _pad0[0xC];
+    u32 end;
+    u32 cursor;
+    u32 unk14;
+    u32 size;
+    u32 remaining;
+    u32 consumed;
+} Gap800AD780Ring;
+extern Gap800AD780Ring lbl_803C7A00;
 typedef struct Gap800AD780Movie {
     u8 _pad0[0x1A0];
     u64 startTime;
@@ -71,7 +88,7 @@ void fn_800AFBF0(void);
 void fn_800AFC10(void);
 void fn_800AFD4C(void);
 u8 fn_800AFFB0(void);
-void fn_800AFFC0(void);
+void fn_800AFFC0(u32 count);
 void fn_800B0008(void);
 void fn_800B0134(void);
 void fn_800B0230(void);

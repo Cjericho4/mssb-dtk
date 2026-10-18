@@ -127,8 +127,12 @@ u8 fn_800AFFB0(void) {
 }
 
 // .text:0x800AFFC0 size:0x48
-void fn_800AFFC0(void) {
-    return;
+void fn_800AFFC0(u32 count) {
+    Gap800AD780Ring* ring = &lbl_803C7A00;
+    ring->cursor += count;
+    if (ring->cursor >= ring->end) ring->cursor -= ring->size;
+    ring->remaining -= count;
+    ring->consumed += count;
 }
 
 // .text:0x800B0008 size:0x12C
@@ -199,7 +203,11 @@ u8* SndAlloc(u32 size) {
 
 // .text:0x800B0A14 size:0x48
 void fn_800B0A14_removeQueue(void) {
-    return;
+    if (lbl_803CC1B2 == 0) return;
+    lbl_803CC1B8->previous->next = lbl_803CC1B8->next;
+    lbl_803CC1B8->next->previous = lbl_803CC1B8->previous;
+    lbl_803CC1B8->active = 0;
+    lbl_803CC1B2--;
 }
 
 // .text:0x800B0A5C size:0xD0
