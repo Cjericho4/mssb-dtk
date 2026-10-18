@@ -137,7 +137,11 @@ void fn_800A7D7C(Gap800A6870PoolNode* nodes, u32 count) {
 
 // .text:0x800A7DB0 size:0x50
 void fn_800A7DB0(void) {
-    return;
+    OSSleepThread(&lbl_803C7420.waiters);
+    GXSetColorUpdate(1);
+    VIFlush();
+    GXDrawDone();
+    GXCopyDisp(lbl_803C7420.framebuffer, 1);
 }
 
 // .text:0x800A7E00 size:0x110

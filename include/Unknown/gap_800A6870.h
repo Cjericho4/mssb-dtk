@@ -13,9 +13,13 @@ typedef union Gap800A6870PoolNode {
     u32 next;
     struct { u32 pointer : 30; u32 flags : 2; };
 } Gap800A6870PoolNode;
+typedef struct Gap800A6870SleepQueue { u32 head, tail; } Gap800A6870SleepQueue;
 typedef struct Gap800A6870Pools {
-    u8 _pad0[0x4C];
+    u8* framebuffer;
+    u8 _pad4[0x48];
     u32* heads;
+    u8 _pad50[0xC];
+    Gap800A6870SleepQueue waiters; /* 0x5C */
 } Gap800A6870Pools;
 extern Gap800A6870Pools lbl_803C7420;
 extern volatile u8 lbl_803CC134;
@@ -117,5 +121,11 @@ s32 OSSignalSemaphore(Gap800A6870Semaphore* semaphore);
 BOOL DVDFastOpen(s32 entryNumber, Gap800A6870DVDFile* file);
 
 void fn_800ACF14(u8* memory);
+
+void OSSleepThread(Gap800A6870SleepQueue* queue);
+void GXSetColorUpdate(u8 enable);
+void VIFlush(void);
+void GXDrawDone(void);
+void GXCopyDisp(u8* destination, u8 clear);
 
 #endif // !__UNKNOWN_gap_800A6870_H_
