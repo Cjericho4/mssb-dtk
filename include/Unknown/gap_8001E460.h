@@ -88,7 +88,19 @@ void fn_8002149C(s32 index);
 BOOL fn_800214D0(void);
 void fn_80021518(void);
 void fn_8002158C(void);
-void fn_800215F8(void);
+typedef struct Gap8001E460LoadSub {
+    u8 _pad0[0x10];
+    /* 0x10 */ s16 unk10;
+} Gap8001E460LoadSub;
+typedef struct Gap8001E460Load {
+    /* 0x0 */ s32 index;
+    u8 _pad4[0x4];
+    /* 0x8 */ Gap8001E460LoadSub* sub;
+} Gap8001E460Load;
+typedef void (*Gap8001E460LoadCallback)(void);
+extern Gap8001E460Entry lbl_800EF508[48];
+void fn_80022CB4(Gap8001E460Entry* entry, s32 a, s32 b, s32 c, Gap8001E460LoadCallback cb, Gap8001E460Load* load);
+void fn_800215F8(Gap8001E460Load* load);
 void fn_80021650(void);
 void fn_800216F8(void);
 void fn_80021758(void);

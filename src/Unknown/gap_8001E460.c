@@ -195,8 +195,9 @@ void fn_8002158C(void) {
 }
 
 // .text:0x800215F8 size:0x58
-void fn_800215F8(void) {
-    return;
+void fn_800215F8(Gap8001E460Load* load) {
+    load->sub->unk10 = 0;
+    fn_80022CB4(&lbl_800EF508[load->index], 0, 1, 0, fn_80021650, load);
 }
 
 // .text:0x80021650 size:0xA8
