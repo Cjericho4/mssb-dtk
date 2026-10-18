@@ -2,6 +2,9 @@
 #define __UNKNOWN_gap_80067AC8_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80067AC8Object Gap80067AC8Object;
+extern Gap80067AC8Object* lbl_803CBD30;
+void fn_80034CEC(Gap80067AC8Object* obj);
 typedef struct Gap80067AC8Status {
     u8 _pad0[0x2A];
     u8 state;
