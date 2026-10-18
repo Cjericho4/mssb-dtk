@@ -20,8 +20,18 @@ void fn_2_D88(void) {
 }
 
 // .text:0x00000E84 size:0xE0
-void fn_2_E84(void) {
-    return;
+void fn_2_E84(u16 index, s16 sound) {
+    MenusSequenceConfig* config = &lbl_2_data_128[sound];
+    if (lbl_2_bss_D974[index] != 0xFFFFFFFF) {
+        if (sndSeqGetValid(lbl_2_bss_D974[index]) != 0) {
+            sndSeqVolume(0, 0, lbl_2_bss_D974[index], 1);
+            sndSeqStop(lbl_2_bss_D974[index]);
+        }
+        lbl_2_bss_D974[index] = -1;
+        lbl_2_bss_D958[index] = -1;
+    }
+    lbl_2_bss_D974[index] = sndSeqPlayEx(config->group, config->song, lbl_2_bss_D984[config->resource], 0, 0);
+    lbl_2_bss_D958[index] = sound;
 }
 
 // .text:0x00000F64 size:0xB4
