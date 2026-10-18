@@ -19,8 +19,16 @@ void fn_800AD914(Gap800AD780Movie* movie) {
 }
 
 // .text:0x800AD95C size:0x98
-void fn_800AD95C(void) {
-    return;
+void fn_800AD95C(Gap800AD780Movie* movie, u8 mode) {
+    if (movie != NULL) {
+        if (movie->flags == 0 || movie->flags == 4) {
+            movie->mode = mode;
+            OSSendMessage(&lbl_802FB870, 1, 0);
+        } else if (movie->flags & 2) {
+            movie->flags = 1;
+            movie->elapsed += OSGetTime() - movie->startTime;
+        }
+    }
 }
 
 // .text:0x800AD9F4 size:0x108

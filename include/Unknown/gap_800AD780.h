@@ -21,9 +21,11 @@ typedef struct Gap800AD780Ring {
 } Gap800AD780Ring;
 extern Gap800AD780Ring lbl_803C7A00;
 typedef struct Gap800AD780Movie {
-    u8 _pad0[0x1A0];
+    u8 _pad0[0x198];
+    u64 elapsed;
     u64 startTime;
-    u8 _pad1A8[0x12];
+    u8 _pad1A8[0x11];
+    u8 mode; /* 0x1B9 */
     u8 flags; /* 0x1BA */
 } Gap800AD780Movie;
 u64 OSGetTime(void);
@@ -70,7 +72,7 @@ extern u8 lbl_803CC17D;
 void fn_800AD780(void);
 void fn_800AD830(void);
 void fn_800AD914(Gap800AD780Movie* movie);
-void fn_800AD95C(void);
+void fn_800AD95C(Gap800AD780Movie* movie, u8 mode);
 void fn_800AD9F4(void);
 u8 fn_800ADAFC(void);
 void fn_800ADB04(void);
