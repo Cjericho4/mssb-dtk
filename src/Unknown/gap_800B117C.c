@@ -26,8 +26,8 @@ void fn_800B1314(void) {
 }
 
 // .text:0x800B1350 size:0x38
-void DrawSprite_TexObj(void) {
-    return;
+void DrawSprite_TexObj(Gap800B117CVertex* vertices, Gap800B117CTexture* texture) {
+    DrawSprite(0x80, vertices, 4, texture, texture->height, texture->width);
 }
 
 // .text:0x800B1388 size:0x38

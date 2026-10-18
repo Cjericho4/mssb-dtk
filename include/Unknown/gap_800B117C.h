@@ -53,7 +53,7 @@ void fn_800B1188(void);
 void DrawNullSprite(Gap800B117CVertex* vertices, s32 count);
 void fn_800B12DC(Gap800B117CVertex* vertices, s32 count);
 void fn_800B1314(void);
-void DrawSprite_TexObj(void);
+void DrawSprite_TexObj(Gap800B117CVertex* vertices, Gap800B117CTexture* texture);
 void fn_800B1388(void);
 void fn_800B13C0(void);
 void fn_800B1468(void);
