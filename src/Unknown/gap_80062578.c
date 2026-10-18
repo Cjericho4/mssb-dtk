@@ -40,8 +40,9 @@ BOOL fn_80062794(u32 handle) {
 }
 
 // .text:0x800627C4 size:0x34
-void fn_800627C4(void) {
-    return;
+s32 fn_800627C4(void) {
+    fn_80021518(0, lbl_800EF808.sound14);
+    return 0;
 }
 
 // .text:0x800627F8 size:0x34
