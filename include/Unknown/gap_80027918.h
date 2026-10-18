@@ -7,10 +7,26 @@ typedef struct Gap80027918Vec {
     f32 y;
     f32 z;
 } Gap80027918Vec;
+typedef struct Gap80027918Item {
+    /* 0x00 */ struct Gap80027918Item* next;
+    /* 0x04 */ Gap80027918Vec pos;
+    u8 _pad10[0x10];
+    /* 0x20 */ s32 id;
+    u8 _pad24[0x26];
+    /* 0x4A */ s16 count;
+} Gap80027918Item;
+typedef struct Gap80027918GameState {
+    u8 _pad0[0x28];
+    /* 0x28 */ u8 mode;
+    u8 _pad29[0x7];
+} Gap80027918GameState;
+extern Gap80027918GameState lbl_80366158;
 typedef struct Gap80027918Node {
     /* 0x00 */ struct Gap80027918Node* prev;
     /* 0x04 */ struct Gap80027918Node* next;
-    u8 _pad8[0xF];
+    u8 _pad8[0x4];
+    /* 0x0C */ Gap80027918Item* items;
+    u8 _pad10[0x7];
     /* 0x17 */ u8 flag : 1;
     /* 0x17 */ u8 type : 7;
     /* 0x18 */ Gap80027918Vec pos;
@@ -52,7 +68,7 @@ void fn_8002DCE4(void);
 void fn_8002E3DC(void);
 void fn_8002E828(void);
 void fn_8002ECA0(void);
-void fn_8002F1AC(void);
+BOOL fn_8002F1AC(Gap80027918Vec* v, s32 id);
 void fn_8002F258(void);
 void fn_8002F5F4(void);
 void fn_8002F9FC(void);

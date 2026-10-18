@@ -148,8 +148,25 @@ void fn_8002ECA0(void) {
 }
 
 // .text:0x8002F1AC size:0xAC
-void fn_8002F1AC(void) {
-    return;
+BOOL fn_8002F1AC(Gap80027918Vec* v, s32 id) {
+    Gap80027918Node* node = (Gap80027918Node*)&lbl_803CBC84;
+    Gap80027918Item* item;
+
+    while ((node = node->next) != NULL) {
+        if (node->type == 6) {
+            break;
+        }
+    }
+    if (node != NULL && lbl_80366158.mode == 0) {
+        for (item = node->items; item != NULL; item = item->next) {
+            if (item->id == id) {
+                memcpy(&item->pos, v, sizeof(Gap80027918Vec));
+                item->count++;
+                return TRUE;
+            }
+        }
+    }
+    return FALSE;
 }
 
 // .text:0x8002F258 size:0x39C
