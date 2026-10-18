@@ -36,7 +36,20 @@ extern Gap80067AC8Voice lbl_802E4CE8[16];
 void fn_800A86B4(s32 mode);
 void fn_800A8B78(Gap80067AC8Voice* voice);
 void fn_80068720(u8 index);
-void fn_8006877C(void);
+typedef struct Gap80067AC8TrackPair {
+    u8 track;
+    u8 unk1;
+} Gap80067AC8TrackPair;
+extern Gap80067AC8TrackPair lbl_800E88A4[16];
+typedef struct Gap80067AC8TrackName {
+    char name[0x10];
+} Gap80067AC8TrackName;
+extern Gap80067AC8TrackName lbl_800E87B4[15];
+extern Gap80067AC8Voice lbl_8034E478[16];
+void fn_800A8878(s32 a, s32 b);
+void fn_800A8AB0(s32 mode);
+void fn_800A8E30(Gap80067AC8TrackName* name, Gap80067AC8Voice* voice, s32 a, s32 b);
+void fn_8006877C(u8 index);
 void fn_80068838(void);
 extern u16 lbl_803CBD24;
 extern char lbl_80109044[0x10];
