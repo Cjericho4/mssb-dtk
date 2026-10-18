@@ -96,7 +96,7 @@ void fn_2_4E904(void);
 void fn_2_4E928(void);
 void fn_2_4E94C(void);
 BOOL fn_2_4E970(void);
-void fn_2_4E9A8(void);
+BOOL fn_2_4E9A8(void);
 BOOL fn_2_4EABC(void);
 BOOL fn_2_4EAF4(void);
 BOOL fn_2_4EB2C(void);

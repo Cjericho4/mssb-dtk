@@ -39,7 +39,36 @@ void fn_2_1B52C(void) {
 
 // .text:0x0001B5C0 size:0x10C
 void fn_2_1B5C0(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0: {
+        QueueEntry* entry = fn_800B0A5C_insertQueue(fn_2_409CC, 2);
+        entry->unk28 = 0;
+        scene->loadingState = 0;
+        scene->field15_0x28 = 1;
+        break;
+    }
+    case 1:
+        if (scene->loadingState == 1) scene->field15_0x28 = 2;
+        break;
+    case 2:
+        if (fn_2_4EB64() == 1) scene->field15_0x28 = 3;
+        break;
+    case 3:
+        if (fn_2_4EB2C() == 1) scene->field15_0x28 = 4;
+        break;
+    case 4:
+        if (fn_2_4EAF4() == 1) scene->field15_0x28 = 5;
+        break;
+    case 5:
+        if (fn_2_4E9A8() == 1) scene->field15_0x28 = 6;
+        break;
+    case 6:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
 }
 
 // .text:0x0001B6CC size:0xE8

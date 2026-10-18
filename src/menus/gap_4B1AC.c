@@ -221,8 +221,8 @@ BOOL fn_2_4E970(void) {
 }
 
 // .text:0x0004E9A8 size:0x114
-void fn_2_4E9A8(void) {
-    return;
+BOOL fn_2_4E9A8(void) {
+    return FALSE;
 }
 
 // .text:0x0004EABC size:0x38
