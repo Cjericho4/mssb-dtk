@@ -152,7 +152,7 @@ void fn_800BEC30(void) {
 
 // .text:0x800BF008 size:0x30
 void fn_800BF008(void) {
-    return;
+    GXLoadTlut(lbl_803009F8.tlut, 15);
 }
 
 // .text:0x800BF038 size:0x10
