@@ -87,7 +87,13 @@ void fn_80062BE4(Gap80062578Object* obj);
 void fn_80062C24(Gap80062578Object* obj);
 void fn_80062C60(void);
 void fn_80062D94(void);
-void fn_80062E6C(void);
+typedef struct Gap80062578Actor {
+    u8 _pad0[0x252];
+    /* 0x252 */ s8 unk252;
+} Gap80062578Actor;
+extern s8 lbl_80108BF0[5][0x36];
+void fn_8004B1C0(s32 index, Gap80062578Actor* actor, s32 a, s32 b);
+void fn_80062E6C(Gap80062578Actor* actor, s32 a, s32 b);
 void fn_80062ED4(void);
 void fn_80062F38(void);
 s32 fn_80063010(s32 arg0, Gap80062578Scene** scene);

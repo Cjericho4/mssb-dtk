@@ -127,8 +127,12 @@ void fn_80062D94(void) {
 }
 
 // .text:0x80062E6C size:0x68
-void fn_80062E6C(void) {
-    return;
+void fn_80062E6C(Gap80062578Actor* actor, s32 a, s32 b) {
+    s32 row = a - 0x28;
+
+    if (lbl_80366158.mode != 1) {
+        fn_8004B1C0(lbl_80108BF0[row][actor->unk252], actor, a, b);
+    }
 }
 
 // .text:0x80062ED4 size:0x64
