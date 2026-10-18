@@ -13,10 +13,13 @@ extern MenusResourceLoads lbl_2_data_12EA8;
 typedef struct MenusResourceSlot {
     void (*callback)(s32, struct MenusResourceSlot*);
     s16 state; /* 0x04 */
-    u8 _pad6[6];
+    u8 _pad6[2];
+    s16 unk8;
+    s16 unkA;
     s16 bank; /* 0x0C */
     s16 index; /* 0x0E */
-    u8 _pad10[8];
+    s16 unk10;
+    u8 _pad12[6];
 } MenusResourceSlot;
 
 typedef struct MenusResourceBank {
@@ -55,7 +58,10 @@ typedef struct MenusCompletionState {
 extern MenusCompletionState* lbl_2_bss_1A8244;
 
 typedef struct MenusResourceEntry {
-    u32 resource;
+    union {
+        u32 resource;
+        void (*callback)(s32, MenusResourceSlot*);
+    };
     s16 index;
     s16 unk6;
     s16 bank;
