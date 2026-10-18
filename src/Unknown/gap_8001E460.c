@@ -213,8 +213,8 @@ void fn_80021758(void) {
 }
 
 // .text:0x80021954 size:0x2C
-void fn_80021954(void) {
-    return;
+void fn_80021954(Gap8001E460Resource** resource) {
+    fn_800ACF78(*resource, (u32)(*resource)->end - (u32)*resource);
 }
 
 // .text:0x80021980 size:0x34

@@ -4,6 +4,7 @@
 #include "mssbTypes.h"
 void sndMasterVolume(u8 volume, u16 time, u8 music, u8 effects);
 struct Gap8001E460Object;
+struct Gap8001E460Resource;
 extern s32 lbl_803CB7AC[2];
 extern u8 lbl_803CBBC0;
 extern u32 lbl_803CBC40;
@@ -77,7 +78,7 @@ void fn_800215F8(void);
 void fn_80021650(void);
 void fn_800216F8(void);
 void fn_80021758(void);
-void fn_80021954(void);
+void fn_80021954(struct Gap8001E460Resource** resource);
 void fn_80021980(void);
 void f_initSound(void);
 void fn_80021AA0(void);
@@ -94,7 +95,10 @@ typedef struct Gap8001E460Object {
     u32 fog; /* 0x70 */
 } Gap8001E460Object;
 void fn_800B9AA8(u32 value);
-typedef struct Gap8001E460Resource Gap8001E460Resource;
+typedef struct Gap8001E460Resource {
+    u8 _pad0[0x18];
+    struct Gap8001E460Resource* end;
+} Gap8001E460Resource;
 typedef struct Gap8001E460ResourceState {
     Gap8001E460Resource* resource;
     u8 _pad4[0xC];
@@ -105,5 +109,7 @@ extern Gap8001E460ResourceState lbl_8037169C;
 void fn_800ACF14(Gap8001E460Resource* resource);
 
 void fn_800ACFB0(struct Gap8001E460Resource* resource);
+
+void fn_800ACF78(Gap8001E460Resource* resource, u32 size);
 
 #endif // !__UNKNOWN_gap_8001E460_H_
