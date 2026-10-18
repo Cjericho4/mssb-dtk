@@ -8,6 +8,8 @@ void fn_800B0A14_removeQueue(void);
 u8* memset(u8* memory, s32 value, u32 size);
 void OSSetProgressiveMode(u32 enable);
 void fn_800A7E00(void);
+void fn_800A7568(void);
+void fn_800A6304(void);
 typedef struct Gap8002244CFlags {
     u8 header[0x18];
     u8 records[0x1B0];

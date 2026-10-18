@@ -37,7 +37,14 @@ void fn_800227E4(void) {
 
 // .text:0x800229CC size:0x58
 void fn_800229CC(void) {
-    return;
+    if (lbl_803716B8.pending != 0) {
+        fn_800A7568();
+    } else if (lbl_803716B8.current != 0) {
+        lbl_803716B8.current = 0;
+    } else {
+        return;
+    }
+    fn_800A6304();
 }
 
 // .text:0x80022A24 size:0xF0
