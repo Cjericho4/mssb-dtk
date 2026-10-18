@@ -1101,8 +1101,17 @@ void fn_2_71A38(Rep0B08Obj* obj) {
 }
 
 // .text:0x00071A70 size:0x110
-void fn_2_71A70(void) {
-    return;
+void fn_2_71A70(Rep0B08Obj* obj) {
+    s32 index = obj->index;
+    fn_2_69E1C(index);
+    menuCheckAnimationEnd(obj);
+    if (obj->unk38 <= 0.0f) {
+        Rep0B08Obj* target;
+        obj->unk34 = obj->angle;
+        target = &lbl_2_bss_1A8248->rep0B08Objects[index];
+        target->variant = 3;
+        target->state = 0;
+    }
 }
 
 // .text:0x00071B80 size:0xEC
