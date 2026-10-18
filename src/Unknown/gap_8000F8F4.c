@@ -169,6 +169,13 @@ void fn_800117CC(void) {
 }
 
 // .text:0x800118AC size:0xC0
-void fn_800118AC(void) {
-    return;
+Gap8000F8F4Mtx* fn_800118AC(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* dst) {
+    Gap8000F8F4Mtx mtx = lbl_800E6600;
+
+    PSMTXConcat(&mtx, src, dst);
+    dst->m[0][3] = 0.0f;
+    dst->m[1][3] = 0.0f;
+    dst->m[2][3] = 0.0f;
+    PSMTXInverse(dst, dst);
+    return dst;
 }

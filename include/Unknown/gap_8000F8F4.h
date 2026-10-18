@@ -66,6 +66,8 @@ void PSMTXConcat(Gap8000F8F4Mtx* a, Gap8000F8F4Mtx* b, Gap8000F8F4Mtx* out);
 void fn_80011640(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* dst);
 void fn_800116DC(void);
 void fn_800117CC(void);
-void fn_800118AC(void);
+extern Gap8000F8F4Mtx lbl_800E6600;
+u32 PSMTXInverse(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* inv);
+Gap8000F8F4Mtx* fn_800118AC(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* dst);
 
 #endif // !__UNKNOWN_gap_8000F8F4_H_
