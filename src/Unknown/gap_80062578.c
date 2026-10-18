@@ -80,8 +80,8 @@ void fn_8006295C(void) {
 
 // .text:0x80062A50 size:0x24
 void initializeUnknown(void) {
-    lbl_803C6714.unk0 = 0;
     lbl_8034E9A0.unk48B3 = 0;
+    lbl_803C6714.unk0 = 0;
     lbl_803C6714.unk5 = 0;
     lbl_803C6714.unk4 = 0;
 }
