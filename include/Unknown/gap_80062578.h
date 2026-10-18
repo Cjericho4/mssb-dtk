@@ -99,7 +99,20 @@ s32 fn_800637D4(void);
 void fn_800637DC(void);
 s32 fn_800638B4(s32 arg0, Gap80062578Scene** scene);
 void fn_800638CC(void);
-void fn_80063958(void);
+typedef struct Gap80062578Slot {
+    /* 0x00 */ u8 unk0[0xC];
+    /* 0x0C */ u8 unkC[0xC];
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ u8 unk1C;
+    u8 _pad1D[0x3];
+} Gap80062578Slot;
+typedef struct Gap80062578SlotTable {
+    Gap80062578Slot slots[9];
+    u8 _pad120[0x8];
+} Gap80062578SlotTable;
+extern Gap80062578SlotTable lbl_802E4BC0;
+u8* memset(u8* memory, s32 value, u32 size);
+void fn_80063958(s8 index);
 void fn_800639BC(void);
 void fn_80064344(void);
 void fn_80064430(void);

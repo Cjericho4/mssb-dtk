@@ -190,8 +190,13 @@ void fn_800638CC(void) {
 }
 
 // .text:0x80063958 size:0x64
-void fn_80063958(void) {
-    return;
+void fn_80063958(s8 index) {
+    Gap80062578Slot* slot = &lbl_802E4BC0.slots[index];
+
+    memset(slot->unk0, 0, 0xC);
+    memset(slot->unkC, 0, 0xC);
+    slot->unk18 = 0;
+    slot->unk1C = 0;
 }
 
 // .text:0x800639BC size:0x988
