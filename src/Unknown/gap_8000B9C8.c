@@ -56,8 +56,9 @@ void fn_8000E2D4(void) {
 }
 
 // .text:0x8000E764 size:0x58
-void fn_8000E764(void) {
-    return;
+void fn_8000E764(f32 angle, Gap8000B9C8Direction* direction) {
+    direction->sine = (f32)sin(angle);
+    direction->cosine = (f32)cos(angle);
 }
 
 // .text:0x8000E7BC size:0x144

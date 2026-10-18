@@ -2,6 +2,9 @@
 #define __UNKNOWN_gap_8000B9C8_H_
 
 #include "mssbTypes.h"
+typedef struct Gap8000B9C8Direction { f32 sine, cosine; } Gap8000B9C8Direction;
+f64 sin(f64 angle);
+f64 cos(f64 angle);
 typedef struct Gap8000B9C8Texture Gap8000B9C8Texture;
 extern Gap8000B9C8Texture lbl_800E9920;
 extern Gap8000B9C8Texture* lbl_803CBBE8;
@@ -18,7 +21,7 @@ void fn_8000D8A4(void);
 void fn_8000DC9C(void);
 void fn_8000E030(void);
 void fn_8000E2D4(void);
-void fn_8000E764(void);
+void fn_8000E764(f32 angle, Gap8000B9C8Direction* direction);
 void fn_8000E7BC(void);
 void SetSpriteRect(void);
 void fn_8000EC0C(void);
