@@ -134,8 +134,12 @@ void fn_800B2B74(Gap800B117CObj* obj, u16 index) {
 }
 
 // .text:0x800B2BA8 size:0x3C
-void fn_800B2BA8(void) {
-    return;
+s32 fn_800B2BA8(Gap800B117CObj* obj, u16 index, Gap800B117CObj* other, u16 otherIndex) {
+    Gap800B117CObj* entry = obj->entries[index];
+    s32 previous = entry->unk14;
+    if (other != NULL) entry->unk14 = other->entries[otherIndex]->unk14;
+    else entry->unk14 = 0;
+    return previous;
 }
 
 // .text:0x800B2BE4 size:0x18
