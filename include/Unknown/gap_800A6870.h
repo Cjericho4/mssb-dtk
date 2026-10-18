@@ -20,10 +20,13 @@ typedef struct Gap800A6870Pools {
     u32* heads;
     u8 _pad50[0xC];
     Gap800A6870SleepQueue waiters; /* 0x5C */
-    u8 _pad64[0x330];
+    u8 _pad64[0x31C];
+    Gap800A6870SleepQueue queue380; /* 0x380 */
+    u8 _pad388[0xC];
     u8 period; /* 0x394 */
     u8 counter;
     u8 paused;
+    /* 0x397 */ u8 unk397;
 } Gap800A6870Pools;
 extern Gap800A6870Pools lbl_803C7420;
 extern volatile u8 lbl_803CC134;
@@ -91,7 +94,7 @@ void fn_800A77A0(void);
 void fn_800A7A80(s32 result);
 void fn_800A7AD4(void);
 void fn_800A7AD8(void);
-void fn_800A7BAC(void);
+void fn_800A7BAC(u8 flag);
 void fn_800A7C08(void);
 void fn_800A7D4C(s32 index, Gap800A6870PoolNode* node);
 void fn_800A7D7C(Gap800A6870PoolNode* nodes, u32 count);
@@ -140,6 +143,7 @@ void GXDrawDone(void);
 void GXCopyDisp(u8* destination, u8 clear);
 
 void OSWakeupThread(Gap800A6870SleepQueue* queue);
+void PPCSync(void);
 
 void AISetStreamPlayState(u32 state);
 BOOL OSDisableInterrupts(void);
