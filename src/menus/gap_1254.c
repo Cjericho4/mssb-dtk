@@ -1,4 +1,5 @@
 #include "menus/gap_1254.h"
+#include "musyx/musyx.h"
 #include "menus/rep_0438.h"
 #include "game/rep_3448.h"
 #include "menus/gap_D08.h"
@@ -119,8 +120,26 @@ void fn_2_1BAC(void) {
 }
 
 // .text:0x00001C34 size:0xF4
-void fn_2_1C34(void) {
-    return;
+void fn_2_1C34(u16 buttons) {
+    switch (buttons) {
+    case 0x100:
+        sndFXStartEx(0x1B8, lbl_800EFBA4.confirmVolume, 0x3F, 0);
+        break;
+    case 0x200:
+        sndFXStartEx(0x1B9, lbl_800EFBA4.alertVolume, 0x3F, 0);
+        break;
+    case 1:
+    case 2:
+    case 4:
+    case 8:
+        sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+        break;
+    case 3: break;
+    case 0x20: break;
+    case 0x40: break;
+    case 0x400: break;
+    case 0x800: break;
+    }
 }
 
 // .text:0x00001D28 size:0x2C
