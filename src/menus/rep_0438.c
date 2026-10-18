@@ -1,5 +1,8 @@
 #include "menus/rep_0438.h"
+extern void fn_800628D4(s32 player);
+extern u8 lbl_2_bss_100B4;
 #include "menus/gap_4B1AC.h"
+#include "menus/gap_D08.h"
 #include "menus/rep_0568.h"
 #include "string.h"
 #include "menus/gap_71EC4.h"
@@ -47,7 +50,22 @@ void fn_2_129D0(void) {
 
 // .text:0x00012A70 size:0xF0
 void fn_2_12A70(void) {
-    return;
+    if (lbl_2_bss_100B8.pendingActions[0] != 0) {
+        lbl_2_bss_100B8.pendingActions[0] = 0;
+        fn_800628D4(lbl_8034E9A0.players[0]);
+    }
+    if (lbl_2_bss_100B8.pendingActions[1] != 0) {
+        lbl_2_bss_100B8.pendingActions[1] = 0;
+        fn_800628D4(lbl_8034E9A0.players[1]);
+    }
+    if (lbl_2_bss_100B8.actionFlags[0] != 0 && lbl_2_bss_100B8.actionFlags[1] != 0) {
+        if (g_d_GameSettings.GameModeSelected != 5) lbl_2_bss_100B4 = 1;
+        lbl_803CBBCC->state = 4;
+        if (g_d_GameSettings._10 == 0) {
+            lbl_2_bss_100B8.actionFlags[1] = 0;
+            lbl_2_bss_100B8.pendingActions[1] = 0;
+        }
+    }
 }
 
 // .text:0x00012B60 size:0xD4

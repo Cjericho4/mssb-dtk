@@ -13,7 +13,8 @@ typedef struct Rep0568Obj {
 typedef struct Rep0568State {
     u8 _pad0[0xC];
     s32 unkC;
-    u8 _pad10[4];
+    u8 actionFlags[2]; /* 0x10 */
+    u8 pendingActions[2]; /* 0x12 */
     u8 active[8];
     union {
         s8 counters[9];
