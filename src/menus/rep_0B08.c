@@ -6,6 +6,7 @@
 
 extern Rep0B08AnimationConfig lbl_2_data_3C84[];
 extern Vec lbl_2_data_2EA4[];
+extern Vec lbl_2_data_3150[];
 extern f32 lbl_2_data_3EF4[];
 extern f32 lbl_2_data_3F5C;
 #include "math.h"
@@ -457,8 +458,26 @@ void fn_2_6AB3C(s32 index, Vec* position, f32 angle) {
 }
 
 // .text:0x0006ABFC size:0xF4
-void fn_2_6ABFC(void) {
-    return;
+void fn_2_6ABFC(s32 index, s32 position) {
+    Rep0B08Obj* obj = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    if (index < 2) {
+        memcpy(&obj->position, &lbl_2_data_2EA4[position], sizeof(Vec));
+    } else if (index >= 2 && index <= 6) {
+        memcpy(&obj->position, &lbl_2_data_2EA4[position], sizeof(Vec));
+    } else {
+        memcpy(&obj->position, &lbl_2_data_3150[index - 7], sizeof(Vec));
+    }
+    obj->previousPosition.x = 0.0f;
+    obj->previousPosition.y = 0.0f;
+    obj->previousPosition.z = 0.0f;
+    obj->velocity.x = 0.0f;
+    obj->velocity.y = 0.0f;
+    obj->velocity.z = 0.0f;
+    obj->unk6C = obj->position.x;
+    obj->unk70 = obj->position.z;
+    obj->unk38 = 0.0f;
+    obj->unkBB = 0;
+    obj->unk30 = obj->unk34 = obj->angle;
 }
 
 // .text:0x0006ACF0 size:0x4
