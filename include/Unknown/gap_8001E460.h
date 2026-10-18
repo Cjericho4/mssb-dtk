@@ -23,7 +23,9 @@ extern Gap8001E460Flags lbl_803716B8;
 typedef struct Gap8001E460Sound {
     u32 unk0;
     struct Gap8001E460Resource* resources[64]; /* 0x4 */
-    u8 _pad104[0x292];
+    u8 _pad104[0x28C];
+    u8 groupCount; /* 0x390 */
+    u8 _pad391[5];
     /* 0x396 */ u8 soundMode;
     u8 _pad397[0x1];
     /* 0x398 */ u8 unk398;
@@ -71,7 +73,7 @@ void fn_800213F4(void);
 void fn_800213F8(u32 size);
 void fn_80021410(void);
 void fn_8002149C(s32 index);
-void fn_800214D0(void);
+BOOL fn_800214D0(void);
 void fn_80021518(void);
 void fn_8002158C(void);
 void fn_800215F8(void);
@@ -111,5 +113,7 @@ void fn_800ACF14(Gap8001E460Resource* resource);
 void fn_800ACFB0(struct Gap8001E460Resource* resource);
 
 void fn_800ACF78(Gap8001E460Resource* resource, u32 size);
+
+u32 sndPopGroup(void);
 
 #endif // !__UNKNOWN_gap_8001E460_H_

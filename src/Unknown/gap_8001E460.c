@@ -178,8 +178,10 @@ void fn_8002149C(s32 index) {
 }
 
 // .text:0x800214D0 size:0x48
-void fn_800214D0(void) {
-    return;
+BOOL fn_800214D0(void) {
+    if (sndPopGroup() == 0) return 0;
+    lbl_800EF808.groupCount--;
+    return 1;
 }
 
 // .text:0x80021518 size:0x74
