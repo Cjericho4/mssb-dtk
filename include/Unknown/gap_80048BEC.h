@@ -30,7 +30,7 @@ typedef struct Gap80048BECObj {
 } Gap80048BECObj;
 
 extern s32 lbl_803CB848;
-extern s32 lbl_803CBCE8;
+extern u32 lbl_803CBCE8;
 extern s32 lbl_803CBCFC;
 extern s32 lbl_803CBD0C;
 
@@ -38,6 +38,15 @@ void fn_80048BEC(Gap80048BECTiming* timing);
 void fn_80048C14(s32 value);
 void fn_80048C1C(void);
 void fn_80048C28(void);
+extern s32 lbl_800FB4C8[35];
+extern s32 lbl_800FB554[23];
+void GXSetGPMetric(s32 perf0, s32 perf1);
+void GXClearGPMetric(void);
+u32 GXReadGP0Metric(void);
+u32 GXReadGP1Metric(void);
+void GXSetVCacheMetric(s32 attr);
+void GXClearVCacheMetric(void);
+void GXClearPixMetric(void);
 void fn_80048D4C(void);
 typedef struct Gap80048BECSelection {
     u8 unk0[0x2C];

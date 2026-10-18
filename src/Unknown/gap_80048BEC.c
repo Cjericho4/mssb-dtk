@@ -24,7 +24,19 @@ void fn_80048C28(void) {
 
 // .text:0x80048D4C size:0xB4
 void fn_80048D4C(void) {
-    return;
+    if (lbl_803CBCE8 != 0) {
+        GXSetGPMetric(lbl_800FB4C8[lbl_803CB83C[0]], lbl_800FB554[lbl_803CB83C[1]]);
+        GXClearGPMetric();
+        if (lbl_800FB4C8[lbl_803CB83C[0]] == 0x22) {
+            GXReadGP0Metric();
+        }
+        if (lbl_800FB554[lbl_803CB83C[1]] == 0x15) {
+            GXReadGP1Metric();
+        }
+        GXSetVCacheMetric(0xF);
+        GXClearVCacheMetric();
+        GXClearPixMetric();
+    }
 }
 
 // .text:0x80048E00 size:0xA8
