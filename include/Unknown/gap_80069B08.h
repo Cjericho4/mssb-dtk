@@ -57,7 +57,7 @@ void fn_8006C398(void);
 void fn_8006C3F0(Gap80069B08Callback value);
 void fn_8006C3F8(s32 a, s32 b, s32 c);
 void fn_8006C43C(Gap80069B08Callback value);
-void fn_8006C444(void);
+void fn_8006C444(s32 a, s32 b, s32 c);
 void fn_8006C488(void);
 void challengeDrawStarsOnMissionMenu(void);
 void fn_8006C5CC(void);

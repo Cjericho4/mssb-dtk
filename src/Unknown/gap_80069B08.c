@@ -121,8 +121,8 @@ void fn_8006C43C(Gap80069B08Callback value) {
 }
 
 // .text:0x8006C444 size:0x44
-void fn_8006C444(void) {
-    return;
+void fn_8006C444(s32 a, s32 b, s32 c) {
+    if (lbl_80366158.mode != 1 && lbl_803CBD3C != NULL) lbl_803CBD3C(a, b, c);
 }
 
 // .text:0x8006C488 size:0x4
