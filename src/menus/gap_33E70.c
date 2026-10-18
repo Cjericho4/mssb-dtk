@@ -1,4 +1,5 @@
 #include "menus/gap_33E70.h"
+#include "menus/gap_1B1BC.h"
 #include "game/rep_3448.h"
 #include "menus/gap_4B1AC.h"
 #include "menus/rep_0B08.h"
@@ -267,7 +268,27 @@ void fn_2_37F04(void) {
 
 // .text:0x000380B0 size:0xF8
 void fn_2_380B0(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        scene->unkIndex = 21;
+        lbl_2_bss_1A8234->flag16264E = 1;
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        if ((*(s16*)&scene->unkIndex)-- == 0) scene->field15_0x28 = 2;
+        break;
+    case 2:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
+    if (lbl_2_bss_1A824C->unk19783F == 1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+    }
 }
 
 // .text:0x000381A8 size:0xF8
