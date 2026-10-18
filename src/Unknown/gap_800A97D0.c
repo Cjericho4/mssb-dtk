@@ -99,7 +99,15 @@ u16 fn_800ABB14(u8* data, s32 count) {
 
 // .text:0x800ABB60 size:0x70
 void fn_800ABB60(void) {
-    return;
+    Gap800A97D0Flags* flags = &lbl_803C7838;
+    s32 i;
+    if (flags->unk55 == 7) {
+        fn_800B0A14_removeQueue();
+    } else {
+        for (i = 0; i < 2; i++) {
+            flags->cards[i].result = CARDProbeEx(i, &flags->cards[i].memSize, &flags->cards[i].sectorSize);
+        }
+    }
 }
 
 // .text:0x800ABBD0 size:0x374
@@ -131,7 +139,7 @@ void fn_800ACCD4(void) {
 void fn_800ACCE8(void) {
     memset((u8*)&lbl_803C7838, 0, sizeof(Gap800A97D0Flags));
     lbl_803C7838.unk54 = 0xF;
-    lbl_803C7838.unk30 = lbl_803C7838.unk8 = -1;
+    lbl_803C7838.cards[1].result = lbl_803C7838.cards[0].result = -1;
     fn_800B0A5C_insertQueue(fn_800ABB60, 0xF0);
 }
 
