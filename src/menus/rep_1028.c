@@ -56,6 +56,26 @@ static inline void menuSetupAnimation(s32 index, s16 id, s32 valueIndex) {
     sub->flag5b = 3;
 }
 
+static inline void menuSetupBaseAsset(s32 index, s16 id) {
+    u32 value;
+    ActRelatedSub* sub;
+    if (lbl_2_bss_3401BC == 0) return;
+    value = lbl_2_bss_3401BC->assets[0];
+    sub = &((ActRelatedEntry*)lbl_2_bss_340140->entries_68)[index].sub;
+    sub->unk38_s32 = value;
+    sub->unk42 = id;
+    sub[1].prevFloat = 0.0f;
+    sub->unk8C = 1;
+    sub->flag59 = value != 0;
+    sub->flag5a = value != 0;
+    sub[1].unk38_f32 = 0.0f;
+    sub->float54 = 1.0f;
+    sub->flag5a = 1;
+    sub[1].prevFloat = 0.0f;
+    sub->flag59 = 1;
+    sub->flag5b = 3;
+}
+
 static inline void menuSetupAsset(s32 index, s16 id) {
     u32 value;
     ActRelatedSub* sub;
@@ -864,8 +884,22 @@ void fn_2_919C0(Rep1028Obj* obj) {
 }
 
 // .text:0x000919CC size:0x118
-void fn_2_919CC(void) {
-    return;
+void fn_2_919CC(Rep1028Obj* obj) {
+    s32 index;
+    hugeAnimStruct* render;
+    Rep1028Obj* target;
+    HugeAnimEntry2D94* entries;
+    fn_2_8AC84(obj->index, 1);
+    menuSetupBaseAsset(obj->index, 0);
+    index = obj->index;
+    render = lbl_2_bss_340140;
+    target = &lbl_2_bss_1A8248->rep1028Objects[index];
+    entries = render->entries_2D94;
+    if (entries != 0) {
+        target->unkA6 = 0;
+        entries[index].callback = lbl_2_data_30900[0];
+    }
+    obj->state = 1;
 }
 
 // .text:0x00091AE4 size:0x38
