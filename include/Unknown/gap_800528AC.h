@@ -7,7 +7,20 @@ extern s32 lbl_803CBD10;
 
 void fn_800528AC(s32 value);
 void fn_800528B4(void);
-void fn_800528C0(void);
+typedef struct Gap800528ACVec {
+    f32 x;
+    f32 y;
+    f32 z;
+} Gap800528ACVec;
+typedef struct Gap800528ACCamera {
+    /* 0x00 */ f32 projection[4][4];
+    /* 0x40 */ f32 view[3][4];
+    u8 _pad70[0x38];
+} Gap800528ACCamera;
+extern Gap800528ACCamera lbl_803C639C[4];
+void PSMTXMultVec(f32 matrix[3][4], Gap800528ACVec* src, Gap800528ACVec* dst);
+void PSMTX44MultVec(f32 matrix[4][4], Gap800528ACVec* src, Gap800528ACVec* dst);
+void fn_800528C0(s16* screenX, s16* screenY, f32 x, f32 y, f32 z);
 void fn_80052968(void);
 void fn_80052D70(void);
 void possiblyTransitionBlackScreen(void);

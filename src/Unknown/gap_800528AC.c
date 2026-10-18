@@ -11,8 +11,19 @@ void fn_800528B4(void) {
 }
 
 // .text:0x800528C0 size:0xA8
-void fn_800528C0(void) {
-    return;
+void fn_800528C0(s16* screenX, s16* screenY, f32 x, f32 y, f32 z) {
+    Gap800528ACVec v;
+    f32 halfWidth;
+    f32 halfHeight;
+    v.x = x;
+    v.y = y;
+    v.z = z;
+    PSMTXMultVec(lbl_803C639C[0].view, &v, &v);
+    PSMTX44MultVec(lbl_803C639C[0].projection, &v, &v);
+    halfWidth = 320.0f;
+    halfHeight = 224.0f;
+    *screenX = v.x * halfWidth + halfWidth;
+    *screenY = -v.y * halfHeight + halfHeight;
 }
 
 // .text:0x80052968 size:0x408
