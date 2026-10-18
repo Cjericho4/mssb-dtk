@@ -166,7 +166,12 @@ void initRenderMode(void) {
 
 // .text:0x800A84C4 size:0x54
 void fn_800A84C4(void) {
-    return;
+    if (lbl_803C7420.paused == 0) {
+        if ((s8)--lbl_803C7420.counter < 0) {
+            lbl_803C7420.counter = lbl_803C7420.period;
+            OSWakeupThread(&lbl_803C7420.waiters);
+        }
+    }
 }
 
 // .text:0x800A8518 size:0x19C
