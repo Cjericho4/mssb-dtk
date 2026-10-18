@@ -17,8 +17,22 @@ typedef struct Gap800BD3A0Light {
     u8 _pad64[0xC];
     /* 0x70 */ Gap800BD3A0Color color;
 } Gap800BD3A0Light;
+typedef struct Gap800BD3A0EntryData {
+    u8 _pad0[0x70];
+} Gap800BD3A0EntryData;
+typedef struct Gap800BD3A0Actor {
+    u8 _pad0[0x98];
+    /* 0x98 */ u8 flags98;
+} Gap800BD3A0Actor;
+typedef struct Gap800BD3A0Model {
+    /* 0x0 */ Gap800BD3A0Actor* actor;
+    u8 _pad4[0x68];
+    /* 0x6C */ u8 unk6C;
+} Gap800BD3A0Model;
+typedef void (*Gap800BD3A0Callback)(Gap800BD3A0Model* model, Gap800BD3A0EntryData* data);
 typedef struct Gap800BD3A0Entry {
-    u8 _pad0[0xB0];
+    u8 _pad0[0x40];
+    /* 0x40 */ Gap800BD3A0EntryData data;
     /* 0xB0 */ u8 unkB0;
     u8 _padB1[0x2F];
 } Gap800BD3A0Entry;
@@ -29,7 +43,7 @@ typedef struct Gap800BD3A0State {
     u8 _pad10[0x4];
     /* 0x14 */ Gap800BD3A0Entry* entries;
     /* 0x18 */ s32 unk18;
-    /* 0x1C */ s32 unk1C;
+    /* 0x1C */ Gap800BD3A0Callback callback;
     /* 0x20 */ s32 unk20;
     u16 boundCount; /* 0x24 */
     u8 _pad26[2];
@@ -55,7 +69,7 @@ void fn_800BDC88(void);
 void ActorObjectInitTable(void);
 void fn_800BDE8C(u8 value);
 void fn_800BDEA0(void);
-void fn_800BDF70(void);
+void fn_800BDF70(Gap800BD3A0Model* model);
 void fn_800BDFE0(void);
 void fn_800BE09C(void);
 void fn_800BE158(void);
@@ -72,7 +86,7 @@ void fn_800BEC30(void);
 void fn_800BF008(void);
 void fn_800BF038(s32 value);
 void fn_800BF048(s32 value);
-void fn_800BF058(s32 value);
+void fn_800BF058(Gap800BD3A0Callback value);
 Gap800BD3A0State* fn_800BF068(void);
 void SKNLoadFile(void);
 void SKNFlushByIndex1(void);

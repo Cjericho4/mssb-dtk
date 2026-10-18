@@ -80,8 +80,13 @@ void fn_800BDEA0(void) {
 }
 
 // .text:0x800BDF70 size:0x70
-void fn_800BDF70(void) {
-    return;
+void fn_800BDF70(Gap800BD3A0Model* model) {
+    if (lbl_803009F8.drawShadows && lbl_803009F8.callback != NULL && model->unk6C) {
+        u8 flags = model->actor->flags98;
+        if ((flags & 0x24) && (flags & 0x12)) {
+            lbl_803009F8.callback(model, &lbl_803009F8.entries->data);
+        }
+    }
 }
 
 // .text:0x800BDFE0 size:0xBC
@@ -169,8 +174,8 @@ void fn_800BF048(s32 value) {
 }
 
 // .text:0x800BF058 size:0x10
-void fn_800BF058(s32 value) {
-    lbl_803009F8.unk1C = value;
+void fn_800BF058(Gap800BD3A0Callback value) {
+    lbl_803009F8.callback = value;
 }
 
 // .text:0x800BF068 size:0xC
