@@ -29,12 +29,17 @@ typedef struct MenusDisplayPanel {
 typedef struct MenusDisplayState {
     MenusResourceBank banks[70];
     u8 _pad162600[4];
-    u8 flag162604;
-    u8 flag162605;
-    u8 _pad162606[0x48];
-    u8 flag16264E;
-    u8 _pad16264F[8];
-    MenusDisplayPanel panels[2];
+    union {
+        struct {
+            u8 flag162604;
+            u8 flag162605;
+            u8 _pad162606[0x48];
+            u8 flag16264E;
+            u8 _pad16264F[8];
+            MenusDisplayPanel panels[2];
+        };
+        u8 flags[13][70]; /* 0x162604 */
+    };
 } MenusDisplayState;
 extern MenusDisplayState* lbl_2_bss_1A8234;
 
