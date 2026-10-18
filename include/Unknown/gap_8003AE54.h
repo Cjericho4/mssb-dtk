@@ -55,7 +55,20 @@ void fn_8003F23C(void);
 void fn_8003F2B8(void);
 void fn_8004053C(void);
 void fn_80040C14(void);
-void fn_80040FE0(void);
+typedef struct Gap8003AE54SaveBlock {
+    u16 checksum;
+    u16 unk2;
+    u8 data[0x4508];
+} Gap8003AE54SaveBlock;
+typedef struct Gap8003AE54Save {
+    u8 _pad0[0x44];
+    u16 checksum;
+    u16 unk46;
+    u8 data[0x5B0];
+    Gap8003AE54SaveBlock blocks[3];
+} Gap8003AE54Save;
+u16 fn_800ABB14(u8* data, s32 size);
+s32 fn_80040FE0(Gap8003AE54Save* save);
 void fn_80041074(void);
 void fn_80041150(void);
 

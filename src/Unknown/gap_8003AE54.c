@@ -97,8 +97,19 @@ void fn_80040C14(void) {
 }
 
 // .text:0x80040FE0 size:0x94
-void fn_80040FE0(void) {
-    return;
+s32 fn_80040FE0(Gap8003AE54Save* save) {
+    u8* data = save->data;
+    Gap8003AE54SaveBlock* block;
+    s32 i;
+    for (i = 0; i < 4; i++) {
+        if (i == 0) {
+            save->checksum = fn_800ABB14(data, sizeof(save->data));
+        } else {
+            block = &save->blocks[i - 1];
+            block->checksum = fn_800ABB14(block->data, sizeof(block->data));
+        }
+    }
+    return 17;
 }
 
 // .text:0x80041074 size:0xDC
