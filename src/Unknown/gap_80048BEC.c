@@ -1,8 +1,10 @@
 #include "Unknown/gap_80048BEC.h"
 
 // .text:0x80048BEC size:0x28
-void fn_80048BEC(void) {
-    return;
+void fn_80048BEC(Gap80048BECTiming* timing) {
+    s32 count = timing->limit;
+    if (timing->requested < count) count = timing->requested;
+    while (count > 0) count--;
 }
 
 // .text:0x80048C14 size:0x8

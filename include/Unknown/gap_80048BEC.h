@@ -2,6 +2,11 @@
 #define __UNKNOWN_gap_80048BEC_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80048BECTiming {
+    s32 unk0;
+    s32 requested;
+    s32 limit;
+} Gap80048BECTiming;
 extern s32 lbl_803CB874;
 extern s32 lbl_803CB878;
 extern s32 lbl_803CB83C[2];
@@ -19,7 +24,7 @@ extern s32 lbl_803CBCE8;
 extern s32 lbl_803CBCFC;
 extern s32 lbl_803CBD0C;
 
-void fn_80048BEC(void);
+void fn_80048BEC(Gap80048BECTiming* timing);
 void fn_80048C14(s32 value);
 void fn_80048C1C(void);
 void fn_80048C28(void);
