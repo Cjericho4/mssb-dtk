@@ -82,13 +82,20 @@ void GetColorFromQuant(void) {
 }
 
 // .text:0x800BC0C4 size:0x724
-void DOVARender(void) {
+#pragma dont_inline on
+void DOVARender(Gap800B993CObj* obj, f32 matrix[3][4], u32 a, u32 b) {
     return;
 }
 
+#pragma dont_inline reset
+
 // .text:0x800BC7E8 size:0x3C
-void DOVARenderSkin(void) {
-    return;
+void DOVARenderSkin(Gap800B993CObj* obj, f32 matrix[3][4], f32 skinMatrices[][3][4], u16* indices, u32 a, u32 b) {
+    lbl_803CC204 = skinMatrices;
+    lbl_803CC208 = indices;
+    DOVARender(obj, matrix, a, b);
+    lbl_803CC204 = NULL;
+    lbl_803CC208 = NULL;
 }
 
 // .text:0x800BC824 size:0x10

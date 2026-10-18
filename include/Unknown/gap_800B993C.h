@@ -2,6 +2,8 @@
 #define __UNKNOWN_gap_800B993C_H_
 
 #include "mssbTypes.h"
+extern f32 (*lbl_803CC204)[3][4];
+extern u16* lbl_803CC208;
 extern s32 lbl_803CC21C;
 extern f32 lbl_803CC218;
 extern f32 lbl_803CC1F8;
@@ -39,8 +41,8 @@ void fn_800BA44C(void);
 void Custom_SetState(void);
 void SetState(void);
 void GetColorFromQuant(void);
-void DOVARender(void);
-void DOVARenderSkin(void);
+void DOVARender(Gap800B993CObj* obj, f32 matrix[3][4], u32 a, u32 b);
+void DOVARenderSkin(Gap800B993CObj* obj, f32 matrix[3][4], f32 skinMatrices[][3][4], u16* indices, u32 a, u32 b);
 void fn_800BC824(Gap800B993CObj* obj, s32 value);
 void DOSetWorldMatrix(Gap800B993CObj* obj, f32 matrix[3][4]);
 void InitDisplayObjWithLayout(void);
