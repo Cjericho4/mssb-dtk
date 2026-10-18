@@ -89,7 +89,15 @@ void fn_8004A1BC(void) {
 
 // .text:0x8004A2BC size:0x6C
 void fn_8004A2BC(void) {
-    return;
+    switch (lbl_803CBBCC->step) {
+    case 0:
+        fn_800B0A5C_insertQueue(fn_8004A1BC, 0x2000);
+        lbl_803C5F04.unk2C = 0;
+        lbl_803CBBCC->step++;
+        break;
+    case 1:
+        break;
+    }
 }
 
 // .text:0x8004A328 size:0x24
@@ -194,8 +202,12 @@ void fn_8004B1C0(s32 index, s32 a, s32 b, s32 c) {
 }
 
 // .text:0x8004B208 size:0x68
-void fn_8004B208(void) {
-    return;
+void fn_8004B208(s32 a, s32 index, s32 c) {
+    s32 slot;
+    if (lbl_803CB848 != 0 && index >= 0 && index < 0x75) {
+        slot = lbl_800FBDEC[index];
+        if (slot != 11) lbl_800FBE64[slot](a, index, c);
+    }
 }
 
 // .text:0x8004B270 size:0x14

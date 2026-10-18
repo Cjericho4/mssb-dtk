@@ -53,7 +53,9 @@ typedef struct Gap80048BECSettings {
 } Gap80048BECSettings;
 extern Gap80048BECSettings g_d_GameSettings;
 typedef struct Gap80048BECState {
-    u8 _pad0[0x36];
+    u8 _pad0[0x2C];
+    /* 0x2C */ u16 unk2C;
+    u8 _pad2E[0x8];
     /* 0x36 */ u8 enabled;
     u8 _pad37[0x39];
 } Gap80048BECState;
@@ -62,6 +64,12 @@ void fn_80049D3C(void);
 void fn_80049D8C(void);
 void fn_8004A0FC(void);
 void fn_8004A1BC(void);
+typedef struct Gap80048BECScene {
+    u8 _pad0[0x4];
+    /* 0x4 */ u16 step;
+} Gap80048BECScene;
+extern Gap80048BECScene* lbl_803CBBCC;
+void fn_800B0A5C_insertQueue(void (*callback)(void), u16 priority);
 void fn_8004A2BC(void);
 BOOL fn_8004A328(Gap80048BECObj* obj);
 void fn_8004A34C(void);
@@ -80,7 +88,8 @@ void fn_8004AE18(void);
 void fn_8004AFA8(void);
 void fn_8004B1B8(s32 value);
 void fn_8004B1C0(s32 index, s32 a, s32 b, s32 c);
-void fn_8004B208(void);
+extern s8 lbl_800FBDEC[0x78];
+void fn_8004B208(s32 a, s32 index, s32 c);
 void fn_8004B270(void);
 void fn_8004B284(void);
 void fn_8004B6EC(void);
