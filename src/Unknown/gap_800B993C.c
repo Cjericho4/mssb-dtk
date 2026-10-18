@@ -39,7 +39,13 @@ void SetFog(void) {
 
 // .text:0x800B9A30 size:0x6C
 void SetFogNoneAgain(void) {
-    return;
+    lbl_80111700.color.r = lbl_80111700.color.g = lbl_80111700.color.b = 0;
+    lbl_80111700.type = 0;
+    lbl_80111700.start = 0.0f;
+    lbl_80111700.end = 0.0f;
+    lbl_80111700.nearZ = 0.0f;
+    lbl_80111700.farZ = 0.0f;
+    GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, lbl_80111700.color);
 }
 
 // .text:0x800B9A9C size:0xC

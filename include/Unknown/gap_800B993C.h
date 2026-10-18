@@ -31,6 +31,12 @@ void fn_800B9948(s32 value);
 void fn_800B9950(u32 flags, f32 a, f32 b);
 void fn_800B996C(s32 value);
 void SetFogNone(void);
+typedef struct Gap800B993CFog {
+    u32 type;
+    f32 start, end, nearZ, farZ;
+    Gap800B993CColor color;
+} Gap800B993CFog;
+extern Gap800B993CFog lbl_80111700;
 void SetFog(void);
 void SetFogNoneAgain(void);
 void fn_800B9A9C(s32 a, f32 b);
