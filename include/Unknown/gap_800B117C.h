@@ -65,7 +65,7 @@ void fn_800B2BA8(void);
 void fn_800B2BE4(Gap800B117CObj* obj, u16 index);
 void fn_800B2BFC(Gap800B117CObj* obj, s16 a, s16 b);
 void fn_800B2C08(Gap800B117CObj* obj, s16 value);
-void fn_800B2C10(Gap800B117CObj* obj, u16 index, Gap800B117CVec* src, Gap800B117CVec* dst);
+void fn_800B2C10(Gap800B117CObj* obj, u16 index, Gap800B117CVec* vec);
 void fn_800B2C44(void);
 void fn_800B2C88(Gap800B117CObj* obj, u16 index, f32 matrix[3][4]);
 void ACTSort(void);
