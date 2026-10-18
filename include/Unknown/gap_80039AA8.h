@@ -2,6 +2,7 @@
 #define __UNKNOWN_gap_80039AA8_H_
 
 #include "mssbTypes.h"
+void fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
 typedef struct Gap80039AA8Texture Gap80039AA8Texture;
 extern Gap80039AA8Texture lbl_8023DD80;
 typedef struct Gap80039AA8Table Gap80039AA8Table;

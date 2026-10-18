@@ -37,7 +37,7 @@ void fn_8003A1D0(void) {
 
 // .text:0x8003A2C0 size:0x2C
 void fn_8003A2C0(void) {
-    return;
+    fn_800B0A5C_insertQueue(fn_8003A1D0, 0x6001);
 }
 
 // .text:0x8003A2EC size:0x90
