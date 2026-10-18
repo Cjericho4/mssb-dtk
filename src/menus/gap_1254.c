@@ -1,4 +1,5 @@
 #include "menus/gap_1254.h"
+#include "game/gap_B3B70.h"
 #include "musyx/musyx.h"
 #include "menus/rep_0438.h"
 #include "game/rep_3448.h"
@@ -296,7 +297,19 @@ void fn_2_57F0(void) {
 
 // .text:0x00005F80 size:0x118
 void fn_2_5F80(void) {
-    return;
+    s32 team;
+    s32 i;
+    s32 j;
+    for (team = 0; team < 2; team++) {
+        for (i = 0; i < 9; i++) {
+            for (j = 0; j < 9; j++) {
+                if (lbl_80354720[team][i].unk2 == lbl_80354720[team][j].unk2) {
+                    lbl_803C6724.teams[team][i] = inMemRoster[team][j].stats.CharID;
+                }
+            }
+            lbl_803C6724.order[team][i] = i;
+        }
+    }
 }
 
 // .text:0x00006098 size:0x3C

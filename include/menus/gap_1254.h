@@ -18,8 +18,11 @@ typedef struct MenusLineupView {
 
 typedef struct MenusTeamSelections {
     u8 _pad0[2];
-    s8 first[9];
-    s8 second[9];
+    union {
+        struct { s8 first[9]; s8 second[9]; };
+        s8 teams[2][9];
+    };
+    s8 order[2][9];
 } MenusTeamSelections;
 extern MenusTeamSelections lbl_803C6724;
 
