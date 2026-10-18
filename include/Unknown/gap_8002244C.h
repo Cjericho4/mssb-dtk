@@ -2,6 +2,8 @@
 #define __UNKNOWN_gap_8002244C_H_
 
 #include "mssbTypes.h"
+void OSSetProgressiveMode(u32 enable);
+void fn_800A7E00(void);
 typedef struct Gap8002244CFlags {
     u8 _pad0[0x1E8];
     /* 0x1E8 */ u8 unk1E8;
@@ -42,7 +44,7 @@ void fn_8002399C(void);
 void fn_80023AA4(void);
 void fn_80023B04(void);
 void fn_80023B90(void);
-void fn_80023CF4(void);
+void fn_80023CF4(BOOL enabled);
 s32 fn_80023D3C(void);
 void fn_80023D44(s32 value);
 void fn_80023D4C(void);

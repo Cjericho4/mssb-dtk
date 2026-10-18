@@ -111,8 +111,14 @@ void fn_80023B90(void) {
 }
 
 // .text:0x80023CF4 size:0x48
-void fn_80023CF4(void) {
-    return;
+void fn_80023CF4(BOOL enabled) {
+    if (enabled) {
+        OSSetProgressiveMode(1);
+        fn_800A7E00();
+    } else {
+        OSSetProgressiveMode(0);
+    }
+    lbl_803CBC60 = enabled;
 }
 
 // .text:0x80023D3C size:0x8
