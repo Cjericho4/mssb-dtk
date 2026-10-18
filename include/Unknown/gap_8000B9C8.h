@@ -9,6 +9,12 @@ typedef struct Gap8000B9C8Texture Gap8000B9C8Texture;
 extern Gap8000B9C8Texture lbl_800E9920;
 extern Gap8000B9C8Texture* lbl_803CBBE8;
 void convertTextureHeader(Gap8000B9C8Texture* texture);
+typedef struct Gap8000B9C8LightState {
+    u8 _pad0[0x7FE];
+    /* 0x7FE */ u8 mask;
+    u8 _pad7FF;
+} Gap8000B9C8LightState;
+extern Gap8000B9C8LightState lbl_80366B18;
 
 void fn_8000B9C8(void);
 void fn_8000BA3C(void);
@@ -29,7 +35,7 @@ void AddVec2iToQuad(void);
 void fn_8000F150(void);
 void fn_8000F3E8(void);
 void somethingSetTexturePointer(void);
-void fn_8000F4B8(void);
+void fn_8000F4B8(s32 a, s32 b, s32 c, s32 d);
 void fn_8000F534(void);
 
 #endif // !__UNKNOWN_gap_8000B9C8_H_
