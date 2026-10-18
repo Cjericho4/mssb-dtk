@@ -8,6 +8,7 @@ extern Rep0B08AnimationConfig lbl_2_data_3C84[];
 extern Vec lbl_2_data_2EA4[];
 extern Vec lbl_2_data_3150[];
 extern f32 lbl_2_data_3EF4[];
+extern f32 lbl_2_data_3F0C[];
 extern f32 lbl_2_data_3F5C;
 #include "math.h"
 #include "menus/rep_08E8.h"
@@ -276,8 +277,21 @@ void fn_2_68B54(void) {
 }
 
 // .text:0x00068C80 size:0x110
-void fn_2_68C80(void) {
-    return;
+BOOL fn_2_68C80(s32 firstIndex, s32 secondIndex) {
+    Rep0B08Obj* first = &lbl_2_bss_1A8248->rep0B08Objects[firstIndex];
+    Rep0B08Obj* second = &lbl_2_bss_1A8248->rep0B08Objects[secondIndex];
+    f32 a;
+    f32 b;
+    f32 distance = PSVECDistance(&first->position, &second->position);
+    if (firstIndex == 0) {
+        a = lbl_2_data_3EF4[lbl_2_bss_1A8248->unk441C];
+        b = lbl_2_data_3F0C[secondIndex];
+    } else {
+        a = lbl_2_data_3F0C[firstIndex];
+        b = lbl_2_data_3EF4[lbl_2_bss_1A8248->unk441C];
+    }
+    if (distance < a + b && first->unkC0 != 0 && second->unkC0 != 0) return TRUE;
+    return FALSE;
 }
 
 // .text:0x00068D90 size:0x1C
