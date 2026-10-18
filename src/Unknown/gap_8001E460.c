@@ -188,8 +188,23 @@ void fn_800213F8(u32 size) {
 }
 
 // .text:0x80021410 size:0x8C
-void fn_80021410(void) {
-    return;
+static inline BOOL gap8001E460_popGroup(void) {
+    if (sndPopGroup() == 0) {
+        return FALSE;
+    }
+    lbl_800EF808.groupCount--;
+    return TRUE;
+}
+
+BOOL fn_80021410(void) {
+    s8 i;
+
+    for (i = (s8)lbl_800EF808.groupCount - 1; i > 0; i--) {
+        if (!gap8001E460_popGroup()) {
+            return FALSE;
+        }
+    }
+    return TRUE;
 }
 
 // .text:0x8002149C size:0x34

@@ -87,7 +87,7 @@ void fn_8002128C(u8 mode);
 void fn_80021308(void);
 void fn_800213F4(void);
 void fn_800213F8(u32 size);
-void fn_80021410(void);
+BOOL fn_80021410(void);
 void fn_8002149C(s32 index);
 BOOL fn_800214D0(void);
 BOOL fn_80021518(u16 gid, struct Gap8001E460Resource* res);
