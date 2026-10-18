@@ -67,8 +67,32 @@ void fn_80033794(Gap80032038Chain* head) {
 }
 
 // .text:0x800337CC size:0x90
-void fn_800337CC(void) {
-    return;
+Gap80032038Obj* fn_800337CC(Gap80032038Obj* obj, s32 count, BOOL exact) {
+    s32 taken = 0;
+    Gap80032038Chain* chain = lbl_803CBC74;
+    Gap80032038Chain* last = NULL;
+    if (obj != NULL) {
+        while (chain != NULL && count != 0) {
+            last = chain;
+            chain = chain->next;
+            taken++;
+            count--;
+        }
+        if (exact && count != 0) {
+            return NULL;
+        }
+        obj->count = taken;
+        if (taken != 0) {
+            obj->chain = lbl_803CBC74;
+            lbl_803CBC74 = chain;
+            if (last != NULL) {
+                last->next = NULL;
+            }
+        } else {
+            obj->chain = NULL;
+        }
+    }
+    return obj;
 }
 
 // .text:0x8003385C size:0xCC

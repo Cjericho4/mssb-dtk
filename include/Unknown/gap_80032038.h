@@ -10,9 +10,11 @@ typedef struct Gap80032038Obj {
     /* 0x08 */ u32 active;
     /* 0x0C */ Gap80032038Chain* chain;
     /* 0x10 */ u8 _pad10[0x4];
-    /* 0x14 */ u32 _pad14 : 24;
-    /* 0x17 */ u32 flag : 1;
-    /* 0x17 */ u32 id : 7;
+    /* 0x14 */ u16 unk14 : 4;
+    /* 0x14 */ u16 count : 12;
+    /* 0x16 */ u8 unk16;
+    /* 0x17 */ u8 flag : 1;
+    /* 0x17 */ u8 id : 7;
 } Gap80032038Obj;
 typedef struct Gap80032038ObjList {
     /* 0x0 */ u32 unk0;
@@ -40,7 +42,7 @@ f32 fn_800335BC(s32 angle);
 f32 fn_800335EC(s32 angle);
 void fn_80033620(void);
 void fn_80033794(Gap80032038Chain* head);
-void fn_800337CC(void);
+Gap80032038Obj* fn_800337CC(Gap80032038Obj* obj, s32 count, BOOL exact);
 void pitchingMachinePitching(void);
 BOOL fn_80033928(u8 id);
 void fn_80033964(Gap80032038Obj* obj);
