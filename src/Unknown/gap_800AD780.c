@@ -167,7 +167,9 @@ void makeLookAtMatrix(void) {
 
 // .text:0x800B07FC size:0x38
 void soundQuit(void) {
-    return;
+    Gap800AD780Hooks hooks = { SndAlloc, fn_800B0934 };
+    sndSetHooks(&hooks);
+    sndQuit();
 }
 
 // .text:0x800B0834 size:0x100
@@ -176,7 +178,7 @@ void initSound(void) {
 }
 
 // .text:0x800B0934 size:0x4
-void fn_800B0934(void) {
+void fn_800B0934(u8* memory) {
     return;
 }
 
@@ -186,8 +188,7 @@ void SndFree(void) {
 }
 
 // .text:0x800B099C size:0x78
-void SndAlloc(void) {
-    return;
+u8* SndAlloc(u32 size) {
 }
 
 // .text:0x800B0A14 size:0x48

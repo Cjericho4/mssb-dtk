@@ -2,6 +2,12 @@
 #define __UNKNOWN_gap_800AD780_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800AD780Hooks {
+    u8* (*alloc)(u32 size);
+    void (*free)(u8* memory);
+} Gap800AD780Hooks;
+void sndSetHooks(Gap800AD780Hooks* hooks);
+void sndQuit(void);
 typedef struct Gap800AD780DrawScript {
     void (*callback)(void);
     u8 _pad4[0x7C];
@@ -64,9 +70,9 @@ void fn_800B05E4(void);
 void makeLookAtMatrix(void);
 void soundQuit(void);
 void initSound(void);
-void fn_800B0934(void);
+void fn_800B0934(u8* memory);
 void SndFree(void);
-void SndAlloc(void);
+u8* SndAlloc(u32 size);
 void fn_800B0A14_removeQueue(void);
 void fn_800B0A5C_insertQueue(void);
 void resetAllDrawingStructs_tonop(void);
