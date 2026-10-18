@@ -6,10 +6,18 @@
 extern u8 lbl_803CBCB4;
 extern s32 lbl_803CBCB8;
 
+typedef struct Gap8003AE54Buffer {
+    u8 _pad0[0x94];
+    /* 0x94 */ u8 unk94;
+    /* 0x95 */ u8 unk95;
+    /* 0x96 */ u8 unk96;
+} Gap8003AE54Buffer;
+extern Gap8003AE54Buffer lbl_802D4B00;
+
 u8 fn_8003AE54(void);
 void fn_8003AE5C(u8 value);
 void fn_8003AE64(void);
-void fn_8003AE70(void);
+u8 fn_8003AE70(s32 arg0);
 void fn_8003AECC(void);
 void fn_8003B5B0(void);
 void fn_8003BB90(void);

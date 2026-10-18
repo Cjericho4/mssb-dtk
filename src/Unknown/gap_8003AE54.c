@@ -16,8 +16,20 @@ void fn_8003AE64(void) {
 }
 
 // .text:0x8003AE70 size:0x5C
-void fn_8003AE70(void) {
-    return;
+u8 fn_8003AE70(s32 arg0) {
+    u8 ret = 0;
+    switch (arg0) {
+    case 0:
+        ret = lbl_802D4B00.unk95;
+        break;
+    case 1:
+        ret = lbl_802D4B00.unk94;
+        break;
+    case 2:
+        ret = lbl_802D4B00.unk96;
+        break;
+    }
+    return ret;
 }
 
 // .text:0x8003AECC size:0x6E4
