@@ -3,6 +3,8 @@
 #include "menus/rep_10C0.h"
 #include "string.h"
 #include "menus/gap_4B1AC.h"
+#include "menus/gap_1B1BC.h"
+#include "menus/rep_0788.h"
 #include "game/rep_1C0.h"
 extern CompressedDiskRead lbl_2_data_12298;
 extern void fn_800111B4(struct MenusSceneArchive* archive);
@@ -205,7 +207,29 @@ void fn_2_409CC(void) {
 
 // .text:0x00040A9C size:0xF4
 void fn_2_40A9C(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        lbl_2_bss_1A824C->unk1978F3 = 0;
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        g_hugeAnimStruct.field269_0x307a = 0;
+        fn_2_20218();
+        lbl_2_bss_1A8234->panels[1].pending = 1;
+        lbl_2_bss_1A8230->pending = 1;
+        scene->field15_0x28 = 2;
+        break;
+    case 2:
+        fn_2_1BF50();
+        scene->field15_0x28 = 3;
+        break;
+    case 3:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
 }
 
 // .text:0x00040B90 size:0x128
