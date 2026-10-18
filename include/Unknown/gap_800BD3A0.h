@@ -37,7 +37,7 @@ extern Gap800BD3A0State lbl_803009F8;
 void LITInitColor(Gap800BD3A0Light* light, Gap800BD3A0Color* color);
 void LITInitDir(Gap800BD3A0Light* light, f32 x, f32 y, f32 z);
 void LITInitPos(Gap800BD3A0Light* light, f32 x, f32 y, f32 z);
-void LITInitAttn(void);
+void LITInitAttn(Gap800BD3A0Light* light, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
 void LITAlloc(void);
 void fn_800BD478(void);
 void fn_800BD548(void);
@@ -83,5 +83,7 @@ void SKNAccVecs16Norms16Iu161(void);
 void SKNAccVecs16Norms16Iu162(void);
 void convertTextureHeader(void);
 void fn_800C07BC(void);
+
+void GXInitLightAttn(Gap800BD3A0Light* light, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
 
 #endif // !__UNKNOWN_gap_800BD3A0_H_

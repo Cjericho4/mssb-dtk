@@ -20,8 +20,8 @@ void LITInitPos(Gap800BD3A0Light* light, f32 x, f32 y, f32 z) {
 }
 
 // .text:0x800BD3CC size:0x20
-void LITInitAttn(void) {
-    return;
+void LITInitAttn(Gap800BD3A0Light* light, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2) {
+    GXInitLightAttn(light, a0, a1, a2, k0, k1, k2);
 }
 
 // .text:0x800BD3EC size:0x8C
