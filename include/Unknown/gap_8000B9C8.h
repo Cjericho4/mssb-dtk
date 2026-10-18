@@ -2,6 +2,10 @@
 #define __UNKNOWN_gap_8000B9C8_H_
 
 #include "mssbTypes.h"
+typedef struct Gap8000B9C8Texture Gap8000B9C8Texture;
+extern Gap8000B9C8Texture lbl_800E9920;
+extern Gap8000B9C8Texture* lbl_803CBBE8;
+void convertTextureHeader(Gap8000B9C8Texture* texture);
 
 void fn_8000B9C8(void);
 void fn_8000BA3C(void);
