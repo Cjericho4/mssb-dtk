@@ -58,7 +58,7 @@ void fn_80020624(void);
 void fn_800206FC(void);
 void fn_80021064(void);
 s32 fn_80021188(void);
-void fn_800211BC(void);
+s32 fn_800211BC(void);
 u8 fn_800211F0(void);
 void fn_80021204(void);
 void fn_80021228(void);

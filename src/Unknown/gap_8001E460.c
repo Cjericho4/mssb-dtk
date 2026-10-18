@@ -125,8 +125,9 @@ s32 fn_80021188(void) {
 }
 
 // .text:0x800211BC size:0x34
-void fn_800211BC(void) {
-    return;
+s32 fn_800211BC(void) {
+    sndMasterVolume(0, 1, 1, 1);
+    return 0;
 }
 
 // .text:0x800211F0 size:0x14
