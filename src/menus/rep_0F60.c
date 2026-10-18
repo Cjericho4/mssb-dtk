@@ -38,7 +38,18 @@ void fn_2_8B418(void) {
 
 // .text:0x0008C724 size:0xE8
 void fn_2_8C724(void) {
-    return;
+    s32 i;
+    for (i = 0; i < lbl_2_bss_340140->field268_0x3078; i++) {
+        lbl_2_bss_340140->entries_2D94[i].pos.x = 0.0f;
+        lbl_2_bss_340140->entries_2D94[i].pos.y = 0.0f;
+        lbl_2_bss_340140->entries_2D94[i].pos.z = 0.0f;
+        lbl_2_bss_340140->entries_2D94[i].vel.x = 0.0f;
+        lbl_2_bss_340140->entries_2D94[i].vel.y = 0.0f;
+        lbl_2_bss_340140->entries_2D94[i].vel.z = 0.0f;
+        lbl_2_bss_340140->entries_2D94[i].unk_26 = 0;
+        lbl_2_bss_340140->entries_2D94[i].callback = NULL;
+        lbl_2_bss_340140->entries_68[i + 1].unk10 = 0;
+    }
 }
 
 // .text:0x0008C80C size:0x104
