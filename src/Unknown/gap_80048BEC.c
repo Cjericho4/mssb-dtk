@@ -184,8 +184,8 @@ void fn_8004B1B8(s32 value) {
 }
 
 // .text:0x8004B1C0 size:0x48
-void fn_8004B1C0(void) {
-    return;
+void fn_8004B1C0(s32 index, s32 a, s32 b, s32 c) {
+    if (index != 11) lbl_800FBE64[index](a, b, c);
 }
 
 // .text:0x8004B208 size:0x68
