@@ -35,8 +35,8 @@ void fn_80062764(s32 value) {
 }
 
 // .text:0x80062794 size:0x30
-void fn_80062794(void) {
-    return;
+BOOL fn_80062794(u32 handle) {
+    return sndFXCheck(handle) != -1;
 }
 
 // .text:0x800627C4 size:0x34
