@@ -2,6 +2,10 @@
 #define __UNKNOWN_gap_80035DD4_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80035DD4Request Gap80035DD4Request;
+typedef struct Gap80035DD4Actor Gap80035DD4Actor;
+typedef struct Gap80035DD4RenderState { u8 _pad0[0x78]; s32 index; } Gap80035DD4RenderState;
+extern Gap80035DD4RenderState lbl_800F79B8;
 typedef struct Gap80035DD4Entry {
     u8 _pad0[0x54];
     /* 0x54 */ s32 unk54;
@@ -42,8 +46,8 @@ void fn_800387B0(void);
 void fn_80038B48(void);
 void fn_80038CD0(void);
 void fn_80038E2C(void);
-void fn_80038EC4(void);
-void fn_80038F08(void);
+void fn_80038EC4(Gap80035DD4Request* request, Gap80035DD4Actor** actor, u8 count);
+void fn_80038F08(Gap80035DD4Request* request, Gap80035DD4Actor* actor, u32 count);
 void fn_80039310(void);
 void fn_80039A4C(void);
 

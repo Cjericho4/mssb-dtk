@@ -161,14 +161,18 @@ void fn_80038E2C(void) {
 }
 
 // .text:0x80038EC4 size:0x44
-void fn_80038EC4(void) {
-    return;
+void fn_80038EC4(Gap80035DD4Request* request, Gap80035DD4Actor** actor, u8 count) {
+    if (lbl_800F79B8.index < 0) lbl_800F79B8.index = 0;
+    fn_80038F08(request, *actor, count);
 }
 
 // .text:0x80038F08 size:0x408
-void fn_80038F08(void) {
+#pragma dont_inline on
+void fn_80038F08(Gap80035DD4Request* request, Gap80035DD4Actor* actor, u32 count) {
     return;
 }
+
+#pragma dont_inline reset
 
 // .text:0x80039310 size:0x73C
 void fn_80039310(void) {
