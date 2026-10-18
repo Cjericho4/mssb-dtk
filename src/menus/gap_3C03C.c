@@ -365,8 +365,23 @@ void fn_2_44504(void) {
 }
 
 // .text:0x00044E2C size:0xE8
-void fn_2_44E2C(void) {
-    return;
+s32 fn_2_44E2C(s32 index) {
+    MenusLineupChoice* choice = &lbl_800E8558[index];
+    if (choice->enabled == 1) {
+        u8 team;
+        u8* teamField = &choice->team;
+        MenusLineupSlot* slot;
+        s32 count = 0;
+        s32 i;
+        team = *teamField;
+        slot = lbl_80109AE8[team];
+        for (i = 0; i < 10; i++, slot++) {
+            if (slot->id != -1) count++;
+        }
+        *teamField = team;
+        return count;
+    }
+    return 0;
 }
 
 // .text:0x00044F14 size:0x20

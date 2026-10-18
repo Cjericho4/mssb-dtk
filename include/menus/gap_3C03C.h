@@ -13,6 +13,19 @@ typedef struct Gap3C03CObj {
     u8 _pad32[2];
 } Gap3C03CObj;
 
+typedef struct MenusLineupChoice {
+    u8 _pad0[2];
+    u8 team;
+    u8 enabled;
+    u8 _pad4[2];
+} MenusLineupChoice;
+typedef struct MenusLineupSlot {
+    s16 id;
+    u8 _pad2[8];
+} MenusLineupSlot;
+extern MenusLineupChoice lbl_800E8558[];
+extern MenusLineupSlot lbl_80109AE8[][10];
+
 typedef struct MenusEffectState {
     u32 type;
 } MenusEffectState;
@@ -87,7 +100,7 @@ BOOL fn_2_442E8(void);
 BOOL fn_2_44368(void);
 void fn_2_44414(void);
 void fn_2_44504(void);
-void fn_2_44E2C(void);
+s32 fn_2_44E2C(s32 index);
 s32 fn_2_44F14(s32 index);
 BOOL fn_2_44F34(s32 index);
 void fn_2_44F64(void);
