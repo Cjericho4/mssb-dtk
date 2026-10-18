@@ -2,6 +2,12 @@
 #define __UNKNOWN_gap_800A6870_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800A6870PoolNode { u32 next; } Gap800A6870PoolNode;
+typedef struct Gap800A6870Pools {
+    u8 _pad0[0x4C];
+    u32* heads;
+} Gap800A6870Pools;
+extern Gap800A6870Pools lbl_803C7420;
 extern u8 lbl_803CC134;
 extern u8 lbl_803CC135;
 extern s32 lbl_803CC12C;
@@ -48,8 +54,8 @@ void fn_800A7AD4(void);
 void fn_800A7AD8(void);
 void fn_800A7BAC(void);
 void fn_800A7C08(void);
-void fn_800A7D4C(void);
-void fn_800A7D7C(void);
+void fn_800A7D4C(s32 index, Gap800A6870PoolNode* node);
+void fn_800A7D7C(Gap800A6870PoolNode* nodes, u32 count);
 void fn_800A7DB0(void);
 void fn_800A7E00(void);
 void fn_800A7F10(void);

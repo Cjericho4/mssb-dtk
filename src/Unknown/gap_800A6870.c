@@ -113,13 +113,20 @@ void fn_800A7C08(void) {
 }
 
 // .text:0x800A7D4C size:0x30
-void fn_800A7D4C(void) {
-    return;
+void fn_800A7D4C(s32 index, Gap800A6870PoolNode* node) {
+    node->next = (node->next & 3) | (lbl_803C7420.heads[index] & ~3);
+    lbl_803C7420.heads[index] = (u32)node | 1;
 }
 
 // .text:0x800A7D7C size:0x34
-void fn_800A7D7C(void) {
-    return;
+void fn_800A7D7C(Gap800A6870PoolNode* nodes, u32 count) {
+    lbl_803C7420.heads = (u32*)nodes;
+    count--;
+    do {
+        nodes->next = (u32)&nodes[1] | 1;
+        nodes++;
+    } while (--count != 0);
+    nodes->next = 0;
 }
 
 // .text:0x800A7DB0 size:0x50
