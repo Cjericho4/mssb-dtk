@@ -70,9 +70,11 @@ typedef struct Gap800B117CObj {
     /* 0x84 */ s16 unk84;
     u8 _pad86[0x2];
     /* 0x88 */ s32 unk88;
-    u8 _pad8C[0x4];
+    f32 blend; /* 0x8C */
     /* 0x90 */ f32 unk90;
-    u8 _pad94[0x54];
+    u8 _pad94[5];
+    u8 tickMode; /* 0x99 */
+    u8 _pad9A[0x4E];
     Gap800B117CAnimation* animation; /* 0xE8 */
     u8 _padEC[0x14];
     /* 0x100 */ struct Gap800B117CObj* next;
@@ -159,7 +161,8 @@ void fn_800B49E4(void);
 f32 fn_800B4A44(Gap800B117CObj* obj, u16 index);
 f32 fn_800B4A94(Gap800B117CObj* obj);
 void fn_800B4AFC(Gap800B117CObj* obj, u8 value);
-void AnimateActorBones(void);
+void ANIMTick(Gap800B117CAnimation* animation, u8 mode);
+void AnimateActorBones(Gap800B117CObj* obj);
 void fn_800B4BC8(Gap800B117CObj* obj, u8 value);
 void fn_800B4C04(Gap800B117CObj* obj, f32 value);
 f32 fn_800B4C40(Gap800B117CObj* obj);

@@ -351,8 +351,13 @@ void fn_800B4AFC(Gap800B117CObj* obj, u8 value) {
 }
 
 // .text:0x800B4B38 size:0x90
-void AnimateActorBones(void) {
-    return;
+void AnimateActorBones(Gap800B117CObj* obj) {
+    u32 i;
+    obj->blend += obj->unk90;
+    if (obj->blend > 1.0f) obj->blend = 1.0f;
+    for (i = 0; i < obj->count; i++) {
+        ANIMTick(obj->entries[i]->animation, obj->tickMode);
+    }
 }
 
 // .text:0x800B4BC8 size:0x3C
