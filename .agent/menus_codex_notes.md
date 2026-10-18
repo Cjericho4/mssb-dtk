@@ -76,10 +76,27 @@ New MenusTransitionEntry (10 bytes) with next8; added array view to existing Men
 Gave up fn_2_7EF68 after4 attempts: split index web gets within6 register differences (first sum r4 vsr0); expression and inline getter reassociate index additions and shift all scratch regs. Restored stub.
 Gave up fn_2_73BF0 after1 attempt: target duplicated return54 branch is folded, with additional tail arithmetic/register differences. Restored stub.
 New ChallengeLineupEntry (6 bytes), signed value3; extended existing ChallengeSaveData with nine entries at40B8 for menus comparison helper.
-Gave up fn_2_33BC after3 attempts: all operations/unrolling correct, but trackedvalue/base r4/r5 swapped; declaration reorder and explicit state pointer unchanged. Restored stub and removed unused ChallengeLineupEntry.
 New opaque MenusSceneArchive via tagged pointer; extended MenusResourceTables with archive7A8.
 New MenusSelectionPair (8 bytes) for value-copy of MenusGameChoiceState selections at10; repeatFlags at Rep0568State10.
 Gave up fn_2_12B60 after3 attempts: pointer induction is hoisted before initial condition, and saved registers differ; restored stub and removed unused pair/repeat layouts and tentative callee signatures.
 Gave up fn_2_8DC00 during asm review: allocates runtime-sized aligned per-animation aux chunks, requiring raw byte slicing/casting to assign opaque aux pointers; no field-only typed representation identified. Stub retained.
 Gave up fn_2_95E80 after5 total attempts: explicit __cntlzw fixes predicate, but state/scene r31/r30 remain swapped; extra scene local unchanged. Stub restored, session limit reached.
 Gave up fn_2_79688 after1 attempt: same index-add web vs temporary-register obstacle as7EF68, plus unrolled iteration constants left separate. Stub restored.
+Correction: fn_2_4E970 already had a matched BOOL prototype/body; no return-zero placeholder was introduced.
+Correction: fn_2_53BC8 returns s32, with caller explicitly checking its low s16 before storing; prototype and typed stub reflect that.
+Revisited fn_2_442E8: new flat nine-entry s16[3] table view and plain9-loop unrolling matched44368, unlike prior nested3x3-record approach.
+Revisited fn_2_95E80 with existing matched __cntlzw predicate pattern discovered in nearby helpers; remaining attempt budget2.
+New MenusSequenceConfig (6 bytes): group0/song2/resource4 for lbl_2_data_128; reused sequence handle and selection arrays.
+Gave up fn_2_14BB8 after5 attempts: case0 needs an extra saved byte-index register and mr before flag store; local and inline forms coalesce with parameter or repeat truncation. Restored stub.
+New MenusLineupChoice (6 bytes), byte2/flag3 for lbl_800E8558; MenusLineupSlot (A bytes), signed id0, ten entries per lbl_80109AE8 row.
+Gave up fn_2_49F7C after3 attempts: explicit setup/copy labels match all target instructions, but MWCC emits trailing blr assigned by target to next4-byte fn_2_4A064; symbol-size fix is outside scope. Restored stub.
+Gave up fn_2_50B0C after4 attempts: otherwise identical instructions, but converted value r10 vsr7 shifts global base/zero/load temps; locals, two-step cast and inline helper unchanged. Restored stub and unused fields.
+Gave up fn_2_698EC after5 attempts: negative-sine inline reduces to3 differences, same fneg/amplitude f2/f3 swap as90DE4; extern amplitude worsens scheduling. Restored stub and unused phase field.
+Gave up fn_2_A1A0 after1 attempt: control-flow and hoisted globals agree, but team/index address web allocates r10/r11 vsr11/r12 and computes index+2 inside each branch, unlike target shared displacement. Restored stub and unused fields.
+New MenusAnimationResource (10 bytes), resource0/size4 with packed size flags for lbl_2_data_2F990; reused hugeAnimStruct allocation fields and animation slots.
+New MenusSortEntry (8 bytes), signed key0/value4; fn_2_44414 sorts54 entries using element0 as a sentinel.
+New MenusAnimationTask union reuses QueueEntry with byte current1C/state1D; Rep0568State now names write/read indices0/1 and ten command bytes2.
+Gave up fn_2_51470 after2 attempts: every target instruction matches with s32 return, code-before-pointer declaration and unsigned shift; extra trailing blr belongs to next4-byte fn_2_51568. Config size fix is outside scope; restored stub.
+Gave up fn_2_6B024 after1 attempt: same negative-sine/amplitude f2/f3 allocation obstacle as698EC/90DE4 (4 remaining diffs), despite inlined bounce and sine helpers. Restored stub/unused phase.
+Gave up fn_2_6784 after4 attempts: struct-member table base folds +C into lbz instead of target relocation addend; explicit pointer hoists into extra saved register. Also first-save readiness store reuses r31 instead of reloading global. Restored stub and unused types.
+New MenusExitTransition: state halfword10/step18 at lbl_2_bss_340234; extended MenusQueueState with active byte0.
