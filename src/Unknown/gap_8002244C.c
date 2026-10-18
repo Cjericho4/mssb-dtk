@@ -47,7 +47,14 @@ void fn_80022A24(void) {
 
 // .text:0x80022B14 size:0x54
 void fn_80022B14(void) {
-    return;
+    s32 complete = lbl_803C6CF8.complete;
+    if (complete == 1) {
+        if (lbl_803716B8.pending != 0) {
+            lbl_803716B8.current = lbl_803716B8.pending;
+            lbl_803716B8.pending = 0;
+        }
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x80022B68 size:0x14C

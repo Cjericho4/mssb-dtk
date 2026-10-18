@@ -2,10 +2,20 @@
 #define __UNKNOWN_gap_8002244C_H_
 
 #include "mssbTypes.h"
+typedef struct Gap8002244CLoad { u8 _pad0[0x715]; u8 complete; } Gap8002244CLoad;
+extern Gap8002244CLoad lbl_803C6CF8;
+void fn_800B0A14_removeQueue(void);
+u8* memset(u8* memory, s32 value, u32 size);
 void OSSetProgressiveMode(u32 enable);
 void fn_800A7E00(void);
 typedef struct Gap8002244CFlags {
-    u8 _pad0[0x1E8];
+    u8 header[0x18];
+    u8 records[0x1B0];
+    u8 flag1C8, flag1C9;
+    u8 _pad1CA[2];
+    u32 current; /* 0x1CC */
+    u32 pending; /* 0x1D0 */
+    u8 _pad1D4[0x14];
     /* 0x1E8 */ u8 unk1E8;
     u8 unk1E9;
     u8 flags;
