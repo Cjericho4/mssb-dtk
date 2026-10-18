@@ -277,9 +277,17 @@ void fn_800B49E4(void) {
     return;
 }
 
+static inline f32 getAnimationTime(Gap800B117CAnimation* animation) {
+    if (animation != NULL) {
+        if (animation->flags17 == 0) return animation->time;
+        if (animation->duration != NULL) return animation->duration->length - animation->time;
+    }
+    return 0.0f;
+}
+
 // .text:0x800B4A44 size:0x50
-void fn_800B4A44(void) {
-    return;
+f32 fn_800B4A44(Gap800B117CObj* obj, u16 index) {
+    return getAnimationTime(obj->entries[index]->animation);
 }
 
 // .text:0x800B4A94 size:0x68

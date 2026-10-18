@@ -34,11 +34,13 @@ typedef struct Gap800B117CList {
     struct Gap800B117CObj* head;
     struct Gap800B117CObj* tail;
 } Gap800B117CList;
+typedef struct Gap800B117CDuration { f32 length; } Gap800B117CDuration;
 typedef struct Gap800B117CAnimation {
     f32 time;
     u32 unk4;
     f32 speed;
-    u8 _padC[0xB];
+    struct Gap800B117CDuration* duration; /* 0xC */
+    u8 _pad10[7];
     u8 flags17;
     u8 flags18;
 } Gap800B117CAnimation;
@@ -139,7 +141,7 @@ void fn_800B472C(void);
 void haveActLayoutPointToGeoHeader(Gap800B117CObj* obj, s32 value);
 void LoadActorLayout(void);
 void fn_800B49E4(void);
-void fn_800B4A44(void);
+f32 fn_800B4A44(Gap800B117CObj* obj, u16 index);
 void fn_800B4A94(void);
 void fn_800B4AFC(Gap800B117CObj* obj, u8 value);
 void AnimateActorBones(void);
