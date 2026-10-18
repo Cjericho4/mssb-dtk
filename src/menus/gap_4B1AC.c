@@ -707,7 +707,17 @@ void fn_2_54234(MenusResourceEntry* entries, s32 count) {
 
 // .text:0x00054354 size:0x120
 void fn_2_54354(MenusResourceEntry* entries, s32 count) {
-    return;
+    while (count > 0) {
+        MenusResourceSlot* slot = &lbl_2_bss_1A8234->banks[entries->bank].slots[entries->index];
+        slot->callback = entries->callback;
+        slot->unk8 = entries->index;
+        slot->unkA = entries->unk6;
+        slot->bank = entries->bank;
+        slot->index = entries->unkA;
+        slot->unk10 = entries->unkC;
+        entries++;
+        count--;
+    }
 }
 
 // .text:0x00054474 size:0x3D0
