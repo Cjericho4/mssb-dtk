@@ -22,7 +22,13 @@ void fn_80064918(void) {
 
 // .text:0x8006496C size:0x50
 void fn_8006496C(void) {
-    return;
+    g_d_GameSettings.option50 = lbl_8034E9A0.option0;
+    if (g_d_GameSettings.mode == 0) {
+        if (g_d_GameSettings.option50 == 0) g_d_GameSettings.option51 = 5;
+        else g_d_GameSettings.option51 = 4;
+    } else {
+        g_d_GameSettings.option51 = lbl_8034E9A0.option1;
+    }
 }
 
 // .text:0x800649BC size:0x48
