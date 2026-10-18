@@ -372,8 +372,27 @@ void fn_2_8FD14(void) {
 }
 
 // .text:0x0008FDB0 size:0xEC
-void fn_2_8FDB0(void) {
-    return;
+void fn_2_8FDB0(s32 index) {
+    Rep1028Obj* obj = &lbl_2_bss_1A8248->rep1028Objects[index];
+    Mtx matrix;
+    Vec offset;
+    if (!(obj->unk30 <= 0.0f)) {
+        PSMTXRotRad(matrix, 'Y', obj->angle);
+        offset.x = 0.0f;
+        offset.y = 0.0f;
+        offset.z = -obj->unk30;
+        PSMTXMultVec(matrix, &offset, &offset);
+        obj->deltaX = offset.x;
+        obj->deltaZ = offset.z;
+        obj->position.x += obj->deltaX;
+        obj->position.z += obj->deltaZ;
+    }
+    obj->previousPosition.x = obj->position.x;
+    obj->previousPosition.z = obj->position.z;
+    if (obj->unk30 == 0.0f) {
+        obj->unk20 = 0.0f;
+        obj->unk24 = 0.0f;
+    }
 }
 
 // .text:0x0008FE9C size:0x1E0

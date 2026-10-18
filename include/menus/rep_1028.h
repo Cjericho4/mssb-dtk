@@ -12,14 +12,20 @@ typedef struct Rep1028Config {
 
 typedef struct Rep1028Obj {
     /* 0x00 */ Vec position;
-    u8 _padC[0x1C];
+    Vec previousPosition; /* 0x0C */
+    f32 deltaX; /* 0x18 */
+    f32 deltaZ; /* 0x1C */
+    f32 unk20;
+    f32 unk24;
     f32 unk28;
     u8 _pad2C[4];
     f32 unk30;
     u8 _pad34[4];
     f32 unk38;
     f32 unk3C;
-    u8 _pad40[0x38];
+    u8 _pad40[4];
+    f32 angle; /* 0x44 */
+    u8 _pad48[0x30];
     s32 index;
     s32 unk7C;
     f32 unk80;
@@ -72,7 +78,7 @@ void fn_2_8FB68(s32 index, s16 id);
 void fn_2_8FBF8(s32 index, s16 id);
 void fn_2_8FC88(s32 index);
 void fn_2_8FD14(void);
-void fn_2_8FDB0(void);
+void fn_2_8FDB0(s32 index);
 void fn_2_8FE9C(void);
 void fn_2_9007C(void);
 void fn_2_9033C(s32 index, Vec* position, f32 value);
