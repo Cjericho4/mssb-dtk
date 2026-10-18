@@ -490,7 +490,19 @@ BOOL fn_2_45938(s32 index) {
 
 // .text:0x00045978 size:0x10C
 void fn_2_45978(void) {
-    return;
+    s32 i;
+    s32 j;
+    for (i = 0; i < 54; i++) {
+        Gap3C03CObj* obj = &lbl_2_bss_1A8248->gap3C03CObjects[i];
+        obj->previous = obj->current;
+        for (j = 0; j < 10; j++) {
+            obj->previousValues[j][0] = obj->currentValues[j][0];
+            obj->previousValues[j][1] = obj->currentValues[j][1];
+        }
+        lbl_2_bss_1A8248->resetFlags[0][i] = 0;
+        lbl_2_bss_1A8248->resetFlags[1][i] = 0;
+        lbl_2_bss_1A8248->resetFlags[2][i] = 0;
+    }
 }
 
 // .text:0x00045A84 size:0x120

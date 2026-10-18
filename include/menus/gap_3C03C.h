@@ -8,7 +8,11 @@ typedef struct Gap3C03CObj {
     u8 _pad0[4];
     s8 unk4;
     s8 unk5;
-    u8 _pad6[0x2B];
+    u8 current; /* 0x06 */
+    u8 previous; /* 0x07 */
+    u8 _pad8;
+    u8 currentValues[10][2]; /* 0x09 */
+    u8 previousValues[10][2]; /* 0x1D */
     s8 unk31;
     u8 _pad32[2];
 } Gap3C03CObj;
