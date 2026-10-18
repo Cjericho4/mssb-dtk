@@ -832,8 +832,12 @@ void fn_2_6D748(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006D754 size:0xEC
-void fn_2_6D754(void) {
-    return;
+void fn_2_6D754(Rep0B08Obj* obj) {
+    setMenuObjectActive(obj->index, 1);
+    menuChangeAnimation(obj->index, 1);
+    obj->angle = 0.0f;
+    obj->unk34 = 0.0f;
+    obj->state = 1;
 }
 
 // .text:0x0006D840 size:0x38
