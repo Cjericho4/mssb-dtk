@@ -35,6 +35,8 @@ extern u8 lbl_803CBCA1;
 extern s16 lbl_803CB818;
 extern s32 lbl_803CB820;
 u8* memset(u8* memory, s32 value, u32 size);
+extern f32 lbl_801F8640[4][4];
+void C_MTXFrustum(f32 m[4][4], f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 void fn_800B0A14_removeQueue(void);
 
 void fn_80035DD4(void);
@@ -50,7 +52,7 @@ void fn_8003649C(void);
 void fn_8003656C(void);
 void fn_8003664C(void);
 void fn_80036824(void);
-void fn_800369DC(void);
+void fn_800369DC(f32 zoom);
 void fn_80036A3C(void);
 void fn_80036C88(void);
 void fn_80037054(void);
