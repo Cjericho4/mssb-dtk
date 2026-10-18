@@ -2,6 +2,17 @@
 #define __UNKNOWN_gap_80062578_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80062578GameState {
+    u8 _pad0[0x28];
+    u8 mode;
+} Gap80062578GameState;
+extern Gap80062578GameState lbl_80366158;
+typedef struct Gap80062578Object Gap80062578Object;
+void fn_80032284(Gap80062578Object* obj);
+typedef struct Gap80062578Setup { s32 value; u32 unk4; u32 unk8; } Gap80062578Setup;
+extern Gap80062578Setup lbl_80108B90;
+extern s32 lbl_803CBD0C;
+void fn_80032064(Gap80062578Object* obj, Gap80062578Setup* setup);
 typedef struct Gap80062578Request {
     u32 unk0;
     u32 unk4;
@@ -69,7 +80,7 @@ void initializeUnknown(void);
 void fn_80062A74(void);
 void fn_80062A94(void);
 void fn_80062BE4(void);
-void fn_80062C24(void);
+void fn_80062C24(Gap80062578Object* obj);
 void fn_80062C60(void);
 void fn_80062D94(void);
 void fn_80062E6C(void);

@@ -107,8 +107,8 @@ void fn_80062BE4(void) {
 }
 
 // .text:0x80062C24 size:0x3C
-void fn_80062C24(void) {
-    return;
+void fn_80062C24(Gap80062578Object* obj) {
+    if (lbl_80366158.mode != 1 && obj != NULL) fn_80032284(obj);
 }
 
 // .text:0x80062C60 size:0x134
