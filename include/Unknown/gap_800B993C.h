@@ -67,4 +67,6 @@ void LITXForm(void);
 
 void PSMTXCopy(f32 src[3][4], f32 dst[3][4]);
 
+void GXSetFog(u32 type, f32 start, f32 end, f32 nearZ, f32 farZ, Gap800B993CColor color);
+
 #endif // !__UNKNOWN_gap_800B993C_H_

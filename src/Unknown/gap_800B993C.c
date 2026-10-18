@@ -27,7 +27,9 @@ void fn_800B996C(s32 value) {
 
 // .text:0x800B9974 size:0x50
 void SetFogNone(void) {
-    return;
+    Gap800B993CColor color;
+    color.r = color.g = color.b = 0;
+    GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, color);
 }
 
 // .text:0x800B99C4 size:0x6C
