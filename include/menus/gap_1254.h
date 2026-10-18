@@ -115,7 +115,7 @@ s32 fn_2_9F70(s8 side);
 void fn_2_A040(void);
 void fn_2_A1A0(void);
 void fn_2_A288(void);
-void fn_2_A50C(void);
+BOOL fn_2_A50C(void);
 BOOL fn_2_A62C(void);
 void fn_2_A6E0(void);
 void fn_2_ABC0(void);

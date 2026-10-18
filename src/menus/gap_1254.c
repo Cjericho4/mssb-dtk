@@ -482,8 +482,16 @@ void fn_2_A288(void) {
 }
 
 // .text:0x0000A50C size:0x120
-void fn_2_A50C(void) {
-    return;
+BOOL fn_2_A50C(void) {
+    s32 i;
+    s32 j;
+    for (i = 0; i < 9; i++) {
+        s32 value = lbl_803C6724.first[i];
+        for (j = 0; j < 9; j++) {
+            if (value == lbl_803C6724.second[j]) return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 // .text:0x0000A62C size:0xB4
