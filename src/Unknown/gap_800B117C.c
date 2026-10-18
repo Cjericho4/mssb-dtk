@@ -363,8 +363,14 @@ void fn_800B4CA0(Gap800B117CObj* obj, f32 value) {
 }
 
 // .text:0x800B4CDC size:0x88
-void fn_800B4CDC(void) {
-    return;
+void fn_800B4CDC(Gap800B117CObj* obj) {
+    s32 i;
+    for (i = obj->count - 1; i >= 0; i--) {
+        if (obj->entries[i]->animation != NULL) {
+            fn_800ACFB0(obj->entries[i]->animation);
+            obj->entries[i]->animation = NULL;
+        }
+    }
 }
 
 // .text:0x800B4D64 size:0x138
