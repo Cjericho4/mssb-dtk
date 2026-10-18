@@ -38,8 +38,7 @@ void fn_80021518(s32 id, u32 sound);
 typedef struct Gap80062578Status {
     u8 _pad0[0x55];
     u8 flags[8];
-    u8 busy; /* 0x5D */
-    u8 pending; /* 0x5E */
+    u8 busy[2]; /* 0x5D */
 } Gap80062578Status;
 extern Gap80062578Status lbl_803C66B0;
 typedef struct Gap80062578Flags {
@@ -67,7 +66,7 @@ typedef struct Gap80062578Scene {
 
 BOOL fn_80062578(void);
 void fn_800625A4(void);
-void fn_80062674(void);
+void fn_80062674(s32 index);
 void fn_800626EC(s32 index);
 void fn_80062744(void);
 void fn_80062764(s32 value);

@@ -2,7 +2,7 @@
 
 // .text:0x80062578 size:0x2C
 BOOL fn_80062578(void) {
-    return lbl_803C66B0.busy == 0 && lbl_803C66B0.pending == 0;
+    return lbl_803C66B0.busy[0] == 0 && lbl_803C66B0.busy[1] == 0;
 }
 
 // .text:0x800625A4 size:0xD0
@@ -11,8 +11,17 @@ void fn_800625A4(void) {
 }
 
 // .text:0x80062674 size:0x78
-void fn_80062674(void) {
-    return;
+void fn_80062674(s32 index) {
+    lbl_803C663C.values[index]--;
+    if (lbl_803C663C.values[index] != 0) {
+        return;
+    }
+    if (g_d_GameSettings.mode == 0) {
+        lbl_803C66B0.flags[0] = 0;
+    } else {
+        lbl_803C66B0.flags[index] = 0;
+    }
+    lbl_803C66B0.busy[index] = 0;
 }
 
 // .text:0x800626EC size:0x58
