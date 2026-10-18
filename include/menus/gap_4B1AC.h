@@ -24,7 +24,8 @@ typedef struct MenusResourceBank {
 } MenusResourceBank;
 typedef struct MenusResourceState {
     MenusResourceBank banks[10];
-    u8 _pad32A00[0x86];
+    u8 _pad32A00[4];
+    u8 flags[13][10]; /* 0x32A04 */
     u8 pending;
 } MenusResourceState;
 extern MenusResourceState* lbl_2_bss_1A8230;

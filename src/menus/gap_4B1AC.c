@@ -652,7 +652,22 @@ void fn_2_53F88(s32 value) {
 
 // .text:0x0005400C size:0x114
 void fn_2_5400C(void) {
-    return;
+    s32 i;
+    for (i = 0; i < 10; i++) {
+        lbl_2_bss_1A8230->flags[0][i] = 0;
+        lbl_2_bss_1A8230->flags[1][i] = 0;
+        lbl_2_bss_1A8230->flags[2][i] = 0;
+        lbl_2_bss_1A8230->flags[3][i] = 0;
+        lbl_2_bss_1A8230->flags[4][i] = 0;
+        lbl_2_bss_1A8230->flags[5][i] = 0;
+        lbl_2_bss_1A8230->flags[6][i] = 0;
+        lbl_2_bss_1A8230->flags[7][i] = 0;
+        lbl_2_bss_1A8230->flags[8][i] = 0;
+        lbl_2_bss_1A8230->flags[9][i] = 0;
+        lbl_2_bss_1A8230->flags[10][i] = 0;
+        lbl_2_bss_1A8230->flags[11][i] = 0;
+        lbl_2_bss_1A8230->flags[12][i] = 0;
+    }
 }
 
 // .text:0x00054120 size:0x114
