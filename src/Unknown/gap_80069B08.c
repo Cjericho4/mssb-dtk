@@ -87,8 +87,14 @@ void fn_8006C0D0(void) {
 }
 
 // .text:0x8006C100 size:0x3C
-void fn_8006C100(void) {
-    return;
+u8 fn_8006C100(s16 value) {
+    u32 i;
+    i = 0;
+    do {
+        if (value >= lbl_80109400[i]) return i;
+        i++;
+    } while (i < 7);
+    return 6;
 }
 
 // .text:0x8006C13C size:0x12C
@@ -117,8 +123,15 @@ void fn_8006C2B4(void) {
 }
 
 // .text:0x8006C398 size:0x58
-void fn_8006C398(void) {
-    return;
+void fn_8006C398(Gap80069B08Lineup* lineup) {
+    u32 i;
+    memset(lineup, 0, sizeof(Gap80069B08Lineup));
+    i = 0;
+    do {
+        lineup->order[i] = i + 1;
+        i++;
+    } while (i < 6);
+    lineup->unk12 = 3;
 }
 
 // .text:0x8006C3F0 size:0x8
