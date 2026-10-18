@@ -16,7 +16,12 @@ typedef struct Gap800BD3A0Light {
     /* 0x60 */ f32 dirZ;
     u8 _pad64[0xC];
     /* 0x70 */ Gap800BD3A0Color color;
+    /* 0x74 */ u8 unk74;
+    u8 _pad75[0x43];
+    /* 0xB8 */ s32 unkB8;
+    /* 0xBC */ s32 unkBC;
 } Gap800BD3A0Light;
+Gap800BD3A0Light* _OSAllocFromHeap(s32 heap, u32 size);
 typedef struct Gap800BD3A0EntryData {
     u8 _pad0[0x70];
 } Gap800BD3A0EntryData;
@@ -78,7 +83,7 @@ void LITInitColor(Gap800BD3A0Light* light, Gap800BD3A0Color* color);
 void LITInitDir(Gap800BD3A0Light* light, f32 x, f32 y, f32 z);
 void LITInitPos(Gap800BD3A0Light* light, f32 x, f32 y, f32 z);
 void LITInitAttn(Gap800BD3A0Light* light, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
-void LITAlloc(void);
+void LITAlloc(Gap800BD3A0Light** out);
 void fn_800BD478(void);
 void fn_800BD548(void);
 void fn_800BD670(void);

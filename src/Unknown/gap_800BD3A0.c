@@ -25,8 +25,17 @@ void LITInitAttn(Gap800BD3A0Light* light, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1
 }
 
 // .text:0x800BD3EC size:0x8C
-void LITAlloc(void) {
-    return;
+void LITAlloc(Gap800BD3A0Light** out) {
+    *out = _OSAllocFromHeap(32, sizeof(Gap800BD3A0Light));
+    (*out)->posZ = 0.0f;
+    (*out)->posY = 0.0f;
+    (*out)->posX = 0.0f;
+    (*out)->dirY = 0.0f;
+    (*out)->dirX = 0.0f;
+    (*out)->dirZ = 1.0f;
+    (*out)->unkB8 = 0;
+    (*out)->unkBC = 0;
+    (*out)->unk74 = 0;
 }
 
 // .text:0x800BD478 size:0xD0
