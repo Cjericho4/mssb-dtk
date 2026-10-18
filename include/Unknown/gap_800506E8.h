@@ -34,7 +34,7 @@ extern s32 lbl_803CBD14;
 
 void fn_800506E8(void);
 void fn_80050760(void);
-void fn_80050F78(void);
+BOOL fn_80050F78(s32 mode);
 void fn_80050FE8(void);
 void fn_8005138C(void);
 void fn_80051D00(void);

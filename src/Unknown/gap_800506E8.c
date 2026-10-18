@@ -11,8 +11,22 @@ void fn_80050760(void) {
 }
 
 // .text:0x80050F78 size:0x70
-void fn_80050F78(void) {
-    return;
+BOOL fn_80050F78(s32 mode) {
+    if (lbl_803C6028.unk7C == 0) {
+        if (mode == 2) {
+            lbl_803C6028.unk7C = 4;
+            lbl_803C6028.unk90 = 1;
+        } else if (mode != 0) {
+            lbl_803C6028.unk7C = 3;
+        } else {
+            lbl_803C6028.unk7C = 1;
+        }
+    }
+    if (lbl_803C6028.unk7C == 2) {
+        lbl_803C6028.unk7C = 0;
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x80050FE8 size:0x3A4
