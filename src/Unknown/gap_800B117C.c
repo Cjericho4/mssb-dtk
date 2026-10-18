@@ -125,8 +125,16 @@ void fn_800B2854(void) {
 }
 
 // .text:0x800B2AC8 size:0x84
-void fn_800B2AC8(void) {
-    return;
+void fn_800B2AC8(Gap800B117CDisplayAnimation* animation) {
+    s32 i;
+    Gap800B117CModel* model = animation->model;
+    Gap800B117CDisplay* display;
+    for (i = 0; i < animation->count; i++) {
+        if ((animation->records[i].flags & 0x18) && animation->records[i].index != 0xFFFF) {
+            display = model->displays[animation->records[i].index].display;
+            fn_800BC824(display, fn_800BF068()->value);
+        }
+    }
 }
 
 // .text:0x800B2B4C size:0x8
