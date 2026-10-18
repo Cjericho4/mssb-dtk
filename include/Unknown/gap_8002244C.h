@@ -109,7 +109,7 @@ void challengeStarRelatedInd(void);
 void multBottomBits_asFloat(void);
 void byteWiseMultiply(void);
 void LERPToNewRange_Float(void);
-void LinearInterpolateToNewRange(void);
+f32 LinearInterpolateToNewRange(f32 x, f32 inMin, f32 inMax, f32 outMin, f32 outMax);
 BOOL fn_80024C04(s32 index);
 void fn_80024C6C(void);
 void fn_80024D2C(void);

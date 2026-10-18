@@ -270,8 +270,17 @@ void LERPToNewRange_Float(void) {
 }
 
 // .text:0x80024BB4 size:0x50
-void LinearInterpolateToNewRange(void) {
-    return;
+f32 LinearInterpolateToNewRange(f32 x, f32 inMin, f32 inMax, f32 outMin, f32 outMax) {
+    f32 range = inMax - inMin;
+    f32 outRange;
+    f32 t;
+    if (range == 0.0f) {
+        t = 1.0f;
+    } else {
+        t = ((x - inMin) / range > 1.0f) ? 1.0f : (((x - inMin) / range < 0.0f) ? 0.0f : (x - inMin) / range);
+    }
+    outRange = outMax - outMin;
+    return outRange * t + outMin;
 }
 
 // .text:0x80024C04 size:0x68
