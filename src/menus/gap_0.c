@@ -1,5 +1,10 @@
 #include "menus/gap_0.h"
 #include "game/rep_1E08.h"
+#include "game/rep_1C0.h"
+#include "musyx/musyx.h"
+extern u32 lbl_2_bss_B644;
+extern CompressedDiskRead lbl_2_data_C8;
+extern void fn_800216F8(s32 mode, s32 (*callback)(void));
 
 extern BdcArrayElement lbl_2_data_C0;
 #include "menus/gap_D08.h"
@@ -104,7 +109,27 @@ u8 fn_2_510(MenusCommandQueue* queue) {
 
 // .text:0x00000554 size:0x110
 void fn_2_554(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s32)scene->unkIndex) {
+    case 0:
+        lbl_2_bss_B644 = OSGetTick();
+        fn_800216F8(2, fn_2_10FC);
+        scene->unkIndex = 1;
+    case 1:
+        if (lbl_803CC1B8->loadingState == 0) break;
+        sndVolume(127, 10, 255);
+        scene->unkIndex = 2;
+    case 2:
+        ARAMTransfer(&lbl_2_data_C8, &lbl_8034E9A0, 1, 0);
+        scene->unkIndex = 3;
+        break;
+    case 3:
+        if (lbl_803C6CF8.allowLoad == 1) {
+            scene->unk_00 = fn_2_794;
+            lbl_2_bss_4 = (MenusCommandQueue*)fn_800B0A5C_insertQueue(fn_2_374, 0x8000);
+        }
+        break;
+    }
 }
 
 // .text:0x00000664 size:0xA4
