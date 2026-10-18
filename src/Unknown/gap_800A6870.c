@@ -75,7 +75,12 @@ void fn_800A75EC(void) {
 
 // .text:0x800A7670 size:0x4C
 void fn_800A7670(void) {
-    return;
+    Gap800A6870Load* load = &lbl_803C6CF8;
+    load->stateWord = 1;
+    if (load->memory != NULL) {
+        fn_800ACF14(load->memory);
+        load->memory = NULL;
+    }
 }
 
 // .text:0x800A76BC size:0xE4

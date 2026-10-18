@@ -37,9 +37,14 @@ typedef struct Gap800A6870Load {
     /* 0x6D8 */ u8 unk6D8;
     u8 _pad6D9[0x17];
     s32 running; /* 0x6F0 */
-    u8 _pad6F4[0x20];
-    u8 state; /* 0x714 */
-    u8 _pad715[3];
+    u8 _pad6F4[8];
+    u8* memory; /* 0x6FC */
+    u8 _pad700[0x14];
+    union {
+        u16 stateWord; /* 0x714 */
+        struct { u8 state; u8 stateLow; };
+    };
+    u8 _pad716[2];
     s32 entryNumber; /* 0x718 */
 } Gap800A6870Load;
 extern Gap800A6870Load lbl_803C6CF8;
@@ -110,5 +115,7 @@ s32 OSResumeThread(Gap800A6870Thread* thread);
 
 s32 OSSignalSemaphore(Gap800A6870Semaphore* semaphore);
 BOOL DVDFastOpen(s32 entryNumber, Gap800A6870DVDFile* file);
+
+void fn_800ACF14(u8* memory);
 
 #endif // !__UNKNOWN_gap_800A6870_H_
