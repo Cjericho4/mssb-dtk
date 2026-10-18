@@ -274,8 +274,12 @@ void fn_800B4A94(void) {
 }
 
 // .text:0x800B4AFC size:0x3C
-void fn_800B4AFC(void) {
-    return;
+void fn_800B4AFC(Gap800B117CObj* obj, u8 value) {
+    u32 i;
+    for (i = 0; i < obj->count; i++) {
+        Gap800B117CAnimation* animation = obj->entries[i]->animation;
+        if (animation != NULL) animation->flags18 = value;
+    }
 }
 
 // .text:0x800B4B38 size:0x90

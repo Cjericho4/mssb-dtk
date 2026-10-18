@@ -20,8 +20,18 @@ typedef struct Gap800B117CList {
     struct Gap800B117CObj* head;
     struct Gap800B117CObj* tail;
 } Gap800B117CList;
+typedef struct Gap800B117CAnimation {
+    f32 time;
+    u32 unk4;
+    f32 speed;
+    u8 _padC[0xB];
+    u8 flags17;
+    u8 flags18;
+} Gap800B117CAnimation;
 typedef struct Gap800B117CObj {
-    u8 _pad0[0x10];
+    u8 _pad0[6];
+    u16 count;
+    u8 _pad8[8];
     /* 0x10 */ s32 unk10;
     /* 0x14 */ s32 unk14;
     /* 0x18 */ struct Gap800B117CObj** entries;
@@ -37,7 +47,9 @@ typedef struct Gap800B117CObj {
     /* 0x88 */ s32 unk88;
     u8 _pad8C[0x4];
     /* 0x90 */ f32 unk90;
-    u8 _pad94[0xA0];
+    u8 _pad94[0x54];
+    Gap800B117CAnimation* animation; /* 0xE8 */
+    u8 _padEC[0x48];
     /* 0x134 */ u16 unk134;
 } Gap800B117CObj;
 typedef struct Gap800B117CFlags {
@@ -100,7 +112,7 @@ void LoadActorLayout(void);
 void fn_800B49E4(void);
 void fn_800B4A44(void);
 void fn_800B4A94(void);
-void fn_800B4AFC(void);
+void fn_800B4AFC(Gap800B117CObj* obj, u8 value);
 void AnimateActorBones(void);
 void fn_800B4BC8(void);
 void fn_800B4C04(void);
