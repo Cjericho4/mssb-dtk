@@ -131,8 +131,8 @@ void fn_800B2BA8(void) {
 }
 
 // .text:0x800B2BE4 size:0x18
-void fn_800B2BE4(void) {
-    return;
+void fn_800B2BE4(Gap800B117CObj* obj, u16 index) {
+    obj->entries[index]->unk14 = (s32)obj->entries[index]->entries;
 }
 
 // .text:0x800B2BFC size:0xC

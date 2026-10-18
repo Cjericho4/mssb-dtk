@@ -53,7 +53,7 @@ void fn_800B2B54(Gap800B117CObj* obj, u16 index, u8 value);
 void Set_FUN_800b2b6c(Gap800B117CObj* obj, s32 value);
 void fn_800B2B74(void);
 void fn_800B2BA8(void);
-void fn_800B2BE4(void);
+void fn_800B2BE4(Gap800B117CObj* obj, u16 index);
 void fn_800B2BFC(Gap800B117CObj* obj, s16 a, s16 b);
 void fn_800B2C08(Gap800B117CObj* obj, s16 value);
 void fn_800B2C10(void);
