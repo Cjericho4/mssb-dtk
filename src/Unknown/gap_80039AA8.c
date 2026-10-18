@@ -50,7 +50,18 @@ void fn_8003A2C0(void) {
 
 // .text:0x8003A2EC size:0x90
 void fn_8003A2EC(void) {
-    return;
+    lbl_803C5090.unk1D = 1;
+    lbl_803C5090.unk17 = 0x60;
+    lbl_803C5090.unk0 = 30.0f;
+    lbl_803C5090.unk8 = 1.0f;
+    lbl_803C5090.unkC = 1.0f;
+    lbl_803C5090.unk10 = 320;
+    lbl_803C5090.unk12 = 224;
+    memset((u8*)&lbl_8023DD80, 0, 0x96000);
+    lbl_803C5090.unk14 = 448;
+    lbl_803C5090.unk1A = 0xFF;
+    lbl_803C5090.unk1B = 0xFF;
+    lbl_803C5090.unk1C = 0xFF;
 }
 
 // .text:0x8003A37C size:0x14C

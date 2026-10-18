@@ -25,6 +25,24 @@ typedef struct Gap80039AA8Table {
 } Gap80039AA8Table;
 extern Gap80039AA8Table lbl_800F7A40;
 extern u8 lbl_803CB828[3];
+typedef struct Gap80039AA8Screen {
+    /* 0x0 */ f32 unk0;
+    u8 _pad4[0x4];
+    /* 0x8 */ f32 unk8;
+    /* 0xC */ f32 unkC;
+    /* 0x10 */ u16 unk10;
+    /* 0x12 */ u16 unk12;
+    /* 0x14 */ u16 unk14;
+    u8 _pad16;
+    /* 0x17 */ u8 unk17;
+    u8 _pad18[2];
+    /* 0x1A */ u8 unk1A;
+    /* 0x1B */ u8 unk1B;
+    /* 0x1C */ u8 unk1C;
+    /* 0x1D */ u8 unk1D;
+    u8 _pad1E[2];
+} Gap80039AA8Screen;
+extern Gap80039AA8Screen lbl_803C5090;
 
 extern s32 lbl_803CBCA8;
 extern s32 lbl_803CBCB0;
