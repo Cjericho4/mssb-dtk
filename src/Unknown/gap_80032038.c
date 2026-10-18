@@ -1,8 +1,10 @@
 #include "Unknown/gap_80032038.h"
 
 // .text:0x80032038 size:0x2C
-void fn_80032038(void) {
-    return;
+s32 fn_80032038(Gap80032038SortEntry* a, Gap80032038SortEntry* b) {
+    if (a->key > b->key) return 1;
+    if (a->key < b->key) return -1;
+    return 0;
 }
 
 // .text:0x80032064 size:0x220

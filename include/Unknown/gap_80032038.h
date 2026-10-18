@@ -2,8 +2,15 @@
 #define __UNKNOWN_gap_80032038_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80032038SortEntry {
+    u32 unk0;
+    f32 key;
+} Gap80032038SortEntry;
+extern f32 lbl_8017FF78[3][4];
+extern f32 lbl_8017FFE0[3][4];
+void PSMTXCopy(f32 src[3][4], f32 dst[3][4]);
 
-void fn_80032038(void);
+s32 fn_80032038(Gap80032038SortEntry* a, Gap80032038SortEntry* b);
 void fn_80032064(void);
 void fn_80032284(void);
 void fn_800324EC(void);
