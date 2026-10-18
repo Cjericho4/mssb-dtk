@@ -1,8 +1,19 @@
 #include "Unknown/gap_80067AC8.h"
 
 // .text:0x80067AC8 size:0x78
-void fn_80067AC8(void) {
-    return;
+s16 fn_80067AC8(s16 key, s8 column) {
+    s32 i;
+    s32 j;
+    for (i = 0; i < 9; i++) {
+        for (j = 0; j < 5; j++) {
+            if (key == lbl_80108EDC[i][j]) {
+                if (column == -1) return key;
+                return lbl_80108EDC[i][column];
+            }
+            if (lbl_80108EDC[i][j] == -1) break;
+        }
+    }
+    return -1;
 }
 
 // .text:0x80067B40 size:0x108

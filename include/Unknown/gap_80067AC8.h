@@ -21,7 +21,8 @@ typedef struct Gap80067AC8Sound {
 extern Gap80067AC8Sound lbl_800EF808;
 void fn_80021518(s32 id, u32 sound);
 
-void fn_80067AC8(void);
+extern s16 lbl_80108EDC[][5];
+s16 fn_80067AC8(s16 key, s8 column);
 void fn_80067B40(void);
 void fn_80067C48(void);
 void fn_80067F70(void);
