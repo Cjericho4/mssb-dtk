@@ -12,7 +12,7 @@ void fn_80008E08(void) {
 
 // .text:0x80008FD0 size:0x3C
 void PostRetraceCallback(void) {
-    return;
+    if (OSGetResetButtonState() && lbl_803CBBAC != 0) lbl_803CBBC2[0] = 1;
 }
 
 // .text:0x8000900C size:0xC
@@ -44,7 +44,8 @@ void fn_800090B4(void) {
 
 // .text:0x80009144 size:0x3C
 void fn_80009144(void) {
-    return;
+    fn_800B0A5C_insertQueue(fn_800090B4, 0x6000);
+    fn_800B0A5C_insertQueue(fn_80009094, 0x7000);
 }
 
 // .text:0x80009180 size:0x55C

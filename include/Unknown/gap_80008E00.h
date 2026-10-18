@@ -2,6 +2,9 @@
 #define __UNKNOWN_gap_80008E00_H_
 
 #include "mssbTypes.h"
+extern u8 lbl_803CBBC2[2];
+BOOL OSGetResetButtonState(void);
+void fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
 extern s32 lbl_803CBBBC;
 typedef struct Gap80008E00State {
     u8 _pad0[0x88];
