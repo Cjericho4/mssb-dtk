@@ -2,6 +2,7 @@
 #include "menus/rep_0B08.h"
 #include "menus/gap_4B1AC.h"
 #include "UnknownHeaders.h"
+#include "menus/gap_3C03C.h"
 
 extern void fn_80068720(s32 state);
 
@@ -40,7 +41,30 @@ void fn_2_1B5C0(void) {
 
 // .text:0x0001B6CC size:0xE8
 void fn_2_1B6CC(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0: {
+        QueueEntry* entry = fn_800B0A5C_insertQueue(fn_2_409CC, 2);
+        entry->unk28 = 0;
+        scene->loadingState = 0;
+        scene->field15_0x28 = 1;
+        break;
+    }
+    case 1:
+        if (scene->loadingState == 1) scene->field15_0x28 = 2;
+        break;
+    case 2:
+        if (fn_2_4EB64() == 1) scene->field15_0x28 = 3;
+        break;
+    case 3:
+        if (fn_2_4EB2C() == 1) scene->field15_0x28 = 4;
+        break;
+    case 4:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
 }
 
 // .text:0x0001B7B4 size:0x79C
