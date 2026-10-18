@@ -32,8 +32,18 @@ void fn_8000FD78(s32 index, s16 a, s16 b, s16 c, s16 d) {
 }
 
 // .text:0x8000FD9C size:0x6C
-void fn_8000FD9C(void) {
-    return;
+void fn_8000FD9C(s32 index, s32 flag, s32 state) {
+    if (flag == 0) {
+        lbl_80366B18.entries[index].state = -1;
+        lbl_80366B18.entries[index].unk31 = 0;
+        lbl_80366B18.entries[index].unk32 = 0;
+        return;
+    }
+    if (state >= 0) {
+        lbl_80366B18.entries[index].state = state;
+    }
+    lbl_80366B18.entries[index].unk31 = flag;
+    lbl_80366B18.entries[index].unk32 = 0;
 }
 
 // .text:0x8000FE08 size:0x4C
