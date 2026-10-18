@@ -12,6 +12,11 @@ extern void C_MTXFrustum(Mtx44 matrix, f32 top, f32 bottom, f32 left, f32 right,
 
 extern void LITXForm(MenusLight* light, Mtx matrix);
 
+#include "string.h"
+extern Vec lbl_2_data_2E9D0;
+extern Vec lbl_2_data_2E9C4;
+extern f32 lbl_2_bss_B29C;
+
 extern hugeAnimStruct* lbl_2_bss_340140;
 extern f32 lbl_2_rodata_E88;
 
@@ -42,7 +47,23 @@ void fn_2_86470(void) {
 
 // .text:0x000868C8 size:0xEC
 void fn_2_868C8(void) {
-    return;
+    HugeAnimEntry2D94* entry = lbl_2_bss_340140->entries_2D94;
+    Vec position;
+    Vec delta;
+    memcpy(&position, &entry->pos, sizeof(Vec));
+    PSVECSubtract(&position, &lbl_2_data_2E9D0, &delta);
+    delta.x *= -1.0f;
+    delta.z *= -1.0f;
+    if (delta.x != 0.0f || delta.z != 0.0f) {
+        lbl_2_bss_B29C = fn_2_4A1E8(delta.z, delta.x);
+    }
+    memcpy(&lbl_2_data_2E9D0, &entry->pos, sizeof(Vec));
+    entry->pos.x = position.x;
+    entry->pos.y = position.y;
+    entry->pos.z = position.z;
+    entry->vel.x = lbl_2_data_2E9C4.x;
+    entry->vel.y = lbl_2_bss_B29C;
+    entry->vel.z = lbl_2_data_2E9C4.z;
 }
 
 // .text:0x000869B4 size:0x58
