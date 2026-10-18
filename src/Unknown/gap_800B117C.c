@@ -225,8 +225,10 @@ void fn_800B3F20(void) {
 }
 
 // .text:0x800B4048 size:0x3C
-void fn_800B4048(void) {
-    return;
+BOOL fn_800B4048(u32* result, Gap800B117CRequest* request, u16 type) {
+    request->type = type;
+    *result = fn_800B43A0(request);
+    return 1;
 }
 
 // .text:0x800B4084 size:0x1F4
@@ -240,9 +242,11 @@ void fn_800B4278(void) {
 }
 
 // .text:0x800B43A0 size:0x384
-void fn_800B43A0(void) {
-    return;
+#pragma dont_inline on
+u32 fn_800B43A0(Gap800B117CRequest* request) {
 }
+
+#pragma dont_inline reset
 
 // .text:0x800B4724 size:0x8
 void fn_800B4724(Gap800B117CObj* obj, s32 value) {

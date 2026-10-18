@@ -2,6 +2,10 @@
 #define __UNKNOWN_gap_800B117C_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800B117CRequest {
+    u32 unk0;
+    u16 type;
+} Gap800B117CRequest;
 typedef struct Gap800B117CVertex Gap800B117CVertex;
 typedef struct Gap800B117CTexture {
     u8 _pad0[8];
@@ -103,10 +107,10 @@ void f_BuildBoneSkinOrientationMatrix(void);
 void fn_800B3A78(void);
 void fn_800B3C04(void);
 void fn_800B3F20(void);
-void fn_800B4048(void);
+BOOL fn_800B4048(u32* result, Gap800B117CRequest* request, u16 type);
 void fn_800B4084(void);
 void fn_800B4278(void);
-void fn_800B43A0(void);
+u32 fn_800B43A0(Gap800B117CRequest* request);
 void fn_800B4724(Gap800B117CObj* obj, s32 value);
 void fn_800B472C(void);
 void haveActLayoutPointToGeoHeader(Gap800B117CObj* obj, s32 value);
