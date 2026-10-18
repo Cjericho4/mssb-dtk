@@ -166,8 +166,17 @@ void fn_80038CD0(void) {
 }
 
 // .text:0x80038E2C size:0x98
-void fn_80038E2C(void) {
-    return;
+void fn_80038E2C(Gap80035DD4Physics* phys) {
+    phys->unk0 = 0.8f;
+    phys->unk4 = 0.5f;
+    phys->unk8 = 100.0f;
+    phys->unkC = 5.0f;
+    phys->unk10 = 1.5f;
+    phys->unk14 = 0.001f;
+    phys->steps = 8;
+    phys->dt = (1.0f / phys->steps) / 60.0f;
+    phys->dtSq = phys->dt * phys->dt;
+    phys->unk24 = 1.0f / (2.0f * phys->dt);
 }
 
 // .text:0x80038EC4 size:0x44
