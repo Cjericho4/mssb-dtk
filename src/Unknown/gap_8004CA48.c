@@ -112,8 +112,10 @@ void fn_8004F964(void) {
 }
 
 // .text:0x8004FD64 size:0x3C
-void fn_8004FD64(void) {
-    return;
+s32 fn_8004FD64(s32 index) {
+    s32 selected = lbl_803C6028.indices[index];
+    if (lbl_803C6028.busy[selected] != 0) return -1;
+    return lbl_800FDE84[selected];
 }
 
 // .text:0x8004FDA0 size:0x48
