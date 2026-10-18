@@ -2,6 +2,9 @@
 #define __UNKNOWN_gap_80069B08_H_
 
 #include "mssbTypes.h"
+typedef void (*Gap80069B08Callback)(s32 a, s32 b, s32 c);
+typedef struct Gap80069B08Game { u8 _pad0[0x28]; u8 mode; } Gap80069B08Game;
+extern Gap80069B08Game lbl_80366158;
 typedef struct Gap80069B08Queue {
     u8 _pad0[0x12];
     u16 priority;
@@ -27,8 +30,8 @@ typedef struct Gap80069B08Tracker {
 extern Gap80069B08Tracker starMissionCompletionTracker;
 extern f32 lbl_8010B590[][7];
 
-extern s32 lbl_803CBD38;
-extern s32 lbl_803CBD3C;
+extern Gap80069B08Callback lbl_803CBD38;
+extern Gap80069B08Callback lbl_803CBD3C;
 
 void fn_80069B08(void);
 void fn_80069B68(void);
@@ -51,9 +54,9 @@ void fn_8006C13C(void);
 void fn_8006C268(void);
 void fn_8006C2B4(void);
 void fn_8006C398(void);
-void fn_8006C3F0(s32 value);
-void fn_8006C3F8(void);
-void fn_8006C43C(s32 value);
+void fn_8006C3F0(Gap80069B08Callback value);
+void fn_8006C3F8(s32 a, s32 b, s32 c);
+void fn_8006C43C(Gap80069B08Callback value);
 void fn_8006C444(void);
 void fn_8006C488(void);
 void challengeDrawStarsOnMissionMenu(void);

@@ -106,17 +106,17 @@ void fn_8006C398(void) {
 }
 
 // .text:0x8006C3F0 size:0x8
-void fn_8006C3F0(s32 value) {
+void fn_8006C3F0(Gap80069B08Callback value) {
     lbl_803CBD38 = value;
 }
 
 // .text:0x8006C3F8 size:0x44
-void fn_8006C3F8(void) {
-    return;
+void fn_8006C3F8(s32 a, s32 b, s32 c) {
+    if (lbl_80366158.mode != 1 && lbl_803CBD38 != NULL) lbl_803CBD38(a, b, c);
 }
 
 // .text:0x8006C43C size:0x8
-void fn_8006C43C(s32 value) {
+void fn_8006C43C(Gap80069B08Callback value) {
     lbl_803CBD3C = value;
 }
 
