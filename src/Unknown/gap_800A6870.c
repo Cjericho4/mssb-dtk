@@ -330,7 +330,17 @@ void fn_800A94A8(u8 flag) {
 
 // .text:0x800A94C4 size:0x5C
 void fn_800A94C4(void) {
-    return;
+    u32 mask = 0;
+    Gap800A6870Pad* p = lbl_803C77B8;
+    s32 i = 0;
+    do {
+        if (p->err == 0) {
+            mask |= 0x80000000 >> i;
+        }
+        i++;
+        p++;
+    } while (i < 4);
+    PADRecalibrate(mask);
 }
 
 // .text:0x800A9520 size:0x2B0

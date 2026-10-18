@@ -144,6 +144,13 @@ void GXCopyDisp(u8* destination, u8 clear);
 
 void OSWakeupThread(Gap800A6870SleepQueue* queue);
 void PPCSync(void);
+BOOL PADRecalibrate(u32 mask);
+typedef struct Gap800A6870Pad {
+    u8 _pad0[0x8];
+    /* 0x8 */ s8 err;
+    u8 _pad9[0x17];
+} Gap800A6870Pad;
+extern Gap800A6870Pad lbl_803C77B8[4];
 
 void AISetStreamPlayState(u32 state);
 BOOL OSDisableInterrupts(void);
