@@ -156,8 +156,20 @@ void fn_80021228(u8 mode) {
 }
 
 // .text:0x8002128C size:0x7C
-void fn_8002128C(void) {
-    return;
+void fn_8002128C(u8 mode) {
+    s32 value = 1;
+
+    if (mode) {
+        value = mode;
+    }
+    lbl_800EF808.unk397 = value;
+    if (OSGetSoundMode() == 0) {
+        mode = 0;
+    } else if (mode != 2) {
+        mode = 1;
+    }
+    lbl_800EF808.soundMode = mode;
+    sndOutputMode(mode);
 }
 
 // .text:0x80021308 size:0xEC
