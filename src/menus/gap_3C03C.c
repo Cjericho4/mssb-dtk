@@ -599,7 +599,11 @@ void fn_2_45E48(void) {
 
 // .text:0x00045FDC size:0x110
 void fn_2_45FDC(void) {
-    return;
+    s32 i;
+    for (i = 0; i < 54; i++) {
+        Gap3C03CObj* obj = &lbl_2_bss_1A8248->gap3C03CObjects[i];
+        obj->previous = obj->current;
+    }
 }
 
 // .text:0x000460EC size:0x4
