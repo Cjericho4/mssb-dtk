@@ -90,7 +90,8 @@ typedef struct Rep10C0State {
     u8 unk197856;
     u8 _pad197857[0xC];
     s8 inputIndex; /* 0x197863 */
-    u8 _pad197864[0x63];
+    u8 unk197864;
+    u8 _pad197865[0x62];
     u8 copiedFlags[20]; /* 0x1978C7 */
     u8 _pad1978DB[0x18];
     u8 unk1978F3;

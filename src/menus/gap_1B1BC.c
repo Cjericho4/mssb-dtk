@@ -4,6 +4,9 @@
 #include "UnknownHeaders.h"
 #include "menus/gap_3C03C.h"
 
+extern void fn_8001F228(void);
+extern void fn_80021410(void);
+
 extern void fn_80068720(s32 state);
 
 // .text:0x0001B1BC size:0x158
@@ -85,7 +88,28 @@ void fn_2_1BF50(void) {
 
 // .text:0x0001BFD0 size:0x104
 void fn_2_1BFD0(void) {
-    return;
+    fn_80068720(10);
+    lbl_2_bss_1A824C->flag1972BC = 1;
+    lbl_2_bss_1A824C->flag1972C0 = 1;
+    lbl_2_bss_1A824C->unk1976D6 = 0;
+    lbl_2_bss_1A8248->unk44F2 = 0;
+    if (lbl_2_bss_1A824C->unk197864 == 0) fn_2_4E7EC();
+    fn_8001F228();
+    fn_80021410();
+    fn_800ACFB0(lbl_800EF808.ptrArray[0]);
+    if (lbl_2_bss_1A8248->unk44F4 != 0) {
+        fn_2_4E8BC();
+        fn_2_4E904();
+        fn_2_4E928();
+    } else {
+        fn_2_4E928();
+    }
+    fn_2_4E94C();
+    if (lbl_80366B18.archive != NULL) {
+        fn_800ACFB0(lbl_80366B18.archive);
+        lbl_80366B18.archive = NULL;
+    }
+    lbl_2_bss_1A823C->unk34 = 0;
 }
 
 // .text:0x0001C0D4 size:0x148

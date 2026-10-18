@@ -105,7 +105,9 @@ typedef struct MenusSceneState {
     u8 readyFlags[9]; /* 0x4431; extent unknown */
     u8 _pad443A[0xB8];
     u8 unk44F2;
-    u8 _pad44F3[4];
+    u8 _pad44F3;
+    s8 unk44F4;
+    u8 _pad44F5[2];
     u8 unk44F7;
 } MenusSceneState;
 
