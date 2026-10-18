@@ -314,8 +314,15 @@ void fn_80024C6C(void) {
 }
 
 // .text:0x80024D2C size:0x84
-void fn_80024D2C(void) {
-    return;
+u32 fn_80024D2C(Gap8002244CKeyAnimation* animation) {
+    Gap8002244CKeyTrack* track = &animation->tracks[animation->trackIndex];
+    s32 i = track->count;
+    while (i-- != 0) {
+        if ((f32)(u32)(track->keys[i].time & 0xFFF) <= animation->time) {
+            return track->keys[i].word & 0xF0000000;
+        }
+    }
+    return 0;
 }
 
 // .text:0x80024DB0 size:0x1F4

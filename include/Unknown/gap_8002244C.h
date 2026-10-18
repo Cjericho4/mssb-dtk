@@ -116,7 +116,19 @@ void LERPToNewRange_Float(void);
 f32 LinearInterpolateToNewRange(f32 x, f32 inMin, f32 inMax, f32 outMin, f32 outMax);
 BOOL fn_80024C04(s32 index);
 void fn_80024C6C(void);
-void fn_80024D2C(void);
+typedef union Gap8002244CKey {
+    u32 word;
+    struct { u16 time, value; };
+} Gap8002244CKey;
+typedef struct Gap8002244CKeyTrack { u16 unk0, count; Gap8002244CKey* keys; } Gap8002244CKeyTrack;
+typedef struct Gap8002244CKeyAnimation {
+    f32 time;
+    u8 _pad4[6];
+    u16 trackIndex;
+    u8 _padC[0xC];
+    Gap8002244CKeyTrack tracks[1];
+} Gap8002244CKeyAnimation;
+u32 fn_80024D2C(Gap8002244CKeyAnimation* animation);
 void fn_80024DB0(void);
 void fn_80024FA4(void);
 void fn_80025C58(void);
