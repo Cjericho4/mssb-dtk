@@ -2,6 +2,7 @@
 #define __UNKNOWN_gap_80048BEC_H_
 
 #include "mssbTypes.h"
+struct Gap80048BECActor;
 typedef struct Gap80048BECMenu {
     u8 _pad0[0x16];
     u16 id;
@@ -23,6 +24,8 @@ extern s32 lbl_803CBD0C;
 typedef struct Gap80048BECObj {
     u8 _pad0[0x3E];
     /* 0x3E */ u8 state;
+    u8 _pad3F[0x1BB];
+    u16 actorIndex; /* 0x1FA */
 } Gap80048BECObj;
 
 extern s32 lbl_803CB848;
@@ -68,7 +71,7 @@ void fn_8004B208(void);
 void fn_8004B270(void);
 void fn_8004B284(void);
 void fn_8004B6EC(void);
-void fn_8004B7B4(void);
+s32 fn_8004B7B4(Gap80048BECObj* obj, struct Gap80048BECActor** actor);
 void fn_8004B7F4(void);
 void fn_8004BAEC(void);
 void fn_8004BD6C(void);
@@ -81,5 +84,8 @@ void fn_8004C5F8(void);
 void fn_8004C9FC(void);
 void fn_8004CA08(s32 value);
 void fn_8004CA14(s32 a, s32 b);
+
+typedef struct Gap80048BECActor Gap80048BECActor;
+s32 fn_800B2BA8(Gap80048BECActor* actor, u16 index, Gap80048BECActor* other, u16 otherIndex);
 
 #endif // !__UNKNOWN_gap_80048BEC_H_

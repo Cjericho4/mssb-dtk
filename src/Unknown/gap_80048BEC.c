@@ -211,8 +211,9 @@ void fn_8004B6EC(void) {
 }
 
 // .text:0x8004B7B4 size:0x40
-void fn_8004B7B4(void) {
-    return;
+s32 fn_8004B7B4(Gap80048BECObj* obj, Gap80048BECActor** actor) {
+    if (obj->actorIndex != 0xFFFF) fn_800B2BA8(*actor, obj->actorIndex, NULL, 0);
+    return 0;
 }
 
 // .text:0x8004B7F4 size:0x2F8
