@@ -187,8 +187,14 @@ BOOL fn_80023DFC(Gap8002244CObj* obj, Gap8002244CVector* out) {
 }
 
 // .text:0x80023E48 size:0xA4
-void fn_80023E48(void) {
-    return;
+void fn_80023E48(Gap8002244CObj* obj, Gap8002244CVector* v) {
+    obj->unkC = (obj->unkC + obj->unk18) % obj->unk4;
+    if (obj->unk10 == obj->unkC) {
+        obj->unk10 = (obj->unk10 + obj->unk18) % obj->unk4;
+    }
+    obj->unk18 = 1;
+    obj->vectors[obj->unkC] = *v;
+    obj->unk8 += (obj->unk8 < obj->unk4);
 }
 
 // .text:0x80023EEC size:0x20
