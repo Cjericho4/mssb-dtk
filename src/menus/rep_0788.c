@@ -388,8 +388,22 @@ void fn_2_262D0(void) {
 }
 
 // .text:0x00026684 size:0xF0
-void fn_2_26684(void) {
-    return;
+void fn_2_26684(DrawingSceneStruct* scene, Rep0788Item* item) {
+    s32 result = fn_2_53BC8(item);
+    if ((s16)result != -1) item->state = result;
+    switch (item->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
+        item->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags |= 2;
+        item->state = 0x25;
+        break;
+    case 5: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x00026774 size:0xF0
