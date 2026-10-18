@@ -2,6 +2,8 @@
 #define __UNKNOWN_gap_80032038_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80032038Chain { struct Gap80032038Chain* next; } Gap80032038Chain;
+extern Gap80032038Chain* lbl_803CBC74;
 extern f32 lbl_8017ED68[];
 typedef struct Gap80032038SortEntry {
     u32 unk0;
@@ -21,7 +23,7 @@ void fn_800332B8(void);
 f32 fn_800335BC(s32 angle);
 f32 fn_800335EC(s32 angle);
 void fn_80033620(void);
-void fn_80033794(void);
+void fn_80033794(Gap80032038Chain* head);
 void fn_800337CC(void);
 void pitchingMachinePitching(void);
 void fn_80033928(void);

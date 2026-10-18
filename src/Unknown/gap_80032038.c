@@ -57,8 +57,13 @@ void fn_80033620(void) {
 }
 
 // .text:0x80033794 size:0x38
-void fn_80033794(void) {
-    return;
+void fn_80033794(Gap80032038Chain* head) {
+    Gap80032038Chain* tail = head;
+    while (tail != NULL && tail->next != NULL) tail = tail->next;
+    if (tail != NULL) {
+        tail->next = lbl_803CBC74;
+        lbl_803CBC74 = head;
+    }
 }
 
 // .text:0x800337CC size:0x90
