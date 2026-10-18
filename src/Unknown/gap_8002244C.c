@@ -178,8 +178,13 @@ BOOL fn_80023D4C(Gap8002244CObj* obj, Gap8002244CVector* out) {
 }
 
 // .text:0x80023D98 size:0x64
-void fn_80023D98(void) {
-    return;
+static inline s32 previousSlot(s32 count) { return count - 1; }
+BOOL fn_80023D98(Gap8002244CObj* obj, Gap8002244CVector* out) {
+    s32 current = obj->current;
+    if (current == obj->unk10) return 0;
+    obj->current = (current + previousSlot(obj->unk4)) % obj->unk4;
+    *out = obj->vectors[obj->current];
+    return 1;
 }
 
 // .text:0x80023DFC size:0x4C
