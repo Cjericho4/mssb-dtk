@@ -111,8 +111,8 @@ void fn_800B2B4C(Gap800B117CObj* obj, f32 value) {
 }
 
 // .text:0x800B2B54 size:0x18
-void fn_800B2B54(void) {
-    return;
+void fn_800B2B54(Gap800B117CObj* obj, u16 index, u8 value) {
+    obj->entries[index]->unk134 = value;
 }
 
 // .text:0x800B2B6C size:0x8

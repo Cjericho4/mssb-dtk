@@ -5,7 +5,9 @@
 typedef struct Gap800B117CObj {
     u8 _pad0[0x10];
     /* 0x10 */ s32 unk10;
-    u8 _pad14[0x68];
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ struct Gap800B117CObj** entries;
+    u8 _pad1C[0x60];
     /* 0x7C */ s32 unk7C;
     /* 0x80 */ s16 unk80;
     /* 0x82 */ s16 unk82;
@@ -14,6 +16,8 @@ typedef struct Gap800B117CObj {
     /* 0x88 */ s32 unk88;
     u8 _pad8C[0x4];
     /* 0x90 */ f32 unk90;
+    u8 _pad94[0xA0];
+    /* 0x134 */ u16 unk134;
 } Gap800B117CObj;
 typedef struct Gap800B117CFlags {
     u8 _pad0[0x8A];
@@ -45,7 +49,7 @@ void fn_800B27DC(void);
 void fn_800B2854(void);
 void fn_800B2AC8(void);
 void fn_800B2B4C(Gap800B117CObj* obj, f32 value);
-void fn_800B2B54(void);
+void fn_800B2B54(Gap800B117CObj* obj, u16 index, u8 value);
 void Set_FUN_800b2b6c(Gap800B117CObj* obj, s32 value);
 void fn_800B2B74(void);
 void fn_800B2BA8(void);
