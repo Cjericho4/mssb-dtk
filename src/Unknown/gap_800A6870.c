@@ -19,7 +19,7 @@ void fn_800A6890(void) {
 
 // .text:0x800A68D4 size:0x2C
 void fn_800A68D4(void) {
-    return;
+    OSResumeThread(&lbl_803C6CF8.thread);
 }
 
 // .text:0x800A6900 size:0x380

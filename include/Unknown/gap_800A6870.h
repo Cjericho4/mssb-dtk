@@ -6,8 +6,13 @@ extern u8 lbl_803CC134;
 extern u8 lbl_803CC135;
 extern s32 lbl_803CC12C;
 extern s32 lbl_803CC13C;
+typedef struct Gap800A6870Thread {
+    u8 _pad0[0x318];
+} Gap800A6870Thread;
 typedef struct Gap800A6870Load {
-    u8 _pad0[0x6D0];
+    u8 _pad0[0x318];
+    Gap800A6870Thread thread; /* 0x318 */
+    u8 _pad630[0xA0];
     /* 0x6D0 */ s32 unk6D0;
     u8 _pad6D4[0x4];
     /* 0x6D8 */ u8 unk6D8;
@@ -75,5 +80,7 @@ void fn_800A9424(void);
 void fn_800A94A8(u8 flag);
 void fn_800A94C4(void);
 void fn_800A9520(void);
+
+s32 OSResumeThread(Gap800A6870Thread* thread);
 
 #endif // !__UNKNOWN_gap_800A6870_H_
