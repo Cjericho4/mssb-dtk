@@ -1,8 +1,8 @@
 #include "Unknown/gap_80062578.h"
 
 // .text:0x80062578 size:0x2C
-void fn_80062578(void) {
-    return;
+BOOL fn_80062578(void) {
+    return lbl_803C66B0.busy == 0 && lbl_803C66B0.pending == 0;
 }
 
 // .text:0x800625A4 size:0xD0

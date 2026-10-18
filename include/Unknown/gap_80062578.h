@@ -2,6 +2,12 @@
 #define __UNKNOWN_gap_80062578_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80062578Status {
+    u8 _pad0[0x5D];
+    u8 busy; /* 0x5D */
+    u8 pending; /* 0x5E */
+} Gap80062578Status;
+extern Gap80062578Status lbl_803C66B0;
 typedef struct Gap80062578Flags {
     /* 0x0 */ s32 unk0;
     /* 0x4 */ u8 unk4;
@@ -27,7 +33,7 @@ typedef struct Gap80062578Scene {
     void (*callback)(void); /* 0x94 */
 } Gap80062578Scene;
 
-void fn_80062578(void);
+BOOL fn_80062578(void);
 void fn_800625A4(void);
 void fn_80062674(void);
 void fn_800626EC(void);
