@@ -22,7 +22,12 @@ void fn_80022634(void) {
 
 // .text:0x800227A0 size:0x44
 void fn_800227A0(void) {
-    return;
+    u8 flags = lbl_803716B8.flags;
+    lbl_803716B8.unk1E9 = 0;
+    lbl_803716B8.flags = flags | 1;
+    lbl_803716B8.flags |= 2;
+    lbl_803716B8.flags |= 4;
+    lbl_803716B8.flags |= 8;
 }
 
 // .text:0x800227E4 size:0x1E8

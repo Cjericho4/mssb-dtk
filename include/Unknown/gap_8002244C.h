@@ -5,6 +5,8 @@
 typedef struct Gap8002244CFlags {
     u8 _pad0[0x1E8];
     /* 0x1E8 */ u8 unk1E8;
+    u8 unk1E9;
+    u8 flags;
 } Gap8002244CFlags;
 extern Gap8002244CFlags lbl_803716B8;
 typedef struct Gap8002244CObj {
