@@ -36,11 +36,11 @@ extern void (*lbl_2_data_30898[])(Rep1028Obj*);
 
 extern void (*lbl_2_data_308A4[])(Rep1028Obj*);
 
-static inline void menuSetupAnimation(s32 index, s16 id) {
+static inline void menuSetupAnimation(s32 index, s16 id, s32 valueIndex) {
     u32 value;
     ActRelatedSub* sub;
     if (lbl_2_bss_3401BC == 0) return;
-    value = lbl_2_bss_3401BC->values[3];
+    value = lbl_2_bss_3401BC->values[valueIndex];
     sub = &((ActRelatedEntry*)lbl_2_bss_340140->entries_68)[index].sub;
     sub->unk38_s32 = value;
     sub->unk42 = id;
@@ -524,7 +524,7 @@ void fn_2_90698(Rep1028Obj* obj) {
 // .text:0x00090718 size:0xDC
 void fn_2_90718(Rep1028Obj* obj) {
     fn_2_8AC84(obj->index, 1);
-    menuSetupAnimation(obj->index, 2);
+    menuSetupAnimation(obj->index, 2, 3);
     obj->countdown = 80;
     obj->unkA0 = 0;
     obj->state = 1;
@@ -625,8 +625,22 @@ void fn_2_90AB0(Rep1028Obj* obj) {
 }
 
 // .text:0x00090ABC size:0x114
-void fn_2_90ABC(void) {
-    return;
+void fn_2_90ABC(Rep1028Obj* obj) {
+    s32 index;
+    hugeAnimStruct* render;
+    Rep1028Obj* target;
+    HugeAnimEntry2D94* entries;
+    fn_2_8AC84(obj->index, 1);
+    menuSetupAnimation(obj->index, 1, 1);
+    index = obj->index;
+    render = lbl_2_bss_340140;
+    target = &lbl_2_bss_1A8248->rep1028Objects[index];
+    entries = render->entries_2D94;
+    if (entries != 0) {
+        target->unkA6 = 0;
+        entries[index].callback = lbl_2_data_30900[0];
+    }
+    obj->state = 1;
 }
 
 // .text:0x00090BD0 size:0x38
