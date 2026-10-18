@@ -69,7 +69,9 @@ void fn_80022CB4(void) {
 
 // .text:0x80022D58 size:0x54
 void fn_80022D58(void) {
-    return;
+    lbl_803716B8.flag1C8 = lbl_803716B8.flag1C9 = 0;
+    memset(lbl_803716B8.header, 0, 0x18);
+    memset(lbl_803716B8.records, 0, 0x1B0);
 }
 
 // .text:0x80022DAC size:0x2CC
