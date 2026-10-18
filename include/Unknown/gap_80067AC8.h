@@ -38,7 +38,22 @@ void fn_800A8B78(Gap80067AC8Voice* voice);
 void fn_80068720(u8 index);
 void fn_8006877C(void);
 void fn_80068838(void);
-void fn_800697B0(void);
+extern u16 lbl_803CBD24;
+extern char lbl_80109044[0x10];
+typedef struct Gap80067AC8Loader {
+    u8 _pad0[0x79C];
+    /* 0x79C */ u32 aramAddr;
+    u8 _pad7A0[0x60];
+} Gap80067AC8Loader;
+extern Gap80067AC8Loader lbl_80366B18;
+typedef struct Gap80067AC8LoadStatus {
+    u8 _pad0[0x715];
+    /* 0x715 */ u8 done;
+} Gap80067AC8LoadStatus;
+extern Gap80067AC8LoadStatus lbl_803C6CF8;
+u32 ARAMTransfer(char* name, s32 a, s32 b, s32 c);
+void fn_800111B4(u32 aramAddr);
+BOOL fn_800697B0(void);
 void fn_80069854(void);
 void fn_800698F8(void);
 void fn_80069A68(void);
