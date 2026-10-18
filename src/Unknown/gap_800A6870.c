@@ -54,8 +54,8 @@ void ARAMTransfer(void) {
 }
 
 // .text:0x800A750C size:0x38
-void fn_800A750C(void) {
-    return;
+BOOL fn_800A750C(s32 unused, Gap800A6870DVDFile* file) {
+    return DVDFastOpen(lbl_803C6CF8.entryNumber, file) != 0;
 }
 
 // .text:0x800A7544 size:0x24

@@ -54,7 +54,7 @@ void fn_800A6D10(void);
 void fn_800A6E24(void);
 void fn_800A6F94(void);
 void ARAMTransfer(void);
-void fn_800A750C(void);
+BOOL fn_800A750C(s32 unused, Gap800A6870DVDFile* file);
 s32 ConvertPathToEntryNum(Gap800A6870File* file);
 void fn_800A7568(void);
 void fn_800A75EC(void);
