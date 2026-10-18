@@ -89,8 +89,19 @@ s32 fn_8005268C(void) {
 }
 
 // .text:0x80052694 size:0xA0
-void fn_80052694(void) {
-    return;
+void fn_80052694(s32 camera) {
+    if (camera < 0) {
+        camera = 0;
+    } else if (camera >= 2) {
+        camera = 1;
+    }
+    lbl_803CBD14 = camera;
+    GXSetProjection(lbl_803C639C.alternate[camera].projection, 0);
+    if (lbl_803CB880 == 1) {
+        GXSetScissor(0, 0, 640, 448);
+    } else if (lbl_803CB880 == 2) {
+        GXSetScissor(camera * 320, 0, 320, 448);
+    }
 }
 
 // .text:0x80052734 size:0x34

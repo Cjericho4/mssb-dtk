@@ -10,7 +10,10 @@ typedef struct Gap800506E8Task {
     u8 id;
 } Gap800506E8Task;
 Gap800506E8Task* fn_800B0A5C_insertQueue(void (*callback)(void), u16 priority);
-typedef struct Gap800506E8Camera { u8 _pad0[0xA8]; } Gap800506E8Camera;
+typedef struct Gap800506E8Camera {
+    /* 0x00 */ f32 projection[4][4];
+    u8 _pad40[0x68];
+} Gap800506E8Camera;
 typedef struct Gap800506E8Cameras {
     Gap800506E8Camera slots[2];
     Gap800506E8Camera alternate[2];
@@ -52,7 +55,9 @@ void fn_800521B0(void);
 void fn_8005240C(void);
 void fn_80052634(Gap800506E8Actor* actor, s32 index);
 s32 fn_8005268C(void);
-void fn_80052694(void);
+void GXSetProjection(f32 mtx[4][4], s32 type);
+void GXSetScissor(u32 left, u32 top, u32 width, u32 height);
+void fn_80052694(s32 camera);
 Gap800506E8Camera* fn_80052734(s32 index);
 Gap800506E8Camera* fn_80052768(s32 index);
 void fn_80052798(s32 value);
