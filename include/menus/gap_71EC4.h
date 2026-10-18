@@ -73,7 +73,8 @@ typedef struct MenusSceneFlags {
 extern MenusSceneFlags lbl_803C5EA4;
 
 typedef struct MenusQueueState {
-    u8 _pad0[0x47];
+    u8 active;
+    u8 _pad1[0x46];
     u8 pending;
 } MenusQueueState;
 extern MenusQueueState lbl_803C50E8;

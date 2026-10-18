@@ -3,6 +3,14 @@
 
 #include "mssbTypes.h"
 
+typedef struct MenusExitTransition {
+    u8 _pad0[0x10];
+    u16 state;
+    u8 _pad12[6];
+    u16 step;
+} MenusExitTransition;
+extern MenusExitTransition lbl_2_bss_340234;
+
 typedef struct MenusExitState {
     u8 _pad0[0x3E];
     u8 unk3E;
