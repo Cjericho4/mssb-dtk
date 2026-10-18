@@ -11,8 +11,11 @@ void fn_800AD830(void) {
 }
 
 // .text:0x800AD914 size:0x48
-void fn_800AD914(void) {
-    return;
+void fn_800AD914(Gap800AD780Movie* movie) {
+    if (movie->flags & 1) {
+        movie->flags = 2;
+        movie->startTime = OSGetTime();
+    }
 }
 
 // .text:0x800AD95C size:0x98

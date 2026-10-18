@@ -2,6 +2,13 @@
 #define __UNKNOWN_gap_800AD780_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800AD780Movie {
+    u8 _pad0[0x1A0];
+    u64 startTime;
+    u8 _pad1A8[0x12];
+    u8 flags; /* 0x1BA */
+} Gap800AD780Movie;
+u64 OSGetTime(void);
 typedef struct Gap800AD780MessageQueue Gap800AD780MessageQueue;
 extern Gap800AD780MessageQueue lbl_802FB870;
 extern u8 lbl_803CC17F;
@@ -42,7 +49,7 @@ extern u8 lbl_803CC17D;
 
 void fn_800AD780(void);
 void fn_800AD830(void);
-void fn_800AD914(void);
+void fn_800AD914(Gap800AD780Movie* movie);
 void fn_800AD95C(void);
 void fn_800AD9F4(void);
 u8 fn_800ADAFC(void);
