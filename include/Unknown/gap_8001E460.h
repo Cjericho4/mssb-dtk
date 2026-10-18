@@ -2,6 +2,7 @@
 #define __UNKNOWN_gap_8001E460_H_
 
 #include "mssbTypes.h"
+void sndMasterVolume(u8 volume, u16 time, u8 music, u8 effects);
 struct Gap8001E460Object;
 extern s32 lbl_803CB7AC[2];
 extern u8 lbl_803CBBC0;
@@ -56,7 +57,7 @@ void fn_8002059C(void);
 void fn_80020624(void);
 void fn_800206FC(void);
 void fn_80021064(void);
-void fn_80021188(void);
+s32 fn_80021188(void);
 void fn_800211BC(void);
 u8 fn_800211F0(void);
 void fn_80021204(void);
