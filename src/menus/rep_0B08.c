@@ -6,6 +6,7 @@
 
 extern Rep0B08AnimationConfig lbl_2_data_3C84[];
 extern Vec lbl_2_data_2EA4[];
+extern s16 lbl_2_data_3D30[][4];
 extern Vec lbl_2_data_3150[];
 extern f32 lbl_2_data_3EF4[];
 extern f32 lbl_2_data_3F0C[];
@@ -857,8 +858,18 @@ void fn_2_6CBB0(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006CCB8 size:0x11C
-void fn_2_6CCB8(void) {
-    return;
+void fn_2_6CCB8(Rep0B08Obj* obj) {
+    s32 i;
+    fn_2_69E1C(obj->index);
+    if (obj->unk50 <= 0.0f) {
+        obj->unkBA = 4;
+        obj->unkC4 = 1;
+        for (i = 0; i < 4; i++) {
+            if (lbl_2_bss_1A8248->rep0B08Objects[0].unkB0 == lbl_2_data_3D30[lbl_2_bss_1A8248->rep0B08Objects[0].unkB2][i]) lbl_2_bss_1A8248->unk4448 = i;
+        }
+        lbl_2_bss_1A8248->rep0B08Objects[0].unkB2 = lbl_2_bss_1A8248->rep0B08Objects[0].unkB0;
+        obj->state = 2;
+    }
 }
 
 // .text:0x0006CDD4 size:0x26C

@@ -119,7 +119,9 @@ typedef struct MenusSceneState {
     u8 unk442F;
     u8 _pad4430;
     u8 readyFlags[9]; /* 0x4431; extent unknown */
-    u8 _pad443A[0x13];
+    u8 _pad443A[0xE];
+    u8 unk4448;
+    u8 _pad4449[4];
     u8 resetFlags[3][54]; /* 0x444D */
     u8 _pad44EF[3];
     u8 unk44F2;
@@ -214,7 +216,7 @@ void fn_2_6C97C(Rep0B08Obj* obj);
 void fn_2_6C988(void);
 void fn_2_6CB78(Rep0B08Obj* obj);
 void fn_2_6CBB0(Rep0B08Obj* obj);
-void fn_2_6CCB8(void);
+void fn_2_6CCB8(Rep0B08Obj* obj);
 void fn_2_6CDD4(void);
 void fn_2_6D040(Rep0B08Obj* obj);
 void fn_2_6D078(Rep0B08Obj* obj);
