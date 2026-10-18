@@ -2,6 +2,20 @@
 #define __UNKNOWN_gap_80062578_H_
 
 #include "mssbTypes.h"
+typedef struct Gap80062578Request {
+    u32 unk0;
+    u32 unk4;
+    s32 value; /* 0x8 */
+} Gap80062578Request;
+extern Gap80062578Request lbl_80108B84;
+void fn_800215F8(Gap80062578Request* request);
+u32 sndFXCheck(u32 handle);
+typedef struct Gap80062578Sound {
+    u8 _pad0[0x98];
+    u32 sound98;
+} Gap80062578Sound;
+extern Gap80062578Sound lbl_800EF808;
+void fn_80021518(s32 id, u32 sound);
 typedef struct Gap80062578Status {
     u8 _pad0[0x5D];
     u8 busy; /* 0x5D */
@@ -38,7 +52,7 @@ void fn_800625A4(void);
 void fn_80062674(void);
 void fn_800626EC(void);
 void fn_80062744(void);
-void fn_80062764(void);
+void fn_80062764(s32 value);
 void fn_80062794(void);
 void fn_800627C4(void);
 void fn_800627F8(void);

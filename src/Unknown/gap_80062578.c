@@ -29,8 +29,9 @@ void fn_80062744(void) {
 }
 
 // .text:0x80062764 size:0x30
-void fn_80062764(void) {
-    return;
+void fn_80062764(s32 value) {
+    lbl_80108B84.value = value;
+    fn_800215F8(&lbl_80108B84);
 }
 
 // .text:0x80062794 size:0x30
