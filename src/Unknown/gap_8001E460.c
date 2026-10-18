@@ -69,8 +69,9 @@ void calledWhenStartingMatch(void) {
 }
 
 // .text:0x80020218 size:0x34
-void fn_80020218(void) {
-    return;
+BOOL fn_80020218(void) {
+    if ((u32)lbl_8037169C.state == 13 || (u32)lbl_8037169C.state == 14 || (u32)lbl_8037169C.state == 15) return 1;
+    return 0;
 }
 
 // .text:0x8002024C size:0x2C

@@ -47,7 +47,7 @@ void fn_8001FC4C(void);
 void fn_8001FDD4(struct Gap8001E460Object* obj);
 void fn_8001FE00(void);
 void calledWhenStartingMatch(void);
-void fn_80020218(void);
+BOOL fn_80020218(void);
 void fn_8002024C(void);
 void fn_80020278(void);
 void fn_80020388(void);
@@ -95,7 +95,9 @@ void fn_800B9AA8(u32 value);
 typedef struct Gap8001E460Resource Gap8001E460Resource;
 typedef struct Gap8001E460ResourceState {
     Gap8001E460Resource* resource;
-    u8 _pad4[0x18];
+    u8 _pad4[0xC];
+    u8 state; /* 0x10 */
+    u8 _pad11[0xB];
 } Gap8001E460ResourceState;
 extern Gap8001E460ResourceState lbl_8037169C;
 void fn_800ACF14(Gap8001E460Resource* resource);
