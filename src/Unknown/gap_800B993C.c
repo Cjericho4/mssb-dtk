@@ -84,6 +84,7 @@ void GetColorFromQuant(void) {
 }
 
 // .text:0x800BC0C4 size:0x724
+// TODO: remove pragma once LoadGeoPalette is decompiled (keeps stub from inlining)
 #pragma dont_inline on
 void DOVARender(Gap800B993CObj* obj, f32 matrix[3][4], u32 a, u32 b) {
     return;
@@ -123,13 +124,20 @@ void DOGet(void) {
 }
 
 // .text:0x800BCB44 size:0x21C
-void LoadGeoPalette(void) {
-    return;
+// TODO: remove pragma once LoadGeoPalette is decompiled (keeps stub from inlining)
+#pragma dont_inline on
+Gap800B993CGeo* LoadGeoPalette(Gap800B993CGeoFile* file) {
+    return file->geo;
 }
+#pragma dont_inline reset
 
 // .text:0x800BCD60 size:0x5C
-void convertGeometryAndSknHeader(void) {
-    return;
+void convertGeometryAndSknHeader(Gap800B993CGeoFile* file, Gap800B993CSkin* skin) {
+    Gap800B993CGeo* geo = LoadGeoPalette(file);
+    if (skin != NULL) {
+        SKNLoadFile(skin, geo);
+    }
+    file->geo = geo;
 }
 
 // .text:0x800BCDBC size:0x7C

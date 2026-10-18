@@ -47,8 +47,15 @@ void fn_800BC824(Gap800B993CObj* obj, s32 value);
 void DOSetWorldMatrix(Gap800B993CObj* obj, f32 matrix[3][4]);
 void InitDisplayObjWithLayout(void);
 void DOGet(void);
-void LoadGeoPalette(void);
-void convertGeometryAndSknHeader(void);
+typedef struct Gap800B993CGeo Gap800B993CGeo;
+typedef struct Gap800B993CSkin Gap800B993CSkin;
+typedef struct Gap800B993CGeoFile {
+    /* 0x00 */ Gap800B993CGeo* geo;
+    u8 _pad4[0x10];
+} Gap800B993CGeoFile;
+Gap800B993CGeo* LoadGeoPalette(Gap800B993CGeoFile* file);
+void SKNLoadFile(Gap800B993CSkin* skin, Gap800B993CGeo* geo);
+void convertGeometryAndSknHeader(Gap800B993CGeoFile* file, Gap800B993CSkin* skin);
 void fn_800BCDBC(void);
 void fn_800BCE38(void);
 void fn_800BCEF8(void);
