@@ -245,7 +245,17 @@ void nop_function(void) {
 
 // .text:0x800B0CB8 size:0x70
 void RunDrawScripts_with_stack_variables(void) {
-    return;
+    Gap800AD780DrawContext initial;
+    Gap800AD780DrawContext context;
+    Gap800AD780DrawScript* script;
+    lbl_803CC1B8 = &lbl_80111300;
+    lbl_80111300.withContext(&initial);
+    script = &lbl_803C7A24[lbl_803CC1B0];
+    do {
+        lbl_803CC1B8 = (Gap800AD780QueueNode*)script;
+        script->withContext(&context);
+        script = script->next;
+    } while (script != NULL);
 }
 
 // .text:0x800B0D28 size:0x10

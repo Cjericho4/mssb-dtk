@@ -2,8 +2,9 @@
 #define __UNKNOWN_gap_800AD780_H_
 
 #include "mssbTypes.h"
+typedef struct Gap800AD780DrawContext { u32 words[5]; } Gap800AD780DrawContext;
 typedef struct Gap800AD780QueueNode {
-    u32 active;
+    union { u32 active; void (*withContext)(Gap800AD780DrawContext* context); };
     struct Gap800AD780QueueNode* previous;
     struct Gap800AD780QueueNode* next;
 } Gap800AD780QueueNode;
@@ -38,8 +39,10 @@ typedef struct Gap800AD780Hooks {
 void sndSetHooks(Gap800AD780Hooks* hooks);
 void sndQuit(void);
 typedef struct Gap800AD780DrawScript {
-    void (*callback)(void);
-    u8 _pad4[0x7C];
+    union { void (*callback)(void); void (*withContext)(Gap800AD780DrawContext* context); };
+    struct Gap800AD780DrawScript* previous;
+    struct Gap800AD780DrawScript* next;
+    u8 _padC[0x74];
 } Gap800AD780DrawScript;
 extern Gap800AD780DrawScript lbl_803C7A24[3];
 typedef struct Gap800AD780DrawEntry {
@@ -108,6 +111,8 @@ void resetAllDrawingStructs_tonop(void);
 void resetAllDrawingStructs(void);
 void fn_800B0C80(void (*callback)(void));
 void nop_function(void);
+extern Gap800AD780QueueNode lbl_80111300;
+extern u16 lbl_803CC1B0;
 void RunDrawScripts_with_stack_variables(void);
 void fn_800B0D28(s32 value);
 void fn_800B0D38(s32 index, void (*callback)(void));
