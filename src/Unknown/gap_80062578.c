@@ -177,18 +177,31 @@ void fn_80063028(void) {
 }
 
 // .text:0x800633AC size:0x36C
-void fn_800633AC(void) {
+#pragma dont_inline on
+void fn_800633AC(Gap80062578Control* control, f32 matrix[3][4], u32 flags) {
     return;
 }
+#pragma dont_inline reset
 
 // .text:0x80063718 size:0xA4
-void fn_80063718(void) {
-    return;
+BOOL fn_80063718(Gap80062578RenderObject* obj, Gap80062578Transform* transform, f32 matrix[3][4], f32 weight) {
+    switch (obj->type) {
+    case 0x4A:
+        fn_800B84AC(&transform->current, &transform->target, &transform->current, weight);
+        fn_800633AC(&transform->current, matrix, lbl_803CB890);
+        return 1;
+    case 0x4B:
+        fn_800B84AC(&transform->current, &transform->target, &transform->current, weight);
+        fn_800633AC(&transform->current, matrix, lbl_803CB890);
+        return 1;
+    default:
+        return 0;
+    }
 }
 
 // .text:0x800637BC size:0x18
 s32 fn_800637BC(s32 arg0, Gap80062578Scene** scene) {
-    (*scene)->callback = fn_80063718;
+    (*scene)->callback = (void (*)(void))fn_80063718;
     return 0;
 }
 
