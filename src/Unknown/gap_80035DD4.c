@@ -118,8 +118,16 @@ void fn_80037AA0(void) {
 }
 
 // .text:0x80037B18 size:0x94
-void fn_80037B18(void) {
-    return;
+void fn_80037B18(Gap80035DD4Xform* xf, Gap80035DD4Vec* force) {
+    Gap80035DD4Vec world;
+    Gap80035DD4Vec arm;
+    Gap80035DD4Vec cross;
+    PSVECScale(&xf->accel, &arm, 1.0f);
+    PSVECAdd(&arm, &xf->vel, &arm);
+    PSMTXMultVec(xf->inv, force, &world);
+    PSVECAdd(&xf->force, &world, &xf->force);
+    PSVECCrossProduct(&arm, &world, &cross);
+    PSVECAdd(&xf->torque, &cross, &xf->torque);
 }
 
 // .text:0x80037BAC size:0x5F0
