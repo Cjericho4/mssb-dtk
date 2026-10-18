@@ -14,7 +14,7 @@ s32 randRange_FUN_80042bf0(s32 low, s32 high);
 void translateStarPitchHitIndex(void);
 void translateStarPitch(void);
 void translateStarSwing(void);
-void fn_80064918(void);
+s32 fn_80064918(s16 id);
 void fn_8006496C(void);
 void fn_800649BC(void);
 void unsure_FillRosterPositions(void);
