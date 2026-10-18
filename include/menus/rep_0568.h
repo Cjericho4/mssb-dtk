@@ -64,7 +64,8 @@ void fn_2_18748(void);
 void fn_2_188EC(void);
 void fn_2_18FBC(void);
 void fn_2_190B8(Rep0568Obj* obj);
-void fn_2_190DC(void);
+struct HugeAnimEntry68;
+void fn_2_190DC(struct HugeAnimEntry68* entries, f32 matrix[3][4]);
 void fn_2_19224(void);
 void fn_2_1937C(void);
 

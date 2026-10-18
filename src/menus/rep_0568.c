@@ -96,7 +96,7 @@ void fn_2_190B8(Rep0568Obj* obj) {
 }
 
 // .text:0x000190DC size:0x148
-void fn_2_190DC(void) {
+void fn_2_190DC(HugeAnimEntry68* entries, Mtx matrix) {
     return;
 }
 

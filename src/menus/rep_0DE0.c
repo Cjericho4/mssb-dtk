@@ -4,6 +4,12 @@
 #include "game/rep_1E08.h"
 
 extern void fn_800BDA94(AnimLevel1** anim, Mtx matrix);
+#include "menus/rep_0568.h"
+#include "Dolphin/GX/GXTransform.h"
+extern Mtx lbl_2_bss_1A81D4;
+extern MenusDisplayConfig lbl_2_data_2E9B4[];
+extern void C_MTXFrustum(Mtx44 matrix, f32 top, f32 bottom, f32 left, f32 right, f32 near, f32 far);
+
 extern void LITXForm(MenusLight* light, Mtx matrix);
 
 extern hugeAnimStruct* lbl_2_bss_340140;
@@ -25,7 +31,7 @@ void fn_2_85AC0(void) {
 }
 
 // .text:0x00085D6C size:0x704
-void fn_2_85D6C(void) {
+void fn_2_85D6C(Mtx matrix) {
     return;
 }
 
@@ -88,7 +94,15 @@ void fn_2_86F40(void) {
 
 // .text:0x00086FEC size:0xE8
 void fn_2_86FEC(void) {
-    return;
+    Mtx44 projection;
+    C_MTXFrustum(projection, -0.175f, 0.175f, 0.25f, -0.25f, 1.0f, 512.0f);
+    GXSetProjection(projection, GX_PERSPECTIVE);
+    fn_2_48D54();
+    fn_2_86470();
+    fn_2_85D6C(lbl_2_bss_1A81D4);
+    PSMTXCopy(lbl_2_bss_1A81D4, fn_80052768(0)->mtx);
+    fn_800A7D4C(0, (BdcArrayElement*)&lbl_2_data_2E9B4[lbl_803CBBC0]);
+    fn_2_190DC(lbl_2_bss_340140->entries_68, fn_80052768(0)->mtx);
 }
 
 // .text:0x000870D4 size:0x40

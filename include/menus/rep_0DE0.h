@@ -2,11 +2,12 @@
 #define __MENUS_rep_0DE0_H_
 
 #include "mssbTypes.h"
+#include "Dolphin/mtx.h"
 
 void fn_2_8563C(void);
 void fn_2_858A4(void);
 void fn_2_85AC0(void);
-void fn_2_85D6C(void);
+void fn_2_85D6C(Mtx matrix);
 void fn_2_86470(void);
 void fn_2_868C8(void);
 void fn_2_869B4(void);
