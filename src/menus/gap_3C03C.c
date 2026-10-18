@@ -374,8 +374,20 @@ BOOL fn_2_44368(void) {
 }
 
 // .text:0x00044414 size:0xF0
-void fn_2_44414(void) {
-    return;
+void fn_2_44414(MenusSortEntry* entries) {
+    s32 i;
+    s32 j;
+    MenusSortEntry temp;
+    for (i = 1; i < 55; i++) {
+        temp = entries[i];
+        entries[0] = temp;
+        j = i - 1;
+        while (temp.key < entries[j].key) {
+            entries[j + 1] = entries[j];
+            j--;
+        }
+        entries[j + 1] = temp;
+    }
 }
 
 // .text:0x00044504 size:0x928

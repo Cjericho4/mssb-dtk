@@ -13,6 +13,11 @@ typedef struct Gap3C03CObj {
     u8 _pad32[2];
 } Gap3C03CObj;
 
+typedef struct MenusSortEntry {
+    s32 key;
+    s32 value;
+} MenusSortEntry;
+
 typedef struct MenusLineupChoice {
     u8 _pad0[2];
     u8 team;
@@ -98,7 +103,7 @@ void fn_2_44184(void);
 BOOL fn_2_44238(s32 value);
 BOOL fn_2_442E8(void);
 BOOL fn_2_44368(void);
-void fn_2_44414(void);
+void fn_2_44414(MenusSortEntry* entries);
 void fn_2_44504(void);
 s32 fn_2_44E2C(s32 index);
 s32 fn_2_44F14(s32 index);
