@@ -291,8 +291,23 @@ f32 fn_800B4A44(Gap800B117CObj* obj, u16 index) {
 }
 
 // .text:0x800B4A94 size:0x68
-void fn_800B4A94(void) {
-    return;
+f32 fn_800B4A94(Gap800B117CObj* obj) {
+    u32 i;
+    Gap800B117CAnimation* anim;
+    Gap800B117CDuration* duration;
+    for (i = 0; i < obj->count; i++) {
+        anim = obj->entries[i]->animation;
+        if (anim != NULL) {
+            if (anim->flags17 == 0) {
+                return anim->time;
+            }
+            duration = anim->duration;
+            if (duration != NULL) {
+                return duration->length - anim->time;
+            }
+        }
+    }
+    return 0.0f;
 }
 
 // .text:0x800B4AFC size:0x3C

@@ -142,7 +142,7 @@ void haveActLayoutPointToGeoHeader(Gap800B117CObj* obj, s32 value);
 void LoadActorLayout(void);
 void fn_800B49E4(void);
 f32 fn_800B4A44(Gap800B117CObj* obj, u16 index);
-void fn_800B4A94(void);
+f32 fn_800B4A94(Gap800B117CObj* obj);
 void fn_800B4AFC(Gap800B117CObj* obj, u8 value);
 void AnimateActorBones(void);
 void fn_800B4BC8(Gap800B117CObj* obj, u8 value);
