@@ -213,8 +213,15 @@ void ACTSort(Gap800B117CObj* obj) {
 }
 
 // .text:0x800B2D5C size:0x74
-void fn_800B2D5C(void) {
-    return;
+void fn_800B2D5C(Gap800B117CObj* obj) {
+    Gap800B117CSkinHeader* skin;
+    GQRSetup5(8, 4, 8, 4);
+    skin = obj->skinHeaders[0];
+    if (skin->format == 0x40) {
+        SKNIt(obj->entries, obj->skinOutput, skin->data);
+    } else {
+        fn_800BF2A8(obj->entries, obj->skinOutput, skin->data);
+    }
 }
 
 // .text:0x800B2DD0 size:0x36C

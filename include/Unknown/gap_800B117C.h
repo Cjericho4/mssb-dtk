@@ -44,6 +44,13 @@ typedef struct Gap800B117CAnimation {
     u8 flags17;
     u8 flags18;
 } Gap800B117CAnimation;
+typedef struct Gap800B117CSkinData Gap800B117CSkinData;
+typedef struct Gap800B117CSkinOutput Gap800B117CSkinOutput;
+typedef struct Gap800B117CSkinHeader {
+    Gap800B117CSkinData* data;
+    u8 _pad4[2];
+    u8 format;
+} Gap800B117CSkinHeader;
 typedef struct Gap800B117CObj {
     u8 _pad0[3];
     /* 0x3 */ u8 priority;
@@ -51,13 +58,13 @@ typedef struct Gap800B117CObj {
     u16 count;
     u8 _pad8[8];
     /* 0x10 */ s32 unk10;
-    /* 0x14 */ s32 unk14;
+    /* 0x14 */ union { s32 unk14; Gap800B117CSkinHeader** skinHeaders; };
     /* 0x18 */ struct Gap800B117CObj** entries;
     u8 _pad1C[0x44];
     f32 (*matrices)[3][4]; /* 0x60 */
     u8 _pad64[0xC];
     Gap800B117CList list; /* 0x70 */
-    /* 0x7C */ s32 unk7C;
+    /* 0x7C */ union { s32 unk7C; Gap800B117CSkinOutput* skinOutput; };
     /* 0x80 */ s16 unk80;
     /* 0x82 */ s16 unk82;
     /* 0x84 */ s16 unk84;
@@ -129,7 +136,10 @@ void fn_800B2C10(Gap800B117CObj* obj, u16 index, Gap800B117CVec* vec);
 void fn_800B2C44(Gap800B117CObj* obj, u16 index, Gap800B117CVec* vec);
 void fn_800B2C88(Gap800B117CObj* obj, u16 index, f32 matrix[3][4]);
 void ACTSort(Gap800B117CObj* obj);
-void fn_800B2D5C(void);
+void GQRSetup5(u32 a, u32 b, u32 c, u32 d);
+void SKNIt(Gap800B117CObj** entries, Gap800B117CSkinOutput* output, Gap800B117CSkinData* data);
+void fn_800BF2A8(Gap800B117CObj** entries, Gap800B117CSkinOutput* output, Gap800B117CSkinData* data);
+void fn_800B2D5C(Gap800B117CObj* obj);
 void fn_800B2DD0(void);
 void fn_800B313C(void);
 void fn_800B34B4(void);
