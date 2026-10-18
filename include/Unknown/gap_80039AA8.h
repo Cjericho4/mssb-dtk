@@ -17,7 +17,12 @@ extern Gap80039AA8State lbl_802D3D80;
 void fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
 typedef struct Gap80039AA8Texture Gap80039AA8Texture;
 extern Gap80039AA8Texture lbl_8023DD80;
-typedef struct Gap80039AA8Table Gap80039AA8Table;
+typedef struct Gap80039AA8Table {
+    u8 _pad0[0x8];
+    /* 0x8 */ u16 height;
+    /* 0xA */ u16 width;
+    u8 _padC[0x14];
+} Gap80039AA8Table;
 extern Gap80039AA8Table lbl_800F7A40;
 extern u8 lbl_803CB828[3];
 
@@ -55,5 +60,8 @@ void GXCopyTex(Gap80039AA8Texture* dest, BOOL clear);
 void GXPixModeSync(void);
 void fn_800BEB3C(void);
 void fn_800BD1E8(void (*callback)(void));
+typedef struct Gap80039AA8Thread Gap80039AA8Thread;
+Gap80039AA8Thread* OSGetCurrentThread(void);
+Gap80039AA8Thread* GXGetCurrentGXThread(void);
 
 #endif // !__UNKNOWN_gap_80039AA8_H_

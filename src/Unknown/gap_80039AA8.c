@@ -27,7 +27,15 @@ void fn_8003A090(void) {
 
 // .text:0x8003A144 size:0x8C
 void fn_8003A144(void) {
-    return;
+    Gap80039AA8Thread* thread = OSGetCurrentThread();
+    if (GXGetCurrentGXThread() == thread) {
+        GXSetTexCopySrc(0, 0, 640, 448);
+        GXSetTexCopyDst(640, 448, 4, 0);
+        GXCopyTex(&lbl_8023DD80, 0);
+        GXPixModeSync();
+        lbl_800F7A40.width = 640;
+        lbl_800F7A40.height = 448;
+    }
 }
 
 // .text:0x8003A1D0 size:0xF0
