@@ -50,8 +50,13 @@ void fn_800BD8C4(void) {
 }
 
 // .text:0x800BDA24 size:0x70
-void fn_800BDA24(void) {
-    return;
+void fn_800BDA24(Gap800BD3A0Instance* inst) {
+    Gap800BD3A0ActorObj* obj = inst->obj;
+    memcpy(&inst->obj->transform, &inst->transform, sizeof(Gap800BD3A0Transform));
+    fn_800B2BFC(inst->obj, inst->unk64, inst->unk66);
+    AnimateActorBones(obj);
+    fn_800B3F20(obj);
+    fn_800B313C(obj);
 }
 
 // .text:0x800BDA94 size:0x1F4

@@ -29,6 +29,26 @@ typedef struct Gap800BD3A0Model {
     u8 _pad4[0x68];
     /* 0x6C */ u8 unk6C;
 } Gap800BD3A0Model;
+typedef struct Gap800BD3A0Transform {
+    u8 _pad0[0x44];
+} Gap800BD3A0Transform;
+typedef struct Gap800BD3A0ActorObj {
+    u8 _pad0[0x1C];
+    /* 0x1C */ Gap800BD3A0Transform transform;
+} Gap800BD3A0ActorObj;
+typedef struct Gap800BD3A0Instance {
+    /* 0x0 */ Gap800BD3A0ActorObj* obj;
+    u8 _pad4[0xC];
+    /* 0x10 */ Gap800BD3A0Transform transform;
+    u8 _pad54[0x10];
+    /* 0x64 */ u16 unk64;
+    /* 0x66 */ u16 unk66;
+} Gap800BD3A0Instance;
+void* memcpy(void* dest, const void* src, u32 size);
+void fn_800B2BFC(Gap800BD3A0ActorObj* obj, u16 a, u16 b);
+void AnimateActorBones(Gap800BD3A0ActorObj* obj);
+void fn_800B3F20(Gap800BD3A0ActorObj* obj);
+void fn_800B313C(Gap800BD3A0ActorObj* obj);
 typedef void (*Gap800BD3A0Callback)(Gap800BD3A0Model* model, Gap800BD3A0EntryData* data);
 typedef struct Gap800BD3A0Entry {
     u8 _pad0[0x40];
@@ -63,7 +83,7 @@ void fn_800BD478(void);
 void fn_800BD548(void);
 void fn_800BD670(void);
 void fn_800BD8C4(void);
-void fn_800BDA24(void);
+void fn_800BDA24(Gap800BD3A0Instance* inst);
 void fn_800BDA94(void);
 void fn_800BDC88(void);
 void ActorObjectInitTable(void);
