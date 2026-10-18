@@ -11,7 +11,10 @@ typedef struct Gap3C03CObj {
     u8 current; /* 0x06 */
     u8 previous; /* 0x07 */
     u8 _pad8;
-    u8 currentValues[10][2]; /* 0x09 */
+    union {
+        u8 currentValues[10][2]; /* 0x09 */
+        s8 signedValues[10][2];
+    };
     u8 previousValues[10][2]; /* 0x1D */
     s8 unk31;
     u8 _pad32[2];
@@ -30,10 +33,14 @@ typedef struct MenusLineupChoice {
 } MenusLineupChoice;
 typedef struct MenusLineupSlot {
     s16 id;
-    u8 _pad2[8];
+    s16 type;
+    s16 minimum;
+    s16 level;
+    u8 _pad8[2];
 } MenusLineupSlot;
 extern MenusLineupChoice lbl_800E8558[];
 extern MenusLineupSlot lbl_80109AE8[][10];
+extern MenusLineupSlot lbl_8010A768[][10];
 
 typedef struct MenusEffectState {
     u32 type;

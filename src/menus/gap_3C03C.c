@@ -511,7 +511,31 @@ void fn_2_42BE8(void) {
 
 // .text:0x00042EB0 size:0x118
 void fn_2_42EB0(void) {
-    return;
+    u8* team;
+    s32 i;
+    s32 j;
+    for (i = 0; i < 54; i++) {
+        MenusLineupChoice* choice = &lbl_800E8558[i];
+        if (choice->enabled == 1) {
+            Gap3C03CObj* obj = &lbl_2_bss_1A8248->gap3C03CObjects[i];
+            if (obj->unk31 == 1) {
+                MenusLineupSlot* slot;
+                team = &choice->team;
+                for (j = 0; j < 10; j++) {
+                    s32 minimum;
+                    s32 id = lbl_80109AE8[*team][j].id;
+                    s32 type;
+                    slot = &lbl_8010A768[*team][j];
+                    type = slot->type;
+                    minimum = slot->minimum;
+                    if (type != -1 && obj->signedValues[j][1] == 0 && type == 18 && lbl_2_bss_1A8248->unk4415 >= minimum && lbl_2_bss_1A8248->unk442A == 1) {
+                        obj->signedValues[j][1] = 1;
+                    }
+                    if (id != -1 && obj->signedValues[j][0] < 0) obj->signedValues[j][1] = 1;
+                }
+            }
+        }
+    }
 }
 
 // .text:0x00042FC8 size:0x12C
