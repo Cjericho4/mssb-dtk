@@ -27,7 +27,9 @@ void fn_8006496C(void) {
 
 // .text:0x800649BC size:0x48
 void fn_800649BC(void) {
-    return;
+    g_d_GameSettings.side = randRange_FUN_80042bf0(0, 1);
+    lbl_800E8754.mode = 3;
+    lbl_800E8754.option = lbl_803CB8D0;
 }
 
 // .text:0x80064A04 size:0x13E8
