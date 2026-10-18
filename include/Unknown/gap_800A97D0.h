@@ -30,6 +30,10 @@ typedef struct Gap800A97D0Heap {
     /* 0x8 */ s32 end;
 } Gap800A97D0Heap;
 extern Gap800A97D0Heap lbl_803C7898;
+typedef struct Gap800A97D0Block {
+    /* 0x0 */ s32 addr;
+    /* 0x4 */ s32 size;
+} Gap800A97D0Block;
 void CARDInit(void);
 void PADInit(void);
 void SISetSamplingRate(u32 msec);
@@ -60,10 +64,10 @@ void fn_800ACCD4(void);
 void fn_800ACCE8(void);
 void fn_800ACD44(void);
 void fn_800ACD64(void);
-void fn_800ACF14(void);
+void fn_800ACF14(Gap800A97D0Block* block);
 void fn_800ACF34(void);
 void fn_800ACF78(void);
-void fn_800ACFB0(void);
+void fn_800ACFB0(Gap800A97D0Block* block);
 void _OSAllocFromHeap(void);
 void fn_800AD01C(s32 end);
 void fn_800AD038(s32 start);

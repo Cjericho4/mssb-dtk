@@ -143,8 +143,10 @@ void fn_800ACD64(void) {
 }
 
 // .text:0x800ACF14 size:0x20
-void fn_800ACF14(void) {
-    return;
+void fn_800ACF14(Gap800A97D0Block* block) {
+    s32 end = block[-1].addr;
+    lbl_803C7898.end = end;
+    lbl_803C7898.size = end - lbl_803C7898.start;
 }
 
 // .text:0x800ACF34 size:0x44
@@ -158,8 +160,10 @@ void fn_800ACF78(void) {
 }
 
 // .text:0x800ACFB0 size:0x20
-void fn_800ACFB0(void) {
-    return;
+void fn_800ACFB0(Gap800A97D0Block* block) {
+    s32 start = block[-1].addr;
+    lbl_803C7898.start = start;
+    lbl_803C7898.size = lbl_803C7898.end - start;
 }
 
 // .text:0x800ACFD0 size:0x4C
