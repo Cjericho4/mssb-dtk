@@ -284,7 +284,20 @@ void fn_800A8E30(void) {
 
 // .text:0x800A8F68 size:0x74
 void fn_800A8F68(void) {
-    return;
+    lbl_803CC148 = 0;
+    *(volatile s32*)&lbl_803CC140 = 0;
+    *(volatile s32*)&lbl_803CC13C = 0;
+    *(volatile u32*)&lbl_803CC138 = 12000;
+    lbl_803CC135 = 255;
+    lbl_803CC154 = NULL;
+    lbl_803CC150 = NULL;
+    lbl_803CC14C = NULL;
+    lbl_803CC134 = 255;
+    AISetStreamVolLeft(0);
+    AISetStreamVolRight(0);
+    AIRegisterStreamCallback(fn_800A9168);
+    AIResetStreamSampleCount();
+    AISetStreamPlayState(0);
 }
 
 // .text:0x800A8FDC size:0x58
