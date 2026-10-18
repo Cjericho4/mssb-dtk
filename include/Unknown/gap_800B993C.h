@@ -13,7 +13,9 @@ typedef union Gap800B993CColor {
 extern u8 lbl_803CC220;
 extern Gap800B993CColor lbl_803CC224;
 typedef struct Gap800B993CObj {
-    u8 _pad0[0x50];
+    u8 _pad0[0x18];
+    /* 0x18 */ f32 worldMatrix[3][4];
+    u8 _pad48[0x8];
     /* 0x50 */ s32 unk50;
 } Gap800B993CObj;
 
@@ -40,7 +42,7 @@ void GetColorFromQuant(void);
 void DOVARender(void);
 void DOVARenderSkin(void);
 void fn_800BC824(Gap800B993CObj* obj, s32 value);
-void DOSetWorldMatrix(void);
+void DOSetWorldMatrix(Gap800B993CObj* obj, f32 matrix[3][4]);
 void InitDisplayObjWithLayout(void);
 void DOGet(void);
 void LoadGeoPalette(void);
@@ -60,5 +62,7 @@ u8 fn_800BD2B0(Gap800B993CColor* out);
 void fn_800BD2CC(u8 enable, Gap800B993CColor* color);
 void fn_800BD2DC(void);
 void LITXForm(void);
+
+void PSMTXCopy(f32 src[3][4], f32 dst[3][4]);
 
 #endif // !__UNKNOWN_gap_800B993C_H_

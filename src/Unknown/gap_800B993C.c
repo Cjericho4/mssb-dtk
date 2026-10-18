@@ -99,8 +99,8 @@ void fn_800BC824(Gap800B993CObj* obj, s32 value) {
 }
 
 // .text:0x800BC834 size:0x2C
-void DOSetWorldMatrix(void) {
-    return;
+void DOSetWorldMatrix(Gap800B993CObj* obj, f32 matrix[3][4]) {
+    PSMTXCopy(matrix, obj->worldMatrix);
 }
 
 // .text:0x800BC860 size:0x258
