@@ -18,7 +18,19 @@ void fn_2_A70(u16 duration) {
 
 // .text:0x00000B38 size:0xE0
 void fn_2_B38(void) {
-    return;
+    lbl_2_bss_18 += ((QueueEntry*)lbl_803CC1B8)->vec.x;
+    if (lbl_2_bss_18 < 0.0f) lbl_2_bss_18 = 0.0f;
+    sndFXCtrl(lbl_2_data_134.voice, 7, (u8)lbl_2_bss_18);
+    if (lbl_2_bss_18 == 0.0f) {
+        lbl_2_bss_1C = 0;
+        if (lbl_2_data_134.voice != 0xFFFFFFFF) {
+            if (sndFXCheck(lbl_2_data_134.voice) == lbl_2_data_134.voice) {
+                sndFXKeyOff(lbl_2_data_134.voice);
+                lbl_2_data_134.voice = 0xFFFFFFFF;
+            }
+        }
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x00000C18 size:0x5C
