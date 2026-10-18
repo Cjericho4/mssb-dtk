@@ -84,8 +84,12 @@ void fn_800AB534(void) {
 }
 
 // .text:0x800ABB14 size:0x4C
-void fn_800ABB14(void) {
-    return;
+u16 fn_800ABB14(u8* data, s32 count) {
+    u16 crc = 0xFFFF;
+    while (--count >= 0) {
+        crc = (crc << 8) ^ lbl_800E7800[(crc >> 8) ^ *data++];
+    }
+    return ~crc;
 }
 
 // .text:0x800ABB60 size:0x70

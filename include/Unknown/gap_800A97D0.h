@@ -2,6 +2,7 @@
 #define __UNKNOWN_gap_800A97D0_H_
 
 #include "mssbTypes.h"
+extern u16 lbl_800E7800[256];
 typedef struct Gap800A97D0Flags {
     u8 _pad0[0x55];
     /* 0x55 */ u8 unk55;
@@ -40,7 +41,7 @@ void fn_800AAEE4(void);
 void fn_800AAFEC(void);
 void fn_800AB474(void);
 void fn_800AB534(void);
-void fn_800ABB14(void);
+u16 fn_800ABB14(u8* data, s32 count);
 void fn_800ABB60(void);
 void fn_800ABBD0(void);
 void fn_800ABF44(void);
