@@ -19,8 +19,13 @@ BOOL fn_80042D68(Gap80042D38Task* task, s32 index, s32 time) {
 }
 
 // .text:0x80042DA8 size:0x40
-void fn_80042DA8(void) {
-    return;
+BOOL fn_80042DA8(Gap80042D38Task* task, s32 index, s32 time) {
+    Gap80042D38Entry* entry = lbl_80371C30[task->baseIndex + index].entry;
+    if ((s32)(entry->time >> 16) == time) {
+        entry->active = 0;
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x80042DE8 size:0x5A4

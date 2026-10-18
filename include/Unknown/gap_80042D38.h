@@ -28,7 +28,7 @@ extern Gap80042D38State* lbl_803CBBCC;
 
 void fn_80042D38(u16 state);
 BOOL fn_80042D68(Gap80042D38Task* task, s32 index, s32 time);
-void fn_80042DA8(void);
+BOOL fn_80042DA8(Gap80042D38Task* task, s32 index, s32 time);
 void challengeStarMenu(void);
 void starMenuCursor(void);
 void fn_80043880(void);
