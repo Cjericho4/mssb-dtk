@@ -236,7 +236,7 @@ void fn_2_709A0(void);
 void fn_2_71098(void);
 void fn_2_71A38(Rep0B08Obj* obj);
 void fn_2_71A70(void);
-void fn_2_71B80(void);
+void fn_2_71B80(Rep0B08Obj* obj);
 void fn_2_71C6C(void);
 
 #endif // !__MENUS_rep_0B08_H_

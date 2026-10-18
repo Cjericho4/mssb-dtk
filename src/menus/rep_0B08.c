@@ -995,8 +995,29 @@ void fn_2_71A70(void) {
 }
 
 // .text:0x00071B80 size:0xEC
-void fn_2_71B80(void) {
-    return;
+extern s16 lbl_2_data_2E80[][3];
+extern void fn_80062890(s32 value);
+static inline void menuCheckAnimationEnd(Rep0B08Obj* obj) {
+    u32 mode = lbl_2_bss_1A8248->unk441C;
+    s32 full = lbl_2_data_2E80[mode][0] * 2;
+    s32 end = full - lbl_2_data_2E80[mode][2] * 2;
+    s32 start = full - lbl_2_data_2E80[mode][1] * 2;
+    if (obj->index == 0) {
+        AnimationStruct* anim = &g_hugeAnimStruct.fielderStructs[0];
+        if (anim && (anim->unk68 == end || anim->unk68 == start)) {
+            if (mode == 5) fn_80062890(1);
+            else fn_80062890(0);
+        }
+    }
+}
+void fn_2_71B80(Rep0B08Obj* obj) {
+    fn_2_69E1C(obj->index);
+    menuCheckAnimationEnd(obj);
+    if (obj->unk50 <= 0.0f) {
+        obj->unkBA = 4;
+        obj->unkC4 = 1;
+        obj->state = 2;
+    }
 }
 
 // .text:0x00071C6C size:0x258
