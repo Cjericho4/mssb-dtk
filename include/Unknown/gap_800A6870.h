@@ -74,6 +74,13 @@ typedef struct Gap800A6870Stream {
     void (*callback)(u32 flags);
 } Gap800A6870Stream;
 extern Gap800A6870Stream* lbl_803CC154;
+extern Gap800A6870Stream* lbl_803CC150;
+extern Gap800A6870Stream* lbl_803CC14C;
+void AIRegisterStreamCallback(void (*callback)(u32 trigger));
+void AIResetStreamSampleCount(void);
+typedef struct Gap800A6870CommandBlock Gap800A6870CommandBlock;
+extern Gap800A6870CommandBlock lbl_802EF260;
+BOOL DVDStopStreamAtEndAsync(Gap800A6870CommandBlock* block, void (*callback)(s32 result, Gap800A6870CommandBlock* block));
 
 s32 fn_800A6870(u8 flag, s32 value);
 void fn_800A6890(void);

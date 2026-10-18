@@ -312,7 +312,16 @@ void fn_800A91B0(void) {
 
 // .text:0x800A93AC size:0x78
 void fn_800A93AC(void) {
-    return;
+    Gap800A6870Stream* stream;
+    AISetStreamVolLeft(0);
+    AISetStreamVolRight(0);
+    AISetStreamPlayState(0);
+    DVDStopStreamAtEndAsync(&lbl_802EF260, NULL);
+    stream = lbl_803CC154;
+    lbl_803CC148 = 2;
+    if (stream != NULL && stream->callback != NULL && (stream->flags & 0x20)) {
+        stream->callback(stream->flags & 0x20);
+    }
 }
 
 // .text:0x800A9424 size:0x84
