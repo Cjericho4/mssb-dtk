@@ -41,8 +41,15 @@ void ANIMTick(void) {
 }
 
 // .text:0x800B79A0 size:0x30
-void ANIMBind(void) {
-    return;
+void ANIMBind(Gap800B508CAnimation* anim, u8* data, Gap800B508CTrack* track, f32 time) {
+    if (track == NULL) return;
+    *data = 0;
+    anim->data = data;
+    anim->track = track;
+    anim->time = time;
+    anim->previousTime = time;
+    anim->flags = track->flags;
+    anim->frame = 0;
 }
 
 // .text:0x800B79D0 size:0x36C
