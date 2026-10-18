@@ -21,7 +21,7 @@ void fn_2_353FC(void);
 void fn_2_35754(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_35860(void);
 void fn_2_35A14(void);
-void fn_2_35DB4(void);
+void fn_2_35DB4(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_35EC0(void);
 void fn_2_36074(void);
 void fn_2_36204(void);
