@@ -749,7 +749,21 @@ void fn_2_8279C(void) {
 
 // .text:0x00082CF0 size:0xF8
 void fn_2_82CF0(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_8034E9A0.scene;
+    if (lbl_803C5EA4.unk36 != 0) {
+        lbl_80371C30[scene->unkIndex].obj->field_0x5C = 0;
+        (&lbl_80371C30[1])[scene->unkIndex].obj->field_0x5C = 0x280000;
+        lbl_80371C30[scene->unkIndex + 2].obj->unk64 = lbl_803C5EA4.unk38 + 0x123;
+        lbl_80371C30[scene->unkIndex + 3].obj->unk64 = lbl_803C5EA4.unk37 + 0x123;
+        lbl_80371C30[scene->unkIndex].obj->field_0x68 = 1;
+        (&lbl_80371C30[1])[scene->unkIndex].obj->field_0x68 = 4;
+        lbl_803C5EA4.unk36 = 0;
+    }
+    if (lbl_8034E9A0.unk48AF != 0) {
+        lbl_8034E9A0.unk48AF = 0;
+        fn_80034CEC((u32)scene);
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x00082DE8 size:0x70
