@@ -1,4 +1,6 @@
 #include "menus/gap_1254.h"
+extern void fn_800506E8(s32 controller, s32 id, s32 enabled);
+extern void fn_80067B40(u8 side, u8 id, s32 enabled);
 #include "menus/gap_0.h"
 #include "game/gap_B3B70.h"
 #include "musyx/musyx.h"
@@ -566,8 +568,22 @@ void fn_2_C484(void) {
 }
 
 // .text:0x0000C698 size:0x144
-void fn_2_C698(void) {
-    return;
+void fn_2_C698(u8 index, u8 side) {
+    s32 id;
+    if (g_d_GameSettings.GameModeSelected != 5) {
+        id = lbl_803C6724.teams[side][index];
+        lbl_8034E9A0.lineupFlags[id] = 1;
+        if (g_d_GameSettings._10 == 0 && side != 0) {
+            if (lbl_8034E9A0.controllerIndices[0] == 0) fn_800506E8(1, id, 1);
+            else fn_800506E8(0, id, 1);
+        } else fn_800506E8(lbl_8034E9A0.controllerIndices[side], id, 1);
+        fn_80067B40(side, (u8)id, 1);
+    } else {
+        id = lbl_803C6724.first[index];
+        fn_800506E8(0, id, 1);
+        lbl_8034E9A0.lineupFlags[id] = 1;
+        fn_80067B40(side, (u8)id, 1);
+    }
 }
 
 // .text:0x0000C7DC size:0x284

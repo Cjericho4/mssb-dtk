@@ -128,7 +128,7 @@ void fn_2_B920(void);
 void fn_2_BF90(void);
 void fn_2_C324(void);
 void fn_2_C484(void);
-void fn_2_C698(void);
+void fn_2_C698(u8 index, u8 side);
 void fn_2_C7DC(void);
 void fn_2_CA60(void);
 void fn_2_CCBC(void);
