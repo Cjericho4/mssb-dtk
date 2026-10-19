@@ -722,7 +722,10 @@ void fn_2_454E8(void) {
 
 // .text:0x00045810 size:0x128
 void fn_2_45810(void) {
-    return;
+    s32 i;
+    for (i = 0; i < 54; i++) {
+        lbl_2_bss_1A8248->rosterFlags[i] = 0;
+    }
 }
 
 // .text:0x00045938 size:0x40
