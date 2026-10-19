@@ -65,7 +65,36 @@ void fn_2_3C168(void) {
 
 // .text:0x0003C3EC size:0x150
 void fn_2_3C3EC(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        scene->unkIndex = 1;
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        if ((*(s16*)&scene->unkIndex)-- == 0) {
+            if (lbl_2_bss_1A8248->readyFlags[lbl_2_bss_1A8248->unk4420] == 0) {
+                lbl_2_bss_1A8248->readyFlags[lbl_2_bss_1A8248->unk4420] = 1;
+                scene->unkIndex = 60;
+                fn_2_72054(lbl_2_bss_1A8248->unk441E, 15);
+                scene->field15_0x28 = 2;
+            } else scene->field15_0x28 = 3;
+        }
+        break;
+    case 2:
+        if ((*(s16*)&scene->unkIndex)-- == 0) scene->field15_0x28 = 3;
+        break;
+    case 3:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
+    if ((u8)lbl_2_bss_1A824C->unk19783F == 1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+    }
 }
 
 // .text:0x0003C53C size:0x2A0
