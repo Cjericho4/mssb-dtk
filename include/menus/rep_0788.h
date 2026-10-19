@@ -110,7 +110,7 @@ void fn_2_2D640(void);
 void fn_2_2D8C4(void);
 void fn_2_2DAA8(void);
 void fn_2_2DCA8(void);
-void fn_2_2DE78(void);
+void fn_2_2DE78(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_2DFC8(void);
 void fn_2_2E17C(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_2E298(void);
