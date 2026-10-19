@@ -1,4 +1,7 @@
 #include "menus/gap_33E70.h"
+#include "menus/rep_1028.h"
+#include "menus/gap_92394.h"
+extern void fn_80062890(s32 id);
 #include "menus/gap_3C03C.h"
 #include "menus/gap_1B1BC.h"
 #include "game/rep_3448.h"
@@ -509,5 +512,38 @@ void fn_2_3BA40(void) {
 
 // .text:0x0003BC24 size:0x164
 void fn_2_3BC24(void) {
-    return;
+    DrawingSceneStruct* scene=lbl_803CC1B8;
+    switch((s8)scene->field15_0x28) {
+    case 0:
+        lbl_2_bss_1A8248->unk442A=1;
+        scene->unkIndex=60;
+        scene->field15_0x28=1;
+        break;
+    case 1:
+        if((*(s16*)&scene->unkIndex)--==0) {
+            fn_2_90428(25);
+            fn_2_92654(25,8);
+            fn_2_90428(26);
+            fn_2_92654(26,1);
+            fn_2_90428(27);
+            fn_2_92654(27,2);
+            fn_80062890(66);
+            scene->unkIndex=180;
+            scene->field15_0x28=2;
+        }
+        break;
+    case 2:
+        if((*(s16*)&scene->unkIndex)--==0) scene->field15_0x28=3;
+        break;
+    case 3:
+        scene->currentDrawingItem->loadingState=1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28=0;
+        break;
+    }
+    if(lbl_2_bss_1A824C->unk19783F==1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState=1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28=0;
+    }
 }
