@@ -433,7 +433,28 @@ void fn_2_40A9C(void) {
 
 // .text:0x00040B90 size:0x128
 void fn_2_40B90(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        lbl_2_bss_1A824C->unk1978F3 = 0;
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        g_hugeAnimStruct.field269_0x307a = 0;
+        fn_2_20218();
+        lbl_2_bss_1A8234->panels[1].pending = 1;
+        lbl_2_bss_1A8230->pending = 1;
+        scene->field15_0x28 = 2;
+        break;
+    case 2: scene->field15_0x28 = 3; break;
+    case 3: fn_2_1BFD0(); scene->field15_0x28 = 4; break;
+    case 4: lbl_8034E978.unk26 = 1; scene->field15_0x28 = 5; break;
+    case 5:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
 }
 
 // .text:0x00040CB8 size:0x15B8
