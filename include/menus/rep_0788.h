@@ -70,7 +70,7 @@ void fn_2_27B7C(void);
 void fn_2_27D8C(void);
 void fn_2_27EDC(void);
 void fn_2_28090(void);
-void fn_2_28224(void);
+void fn_2_28224(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_2835C(void);
 void fn_2_284B0(void);
 void fn_2_28794(void);
