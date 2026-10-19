@@ -126,7 +126,7 @@ void fn_2_B508(void);
 void fn_2_B66C(void);
 void fn_2_B920(void);
 void fn_2_BF90(void);
-void fn_2_C324(void);
+s8 fn_2_C324(s32 character);
 void fn_2_C484(void);
 void fn_2_C698(u8 index, u8 side);
 void fn_2_C7DC(void);

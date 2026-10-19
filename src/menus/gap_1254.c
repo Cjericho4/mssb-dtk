@@ -569,8 +569,23 @@ void fn_2_BF90(void) {
 }
 
 // .text:0x0000C324 size:0x160
-void fn_2_C324(void) {
-    return;
+s8 fn_2_C324(s32 character) {
+    s32 found=-1;
+    s32 i,j;
+    for(i=0;i<9;i++) {
+        for(j=0;j<5;j++) {
+            if(character==lbl_80108EDC[i][j]) {found=i;goto done;}
+        }
+    }
+done:
+    if(found==-1) return found;
+    for(i=0;i<9;i++) {
+        s32 current=inMemRoster[0][i].stats.CharID;
+        for(j=0;j<5;j++) {
+            if(current==lbl_80108EDC[found][j] && current!=character) return found;
+        }
+    }
+    return -1;
 }
 
 // .text:0x0000C484 size:0x214
