@@ -79,7 +79,7 @@ void fn_2_28D24(void);
 void fn_2_28EA0(void);
 void fn_2_2926C(void);
 void fn_2_29884(void);
-void fn_2_29F18(void);
+void fn_2_29F18(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_2A068(void);
 void fn_2_2A21C(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_2A338(void);
