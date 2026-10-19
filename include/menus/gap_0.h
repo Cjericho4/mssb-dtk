@@ -26,7 +26,8 @@ typedef struct MenusInputState {
 extern MenusInputState lbl_803C77B8;
 
 typedef struct MenusCommandQueue {
-    u8 _pad0[0x15];
+    u8 _pad0[0x14];
+    u8 state;
     u8 writeIndex;
     u8 readIndex;
     u8 commands[0x20];

@@ -13,6 +13,15 @@ extern BdcArrayElement lbl_2_data_C0;
 #include "UnknownHeaders.h"
 #include "Dolphin/OS/OSUtil.h"
 
+extern s32 fn_80022A24(u8 stadium, u8 miniGame);
+extern void fn_800229CC(void);
+
+static inline u8 menusPopCommand(MenusCommandQueue* queue) {
+    if (queue->readIndex == queue->writeIndex) return 0;
+    queue->readIndex = (queue->readIndex + 1) % 32;
+    return queue->commands[queue->readIndex];
+}
+
 extern u32 lbl_803CB750;
 extern void fn_8004153C(void);
 extern void fn_800A97D0(s32 first, s32 second);
@@ -105,7 +114,19 @@ void fn_2_328(void) {
 
 // .text:0x00000374 size:0x150
 void fn_2_374(void) {
-    return;
+    MenusCommandQueue* queue = (MenusCommandQueue*)lbl_803CC1B8;
+    switch ((s32)queue->state) {
+    case 0: queue->state = menusPopCommand(queue); break;
+    case 1:
+        if (fn_80022A24(g_d_GameSettings.StadiumID, g_d_GameSettings.miniGameStadiumIndicator) != 0) {
+            if ((queue->state = menusPopCommand(queue)) == 2) {
+            case 2:
+                fn_800229CC();
+                queue->state = menusPopCommand(queue);
+            }
+        }
+        break;
+    }
 }
 
 // .text:0x000004C4 size:0x4C
