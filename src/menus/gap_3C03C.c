@@ -14,6 +14,7 @@ extern void fn_80062890(s32 value);
 extern CompressedDiskRead lbl_2_data_12298;
 extern void fn_800111B4(struct MenusSceneArchive* archive);
 
+extern MenusChoiceConfig lbl_801094E4[];
 extern MenusMenuBuffer lbl_2_bss_15B8;
 extern MenusMenuBuffer* lbl_2_data_12CE8[];
 extern MenusMenuBuffer* lbl_2_data_12C0C[];
@@ -983,7 +984,22 @@ void fn_2_468DC(void) {
 
 // .text:0x00046ADC size:0x148
 void fn_2_46ADC(void) {
-    return;
+    u32 i;
+    s32 j;
+    for (i = 0; i < 54; i++) {
+        Gap3C03CObj* obj = &lbl_2_bss_1A8248->gap3C03CObjects[i];
+        obj->config = &lbl_801094E4[i];
+        obj->unk4 = obj->config->group;
+        obj->unk5 = obj->config->level;
+        obj->current = obj->previous = 0;
+        obj->_pad8 = 0;
+        for (j = 0; j < 10; j++) {
+            obj->currentValues[j][0] = obj->previousValues[j][0] = 0;
+            obj->currentValues[j][1] = obj->previousValues[j][1] = 0;
+        }
+        if (obj->unk4 == lbl_2_bss_1A8248->unk441C && obj->unk5 <= 3) obj->unk31 = 1;
+        else obj->unk31 = 0;
+    }
 }
 
 // .text:0x00046C24 size:0x8

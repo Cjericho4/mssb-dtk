@@ -4,8 +4,14 @@
 #include "mssbTypes.h"
 #include "Dolphin/mtx.h"
 
+typedef struct MenusChoiceConfig {
+    u8 group;
+    u8 level;
+    u8 _pad2[0x1A];
+} MenusChoiceConfig;
+
 typedef struct Gap3C03CObj {
-    u8 _pad0[4];
+    MenusChoiceConfig* config;
     s8 unk4;
     s8 unk5;
     u8 current; /* 0x06 */
