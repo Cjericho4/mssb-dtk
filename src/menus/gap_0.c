@@ -57,8 +57,25 @@ void fn_2_160(void) {
 }
 
 // .text:0x000001A8 size:0x130
-void fn_2_1A8(void) {
-    return;
+s32 fn_2_1A8(u8 controller, u8 type, u16 mask) {
+    u16 buttons = 0;
+    s32 result = -1;
+    switch ((s32)type) {
+    case 0: buttons = lbl_803C77B8.controllers[controller].buttons; break;
+    case 1: buttons = lbl_803CBBCC->input[controller]; break;
+    case 2: buttons = lbl_803C77B8.controllers[controller].held; break;
+    }
+    buttons &= mask;
+    if (type == 1) lbl_803CBBCC->flags |= 1 << controller;
+    if (buttons & 0x100) result = 4;
+    else if (buttons & 0x200) result = 5;
+    else if (buttons & 8) result = 0;
+    else if (buttons & 4) result = 1;
+    else if (buttons & 1) result = 2;
+    else if (buttons & 2) result = 3;
+    else if (buttons & 0x40) result = 6;
+    else if (buttons & 0x20) result = 7;
+    return result;
 }
 
 // .text:0x000002D8 size:0x4

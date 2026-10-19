@@ -40,7 +40,7 @@ void _epilog(void);
 void _prolog(void);
 void fn_2_110(void);
 void fn_2_160(void);
-void fn_2_1A8(void);
+s32 fn_2_1A8(u8 controller, u8 type, u16 mask);
 void fn_2_2D8(void);
 void fn_2_2DC(void);
 void fn_2_328(void);
