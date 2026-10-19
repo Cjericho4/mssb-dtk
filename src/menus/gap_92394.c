@@ -100,6 +100,18 @@ void fn_2_92654(s32 index, u8 variant) {
 }
 
 // .text:0x0009267C size:0x14C
-void fn_2_9267C(void) {
-    return;
+void fn_2_9267C(Vec* out, Vec* current, Vec* previous, Vec* target, f32 dt, f32 spring, f32 damping, f32 length) {
+    Vec delta;
+    Vec velocity;
+    Vec displacement;
+    f32 distance;
+    PSVECSubtract(current, previous, &delta);
+    distance = PSVECDistance(current, previous);
+    PSVECSubtract(target, previous, &displacement);
+    PSVECScale(&displacement, dt, &velocity);
+    distance = spring * (length - distance) + damping * (PSVECDotProduct(&velocity, &delta) / distance);
+    PSVECNormalize(&delta, &delta);
+    PSVECScale(&delta, distance * dt, &delta);
+    PSVECAdd(current, &delta, current);
+    *out = *current;
 }

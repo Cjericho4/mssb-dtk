@@ -15,6 +15,6 @@ void fn_2_92504(Rep1028Obj* obj);
 void fn_2_9253C(Rep1028Obj* obj);
 void fn_2_9257C(void);
 void fn_2_92654(s32 index, u8 variant);
-void fn_2_9267C(void);
+void fn_2_9267C(Vec* out, Vec* current, Vec* previous, Vec* target, f32 dt, f32 spring, f32 damping, f32 length);
 
 #endif // !__MENUS_gap_92394_H_
