@@ -13,6 +13,7 @@ extern f32 lbl_2_data_3F0C[];
 extern f32 lbl_2_data_3F2C[];
 extern f32 lbl_2_data_3F5C;
 extern s32 lbl_2_data_3C5C[];
+extern s32 lbl_2_data_3C40[];
 #include "math.h"
 #include "menus/rep_08E8.h"
 #include "Dolphin/GX/GXTypes.h"
@@ -970,8 +971,14 @@ void fn_2_6D4F8(Rep0B08Obj* obj) {
 }
 
 // .text:0x0006D5D4 size:0x13C
-void fn_2_6D5D4(void) {
-    return;
+void fn_2_6D5D4(Rep0B08Obj* obj) {
+    setMenuObjectActive(obj->index, 1);
+    if (obj->animationIndex == 0) fn_80062890(lbl_2_data_3C40[lbl_2_bss_1A8248->unk441C]);
+    else if (obj->animationIndex == 1) fn_80062890(lbl_2_data_3C40[6]);
+    obj->unk34 = 0.0f;
+    obj->angle = 0.0f;
+    menuChangeAnimation(obj->index, 2);
+    obj->state = 1;
 }
 
 // .text:0x0006D710 size:0x38

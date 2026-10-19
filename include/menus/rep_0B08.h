@@ -229,7 +229,7 @@ void fn_2_6D374(Rep0B08Obj* obj);
 void fn_2_6D4B0(Rep0B08Obj* obj);
 void fn_2_6D4E8(Rep0B08Obj* obj);
 void fn_2_6D4F8(Rep0B08Obj* obj);
-void fn_2_6D5D4(void);
+void fn_2_6D5D4(Rep0B08Obj* obj);
 void fn_2_6D710(Rep0B08Obj* obj);
 void fn_2_6D748(Rep0B08Obj* obj);
 void fn_2_6D754(Rep0B08Obj* obj);
