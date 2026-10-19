@@ -180,7 +180,7 @@ void fn_2_79B24(void);
 void fn_2_79CF8(void);
 void fn_2_79FAC(void);
 void fn_2_7A194(void);
-void fn_2_7A460(void);
+void fn_2_7A460(struct DrawingSceneStruct* scene, s32 index);
 void fn_2_7A5B8(void);
 void fn_2_7A748(void);
 void fn_2_7A9D8(void);

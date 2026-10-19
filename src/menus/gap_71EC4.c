@@ -543,8 +543,21 @@ void fn_2_7A194(void) {
 }
 
 // .text:0x0007A460 size:0x158
-void fn_2_7A460(void) {
-    return;
+void fn_2_7A460(DrawingSceneStruct* scene, s32 index) {
+    s32 total;
+    if ((u32)__cntlzw(1 - lbl_803C66B0.flags[index]) >> 5) {
+        total=!!fn_80042DA8(scene,index,40);
+        total+=!!fn_80042DA8(scene,index+2,40);
+        total+=!!fn_80042DA8(scene,index+0x85,30);
+        total+=!!fn_80042DA8(scene,index+0x1C,30);
+        total+=!!fn_80042DA8(scene,index+0x6A,50);
+        if(total==5) {
+            lbl_80371C30[12+scene->unkIndex+index].obj->flags &=~2;
+            lbl_80371C30[18+scene->unkIndex+index].obj->flags &=~2;
+            fn_80062674(index);
+            lbl_803C66B0.flags[index]=2;
+        }
+    }
 }
 
 // .text:0x0007A5B8 size:0x190
