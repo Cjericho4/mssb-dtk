@@ -8,7 +8,10 @@ typedef struct MenusAnimationAux MenusAnimationAux;
 
 typedef struct MenusRenderAnimation {
     ActRelatedSub animation;
-    u8 _pad5C[0x10];
+    f32 time; /* 0x5C */
+    f32 blend; /* 0x60 */
+    u8 _pad64[4];
+    s32 mode; /* 0x68 */
     u8 visible; /* 0x6C */
     u8 _pad6D[0x23];
 } MenusRenderAnimation;
@@ -94,7 +97,7 @@ void fn_2_18FBC(void);
 void fn_2_190B8(Rep0568Obj* obj);
 struct HugeAnimEntry68;
 void fn_2_190DC(struct HugeAnimEntry68* entries, f32 matrix[3][4]);
-void fn_2_19224(void);
+void fn_2_19224(MenusRenderList* list);
 void fn_2_1937C(MenusRenderList* list, Mtx matrix);
 
 #endif // !__MENUS_rep_0568_H_

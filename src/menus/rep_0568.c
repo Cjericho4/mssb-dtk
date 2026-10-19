@@ -8,6 +8,14 @@
 extern void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 extern void fn_800BDA94(AnimLevel1** anim, Mtx matrix);
 
+extern f32 lbl_2_rodata_5B8;
+extern void ACTSetAnimation(AnimLevel1* actor, s32 bank, s32 sequence, u16 number, f32 blend, f32 time);
+extern void fn_800B4CA0(AnimLevel1* actor, f32 time);
+extern void fn_800B4C04(AnimLevel1* actor, f32 speed);
+extern void fn_800B4AFC(AnimLevel1* actor, u8 loop);
+extern void Set_FUN_800b2b6c(AnimLevel1* actor, s32 mode);
+extern void fn_800BDA24(MenusRenderAnimation* entry);
+
 // .text:0x00016A98 size:0x248
 void fn_2_16A98(void) {
     return;
@@ -136,8 +144,28 @@ void fn_2_190DC(HugeAnimEntry68* entries, Mtx matrix) {
 }
 
 // .text:0x00019224 size:0x158
-void fn_2_19224(void) {
-    return;
+void fn_2_19224(MenusRenderList* list) {
+    u16 i;
+    MenusRenderAnimation* entry;
+    for (i=0;i<list->count;i++) {
+        AnimationStruct* actor=g_hugeAnimStruct.AnimationStructPtrs[i];
+        if (actor != NULL && actor->unk_25D != 0) {
+            entry=&list->entries[i];
+            if(entry->animation.obj != NULL) {
+                if(entry->animation.unk8C) ACTSetAnimation(entry->animation.obj,entry->animation.unk38_s32,0,*(u16*)&entry->animation.unk42,lbl_2_rodata_5B8,entry->blend);
+                if(entry->animation.flag59) fn_800B4CA0(entry->animation.obj,entry->time);
+                if(entry->animation.flag5a) fn_800B4C04(entry->animation.obj,entry->animation.float54);
+                if(entry->animation.flag5b&2) fn_800B4AFC(entry->animation.obj,entry->animation.flag5b&1);
+                Set_FUN_800b2b6c(entry->animation.obj,entry->mode);
+                if(entry->visible) fn_800BDA24(entry);
+                entry->animation.obj->animFlags=1;
+                entry->animation.unk8C=0;
+                entry->animation.flag59=0;
+                entry->animation.flag5a=0;
+                entry->animation.flag5b &=1;
+            }
+        }
+    }
 }
 
 // .text:0x0001937C size:0x140
