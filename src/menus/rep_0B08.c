@@ -419,8 +419,18 @@ void fn_2_69E1C(s32 index) {
 }
 
 // .text:0x0006A450 size:0x158
-void fn_2_6A450(void) {
-    return;
+void fn_2_6A450(s32 index, f32 x, f32 z) {
+    Rep0B08Obj* obj=&lbl_2_bss_1A8248->rep0B08Objects[index];
+    f32 dx, dz;
+    obj->previousPosition.x=x;
+    obj->previousPosition.z=z;
+    dx=x-obj->position.x;
+    dz=z-obj->position.z;
+    if(dx==0.0f && dz==0.0f) {
+        obj->unk38=0.0f;
+        obj->unk50=0.0f;
+    } else obj->unk50=dolsqrtf2(dx*dx+dz*dz);
+    obj->unkBB=1;
 }
 
 // .text:0x0006A5A8 size:0x80

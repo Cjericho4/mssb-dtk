@@ -165,7 +165,7 @@ void fn_2_69710(void);
 void fn_2_698EC(void);
 void fn_2_699D4(void);
 void fn_2_69E1C(s32 index);
-void fn_2_6A450(void);
+void fn_2_6A450(s32 index, f32 x, f32 z);
 void fn_2_6A5A8(s32 index);
 void fn_2_6A628(void);
 void fn_2_6A708(void);
