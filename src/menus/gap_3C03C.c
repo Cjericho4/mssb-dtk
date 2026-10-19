@@ -1,4 +1,5 @@
 #include "menus/gap_3C03C.h"
+#include "menus/gap_94854.h"
 extern void fn_80062890(s32 value);
 #include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
@@ -23,7 +24,36 @@ extern void fn_80031CA4(Vec* position, MenusEffectState* state);
 
 // .text:0x0003C03C size:0x12C
 void fn_2_3C03C(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        scene->unkIndex = 1;
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        if ((*(s16*)&scene->unkIndex)-- == 0) {
+            fn_2_94854(11);
+            fn_2_9461C(0);
+            fn_2_94604(1);
+            fn_2_94634(1);
+            scene->unkIndex = 20;
+            scene->field15_0x28 = 2;
+        }
+        break;
+    case 2:
+        if ((*(s16*)&scene->unkIndex)-- == 0) scene->field15_0x28 = 3;
+        break;
+    case 3:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
+    if ((u8)lbl_2_bss_1A824C->unk19783F == 1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+    }
 }
 
 // .text:0x0003C168 size:0x284
