@@ -28,7 +28,7 @@ void fn_2_60F7C(void);
 void fn_2_61104(void);
 void fn_2_612A8(void);
 void fn_2_61468(void);
-void fn_2_61644(void);
+void fn_2_61644(struct DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_61794(void);
 void fn_2_61948(void);
 void fn_2_61B6C(void);
