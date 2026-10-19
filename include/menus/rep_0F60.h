@@ -26,8 +26,8 @@ void fn_2_8CCCC(s32 index, s32 animation, u8 flag, u8 mode, u8 value263, s16 val
 void fn_2_8CD58(s32 index, s32 animation, u8 flag, u8 mode, s16 time, u8 value266, u8 duration);
 void fn_2_8D024(void);
 void fn_2_8D24C(Rep0568Obj* obj);
-void fn_2_8D270(void);
-void fn_2_8D9DC(void);
+void fn_2_8D270(u8 index);
+void fn_2_8D9DC(s32 mode);
 void fn_2_8DB14(void);
 void fn_2_8DC00(void);
 void fn_2_8DCD8(void);

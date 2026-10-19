@@ -5,6 +5,8 @@
 
 extern void fn_800BDC88(HugeAnimEntry68* entries, u16 first, u16 last, s32 resource, s32 mode, s32 flags);
 
+extern u8 lbl_2_data_3CD0[];
+extern u8 lbl_800E869C[];
 extern hugeAnimStruct* lbl_2_bss_340140;
 extern f32 lbl_2_rodata_FB4;
 
@@ -117,13 +119,24 @@ void fn_2_8D24C(Rep0568Obj* obj) {
 }
 
 // .text:0x0008D270 size:0x76C
-void fn_2_8D270(void) {
+void fn_2_8D270(u8 index) {
     return;
 }
 
 // .text:0x0008D9DC size:0x138
-void fn_2_8D9DC(void) {
-    return;
+void fn_2_8D9DC(s32 mode) {
+    s32 i;
+    for (i = 0; i < lbl_2_bss_1A824C->objectCount; i++) {
+        lbl_2_bss_340140->AnimationStructPtrs[i] = &g_hugeAnimStruct.fielderStructs[i];
+        lbl_2_bss_340140->AnimationStructPtrs[i]->_rest255[0] = i;
+        lbl_2_bss_340140->AnimationStructPtrs[i]->unk254 = i;
+        switch (mode) {
+        case 0: lbl_2_bss_340140->AnimationStructPtrs[i]->unk252 = lbl_2_data_3CD0[i]; break;
+        case 1: lbl_2_bss_340140->AnimationStructPtrs[i]->unk252 = 28; break;
+        case 2: lbl_2_bss_340140->AnimationStructPtrs[i]->unk252 = lbl_800E869C[lbl_2_bss_1A824C->unk197706]; break;
+        }
+        fn_2_8D270(i);
+    }
 }
 
 // .text:0x0008DB14 size:0xEC
