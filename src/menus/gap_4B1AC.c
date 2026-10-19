@@ -508,7 +508,49 @@ void fn_2_5163C(void) {
 
 // .text:0x00051890 size:0x160
 void fn_2_51890(void) {
-    return;
+    MenusRosterState* settings=&lbl_80361B20;
+    MenusSavedRosters* data=(MenusSavedRosters*)&lbl_80354768;
+    if(data->rosters[settings->mode].enabled) {
+        if(data->rosters[lbl_8034E9A0.unk4754].alternate) {
+            lbl_2_bss_F410.rosterMode=1;
+            lbl_2_bss_33FBCC.mode=3;
+            lbl_2_bss_33FBCC.flags[0]=0;
+            lbl_2_bss_33FBCC.flags[1]=1;
+            lbl_2_bss_33FBCC.flags[2]=1;
+            lbl_2_bss_33FBCC.flags[3]=1;
+            lbl_2_bss_33FBCC.flags[4]=1;
+            lbl_2_bss_33FBCC.flags[5]=1;
+        } else {
+            lbl_2_bss_F410.rosterMode=2;
+            lbl_2_bss_33FBCC.mode=2;
+            lbl_2_bss_33FBCC.flags[0]=0;
+            lbl_2_bss_33FBCC.flags[1]=0;
+            lbl_2_bss_33FBCC.flags[2]=1;
+            lbl_2_bss_33FBCC.flags[3]=1;
+            lbl_2_bss_33FBCC.flags[4]=1;
+            lbl_2_bss_33FBCC.flags[5]=1;
+        }
+    } else {
+        if(data->rosters[lbl_8034E9A0.unk4754].alternate) {
+            lbl_2_bss_F410.rosterMode=1;
+            lbl_2_bss_33FBCC.mode=1;
+            lbl_2_bss_33FBCC.flags[0]=0;
+            lbl_2_bss_33FBCC.flags[1]=1;
+            lbl_2_bss_33FBCC.flags[2]=0;
+            lbl_2_bss_33FBCC.flags[3]=1;
+            lbl_2_bss_33FBCC.flags[4]=1;
+            lbl_2_bss_33FBCC.flags[5]=1;
+        } else {
+            lbl_2_bss_F410.rosterMode=0;
+            lbl_2_bss_33FBCC.mode=0;
+            lbl_2_bss_33FBCC.flags[0]=1;
+            lbl_2_bss_33FBCC.flags[1]=0;
+            lbl_2_bss_33FBCC.flags[2]=0;
+            lbl_2_bss_33FBCC.flags[3]=0;
+            lbl_2_bss_33FBCC.flags[4]=0;
+            lbl_2_bss_33FBCC.flags[5]=1;
+        }
+    }
 }
 
 // .text:0x000519F0 size:0x2C

@@ -10,6 +10,17 @@ typedef struct MenusResourceLoads {
 } MenusResourceLoads;
 extern MenusResourceLoads lbl_2_data_12EA8;
 
+typedef struct MenusSavedRoster {
+    u8 _pad0[0x1606];
+    s8 enabled;
+    u8 _pad1607[0x2E14];
+    u8 alternate; /* 0x441B */
+    u8 _pad441C[0xEC];
+} MenusSavedRoster;
+typedef struct MenusSavedRosters {
+    MenusSavedRoster rosters[3];
+} MenusSavedRosters;
+
 typedef struct MenusResourceSlot {
     void (*callback)(s32, struct MenusResourceSlot*);
     s16 state; /* 0x04 */

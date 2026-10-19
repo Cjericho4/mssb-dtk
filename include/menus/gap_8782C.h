@@ -9,7 +9,9 @@ typedef struct MenusRosterTransition {
     u16 state;
     u8 _pad4;
     u8 mode;
-    u8 _pad6[8];
+    u8 _pad6;
+    u8 flags[6]; /* 0x07 */
+    u8 _padD;
     u8 pending;
     u8 _padF[0x13];
     u8 command;
@@ -38,6 +40,7 @@ typedef struct MenusGameChoiceState {
     s32 selections[2];
     u8 _pad18[0x38];
     u32 selection;
+    s32 rosterMode; /* 0x54 */
 } MenusGameChoiceState;
 extern MenusRosterState lbl_80361B20;
 extern MenusGameChoiceState lbl_2_bss_F410;
