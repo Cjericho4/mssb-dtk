@@ -612,8 +612,23 @@ void fn_2_EC34(void) {
 }
 
 // .text:0x0000EC54 size:0x140
-void fn_2_EC54(void) {
-    return;
+void fn_2_EC54(s32 side) {
+    s32 i;
+    s32 j;
+    if (g_d_GameSettings.GameModeSelected != 5) {
+        if (g_d_GameSettings._10 == 1) {
+            lbl_2_bss_100B8.selectionFlags[1] = 0;
+            lbl_2_bss_100B8.selectionFlags[0] = 0;
+        } else lbl_2_bss_100B8.selectionFlags[side] = 0;
+        for (i = 0; i < 2; i++) {
+            for (j = 0; j < 9; j++) lbl_803C6724.selectionFlags[i][j] = 0;
+            if (lbl_2_bss_F468.flags45[i] != 0) lbl_2_bss_F468.flags45[i] = 0;
+        }
+        if (lbl_2_bss_F468.unk56 == 0) lbl_2_bss_F468.unk56 = 1;
+        lbl_2_bss_F468.unk2E = 1;
+        lbl_2_bss_100B4 = 1;
+        lbl_803CBBCC->state = 8;
+    }
 }
 
 // .text:0x0000ED94 size:0x46C

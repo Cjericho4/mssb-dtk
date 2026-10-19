@@ -23,6 +23,7 @@ typedef struct MenusTeamSelections {
         s8 teams[2][9];
     };
     s8 order[2][9];
+    u8 selectionFlags[2][9];
 } MenusTeamSelections;
 extern MenusTeamSelections lbl_803C6724;
 
@@ -136,7 +137,7 @@ void fn_2_CE44(void);
 void fn_2_DFAC(void);
 void fn_2_EAE0(void);
 void fn_2_EC34(void);
-void fn_2_EC54(void);
+void fn_2_EC54(s32 side);
 void fn_2_ED94(void);
 void fn_2_F200(void);
 void fn_2_FAA0(void);
