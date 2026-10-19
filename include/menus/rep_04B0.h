@@ -4,6 +4,18 @@
 #include "mssbTypes.h"
 #include "Dolphin/mtx.h"
 
+typedef struct MenusProjectionState {
+    u8 _pad0[0x30];
+    s16 state;
+    s16 step;
+    u8 _pad34[4];
+    f32 value;
+    Vec target;
+    Vec position;
+    s32 flags;
+} MenusProjectionState;
+extern MenusProjectionState lbl_2_bss_1010C;
+
 typedef struct MenusLightMatrixState {
     u8 _pad0[0x14];
     Mtx matrix;

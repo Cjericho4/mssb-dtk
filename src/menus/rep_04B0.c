@@ -4,6 +4,11 @@
 #include "static/UnknownHomes_Static.h"
 #include "menus/rep_08E8.h"
 
+#include "Dolphin/GX/GXTransform.h"
+extern void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+extern void fn_800B806C(s32 index, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f, f32 scale);
+extern Vec lbl_2_data_20EC;
+
 extern void LITXForm(MenusLight* light, Mtx matrix);
 
 extern MenusSceneAsset lbl_2_data_1DD4;
@@ -141,5 +146,19 @@ void fn_2_166CC(void) {
 
 // .text:0x00016724 size:0x14C
 void fn_2_16724(void) {
-    return;
+    Mtx44 projection;
+    Vec* position = &lbl_2_data_20EC;
+    lbl_2_bss_1010C.position.x = position->x;
+    lbl_2_bss_1010C.position.y = position->y;
+    lbl_2_bss_1010C.position.z = position->z;
+    lbl_2_bss_1010C.target.x = 0.0f;
+    lbl_2_bss_1010C.target.y = 0.0f;
+    lbl_2_bss_1010C.target.z = 10.0f;
+    C_MTXFrustum(projection, -0.175f, 0.175f, 0.25f, -0.25f, 1.0f, 512.0f);
+    GXSetProjection(projection, GX_PERSPECTIVE);
+    fn_800B806C(0, -240.0f, 240.0f, -320.0f, 320.0f, -512.0f, -1.0f, 1280.0f);
+    lbl_2_bss_1010C.flags = 0;
+    lbl_2_bss_1010C.value = 0.0f;
+    lbl_2_bss_1010C.state = 0;
+    lbl_2_bss_1010C.step = 0;
 }
