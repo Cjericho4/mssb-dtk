@@ -1,4 +1,5 @@
 #include "menus/gap_3C03C.h"
+#include "menus/gap_0.h"
 #include "menus/gap_94854.h"
 extern void fn_80062890(s32 value);
 #include "menus/rep_0B08.h"
@@ -108,7 +109,34 @@ void fn_2_3DDC4(void) {
 
 // .text:0x0003DF28 size:0x130
 void fn_2_3DF28(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        scene->unkIndex = 20;
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        if ((*(s16*)&scene->unkIndex)-- == 0) {
+            scene->field15_0x28 = 2;
+        }
+        break;
+    case 2:
+        if (lbl_803C77B8.controllers[lbl_2_bss_1A824C->inputIndex].pressed & 0x300) {
+            scene->unkIndex = 50;
+            scene->field15_0x28 = 3;
+        }
+        break;
+    case 3:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
+    if ((u8)lbl_2_bss_1A824C->unk19783F == 1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+    }
 }
 
 // .text:0x0003E058 size:0x334
