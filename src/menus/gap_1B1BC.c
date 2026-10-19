@@ -265,8 +265,31 @@ void fn_2_1C5C8(s32 id) {
 }
 
 // .text:0x0001C714 size:0x14C
-void fn_2_1C714(void) {
-    return;
+void fn_2_1C714(s32 id) {
+    u32 i;
+    for (i = 0; i < 51; i++) {
+        if (id == lbl_2_bss_1A8248->choices[i].id && ((u32)lbl_2_bss_1A8248->choices[i].state == 1 || (u32)lbl_2_bss_1A8248->choices[i].state == 0)) {
+            if (lbl_2_bss_1A8248->choices[i].flag == 0 && lbl_2_bss_1A8248->unk441C != id) {
+                if (lbl_2_bss_1A8248->unk441C == 5) lbl_2_bss_1A8248->choices[i].state = 3;
+                else lbl_2_bss_1A8248->choices[i].state = 0;
+            } else lbl_2_bss_1A8248->choices[i].state = 0;
+            if (lbl_2_bss_1A8248->choices[i].flag == 2) lbl_2_bss_1A8248->choices[i].state = 0;
+        }
+        if ((u32)lbl_2_bss_1A8248->choices[i].id == 6 || (u32)lbl_2_bss_1A8248->choices[i].id == 7 || (u32)lbl_2_bss_1A8248->choices[i].id == 8) {
+            lbl_2_bss_1A8248->choices[i].state = 0;
+            lbl_2_bss_1A8248->choiceFlags[6] = 1;
+            lbl_2_bss_1A8248->choiceFlags[7] = 1;
+            lbl_2_bss_1A8248->choiceFlags[8] = 1;
+        }
+    }
+    lbl_2_bss_1A8248->choiceFlags[id] = 1;
+    if (lbl_2_bss_1A8248->unk441C != id) {
+        s32 flag = 1 << id;
+        if (!(lbl_2_bss_1A8248->unk4426 & flag)) {
+            lbl_2_bss_1A8248->unk4422++;
+            lbl_2_bss_1A8248->unk4426 |= flag;
+        }
+    }
 }
 
 // .text:0x0001C860 size:0x734
