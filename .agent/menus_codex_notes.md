@@ -102,3 +102,24 @@ New MenusResourceLoads: six CompressedDiskRead mode descriptors at offset3D4 of 
 Gave up fn_2_432EC after 5 attempts: direct tables reproduce instructions with saved-register permutation; explicit bases fix some saved regs but reassociate table offsets and reorder comparisons. Stub restored.
 Gave up fn_2_6B120 during asm review: repeats negative-sine/amplitude f2/f3 allocation obstacle documented for 6B024/698EC/90DE4; retained stub.
 Gave up fn_2_450E4 after 5 attempts: all instructions match except six cmpw operand orders in unrolled child-choice checks; swapping expressions, casts and int/s8 locals failed. Stub restored and unused fields removed.
+Gave up fn_2_54890 after 5 attempts: transition loads/stores schedule differently; resource loop unrolls or retains counter instead of target 43-iteration CTR loop. Stub restored.
+Gave up fn_2_6B4FC during asm review: repeats documented negative-sine/amplitude f2/f3 allocation obstacle from 6B024/6B120; retained stub.
+Gave up fn_2_6B620 during asm review: repeats documented negative-sine/amplitude f2/f3 allocation obstacle from 6B024/6B120; retained stub.
+Gave up fn_2_42FC8 after 5 attempts: all operations agree, but three loop-pointer registers permute (choice/object offset/team); explicit pointer induction adds an mr and changes scheduling. Stub restored.
+Gave up fn_2_74E14 after 5 attempts: constant-first index sums fixed base folding, but row and byte-side saved registers remain swapped; explicit side local shifts all saved values. Stub restored.
+Gave up fn_2_477C0 during asm review: dynamically aligned per-animation aux chunks require byte slicing, like documented 8DC00; no field-only typed layout identified. Stub retained.
+Gave up fn_2_95FE0 after 5 attempts: all instructions agree except li total=1 scheduled before argument constants instead of after; post-call init, comma expression and inline out-parameter helper failed. Stub restored.
+New MenusRenderAnimation (90 bytes) embeds ActRelatedSub, with visibility byte6C; MenusRenderList has count0 and these entries at34.
+Gave up fn_2_348C after 4 attempts: nested loops and byte stores reproduce target unrolling, but team/boolean temps and five induction/base registers allocate differently. Stub restored and unused flag array removed.
+Gave up fn_2_190DC after 5 attempts: all operations agree but input-list and animation-entry saved registers r28/r29 are swapped; declaration ordering and explicit global pointer unchanged. Stub restored and unused fields/prototypes removed.
+Gave up fn_2_1C0D4 after 2 attempts: save-global pointer is sunk until after memset instead of anchored in r31 before call; direct and inline initializer forms differ in scheduling. Stub restored and unused fields removed.
+New MenusChoiceConfig (1C bytes), group0/level1; replaced Gap3C03CObj initial padding with its config pointer.
+Gave up fn_2_5184 after 3 attempts: explicit cached pointers restore saved-register count, but prologue scheduling and shifted team-row address bases differ throughout. Stub restored and unused fields removed.
+New MenusProjectionState at lbl_2_bss_1010C: state30/step32/value38/target3C/position48/flags54.
+Gave up fn_2_45204 after 5 attempts: nested unsigned counting loop matches target lhau unrolling, but outer index/choice r30/r31 swapped; explicit pointer fixes registers but adds prologue mr. Stub restored.
+Gave up fn_2_466AC after 3 attempts: declaration ordering fixes value registers, leaving7 differences in choice/object-offset/team pointer permutation, same obstacle as42FC8; direct team access drops required saved pointer. Stub restored.
+Gave up fn_2_80E0C after 5 attempts: total+=4 fixes saved registers, leaving only li total=2 / li third argument20 scheduling swapped; post-call total initialization is late. Stub restored.
+- fn_2_1B1BC: ASM review deferred resource-relative pointer fixup; no compliant typed relocation idiom identified, stub retained.
+- fn_2_8B2C0: ASM review deferred twelve relative resource pointer fixups; shared HugeAnimStruct slots require a typed relocation view, stub retained.
+- New structs MenusSavedRoster / MenusSavedRosters in gap_4B1AC.h: persisted roster records, stride 0x4508, enabled byte 0x1606 and alternate flag 0x441B.
+- fn_2_EAE0: two candidates retain selection-offset induction register and three saved registers versus target five; infinite controller loop register allocation differs substantially, stub restored and unused fields removed.
