@@ -467,8 +467,24 @@ void fn_2_26C70(void) {
 }
 
 // .text:0x00026F80 size:0x138
-void fn_2_26F80(void) {
-    return;
+void fn_2_26F80(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x5C = lbl_2_bss_1A8248->unk441C << 16;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x68 = 0;
+        slot->state = 0x25;
+        break;
+    case 5: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x000270B8 size:0x204
