@@ -69,7 +69,7 @@ void fn_2_665C0(void);
 void fn_2_6675C(struct DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_66884(void);
 void fn_2_66AEC(void);
-void fn_2_66CC4(void);
+void fn_2_66CC4(struct DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_66E14(void);
 void fn_2_66FC8(void);
 void fn_2_671DC(void);
