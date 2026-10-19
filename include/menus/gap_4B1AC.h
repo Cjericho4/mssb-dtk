@@ -13,7 +13,7 @@ extern MenusResourceLoads lbl_2_data_12EA8;
 typedef struct MenusResourceSlot {
     void (*callback)(s32, struct MenusResourceSlot*);
     s16 state; /* 0x04 */
-    u8 _pad6[2];
+    s16 timer; /* 0x06 */
     s16 unk8;
     s16 unkA;
     s16 bank; /* 0x0C */
