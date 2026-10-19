@@ -1,11 +1,21 @@
 #include "menus/rep_08E8.h"
 #include "game/rep_1E08.h"
 #include "math.h"
+#include "string.h"
 #include "UnknownHeaders.h"
 #include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
 #include "menus/gap_3C03C.h"
 #include "menus/gap_4B1AC.h"
+
+extern f32 lbl_2_bss_55B8;
+extern Vec lbl_2_data_132EC;
+extern Vec lbl_2_data_132F8;
+
+static inline f32 menuMovementAngle(f32 x, f32 y) {
+    if (0.0f == x && 0.0f == y) return 0.0f;
+    return (f32)atan2(y, x);
+}
 
 extern u32 lbl_803CBD0C;
 extern MenusEffectState* lbl_2_data_13374[];
@@ -136,7 +146,23 @@ void fn_2_48A1C(void) {
 
 // .text:0x00048BE0 size:0x128
 void fn_2_48BE0(void) {
-    return;
+    Vec position;
+    Vec delta;
+    AnimationStruct* actor = &g_hugeAnimStruct.fielderStructs[lbl_2_bss_1A824C->animationIndex];
+    memcpy(&position, &actor->unk34, sizeof(Vec));
+    PSVECSubtract(&position, &lbl_2_data_132F8, &delta);
+    delta.x *= -1.0f;
+    delta.z *= -1.0f;
+    if (0.0f != delta.x || 0.0f != delta.z) {
+        lbl_2_bss_55B8 = menuMovementAngle(delta.z, delta.x);
+    }
+    memcpy(&lbl_2_data_132F8, &actor->unk34, sizeof(Vec));
+    actor->unk34.x = position.x;
+    actor->unk34.y = position.y;
+    actor->unk34.z = position.z;
+    actor->unk40.x = lbl_2_data_132EC.x;
+    actor->unk40.y = lbl_2_bss_55B8;
+    actor->unk40.z = lbl_2_data_132EC.z;
 }
 
 // .text:0x00048D08 size:0x4C
