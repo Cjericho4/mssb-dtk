@@ -2,6 +2,11 @@
 #include "menus/rep_0438.h"
 #include "UnknownHeaders.h"
 #include "string.h"
+#include "Dolphin/GX/GXPixel.h"
+#include "Dolphin/GX/GXGeometry.h"
+#include "Dolphin/GX/GXTransform.h"
+extern void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+extern void fn_800BDA94(AnimLevel1** anim, Mtx matrix);
 
 // .text:0x00016A98 size:0x248
 void fn_2_16A98(void) {
@@ -136,6 +141,24 @@ void fn_2_19224(void) {
 }
 
 // .text:0x0001937C size:0x140
-void fn_2_1937C(void) {
-    return;
+void fn_2_1937C(MenusRenderList* list, Mtx matrix) {
+    Mtx44 projection;
+    u16 i;
+    MenusRenderAnimation* entry;
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+    GXSetCullMode(GX_CULL_BACK);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+    for (i = 0; i < list->count; i++) {
+        AnimationStruct* actor = g_hugeAnimStruct.AnimationStructPtrs[i];
+        if (actor != NULL) {
+            entry = &list->entries[i];
+            if (entry->animation.obj != NULL && entry->visible != 0) {
+                f32 x = actor->unk34.x / 1280.0f;
+                f32 y = actor->unk34.y / 1280.0f;
+                C_MTXFrustum(projection, -0.175f + y, 0.175f + y, 0.25f + x, -0.25f + x, 1.0f, 512.0f);
+                GXSetProjection(projection, GX_PERSPECTIVE);
+                fn_800BDA94(&entry->animation.obj, matrix);
+            }
+        }
+    }
 }

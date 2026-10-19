@@ -6,6 +6,18 @@
 
 typedef struct MenusAnimationAux MenusAnimationAux;
 
+typedef struct MenusRenderAnimation {
+    ActRelatedSub animation;
+    u8 _pad5C[0x10];
+    u8 visible; /* 0x6C */
+    u8 _pad6D[0x23];
+} MenusRenderAnimation;
+typedef struct MenusRenderList {
+    u16 count;
+    u8 _pad2[0x32];
+    MenusRenderAnimation entries[1];
+} MenusRenderList;
+
 typedef union MenusAnimationTask {
     QueueEntry queue;
     struct {
@@ -82,6 +94,6 @@ void fn_2_190B8(Rep0568Obj* obj);
 struct HugeAnimEntry68;
 void fn_2_190DC(struct HugeAnimEntry68* entries, f32 matrix[3][4]);
 void fn_2_19224(void);
-void fn_2_1937C(void);
+void fn_2_1937C(MenusRenderList* list, Mtx matrix);
 
 #endif // !__MENUS_rep_0568_H_
