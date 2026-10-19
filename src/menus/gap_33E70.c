@@ -1,4 +1,5 @@
 #include "menus/gap_33E70.h"
+#include "menus/gap_3C03C.h"
 #include "menus/gap_1B1BC.h"
 #include "game/rep_3448.h"
 #include "menus/gap_4B1AC.h"
@@ -418,7 +419,39 @@ void fn_2_38C14(void) {
 
 // .text:0x00038D44 size:0x164
 void fn_2_38D44(void) {
-    return;
+    DrawingSceneStruct* scene=lbl_803CC1B8;
+    switch((s8)scene->field15_0x28) {
+    case 0:
+        if(fn_2_45A84()==1) {
+            scene->unkIndex=1;
+            scene->field15_0x28=1;
+        }else scene->field15_0x28=4;
+        break;
+    case 1:
+        if((*(s16*)&scene->unkIndex)--==0) scene->field15_0x28=2;
+        break;
+    case 2:
+        lbl_2_bss_1A8234->panels[0].flag29=1;
+        scene->unkIndex=90;
+        scene->field15_0x28=3;
+        break;
+    case 3:
+        if((*(s16*)&scene->unkIndex)--==0) {
+            lbl_2_bss_1A8234->panels[1].flag29=1;
+            scene->field15_0x28=4;
+        }
+        break;
+    case 4:
+        scene->currentDrawingItem->loadingState=1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28=0;
+        break;
+    }
+    if(lbl_2_bss_1A824C->unk19783F==1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState=1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28=0;
+    }
 }
 
 // .text:0x00038EA8 size:0xA0
