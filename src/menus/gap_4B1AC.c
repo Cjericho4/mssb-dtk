@@ -612,8 +612,23 @@ void fn_2_5389C(void) {
 }
 
 // .text:0x00053AA4 size:0x124
-void fn_2_53AA4(void) {
-    return;
+s32 fn_2_53AA4(MenusResourceSlot* slot) {
+    s16 bank = slot->bank;
+    s16 result = -1;
+    if (lbl_2_bss_1A8230->flags[0][bank] != 0) result = 0;
+    else if (lbl_2_bss_1A8230->flags[1][bank] != 0) result = 2;
+    else if (lbl_2_bss_1A8230->flags[8][bank] != 0) result = 5;
+    else if (lbl_2_bss_1A8230->flags[2][bank] != 0) result = 23;
+    else if (lbl_2_bss_1A8230->flags[3][bank] != 0) result = 8;
+    else if (lbl_2_bss_1A8230->flags[4][bank] != 0) result = 11;
+    else if (lbl_2_bss_1A8230->flags[5][bank] != 0) result = 14;
+    else if (lbl_2_bss_1A8230->flags[6][bank] != 0) result = 17;
+    else if (lbl_2_bss_1A8230->flags[7][bank] != 0) result = 20;
+    else if (lbl_2_bss_1A8230->flags[9][bank] != 0) result = 24;
+    else if (lbl_2_bss_1A8230->flags[10][bank] != 0) result = 27;
+    else if (lbl_2_bss_1A8230->flags[11][bank] != 0) result = 30;
+    else if (lbl_2_bss_1A8230->flags[12][bank] != 0) result = 33;
+    return result;
 }
 
 // .text:0x00053BC8 size:0x124
