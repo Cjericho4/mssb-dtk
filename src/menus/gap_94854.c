@@ -39,8 +39,32 @@ void fn_2_948B8(void) {
 }
 
 // .text:0x0009493C size:0x150
-void fn_2_9493C(void) {
-    return;
+void fn_2_9493C(DrawingSceneStruct* scene) {
+    s32 completed;
+    s32 total;
+    MenusPreferences* prefs;
+    MenusInputFlags* input = &lbl_803C66B0;
+    if ((u32)__cntlzw(1 - input->state4F) >> 5) {
+        completed = 0;
+        total = 0;
+        prefs = &lbl_2_bss_1033C;
+        if (prefs->enabled != 0 && prefs->selected == 0 && prefs->flagB == 0) {
+            total++;
+            completed = !!fn_80042DA8(scene, 19, 0);
+        }
+        if (completed == total) {
+            if (prefs->enabled != 0 && lbl_2_bss_1033C.selected == 0 && lbl_2_bss_1033C.flagB == 0) {
+                Entry_80371C30* first = &lbl_80371C30[19];
+                Entry_80371C30* second = &lbl_80371C30[22];
+                first[scene->unkIndex].obj->field_0x5C = 0;
+                second[scene->unkIndex].obj->field_0x5C = 0;
+                first[scene->unkIndex].obj->unk64 = 26;
+                second[scene->unkIndex].obj->unk64 = 16;
+            }
+            fn_80062674(0);
+            input->state4F = 2;
+        }
+    }
 }
 
 // .text:0x00094A8C size:0xB78
