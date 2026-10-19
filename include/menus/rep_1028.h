@@ -57,7 +57,7 @@ typedef struct Rep1028Obj {
 } Rep1028Obj;
 
 void fn_2_8F0F4(void);
-void fn_2_8F27C(void);
+void fn_2_8F27C(s32 index);
 void fn_2_8F3D4(s32 index);
 void fn_2_8F528(s32 index);
 void fn_2_8F640(void);
