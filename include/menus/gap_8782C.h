@@ -38,7 +38,9 @@ typedef struct MenusGameChoiceState {
     u32 unk0;
     u8 _pad4[0xC];
     s32 selections[2];
-    u8 _pad18[0x38];
+    u8 _pad18[0x2C];
+    s32 option; /* 0x44 */
+    u8 _pad48[8];
     u32 selection;
     s32 rosterMode; /* 0x54 */
 } MenusGameChoiceState;

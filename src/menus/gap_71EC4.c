@@ -7,6 +7,8 @@ extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "menus/rep_10C0.h"
 #include "menus/rep_0438.h"
 
+extern MenusSceneScript lbl_2_data_2DC8C;
+extern u8 lbl_2_data_2DC84[];
 extern MenusSceneScript lbl_2_data_2B4DC;
 extern MenusSceneScript lbl_2_data_2AADC;
 extern MenusSceneScript lbl_2_data_2D33C;
@@ -873,7 +875,21 @@ void fn_2_845A8(void) {
 
 // .text:0x00084FA8 size:0x160
 void fn_2_84FA8(void) {
-    return;
+    DrawingSceneStruct* scene;
+    s32 i;
+    s8 option;
+    fn_80034E20(scene=lbl_803CC1B8,&lbl_2_data_2DC8C);
+    for(i=0;i<6;i++) {
+        if(lbl_80361B20.unkF5==0 && lbl_2_data_2DC84[i]==1) option=6;
+        else option=lbl_2_data_2DC84[i];
+        fn_800363D8(scene,i+6,2,30,option);
+    }
+    if(lbl_80361B20.unkF5==0 && lbl_2_data_2DC84[lbl_2_bss_F410.option]==1) option=18;
+    else option=lbl_2_data_2DC84[lbl_2_bss_F410.option];
+    if(lbl_2_bss_F410.option!=0) fn_800363D8(scene,0,1,32,option);
+    lbl_803CBCD8.unk4=0;
+    scene->unk18=0;
+    lbl_803CC1B8->unk_00=fn_2_845A8;
 }
 
 // .text:0x00085108 size:0x54
