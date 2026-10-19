@@ -1,4 +1,5 @@
 #include "menus/gap_1254.h"
+extern s16 lbl_80108EDC[][5];
 extern void fn_800506E8(s32 controller, s32 id, s32 enabled);
 extern void fn_80067B40(u8 side, u8 id, s32 enabled);
 #include "menus/gap_0.h"
@@ -478,8 +479,18 @@ restart:
 }
 
 // .text:0x0000A040 size:0x160
-void fn_2_A040(void) {
-    return;
+void fn_2_A040(s32 group, s32 choice, u8 team, u8 slot) {
+    s32 i,j;
+    if(lbl_80108EDC[group][choice]!=-1 && choice<4) {
+        choice++;
+        if(choice==5 || lbl_80108EDC[group][choice]==-1) choice=0;
+        for(i=0;i<2;i++) {
+            for(j=0;j<9;j++) {
+                if(lbl_803C6724.teams[i][j]==lbl_80108EDC[group][choice]) return;
+            }
+        }
+        lbl_803C6724.teams[team][slot]=lbl_80108EDC[group][choice];
+    } else lbl_803C6724.teams[team][slot]=lbl_80108EDC[group][0];
 }
 
 // .text:0x0000A1A0 size:0xE8

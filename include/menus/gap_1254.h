@@ -113,7 +113,7 @@ void fn_2_8CF8(void);
 void fn_2_95D8(void);
 void fn_2_9ACC(void);
 s32 fn_2_9F70(s8 side);
-void fn_2_A040(void);
+void fn_2_A040(s32 group, s32 choice, u8 team, u8 slot);
 void fn_2_A1A0(void);
 void fn_2_A288(void);
 BOOL fn_2_A50C(void);
