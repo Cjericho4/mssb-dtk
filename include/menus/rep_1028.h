@@ -142,7 +142,8 @@ void fn_2_91B7C(void);
 void fn_2_91B80(Rep1028Obj* obj);
 void fn_2_91C08(Rep1028Obj* obj);
 void fn_2_91C40(Rep1028Obj* obj);
-void fn_2_91C4C(void);
+struct hugeAnimStruct;
+void fn_2_91C4C(Rep1028Obj* obj, struct hugeAnimStruct* anim);
 void fn_2_91D74(void);
 
 #endif // !__MENUS_rep_1028_H_

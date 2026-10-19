@@ -980,8 +980,31 @@ void fn_2_91C40(Rep1028Obj* obj) {
 }
 
 // .text:0x00091C4C size:0x128
-void fn_2_91C4C(void) {
-    return;
+void fn_2_91C4C(Rep1028Obj* obj, hugeAnimStruct* anim) {
+    s32 index = obj->index;
+    if (obj->unkA8 == 1) {
+        if (lbl_2_bss_3401BC != NULL) {
+            ActRelatedSub* sub = &((ActRelatedEntry*)lbl_2_bss_340140->entries_68)[index].sub;
+            sub->float54 = 0.0f;
+            sub->flag5a = 1;
+            sub[1].prevFloat = 0.0f;
+            sub->flag59 = 1;
+            sub->flag5b = 2;
+            sub->unk8C = 0;
+            obj->state = 2;
+        }
+    } else if (obj->unkA8 == 2) {
+        if (0.0f == fn_800B4A94(((ActRelatedEntry*)lbl_2_bss_340140->entries_68)[index].sub.obj, anim) && lbl_2_bss_3401BC != NULL) {
+            ActRelatedSub* sub = &((ActRelatedEntry*)lbl_2_bss_340140->entries_68)[index].sub;
+            sub->float54 = 0.0f;
+            sub->flag5a = 1;
+            sub[1].prevFloat = 0.0f;
+            sub->flag59 = 1;
+            sub->flag5b = 2;
+            sub->unk8C = 0;
+            obj->state = 2;
+        }
+    }
 }
 
 // .text:0x00091D74 size:0x620
