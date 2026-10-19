@@ -134,7 +134,7 @@ void fn_2_30C4C(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_30D80(void);
 void fn_2_30EF8(void);
 void fn_2_3109C(void);
-void fn_2_31250(void);
+void fn_2_31250(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_31384(void);
 void fn_2_31538(void);
 void fn_2_316F8(void);
