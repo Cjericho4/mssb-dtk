@@ -123,7 +123,7 @@ void fn_2_2F544(void);
 void fn_2_2F710(void);
 void fn_2_2F8A4(void);
 void fn_2_2FA7C(void);
-void fn_2_2FBCC(void);
+void fn_2_2FBCC(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_2FD00(void);
 void fn_2_2FE50(void);
 void fn_2_300BC(void);
