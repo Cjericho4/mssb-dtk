@@ -1,4 +1,6 @@
 #include "menus/rep_0568.h"
+#include "menus/gap_D08.h"
+#include "game/rep_3448.h"
 #include "menus/rep_0438.h"
 #include "UnknownHeaders.h"
 #include "string.h"
@@ -41,7 +43,20 @@ void fn_2_16D38(void) {
 
 // .text:0x00016DA8 size:0x164
 void fn_2_16DA8(void) {
-    return;
+    s32 i;
+    g_hugeAnimStruct.field268_0x3078=0;
+    for(i=0;i<lbl_2_bss_100B8.count;i++) g_hugeAnimStruct.AnimationStructPtrs[i]=&g_hugeAnimStruct.fielderStructs[i];
+    i=3;
+    do {
+        lbl_2_bss_100B8.flags[i+2]=0;
+    }while(i--!=0);
+    if(lbl_803CBBCC->previousSelection==5 || g_d_GameSettings.GameModeSelected==5) {
+        lbl_2_bss_100B8.values[0]=1;
+        lbl_2_bss_100B8.values[1]=0;
+    }else {
+        lbl_2_bss_100B8.values[0]=1;
+        lbl_2_bss_100B8.values[1]=1;
+    }
 }
 
 // .text:0x00016F0C size:0x6C
