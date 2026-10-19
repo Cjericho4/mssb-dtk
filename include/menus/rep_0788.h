@@ -105,7 +105,7 @@ void fn_2_2CBCC(void);
 void fn_2_2CDA4(void);
 void fn_2_2CF58(void);
 void fn_2_2D0D4(void);
-void fn_2_2D508(void);
+void fn_2_2D508(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_2D640(void);
 void fn_2_2D8C4(void);
 void fn_2_2DAA8(void);
