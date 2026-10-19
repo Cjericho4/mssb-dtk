@@ -51,7 +51,7 @@ void fn_2_25D6C(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_25D98(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_25EB0(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_26010(DrawingSceneStruct* scene, MenusResourceSlot* slot);
-void fn_2_26170(void);
+void fn_2_26170(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_262D0(void);
 void fn_2_26684(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_26774(DrawingSceneStruct* scene, Rep0788Item* item);
