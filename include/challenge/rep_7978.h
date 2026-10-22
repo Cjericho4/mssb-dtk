@@ -11,7 +11,13 @@ typedef struct Rep7978Camera {
     /* 0x70 */ Vec eye;
     /* 0x7C */ Vec direction;
     /* 0x88 */ Vec up;
-    /* 0x94 */ u8 _pad94[0x28];
+    /* 0x94 */ u8 _pad94[0x10];
+    f32 angleX;
+    f32 angleY;
+    f32 moveSpeed;
+    f32 turnSpeed;
+    f32 width;
+    f32 height;
     /* 0xBC */ f32 scale;
     /* 0xC0 */ f32 nearZ;
     /* 0xC4 */ f32 farZ;
@@ -19,6 +25,7 @@ typedef struct Rep7978Camera {
     /* 0xCC */ f32 bottom;
     /* 0xD0 */ f32 left;
     /* 0xD4 */ f32 right;
+    u32 flags;
 } Rep7978Camera;
 
 #include "challenge/challenge.h"

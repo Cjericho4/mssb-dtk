@@ -22,5 +22,31 @@ void fn_1_27330(Rep7978Camera* camera) {
 
 // .text:0x000273D8 size:0x188
 void fn_1_273D8(Rep7978Camera* camera) {
-    return;
+    Vec target;
+    camera->moveSpeed = 5.0f;
+    camera->turnSpeed = 120.0f;
+    camera->flags = 0;
+    camera->angleX = 0.0f;
+    camera->angleY = 0.0f;
+    camera->eye.z = 0.0f;
+    camera->eye.y = 0.0f;
+    camera->eye.x = 0.0f;
+    camera->direction.y = 0.0f;
+    camera->direction.x = 0.0f;
+    camera->direction.z = 1.0f;
+    camera->up.x = 0.0f;
+    camera->up.y = 1.0f;
+    camera->up.z = 0.0f;
+    PSVECAdd(&camera->eye, &camera->direction, &target);
+    C_MTXLookAt(camera->view, &camera->eye, &camera->up, &target);
+    camera->width = 1.0f;
+    camera->height = 1.0f;
+    camera->scale = 1.0f / camera->height;
+    camera->nearZ = 1.0f;
+    camera->farZ = 512.0f;
+    camera->top = 240.0f;
+    camera->bottom = -240.0f;
+    camera->left = -320.0f;
+    camera->right = 320.0f;
+    C_MTXFrustum(camera->projection, camera->scale * (camera->top * camera->nearZ) / 1280.0f, camera->scale * (camera->bottom * camera->nearZ) / 1280.0f, camera->scale * (camera->left * camera->nearZ) / 1280.0f, camera->scale * (camera->right * camera->nearZ) / 1280.0f, camera->nearZ, camera->farZ);
 }
