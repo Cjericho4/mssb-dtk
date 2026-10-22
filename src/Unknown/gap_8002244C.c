@@ -140,9 +140,140 @@ ActMemBlock* fn_80023078(ActDisplayObj* obj, ActDOLayout* layout, ActMemBlock* m
 #pragma dont_inline off
 
 #pragma dont_inline on
+/* f_InitActorWithLayout -- build a GameActor (charPipeline ACTActor + game fields) from a loaded
+ * actor layout inside a 32-byte-granular memory block (Ghidra: objinit.c::InitActorWithLayout).
+ *
+ * layout: relocated ActLayout of the character .gpc (totalBones 0x06, hierarchyRoot 0x0C,
+ * geoPalettePtr 0x10, skinFileID 0x14); mem: ActMemBlock cursor the actor is carved from
+ * (lbl_8017EBB0[slot], see fn_8002399C).  Returns the actor.
+ * Memory layout carved from mem: [optional skin ActDisplayObj (4 blocks) via fn_80023078]
+ * GameActor (0xA0) | boneArray (totalBones*4, 32-aligned) | forwardMtxArray (totalBones*0x30) |
+ * [skinMtxArray | skinInvTransposeMtxArray | orientationInvMtxArray, each totalBones*0x30, when the
+ * skin has lighting data] | per-bone data (totalBones*0x140) | bones (f_InitBone).
+ * Skin lookup: layout->geoPalettePtr->descriptorArray[skinFileID] -- when skinFileID >=
+ * numDescriptors it OSReports "Display object id %d is greater than number of objects %d" and then
+ * dereferences the NULL skin at 0x800233A0 (the crash a wrong skeleton/palette pairing produces).
+ * The descriptor whose position data has compCount == 6 provides the skinned position/normal
+ * arrays (same rule as LoadGeoPalette).  Also: DSInitTree/DSInitList, worldControl.type = 0,
+ * f_InitBone over the hierarchy (bone count must equal totalBones or OSPanic),
+ * BuildBoneSkinOrientationMatrix, ACTSort, and the game fields 0x80..0x99 reset (unk8C = 1.0f).
+ * Chain position: fn_80017814 -> fn_8002399C -> here; the actor is what the per-character
+ * animation/bone code manipulates afterwards.
+ * Variant hook: none (purely structural); a texture-only skin never reaches this function.
+ * Match status: NOT matched -- 93 of 207 lines: the retail build keeps the running cursor and the
+ * skin object in stack memory (0xC/0x54, 0x110 frame; a 0xE4-byte local struct reproduces the
+ * layout but then MWCC reloads instead of forwarding) and allocates r31 for the string base;
+ * semantics identical. */
 // .text:0x800232E0 size:0x32C
 GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
-    return;
+    char* str = lbl_800E6698;
+    GameActor* act;
+    u32 boneArraySize;
+    u32 mtxArraySize;
+    u32 skinMtxSize;
+    u32 skinInvSize;
+    u32 orientInvSize;
+    u16 numBones;
+    ActMemBlock* cursor;
+    Mtx identity;
+    ActDisplayObj* skinObj;
+    u32 i;
+    u32 tmp;
+    ActGeoDescriptor* desc;
+    ActPositionData* pos;
+    u32 normalDelta;
+    ActGeoPalette* pal;
+
+    numBones = 0;
+    skinMtxSize = 0;
+    skinInvSize = 0;
+    orientInvSize = 0;
+    boneArraySize = (layout->totalBones * 4 + 0x1F) & ~0x1F;
+    mtxArraySize = (layout->totalBones * 0x30 + 0x1F) & ~0x1F;
+    cursor = mem;
+    if (layout->skinFileID != 0xFFFF) {
+        pal = layout->geoPalettePtr;
+        if (layout->skinFileID >= pal->numDescriptors) {
+            OSReport(str, layout->skinFileID, pal->numDescriptors);
+            skinObj = NULL;
+        } else {
+            skinObj = (ActDisplayObj*)mem;
+            cursor = mem + 4;
+            cursor = fn_80023078(skinObj, pal->descriptorArray[layout->skinFileID].layout, cursor);
+        }
+        mem = cursor;
+        tmp = (layout->totalBones * 0x30 + 0x1F) & ~0x1F;
+        skinMtxSize = tmp;
+        skinInvSize = tmp;
+        if (skinObj->lightingData != NULL) {
+            orientInvSize = tmp;
+        }
+    }
+    act = (GameActor*)mem;
+    act->boneArray = (ActBone**)(act + 1);
+    act->forwardMtxArray = (MtxPtr)((u32)act->boneArray + boneArraySize);
+    act->skinObject = skinObj;
+    act->skHeader = 0;
+    mem = (ActMemBlock*)((u32)mem + ((boneArraySize + mtxArraySize + skinMtxSize + skinInvSize + orientInvSize +
+                             ((layout->totalBones * 0x140 + 0x1F) & ~0x1F) + 0xBF) & ~0x1F));
+    PSMTXIdentity(identity);
+    act->actorID = layout->actorID;
+    act->layout = layout;
+    act->totalBones = layout->totalBones;
+    DSInitTree(&act->hierarchy, NULL, (DSBranchPtr)4);
+    DSInitList(&act->drawPriorityList, NULL, (DSLinkPtr)0xFC);
+    act->pal = NULL;
+    if (layout->geoPalettePtr != NULL) {
+        act->pal = layout->geoPalettePtr;
+    }
+    if (layout->skinFileID != 0xFFFF) {
+        DOSetWorldMatrix(act->skinObject, identity);
+        act->skinMtxArray = (MtxPtr)((u32)act->forwardMtxArray + mtxArraySize);
+        act->skinInvTransposeMtxArray = (MtxPtr)((u32)act->skinMtxArray + skinMtxSize);
+        normalDelta = act->skinObject->lightingData->normalArray - act->skinObject->positionData->positionArray;
+        pal = layout->geoPalettePtr;
+        desc = pal->descriptorArray;
+        for (i = 0; i < pal->numDescriptors; i++) {
+            pos = desc[i].layout->positionData;
+            if (pos->compCount == 6) {
+                act->skinObject->positionData->positionArray = pos->positionArray;
+                act->skinObject->lightingData->normalArray = pos->positionArray + normalDelta;
+                break;
+            }
+        }
+        if (act->skinObject->lightingData != NULL) {
+            act->orientationInvMtxArray = (MtxPtr)((u32)act->skinInvTransposeMtxArray + skinInvSize);
+        } else {
+            act->orientationInvMtxArray = NULL;
+        }
+    } else {
+        act->skinObject = NULL;
+        act->skinMtxArray = NULL;
+        act->skinInvTransposeMtxArray = NULL;
+        act->orientationInvMtxArray = NULL;
+    }
+    act->worldControl.type = 0;
+    if (layout->hierarchyRoot != NULL) {
+        f_InitBone(NULL, layout->hierarchyRoot, act, &numBones,
+                   (ActMemBlock*)((u32)act->forwardMtxArray + mtxArraySize + skinMtxSize + skinInvSize + orientInvSize), mem);
+    }
+    if (numBones != act->totalBones) {
+        OSPanic(str + 0x3C, 0x209, str + 0x48);
+    }
+    if (act->skinObject != NULL) {
+        BuildBoneSkinOrientationMatrix((ActBone*)act->hierarchy.Root, identity);
+    }
+    ACTSort(act);
+    act->unk80 = 0;
+    act->unk82 = 0;
+    act->unk84 = 0;
+    act->unk88 = 0;
+    act->unk8C = 1.0f;
+    act->unk90 = 0.0f;
+    act->unk99 = 0;
+    act->unk98 = 0;
+    act->unk94 = 0;
+    return act;
 }
 #pragma dont_inline off
 
