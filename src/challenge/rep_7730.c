@@ -290,7 +290,21 @@ void fn_1_20F8C(void) {
 
 // .text:0x00021040 size:0x140
 void fn_1_21040(void) {
-    return;
+    s32 i;
+    GXBegin(GX_LINES, GX_VTXFMT0, 44);
+    for (i = 0; i < 11; i++) {
+        u32 color = 0xFFFFFFFF;
+        if (i == 5) color = 0xFF0000FF;
+        GXPosition3f32((i - 5) * 10, 0.0f, -50.0f);
+        GXColor1u32(color);
+        GXPosition3f32((i - 5) * 10, 0.0f, 50.0f);
+        GXColor1u32(color);
+        if (i == 5) color = 0x00FF00FF;
+        GXPosition3f32(-50.0f, 0.0f, (i - 5) * 10);
+        GXColor1u32(color);
+        GXPosition3f32(50.0f, 0.0f, (i - 5) * 10);
+        GXColor1u32(color);
+    }
 }
 
 // .text:0x00021180 size:0x118

@@ -81,6 +81,7 @@ void fn_1_20BD8(void);
 void fn_1_20DC8(void);
 void fn_1_20E00(void);
 void fn_1_20F8C(void);
+#include "Dolphin/GX/GXFifo.h"
 void fn_1_21040(void);
 void fn_1_21180(void);
 void fn_1_21298(void);
