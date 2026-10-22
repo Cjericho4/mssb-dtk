@@ -60,7 +60,10 @@ void SetFog(u8 type, GXColor color, f32 start, f32 end, f32 nearScale, f32 farSc
 void fn_1_786C(void);
 void fn_1_78E4(void);
 void fn_1_7960(void);
-void fn_1_7E04(void);
+void fn_1_7E04(f32 scale);
+void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+void fn_800B806C(s32 index, f32 t, f32 b, f32 l, f32 r, f32 nearZ, f32 farZ, f32 scale);
+#include "Dolphin/GX/GXTransform.h"
 void fn_1_7EF8(void);
 void fn_1_7FF8(void);
 void fn_1_8368(void);

@@ -115,8 +115,12 @@ void fn_1_7960(void) {
 }
 
 // .text:0x00007E04 size:0xF4
-void fn_1_7E04(void) {
-    return;
+void fn_1_7E04(f32 scale) {
+    Mtx44 projection;
+    f32 inverse = 1.0f / scale;
+    C_MTXFrustum(projection, -0.175f * inverse, 0.175f * inverse, 0.25f * inverse, -0.25f * inverse, 1.0f, 512.0f);
+    GXSetProjection(projection, GX_PERSPECTIVE);
+    fn_800B806C(0, -240.0f * inverse, 240.0f * inverse, -320.0f * inverse, 320.0f * inverse, -512.0f, -1.0f, 1280.0f);
 }
 
 // .text:0x00007EF8 size:0x100
