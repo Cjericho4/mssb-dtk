@@ -20,7 +20,16 @@ void fn_3_106ED4(void);
 void fn_3_107078(void);
 void fn_3_1070A4(void);
 void fn_3_10722C(void);
-void fn_3_10754C(void);
+typedef struct Minigame10754COut {
+    /* 0x00 */ s16 points[6];
+    /* 0x0C */ u8 flags[6];
+    /* 0x12 */ u8 eliminated;
+    /* 0x13 */ u8 unk13;
+    /* 0x14 */ u8 charID;
+} Minigame10754COut;
+
+void fn_8006C398(Minigame10754COut* out);
+void fn_3_10754C(Minigame10754COut* out);
 void fn_3_10768C(void);
 void fn_3_107784(void);
 void fn_3_1078F8(void);

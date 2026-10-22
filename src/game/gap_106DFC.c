@@ -66,8 +66,33 @@ void fn_3_10722C(void) {
 }
 
 // .text:0x0010754C size:0x140 mapped:0x807465E0
-void fn_3_10754C(void) {
-    return;
+void fn_3_10754C(Minigame10754COut* out) {
+    MinigameStanding standings[4];
+    u32 i;
+
+    fn_8006C398(out);
+    if (g_Minigame._1A3C != 0 && g_Minigame._1908 >= 0 && g_Minigame._1908 < 4) {
+        i = 0;
+        do {
+            out->points[i] = g_Minigame.unk1E10[i];
+            i++;
+        } while (i < 6);
+        i = 0;
+        do {
+            out->flags[i] = g_Minigame.unk1E1C[i];
+            i++;
+        } while (i < 6);
+        fn_3_1079C8(standings, 1);
+        i = 0;
+        do {
+            if ((u8)standings[i].id == g_Minigame._1908) {
+                out->eliminated = standings[i].eliminated;
+            }
+            i++;
+        } while (i < g_Minigame.miniGameNumberOfParticipants);
+        out->unk13 = g_Minigame.field_1E22[g_Minigame._1908];
+        out->charID = inMemRoster[0][g_Minigame.players.characterIndex[g_Minigame._1908]].stats.CharID;
+    }
 }
 
 // .text:0x0010768C size:0xF8 mapped:0x80746720

@@ -1900,7 +1900,7 @@ typedef struct _MiniGameStruct {
     /*0x1905*/ s8 rosterID;
     /*0x1906*/ u8 miniGameNumberOfParticipants;
     /*0x1907*/ u8 _1907;
-    /*0x1908*/ u8 _1908;
+    /*0x1908*/ s8 _1908;
     /*0x1909*/ u8 multiPlayerInd;
     /*0x190A*/ u8 _190A;
     /*0x190B*/ u8 turnOverStatus;
@@ -2209,7 +2209,8 @@ typedef struct _MiniGameStruct {
     /*0x1DF4*/ s16 targetPointsArray[4];
     /*0x1DFC*/ u8 _1DFC[0x8];
     /*0x1E04*/ QueueEntry* unk1E04;
-    /*0x1E08*/ u8 _1E08[0x14];
+    /*0x1E08*/ u8 _1E08[0x8];
+    /*0x1E10*/ s16 unk1E10[6];
     /*0x1E1C*/ u8 unk1E1C[6];
     /*0x1E22*/ u8 field_1E22[4];
     /*0x1E26*/ u8 field_1E26[6];
