@@ -290,16 +290,15 @@ void fn_3_E671C(Arg0_E6798* arg0) {
 
 // .text:0x000E6798 size:0x5C mapped:0x8072582C
 void fn_3_E6798(Arg0_E6798* arg0) {
-    u8* flags = lbl_3_data_196B4;
-    int i = 0;
+    u32 i;
     NodeArray_E6798* nodeArr = arg0->unk74->unk0;
-    for (; i < 7; i++) {
-        if (*flags != 0) {
+
+    for (i = 0; i < 7; i++) {
+        if (lbl_3_data_196B4[i] != 0) {
             nodeArr->unk18[i]->unk14 = nodeArr->unk18[i]->unk18;
         } else {
             nodeArr->unk18[i]->unk14 = 0;
         }
-        flags++;
     }
 }
 
