@@ -39,13 +39,37 @@ void fn_1_5AC0(void) {
 }
 
 // .text:0x00006050 size:0x528
-void fn_1_6050(void) {
+void fn_1_6050(u16* pixels, s32 width, s32 height, f32 scale) {
     return;
 }
 
 // .text:0x00006578 size:0x14C
-void fn_1_6578(void) {
-    return;
+void fn_1_6578(GXTexObj* texture, u16* pixels, s32 width, s32 height) {
+    s32 filter;
+    f32* scale;
+    s32 mipWidth = width;
+    s32 mipHeight = height;
+    s32 offset = 0;
+    s32 i;
+    ChallengeMipSettings* settings = &lbl_1_data_2A8;
+    if (settings->levels == 0) {
+        width /= 4;
+        height /= 4;
+        fn_1_6050(pixels, width, height, 1.0f);
+        filter = 1;
+    } else {
+        scale = settings->scales;
+        for (i = 0; i <= settings->levels; i++) {
+            fn_1_6050(&pixels[offset], mipWidth, mipHeight, *scale);
+            offset += mipWidth * mipHeight;
+            mipWidth /= 2;
+            mipHeight /= 2;
+            scale++;
+        }
+        filter = settings->filter;
+    }
+    GXInitTexObj(texture, pixels, width, height, GX_TF_IA8, GX_REPEAT, GX_REPEAT, settings->levels);
+    GXInitTexObjLOD(texture, filter, GX_LINEAR, 0.0f, settings->levels, settings->bias, 0, 0, 0);
 }
 
 // .text:0x000066C4 size:0x184

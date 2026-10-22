@@ -33,8 +33,18 @@ void fn_1_5544(void);
 void fn_1_5698(void);
 void fn_1_5924(void);
 void fn_1_5AC0(void);
-void fn_1_6050(void);
-void fn_1_6578(void);
+void fn_1_6050(u16* pixels, s32 width, s32 height, f32 scale);
+#include "Dolphin/GX/GXTexture.h"
+typedef struct ChallengeMipSettings {
+    u8 _pad0[0x778];
+    u8 levels;
+    u8 _pad779[3];
+    f32 scales[4];
+    f32 bias;
+    s32 filter;
+} ChallengeMipSettings;
+extern ChallengeMipSettings lbl_1_data_2A8;
+void fn_1_6578(GXTexObj* texture, u16* pixels, s32 width, s32 height);
 void fn_1_66C4(void);
 void fn_1_6848(void);
 void fn_1_6E14(void);
