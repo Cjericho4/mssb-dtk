@@ -70,6 +70,12 @@ void fn_1_1F618(void);
 void fn_1_1F900(void);
 void fn_1_1FD78(void);
 void fn_1_2004C(void);
+void fn_80048C1C(void);
+void fn_80048D4C(void);
+void fn_80048C28(void);
+#include "Dolphin/GX/GXFrameBuffer.h"
+extern void (*lbl_1_data_10508[])(ChallengeScene*);
+extern void (*lbl_1_data_10510[])(ChallengeScene*);
 void fn_1_202A4(void);
 void fn_1_2040C(void);
 void fn_1_2051C(void);

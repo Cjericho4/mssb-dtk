@@ -181,7 +181,29 @@ void fn_1_2004C(void) {
 
 // .text:0x000202A4 size:0x168
 void fn_1_202A4(void) {
-    return;
+    ChallengeScene* scene = (ChallengeScene*)lbl_803CC1B8;
+    fn_80048C1C();
+    lbl_1_data_10508[scene->bytes[12]](scene);
+    if (lbl_803C77B8.held & 0x200) {
+        union { GXColor color; u32 rgba; } clear;
+        clear.rgba = 0x11775500;
+        GXSetCopyClear(clear.color, 0xFFFFFF);
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+    }
+    fn_80048D4C();
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_U16, 8);
+    GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+    GXSetNumChans(1);
+    GXSetNumTexGens(1);
+    lbl_1_data_10510[scene->bytes[12]](scene);
+    fn_80048C28();
 }
 
 // .text:0x0002040C size:0x110
