@@ -99,14 +99,189 @@ void fn_8001594C(void) {
     return;
 }
 
-// .text:0x80016344 size:0x3CC
-BOOL fn_80016344(u8 charID, s32 slot, u8 stance, s32 player) {
-    return;
+/* ---- fn_80016344 / fn_80016710 helpers (inlined into both in the retail binary) -------------- */
+
+/* Batter slot (12): stream subfile track 17 into g_hugeAnimStruct.batterAnimBank, then ANIMGet. */
+static inline BOOL loadBatterAnimBank(s32 slot) {
+    Gap8001196CAnim* anim = &g_hugeAnimStruct.slots[slot];
+    if (g_hugeAnimStruct.bankLoadStep == 0) {
+        g_hugeAnimStruct.bankLoadStep = 1;
+        g_hugeAnimStruct.loadedCharID[slot] = anim->charID;
+        anim->animBank = g_hugeAnimStruct.batterAnimBank;
+        ARAMTransfer(&lbl_803CB790[anim->charID * SUBFILE_TRACKS + 17], anim->animBank, 0, NULL);
+    } else if (lbl_803C6CF8.allowLoad == 1) {
+        ANIMGet(anim->animBank);
+        return TRUE;
+    }
+    return FALSE;
 }
 
+/* Other slots: mode 2 and slots < 9 load the skeleton rig through fn_80021BBC (master 432+charID or
+ * track 15) into the shared / per-block buffer; slots >= 9 stream subfile track 16 instead. */
+static inline BOOL loadFielderAnimBank(s32 slot) {
+    Gap8001196CAnim* anim = &g_hugeAnimStruct.slots[slot];
+    if (g_hugeAnimStruct.bankLoadStep == 0) {
+        g_hugeAnimStruct.bankLoadStep = 1;
+        g_hugeAnimStruct.loadedCharID[slot] = anim->charID;
+        if (g_d_GameSettings.mode == 2) {
+            anim->animBank = g_hugeAnimStruct.sharedAnimBank;
+            fn_80021BBC(anim->charID, anim->animBank);
+        } else if (slot >= 9) {
+            anim->animBank = g_hugeAnimStruct.sharedAnimBank;
+            ARAMTransfer(&lbl_803CB790[anim->charID * SUBFILE_TRACKS + 16], anim->animBank, 0, NULL);
+        } else {
+            anim->animBank = g_hugeAnimStruct.animBanks[slot].bankE;
+            fn_80021BBC(anim->charID, anim->animBank);
+        }
+    } else if (lbl_803C6CF8.allowLoad == 1) {
+        ANIMGet(anim->animBank);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+/* Stadium/extra object attached to the character: lbl_800EEB18[charID] (0x800EEB18, s16, -1 = none)
+ * is the model id; if the relocated .gpc root header has an extra block (word 0x10) the object is
+ * streamed once by fn_80021ADC(modelID, obj->buf) (master descriptor 486 + modelID, guarded by
+ * lbl_803CBBFA) and bound with fn_80025FFC.  Returns 1 when done (or nothing to do), 0 to retry. */
+static inline u8 loadStadiumObject(u8 charID, s32 slot, Gap8001196CStadiumObj* obj) {
+    s16 modelID = lbl_800EEB18[charID];
+    if (modelID == -1 || ((Gap8001196CModelFile*)g_hugeAnimStruct.slots[slot].fileBuffer)->unk10 == NULL) {
+        g_hugeAnimStruct.slots[slot].stadiumObj = NULL;
+        return 1;
+    }
+    if (lbl_803CBBFA == 0) {
+        fn_80021ADC(modelID, obj->buf);
+        lbl_803CBBFA = 1;
+    }
+    if (lbl_803C6CF8.allowLoad == 1) {
+        obj->charID = charID;
+        obj->slot = slot;
+        obj->unk4 = obj->buf;
+        fn_80025FFC(((Gap8001196CModelFile*)g_hugeAnimStruct.slots[slot].fileBuffer)->unk10, &obj->unk4, obj);
+        lbl_803CBBFA = 0;
+        g_hugeAnimStruct.slots[slot].stadiumObj = obj;
+        return 1;
+    }
+    return 0;
+}
+
+/* fn_80016344 -- per-slot character load state machine (game side: batter/fielder slots).
+ *
+ * charID: character; slot: 0..12 (12 = batter); stance: roster batting/fielding byte copied to
+ * 0x25A/0x25B; player: roster index forwarded to fn_80017098 when a load must be queued.
+ * Returns TRUE when the slot is fully loaded (loadState 6, or state 5 just finished).
+ * g_hugeAnimStruct.loadState (0x2D77): 6 done, 1 queued (wait), 2 register slotPtrs[slot] and
+ * reset bankLoadStep, 3 animation bank / skeleton (loadBatterAnimBank / loadFielderAnimBank),
+ * 4 stadium object (loadStadiumObject with lbl_80118220[0]), 5 fn_80013680(slot) post-processing,
+ * anything else -> fn_80017098(0, player, 1, slot, 1, charID) re-queues the load.
+ * Tables: lbl_803CB790 runtime subfile table (tracks 16/17), lbl_800EEB18 model map,
+ * lbl_80118220 stadium objects, lbl_803C6CF8.allowLoad.
+ * Chain position: runs after fn_8001758C/fn_80017814 built the actor; the model files themselves
+ * are not touched here.  Variant hook: none for a texture skin; a model-swapping skin only needs
+ * the lbl_800EEB18 lookup keyed on (charID, skin).
+ * Match status: NOT matched -- only the two state-4 CSE temps (&slots[slot].fileBuffer and
+ * slot*0x27c) are allocated r26 after the params here but r30/r29 before them in the target;
+ * everything else is identical. */
+// .text:0x80016344 size:0x3CC
+BOOL fn_80016344(u8 charID, s32 slot, u8 stance, s32 player) {
+    if (g_hugeAnimStruct.loadState == 6) {
+        return TRUE;
+    }
+    if (g_hugeAnimStruct.loadState == 1) {
+        return FALSE;
+    }
+    if (g_hugeAnimStruct.loadState == 2) {
+        g_hugeAnimStruct.slotPtrs[slot] = &g_hugeAnimStruct.slots[slot];
+        g_hugeAnimStruct.slotPtrs[slot]->rosterUnk26 = stance;
+        g_hugeAnimStruct.slotPtrs[slot]->rosterUnk27 = stance;
+        g_hugeAnimStruct.bankLoadStep = 0;
+        g_hugeAnimStruct.loadState = 3;
+    }
+    if (g_hugeAnimStruct.loadState == 3) {
+        if (slot == 12) {
+            if (!loadBatterAnimBank(slot)) {
+                return FALSE;
+            }
+        } else {
+            if (!loadFielderAnimBank(slot)) {
+                return FALSE;
+            }
+        }
+        g_hugeAnimStruct.loadState = 4;
+    }
+    if (g_hugeAnimStruct.loadState == 4) {
+        if (!loadStadiumObject(charID, slot, &lbl_80118220[0])) {
+            return FALSE;
+        }
+        g_hugeAnimStruct.loadState = 5;
+    }
+    if (g_hugeAnimStruct.loadState == 5) {
+        if (!fn_80013680(&g_hugeAnimStruct.slots[slot])) {
+            return FALSE;
+        }
+        g_hugeAnimStruct.loadState = 0;
+        return TRUE;
+    }
+    fn_80017098(0, player, 1, slot, 1, charID);
+    return FALSE;
+}
+
+/* fn_80016710 -- per-slot character load state machine (menu / non-batter variant of fn_80016344).
+ *
+ * Same states as fn_80016344 without the stance copy and batter path: state 3 uses
+ * loadFielderAnimBank, state 4 uses stadium object lbl_80118220[0] in mode 2 and
+ * lbl_80118220[slot] otherwise (13 objects of 0x64 bytes), state 5 runs fn_80013680 (mode 2) or
+ * fn_80012B90 and returns TRUE without clearing loadState; other states queue
+ * fn_80017098(0, 0, 0, slot, 1, charID).  Returns TRUE when loaded.
+ * Variant hook / tables: as fn_80016344.
+ * Match status: NOT matched -- same two CSE temps as fn_80016344, swapped (r29/r30) inside each
+ * inlined loadStadiumObject copy; everything else identical. */
 // .text:0x80016710 size:0x450
 BOOL fn_80016710(u8 charID, s32 slot) {
-    return;
+    if (g_hugeAnimStruct.loadState == 6) {
+        return TRUE;
+    }
+    if (g_hugeAnimStruct.loadState == 1) {
+        return FALSE;
+    }
+    if (g_hugeAnimStruct.loadState == 2) {
+        g_hugeAnimStruct.slotPtrs[slot] = &g_hugeAnimStruct.slots[slot];
+        g_hugeAnimStruct.bankLoadStep = 0;
+        g_hugeAnimStruct.loadState = 3;
+    }
+    if (g_hugeAnimStruct.loadState == 3) {
+        if (!loadFielderAnimBank(slot)) {
+            return FALSE;
+        }
+        g_hugeAnimStruct.loadState = 4;
+    }
+    if (g_hugeAnimStruct.loadState == 4) {
+        if (g_d_GameSettings.mode == 2) {
+            if (!loadStadiumObject(charID, slot, &lbl_80118220[0])) {
+                return FALSE;
+            }
+        } else {
+            if (!loadStadiumObject(charID, slot, &lbl_80118220[slot])) {
+                return FALSE;
+            }
+        }
+        g_hugeAnimStruct.loadState = 5;
+    }
+    if (g_hugeAnimStruct.loadState == 5) {
+        if (g_d_GameSettings.mode == 2) {
+            if (!fn_80013680(&g_hugeAnimStruct.slots[slot])) {
+                return FALSE;
+            }
+        } else {
+            if (!fn_80012B90(&g_hugeAnimStruct.slots[slot])) {
+                return FALSE;
+            }
+        }
+        return TRUE;
+    }
+    fn_80017098(0, 0, 0, slot, 1, charID);
+    return FALSE;
 }
 
 #pragma dont_inline on
