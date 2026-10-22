@@ -35,10 +35,12 @@ void LoadModel(void) {
     return;
 }
 
+#pragma dont_inline on
 // .text:0x80012B90 size:0xAF0
-void fn_80012B90(void) {
+u8 fn_80012B90(struct Gap8001196CAnim* anim) {
     return;
 }
+#pragma dont_inline off
 
 #pragma dont_inline on
 // .text:0x80013680 size:0xB84
@@ -103,7 +105,7 @@ BOOL fn_80016344(u8 charID, s32 slot, u8 stance, struct Gap8001196CLoadArg* arg)
 }
 
 // .text:0x80016710 size:0x450
-void fn_80016710(void) {
+BOOL fn_80016710(u8 charID, s32 slot) {
     return;
 }
 

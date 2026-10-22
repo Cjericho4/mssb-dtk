@@ -12,8 +12,8 @@ void fn_80011BE4(void);
 void fn_80011CA8(void);
 void fn_800126EC(void);
 void LoadModel(void);
-void fn_80012B90(void);
 u8 fn_80013680(struct Gap8001196CAnim* anim);
+u8 fn_80012B90(struct Gap8001196CAnim* anim);
 void fn_80014204(void);
 void fn_800145F8(void);
 void fn_80014990(void);
@@ -25,7 +25,7 @@ void fn_8001500C(void);
 void fn_80015468(void);
 void fn_8001594C(void);
 BOOL fn_80016344(u8 charID, s32 slot, u8 stance, struct Gap8001196CLoadArg* arg);
-void fn_80016710(void);
+BOOL fn_80016710(u8 charID, s32 slot);
 BOOL fn_80016F7C(void);
 typedef struct Gap8001196CModelFile { u8 _pad0[0x10]; u8* unk10; } Gap8001196CModelFile; /* relocated .gpc root header */
 typedef struct Gap8001196CStadiumObj {
@@ -34,9 +34,9 @@ typedef struct Gap8001196CStadiumObj {
     u8 _pad8[0x58];
     /* 0x60 */ u8 charID;
     /* 0x61 */ u8 slot;
-    u8 _pad62[0x520 - 0x62];
-} Gap8001196CStadiumObj;
-extern Gap8001196CStadiumObj lbl_80118220;
+    u8 _pad62[2];
+} Gap8001196CStadiumObj;                     /* 0x64 */
+extern Gap8001196CStadiumObj lbl_80118220[13];
 extern u8 lbl_803CBBFA;
 extern s16 lbl_800EEB18[54];                 /* charID -> model id (-1 = none) */
 struct Gap8001196CLoadArg;
