@@ -64,7 +64,24 @@ void fn_3_E12F8(void) {
 
 // .text:0x000E1370 size:0x108 mapped:0x80720404
 void fn_3_E1370(s32 arg0) {
-    return;
+    AnimationStruct* anim;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        if (arg0 == 3) {
+            anim = g_hugeAnimStruct.AnimationStructPtrs[i];
+            if (g_d_GameSettings.GameModeSelected == 2) {
+                anim = g_hugeAnimStruct.AnimationStructPtrs[9];
+                if (i >= 1) {
+                    return;
+                }
+            }
+            if (anim != NULL) {
+                anim->unk25A = g_Minigame.teamEntries[i]._4 / 2;
+                anim->unk25B = g_Minigame.teamEntries[i]._4 % 2;
+            }
+        }
+    }
 }
 
 // .text:0x000E1478 size:0x4EC mapped:0x8072050C
