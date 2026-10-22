@@ -143,7 +143,87 @@ void DOGet(Gap800B993CObj** out, Gap800B993CModel* model, u16 index) {
 // TODO: remove pragma once LoadGeoPalette is decompiled (keeps stub from inlining)
 #pragma dont_inline on
 Gap800B993CGeo* LoadGeoPalette(Gap800B993CGeoFile* file) {
-    return file->geo;
+    GeoPaletteHdr* pal = (GeoPaletteHdr*)file;
+    u32 ret = 0;
+    GeoDescriptor* desc;
+    GeoLayout* layout;
+    GeoRelocArray* arr;
+    GeoTextureData* tex;
+    GeoDisplayData* disp;
+    GeoDisplayStateList* states;
+    u16 i;
+    u16 j;
+
+    if (pal->userDataSize != 0 && pal->userData != 0) {
+        pal->userData = pal->userData + (u32)pal;
+    }
+    pal->descriptorArray = pal->descriptorArray + (u32)pal;
+    for (i = 0; i < pal->numDescriptors; i++) {
+        desc = (GeoDescriptor*)pal->descriptorArray;
+        desc[i].layout = desc[i].layout + (u32)pal;
+        desc = (GeoDescriptor*)pal->descriptorArray;
+        desc[i].name = desc[i].name + (u32)pal;
+        layout = (GeoLayout*)((GeoDescriptor*)pal->descriptorArray)[i].layout;
+        if (layout->positionData != 0) {
+            layout->positionData = layout->positionData + (u32)layout;
+            arr = (GeoRelocArray*)layout->positionData;
+            if (arr->array != 0) {
+                arr->array = arr->array + (u32)layout;
+            }
+            arr = (GeoRelocArray*)layout->positionData;
+            if (arr->compCount == 6) {
+                ret = arr->array;
+            }
+        }
+        if (layout->colorData != 0) {
+            layout->colorData = layout->colorData + (u32)layout;
+            arr = (GeoRelocArray*)layout->colorData;
+            if (arr->array != 0) {
+                arr->array = arr->array + (u32)layout;
+            }
+        }
+        if (layout->textureData != 0) {
+            layout->textureData = layout->textureData + (u32)layout;
+            for (j = 0; j < layout->numTextureChannels; j++) {
+                tex = (GeoTextureData*)layout->textureData;
+                if (tex[j].textureCoordArray != 0) {
+                    tex[j].textureCoordArray = (u32)layout + tex[j].textureCoordArray;
+                }
+                tex = (GeoTextureData*)layout->textureData;
+                if (tex[j].texturePaletteName != 0) {
+                    tex[j].texturePaletteName = (u32)layout + tex[j].texturePaletteName;
+                }
+            }
+        }
+        if (layout->lightingData != 0) {
+            layout->lightingData = layout->lightingData + (u32)layout;
+            arr = (GeoRelocArray*)layout->lightingData;
+            if (arr->array != 0) {
+                arr->array = arr->array + (u32)layout;
+            }
+        }
+        if (layout->displayData != 0) {
+            layout->displayData = layout->displayData + (u32)layout;
+            disp = (GeoDisplayData*)layout->displayData;
+            if (disp->primitiveBank != 0) {
+                disp->primitiveBank = disp->primitiveBank + (u32)layout;
+            }
+            disp = (GeoDisplayData*)layout->displayData;
+            if (disp->displayStateList != 0) {
+                disp->displayStateList = disp->displayStateList + (u32)layout;
+            }
+            for (j = 0; j < ((GeoDisplayData*)layout->displayData)->numStateEntries; j++) {
+                states = (GeoDisplayStateList*)((GeoDisplayData*)layout->displayData)->displayStateList;
+                if (states[j].primitiveList != 0) {
+                    states[j].primitiveList = (u32)layout + states[j].primitiveList;
+                }
+            }
+        }
+        if (layout->unk18 != 0) {
+            layout->unk18 = layout->unk18 + (u32)layout;
+        }
+    }
+    return (Gap800B993CGeo*)ret;
 }
 #pragma dont_inline reset
 

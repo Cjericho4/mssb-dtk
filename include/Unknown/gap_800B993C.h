@@ -61,6 +61,66 @@ void OSReport(char* format, ...);
 extern char lbl_800E7F8C[];
 typedef struct Gap800B993CGeo Gap800B993CGeo;
 typedef struct Gap800B993CSkin Gap800B993CSkin;
+
+/* On-disc GEOPalette (Dolphin charPipeline layout) with file-relative offsets; LoadGeoPalette turns every
+ * offset into a pointer in place.  Offsets are kept as u32 so the relocation is plain integer arithmetic. */
+typedef struct GeoRelocArray {        /* PositionData / ColorData (LightingData adds a f32) */
+    /* 0x00 */ u32 array;
+    /* 0x04 */ u16 num;
+    /* 0x06 */ u8 quantizeInfo;
+    /* 0x07 */ u8 compCount;
+} GeoRelocArray;
+
+typedef struct GeoTextureData {
+    /* 0x00 */ u32 textureCoordArray;
+    /* 0x04 */ u16 numTextureCoords;
+    /* 0x06 */ u8 quantizeInfo;
+    /* 0x07 */ u8 compCount;
+    /* 0x08 */ u32 texturePaletteName;
+    /* 0x0C */ u32 texturePalette;
+} GeoTextureData; /* 0x10 */
+
+typedef struct GeoDisplayStateList {
+    /* 0x00 */ u8 id;
+    /* 0x01 */ u8 pad8;
+    /* 0x02 */ u16 pad16;
+    /* 0x04 */ u32 setting;
+    /* 0x08 */ u32 primitiveList;
+    /* 0x0C */ u32 listSize;
+} GeoDisplayStateList; /* 0x10 */
+
+typedef struct GeoDisplayData {
+    /* 0x00 */ u32 primitiveBank;
+    /* 0x04 */ u32 displayStateList; /* GeoDisplayStateList[] */
+    /* 0x08 */ u16 numStateEntries;
+    /* 0x0A */ u16 pad16;
+} GeoDisplayData;
+
+typedef struct GeoLayout {             /* DODisplayLayout + one extra pointer */
+    /* 0x00 */ u32 positionData;
+    /* 0x04 */ u32 colorData;
+    /* 0x08 */ u32 textureData;        /* GeoTextureData[numTextureChannels] */
+    /* 0x0C */ u32 lightingData;
+    /* 0x10 */ u32 displayData;
+    /* 0x14 */ u8 numTextureChannels;
+    /* 0x15 */ u8 pad8;
+    /* 0x16 */ u16 pad16;
+    /* 0x18 */ u32 unk18;
+} GeoLayout;
+
+typedef struct GeoDescriptor {
+    /* 0x00 */ u32 layout; /* GeoLayout* */
+    /* 0x04 */ u32 name;   /* char* */
+} GeoDescriptor;
+
+typedef struct GeoPaletteHdr {
+    /* 0x00 */ u32 versionNumber;      /* overwritten by the caller with LoadGeoPalette's result */
+    /* 0x04 */ u32 userDataSize;
+    /* 0x08 */ u32 userData;
+    /* 0x0C */ u32 numDescriptors;
+    /* 0x10 */ u32 descriptorArray;    /* GeoDescriptor[numDescriptors] */
+} GeoPaletteHdr;
+
 typedef struct Gap800B993CGeoFile {
     /* 0x00 */ Gap800B993CGeo* geo;
     u8 _pad4[0x10];
