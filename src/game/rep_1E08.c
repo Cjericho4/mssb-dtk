@@ -383,15 +383,15 @@ void fn_3_BDCA4(void) {
     val28 = lbl_80366158._28;
     qEntry->unk20 -= (s32)(((u32)(2 - val28) | (u32)(val28 - 2)) >> 31);
 
-    ((BdcArrayElement*)(qEntry->unk24))[lbl_803CBBC0].unk48 = lbl_3_rodata_1E84 / fn_80052768(0)->unkA4;
-    ((BdcArrayElement*)(qEntry->unk24))[lbl_803CBBC0].unk38 = qEntry->vec.x;
-    ((BdcArrayElement*)(qEntry->unk24))[lbl_803CBBC0].unk3C = qEntry->vec.y;
-    ((BdcArrayElement*)(qEntry->unk24))[lbl_803CBBC0].unk40 = qEntry->vec.z;
-    ((BdcArrayElement*)(qEntry->unk24))[lbl_803CBBC0].unk44 = qEntry->unk20;
+    qEntry->unk24[lbl_803CBBC0].unk48 = lbl_3_rodata_1E84 / fn_80052768(0)->unkA4;
+    qEntry->unk24[lbl_803CBBC0].unk38 = qEntry->vec.x;
+    qEntry->unk24[lbl_803CBBC0].unk3C = qEntry->vec.y;
+    qEntry->unk24[lbl_803CBBC0].unk40 = qEntry->vec.z;
+    qEntry->unk24[lbl_803CBBC0].unk44 = qEntry->unk20;
 
-    PSMTXCopy(fn_80052768(0)->mtx, ((BdcArrayElement*)(qEntry->unk24))[lbl_803CBBC0].mtx);
+    PSMTXCopy(fn_80052768(0)->mtx, qEntry->unk24[lbl_803CBBC0].mtx);
 
-    fn_800A7D4C(0, &((BdcArrayElement*)(qEntry->unk24))[lbl_803CBBC0]);
+    fn_800A7D4C(0, &qEntry->unk24[lbl_803CBBC0]);
 
     if (qEntry->unk20 == 0) {
         fn_800B0A14_removeQueue();
@@ -406,7 +406,7 @@ void fn_3_BDE14(void) {
     qEntry = fn_800B0A5C_insertQueue(fn_3_BDCA4, 3);
     getAnimRelatedCoordinates(0, 7, &qEntry->vec);
     qEntry->unk20 = lbl_3_data_A3C[1] - 2;
-    qEntry->unk24 = (u8*)&lbl_3_data_11620;
+    qEntry->unk24 = (BdcArrayElement*)&lbl_3_data_11620;
 
     for (i = 0; i < 0x60; i++) {
         f32 angle = 6.2831855f * (f32)rand() / 32767.0f;
@@ -435,7 +435,7 @@ void fn_3_BDF74(void) {
     qEntry->vec.y = -g_Ball.physicsSubstruct.futureCoordsAndDist[0].pos.y;
     qEntry->vec.z = g_Ball.physicsSubstruct.futureCoordsAndDist[0].pos.z;
     qEntry->unk20 = lbl_3_data_A3C[1] - 2;
-    qEntry->unk24 = lbl_3_data_11620.hdr2;
+    qEntry->unk24 = (BdcArrayElement*)lbl_3_data_11620.hdr2;
     for (i = 0; i < 0x60; i++) {
         angle = 6.2831855f * (f32)rand() / 32767.0f;
         lbl_3_data_11620.c[i].x = (f32)(400.0 * cos((f64)angle));

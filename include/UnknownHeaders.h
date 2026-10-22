@@ -773,6 +773,7 @@ f32 unk14;
 extern Bss_1910 lbl_3_bss_1910;
 extern f32 lbl_3_rodata_1DD0;
 extern f32 lbl_3_rodata_1DD4;
+typedef struct BdcArrayElement BdcArrayElement;
 typedef struct QueueEntry {
     u8 _pad0[0x10];
     s16 unk10;     /* 0x10 */
@@ -791,7 +792,7 @@ typedef struct QueueEntry {
         };
     };
     s32 unk20;     /* 0x20 */
-    u8* unk24;     /* 0x24 */
+    BdcArrayElement* unk24; /* 0x24 */
     u8 unk28;      /* 0x28 */
 } QueueEntry;
 /* extern function with proper types */

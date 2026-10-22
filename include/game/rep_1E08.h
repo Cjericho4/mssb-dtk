@@ -91,7 +91,7 @@ extern void fn_8003A85C(u8 val);
 extern void fn_8003A848(u8 b0, u8 b1, u8 b2);
 extern void fn_8003A6B0(s32 idx, TexDataInfo* texData, f32 f1, f32 f2);
 
-typedef struct {
+typedef struct BdcArrayElement {
     u8 _pad0[0x08];
     Mtx mtx;         /* 0x08 */
     f32 unk38;       /* 0x38 */
