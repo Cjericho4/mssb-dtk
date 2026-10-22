@@ -286,7 +286,24 @@ void fn_1_F0D0(void) {
 
 // .text:0x0000F1D8 size:0x120
 void fn_1_F1D8(void) {
-    return;
+    Control control;
+    Mtx matrix;
+    VecXYZ position;
+    Vec direction;
+    ChallengeScene* scene = (ChallengeScene*)lbl_803CC1B8;
+    AnimationStruct* animation = g_hugeAnimStruct.AnimationStructPtrs[lbl_1_bss_5F73];
+    getAnimRelatedCoordinates(0, scene->words[4], &position);
+    control.type = 0;
+    CTRLSetRotation(&control, animation->unk40.x, animation->unk40.y, animation->unk40.z);
+    CTRLBuildMatrix(&control, matrix);
+    direction.x = 0.0f;
+    direction.y = 0.0f;
+    direction.z = 1.0f;
+    PSMTXMultVec(matrix, &direction, &direction);
+    fn_80030D88(&position, &direction, lbl_1_data_F278[0], 5);
+    fn_80030D88(&position, &direction, lbl_1_data_F278[1], 5);
+    fn_80030D88(&position, &direction, lbl_1_data_F278[2], 5);
+    if (--scene->words[3] == 0) fn_800B0A14_removeQueue();
 }
 
 // .text:0x0000F2F8 size:0x84

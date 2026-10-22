@@ -228,6 +228,7 @@ typedef struct ChallengeCopyValues {
 extern ChallengeCopyValues* lbl_1_data_F278[3];
 extern ChallengeCopyValues lbl_1_data_F284;
 void fn_1_F0D0(void);
+void fn_80030D88(VecXYZ* position, Vec* direction, ChallengeCopyValues* values, s32 count);
 void fn_1_F1D8(void);
 void fn_1_F2F8(void);
 void fn_1_F37C(void);
