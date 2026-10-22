@@ -100,7 +100,7 @@ void fn_8001594C(void) {
 }
 
 // .text:0x80016344 size:0x3CC
-BOOL fn_80016344(u8 charID, s32 slot, u8 stance, struct Gap8001196CLoadArg* arg) {
+BOOL fn_80016344(u8 charID, s32 slot, u8 stance, s32 player) {
     return;
 }
 
@@ -111,8 +111,104 @@ BOOL fn_80016710(u8 charID, s32 slot) {
 
 #pragma dont_inline on
 // .text:0x80016B60 size:0x41C
+/* fn_80016B60 -- stream a slot's five animation banks, one step per call.
+ *
+ * anim: the slot record (Gap8001196CAnim).  Returns TRUE once all banks are loaded and ANIMGet'd.
+ * Step counter: g_hugeAnimStruct.bankLoadStep (0x2D8D).  Odd steps queue an ARAMTransfer from the
+ * runtime subfile table lbl_803CB790[anim->charID*19 + track] into the per-block buffer
+ * g_hugeAnimStruct.animBanks[anim->blockIndex] (0x2CEC + blockIndex*0x14), even steps wait for
+ * lbl_803C6CF8.allowLoad == 1 and call ANIMGet on the buffer.  Track selection depends on
+ * g_d_GameSettings.mode (0x800E86FC+7) and settings.unk11:
+ *   step 1/2  animBankA (0x18) <- track 4  (13 in mode 7)
+ *   step 3/4  animBankB (0x14) <- track 12 (11 in mode 2, 14 in mode 6)
+ *   step 5/6  animBankC (0x1C) <- track 5  (18 when unk11 != 0 or mode 2); step 6 also sets
+ *             animBankD = animBanks[0].bankD and jumps to step 9 (steps 7/8, track 2/9/10, are dead)
+ *   step 9/10 animBank  (0x24) <- track 16
+ * Chain position: driven by fn_80016F7C for slots 0..3 after the models are in; the banks are
+ * what fn_8002399C/fn_80017814 hand to the actor as "aux".
+ * Variant hook: none needed for a cosmetic skin (animations stay on charID); a clone slot must
+ * alias the source's tracks 2..18 so these lookups keep working.
+ * Match status: MATCH. */
 BOOL fn_80016B60(Gap8001196CAnim* anim) {
-    return;
+    Gap8001196CSlotBanks* banks;
+    s32 track;
+
+    if (g_hugeAnimStruct.bankLoadStep == 0) {
+        g_hugeAnimStruct.bankLoadStep = 1;
+    }
+    if (g_hugeAnimStruct.bankLoadStep == 1) {
+        anim->animBankA = g_hugeAnimStruct.animBanks[anim->blockIndex].bankA;
+        if (g_d_GameSettings.mode == 7) {
+            track = anim->charID * SUBFILE_TRACKS + 13;
+        } else {
+            track = anim->charID * SUBFILE_TRACKS + 4;
+        }
+        ARAMTransfer(&lbl_803CB790[track], anim->animBankA, 0, NULL);
+        g_hugeAnimStruct.bankLoadStep = 2;
+    } else if (g_hugeAnimStruct.bankLoadStep == 2) {
+        if (lbl_803C6CF8.allowLoad == 1) {
+            ANIMGet(anim->animBankA);
+            g_hugeAnimStruct.bankLoadStep = 3;
+        }
+    } else if (g_hugeAnimStruct.bankLoadStep == 3) {
+        anim->animBankB = g_hugeAnimStruct.animBanks[anim->blockIndex].bankB;
+        if (g_d_GameSettings.mode == 2) {
+            track = anim->charID * SUBFILE_TRACKS + 11;
+        } else if (g_d_GameSettings.mode == 6) {
+            track = anim->charID * SUBFILE_TRACKS + 14;
+        } else {
+            track = anim->charID * SUBFILE_TRACKS + 12;
+        }
+        ARAMTransfer(&lbl_803CB790[track], anim->animBankB, 0, NULL);
+        g_hugeAnimStruct.bankLoadStep = 4;
+    } else if (g_hugeAnimStruct.bankLoadStep == 4) {
+        if (lbl_803C6CF8.allowLoad == 1) {
+            ANIMGet(anim->animBankB);
+            g_hugeAnimStruct.bankLoadStep = 5;
+        }
+    } else if (g_hugeAnimStruct.bankLoadStep == 5) {
+        anim->animBankC = g_hugeAnimStruct.animBanks[anim->blockIndex].bankC;
+        if (g_d_GameSettings.unk11 != 0 || g_d_GameSettings.mode == 2) {
+            track = anim->charID * SUBFILE_TRACKS + 18;
+        } else {
+            track = anim->charID * SUBFILE_TRACKS + 5;
+        }
+        ARAMTransfer(&lbl_803CB790[track], anim->animBankC, 0, NULL);
+        g_hugeAnimStruct.bankLoadStep = 6;
+    } else if (g_hugeAnimStruct.bankLoadStep == 6) {
+        if (lbl_803C6CF8.allowLoad == 1) {
+            ANIMGet(anim->animBankC);
+            anim->animBankD = g_hugeAnimStruct.animBanks[0].bankD;
+            g_hugeAnimStruct.bankLoadStep = 9;
+        }
+    } else if (g_hugeAnimStruct.bankLoadStep == 7) {
+        anim->animBankD = g_hugeAnimStruct.animBanks[anim->blockIndex].bankD;
+        if (g_d_GameSettings.mode == 7) {
+            track = anim->charID * SUBFILE_TRACKS + 9;
+        } else if (g_d_GameSettings.mode == 2) {
+            track = anim->charID * SUBFILE_TRACKS + 10;
+        } else {
+            track = anim->charID * SUBFILE_TRACKS + 2;
+        }
+        ARAMTransfer(&lbl_803CB790[track], anim->animBankD, 0, NULL);
+        g_hugeAnimStruct.bankLoadStep = 8;
+    } else if (g_hugeAnimStruct.bankLoadStep == 8) {
+        if (lbl_803C6CF8.allowLoad == 1) {
+            ANIMGet(anim->animBankD);
+            g_hugeAnimStruct.bankLoadStep = 9;
+        }
+    } else if (g_hugeAnimStruct.bankLoadStep == 9) {
+        anim->animBank = g_hugeAnimStruct.animBanks[anim->blockIndex].bankE;
+        ARAMTransfer(&lbl_803CB790[anim->charID * SUBFILE_TRACKS + 16], anim->animBank, 0, NULL);
+        g_hugeAnimStruct.bankLoadStep = 10;
+    } else if (g_hugeAnimStruct.bankLoadStep == 10) {
+        if (lbl_803C6CF8.allowLoad == 1) {
+            ANIMGet(anim->animBank);
+            g_hugeAnimStruct.bankLoadStep = 0;
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 #pragma dont_inline off
 
@@ -123,7 +219,7 @@ BOOL fn_80016F7C(void) {
 
     if (g_hugeAnimStruct.loadStarted == 0) {
         g_hugeAnimStruct.loadStarted = 1;
-        g_hugeAnimStruct.unk2D8D = 0;
+        g_hugeAnimStruct.bankLoadStep = 0;
         g_hugeAnimStruct.loadSlot = 0;
     }
     do {
@@ -151,10 +247,9 @@ BOOL fn_80016F7C(void) {
 
 #pragma dont_inline on
 // .text:0x80017098 size:0x2A8
-void fn_80017098(s32 arg0, struct Gap8001196CLoadArg* arg, s32 arg2, s32 slot, s32 arg4, u8 charID) {
+BOOL fn_80017098(s32 team, s32 player, s32 arg1B, s32 slotKind, s32 variant, s32 charIDOverride) {
     return;
 }
-#pragma dont_inline off
 
 // .text:0x80017340 size:0x24C
 void fn_80017340(void) {
@@ -202,7 +297,7 @@ BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 arg6, u8
     case 1:
         if (lbl_803716B8.loadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
         load:
-            fn_80017814(anim, anim->unk255, slotKind, fn_8001FDD4);
+            fn_80017814(anim, anim->blockIndex, slotKind, fn_8001FDD4);
             return TRUE;
         }
         break;
