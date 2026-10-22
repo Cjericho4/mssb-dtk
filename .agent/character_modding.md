@@ -98,7 +98,7 @@ Addresses are RAM addresses; DOL file offset = RAM - 0x800E8300 + 0xE5300 for `.
    33..36 -> `fn_80063010`, 19 -> `fn_8004B7B4`, 12/21/22/23/42 and 24/25/26 -> `actor->unk99 = 1`,
    20/43 -> `fn_800637BC`, 38 -> `unk99 = 1` + `fn_8004BD6C`, 41 -> `fn_800637D4` + `fn_8004BD6C`,
    14/37 -> `fn_80052634`, 16/44..47 -> `fn_80062ED4`.  A clone slot therefore also needs its
-   `charID` case here if the source character has one (Mario = 2 -> `fn_800638B4`).
+   `charID` case here if the source character has one (e.g. DK = 2 -> `fn_800638B4`; Mario = 0 has no case).
 4. `convertGeometryAndSknHeader` -> **`LoadGeoPalette`** (0x800BCB44, now matched in
    `src/Unknown/gap_800B993C.c`): converts the on-disc `GEOPalette`
    (`GeoPaletteHdr` -> `GeoDescriptor[] {layout, name}` -> `GeoLayout {position, color,
@@ -243,7 +243,7 @@ slots"): keep `charID` for gameplay/stats and add a `skin` byte per actor/player
   `f_InitActorWithLayout` and `DecompressDiskData` have full documented bodies in src/ (see 1.5);
   in a `--non-matching` build those bodies link as `Equivalent` code.  `convertTextureHeader` and `LoadGeoPalette` are matched and typed
   (`TextureArchiveHeader`, `GeoPaletteHdr`...), `f_InitActorWithLayout` and `DecompressDiskData`
-  are unmatched (`f_InitActorWithLayout` is typed, best attempt in `.agent/attempts/`; `DecompressDiskData` keeps its inline-asm source), which does not block a shifted build.
+  are unmatched (`f_InitActorWithLayout` is typed, best attempt in `.agent/attempts/`; `DecompressDiskData` is now clean C, non-matching), which does not block a shifted build.
 
 ## 5. Recommended plan
 1. **Prototype with data only (today):** pick the "three Marios" as three slots.  Build a patcher
