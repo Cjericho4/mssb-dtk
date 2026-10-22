@@ -105,72 +105,58 @@ void *ReadDataFromDisk(void *)
 
 /*================================================================================*/
 
-#pragma opt_unroll_factor_limit 
+/* DecompressDiskData -- LZSS-expand the current disc read segment (Namco-style bit stream).
+ *
+ * Uses gDataDecompressorValues (0x803C....: set up by SetReadParameters): BitsInBuffer/ReadBits
+ * stream, DataWriteBottom (0x348) start of the output buffer, DataWriteTop (0x358) write cursor,
+ * BytesToRead (0x338) bytes still to produce, LookBackSize (0x362) / RepetitionSize (0x363) bit
+ * widths from the file's compressionConstants, error (0x364).
+ * Each token is a 1-bit flag: 1 -> one literal byte (8 bits); 0 -> a back-reference of
+ * (ReadBits(LookBackSize) + 1) bytes back, (ReadBits(RepetitionSize) + 2) bytes long, copied byte
+ * by byte (overlap allowed).  A reference that would run before the buffer start or past the
+ * expected size sets error = 1 and stops.  Returns when BytesToRead reaches 0.
+ * Chain position: every character subfile / master descriptor loaded through ARAMTransfer with the
+ * 0x40000000 "compressed" bit passes through here before fn_80017814 relocates it; a modded file
+ * must be re-packed with this scheme (or stored uncompressed).
+ * Match status: NOT matched -- 31 lines: the retail build saves r27..r31 (stmw) with only r27/r31 used, uses a
+ * ctr loop for the copy (a for loop gets unrolled here, a do-while compiles to subic./bne) and re-
+ * materialises the global address in the error path; semantics identical. */
 void DecompressDiskData(void)
 {
-    u32 dataFlag;
-    u32 register repetition;
     u32 lookBack;
-    u32 i;
-    u8 *tP;
+    u32 repetition;
+    u8 *dst;
     DataVars *v = &gDataDecompressorValues;
-    u32 UNUSED_VALUE = 0;
 
     while (TRUE)
     {
-        // returns 0 or 1
-        dataFlag = ReadBits(LZSS_FLAG_SIZE);
-        // if 1, it's original data
-        if (dataFlag)
+        if (ReadBits(LZSS_FLAG_SIZE))
         {
-            // read new byte
             *v->DataWriteTop++ = ReadBits(LZSS_BYTE_SIZE);
             v->BytesToRead--;
         }
-        // else it's repeated data
         else
         {
-
-            // how far back the repeated data starts
-            // `+ 1` because a lookback of 0 means we want to read the data at the top of the DataWrite, which is DataWriteTop[-1]
             lookBack = ReadBits(v->LookBackSize) + 1;
-            // how long the string of repeated data is
-            repetition = ReadBits(v->RepetitionSize);
-            repetition += LZSS_MINIMUM_REPETITION_SIZE;
-
+            repetition = ReadBits(v->RepetitionSize) + LZSS_MINIMUM_REPETITION_SIZE;
             v->BytesToRead -= repetition;
-
-            // someone forgot a |?
-            // If the repetition algorithm requests data that is before the beginning of the array or requests more bytes than the original size, flag it
             if (v->BytesToRead < 0 | &v->DataWriteTop[-lookBack] < v->DataWriteBottom)
+            {
                 break;
-
-            // assume repetition is always > 0
-            // while repetition != 0, copy the byte that was `lookback` bytes ago
-            // ERROR: should load pointer instead or mr-ing previous load
-            tP = v->DataWriteTop;
-            // ERROR: should be mtctr, but not unroll
-            asm {
-                mtctr repetition
-                loop:
-            };
-            *tP++ = tP[-lookBack];
-            asm {
-                bdnz loop
-                li r30, 0
-                li r29, 0
-                li r28, 0
-            };
-
-            // update array pointer
-            v->DataWriteTop = tP;
+            }
+            dst = v->DataWriteTop;
+            do
+            {
+                *dst = dst[-lookBack];
+                dst++;
+            } while (--repetition != 0);
+            v->DataWriteTop = dst;
         }
-
-        // if we read all the bytes we wanted, return
-        if (!v->BytesToRead)
+        if (v->BytesToRead == 0)
+        {
             return;
+        }
     }
-
     v->error = 1;
 }
 
