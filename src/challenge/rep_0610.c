@@ -67,7 +67,18 @@ void fn_1_D300(void) {
 
 // .text:0x0000D4BC size:0xD4
 void fn_1_D4BC(void) {
-    return;
+    hugeAnimStruct* animations = &g_hugeAnimStruct;
+    AnimationStruct* animation = &animations->fielderStructs[0];
+    VecXYZ position;
+    if (animation != 0) {
+        animation->unk276 >>= 1;
+        animation->unk276 = (animation->unk276 & 0x1F) << 3;
+        getAnimRelatedCoordinates(0, 0x1E, &position);
+        if (animation->unk34.y - position.y < 0.3f) animation->unk276 |= 2;
+        getAnimRelatedCoordinates(0, 0x22, &position);
+        if (animation->unk34.y - position.y < 0.3f) animation->unk276 |= 4;
+    }
+    animations->AnimationStructPtrs[0]->unk276 |= 1;
 }
 
 // .text:0x0000D590 size:0xA8
