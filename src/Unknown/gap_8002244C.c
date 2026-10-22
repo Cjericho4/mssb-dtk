@@ -95,25 +95,31 @@ void fn_80022D58(void) {
     memset(lbl_803716B8.records, 0, 0x1B0);
 }
 
+#pragma dont_inline on
 // .text:0x80022DAC size:0x2CC
-void f_InitBone(void) {
+void f_InitBone(ActBone* parent, ActBoneLayout* layout, GameActor* actor, u16* numBones, ActMemBlock* mtxMem, ActMemBlock* boneMem) {
     return;
 }
+#pragma dont_inline off
 
+#pragma dont_inline on
 // .text:0x80023078 size:0x268
-void fn_80023078(void) {
+ActMemBlock* fn_80023078(ActDisplayObj* obj, ActDOLayout* layout, ActMemBlock* mem) {
     return;
 }
+#pragma dont_inline off
 
 // .text:0x800232E0 size:0x32C
-void f_InitActorWithLayout(void) {
+GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
     return;
 }
 
+#pragma dont_inline on
 // .text:0x8002360C size:0x2D4
-void BuildBoneSkinOrientationMatrix(void) {
+void BuildBoneSkinOrientationMatrix(ActBone* root, Mtx m) {
     return;
 }
+#pragma dont_inline off
 
 // .text:0x800238E0 size:0xBC
 void fn_800238E0(void) {

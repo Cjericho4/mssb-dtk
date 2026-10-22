@@ -32,3 +32,6 @@
 - fn_3_20EEC (rep_940): decompiled from stub to 10 lines; float load order of lbl_3_data_4474[1]/[0] (attempt saved).
 - fn_3_7AFE4 (gap_7976C): decompiled from stub to 4 lines (lis/addi pairing of g_Scores vs g_GameLogic); needs the 7AEEC loop as an inline copy (attempt saved).
 - fn_3_6FA28 (rep_1200): decompiled from stub to 24 lines (regalloc of the second g_Ball base and the stadium-table index; constant load order) (attempt saved).
+- DecompressDiskData (DOL read.c): existing inline-asm source is the best (19 lines); clean-C LZSS rewrites (do-while, for, while(n--)) are all worse; gave up.
+- f_InitActorWithLayout (DOL gap_8002244C): decompiled from stub to 93 lines; target has memory-resident cursor/skinObj locals plus a 0x110 frame that no plain-local form reproduces (attempt saved; typed structs + dont_inline pragmas on same-file stubs kept in the tree).
+- idiom: `return;` stubs in the same unit get inlined by -inline auto; wrap stubs of callees in `#pragma dont_inline on/off` before judging a candidate's diff.

@@ -2,6 +2,115 @@
 #define __UNKNOWN_gap_8002244C_H_
 
 #include "mssbTypes.h"
+
+#include "Dolphin/mtx.h"
+#include "Dolphin/os.h"
+#include "charPipeline/structures/Tree.h"
+#include "charPipeline/structures/List.h"
+#include "C3/control.h"
+
+/* Dolphin charPipeline actor data as this game lays it out (Ghidra: ActLayout / ACTActor). */
+typedef struct ActPositionData {
+    /* 0x00 */ u32 positionArray;
+    /* 0x04 */ u16 numPositions;
+    /* 0x06 */ u8 quantizeInfo;
+    /* 0x07 */ u8 compCount;
+} ActPositionData;
+
+typedef struct ActLightingData {
+    /* 0x00 */ u32 normalArray;
+} ActLightingData;
+
+typedef struct ActDOLayout {
+    /* 0x00 */ ActPositionData* positionData;
+    /* 0x04 */ u32 colorData;
+    /* 0x08 */ u32 textureData;
+    /* 0x0C */ ActLightingData* lightingData;
+    /* 0x10 */ u32 displayData;
+    /* 0x14 */ u8 numTextureChannels;
+    /* 0x15 */ u8 pad8;
+    /* 0x16 */ u16 pad16;
+} ActDOLayout;
+
+typedef struct ActDisplayObj {              /* DODisplayObj */
+    /* 0x00 */ ActPositionData* positionData;
+    /* 0x04 */ u32 colorData;
+    /* 0x08 */ u32 textureData;
+    /* 0x0C */ ActLightingData* lightingData;
+    /* 0x10 */ u32 displayData;
+    /* 0x14 */ u8 numTextureChannels;
+    /* 0x15 */ u8 pad8;
+    /* 0x16 */ u16 pad16;
+    /* 0x18 */ s32 visibility;
+    /* 0x1C */ Mtx worldMatrix;
+    /* 0x4C */ u32 shaderFunc;
+    /* 0x50 */ u32 shaderData;
+    u8 _pad54[0x80 - 0x54];
+} ActDisplayObj; /* the game reserves 0x80 for the skin object */
+
+typedef struct ActGeoDescriptor {
+    /* 0x00 */ ActDOLayout* layout;
+    /* 0x04 */ char* name;
+} ActGeoDescriptor;
+
+typedef struct ActGeoPalette {
+    /* 0x00 */ u32 versionNumber;
+    /* 0x04 */ u32 userDataSize;
+    /* 0x08 */ u32 userData;
+    /* 0x0C */ u32 numDescriptors;
+    /* 0x10 */ ActGeoDescriptor* descriptorArray;
+} ActGeoPalette;
+
+typedef struct ActBoneLayout ActBoneLayout;
+
+typedef struct ActLayout {
+    /* 0x00 */ u32 versionNumber;
+    /* 0x04 */ u16 actorID;
+    /* 0x06 */ u16 totalBones;
+    /* 0x08 */ u32 hierarchyOffset;
+    /* 0x0C */ ActBoneLayout* hierarchyRoot;
+    /* 0x10 */ ActGeoPalette* geoPalettePtr;
+    /* 0x14 */ u16 skinFileID;
+    /* 0x16 */ u16 pad16;
+    /* 0x18 */ u32 userDataSize;
+    /* 0x1C */ u32 userData;
+} ActLayout;
+
+typedef struct ActBone ActBone;
+
+typedef struct GameActor {                  /* ACTActor + game fields */
+    /* 0x00 */ ActLayout* layout;
+    /* 0x04 */ u16 actorID;
+    /* 0x06 */ u16 totalBones;
+    /* 0x08 */ DSTree hierarchy;
+    /* 0x10 */ ActGeoPalette* pal;
+    /* 0x14 */ ActDisplayObj* skinObject;
+    /* 0x18 */ ActBone** boneArray;
+    /* 0x1C */ Control worldControl;        /* 0x3C bytes */
+    u8 _pad58[8];                            /* game's Control is 0x44 here */
+    /* 0x60 */ MtxPtr forwardMtxArray;
+    /* 0x64 */ MtxPtr skinMtxArray;
+    /* 0x68 */ MtxPtr orientationInvMtxArray;
+    /* 0x6C */ MtxPtr skinInvTransposeMtxArray;
+    /* 0x70 */ DSList drawPriorityList;
+    /* 0x7C */ u32 skHeader;
+    /* 0x80 */ u16 unk80;
+    /* 0x82 */ u16 unk82;
+    /* 0x84 */ u16 unk84;
+    /* 0x86 */ u16 pad86;
+    /* 0x88 */ u32 unk88;
+    /* 0x8C */ f32 unk8C;
+    /* 0x90 */ f32 unk90;
+    /* 0x94 */ u32 unk94;
+    /* 0x98 */ u8 unk98;
+    /* 0x99 */ u8 unk99;
+    u8 _pad9A[0xA0 - 0x9A];
+} GameActor; /* size 0xA0, bone pointer array follows */
+
+typedef struct ActMemBlock { u8 bytes[0x20]; } ActMemBlock; /* 32-byte DMA-aligned allocation units */
+
+extern char lbl_800E6698[];                 /* "Display object id %d is greater than number of objects %d" etc. */
+
 typedef struct Gap8002244CLoad { u8 _pad0[0x715]; u8 complete; } Gap8002244CLoad;
 extern Gap8002244CLoad lbl_803C6CF8;
 void fn_800B0A14_removeQueue(void);
@@ -81,10 +190,12 @@ void fn_80022B14(void);
 void fn_80022B68(void);
 BOOL fn_80022CB4(s32 a, u32 b, s32 c, s32 d, u32 e, s32 f);
 void fn_80022D58(void);
-void f_InitBone(void);
-void fn_80023078(void);
-void f_InitActorWithLayout(void);
-void BuildBoneSkinOrientationMatrix(void);
+void f_InitBone(ActBone* parent, ActBoneLayout* layout, GameActor* actor, u16* numBones, ActMemBlock* mtxMem, ActMemBlock* boneMem);
+ActMemBlock* fn_80023078(ActDisplayObj* obj, ActDOLayout* layout, ActMemBlock* mem);
+GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem);
+void BuildBoneSkinOrientationMatrix(ActBone* root, Mtx m);
+void ACTSort(GameActor* actor);
+void DOSetWorldMatrix(ActDisplayObj* obj, Mtx m);
 void fn_800238E0(void);
 void fn_8002399C(void);
 typedef struct Gap8002244CActor { u8 _pad0[0x1BC0]; } Gap8002244CActor;

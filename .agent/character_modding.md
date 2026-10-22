@@ -146,7 +146,7 @@ slots"): keep `charID` for gameplay/stats and add a `skin` byte per actor/player
   (gap_8001196C.c, not matched yet), `fn_8002244C` (gap_8002244C.c, not matched), and the
   roster -> actor copy.  `convertTextureHeader` and `LoadGeoPalette` are matched and typed
   (`TextureArchiveHeader`, `GeoPaletteHdr`...), `f_InitActorWithLayout` and `DecompressDiskData`
-  are typed but unmatched (attempts in `.agent/attempts/`), which does not block a shifted build.
+  are unmatched (`f_InitActorWithLayout` is typed, best attempt in `.agent/attempts/`; `DecompressDiskData` keeps its inline-asm source), which does not block a shifted build.
 
 ## 5. Recommended plan
 1. **Prototype with data only (today):** pick the "three Marios" as three slots.  Build a patcher
