@@ -257,11 +257,10 @@ s32 fn_3_107BD0(u8* a, u8* b) {
     u8 ib = *b;
     u8 ia = *a;
     u8 keyB = g_Minigame.field_1E22[ib];
-    u8 keyA = g_Minigame.field_1E22[ia];
-    if (keyB == keyA) {
+    if (keyB == g_Minigame.field_1E22[ia]) {
         goto same;
     }
-    return keyB - keyA;
+    return keyB - g_Minigame.field_1E22[ia];
 same:
     return ia - ib;
 }
