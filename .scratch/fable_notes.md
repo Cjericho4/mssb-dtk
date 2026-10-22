@@ -35,3 +35,5 @@
 - DecompressDiskData (DOL read.c): existing inline-asm source is the best (19 lines); clean-C LZSS rewrites (do-while, for, while(n--)) are all worse; gave up.
 - f_InitActorWithLayout (DOL gap_8002244C): decompiled from stub to 93 lines; target has memory-resident cursor/skinObj locals plus a 0x110 frame that no plain-local form reproduces (attempt saved; typed structs + dont_inline pragmas on same-file stubs kept in the tree).
 - idiom: `return;` stubs in the same unit get inlined by -inline auto; wrap stubs of callees in `#pragma dont_inline on/off` before judging a candidate's diff.
+- idiom: a global pointer table re-read (lis/addi + index recomputed) after a call instead of CSE'd into saved regs => declare the table `volatile` (fn_8002399C, lbl_8017EBB0).
+- idiom: a u16-packed argument split with srawi 16 / clrlwi 16 => `s32 hi = packed >> 16; u16 lo = packed;` (fn_8002244C); constant+index folded into the displacement vs kept as `addi idx,0x36; slwi` => keep the sum in a local or pass `&tbl[BASE + id]` directly as an inline-function argument so it is sunk to the use.
