@@ -1188,6 +1188,7 @@ void calculateBuntHorizontalAngle(void) {
     int lowerBunt;
     int upperBunt;
     u8 contact;
+    s32 size;
 
     inputs = &g_Controls[g_GameLogic.teams[g_GameLogic.teamBatting]];
     if (ACTIVE_TUTORIAL) {
@@ -1200,13 +1201,14 @@ void calculateBuntHorizontalAngle(void) {
     }
 
     contact = g_Batter.contactType;
+    size = g_Batter.contactSize_raw[BAT_CONTACT_TYPE_SLAP];
 
-    upperBunt = lbl_3_data_5A64[contact][0][1] + ((g_Batter.contactSize_raw[BAT_CONTACT_TYPE_SLAP] *
-                                                   (lbl_3_data_5A64[contact][1][1] - lbl_3_data_5A64[contact][0][1])) /
+    lowerBunt = lbl_3_data_5A64[contact][0][0] + ((size *
+                                                   (lbl_3_data_5A64[contact][1][0] - lbl_3_data_5A64[contact][0][0])) /
                                                   100);
 
-    lowerBunt = lbl_3_data_5A64[contact][0][0] + ((g_Batter.contactSize_raw[BAT_CONTACT_TYPE_SLAP] *
-                                                   (lbl_3_data_5A64[contact][1][0] - lbl_3_data_5A64[contact][0][0])) /
+    upperBunt = lbl_3_data_5A64[contact][0][1] + ((size *
+                                                   (lbl_3_data_5A64[contact][1][1] - lbl_3_data_5A64[contact][0][1])) /
                                                   100);
 
     horizAngle = lowerBunt + (g_Ball.StaticRandomInt1 % (upperBunt - lowerBunt));
