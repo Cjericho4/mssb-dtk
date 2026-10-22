@@ -194,6 +194,13 @@ f32 fn_1_D71C(s32 index);
 void fn_1_D7A4(void);
 void fn_1_D8A0(void);
 void fn_1_D9B8(void);
+typedef struct ChallengeAnimChoice {
+    s16 table;
+    s16 entry;
+    s16 value;
+    s16 flags;
+} ChallengeAnimChoice;
+extern ChallengeAnimChoice lbl_1_bss_3218[9];
 void fn_1_DE1C(void);
 void fn_1_DF14(void);
 void fn_1_E098(void);

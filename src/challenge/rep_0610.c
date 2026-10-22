@@ -175,7 +175,29 @@ void fn_1_D9B8(void) {
 
 // .text:0x0000DE1C size:0xF8
 void fn_1_DE1C(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch (scene->flag14) {
+    case 0:
+        if ((s8)scene->flag15 == 0) {
+            scene->aFunctionPointer = fn_1_D9B8;
+        } else {
+            while ((s8)scene->flag15-- != 0) {
+                if (lbl_1_bss_3218[(s8)scene->flag15].table >= 0) {
+                    DrawingSceneStruct* entry = (DrawingSceneStruct*)fn_800B0A5C_insertQueue(fn_1_DF14, (u16)(lbl_803CC1B8->priority + 1));
+                    entry->loadingState = 0;
+                    entry->flag14 = scene->flag15;
+                    scene->loadingState = 0;
+                    scene->flag14++;
+                    break;
+                }
+            }
+        }
+        break;
+    case 1:
+        if (scene->loadingState != 0) scene->flag14 = 0;
+        break;
+    }
+    fn_1_D8A0();
 }
 
 // .text:0x0000DF14 size:0x184
