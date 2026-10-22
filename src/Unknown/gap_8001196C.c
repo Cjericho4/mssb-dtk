@@ -214,7 +214,7 @@ void fn_800177B4(void) {
 }
 
 // .text:0x80017814 size:0x514
-void fn_80017814(Gap8001196CAnim* anim, s32 arg1, u32 slotKind, void (*callback)(struct Gap8001E460Object*)) {
+void fn_80017814(Gap8001196CAnim* anim, s32 index, s32 slotKind, void (*callback)(struct Gap8001E460Object*)) {
     return;
 }
 

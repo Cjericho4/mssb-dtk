@@ -2,6 +2,7 @@
 #define __UNKNOWN_gap_8001196C_H_
 
 #include "mssbTypes.h"
+#include "C3/control.h"
 void fn_8003AC90(void);
 
 void fn_8001196C(void);
@@ -48,20 +49,33 @@ void fn_80017340(void);
 
 /* per-slot animation/actor record (AnimationStruct in UnknownHeaders.h), 0x27C bytes */
 typedef struct Gap8001196CAnim {
-    u8 _pad0[8];
+    /* 0x000 */ struct Gap8001196CActor* actor;
+    u8 _pad4[4];
     /* 0x008 */ u8* fileBuffer;              /* body .gpc / anim bank buffer */
     u8 _padC[4];
     union {
         /* 0x010 */ struct Gap8001196CSlotTable* slotTables[9];
         struct {
-            u8 _pad10[0x14];
+            u8 _pad10[4];
+            /* 0x014 */ u8* auxBatter;       /* actor-slot aux for slotKind >= 9 */
+            /* 0x018 */ u8* auxFielder;      /* actor-slot aux for slotKind < 9 */
+            u8 _pad1C[8];
             /* 0x024 */ u8* animBank;
             u8 _pad28[4];
             /* 0x02C */ struct Gap8001196CStadiumObj* stadiumObj;
         };
     };
-
-    u8 _pad34[0x252 - 0x34];
+    u8 _pad34[0x60 - 0x34];
+    /* 0x060 */ s16 unk60;
+    /* 0x062 */ s16 animID;
+    /* 0x064 */ s16 nextAnim;
+    /* 0x066 */ s16 unk66;
+    /* 0x068 */ s16 unk68;
+    /* 0x06A */ s16 unk6A;
+    /* 0x06C */ s16 unk6C;
+    /* 0x06E */ s16 unk6E;
+    u8 _pad70[0x162 - 0x70];
+    /* 0x162 */ u16 boneIndices[120];        /* bone id -> actor bone index, 0xFFFF = none */
     /* 0x252 */ s8 charID;
     u8 _pad253;
     /* 0x254 */ u8 slotKind;                 /* 9 = batter */
@@ -73,14 +87,77 @@ typedef struct Gap8001196CAnim {
     /* 0x25A */ u8 rosterUnk26;
     /* 0x25B */ u8 rosterUnk27;
     /* 0x25C */ u8 unk25C;
-    u8 _pad25D[0x278 - 0x25D];
+    /* 0x25D */ u8 unk25D;
+    /* 0x25E */ u8 unk25E;
+    /* 0x25F */ u8 unk25F;
+    /* 0x260 */ u8 unk260;
+    /* 0x261 */ u8 unk261;
+    /* 0x262 */ u8 unk262;
+    /* 0x263 */ u8 unk263;
+    /* 0x264 */ u8 unk264;
+    /* 0x265 */ u8 unk265;
+    /* 0x266 */ u8 unk266;
+    /* 0x267 */ u8 unk267;
+    /* 0x268 */ u8 unk268;
+    /* 0x269 */ u8 unk269;
+    /* 0x26A */ u8 unk26A;
+    /* 0x26B */ u8 unk26B;
+    /* 0x26C */ u8 unk26C;
+    /* 0x26D */ u8 unk26D;
+    /* 0x26E */ u8 unk26E;
+    u8 _pad26F;
+    /* 0x270 */ u8 unk270;
+    /* 0x271 */ u8 unk271;
+    /* 0x272 */ u8 unk272;
+    /* 0x273 */ u8 unk273;
+    u8 _pad274[3];
+    /* 0x277 */ u8 unk277;
     /* 0x278 */ u8 isBatter;
     u8 _pad279[0x27C - 0x279];
 } Gap8001196CAnim;
 typedef struct Gap8001196CSlotBank { u8* animBank; u8 _pad4[0x10]; } Gap8001196CSlotBank; /* 0x14 */
 /* hugeAnimStruct (UnknownHeaders.h) seen from this unit */
+/* actor as this unit sees it (GameActor in gap_8002244C.h) */
+typedef struct Gap8001196CBone { u16 boneID; u8 _pad2[0x134]; u8 unk136; } Gap8001196CBone;
+typedef struct Gap8001196CActor {
+    u8 _pad0[6];
+    /* 0x06 */ u16 totalBones;
+    u8 _pad8[0x10];
+    /* 0x18 */ Gap8001196CBone** boneArray;
+    u8 _pad1C[0x99 - 0x1C];
+    /* 0x99 */ u8 unk99;
+} Gap8001196CActor;
+/* per-slot actor record at +0x34 of each 0x90-byte entry (Gap8002244CActorSlot in gap_8002244C.h) */
+typedef struct Gap8001196CActorSlot {
+    /* 0x00 */ Gap8001196CActor* actor;
+    /* 0x04 */ u8* aux;
+    /* 0x08 */ void (*callback)(struct Gap8001E460Object*);
+    u8 _padC[4];
+    /* 0x10 */ Control control;
+    u8 _pad4C[8];
+    /* 0x54 */ f32 unk54;
+    u8 _pad58[2];
+    /* 0x5A */ u8 unk5A;
+    u8 _pad5B;
+} Gap8001196CActorSlot;                      /* 0x5C here; the real record runs past the entry */
+typedef struct Gap8001196CActorEntry { u8 _pad0[0x34]; Gap8001196CActorSlot slot; } Gap8001196CActorEntry; /* 0x90 */
+/* relocated .gpc root header (offsets become pointers in fn_80017814) */
+typedef struct Gap8001196CRootHeader {
+    /* 0x00 */ u32 texture;
+    /* 0x04 */ u32 layout;
+    /* 0x08 */ u32 geo;
+    /* 0x0C */ u32 skn;
+    /* 0x10 */ u32 unk10;
+} Gap8001196CRootHeader;
 typedef struct Gap8001196CAnimTable {
-    u8 _pad0[0xC04];
+    u8 _pad0[0x60];
+    /* 0x0060 */ Gap8001196CActorEntry* actorEntries;
+    u8 _pad64[0xAC - 0x64];
+    /* 0x00AC */ void* unkAC;
+    /* 0x00B0 */ void* unkB0;
+    /* 0x00B4 */ void* unkB4;
+    /* 0x00B8 */ void* unkB8;
+    u8 _padBC[0xC04 - 0xBC];
     /* 0x0C04 */ Gap8001196CAnim slots[13];
     /* 0x2C50 */ Gap8001196CAnim* slotPtrs[13];
     u8 _pad2C84[0x2CAC - 0x2C84];
@@ -133,7 +210,35 @@ void* memcpy(void* dest, const void* src, u32 n);
 BOOL fn_80016B60(Gap8001196CAnim* anim);
 BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 arg6, u8 slotKind, u8 variant);
 void fn_800177B4(void);
-void fn_80017814(Gap8001196CAnim* anim, s32 arg1, u32 slotKind, void (*callback)(struct Gap8001E460Object*));
+void fn_80017814(Gap8001196CAnim* anim, s32 index, s32 slotKind, void (*callback)(struct Gap8001E460Object*));
+struct Gap8001196CTexArchive;
+struct Gap8001196CActLayout;
+struct Gap8001196CGeoFile;
+struct Gap8001196CSkin;
+void convertTextureHeader(struct Gap8001196CTexArchive* tex);
+void LoadActorLayout(struct Gap8001196CActLayout* layout);
+void convertGeometryAndSknHeader(struct Gap8001196CGeoFile* geo, struct Gap8001196CSkin* skn);
+void haveActLayoutPointToGeoHeader(struct Gap8001196CActLayout* layout, struct Gap8001196CGeoFile* geo);
+void fn_800BD190(struct Gap8001196CGeoFile* geo, struct Gap8001196CTexArchive* tex);
+void fn_8002399C(Gap8001196CActorSlot* slot, s32 blockIdx, u16 actorID, struct Gap8001196CActLayout* layout, u8* aux,
+                 struct Gap8001196CSkin* skn);
+void fn_80025DDC(u8* data);
+void fn_80025C58(u8* data, Gap8001196CActorSlot* slot);
+void fn_800B2B74(Gap8001196CActor* actor, u16 boneIdx);
+void fn_800B2B54(Gap8001196CActor* actor, u16 boneIdx, u8 value);
+void fn_800BD548(Gap8001196CActorSlot* slot, s32 count, ...);
+s32 fn_800B2BA8(Gap8001196CActor* actor, u16 boneIdx, Gap8001196CActor* other, u16 otherIdx);
+void fn_800B2C08(Gap8001196CActor* actor, u16 boneIdx);
+void fn_8001FC4C(Gap8001196CAnim* anim);
+void fn_800638B4(Gap8001196CAnim* anim, Gap8001196CActorSlot* slot);
+void fn_80063010(Gap8001196CAnim* anim, Gap8001196CActorSlot* slot);
+void fn_8004B7B4(Gap8001196CAnim* anim, Gap8001196CActorSlot* slot);
+void fn_800637BC(Gap8001196CAnim* anim, Gap8001196CActorSlot* slot);
+void fn_8004BD6C(Gap8001196CAnim* anim, Gap8001196CActorSlot* slot);
+void fn_800637D4(Gap8001196CAnim* anim, Gap8001196CActorSlot* slot);
+void fn_80052634(Gap8001196CAnim* anim, Gap8001196CActorSlot* slot);
+void fn_80062ED4(Gap8001196CAnim* anim, Gap8001196CActorSlot* slot);
+u8* memset(u8* dst, s32 value, u32 size);
 void fn_80017D28(void);
 void fn_80017DBC(void);
 void fn_80018024(void);
