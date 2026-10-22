@@ -126,8 +126,52 @@ void fn_80017340(void) {
 }
 
 // .text:0x8001758C size:0x228
-void fn_8001758C(void) {
-    return;
+BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 arg6, u8 slotKind, u8 variant) {
+    Gap8001196CAnim* anim = &g_hugeAnimStruct.slots[slot];
+    s32 track;
+    Gap8001196CRosterEntry* entry;
+
+    switch (*state) {
+    case 0:
+        if (lbl_803C6CF8.allowLoad == 1) {
+            anim->unk25C = 1;
+            anim->team = team;
+            anim->player = player;
+            anim->slotKind = slotKind;
+            anim->charID = charID;
+            anim->unk258 = arg6;
+            anim->variant = variant;
+            track = anim->charID * SUBFILE_TRACKS;
+            entry = &inMemRoster[team][player];
+            anim->rosterUnk26 = entry->unk26;
+            anim->rosterUnk27 = entry->unk27;
+            anim->isBatter = slotKind == 9;
+            if (variant == 0) {
+                track += 1;
+            }
+            if (anim->isBatter != 0 && variant == 1 && g_hugeAnimStruct.cachedBatterCharID == charID) {
+                memcpy(anim->fileBuffer, g_hugeAnimStruct.cachedBatterData, g_hugeAnimStruct.cachedBatterSize);
+                goto load;
+            }
+            if (slotKind >= 10 && slotKind <= 12 && variant == 0 && g_hugeAnimStruct.cachedFielderCharID == charID) {
+                memcpy(anim->fileBuffer, g_hugeAnimStruct.cachedFielderData, g_hugeAnimStruct.cachedFielderSize);
+                goto load;
+            }
+            if (variant == 0 || fn_8002204C(anim->charID, anim->fileBuffer) == NULL) {
+                ARAMTransfer(&lbl_803CB790[track], anim->fileBuffer, 0, NULL);
+            }
+            *state = 1;
+        }
+        break;
+    case 1:
+        if (lbl_803716B8.loadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
+        load:
+            fn_80017814(anim, anim->unk255, slotKind, fn_8001FDD4);
+            return TRUE;
+        }
+        break;
+    }
+    return FALSE;
 }
 
 // .text:0x800177B4 size:0x60
@@ -136,7 +180,7 @@ void fn_800177B4(void) {
 }
 
 // .text:0x80017814 size:0x514
-void fn_80017814(void) {
+void fn_80017814(Gap8001196CAnim* anim, s32 arg1, u32 slotKind, void (*callback)(struct Gap8001E460Object*)) {
     return;
 }
 
