@@ -23,9 +23,10 @@ Addresses are RAM addresses; DOL file offset = RAM - 0x800E8300 + 0xE5300 for `.
 ### 1.2 Disc data tables (all in DOL `.data`, fixed size)
 | Table | RAM / DOL off | Shape | Meaning |
 |---|---|---|---|
-| `lbl_800F1D78` | 0x800F1D78 / 0xEED78 | 1026 x 16 B = 54 chars x 19 tracks | Section-1 **subfile table**: `{u32 flags(0x40B), u32 (0x40000000\|uncompSize), u32 discOffset, u32 compSize}`. Index = `charID*19 + track`. Track 0 = body `.gpc`, track 1 = equipment/hands `.gpc`, tracks 2..14 = animation banks, **track 15 = skeleton rig** (`fn_80021BBC` falls back to `lbl_800F1D78[charID*19+15]` when not in ARAM), 16..18 more anim banks. `lbl_803CB790` (sdata) points at the runtime copy used by `fn_8001758C`/`fn_80016344`. |
+| `lbl_800F1D78` | 0x800F1D78 / 0xEED78 | 1026 x 16 B = 54 chars x 19 tracks | Section-1 **subfile table**: `{u32 flags(0x40B), u32 (0x40000000\|uncompSize), u32 discOffset, u32 compSize}`. Index = `charID*19 + track`. Tracks 0/1 = the two model `.gpc` files (body and equipment/hands — **which is which is inferred, not verified**: the matched `fn_8001758C` loads `track = charID*19 + (variant == 0)`, i.e. track 1 on the default `variant == 0` path, and only calls the master-descriptor body loader `fn_8002204C` when `variant != 0`; a data-only patcher must cover both tracks), tracks 2..14 = animation banks, **track 15 = skeleton rig** (`fn_80021BBC` falls back to `lbl_800F1D78[charID*19+15]` when not in ARAM), 16..18 more anim banks. `lbl_803CB790` (sdata) points at the runtime copy used by `fn_8001758C`/`fn_80016344`. |
 | `lbl_800EFD38` | 0x800EFD38 / 0xECD38 | 515 x 16 B (+`lbl_800F1D68`, 1 x 16 B, same format => 516) | **Master descriptor table** (ARAM/section-2 objects), same entry format but word2 is an ARAM/section offset. Tiers come from `lbl_803CB7E0` = `{0x36, 0x17A, 0x36, 0x1D}`: entries 0..53 body models, 54..431 = `54 + charID*7 + k` sub-items (hands/bats/grips, see `fn_8002244C`: `entry = 54 + (id>>16)`), 432..485 = `432 + charID` skeleton rigs (`fn_80021BBC`), 486..514 = `486 + id` stadium objects (`fn_80021ADC`, id < 0x1D). |
 | `lbl_800EEAAC` | 0x800EEAAC / 0xEBAAC | 54 x u16 | **Glove/attachment bone-list base**: value is `charID*6` in the retail DOL, i.e. the start index of that character's 6-entry attachment-bone list. Read as `lhax(table, actor->unk252*2)` in `fn_80011CA8`, `LoadModel`, `fn_80013680` (animateModelArmsGlovesBats), `fn_80014204`, `fn_800145F8`, `fn_8001D180` (updateAnimationAction); each walks the actor's bone list (`actor+0x30`) from that index. Setting a clone's entry to the source character's value (DK = 0x000C) is what the fork does. |
+| `lbl_800F71D8+0x1E0` | 0x800F73B8 / 0xF43B8 | 54 x 2 s8 | **Body-item pairs** `{masterIdx, subItem or -1}` read by `fn_8002204C` (as `lbl_800EFBE8+0x77D0`) only when `lbl_803716B8.unk1EA & 1` (bodies resident in ARAM): the master descriptor to stream for the body and the sub-item id passed to `fn_8002254C`. Retail values not dumped here; a cloned slot needs its own pair (hypothesis: the fork's patcher does not know this table). |
 | `lbl_800EEB18` | 0x800EEB18 | 54 x u16 | **Model ID map** (identity 0..53 in retail, -1 = none). `fn_8001500C`, `fn_8001594C`, `fn_80016344`, `fn_80016710`, `fn_80019C00`, `fn_8001A3FC` use `lhax(table, charID*2)` to pick the model/anim set (`lbl_80118220[modelID]`, 0x64 stride). This is the cheapest existing "charID -> model" indirection. |
 | `lbl_803CB7E0` | sdata | 4 x u16 | descriptor tier counts (54, 378, 54, 29). |
 
@@ -177,6 +178,10 @@ slots"): keep `charID` for gameplay/stats and add a `skin` byte per actor/player
   bit 30, 32-byte DMA alignment, `files/ZZZZ.dat` free arena) is a plausible recipe.  Note the fork
   copies *all* 19 tracks per clone (2 MB/clone in the "free arena"); aliasing tracks 2..18 to the
   source slot like the retail variants do makes a clone cost only its two `.gpc` files.
+  Two more per-character tables found this round must be covered too: the body-item pair table
+  (`lbl_800F71D8+0x1E0`, `fn_8002204C`) and the per-charID setup switch in `fn_80017814`
+  (`jumptable_800EEC40`): a Mario clone on another slot will not get Mario's case-2 `fn_800638B4`
+  setup unless the jump table is patched or the hook keys on the source charID.
 * Beyond 54: no.  Every table is fixed-size `.data` with hard bounds (`fn_80021BBC`: `charID < 0x36`,
   `fn_80021ADC`: `< 0x1D`), and the stats/menu side has the same limit, so extra slots need code or
   table relocation.
