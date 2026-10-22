@@ -4,10 +4,16 @@
 #include "mssbTypes.h"
 #include "UnknownHeaders.h"
 
+typedef struct ChallengeAxes {
+    u8 bytes[6];
+} ChallengeAxes;
+
 typedef struct ChallengeInput {
     /* 0x0 */ u16 buttons;
     /* 0x2 */ u16 held;
     /* 0x4 */ u16 pressed;
+    /* 0x6 */ u8 _pad6[0xA];
+    /* 0x10 */ ChallengeAxes axes;
 } ChallengeInput;
 extern ChallengeInput lbl_803C77B8;
 

@@ -1,7 +1,7 @@
 #include "challenge/rep_7978.h"
 
 // .text:0x00026D28 size:0x5B4
-void fn_1_26D28(void) {
+void fn_1_26D28(Rep7978Camera* camera, u16 buttons, u16 held, u16 pressed, ChallengeAxes* axes) {
     return;
 }
 

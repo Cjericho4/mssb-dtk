@@ -25,6 +25,9 @@ void fn_1_276CC(void);
 void fn_1_27AD0(void);
 void fn_1_27AD4(void);
 void fn_1_27BB8(void);
+#include "challenge/rep_7978.h"
+#include "stl/string.h"
+extern void (*lbl_1_data_108E8[])(void);
 void fn_1_27D6C(void);
 void fn_1_27E50(void);
 void fn_1_27E98(void);

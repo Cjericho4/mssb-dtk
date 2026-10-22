@@ -50,7 +50,17 @@ void fn_1_27BB8(void) {
 
 // .text:0x00027D6C size:0xE4
 void fn_1_27D6C(void) {
-    return;
+    if (((ChallengeScene*)lbl_803CC1B8)->flags34 & 1) {
+        lbl_1_data_108E8[(s8)((ChallengeScene*)lbl_803CC1B8)->choice]();
+    } else {
+        ChallengeAxes axes;
+        memcpy(&axes, &lbl_803C77B8.axes, sizeof(axes));
+        axes.bytes[0] = -axes.bytes[0];
+        axes.bytes[4] = lbl_803C77B8.axes.bytes[5];
+        axes.bytes[5] = lbl_803C77B8.axes.bytes[4];
+        fn_1_26D28((Rep7978Camera*)((ChallengeScene*)lbl_803CC1B8)->arg14, lbl_803C77B8.buttons, lbl_803C77B8.held, lbl_803C77B8.pressed, &axes);
+    }
+    if (lbl_803C77B8.held & 0x1000) ((ChallengeScene*)lbl_803CC1B8)->flags34 ^= 1;
 }
 
 // .text:0x00027E50 size:0x48
