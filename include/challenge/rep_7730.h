@@ -97,6 +97,7 @@ void fn_1_23AD8(Mtx44 projection, Vec* eye, Vec* target);
 void C_MTXFrustum(Mtx44 projection, f32 top, f32 bottom, f32 left, f32 right, f32 nearZ, f32 farZ);
 void fn_1_23B54(void);
 void fn_1_24410(void);
+extern void (*lbl_1_data_104A8[4])(void);
 void fn_1_246AC(void);
 void fn_1_24778(void);
 void fn_1_247A0(void);
