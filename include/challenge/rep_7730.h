@@ -108,6 +108,24 @@ void fn_1_25064(void);
 void fn_1_25C68(void);
 void fn_1_25F98(void);
 void fn_1_267BC(void);
+typedef struct ChallengeSpriteHeader {
+    u8 _pad0[8];
+    s32* indices;
+} ChallengeSpriteHeader;
+typedef struct ChallengeSpriteSlot {
+    u8 _pad0[0x38];
+    ChallengeSpriteHeader* header;
+} ChallengeSpriteSlot;
+extern ChallengeSpriteSlot lbl_803C4BE0[];
+typedef struct ChallengeSpriteResource ChallengeSpriteResource;
+typedef struct Gap26AF8Entry {
+    ChallengeSpriteResource* data;
+    u8 _pad4[0xC];
+} Gap26AF8Entry;
+extern Gap26AF8Entry lbl_1_data_FB98[];
+extern s32 lbl_1_data_10344[];
+s32 fn_80035838(Gap26AF8Entry* descriptor, s32 mode);
+s32 fn_80035DD4(s32 index);
 void fn_1_267F4(void);
 void fn_800AD038(s32 heap);
 void fn_800B24D4(s32 mode);

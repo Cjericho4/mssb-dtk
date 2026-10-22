@@ -451,7 +451,28 @@ void fn_1_267BC(void) {
 
 // .text:0x000267F4 size:0x134
 void fn_1_267F4(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch (scene->byte1E) {
+    case 0:
+        if (fn_80035838(&lbl_1_data_FB98[scene->byte20], 0) != 0) scene->byte1E++;
+        break;
+    case 1: {
+        s32 index;
+        scene->unk14 = (DrawingSceneItem*)fn_800B0A5C_insertQueue(fn_1_267BC, 1);
+        ((DrawingSceneStruct*)scene->unk14)->loadingState = 0;
+        index = fn_80035DD4(0);
+        if (index == -1) OSPanic("spr.c", 0xF5, "It is a number not registered. \n");
+        scene->unk18 = lbl_803C4BE0[index].header->indices[0];
+        fn_80034E20(scene->unk14, lbl_1_data_10344);
+        scene->byte21 = 0;
+        scene->byte22 = 0;
+        scene->field14_0x24[0] = 0;
+        scene->unk1a = 0;
+        scene->unk_1C = 0;
+        lbl_803CC1B8->aFunctionPointer = fn_1_25F98;
+        break;
+    }
+    }
 }
 
 // .text:0x00026928 size:0x10C
