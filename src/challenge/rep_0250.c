@@ -41,7 +41,30 @@ void fn_1_8DBC(void) {
 
 // .text:0x00008F34 size:0x184
 void fn_1_8F34(void) {
-    return;
+    DrawingSceneStruct* scene;
+    ChallengeLayoutState* state = &lbl_1_bss_2FA8;
+    scene = lbl_803CC1B8;
+    if (lbl_803C77B8.held & 0x200) {
+        fn_80034CEC((u32)state->item);
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    state->item = scene;
+    fn_80034E20(scene, &lbl_1_data_CC8);
+    if (state->mode == 1 || state->mode == 3) {
+        ChallengeLayoutPosition* position = fn_80035F20(lbl_1_data_CC8.id, 1, state->index, (s16)(state->index + 2));
+        lbl_80371C30[scene->unkIndex].obj->pos.x = position->x;
+        lbl_80371C30[scene->unkIndex].obj->pos.y = position->y;
+        fn_80035ED0(1);
+        state->index++;
+        if (state->index > 3) state->index = 0;
+    } else {
+        lbl_80371C30[scene->unkIndex].obj->unk64 = 7;
+        fn_80035ED0(1);
+        fn_80035ED0(2);
+        fn_80035ED0(3);
+    }
+    lbl_803CC1B8->aFunctionPointer = fn_1_8DBC;
 }
 
 // .text:0x000090B8 size:0x2C

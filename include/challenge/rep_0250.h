@@ -4,7 +4,7 @@
 #include "mssbTypes.h"
 #include "challenge/challenge.h"
 #include "game/rep_3448.h"
-extern s32 lbl_1_data_B88[];
+
 #include "UnknownHeaders.h"
 #include "challenge/challenge.h"
 
@@ -20,6 +20,7 @@ typedef struct ChallengeLayoutConfig {
     u8 _pad0[0x14];
     u8 id;
 } ChallengeLayoutConfig;
+extern ChallengeLayoutConfig lbl_1_data_B88[];
 extern u16 lbl_1_bss_2FAC;
 extern DrawingSceneStruct* lbl_1_bss_2FCC;
 extern ChallengeLayoutConfig lbl_1_data_CC8;
@@ -28,6 +29,7 @@ void fn_80035ED0(s32 mode);
 void fn_80035EEC(s32 id, s32 index);
 void fn_1_8CD4(void);
 void fn_1_8DBC(void);
+void fn_80034E20(DrawingSceneStruct* scene, ChallengeLayoutConfig* config);
 void fn_1_8F34(void);
 void fn_1_90B8(void);
 void fn_1_90E4(void);
