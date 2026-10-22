@@ -168,7 +168,22 @@ void fn_1_D67C(u8 value);
 void fn_1_D688(void);
 void fn_1_D6B4(void);
 s32 fn_1_D6E4(void);
-void fn_1_D71C(void);
+typedef struct ChallengeAnimation {
+    f32 time;
+    u8 _pad4[8];
+    struct ChallengeAnimationData* data;
+} ChallengeAnimation;
+typedef struct ChallengeModelObject {
+    u8 _pad0[0xE8];
+    ChallengeAnimation* animation;
+} ChallengeModelObject;
+typedef struct ChallengeModel {
+    u8 _pad0[6];
+    u16 count;
+    u8 _pad8[0x10];
+    ChallengeModelObject** objects;
+} ChallengeModel;
+f32 fn_1_D71C(s32 index);
 void fn_1_D7A4(void);
 void fn_1_D8A0(void);
 void fn_1_D9B8(void);

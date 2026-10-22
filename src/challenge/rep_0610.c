@@ -124,8 +124,20 @@ s32 fn_1_D6E4(void) {
 }
 
 // .text:0x0000D71C size:0x88
-void fn_1_D71C(void) {
-    return;
+f32 fn_1_D71C(s32 index) {
+    s32 count;
+    s32 i;
+    ChallengeModel* model = (ChallengeModel*)g_hugeAnimStruct.ctrlOrBonePtr[index].unk34;
+    count = model->count;
+    for (i = 0; i < count; i++) {
+        if (model->objects[i]->animation != 0 && model->objects[i]->animation->data != 0) {
+            break;
+        }
+    }
+    if (i < count) {
+        return model->objects[i]->animation->time;
+    }
+    return 0.0f;
 }
 
 // .text:0x0000D7A4 size:0xFC
