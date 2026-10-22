@@ -536,8 +536,14 @@ s32 fn_1_160D8(s8 a, s8 b) {
 }
 
 // .text:0x000160F8 size:0xD8
-void fn_1_160F8(void) {
-    return;
+void fn_1_160F8(s32 delta) {
+    f32 step = 0.01f;
+    if (lbl_803C77B8.buttons & 0x400) step *= 10.0f;
+    step *= delta;
+    lbl_1_bss_5F74 += step;
+    if (lbl_1_bss_5F74 > 1.0f) lbl_1_bss_5F74 = 0.0f;
+    if (lbl_1_bss_5F74 < 0.0f) lbl_1_bss_5F74 = 1.0f;
+    fn_800B9A9C(lbl_1_bss_5F78, lbl_1_bss_5F74);
 }
 
 // .text:0x000161D0 size:0x3C

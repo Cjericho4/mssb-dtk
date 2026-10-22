@@ -251,7 +251,7 @@ void fn_1_1540C(void);
 void fn_1_15760(void);
 void fn_1_15CE0(void);
 s32 fn_1_160D8(s8 a, s8 b);
-void fn_1_160F8(void);
+void fn_1_160F8(s32 delta);
 void fn_1_161D0(void);
 void fn_1_1620C(void);
 void fn_1_163FC(void);
