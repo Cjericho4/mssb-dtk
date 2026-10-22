@@ -9,10 +9,29 @@
 #include "game/gap_97144.h"
 #include "game/rep_16B8.h"
 #include "game/sta_c6.h"
+#include "game/rep_2BF8.h"
+
+extern s32 lbl_3_data_900C[];
 
 // .text:0x000EA340 size:0x114 mapped:0x807293D4
 void fn_3_EA340(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    u32 i;
+    s8 v;
+    s32 ch;
+
+    fn_80034E20(scene, lbl_3_data_900C);
+    for (i = 0; i < 3; i++) {
+        v = g_Minigame.players.fielderRosterIDs[i];
+        if (v >= 0) {
+            ch = g_Minigame.players.characterIndex[v] << 16;
+            lbl_80371C30[3 + scene->unkIndex + i].obj->field_0x5C = ch;
+            lbl_80371C30[6 + scene->unkIndex + i].obj->field_0x5C = ch;
+            lbl_80371C30[9 + scene->unkIndex + i].obj->field_0x5C = inMemRoster[0][g_Minigame.players.fielderRosterIDs[i]].stats.CharID << 16;
+        }
+    }
+    scene->unk18 = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_3_E9D30;
 }
 
 // .text:0x000EA454 size:0x4A8 mapped:0x807294E8
