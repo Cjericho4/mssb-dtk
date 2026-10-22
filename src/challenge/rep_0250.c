@@ -2,7 +2,12 @@
 
 // .text:0x00008CD4 size:0xE8
 void fn_1_8CD4(void) {
-    return;
+    ChallengeLayoutPosition* position = fn_80035F20(lbl_1_data_CC8.id, 1, lbl_1_bss_2FAC, (s16)(lbl_1_bss_2FAC + 2));
+    lbl_80371C30[lbl_1_bss_2FCC->unkIndex].obj->pos.x = position->x;
+    lbl_80371C30[lbl_1_bss_2FCC->unkIndex].obj->pos.y = position->y;
+    fn_80035ED0(1);
+    lbl_1_bss_2FAC++;
+    if (lbl_1_bss_2FAC > 3) lbl_1_bss_2FAC = 0;
 }
 
 // .text:0x00008DBC size:0x178

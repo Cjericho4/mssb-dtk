@@ -11,6 +11,21 @@ extern s32 lbl_1_data_B88[];
 extern u8 lbl_1_bss_2FAA;
 extern u8 lbl_1_bss_2FB9;
 
+typedef struct ChallengeLayoutPosition {
+    u8 _pad0[0x14];
+    s16 x;
+    s16 y;
+} ChallengeLayoutPosition;
+typedef struct ChallengeLayoutConfig {
+    u8 _pad0[0x14];
+    u8 id;
+} ChallengeLayoutConfig;
+extern u16 lbl_1_bss_2FAC;
+extern DrawingSceneStruct* lbl_1_bss_2FCC;
+extern ChallengeLayoutConfig lbl_1_data_CC8;
+ChallengeLayoutPosition* fn_80035F20(s32 id, s32 mode, s32 index, s16 next);
+void fn_80035ED0(s32 mode);
+void fn_80035EEC(s32 id, s32 index);
 void fn_1_8CD4(void);
 void fn_1_8DBC(void);
 void fn_1_8F34(void);
