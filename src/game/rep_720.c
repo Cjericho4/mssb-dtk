@@ -1159,7 +1159,7 @@ void fn_3_1CAC0(void) {
     if (lbl_3_common_bss_DE94->field_0x9AC == 0) {
         obj->unkA4 = g_pCamera->unk2878;
     } else {
-        obj->unkA4 = ((36.0 / tan((57.29578f * lbl_3_common_bss_DE94->fov) / 114.59155f)) * 0.5) / 74.0;
+        obj->unkA4 = ((36.0 / tan((57.29578f * lbl_3_common_bss_DE94->fov) / 114.59155f)) / 2.0) / 74.0;
     }
 }
 
