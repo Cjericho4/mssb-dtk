@@ -14,12 +14,33 @@ typedef struct Gap8001E460Config {
 } Gap8001E460Config;
 extern Gap8001E460Config lbl_800EFBC0;
 typedef struct Gap8001E460Flags {
-    u8 _pad0[0x1E8];
+    u8 _pad0[0x1E0];
+    /* 0x1E0 */ void** aramAddrs;            /* per-character ARAM copy of the skeleton file */
+    u8 _pad1E4[4];
     /* 0x1E8 */ u8 unk1E8;
-    u8 _pad1E9[0x373];
+    u8 _pad1E9[1];
+    /* 0x1EA */ u8 unk1EA;                   /* bit 1: skeletons are resident in ARAM */
+    u8 _pad1EB[0x371];
     /* 0x55C */ s32 unk55C;
 } Gap8001E460Flags;
 extern Gap8001E460Flags lbl_803716B8;
+
+/* disc file descriptor, 16 bytes */
+typedef struct DiskFileDesc {
+    /* 0x0 */ u32 flags;                     /* 0x40B */
+    /* 0x4 */ u32 sizeFlags;                 /* 0x40000000 | uncompressed size */
+    /* 0x8 */ u32 discOffset;
+    /* 0xC */ u32 compressedSize;
+} DiskFileDesc;
+/* master descriptor table: 54 body files, 378 sub-item files (54*7), 54 skeletons, 29 stadiums */
+#define MASTER_DESC_SKELETON_BASE 432
+extern DiskFileDesc lbl_800EFD38[];
+/* per-character subfile table, flat: 19 tracks per character, track 15 is the skeleton */
+#define SUBFILE_TRACKS 19
+#define SUBFILE_TRACK_SKELETON 15
+extern DiskFileDesc lbl_800F1D78[];
+void* ARAMTransfer(DiskFileDesc* desc, void* dest, u8 loadInfo, void* aramAddress);
+void* _OSAllocFromHeap(s32 heap, u32 size);
 typedef struct Gap8001E460Sound {
     u32 unk0;
     struct Gap8001E460Resource* resources[64]; /* 0x4 */
@@ -130,7 +151,7 @@ void fn_80021AC0(void);
 void fn_80021AC4(void);
 void fn_80021AC8(void);
 void fn_80021ADC(void);
-void fn_80021BBC(void);
+void* fn_80021BBC(s32 charID, void* buf);
 void fn_80021CA4(void);
 void fn_8002204C(void);
 

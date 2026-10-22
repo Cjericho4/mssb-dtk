@@ -314,8 +314,23 @@ void fn_80021ADC(void) {
 }
 
 // .text:0x80021BBC size:0xE8
-void fn_80021BBC(void) {
-    return;
+void* fn_80021BBC(s32 charID, void* buf) {
+    DiskFileDesc* desc;
+
+    if (charID < 0 || charID >= 54) {
+        return NULL;
+    }
+    if (buf == NULL) {
+        desc = &lbl_800EFD38[MASTER_DESC_SKELETON_BASE + charID];
+        buf = _OSAllocFromHeap(0x20, desc->sizeFlags & 0x0FFFFFFF);
+    }
+    if (lbl_803716B8.unk1EA & 2) {
+        desc = &lbl_800EFD38[MASTER_DESC_SKELETON_BASE + charID];
+        ARAMTransfer(desc, buf, 3, lbl_803716B8.aramAddrs[charID]);
+    } else {
+        ARAMTransfer(&lbl_800F1D78[charID * SUBFILE_TRACKS + SUBFILE_TRACK_SKELETON], buf, 0, NULL);
+    }
+    return buf;
 }
 
 // .text:0x80021CA4 size:0x3A8
