@@ -32,6 +32,17 @@ void fn_1_88D0(void);
 void fn_1_8A90(void);
 void fn_1_8B8C(void);
 void fn_1_8B90(void);
+typedef struct ChallengeResetFlags {
+    u16 count;
+    union {
+        u8 flags[11];
+        struct {
+            u8 _pad2[10];
+            u8 active;
+        };
+    };
+} ChallengeResetFlags;
+extern ChallengeResetFlags lbl_1_common_bss_47698;
 void fn_1_8C9C(void);
 
 #endif // !__CHALLENGE_gap_85A8_H_

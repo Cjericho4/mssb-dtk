@@ -71,5 +71,11 @@ void fn_1_8B90(void) {
 
 // .text:0x00008C9C size:0x38
 void fn_1_8C9C(void) {
-    return;
+    s32 i;
+    lbl_1_common_bss_47698.count = 0;
+    i = 10;
+    do {
+        lbl_1_common_bss_47698.flags[i] = 0;
+    } while (--i != 0);
+    lbl_1_common_bss_47698.active = 0;
 }
