@@ -1985,7 +1985,7 @@ typedef struct _MiniGameStruct {
     /*0x19E6*/ u8 _19E6;
     /*0x19E7*/ u8 _19E7;
     /*0x19E8*/ MinigameTeamEntry teamEntries[4]; // 4 × 9 = 36 bytes, ends at 0x1A0C
-    /*0x1A0C*/ u8 _1A0C;
+    /*0x1A0C*/ s8 _1A0C;
     /*0x1A0D*/ u8 _1A0D;
     /*0x1A0E*/ u8 _1A0E;
     /*0x1A0F*/ s8 _1A0F[4];
