@@ -126,7 +126,36 @@ void SKN2Vecs16Norms16NoTouch(void);
 void fn_800C02C8(void);
 void SKNAccVecs16Norms16Iu161(void);
 void SKNAccVecs16Norms16Iu162(void);
-void convertTextureHeader(void);
+/* Namco texture archive (e.g. the texture section of a character .gpc). The 0x20-byte headers follow the
+ * u16 count directly; convertTextureHeader turns the archive-relative offsets into pointers in place. */
+typedef struct TextureHeader {
+    /* 0x00 */ u32 dataOffset;      /* archive-relative, becomes a pointer */
+    /* 0x04 */ u32 clutOffset;      /* archive-relative, becomes a pointer (0 = none) */
+    /* 0x08 */ u16 height;
+    /* 0x0A */ u16 width;
+    /* 0x0C */ u8 wrapS;
+    /* 0x0D */ u8 wrapT;
+    /* 0x0E */ u8 minFilt;
+    /* 0x0F */ u8 magFilt;
+    /* 0x10 */ f32 lodBias;
+    /* 0x14 */ u8 unk14;
+    /* 0x15 */ u8 minLOD;
+    /* 0x16 */ u8 maxLOD;
+    /* 0x17 */ u8 format;
+    /* 0x18 */ u16 tlutNumEntries;
+    /* 0x1A */ u8 tlutFmt;
+    /* 0x1B */ u8 unk1B;
+    /* 0x1C */ u16 texId;           /* set to the table index by convertTextureHeader */
+    /* 0x1E */ u16 unk1E;
+} TextureHeader; /* size 0x20 */
+
+typedef struct TextureArchiveHeader {
+    /* 0x00 */ u16 count;
+    /* 0x02 */ u16 pad;
+    /* 0x04 */ TextureHeader textures[1];
+} TextureArchiveHeader;
+
+void convertTextureHeader(TextureArchiveHeader* hdr);
 void fn_800C07BC(void);
 
 void GXInitLightAttn(Gap800BD3A0Light* light, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);

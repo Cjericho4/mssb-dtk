@@ -263,8 +263,19 @@ void SKNAccVecs16Norms16Iu162(void) {
 }
 
 // .text:0x800C0770 size:0x4C
-void convertTextureHeader(void) {
-    return;
+void convertTextureHeader(TextureArchiveHeader* hdr) {
+    s32 i;
+
+    for (i = 0; i < hdr->count; i++) {
+        TextureHeader* t = &hdr->textures[i];
+        if (t->dataOffset != 0) {
+            t->dataOffset = (u32)hdr + t->dataOffset;
+        }
+        if (t->clutOffset != 0) {
+            t->clutOffset = (u32)hdr + t->clutOffset;
+        }
+        t->texId = i;
+    }
 }
 
 // .text:0x800C07BC size:0x2D0
