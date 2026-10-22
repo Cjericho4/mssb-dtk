@@ -13,8 +13,11 @@ void fn_1_272DC(Rep7978Camera* camera, u32 mtxId) {
 }
 
 // .text:0x00027330 size:0xA8
-void fn_1_27330(void) {
-    return;
+void fn_1_27330(Rep7978Camera* camera) {
+    Vec target;
+    PSVECAdd(&camera->eye, &camera->direction, &target);
+    C_MTXLookAt(camera->view, &camera->eye, &camera->up, &target);
+    C_MTXFrustum(camera->projection, camera->scale * (camera->top * camera->nearZ) / 1280.0f, camera->scale * (camera->bottom * camera->nearZ) / 1280.0f, camera->scale * (camera->left * camera->nearZ) / 1280.0f, camera->scale * (camera->right * camera->nearZ) / 1280.0f, camera->nearZ, camera->farZ);
 }
 
 // .text:0x000273D8 size:0x188

@@ -20,7 +20,6 @@ typedef struct Rep7BF0Unk471BC {
 extern Rep7BF0Unk471BC lbl_1_bss_471BC;
 typedef struct Rep7BF0View471D8 {
     /* 0x00 */ Rep7978Camera camera;
-    /* 0x70 */ u8 _pad70[0x68];
 } Rep7BF0View471D8;
 extern Rep7BF0View471D8 lbl_1_bss_471D8;
 void fn_80048BEC(Rep7BF0Unk471BC* arg0, s32 arg1, s32 arg2);
