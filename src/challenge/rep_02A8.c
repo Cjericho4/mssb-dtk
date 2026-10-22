@@ -27,7 +27,30 @@ void fn_1_A464(void) {
 
 // .text:0x0000A634 size:0xE0
 void fn_1_A634(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch (lbl_1_bss_2FEE) {
+    case 0: {
+        ChallengeScene* entry;
+        scene->loadingState = 0;
+        entry = (ChallengeScene*)fn_800B0A5C_insertQueue(fn_1_9F04, 1);
+        entry->byte18 = 0;
+        entry->byte19 = 3;
+        entry->arg14 = (s32)fn_1_A838;
+        lbl_803CC1B8->loadingState = 0;
+        lbl_1_bss_2FEE++;
+        break;
+    }
+    case 1:
+        if (scene->loadingState != 0) {
+            scene->loadingState = 0;
+            lbl_1_bss_2FEE++;
+        }
+        break;
+    case 2:
+        scene->aFunctionPointer = fn_1_A464;
+        lbl_1_bss_2FEE = 0;
+        break;
+    }
 }
 
 // .text:0x0000A714 size:0x4

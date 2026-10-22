@@ -10,6 +10,9 @@ void fn_1_A2E4(void);
 void fn_1_A348(void);
 void fn_1_A464(void);
 void fn_1_A634(void);
+extern u8 lbl_1_bss_2FEE;
+void fn_1_9F04(void);
+#include "challenge/challenge.h"
 void fn_1_A714(void);
 BOOL fn_1_A718(void);
 s32 fn_1_A77C(void);
