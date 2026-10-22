@@ -38,16 +38,47 @@ Addresses are RAM addresses; DOL file offset = RAM - 0x800E8300 + 0xE5300 for `.
    (`g_hugeAnimStruct` 0x2D54/0x2D3C, keyed by charID at 0x2D5C/0x2D44), or
    `fn_8002204C(charID, buf)` (variant != 0) falling back to `ARAMTransfer(&lbl_803CB790[track], buf)`;
    state 1 waits for `lbl_803716B8.loadBusy == 0` then calls `fn_80017814(anim, anim->unk255, slotKind, fn_8001FDD4)`.
-2. `fn_80016344` / `fn_80016710` (called from game `fn_3_6B4C8`, `fn_3_6B5D8`, `fn_3_10C81C`, menus
-   `fn_2_481F4`): state machine that loads skeleton (`fn_80021BBC(charID, buf)`, **now matched** in
-   gap_8001E460.c: `_OSAllocFromHeap(0x20, size)` if `buf == NULL`, then
+   `fn_8002204C(charID, buf)` (body loader, 82-line attempt in `.agent/attempts/`, types in
+   gap_8001E460.h): allocates `buf` from the master descriptor size if NULL, then if
+   `lbl_803716B8.unk1EA & 1` (body models resident in ARAM) reads the pair
+   `lbl_800EFBE8+0x77D0 [charID] = {masterIdx, subItem or -1}` (= `lbl_800F71D8+0x1E0`, 54 x 2 s8,
+   DOL file offset 0xF43B8) and queues master descriptor `masterIdx` from
+   `lbl_803716B8.bodyAramAddrs[masterIdx]` (callback `fn_80022620`, or `fn_8002254C` with `subItem`
+   as its param when a sub-item follows); otherwise it queues subfile row `charID*19 + 0` (track 0,
+   body `.gpc`) from disc.  It then sets `lbl_803716B8.unk1E8 = 1`, registers `fn_80022634` with
+   `fn_800B0A5C_insertQueue`, and kicks the ring (run the current record's callback, ARAMTransfer the
+   next record, copy it to `lbl_803716B8.current`).  Note the function addresses *all three tables
+   as one block* based at `lbl_800EFBE8` (`+0x150` master, `+0x2190` subfiles, `+0x77D0` pairs).
+2. `fn_80016344(u8 charID, s32 slot, u8 stance, arg)` / `fn_80016710(u8 charID, s32 slot)` (called from game
+   `fn_3_6B4C8`, `fn_3_6B5D8`, `fn_3_10C81C`, menus `fn_2_481F4`; 32/29-line attempts in `.agent/attempts/`,
+   types in gap_8001196C.h): state machine on `g_hugeAnimStruct.loadState` (0x2D77):
+   state 2 stores `slotPtrs[slot] = &slots[slot]` (0x2C50; fn_80016344 also copies `stance` into
+   0x25A/0x25B) and clears 0x2D8D; state 3 records `loadedCharID[slot] = slots[slot].charID` (0x2D7F)
+   and loads the animation bank: mode 2 -> `fn_80021BBC(charID, sharedAnimBank)` (0x2CAC);
+   slot >= 9 -> `ARAMTransfer(&lbl_803CB790[charID*19 + 16], sharedAnimBank)`; slot 12 (fn_80016344
+   only) -> `ARAMTransfer(&lbl_803CB790[charID*19 + 17], batterAnimBank 0x2CBC)`; else
+   `fn_80021BBC(charID, slotBanks[slot].animBank)` (0x2CFC + slot*0x14); then `ANIMGet(bank)` once
+   `lbl_803C6CF8.allowLoad == 1`.  State 4: `modelID = lbl_800EEB18[charID]` (s16, -1 = none); if
+   set and the relocated `.gpc` root header word 0x10 is non-NULL, `fn_80021ADC(modelID,
+   lbl_80118220[k].buf)` loads master descriptor `486 + modelID` (stadium-object tier) and
+   `fn_80025FFC(root->unk10, &obj.unk4, &obj)` binds it, storing `slots[slot].stadiumObj` (0x2C);
+   `k` is 0 in mode 2 (fn_80016710) / always 0 in fn_80016344, else `slot` (13 objects of 0x64 bytes).
+   State 5: `fn_80013680(&slots[slot])` (mode 2) or `fn_80012B90` (fn_80016710) and done.  The
+   skeleton itself is loaded by `fn_80021BBC(charID, buf)` (**matched** in gap_8001E460.c:
+   `_OSAllocFromHeap(0x20, size)` if `buf == NULL`, then
    `ARAMTransfer(&lbl_800EFD38[432 + charID], buf, 3, lbl_803716B8.skeletonAramAddrs[charID])` when
-   `lbl_803716B8.unk1EA & 2`, else `ARAMTransfer(&lbl_800F1D78[charID*19 + 15], buf, 0, NULL)`), animation banks (`lbl_803CB790[charID*19 + 16/17]`),
-   and body/equipment subfiles; stores the actor in `g_hugeAnimStruct.AnimationStructPtrs[i]` (+0x2c50).
-3. `fn_80017814` (`FUN_80017814(ACTActor*, actorIndex, flag, userData)`): relocates the `.gpc` root
-   header in place (words 0x08/0x0C/0x10 += base), then calls **`convertTextureHeader`**
-   (= Ghidra `AdjustTextureHeaderPointers`, 0x800C0770, now matched in `src/Unknown/gap_800BD3A0.c`)
-   on the texture archive pointed to by word 0 of the root header, then `fn_8002399C`
+   `lbl_803716B8.unk1EA & 2`, else `ARAMTransfer(&lbl_800F1D78[charID*19 + 15], buf, 0, NULL)`).
+3. `fn_80017814(anim, index, slotKind, callback)` (54-line attempt in `.agent/attempts/`, typed
+   `Gap8001196CRootHeader`/`Gap8001196CActorSlot`/`Gap8001196CBone` in gap_8001196C.h): relocates
+   the `.gpc` root header in place — words 0x00 texture archive, 0x04 actor layout, 0x08 geo
+   palette, 0x0C skin, 0x10 extra, each `+= base` when non-zero (nested, so a zero word stops the
+   chain) — then **`convertTextureHeader(root->texture)`** (= Ghidra `AdjustTextureHeaderPointers`,
+   0x800C0770, matched in `src/Unknown/gap_800BD3A0.c`), and if `root->layout` is set:
+   `LoadActorLayout(layout)`, `convertGeometryAndSknHeader(geo, skn)`,
+   `haveActLayoutPointToGeoHeader(layout, geo)`, **`fn_800BD190(geo, tex)`** (binds the texture
+   archive to the geometry — the one place a per-skin texture archive would be substituted), then
+   `fn_8002399C(slot = &g_hugeAnimStruct.actorEntries[index].slot, anim->unk255 (memory block index),
+   index (actor id), layout, slotKind < 9 ? anim->0x18 : anim->0x14, skn)`
    (`characterAndBallDisplayRelated`, **now matched**: `memset(lbl_8017EBB0[slotIdx], 0, lbl_803CBC5C)`,
    `layout->actorID = actorID`, `slot->actor = f_InitActorWithLayout(layout, lbl_8017EBB0[slotIdx])`,
    `actor->skHeader = skHeader`, then resets the `Gap8002244CActorSlot` fields) -> **`f_InitActorWithLayout`** (0x800232E0).
@@ -56,6 +87,17 @@ Addresses are RAM addresses; DOL file offset = RAM - 0x800E8300 + 0xE5300 for `.
    `54 + charID` at `block->size` and queues descriptor `54 + itemID` (`fn_80022CB4`, ring of 18
    `Gap8002244CRecord`s in `lbl_803716B8`) into `block + size` with ARAM source
    `lbl_803716B8.subItemAramAddrs[itemID]` and completion callback `fn_80022620`.
+   After the actor exists, `fn_80017814` builds `anim->boneIndices[boneID] = actorBoneIndex` (0x162,
+   120 u16, 0xFFFF = absent) from `actor->boneArray[i]->boneID`, calls `fn_800B2B74` for bone ids
+   19/25/36, `fn_800B2B54(actor, boneIndices[3], 0xD)`, `fn_800BD548(slot, 4, hugeAnimStruct
+   0xAC..0xB8)`, zeroes the slot control, marks bones 3/2/1/46 with `fn_800B2BA8` + `bone->0x136 = 1`
+   (bone 36 without the flag), `fn_800B2C08(actor, boneIndices[4])`, `fn_8001FC4C(anim)`, resets the
+   anim ids 0x60..0x6E to -1 and flags 0x25D..0x273, and finally runs a **per-charID switch**
+   (jump table `jumptable_800EEC40`, 48 entries) for character-specific setup: 2 -> `fn_800638B4`,
+   33..36 -> `fn_80063010`, 19 -> `fn_8004B7B4`, 12/21/22/23/42 and 24/25/26 -> `actor->unk99 = 1`,
+   20/43 -> `fn_800637BC`, 38 -> `unk99 = 1` + `fn_8004BD6C`, 41 -> `fn_800637D4` + `fn_8004BD6C`,
+   14/37 -> `fn_80052634`, 16/44..47 -> `fn_80062ED4`.  A clone slot therefore also needs its
+   `charID` case here if the source character has one (Mario = 2 -> `fn_800638B4`).
 4. `convertGeometryAndSknHeader` -> **`LoadGeoPalette`** (0x800BCB44, now matched in
    `src/Unknown/gap_800B993C.c`): converts the on-disc `GEOPalette`
    (`GeoPaletteHdr` -> `GeoDescriptor[] {layout, name}` -> `GeoLayout {position, color,
@@ -113,9 +155,15 @@ slots"): keep `charID` for gameplay/stats and add a `skin` byte per actor/player
   (per roster entry) and be copied into `AnimationStruct._rest253` by `fn_8001758C` next to the
   arm/stance copy.
 * Lookups that must switch from `charID` to `(charID, skin)`: only the *cosmetic* ones —
-  `fn_8001758C`'s subfile index (`charID*19 + 0/1` -> variant's body/equipment subfile),
-  `fn_8002244C`'s sub-item descriptor (`54 + charID*7 + k`), `fn_80016344`'s body/equipment loads,
-  and `fn_8001500C`/`fn_80016710`'s `lbl_800EEB18` model map.  Skeleton (track 15 / descriptor
+  `fn_8001758C`'s subfile index (`track = charID*19 + (variant == 0)` -> variant's body/equipment
+  subfile), `fn_8002204C`'s body lookups (`bodyItems[charID]` pair, `master[charID]` size and
+  `subfiles[charID][0]`), `fn_8002244C`'s sub-item descriptors (`54 + charID` / `54 + itemID`),
+  and — only if the skin changes the stadium object — `fn_80016344`/`fn_80016710`'s
+  `lbl_800EEB18[charID]` model map.  The animation banks (`charID*19 + 16/17`, `fn_80021BBC`
+  skeleton, `slotBanks`) and the `fn_80017814` per-charID switch stay on `charID`.  If the skin only
+  recolours textures, the cheapest hook of all is in `fn_80017814`: swap `root->texture` (the texture
+  archive pointer handed to `convertTextureHeader` and `fn_800BD190(geo, tex)`) for the variant's
+  archive before those two calls.  Skeleton (track 15 / descriptor
   432+S), the glove list (`lbl_800EEAAC`), animation banks, stats, names, voice, AI and the
   `AnimationStruct.unk252` comparisons in game code (`rep_F80.c`, `rep_E08.c`, `rep_AC8.c`,
   `gap_6B4C8.c`, `gap_62578.c`) all stay on `charID` untouched.
@@ -156,7 +204,9 @@ slots"): keep `charID` for gameplay/stats and add a `skin` byte per actor/player
   addresses are handled by the linker only for symbols it knows.
 * The code needed for Option C is small and now mostly in matched/typed files: `fn_8001758C`
   (gap_8001196C.c, matched), `fn_8002244C` and `fn_8002399C` (gap_8002244C.c, matched),
-  `fn_80021BBC` (gap_8001E460.c, matched), and the roster -> actor copy.  `convertTextureHeader` and `LoadGeoPalette` are matched and typed
+  `fn_80021BBC` (gap_8001E460.c, matched), and the roster -> actor copy.  `fn_8002204C`,
+  `fn_80016344`, `fn_80016710` and `fn_80017814` are typed with near-miss attempts (82/32/29/54 sbs
+  lines) in `.agent/attempts/`; in a `--non-matching` build those bodies link as `Equivalent` code.  `convertTextureHeader` and `LoadGeoPalette` are matched and typed
   (`TextureArchiveHeader`, `GeoPaletteHdr`...), `f_InitActorWithLayout` and `DecompressDiskData`
   are unmatched (`f_InitActorWithLayout` is typed, best attempt in `.agent/attempts/`; `DecompressDiskData` keeps its inline-asm source), which does not block a shifted build.
 

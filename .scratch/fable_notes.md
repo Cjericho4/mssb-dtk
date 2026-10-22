@@ -41,3 +41,4 @@
 - fn_80016344 (DOL gap_8001196C): decompiled from stub to 32 lines; two state-4 CSE temps get r30/r29 above the params in the target but r26 here (attempt saved; anim-table/stadium-object types kept).
 - fn_80017814 (DOL gap_8001196C): decompiled from stub to 54 lines; prologue register for the root snapshot (r7 vs r3), loop SR init (mr vs li) and call-arg scheduling left (attempt saved; root header/actor slot/bone types kept).
 - fn_80016710 (DOL gap_8001196C): decompiled from stub to 29 lines; same two-temp register swap as fn_80016344 inside the inlined stadium-object helper (attempt saved).
+- f_InitActorWithLayout (2nd pass): a 0xE4-byte local struct reproduces the frame/slots exactly; escaping struct kills store-forwarding of cursor and CSEs &identity; unions/single-field structs are registerized, unreferenced locals get no stack (attempt header updated).
