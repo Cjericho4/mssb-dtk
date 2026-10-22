@@ -586,19 +586,13 @@ void fn_3_10C58C(void) {
 // .text:0x0010C7A4 size:0x78 mapped:0x8074B838
 void fn_3_10C7A4(void) {
     s32 i;
-    u8* entry = (u8*)&g_Minigame;
-    s32 zero = 0;
-    s8 minusOne = -1;
 
     fn_8001CA40(0);
-    i = 0;
-    do {
+    for (i = 0; i < 4; i++) {
         fn_80011BE4(i);
-        entry[0x19E9] = zero;
-        i++;
-        entry[0x19EA] = minusOne;
-        entry += 9;
-    } while (i < 4);
+        g_Minigame.teamEntries[i]._1 = 0;
+        g_Minigame.teamEntries[i].fieldB = -1;
+    }
 }
 
 // .text:0x0010C81C size:0x404 mapped:0x8074B8B0
