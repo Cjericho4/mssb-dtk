@@ -57,8 +57,44 @@ void fn_1_86E4(void) {
 }
 
 // .text:0x00008770 size:0x15C
+static inline void updateChallengeMode(void) {
+    Gap85A8State* state = &lbl_1_common_bss_47674;
+    if (state->pending == 0) return;
+    switch (state->mode) {
+    case 0:
+        if (state->unkF == state->previous) return;
+        state->previous = state->unkF;
+        state->unkF = 0;
+        break;
+    case 1:
+        state->previous = state->unkF;
+        state->unkF = 1;
+        break;
+    case 2:
+        state->previous = state->unkF;
+        state->unkF = 2;
+        break;
+    }
+    state->pending = 0;
+}
+
 void fn_1_8770(void) {
-    return;
+    if (lbl_803C77B8.held & 8) {
+        if (--lbl_1_common_bss_47674.mode < 0) lbl_1_common_bss_47674.mode = 2;
+    } else if (lbl_803C77B8.held & 4) {
+        if (++lbl_1_common_bss_47674.mode == 3) lbl_1_common_bss_47674.mode = 0;
+    } else if (lbl_803C77B8.held & 0x100) {
+        if (lbl_1_common_bss_47674.ready == 0) {
+            lbl_1_common_bss_47674.pending = 1;
+            lbl_1_common_bss_47674.ready = 1;
+        } else {
+            lbl_1_common_bss_47674.pending = 2;
+        }
+        updateChallengeMode();
+    } else if (lbl_803C77B8.held & 0x200) {
+        lbl_1_common_bss_47674.unkC = 0;
+        lbl_803CC1B8->aFunctionPointer = fn_1_8B90;
+    }
 }
 
 // .text:0x000088CC size:0x4

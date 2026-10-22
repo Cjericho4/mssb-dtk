@@ -11,7 +11,7 @@ typedef struct Gap85A8State {
     /* 0x08 */ s32 mode;
     /* 0x0C */ u8 unkC;
     /* 0x0D */ u8 pending;
-    /* 0x0E */ u8 _padE;
+    /* 0x0E */ u8 ready;
     /* 0x0F */ u8 unkF;
     /* 0x10 */ u8 previous;
 } Gap85A8State;
