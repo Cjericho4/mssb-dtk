@@ -137,6 +137,35 @@ Groups sharing tracks 2..14: {12,42} koopa, {13,29,30,31,32} toads, {16,44,45,46
 animation/skeleton rows alias another slot.  Three Marios = three slots whose rows 2..18 alias
 Mario's and whose track 0/1 (and descriptor entries 54+S*7.., 432+S) point at recoloured copies.
 
+### 1.5 Chain function status (pass 3: every function below has a full, documented body in src/)
+| Function | Unit | Role | Status |
+|---|---|---|---|
+| `fn_80017098` | src/Unknown/gap_8001196C.c | request a character load / reuse a loaded slot (entry point) | MATCH |
+| `fn_8001758C` | src/Unknown/gap_8001196C.c | fill the slot record, pick subfile track, start the body load | MATCH |
+| `fn_8002204C` | src/Unknown/gap_8001E460.c | body model loader (master descriptor / track 0 / body-item pair) | MATCH (needs the unit's `.data` split: the disc tables are defined in C) |
+| `fn_80021CA4` | src/Unknown/gap_8001E460.c | sub-item (bat/glove) pair loader | MATCH (same split) |
+| `fn_80021BBC` | src/Unknown/gap_8001E460.c | skeleton rig loader (432+charID / track 15) | MATCH |
+| `fn_8002244C` | src/Unknown/gap_8002244C.c | load-queue callback chaining the second sub-item | MATCH |
+| `fn_80016344` / `fn_80016710` | src/Unknown/gap_8001196C.c | per-slot load state machines (anim banks, stadium object, sub-items) | 33 / 32 diff lines (two CSE temps in r26 instead of r30/r29) |
+| `fn_80016B60` | src/Unknown/gap_8001196C.c | streams the five animation banks (tracks 4/12/5/2/16) | MATCH |
+| `fn_80016F7C` | src/Unknown/gap_8001196C.c | drives fn_80016B60 for slots 0..3 | MATCH |
+| `fn_80017814` | src/Unknown/gap_8001196C.c | relocate the .gpc root header, bind textures, build the actor, bone map, per-charID switch | 54 diff lines |
+| `fn_8002399C` | src/Unknown/gap_8002244C.c | actor slot init -> f_InitActorWithLayout | MATCH |
+| `f_InitActorWithLayout` | src/Unknown/gap_8002244C.c | carve the GameActor, skin DO, bones from the memory block | 98 diff lines (stack-resident cursor/skin object) |
+| `fn_80012B90` | src/Unknown/gap_8001196C.c | bat/glove pair loader (3 pairs x 2 models, 9 steps) | first decompile, 593 diff lines |
+| `fn_80013680` | src/Unknown/gap_8001196C.c | mode-2 bat/glove loader with entry cache + bone attachment | first decompile, 647 diff lines |
+| `convertTextureHeader` | src/Unknown/gap_800BD3A0.c | texture archive offset -> pointer fixup | MATCH |
+| `LoadGeoPalette` | src/Unknown/gap_800B993C.c | geometry palette relocation | MATCH |
+| `DecompressDiskData` | src/Unknown/File_0x800a64e0.c | LZSS expansion of compressed disc files | 31 diff lines (saved-register set, ctr loop) |
+
+The disc tables themselves (`lbl_800EFBE8`, `lbl_800EFD38`, `lbl_800F1D68`, `lbl_800F1D78`,
+`lbl_800F5D98`, `lbl_800F71D8`, `lbl_800F73B8`, `lbl_800F7424`, `lbl_800F743C`) are now C arrays
+with their retail contents at the top of `src/Unknown/gap_8001E460.c` (DOL `.data`
+0x800EFBE8..0x800F7478, split in `config/GYQE01/splits.txt`), so a source-level mod can edit or
+extend them directly.  `fn_80021CA4` also documents the sub-item pair tables: `lbl_800F743C[charID]`
+picks a row of `lbl_800F7424[kind][itemSlot] = {k1, k2}`, giving master descriptors
+`54 + charID*7 + k` (ARAM) or disc file `lbl_800F5D98[charID*6 + itemSlot]`.
+
 ## 2. Where a per-player "skin variant" ID could be added
 
 Option A — **no new ID, reuse a slot** (what the fork does): clone onto an existing slot.  Costs a
@@ -209,9 +238,10 @@ slots"): keep `charID` for gameplay/stats and add a `skin` byte per actor/player
   addresses are handled by the linker only for symbols it knows.
 * The code needed for Option C is small and now mostly in matched/typed files: `fn_8001758C`
   (gap_8001196C.c, matched), `fn_8002244C` and `fn_8002399C` (gap_8002244C.c, matched),
-  `fn_80021BBC` (gap_8001E460.c, matched), and the roster -> actor copy.  `fn_8002204C`,
-  `fn_80016344`, `fn_80016710` and `fn_80017814` are typed with near-miss attempts (82/32/29/54 sbs
-  lines) in `.agent/attempts/`; in a `--non-matching` build those bodies link as `Equivalent` code.  `convertTextureHeader` and `LoadGeoPalette` are matched and typed
+  `fn_80021BBC`, `fn_8002204C`, `fn_80021CA4`, `fn_80016B60`, `fn_80017098` (all matched), and the
+  roster -> actor copy.  `fn_80016344`, `fn_80016710`, `fn_80017814`, `fn_80012B90`, `fn_80013680`,
+  `f_InitActorWithLayout` and `DecompressDiskData` have full documented bodies in src/ (see 1.5);
+  in a `--non-matching` build those bodies link as `Equivalent` code.  `convertTextureHeader` and `LoadGeoPalette` are matched and typed
   (`TextureArchiveHeader`, `GeoPaletteHdr`...), `f_InitActorWithLayout` and `DecompressDiskData`
   are unmatched (`f_InitActorWithLayout` is typed, best attempt in `.agent/attempts/`; `DecompressDiskData` keeps its inline-asm source), which does not block a shifted build.
 
