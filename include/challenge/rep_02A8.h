@@ -47,6 +47,7 @@ void fn_1_B4A4(void);
 void fn_1_B5B8(void);
 void fn_1_BA64(void);
 void fn_1_BC00(void);
+extern u8 lbl_1_bss_2FDE;
 void fn_1_BDD8(void);
 void fn_1_BEF4(s16 voiceID);
 u8 fn_800211F0(void);

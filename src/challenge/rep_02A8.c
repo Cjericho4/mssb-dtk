@@ -182,7 +182,37 @@ void fn_1_BC00(void) {
 
 // .text:0x0000BDD8 size:0x11C
 void fn_1_BDD8(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch (lbl_1_bss_2FDE) {
+    case 0: {
+        ChallengeScene* entry;
+        s32 file;
+        scene->loadingState = 0;
+        file = lbl_1_data_1CA0 + 5;
+        entry = (ChallengeScene*)fn_800B0A5C_insertQueue(fn_1_9F04, 1);
+        entry->byte18 = 0;
+        entry->byte19 = file;
+        entry->arg14 = (s32)fn_1_A8B4;
+        lbl_803CC1B8->loadingState = 0;
+        lbl_1_bss_2FDE++;
+        break;
+    }
+    case 1:
+        if (scene->loadingState != 0) {
+            if (lbl_1_data_1CA0 != 31) {
+                lbl_1_data_1CA0++;
+                lbl_1_bss_2FDE = 0;
+            } else {
+                scene->loadingState = 0;
+                lbl_1_bss_2FDE++;
+            }
+        }
+        break;
+    case 2:
+        scene->aFunctionPointer = fn_1_BC00;
+        lbl_1_bss_2FDE = 0;
+        break;
+    }
 }
 
 // .text:0x0000BEF4 size:0x40
