@@ -1005,19 +1005,17 @@ VecXYZ* fn_3_D2684(StaC2Object* obj) {
     Vec diff;
     u8 idsA[9] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
     u8 idsB[9] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-    u8* list;
-    u8* ids;
     u32 i;
     AnimationStruct* anim;
+    u8* list;
 
     if (obj->pos.x > 0.0f) {
         list = idsA;
     } else {
         list = idsB;
     }
-    ids = list;
-    for (i = 0; i < 4; i++, ids++) {
-        anim = g_hugeAnimStruct.AnimationStructPtrs[*ids];
+    for (i = 0; i < 4; i++) {
+        anim = g_hugeAnimStruct.AnimationStructPtrs[list[i]];
         if (anim != NULL) {
             PSVECSubtract((Vec*)&obj->pos, (Vec*)&anim->unk34, &diff);
             if (PSVECMag(&diff) <= 12.5f) {
