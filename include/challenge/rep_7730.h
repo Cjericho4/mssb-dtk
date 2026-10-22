@@ -30,7 +30,11 @@ typedef struct Rep7730Values {
 extern Rep7730Values lbl_1_bss_6BE4;
 
 typedef struct Rep7730Unk6BF4 {
-    /* 0x0 */ u8 _pad0[0x154];
+    /* 0x00 */ u8 _pad0[0x50];
+    /* 0x50 */ f32 angle;
+    /* 0x54 */ u8 _pad54[0x98];
+    /* 0xEC */ f32 time;
+    /* 0xF0 */ u8 _padF0[0x64];
 } Rep7730Unk6BF4;
 extern Rep7730Unk6BF4 lbl_1_bss_6BF4;
 void fn_80037B18(Rep7730Unk6BF4* arg0, Vec* arg1, f32 arg2);
@@ -58,7 +62,8 @@ void fn_1_1E8C0(s32 arg);
 void fn_1_1E90C(void);
 void fn_1_1EFF4(void);
 void fn_1_1F05C(void);
-void fn_1_1F23C(void);
+void fn_800385F0(Rep7730Unk6BF4* camera, f32 a, f32 b, f32 c, f32 d);
+void fn_1_1F23C(Rep7730Unk6BF4* camera);
 void fn_1_1F2D8(void);
 void fn_1_1F418(void);
 void fn_1_1F618(void);

@@ -141,8 +141,12 @@ void fn_1_1F05C(void) {
 }
 
 // .text:0x0001F23C size:0x9C
-void fn_1_1F23C(void) {
-    return;
+void fn_1_1F23C(Rep7730Unk6BF4* camera) {
+    fn_800385F0(&lbl_1_bss_6BF4, ((ChallengeScene*)lbl_803CC1B8)->parameters[0], ((ChallengeScene*)lbl_803CC1B8)->parameters[1], ((ChallengeScene*)lbl_803CC1B8)->parameters[2], ((ChallengeScene*)lbl_803CC1B8)->parameters[3]);
+    camera->angle = -((ChallengeScene*)lbl_803CC1B8)->parameters[4];
+    camera->time += 2.0f;
+    ((ChallengeScene*)lbl_803CC1B8)->flags2C &= ~2;
+    ((ChallengeScene*)lbl_803CC1B8)->flags2C |= 2;
 }
 
 // .text:0x0001F2D8 size:0x140
