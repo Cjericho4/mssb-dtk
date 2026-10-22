@@ -339,6 +339,6 @@ void fn_80021CA4(void) {
 }
 
 // .text:0x8002204C size:0x400
-void fn_8002204C(void) {
+u8* fn_8002204C(s32 charID, u8* buf) {
     return;
 }

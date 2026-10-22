@@ -37,3 +37,4 @@
 - idiom: `return;` stubs in the same unit get inlined by -inline auto; wrap stubs of callees in `#pragma dont_inline on/off` before judging a candidate's diff.
 - idiom: a global pointer table re-read (lis/addi + index recomputed) after a call instead of CSE'd into saved regs => declare the table `volatile` (fn_8002399C, lbl_8017EBB0).
 - idiom: a u16-packed argument split with srawi 16 / clrlwi 16 => `s32 hi = packed >> 16; u16 lo = packed;` (fn_8002244C); constant+index folded into the displacement vs kept as `addi idx,0x36; slwi` => keep the sum in a local or pass `&tbl[BASE + id]` directly as an inline-function argument so it is sunk to the use.
+- fn_8002204C (DOL gap_8001E460): decompiled from stub to 82 lines; sub-table address association ((base+const)+idx with lwzx size read) not reproducible from struct/array forms (attempt saved; Gap8001E460DataBlock/LoadRecord types kept).
