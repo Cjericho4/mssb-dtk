@@ -73,7 +73,22 @@ void fn_1_88D0(void) {
 
 // .text:0x00008A90 size:0xFC
 void fn_1_8A90(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    if (lbl_803C77B8.held & 8) {
+        if (--lbl_1_common_bss_47674.selection < 0) lbl_1_common_bss_47674.selection = 1;
+    } else if (lbl_803C77B8.held & 4) {
+        if (++lbl_1_common_bss_47674.selection == 2) lbl_1_common_bss_47674.selection = 0;
+    } else if (lbl_803C77B8.held & 0x100) {
+        if (lbl_1_common_bss_47674.selection == 0) {
+            scene->aFunctionPointer = fn_1_9AB0;
+        } else {
+            scene->aFunctionPointer = fn_1_88D0;
+        }
+    } else if (lbl_803C77B8.held & 0x200) {
+        lbl_1_common_bss_47674.active = 0;
+        fn_80035CA4(6);
+        scene->currentDrawingItem->loadingState = 1;
+    }
 }
 
 // .text:0x00008B8C size:0x4

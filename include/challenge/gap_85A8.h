@@ -6,7 +6,8 @@
 #include "game/rep_3448.h"
 
 typedef struct Gap85A8State {
-    /* 0x00 */ u8 _pad0[8];
+    /* 0x00 */ s32 active;
+    /* 0x04 */ s32 selection;
     /* 0x08 */ s32 mode;
     /* 0x0C */ u8 unkC;
     /* 0x0D */ u8 pending;
@@ -33,6 +34,8 @@ void fn_1_8770(void);
 void fn_1_88CC(void);
 void fn_1_88D0(void);
 void fn_1_8A90(void);
+void fn_1_9AB0(void);
+void fn_80035CA4(s32 id);
 void fn_1_8B8C(void);
 void fn_1_8B90(void);
 typedef struct ChallengeResetFlags {
