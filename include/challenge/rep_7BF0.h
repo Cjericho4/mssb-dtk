@@ -28,10 +28,17 @@ void fn_1_2858C(void);
 void fn_1_289C0(void);
 void fn_1_289E0(void);
 void fn_1_28AE0(void);
+typedef struct ChallengeScriptGlobals {
+    s32 bounds[4];
+    u8 _pad10[0x24];
+    s32 mode;
+} ChallengeScriptGlobals;
+extern ChallengeScriptGlobals lbl_1_data_11300;
 void fn_1_28C34(void);
 void fn_1_28CE8(DrawingSceneStruct* scene);
 void fn_1_2905C(void);
-void fn_1_2935C(void);
+void fn_1_2935C(Rep7BF0View471D8* view);
+void fn_80037768(Rep7BF0View471D8* view, s32 kind, s32 mode, f32 a, f32 b, f32 c, f32 d);
 void fn_1_29414(DrawingSceneStruct* scene);
 void fn_1_2948C(void);
 void fn_1_295E8(void);

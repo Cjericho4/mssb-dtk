@@ -36,8 +36,8 @@ void fn_1_2905C(void) {
 }
 
 // .text:0x0002935C size:0xB8
-void fn_1_2935C(void) {
-    return;
+void fn_1_2935C(Rep7BF0View471D8* view) {
+    fn_80037768(view, 2, lbl_1_data_11300.mode, (f32)lbl_1_data_11300.bounds[0] / 100000.0f, (f32)lbl_1_data_11300.bounds[1] / 100000.0f, (f32)lbl_1_data_11300.bounds[2] / 100000.0f, (f32)lbl_1_data_11300.bounds[3] / 100000.0f);
 }
 
 // .text:0x00029414 size:0x78
