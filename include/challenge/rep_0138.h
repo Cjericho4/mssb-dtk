@@ -45,6 +45,35 @@ typedef struct ChallengeMipSettings {
 } ChallengeMipSettings;
 extern ChallengeMipSettings lbl_1_data_2A8;
 void fn_1_6578(GXTexObj* texture, u16* pixels, s32 width, s32 height);
+typedef struct ChallengeModelPose {
+    u32 flags;
+    void (*draw)(Rep0138Model*);
+    Mtx transform;
+    u8 _pad38[0x34];
+} ChallengeModelPose;
+typedef struct ChallengePreviewState {
+    u8 _pad0[0x30];
+    u16 flags;
+    u8 _pad32[0x1A];
+    Vec position;
+    u8 _pad58[4];
+    ChallengeModelPose poses[4];
+    u8 _pad20C[0x10];
+    u16* pixels;
+    u8 _pad220[0xE];
+    s16 selection;
+    s8 mode;
+    s8 option;
+    u8 _pad232[2];
+    u8 active;
+    u8 _pad235[0xB];
+} ChallengePreviewState;
+extern ChallengePreviewState lbl_1_common_bss_472B4;
+void fn_800B472C(Rep0138Model* model);
+typedef struct Rep0138Globals80366158 { u8 _pad0[8]; s32 unk8; } Rep0138Globals80366158;
+extern Rep0138Globals80366158 lbl_80366158;
+void fn_800AD038(s32 arg);
+#include <string.h>
 void fn_1_66C4(void);
 void fn_1_6848(void);
 void fn_1_6E14(void);

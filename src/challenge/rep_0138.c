@@ -74,7 +74,28 @@ void fn_1_6578(GXTexObj* texture, u16* pixels, s32 width, s32 height) {
 
 // .text:0x000066C4 size:0x184
 void fn_1_66C4(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 mode, option;
+    fn_800AD038(lbl_80366158.unk8);
+    scene->loadingState = 0;
+    mode = lbl_1_common_bss_472B4.mode;
+    option = lbl_1_common_bss_472B4.option;
+    memset(&lbl_1_common_bss_472B4, 0, sizeof(ChallengePreviewState));
+    lbl_1_common_bss_472B4.mode = mode;
+    lbl_1_common_bss_472B4.option = option;
+    lbl_1_common_bss_472B4.pixels = _OSAllocFromHeap(0x20, 0x80000);
+    lbl_1_common_bss_472B4.position.x = -6.0f;
+    lbl_1_common_bss_472B4.position.y = -10.666667f;
+    lbl_1_common_bss_472B4.flags = 0xF36C;
+    lbl_1_common_bss_472B4.position.z = 0.63f;
+    lbl_1_common_bss_472B4.selection = -1;
+    lbl_1_common_bss_472B4.active = 0;
+    PSMTXIdentity(lbl_1_common_bss_472B4.poses[0].transform);
+    lbl_1_common_bss_472B4.poses[0].draw = fn_1_77EC;
+    lbl_1_common_bss_472B4.poses[1] = lbl_1_common_bss_472B4.poses[0];
+    lbl_1_common_bss_472B4.poses[2].draw = fn_800B472C;
+    lbl_1_common_bss_472B4.poses[3] = lbl_1_common_bss_472B4.poses[2];
+    lbl_803CC1B8->aFunctionPointer = fn_1_6848;
 }
 
 // .text:0x00006848 size:0x5CC
