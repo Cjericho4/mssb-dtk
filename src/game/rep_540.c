@@ -23,11 +23,11 @@ void fn_3_6530(void) {
         g_Ball.ballState = 1;
     }
 
-    g_Ball.someCollisionInd = 1;
     g_Ball.currentStarSwing = 0;
     g_Ball.inAirOrBefore2ndBounceOrLowBallEnergy = 0;
     g_Ball.warioWaluGarlicIsActive = 0;
     g_Ball.autoFielderAvoidDropSpotForPeachesStarHit = 0;
+    g_Ball.someCollisionInd = 1;
     g_Ball.physicsSubstruct.acceleration.x = lbl_3_rodata_590;
     g_Ball.physicsSubstruct.acceleration.y = lbl_3_rodata_590;
     g_Ball.physicsSubstruct.acceleration.z = lbl_3_rodata_590;
