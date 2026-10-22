@@ -48,8 +48,8 @@ typedef struct Gap8001196CSubItemEntry {
     /* 0xCD */ u8 arm;                       /* roster byte 0x26 (fielding arm); toggled while loading the pair */
     /* 0xCE */ u8 stance;                    /* roster byte 0x27 */
     /* 0xCF */ s8 charID;
-    /* 0xD0 */ u8 slotKind;
-    /* 0xD1 */ u8 prevSlotKind;
+    /* 0xD0 */ s8 slotKind;                  /* -1 = released */
+    /* 0xD1 */ s8 prevSlotKind;
     u8 _padD2[2];
 } Gap8001196CSubItemEntry;                   /* 0xD4 */
 

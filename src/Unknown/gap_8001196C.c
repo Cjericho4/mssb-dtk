@@ -115,7 +115,7 @@ static inline BOOL finishSubItemLoad(void) {
 // .text:0x80012B90 size:0xAF0
 u8 fn_80012B90(struct Gap8001196CAnim* anim) {
     Gap8001196CSubItemEntry* entry;
-    s32 slotKind = anim->slotKind;
+    s32 slotKind = (s8)anim->slotKind;
     s32 charID = anim->charID;
     s32 pairIndex;
     u8 armFlag;
@@ -261,7 +261,7 @@ static inline void claimSubItemEntry(Gap8001196CSubItemEntry* entry, Gap8001196C
     entry->textureArchive = lbl_803CBC00;
     entry->charID = anim->charID;
     entry->prevSlotKind = entry->slotKind;
-    entry->slotKind = anim->slotKind;
+    entry->slotKind = (s8)anim->slotKind;
     entry->arm = anim->rosterUnk26;
     entry->stance = anim->rosterUnk27;
 }
@@ -287,7 +287,7 @@ static inline void claimSubItemEntry(Gap8001196CSubItemEntry* entry, Gap8001196C
 u8 fn_80013680(struct Gap8001196CAnim* anim) {
     Gap8001196CSubItemEntry* entry;
     s32 charID = anim->charID;
-    s32 slotKind = anim->slotKind;
+    s32 slotKind = (s8)anim->slotKind;
     u8 i;
     u8 j;
     u8 armByte;
@@ -305,7 +305,7 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
                 entry->slotKind != -1 || entry->textureArchive != lbl_803CBC00) {
                 continue;
             }
-            if ((anim->slotKind < 9 && entry->prevSlotKind < 9) || (anim->slotKind >= 9 && entry->prevSlotKind >= 9)) {
+            if ((slotKind < 9 && entry->prevSlotKind < 9) || (slotKind >= 9 && entry->prevSlotKind >= 9)) {
                 entry->slotKind = slotKind;
                 anim->subItems = entry;
                 anim->subItems->valid = 1;
@@ -321,7 +321,7 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
         if (lbl_803CBBFC == 0 && lbl_803CBBFD == 0) {
             for (i = 0; i < 13; i++) {
                 entry = &g_hugeAnimStruct.subItemEntries[i];
-                if (entry->slotKind == anim->slotKind && entry->slotKind < 9) {
+                if (entry->slotKind == slotKind && entry->slotKind < 9) {
                     entry->slotKind = -1;
                     break;
                 }
