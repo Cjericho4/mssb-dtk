@@ -32,7 +32,9 @@ typedef struct Gap8001196CModelFile { u8 _pad0[0x10]; u8* unk10; } Gap8001196CMo
 typedef struct Gap8001196CStadiumObj {
     /* 0x00 */ u8* buf;                      /* file buffer (relocated root header: 4 word offsets) */
     /* 0x04 */ u8* unk4;                     /* selected part of the file (word lbl_803CB7C4[3]) */
-    u8 _pad8[0x58];
+    u8 _pad8[0x55];
+    /* 0x5D */ u8 unk5D;
+    u8 _pad5E[2];
     /* 0x60 */ u8 index0;                    /* charID (stadium objects) / actor-entry index (sub-items) */
     /* 0x61 */ u8 index1;                    /* slot (stadium objects) */
     u8 _pad62[2];
@@ -57,6 +59,13 @@ extern u8* lbl_803CBC08;                     /* texture archive handed to fn_800
 extern u8 lbl_803CBC0C;                      /* a sub-item load is in flight */
 extern Gap8001196CStadiumObj* lbl_803CBC1C;  /* sub-item object being loaded */
 extern u8 lbl_803CB7C4[4];                   /* which root-header word holds layout/geo/extra/skin for sub-items */
+extern u8 lbl_803CB7B4[8];                   /* bone ids the two sub-item models attach to ([0] obj0, [1] obj1) */
+extern u8 lbl_803CBBFB;                      /* fn_80013680: entry chosen, loads in progress */
+extern u8 lbl_803CBBFC;                      /* fn_80013680: obj1 loaded */
+extern u8 lbl_803CBBFD;                      /* fn_80013680: obj0 loaded */
+extern u8* lbl_803CBC00;                     /* fn_80013680: body texture archive */
+extern Gap8001196CSubItemEntry* lbl_803CBC20; /* fn_80013680: entry being filled */
+extern s16 lbl_800EEAAC[54];                 /* glove/attachment bone-list base per character */
 extern u8 lbl_803CBBFA;
 extern s16 lbl_800EEB18[54];                 /* charID -> model id (-1 = none) */
 struct Gap8001196CLoadArg;
@@ -161,7 +170,13 @@ typedef struct Gap8001196CSlotBanks {
 } Gap8001196CSlotBanks;                      /* 0x14 */
 /* hugeAnimStruct (UnknownHeaders.h) seen from this unit */
 /* actor as this unit sees it (GameActor in gap_8002244C.h) */
-typedef struct Gap8001196CBone { u16 boneID; u8 _pad2[0x134]; u8 unk136; } Gap8001196CBone;
+typedef struct Gap8001196CBone {
+    /* 0x000 */ u16 boneID;
+    u8 _pad2[0x12];
+    /* 0x014 */ u32 attachment;              /* copied from the sub-item actor bone that carries one */
+    u8 _pad18[0x136 - 0x18];
+    /* 0x136 */ u8 unk136;
+} Gap8001196CBone;
 typedef struct Gap8001196CActor {
     u8 _pad0[6];
     /* 0x06 */ u16 totalBones;

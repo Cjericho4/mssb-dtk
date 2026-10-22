@@ -207,9 +207,209 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
 #pragma dont_inline off
 
 #pragma dont_inline on
+/* ---- fn_80013680 helpers ---------------------------------------------------------------------- */
+
+/* Hook sub-item model k (0 = obj0, 1 = obj1) of anim->subItems onto the owning actor: the owner's
+ * bone lbl_803CB7B4[k] (via anim->boneIndices) receives the attachment of the first bone of the
+ * sub-item actor (g_hugeAnimStruct.subItemActorEntries[index0]) that carries one.  Only done when
+ * the character has a glove list (lbl_800EEAAC[charID] >= 0).  The retail code wraps the body in a
+ * one-iteration count-down loop; it is written out flat here. */
+static inline void attachSubItemBone(Gap8001196CAnim* anim, s32 k) {
+    Gap8001196CAnim* owner = g_hugeAnimStruct.slotPtrs[anim->slotKind];
+    Gap8001196CSubItemEntry* sub;
+    Gap8001196CActor* subActor;
+    Gap8001196CBone* ownerBone;
+    Gap8001196CBone* subBone;
+    u16 boneIdx;
+    s32 n;
+    s32 index;
+
+    if (owner != NULL) {
+        boneIdx = owner->boneIndices[lbl_803CB7B4[k]];
+    } else {
+        boneIdx = 0xFFFF;
+    }
+    if ((s32)boneIdx == 0xFFFF) {
+        return;
+    }
+    if (lbl_800EEAAC[owner->charID] < 0) {
+        return;
+    }
+    sub = owner->subItems;
+    if (sub == NULL) {
+        return;
+    }
+    index = (k == 0) ? sub->obj0.index0 : sub->obj1.index0;
+    ownerBone = owner->actor->boneArray[boneIdx];
+    subActor = g_hugeAnimStruct.subItemActorEntries[index].slot.actor;
+    if (subActor == NULL) {
+        return;
+    }
+    n = subActor->totalBones;
+    do {
+        n--;
+        subBone = subActor->boneArray[n];
+        if (subBone->attachment != 0) {
+            ownerBone->attachment = subBone->attachment;
+            return;
+        }
+    } while (n != 0);
+}
+
+/* Fill a free/stolen sub-item entry for this slot record (fn_80013680 first phase). */
+static inline void claimSubItemEntry(Gap8001196CSubItemEntry* entry, Gap8001196CAnim* anim) {
+    entry->textureArchive = lbl_803CBC00;
+    entry->charID = anim->charID;
+    entry->prevSlotKind = entry->slotKind;
+    entry->slotKind = anim->slotKind;
+    entry->arm = anim->rosterUnk26;
+    entry->stance = anim->rosterUnk27;
+}
+
+/* fn_80013680 -- mode-2 (challenge) bat/glove loader: reuse or load one sub-item pair per slot.
+ *
+ * anim: slot record.  Returns 1 when anim->subItems is ready (reused or freshly loaded).
+ * Phase 1 (lbl_803CBBFB == 0): remember the body texture archive (lbl_803CBC00) and look for a
+ * cached entry in g_hugeAnimStruct.subItemEntries[0..12] with the same charID, arm/stance bytes,
+ * texture archive, slotKind == -1 (released) and the same fielder/batter class (prevSlotKind < 9
+ * vs slotKind < 9): reuse it immediately (attach both sub-item bones, return 1).  Otherwise release
+ * the entry this slotKind owned, take a free one (slotKind == -1) or steal the first entry whose
+ * character is in no live slot (slotPtrs), and start loading.
+ * Phase 2: load obj1 then obj0 through startSubItemLoad/finishSubItemLoad; the fn_80021CA4 item
+ * slot is 1/3/5 for obj1 and 0/2/4 for obj0 depending on the arm/stance byte and whether the slot
+ * is a fielder (slotKind < 9).  When both are in: anim->subItems = entry, bones attached,
+ * valid = 1, state cleared.
+ * Chain position: fn_80016344 state 5 and fn_80016710 state 5 in mode 2 (fn_80012B90 otherwise).
+ * Variant hook: as fn_80012B90 (file choice happens in fn_80021CA4); the cache compares charID,
+ * so a (charID, skin) key must be part of the entry compare if skins differ in sub-items.
+ * Match status: NOT matched (first full decompile; see .scratch/fable_notes.md). */
 // .text:0x80013680 size:0xB84
 u8 fn_80013680(struct Gap8001196CAnim* anim) {
-    return;
+    Gap8001196CSubItemEntry* entry;
+    s32 charID = anim->charID;
+    s32 slotKind = anim->slotKind;
+    u8 i;
+    u8 j;
+    u8 armByte;
+    BOOL armSet;
+    BOOL isFielder;
+    BOOL armMatchesClass;
+    s32 itemSlot;
+
+    if (lbl_803CBBFB == 0) {
+        lbl_803CBBFB = 1;
+        lbl_803CBC00 = (u8*)((Gap8001196CRootHeader*)anim->fileBuffer)->texture;
+        for (i = 0; i < 13; i++) {
+            entry = &g_hugeAnimStruct.subItemEntries[i];
+            if (entry->charID != charID || entry->arm != anim->rosterUnk26 || entry->stance != anim->rosterUnk27 ||
+                entry->slotKind != -1 || entry->textureArchive != lbl_803CBC00) {
+                continue;
+            }
+            if ((anim->slotKind < 9 && entry->prevSlotKind < 9) || (anim->slotKind >= 9 && entry->prevSlotKind >= 9)) {
+                entry->slotKind = slotKind;
+                anim->subItems = entry;
+                anim->subItems->valid = 1;
+                attachSubItemBone(anim, 0);
+                attachSubItemBone(anim, 1);
+                lbl_803CBBFD = 0;
+                lbl_803CBBFC = 0;
+                lbl_803CBBFB = 0;
+                lbl_803CBC00 = NULL;
+                return 1;
+            }
+        }
+        if (lbl_803CBBFC == 0 && lbl_803CBBFD == 0) {
+            for (i = 0; i < 13; i++) {
+                entry = &g_hugeAnimStruct.subItemEntries[i];
+                if (entry->slotKind == anim->slotKind && entry->slotKind < 9) {
+                    entry->slotKind = -1;
+                    break;
+                }
+            }
+            for (i = 0; i < 13; i++) {
+                entry = &g_hugeAnimStruct.subItemEntries[i];
+                if (entry->slotKind == -1) {
+                    lbl_803CBC20 = entry;
+                    claimSubItemEntry(entry, anim);
+                    break;
+                }
+            }
+            if (i == 13) {
+                for (i = 0; i < 13; i++) {
+                    entry = &g_hugeAnimStruct.subItemEntries[i];
+                    lbl_803CBC20 = entry;
+                    for (j = 0; j < 13; j++) {
+                        if (g_hugeAnimStruct.slotPtrs[j] != NULL && entry->charID == g_hugeAnimStruct.slotPtrs[j]->charID) {
+                            break;
+                        }
+                    }
+                    if (j == 13) {
+                        claimSubItemEntry(entry, anim);
+                        break;
+                    }
+                }
+            }
+        }
+        lbl_803CBC20->obj1.unk5D = 0;
+        lbl_803CBC20->obj0.unk5D = 0;
+    }
+    if (lbl_803CBBFB == 0) {
+        return 0;
+    }
+    armByte = (slotKind < 9) ? anim->rosterUnk26 : anim->rosterUnk27;
+    armSet = armByte != 0;
+    isFielder = slotKind < 9;
+    armMatchesClass = armSet == isFielder;
+    while (TRUE) {
+        if (lbl_803CBBFC == 0) {
+            entry = lbl_803CBC20;
+            if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+                if (isFielder && entry->arm != 0) {
+                    itemSlot = 3;
+                } else if (armMatchesClass) {
+                    itemSlot = 5;
+                } else {
+                    itemSlot = 1;
+                }
+                startSubItemLoad(entry, &entry->obj1, itemSlot);
+            }
+            if (!finishSubItemLoad()) {
+                break;
+            }
+            lbl_803CBBFC = 1;
+            continue;
+        }
+        if (lbl_803CBBFD == 0) {
+            entry = lbl_803CBC20;
+            if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+                if (isFielder && entry->arm != 1) {
+                    itemSlot = 2;
+                } else if (armMatchesClass) {
+                    itemSlot = 4;
+                } else {
+                    itemSlot = 0;
+                }
+                startSubItemLoad(entry, &entry->obj0, itemSlot);
+            }
+            if (finishSubItemLoad()) {
+                lbl_803CBBFD = 1;
+            }
+        }
+        break;
+    }
+    if (lbl_803CBBFC != 0 && lbl_803CBBFD != 0) {
+        anim->subItems = lbl_803CBC20;
+        attachSubItemBone(anim, 0);
+        attachSubItemBone(anim, 1);
+        anim->subItems->valid = 1;
+        lbl_803CBC20 = NULL;
+        lbl_803CBBFB = 0;
+        lbl_803CBBFD = 0;
+        lbl_803CBBFC = 0;
+        lbl_803CBC00 = NULL;
+        return 1;
+    }
+    return 0;
 }
 #pragma dont_inline off
 
