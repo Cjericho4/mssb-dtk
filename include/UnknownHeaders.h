@@ -1067,19 +1067,22 @@ typedef struct CommonBss32A94 {
     s16 unk4;
     s16 unk6[5];        /* 0x06 */
     s8 unk10[16];       /* 0x10 */
-    u8 _pad20[0x22 - 0x20];
+    s16 unk20;          /* 0x20 */
     s8 unk22;           /* 0x22 */
     s8 unk23;           /* 0x23 */
     u8 unk24;           /* 0x24 */
     s8 unk25;           /* 0x25 */
-    u8 _pad26;
+    u8 unk26;           /* 0x26 */
     u8 unk27;           /* 0x27 */
     u8 unk28[3];        /* 0x28: runners on 1st/2nd/3rd */
-    u8 _pad2B[0x44 - 0x2B];
+    u8 unk2B[7];        /* 0x2B */
+    u8 _pad32[0x44 - 0x32];
     s16 unk44[2];  /* 0x44 */
     u8 _pad48[0x4C - 0x48];
     s16 unk4C[2];  /* 0x4C */
-    u8 _pad50[0x7D - 0x50];
+    u8 _pad50[0x61 - 0x50];
+    u8 unk61;           /* 0x61 */
+    u8 _pad62[0x7D - 0x62];
     u8 unk7D;
     u8 unk7E;
     u8 unk7F;
