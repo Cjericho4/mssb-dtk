@@ -40,10 +40,12 @@ void fn_80012B90(void) {
     return;
 }
 
+#pragma dont_inline on
 // .text:0x80013680 size:0xB84
-void fn_80013680(void) {
+u8 fn_80013680(struct Gap8001196CAnim* anim) {
     return;
 }
+#pragma dont_inline off
 
 // .text:0x80014204 size:0x3F4
 void fn_80014204(void) {
@@ -96,7 +98,7 @@ void fn_8001594C(void) {
 }
 
 // .text:0x80016344 size:0x3CC
-void fn_80016344(void) {
+BOOL fn_80016344(u8 charID, s32 slot, u8 stance, struct Gap8001196CLoadArg* arg) {
     return;
 }
 
@@ -145,10 +147,12 @@ BOOL fn_80016F7C(void) {
     return FALSE;
 }
 
+#pragma dont_inline on
 // .text:0x80017098 size:0x2A8
-void fn_80017098(void) {
+void fn_80017098(s32 arg0, struct Gap8001196CLoadArg* arg, s32 arg2, s32 slot, s32 arg4, u8 charID) {
     return;
 }
+#pragma dont_inline off
 
 // .text:0x80017340 size:0x24C
 void fn_80017340(void) {

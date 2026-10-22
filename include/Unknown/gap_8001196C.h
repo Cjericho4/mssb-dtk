@@ -12,7 +12,7 @@ void fn_80011CA8(void);
 void fn_800126EC(void);
 void LoadModel(void);
 void fn_80012B90(void);
-void fn_80013680(void);
+u8 fn_80013680(struct Gap8001196CAnim* anim);
 void fn_80014204(void);
 void fn_800145F8(void);
 void fn_80014990(void);
@@ -23,10 +23,27 @@ void fn_80014F40(void);
 void fn_8001500C(void);
 void fn_80015468(void);
 void fn_8001594C(void);
-void fn_80016344(void);
+BOOL fn_80016344(u8 charID, s32 slot, u8 stance, struct Gap8001196CLoadArg* arg);
 void fn_80016710(void);
 BOOL fn_80016F7C(void);
-void fn_80017098(void);
+typedef struct Gap8001196CModelFile { u8 _pad0[0x10]; u8* unk10; } Gap8001196CModelFile; /* relocated .gpc root header */
+typedef struct Gap8001196CStadiumObj {
+    /* 0x00 */ u8* buf;
+    /* 0x04 */ u8* unk4;
+    u8 _pad8[0x58];
+    /* 0x60 */ u8 charID;
+    /* 0x61 */ u8 slot;
+    u8 _pad62[0x520 - 0x62];
+} Gap8001196CStadiumObj;
+extern Gap8001196CStadiumObj lbl_80118220;
+extern u8 lbl_803CBBFA;
+extern s16 lbl_800EEB18[54];                 /* charID -> model id (-1 = none) */
+struct Gap8001196CLoadArg;
+void* fn_80021BBC(s32 charID, void* buf);
+u8* fn_80021ADC(s32 modelID, u8* buf);
+void fn_80025FFC(u8* model, u8** out, Gap8001196CStadiumObj* obj);
+void ANIMGet(u8* animBank);
+void fn_80017098(s32 arg0, struct Gap8001196CLoadArg* arg, s32 arg2, s32 slot, s32 arg4, u8 charID);
 void fn_80017340(void);
 
 /* per-slot animation/actor record (AnimationStruct in UnknownHeaders.h), 0x27C bytes */
@@ -34,7 +51,16 @@ typedef struct Gap8001196CAnim {
     u8 _pad0[8];
     /* 0x008 */ u8* fileBuffer;              /* body .gpc / anim bank buffer */
     u8 _padC[4];
-    /* 0x010 */ struct Gap8001196CSlotTable* slotTables[9];
+    union {
+        /* 0x010 */ struct Gap8001196CSlotTable* slotTables[9];
+        struct {
+            u8 _pad10[0x14];
+            /* 0x024 */ u8* animBank;
+            u8 _pad28[4];
+            /* 0x02C */ struct Gap8001196CStadiumObj* stadiumObj;
+        };
+    };
+
     u8 _pad34[0x252 - 0x34];
     /* 0x252 */ s8 charID;
     u8 _pad253;
@@ -51,23 +77,40 @@ typedef struct Gap8001196CAnim {
     /* 0x278 */ u8 isBatter;
     u8 _pad279[0x27C - 0x279];
 } Gap8001196CAnim;
+typedef struct Gap8001196CSlotBank { u8* animBank; u8 _pad4[0x10]; } Gap8001196CSlotBank; /* 0x14 */
 /* hugeAnimStruct (UnknownHeaders.h) seen from this unit */
 typedef struct Gap8001196CAnimTable {
     u8 _pad0[0xC04];
     /* 0x0C04 */ Gap8001196CAnim slots[13];
-    u8 _pad2C50[0x2D3C - 0x2C50];
-    /* 0x2D3C */ void* cachedFielderData;
-    /* 0x2D40 */ u32 cachedFielderSize;
-    /* 0x2D44 */ s16 cachedFielderCharID;
-    u8 _pad2D46[0x2D54 - 0x2D46];
-    /* 0x2D54 */ void* cachedBatterData;
-    /* 0x2D58 */ u32 cachedBatterSize;
-    /* 0x2D5C */ s16 cachedBatterCharID;
-    u8 _pad2D5E[0x2D88 - 0x2D5E];
-    /* 0x2D88 */ s8 loadSlot;                /* fn_80016F7C loop index */
-    u8 _pad2D89[4];
-    /* 0x2D8D */ u8 unk2D8D;
-    /* 0x2D8E */ u8 loadStarted;
+    /* 0x2C50 */ Gap8001196CAnim* slotPtrs[13];
+    u8 _pad2C84[0x2CAC - 0x2C84];
+    /* 0x2CAC */ u8* sharedAnimBank;
+    u8 _pad2CB0[0x2CBC - 0x2CB0];
+    /* 0x2CBC */ u8* batterAnimBank;
+    u8 _pad2CC0[0x2CFC - 0x2CC0];
+    union {
+        /* 0x2CFC */ Gap8001196CSlotBank slotBanks[9]; /* overlaps the bytes below in the binary */
+        struct {
+            u8 _pad2CFC[0x2D77 - 0x2CFC];
+            /* 0x2D77 */ u8 loadState;
+            u8 _pad2D78[7];
+            /* 0x2D7F */ u8 loadedCharID[9];
+            /* 0x2D88 */ s8 loadSlot;        /* fn_80016F7C loop index */
+            u8 _pad2D89[4];
+            /* 0x2D8D */ u8 unk2D8D;
+            /* 0x2D8E */ u8 loadStarted;
+        };
+        struct {
+            u8 _pad2CFCb[0x2D3C - 0x2CFC];
+            /* 0x2D3C */ void* cachedFielderData;
+            /* 0x2D40 */ u32 cachedFielderSize;
+            /* 0x2D44 */ s16 cachedFielderCharID;
+            u8 _pad2D46[0x2D54 - 0x2D46];
+            /* 0x2D54 */ void* cachedBatterData;
+            /* 0x2D58 */ u32 cachedBatterSize;
+            /* 0x2D5C */ s16 cachedBatterCharID;
+        };
+    };
 } Gap8001196CAnimTable;
 typedef struct Gap8001196CGameSettings { u8 _pad0[7]; u8 mode; u8 _pad8[0x50]; } Gap8001196CGameSettings;
 extern Gap8001196CGameSettings g_d_GameSettings;
