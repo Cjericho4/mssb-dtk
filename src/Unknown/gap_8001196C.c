@@ -247,8 +247,90 @@ BOOL fn_80016F7C(void) {
 
 #pragma dont_inline on
 // .text:0x80017098 size:0x2A8
+/* fn_80017098 -- request a character load into a slot (or reuse a slot that already has it).
+ *
+ * team/player: inMemRoster[team][player] (0x5A0/0xA0 strides) supplies the charID when
+ * charIDOverride < 0 (roster field 0x24); arg1B and variant (0x259) are copied into the slot;
+ * slotKind is which logical slot (0..8 fielders, 9..12 batter/runner kinds) wants the character.
+ * Returns TRUE when an already-loaded slot was reused, FALSE when a load task was queued.
+ *
+ * With charIDOverride >= 0 no search is done: a task is queued with slot = slotKind.  Otherwise the
+ * 13 g_hugeAnimStruct.slots are scanned for one with the same charID (0x252), roster bytes
+ * (0x25A/0x25B), player (0x257), team (0x256), unk258 (== arg1B) and variant (0x259); on a hit the
+ * slot is re-owned (slotOwner[i] = slotKind, slots[i].slotKind = slotKind, slotPtrs[slotKind] =
+ * &slots[i], loadState = 0) and no file is read.  On a miss a Gap8001196CLoadTask is queued for
+ * fn_800177B4 (fn_800B0A5C_insertQueue), a free slot is picked (slotOwner[i] < 0; kinds >= 9 only
+ * look at 9..12, defaulting to 13 = "none"), and loadState = 1 starts fn_80016344/fn_80016710.
+ * Chain position: entry point of the charID -> model chain from game/menu code.
+ * Variant hook: the per-player skin id would be read from the roster here (next to the charID
+ * override) and stored in the task/slot so the loaders can key on (charID, skin); the reuse scan
+ * already compares `variant` (0x259), which is the existing per-slot variant byte.
+ * Match status: MATCH. */
 BOOL fn_80017098(s32 team, s32 player, s32 arg1B, s32 slotKind, s32 variant, s32 charIDOverride) {
-    return;
+    Gap8001196CLoadTask* task;
+    s32 i;
+    s32 slot;
+    BOOL sameRoster;
+
+    if (charIDOverride >= 0) {
+        task = fn_800B0A5C_insertQueue(fn_800177B4, 0);
+        slot = slotKind;
+    } else {
+        for (i = 0; i < 13; i++) {
+            sameRoster = FALSE;
+            if (g_hugeAnimStruct.slots[i].charID == inMemRoster[team][player].charID &&
+                g_hugeAnimStruct.slots[i].rosterUnk26 == inMemRoster[team][player].unk26 &&
+                g_hugeAnimStruct.slots[i].rosterUnk27 == inMemRoster[team][player].unk27 &&
+                (s8)g_hugeAnimStruct.slots[i].player == (s8)player) {
+                sameRoster = TRUE;
+            }
+            if (g_hugeAnimStruct.slots[i].team == team && sameRoster && g_hugeAnimStruct.slots[i].unk258 == arg1B &&
+                g_hugeAnimStruct.slots[i].variant == variant) {
+                g_hugeAnimStruct.loadState = 0;
+                g_hugeAnimStruct.slotOwner[i] = slotKind;
+                g_hugeAnimStruct.currentSlot = i;
+                g_hugeAnimStruct.slots[i].slotKind = slotKind;
+                for (slot = 0; slot < 13; slot++) {
+                    if (g_hugeAnimStruct.slotPtrs[slot] == &g_hugeAnimStruct.slots[i]) {
+                        g_hugeAnimStruct.slotPtrs[slot] = NULL;
+                        break;
+                    }
+                }
+                g_hugeAnimStruct.slotPtrs[slotKind] = &g_hugeAnimStruct.slots[i];
+                return TRUE;
+            }
+        }
+        task = fn_800B0A5C_insertQueue(fn_800177B4, 0);
+        if (slotKind >= 9) {
+            for (slot = 9; slot < 13; slot++) {
+                if (g_hugeAnimStruct.slotOwner[slot] < 0) {
+                    break;
+                }
+            }
+        } else {
+            for (slot = 0; slot < 13; slot++) {
+                if (g_hugeAnimStruct.slotOwner[slot] < 0) {
+                    break;
+                }
+            }
+        }
+    }
+    task->unk14 = 0;
+    task->slot = slot;
+    task->team = team;
+    task->player = player;
+    task->unk1B = arg1B;
+    task->slotKind = slotKind;
+    task->variant = variant;
+    if (charIDOverride < 0) {
+        task->charID = inMemRoster[team][player].charID;
+    } else {
+        task->charID = charIDOverride;
+    }
+    g_hugeAnimStruct.slotOwner[slot] = slotKind;
+    g_hugeAnimStruct.loadState = 1;
+    g_hugeAnimStruct.currentSlot = slot;
+    return FALSE;
 }
 
 // .text:0x80017340 size:0x24C
