@@ -12,7 +12,31 @@ void fn_1_8CD4(void) {
 
 // .text:0x00008DBC size:0x178
 void fn_1_8DBC(void) {
-    return;
+    DrawingSceneStruct* scene;
+    ChallengeLayoutState* state = &lbl_1_bss_2FA8;
+    (scene = lbl_803CC1B8)->unk18++;
+    if (state->mode == 1 || state->mode == 3) {
+        if (lbl_8039C3E0.mode == 1) {
+            if (state->loaded == 0) {
+                fn_800B0A14_removeQueue();
+                state->loaded = 1;
+                return;
+            } else {
+                ChallengeLayoutPosition* position = fn_80035F20(lbl_1_data_CC8.id, 1, state->index, (s16)(state->index + 2));
+                lbl_80371C30[state->item->unkIndex].obj->pos.x = position->x;
+                lbl_80371C30[state->item->unkIndex].obj->pos.y = position->y;
+                fn_80035ED0(1);
+                state->index++;
+                if (state->index > 3) state->index = 0;
+            }
+        }
+        fn_80035ED0(2);
+        fn_80035ED0(3);
+    }
+    if ((lbl_803C77B8.held & 1) || (lbl_803C77B8.held & 2)) {
+        fn_80034CEC((u32)scene);
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x00008F34 size:0x184
