@@ -105,14 +105,44 @@ void fn_80016710(void) {
     return;
 }
 
+#pragma dont_inline on
 // .text:0x80016B60 size:0x41C
-void fn_80016B60(void) {
+BOOL fn_80016B60(Gap8001196CAnim* anim) {
     return;
 }
+#pragma dont_inline off
 
 // .text:0x80016F7C size:0x11C
-void fn_80016F7C(void) {
-    return;
+BOOL fn_80016F7C(void) {
+    Gap8001196CAnim* src;
+    Gap8001196CAnim* dst;
+
+    if (g_hugeAnimStruct.loadStarted == 0) {
+        g_hugeAnimStruct.loadStarted = 1;
+        g_hugeAnimStruct.unk2D8D = 0;
+        g_hugeAnimStruct.loadSlot = 0;
+    }
+    do {
+        if (!fn_80016B60(&g_hugeAnimStruct.slots[g_hugeAnimStruct.loadSlot])) {
+            break;
+        }
+        if (g_d_GameSettings.mode == 6) {
+            src = &g_hugeAnimStruct.slots[g_hugeAnimStruct.loadSlot];
+            dst = &g_hugeAnimStruct.slots[g_hugeAnimStruct.loadSlot + 4];
+            dst->slotTables[0] = src->slotTables[0];
+            dst->slotTables[1] = src->slotTables[1];
+            dst->slotTables[2] = src->slotTables[2];
+            dst->slotTables[3] = src->slotTables[3];
+            dst->slotTables[4] = src->slotTables[4];
+            dst->slotTables[5] = src->slotTables[5];
+            dst->slotTables[6] = src->slotTables[6];
+        }
+        g_hugeAnimStruct.loadSlot++;
+        if (g_hugeAnimStruct.loadSlot >= 4) {
+            return TRUE;
+        }
+    } while (TRUE);
+    return FALSE;
 }
 
 // .text:0x80017098 size:0x2A8

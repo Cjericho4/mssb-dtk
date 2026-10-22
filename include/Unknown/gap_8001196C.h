@@ -25,8 +25,7 @@ void fn_80015468(void);
 void fn_8001594C(void);
 void fn_80016344(void);
 void fn_80016710(void);
-void fn_80016B60(void);
-void fn_80016F7C(void);
+BOOL fn_80016F7C(void);
 void fn_80017098(void);
 void fn_80017340(void);
 
@@ -34,7 +33,9 @@ void fn_80017340(void);
 typedef struct Gap8001196CAnim {
     u8 _pad0[8];
     /* 0x008 */ u8* fileBuffer;              /* body .gpc / anim bank buffer */
-    u8 _padC[0x252 - 0xC];
+    u8 _padC[4];
+    /* 0x010 */ struct Gap8001196CSlotTable* slotTables[9];
+    u8 _pad34[0x252 - 0x34];
     /* 0x252 */ s8 charID;
     u8 _pad253;
     /* 0x254 */ u8 slotKind;                 /* 9 = batter */
@@ -62,7 +63,14 @@ typedef struct Gap8001196CAnimTable {
     /* 0x2D54 */ void* cachedBatterData;
     /* 0x2D58 */ u32 cachedBatterSize;
     /* 0x2D5C */ s16 cachedBatterCharID;
+    u8 _pad2D5E[0x2D88 - 0x2D5E];
+    /* 0x2D88 */ s8 loadSlot;                /* fn_80016F7C loop index */
+    u8 _pad2D89[4];
+    /* 0x2D8D */ u8 unk2D8D;
+    /* 0x2D8E */ u8 loadStarted;
 } Gap8001196CAnimTable;
+typedef struct Gap8001196CGameSettings { u8 _pad0[7]; u8 mode; u8 _pad8[0x50]; } Gap8001196CGameSettings;
+extern Gap8001196CGameSettings g_d_GameSettings;
 extern Gap8001196CAnimTable g_hugeAnimStruct;
 typedef struct Gap8001196CRosterEntry { u8 _pad0[0x26]; u8 unk26; u8 unk27; u8 _pad28[0x78]; } Gap8001196CRosterEntry;
 extern Gap8001196CRosterEntry inMemRoster[2][9];
@@ -79,6 +87,7 @@ void fn_8001FDD4(struct Gap8001E460Object* obj);
 u8* fn_8002204C(s32 charID, u8* buf);
 void* ARAMTransfer(Gap8001196CDiskDesc* desc, void* dest, u8 loadInfo, void* aramAddress);
 void* memcpy(void* dest, const void* src, u32 n);
+BOOL fn_80016B60(Gap8001196CAnim* anim);
 BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 arg6, u8 slotKind, u8 variant);
 void fn_800177B4(void);
 void fn_80017814(Gap8001196CAnim* anim, s32 arg1, u32 slotKind, void (*callback)(struct Gap8001E460Object*));
