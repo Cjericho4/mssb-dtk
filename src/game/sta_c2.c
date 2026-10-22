@@ -803,7 +803,22 @@ void fn_3_D141C(StaC2D1280Obj* obj) {
 
 // .text:0x000D173C size:0x10C mapped:0x807107D0
 void fn_3_D173C(StaC2SpinObj* obj) {
-    return;
+    Mtx inv;
+    Mtx rot;
+    u32 i;
+    f32 pi = 3.1415927f;
+
+    PSMTXInverse(fn_80052734(fn_8005268C())->viewMtx, inv);
+    PSMTXIdentity(rot);
+    rot[0][0] = (f32)cos(pi);
+    rot[0][2] = -(f32)sin(pi);
+    rot[2][0] = (f32)sin(pi);
+    rot[2][2] = (f32)cos(pi);
+    PSMTXConcat(inv, rot, inv);
+    inv[0][3] = inv[1][3] = inv[2][3] = 0.0f;
+    for (i = 0; i < ((StaC2Model*)obj->wrapper->boneData)->boneCount; i++) {
+        PSMTXConcat(inv, ((StaC2Model*)obj->wrapper->boneData)->bones[i]->mtx, ((StaC2Model*)obj->wrapper->boneData)->bones[i]->mtx);
+    }
 }
 
 // .text:0x000D1848 size:0x124 mapped:0x807108DC

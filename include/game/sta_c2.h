@@ -233,6 +233,7 @@ void fn_3_D1110(struct StaC2D00D0Src* obj);
 void fn_3_D127C(void);
 void fn_3_D1280(struct StaC2D1280Obj* obj);
 void fn_3_D141C(struct StaC2D1280Obj* obj);
+s32 fn_8005268C(void);
 void fn_3_D173C(StaC2SpinObj* obj);
 void fn_3_D196C(s32 idx);
 typedef struct StadiumActorAnim {
