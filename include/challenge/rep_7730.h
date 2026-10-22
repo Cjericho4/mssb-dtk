@@ -109,6 +109,9 @@ void fn_1_25C68(void);
 void fn_1_25F98(void);
 void fn_1_267BC(void);
 void fn_1_267F4(void);
+void fn_800AD038(s32 heap);
+void fn_800B24D4(s32 mode);
+void fn_800B1188(void);
 void fn_1_26928(void);
 void fn_1_26A34(void);
 
