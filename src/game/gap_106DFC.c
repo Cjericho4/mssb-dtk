@@ -244,11 +244,10 @@ s32 fn_3_107B9C(u8* a, u8* b) {
     u8 ib = *b;
     u8 ia = *a;
     u8 keyB = g_Minigame.field_1E26[ib];
-    u8 keyA = g_Minigame.field_1E26[ia];
-    if (keyB == keyA) {
+    if (keyB == g_Minigame.field_1E26[ia]) {
         goto same;
     }
-    return keyB - keyA;
+    return keyB - g_Minigame.field_1E26[ia];
 same:
     return ia - ib;
 }
