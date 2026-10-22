@@ -222,7 +222,7 @@ void fn_1_20890(void) {
     PSMTXIdentity(mtx);
     GXLoadPosMtxImm(mtx, GX_PNMTX0);
     GXSetCurrentMtx(GX_PNMTX0);
-    GXLoadTexMtxImm(mtx, GX_IDENTITY, GX_MTX2x4);
+    GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
     fn_80048C14(3);
     fn_80048E00(0, 0x20);
     fn_80048E00(1, 0);
