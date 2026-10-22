@@ -32,7 +32,26 @@ void fn_1_90E4(void) {
 
 // .text:0x00009290 size:0xF0
 void fn_1_9290(void) {
-    return;
+    DrawingSceneStruct* scene;
+    ChallengeLayoutState* state = &lbl_1_bss_2FA8;
+    (scene = lbl_803CC1B8)->unk18++;
+    if (state->mode == 0) {
+        fn_80035EEC(3, 0);
+        fn_80035EEC(7, 1);
+        fn_80035ED0(2);
+    } else if (state->mode == 1) {
+        fn_80035EEC(11, 0);
+        fn_80035EEC(15, 1);
+        fn_80035EEC(19, 2);
+    } else {
+        fn_80035ED0(2);
+        fn_80035ED0(3);
+    }
+    if (state->previous != (s8)state->selected) {
+        fn_80034CEC((u32)scene);
+        fn_800B0A14_removeQueue();
+    }
+    if (lbl_803C77B8.held & 0x200) fn_800B0A14_removeQueue();
 }
 
 // .text:0x00009380 size:0x324

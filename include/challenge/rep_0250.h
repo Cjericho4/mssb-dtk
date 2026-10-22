@@ -31,6 +31,15 @@ void fn_1_8DBC(void);
 void fn_1_8F34(void);
 void fn_1_90B8(void);
 void fn_1_90E4(void);
+typedef struct ChallengeLayoutState {
+    u8 _pad0[2];
+    u8 selected;
+    u8 _pad3[4];
+    u8 mode;
+    u8 _pad8[9];
+    u8 previous;
+} ChallengeLayoutState;
+extern ChallengeLayoutState lbl_1_bss_2FA8;
 void fn_1_9290(void);
 void fn_1_9380(void);
 void fn_1_96A4(void);
