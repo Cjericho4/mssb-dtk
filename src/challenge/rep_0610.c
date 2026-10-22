@@ -71,8 +71,15 @@ void fn_1_D4BC(void) {
 }
 
 // .text:0x0000D590 size:0xA8
-void fn_1_D590(void) {
-    return;
+void fn_1_D590(s32 a, s32 b, f32 frame) {
+    ChallengeState* state = &lbl_1_bss_3070;
+    if (state->enabled == 0 || state->mode == 0) return;
+    if (state->mode == 2) {
+        if ((s32)frame == 0) state->phase += (state->phase != 0);
+        if (state->phase == 3) state->phase = 0;
+        if (state->phase != 2) return;
+    }
+    fn_8004B208(a, b, (s8)state->channel < 0 ? 0 : (s8)state->channel);
 }
 
 // .text:0x0000D638 size:0x18
