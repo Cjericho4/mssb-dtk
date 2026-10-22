@@ -505,13 +505,20 @@ void fn_3_105BD8(Struct_105BD8* arg0) {
 
 // .text:0x00105C28 size:0x5C mapped:0x80744CBC
 u32 fn_3_105C28(Struct_105C28* arg0, u32 arg1) {
-    LookupTable_105C28* tbl = arg0->table;
-    u16 lo = (u16)arg1;
-    u16 hi = (u16)(arg1 >> 16);
-    u16 found = 0;
-    u16 count = tbl->count;
-    LookupEntry_105C28* entry = tbl->entries;
+    u32 lo;
+    u32 found;
+    u32 hi;
+    u16 count;
+    LookupEntry_105C28* entry;
     LookupEntry_105C28* last;
+    LookupTable_105C28* tbl;
+
+    tbl = arg0->table;
+    hi = arg1 >> 16;
+    lo = arg1 & 0xFFFF;
+    found = 0;
+    count = tbl->count;
+    entry = tbl->entries;
     do {
         last = entry;
         if (entry->key == hi && lo == 0) {
