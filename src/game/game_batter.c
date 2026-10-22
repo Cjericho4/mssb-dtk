@@ -657,9 +657,10 @@ void ifSwing(void) {
 
 // .text:0x00013008 size:0x254 mapped:0x80651e70
 void starSwingSpendStars(void) {
+    u8* pStars;
     u8 miniGamesEnabled = g_d_GameSettings.minigamesEnabled;
     if (!miniGamesEnabled && g_Batter.isStarSwing && !g_Batter.starSwing_starsHaveBeenSpent) {
-        u8* pStars = &g_GameLogic.TeamStars[g_GameLogic.teamBatting];
+        pStars = &g_GameLogic.TeamStars[g_GameLogic.teamBatting];
         if (*pStars) {
             if (g_d_GameSettings.GameModeSelected != GAME_TYPE_PRACTICE ||
                 g_Practice.practiceType_2 == PRACTICE_TYPE_FREEPLAY) {
@@ -702,7 +703,7 @@ void starSwingSpendStars(void) {
                     c = g_Minigame.minigameControlStruct[0].characterIndex[g_Minigame.rosterID];
                 }
                 getAnimRelatedCoordinates(c, 26, &a);
-                fn_3_C0CE8(g_Batter.captainStarHitPitch, a.x, a.y, a.z);
+                fn_3_C0CE8(a.x, a.y, a.z, (s32)g_Batter.captainStarHitPitch);
             }
         }
     }
