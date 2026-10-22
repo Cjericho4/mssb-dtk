@@ -1,0 +1,34 @@
+- fn_3_C0854 (rep_1F58): sfx local lands in r5, target keeps it in r0 with store temps in r4/r5 (slwi r4/li r5 -1/li r0 0x18/sthx/beq/li r0 0x17/clrlwi r3,r0); tried s32/u8/s16/u16/s8/u32, block scope, decl order, store-first order, ternary and if/else (both go branchless), u8 drops the clrlwi entirely.
+- fn_3_6B870 (gap_6B4C8): inlined unloadEmptyBaseRunners loop has i in r30 / strength-reduced &runnerOnBase ptr in r31, target is the reverse; tried explicit s16* ptr (gets r30 but offset folds as 0x8 not 0x2+0x6), do-while, s16 i, <=3, base local, struct-pointer param.
+- processStadiumObjectFunction (rep_1D58): MATCHED later: the function returns void (caller checkCollision ignores the result and returns its own ret); with a void return MWCC reuses the dead r3 param for the global base.
+- fn_3_135600 (rep_3520): lis r5/r6 base pairing swapped (target lbl_3_data_21A48 in r5, g_Minigame in r6); diff order, operand order, mg local before/after, negated form all keep ours.
+- fn_3_BD80C (rep_1E08): target keeps &lbl_3_common_bss_35154 in r5 and a separate `addi r30, r5, 0x3e4` sub-object pointer; MWCC folds the 0x3e4 into every displacement whatever local/global form is used (same-file-static-off-one-base class).
+- fn_3_5A6A0 (gap_5985C): `xor r7, r4, r3` temp colored before the g_GameLogic base in the target; ours always r9 (probed all 5040 store orders, gl local, two-step web, inline, param reuse, u8/u32 params).
+- fn_3_D8A10 (gap_D8A10): 6 lines left, j loop over mg->_1918/_1914 lacks the IV walker (target: lbz 0x1919(r3); addi r3,r3,1); tried i reuse, do/while, u8..s16 j, g_Minigame direct (walker but from r3 not r31), inline helpers, u8* walkers, continue forms. Head fixed by s16 c = unk4C local (attempt saved).
+- fn_3_16E1EC (rep_4138): snapshot stores need a separate `addi r7, r31, 0x10` sub-object base (same-file static lbl_3_bss_D6F0 addressed off the D6E0 overlay) plus an extra neg before cntlzw on the ptr==NULL test; local bss/snap pointers all fold to r31 displacements.
+- fn_3_E1964 (gap_E1964): target IV init is li r29,0; mr r27,r29 (IV copied from i); all loop forms (for/do-while/while, inline helpers, dual counters, u8..u32 i, byte-offset casts) emit two li with i/IV swapped. rand() % 4096 matches the tail (attempt saved).
+- fn_3_9EE24 / RandomF32_UNK_Range (rep_1838): down to 2/3 lines after the orig/if-form abs + separate r2; remaining: target adds (partial+quot) into r0 then u8+r0 into r4, ours adds in place in r4 (720 term orders, named sums, += chains all fail).
+- fn_3_9056C (m_sound): 2 lines left (addi r4,r30,0x1c4 scheduled before slwi r0,r28,1); pointer `+=` forms give the unfolded bases, dropping the seq local fixed the stores (attempt saved).
+- fn_3_90B14 (gap_90754): target shares one `li r5,0` between `scene->loadingState = 0` and the call's third arg; ours emits separate zeros (tried assignment-as-arg, s32/s16 zero local, slot local).
+- fn_3_20AE0 (rep_8C8): store-only; target loads 0.0f directly into f0 first (x=f0,z=f3,a=f2,b=f1), ours always addi+lfs 0(r) for the 0.0f and f2/f3/f1/f0; every decl/init/store order, literal/extern/local, and inline-helper form compiles to the identical code.
+- fn_3_DF6D4 (gap_DEB90): 21 lines; target shares `li r0,0` between the unrolled `player != 0` compare and `_19DA[player] = 0`, ours emits two; post-loop constant-1 stores regalloc differs (attempt saved).
+- fn_3_FCEB0 (rep_3090): 7 lines with a goto-structured loop (init block at end); p/IV register swap + one extra trailing blr (attempt saved).
+- fn_3_6BD6C (gap_6B4C8): 16 lines with `s32 i; s32 team; hugeAnimStruct* has;` + has local after the unk9B store; left: constants 1/0 in r5/r7 swapped (brute of the 4 store orders no help) and epilogue lwz r31 interleaved with the `!= 0` tail.
+- fn_3_11741C (rep_3310): target computes state as `nor; srawi; andc r6, r0(=2), r3`; ours emits or+nor / nor+rlwinm for every `2 & ~(~(a|b) >> 31)` spelling (s16/s32/u32 state, separate mask locals, ternary gives a different idiom).
+- B27A4 (gap_AC9F8): 3 lines left after adding the missing g_GameLogic._140[1]/[0] stores and dropping the two dead stores: only `addi r3, g_GameLogic@l` scheduled before `li r0,-1`/first sth.
+- fn_3_11881C / rep_3310 0x34 family: even a typed view struct (entries_68v->subs[i].obj, base at 0x34, 0x90 stride) and a strided AnimLevel1** (lists[i*36]) fold back to add+lwz 0x34; the target's addi base,0x34 + lwzx stays unreachable.
+- fn_3_1354BC (rep_3520): 5 lines, float temp allocation only (attempt saved).
+- fn_3_DF608 (gap_DEB90): 10 lines, same prologue zero/lis-order family as DF6D4 (attempt saved).
+- fn_3_90220 (m_sound): 14 lines; arg evaluation order (lhzx, lbzx->r0, add, lbz pan, mr r4) not reproducible with local/pointer orderings (attempt saved).
+- fn_3_BF070 (rep_1E08): 53 lines; target keeps &lbl_3_data_111A8 (r30) and &g_d_GameSettings (r31) in saved regs across the two calls (stmw r27); pointer locals didn't change the output.
+- fn_3_D9868 (gap_D8A10): 37 lines; two g_Minigame anchors and loop-counter regs swapped; decl brute/for-loop forms no help (attempt saved).
+- fn_3_FCE38 (rep_3090): 13 lines with two index-based while loops; target has a shared IV-reset block at the end reached from both forward-loop exits, plus p/IV reg swap (attempt saved).
+- fn_3_142C18 (rep_37A8): 9 lines; target/IV register swap in the setRandomTarget loop (attempt saved).
+- fn_3_14E894 (rep_3880): 9 lines; `mr r31,r30` zero copy + node/want reg swap (attempt saved).
+- fn_3_90C14 (gap_90754): same shared-zero (`sth r5,0x10(r30)` + call arg) obstacle as fn_3_90B14; not attempted.
+- fn_3_B7E44 (rep_1CB8): decompiled from stub to 16 lines; only the double-constant load scheduling differs (attempt saved).
+- fn_3_ED058 (gap_EA340): decompiled from stub to 9 lines; unprototyped-call r3 reuse for fn_80034CEC (attempt saved; making fn_80034CEC unprototyped globally made it worse).
+- fn_3_E7388 (sta_c6): decompiled from stub to 18 lines; regalloc only (attempt saved; E7388Out typedef + (s32, E7388Out*) signature added to sta_c6.h).
+- fn_3_20EEC (rep_940): decompiled from stub to 10 lines; float load order of lbl_3_data_4474[1]/[0] (attempt saved).
+- fn_3_7AFE4 (gap_7976C): decompiled from stub to 4 lines (lis/addi pairing of g_Scores vs g_GameLogic); needs the 7AEEC loop as an inline copy (attempt saved).
+- fn_3_6FA28 (rep_1200): decompiled from stub to 24 lines (regalloc of the second g_Ball base and the stadium-table index; constant load order) (attempt saved).
