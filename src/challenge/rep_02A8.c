@@ -123,7 +123,33 @@ void fn_1_A95C(void) {
 
 // .text:0x0000B4A4 size:0x114
 void fn_1_B4A4(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch (lbl_1_bss_2FE8) {
+    case 0: {
+        ChallengeScene* entry;
+        scene->loadingState = 0;
+        entry = (ChallengeScene*)fn_800B0A5C_insertQueue(fn_1_9F04, 1);
+        entry->byte18 = 0;
+        entry->byte19 = 0x2A;
+        entry->arg14 = (s32)fn_1_A7E4;
+        lbl_803CC1B8->loadingState = 0;
+        lbl_1_bss_2FE8++;
+        break;
+    }
+    case 1:
+        if (scene->loadingState != 0) {
+            lbl_800EF808.soundMode = 2;
+            sndOutputMode(2);
+            scene->loadingState = 0;
+            lbl_1_bss_2FE8++;
+        }
+        break;
+    case 2:
+        scene->aFunctionPointer = fn_1_A95C;
+        lbl_1_common_bss_49994.pending = 0;
+        lbl_1_bss_2FE8 = 0;
+        break;
+    }
 }
 
 // .text:0x0000B5B8 size:0x4AC

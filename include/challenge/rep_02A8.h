@@ -34,6 +34,12 @@ s32 fn_1_A880(void);
 s32 fn_1_A8B4(void);
 s32 fn_1_A908(void);
 void fn_1_A95C(void);
+typedef struct ChallengeSoundState {
+    u8 _pad0[0xE0];
+    u8 pending;
+} ChallengeSoundState;
+extern ChallengeSoundState lbl_1_common_bss_49994;
+extern u8 lbl_1_bss_2FE8;
 void fn_1_B4A4(void);
 void fn_1_B5B8(void);
 void fn_1_BA64(void);
