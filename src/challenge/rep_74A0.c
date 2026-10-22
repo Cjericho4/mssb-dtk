@@ -67,7 +67,7 @@ void fn_1_19D60(ChallengeRenderModel* model, s32 mode) {
 void fn_1_1A1EC(ChallengeRenderTask* task, s32 mode) {
     ChallengeRenderObject* object = task->object;
     if (task->callback != 0) {
-        task->callback(task, mode);
+        task->callback(task);
     }
     if (object->model != 0) {
         fn_800B2D5C(object);
@@ -84,8 +84,36 @@ void fn_1_1A1EC(ChallengeRenderTask* task, s32 mode) {
 }
 
 // .text:0x0001A290 size:0x124
-void fn_1_1A290(void) {
-    return;
+static inline void drawChallengeTask(HugeAnimEntry68* entry, s32 mode) {
+    ChallengeRenderTask* task = (ChallengeRenderTask*)&entry->unk34;
+    ChallengeRenderObject* object = task->object;
+    if (object != 0 && entry[1].unk10 != 0) {
+    if (task->callback != 0) {
+        task->callback(task);
+    }
+    if (object->model != 0) {
+        fn_800B2D5C(object);
+        GXInvalidateVtxCache();
+        fn_1_19D60(object->model, mode);
+    } else {
+        for (object = object->children; object != 0; object = object->next) {
+            if (object->model != 0) {
+                DOSetWorldMatrix(object->model, object->world);
+            }
+            fn_1_19D60(object->model, mode);
+        }
+    }
+    }
+}
+
+void fn_1_1A290(HugeAnimEntry68* entries, s32 mode) {
+    u16 i;
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+    GXSetCullMode(GX_CULL_BACK);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+    for (i = 0; i < entries->count; i++) {
+        drawChallengeTask(&entries[i], mode);
+    }
 }
 
 // .text:0x0001A3B4 size:0x3C0

@@ -47,14 +47,16 @@ typedef struct ChallengeRenderObject {
 typedef struct ChallengeRenderTask {
     ChallengeRenderObject* object;
     u32 unk4;
-    void (*callback)(struct ChallengeRenderTask* task, s32 mode);
+    void (*callback)(struct ChallengeRenderTask* task);
 } ChallengeRenderTask;
 void fn_800B2D5C(ChallengeRenderObject* object);
 void GXInvalidateVtxCache(void);
 void DOSetWorldMatrix(ChallengeRenderModel* model, MtxPtr world);
 void fn_1_19D60(ChallengeRenderModel* model, s32 mode);
 void fn_1_1A1EC(ChallengeRenderTask* task, s32 mode);
-void fn_1_1A290(void);
+#include "Dolphin/GX/GXPixel.h"
+#include "Dolphin/GX/GXGeometry.h"
+void fn_1_1A290(HugeAnimEntry68* entries, s32 mode);
 void fn_1_1A3B4(void);
 typedef struct ChallengeModelGroup {
     u8 _pad0[6];
