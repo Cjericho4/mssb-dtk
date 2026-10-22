@@ -4,6 +4,16 @@
 #include "mssbTypes.h"
 #include "UnknownHeaders.h"
 
+typedef struct Gap9EA0State {
+    /* 0x00 */ u8 selection;
+    /* 0x01 */ u8 pending;
+    /* 0x02 */ u8 _pad2[0xA];
+    /* 0x0C */ s32 unkC;
+    /* 0x10 */ u8 _pad10[0x14];
+    /* 0x24 */ s32 slots[11];
+} Gap9EA0State;
+extern Gap9EA0State lbl_1_common_bss_49A78;
+
 typedef struct ChallengeScriptData ChallengeScriptData;
 typedef struct ChallengeScriptEntry {
     u32 unk0;

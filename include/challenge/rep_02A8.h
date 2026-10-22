@@ -2,11 +2,14 @@
 #define __CHALLENGE_rep_02A8_H_
 
 #include "mssbTypes.h"
+#include "challenge/challenge.h"
 #include "UnknownHeaders.h"
 #include "musyx/musyx.h"
 
 void fn_1_A250(void);
 void fn_1_A2E4(void);
+extern void (*lbl_1_data_1C8C[5])(void);
+void fn_1_C2A4(void);
 void fn_1_A348(void);
 void fn_1_A464(void);
 void fn_1_A634(void);

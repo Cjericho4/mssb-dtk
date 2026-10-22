@@ -17,7 +17,20 @@ void fn_1_A2E4(void) {
 
 // .text:0x0000A348 size:0x11C
 void fn_1_A348(void) {
-    return;
+    u16 pressed = lbl_803C77B8.pressed;
+    u16 held = lbl_803C77B8.held;
+    if (pressed & 8) {
+        lbl_1_common_bss_49A78.selection = ((s8)lbl_1_common_bss_49A78.selection + 4) % 5;
+    } else if (pressed & 4) {
+        lbl_1_common_bss_49A78.selection = ((s8)lbl_1_common_bss_49A78.selection + 6) % 5;
+    } else if (held & 0x100) {
+        lbl_803CC1B8->aFunctionPointer = lbl_1_data_1C8C[(s8)lbl_1_common_bss_49A78.selection];
+        lbl_1_common_bss_49A78.pending = 0;
+    } else if (held & 0x1200) {
+        lbl_1_bss_2FDA = 0;
+        lbl_1_bss_2FD9 = 0;
+        lbl_803CC1B8->aFunctionPointer = fn_1_C2A4;
+    }
 }
 
 // .text:0x0000A464 size:0x1D0
