@@ -92,7 +92,9 @@ void fn_1_7848(void) {
 
 // .text:0x0000786C size:0x78
 void fn_1_786C(void) {
-    return;
+    fn_80048D4C();
+    GXSetCopyClear(lbl_1_data_858, 0xFFFFFF);
+    SetFog(lbl_1_bss_4E0->type, lbl_1_bss_4E0->color, lbl_1_bss_4E0->start, lbl_1_bss_4E0->end, 1.0f, 512.0f);
 }
 
 // .text:0x000078E4 size:0x7C

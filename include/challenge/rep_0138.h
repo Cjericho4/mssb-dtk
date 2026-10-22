@@ -43,6 +43,20 @@ void fn_1_7280(void);
 void fn_1_73B8(Rep0138Model* model, s32 count, ...);
 void fn_1_77EC(Rep0138Model* model);
 void fn_1_7848(void);
+typedef struct ChallengeFog {
+    union {
+        GXColor color;
+        struct {
+            u8 rgb[3];
+            u8 type;
+        };
+    };
+    f32 start;
+    f32 end;
+} ChallengeFog;
+extern ChallengeFog* lbl_1_bss_4E0;
+void fn_80048D4C(void);
+void SetFog(u8 type, GXColor color, f32 start, f32 end, f32 nearScale, f32 farScale);
 void fn_1_786C(void);
 void fn_1_78E4(void);
 void fn_1_7960(void);
