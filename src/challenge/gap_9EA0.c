@@ -16,8 +16,35 @@ void fn_1_9F04(void) {
 }
 
 // .text:0x0000A024 size:0x160
-void fn_1_A024(void) {
-    return;
+void fn_1_A024(Gap9EA0TextList* list, s32 action) {
+    s32 start = list->start;
+    s32 count = list->count;
+    s32 total = list->total;
+    s32 selected = list->unk4;
+    s32 relative = selected - start;
+    s32 visible;
+    if (start + count < total) visible = count;
+    else if (total < count) visible = total;
+    else visible = total - start;
+    switch (action) {
+    case 0:
+        if (relative != 0) list->unk4--;
+        else if (start != 0) { list->start--; list->unk4--; }
+        break;
+    case 1:
+        if (relative + 1 == visible) {
+            if (selected + 1 < total) { list->start++; list->unk4++; }
+        } else list->unk4++;
+        break;
+    case 2:
+        if (start < count) { list->start = 0; list->unk4 = 0; }
+        else { list->start -= count; list->unk4 -= list->count; }
+        break;
+    case 3:
+        if (selected + visible >= total) { list->start = total - visible; list->unk4 = list->total - 1; }
+        else { list->start += count; list->unk4 += list->count; }
+        break;
+    }
 }
 
 // .text:0x0000A184 size:0x70
