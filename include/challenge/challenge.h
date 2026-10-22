@@ -15,7 +15,8 @@ extern ChallengeInput lbl_803C77B8;
    use the bytes after 0x14 as their own word/byte fields. */
 typedef struct ChallengeScene {
     /* 0x00 */ void (*callback)(void);
-    /* 0x04 */ u8 _pad4[0xC];
+    /* 0x04 */ u8 _pad4[8];
+    /* 0x0C */ struct ChallengeScene* parent;
     /* 0x10 */ s16 loadingState;
     /* 0x12 */ u16 priority;
     union {
@@ -35,6 +36,10 @@ typedef struct ChallengeScene {
         f32 parameters[6]; /* 0x14..0x28 */
     };
     /* 0x2C */ u32 flags2C;
+    /* 0x30 */ u8 _pad30[4];
+    /* 0x34 */ u16 flags34;
+    /* 0x36 */ u8 choice;
+    /* 0x37 */ u8 cursor;
 } ChallengeScene;
 
 #endif // !__CHALLENGE_challenge_H_

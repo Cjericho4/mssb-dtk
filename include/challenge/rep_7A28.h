@@ -3,6 +3,7 @@
 
 #include "mssbTypes.h"
 #include "UnknownHeaders.h"
+#include "challenge/challenge.h"
 
 typedef struct Rep7A28Slot {
     /* 0x00 */ s32 value;

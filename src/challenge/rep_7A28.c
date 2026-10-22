@@ -28,7 +28,19 @@ void fn_1_27AD0(void) {
 
 // .text:0x00027AD4 size:0xE4
 void fn_1_27AD4(void) {
-    return;
+    ChallengeScene* scene = (ChallengeScene*)lbl_803CC1B8;
+    if (lbl_803C77B8.pressed & 8) {
+        scene->cursor = ((s8)scene->cursor + 1) % 2;
+    } else if (lbl_803C77B8.pressed & 4) {
+        scene->cursor = ((s8)scene->cursor + 1) % 2;
+    } else if (lbl_803C77B8.held & 0x100) {
+        scene->choice = scene->cursor + 1;
+        scene->cursor = 0;
+    } else if (lbl_803C77B8.held & 0x200) {
+        fn_800AD038(lbl_80366158.unk8);
+        ((ChallengeScene*)lbl_803CC1B8)->parent->loadingState = 1;
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x00027BB8 size:0x1B4
