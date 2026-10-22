@@ -1014,10 +1014,10 @@ void fn_3_889FC(void) {
 
 // .text:0x00088B18 size:0x10C mapped:0x806C7BAC
 void fn_3_88B18(void) {
-    s32 state;
     s32 i;
     InMemRunnerType* runner;
     s16 standing;
+    s32 state;
 
     state = 0;
     if (g_FieldingLogic._107 != 0 && g_FieldingLogic._107 != 4) {
