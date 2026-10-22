@@ -11,8 +11,13 @@ void fn_1_C9E0(void) {
 }
 
 // .text:0x0000CB9C size:0x88
-void fn_1_CB9C(void) {
-    return;
+void fn_1_CB9C(s32 reset) {
+    if (reset != 0) {
+        lbl_1_bss_30BC = 0;
+    } else {
+        PSMTXCopy(lbl_1_bss_30C0.matrix, lbl_1_data_F4F8[lbl_803CBBC0].matrix);
+        fn_800A7D4C(8, &lbl_1_data_F4F8[lbl_803CBBC0]);
+    }
 }
 
 // .text:0x0000CC24 size:0xA4

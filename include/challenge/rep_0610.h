@@ -139,7 +139,20 @@ extern Rep0610Linked* lbl_1_bss_67B8;
 
 void fn_1_C5AC(void);
 void fn_1_C9E0(void);
-void fn_1_CB9C(void);
+typedef struct ChallengeView {
+    u32 header[2];
+    Mtx matrix;
+} ChallengeView;
+typedef struct ChallengeViewState {
+    u8 _pad0[0x58];
+    Mtx matrix;
+} ChallengeViewState;
+extern ChallengeView lbl_1_data_F4F8[];
+extern ChallengeViewState lbl_1_bss_30C0;
+extern s32 lbl_1_bss_30BC;
+extern u8 lbl_803CBBC0;
+void fn_800A7D4C(s32 mode, ChallengeView* view);
+void fn_1_CB9C(s32 reset);
 void fn_1_CC24(void);
 void fn_1_CCC8(void);
 void fn_1_CDC8(void);
