@@ -174,17 +174,14 @@ void fn_3_1078F8(void) {
 
 // .text:0x00107988 size:0x40 mapped:0x80746A1C
 s32 fn_3_107988(u32 arg0) {
-    MiniGameStruct* s = &g_Minigame;
-    u32 count = s->field_1E26[4] - 1;
-    if (count <= 0) {
-        return 0;
-    }
-    do {
-        if (s->_1DFC[0x20] == arg0) {
+    u32 i;
+    s32 count = g_Minigame.field_1E26[4] - 1;
+
+    for (i = 0; i < count; i++) {
+        if (g_Minigame.unk1E1C[i] == arg0) {
             return 1;
         }
-        s = (MiniGameStruct*)((u8*)s + 1);
-    } while (--count != 0);
+    }
     return 0;
 }
 
