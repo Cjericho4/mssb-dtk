@@ -150,7 +150,9 @@ typedef struct ChallengeView {
     Mtx matrix;
 } ChallengeView;
 typedef struct ChallengeViewState {
-    u8 _pad0[0x58];
+    u8 _pad0[0x50];
+    f32 angle;
+    u8 _pad54[4];
     Mtx matrix;
 } ChallengeViewState;
 extern ChallengeView lbl_1_data_F4F8[];
@@ -160,6 +162,14 @@ extern u8 lbl_803CBBC0;
 void fn_800A7D4C(s32 mode, ChallengeView* view);
 void fn_1_CB9C(s32 reset);
 void fn_1_CC24(void);
+typedef struct ChallengeTiming {
+    f32 time;
+    f32 end;
+} ChallengeTiming;
+extern u8 lbl_1_bss_5F69;
+extern f32 lbl_1_data_F568;
+void fn_800385F0(ChallengeViewState* state, f32 a, f32 b, f32 c, f32 d);
+void fn_80037AA0(ChallengeViewState* state, s32 mode, void (*callback)(s32), u16 id, ChallengeTiming* timing);
 void fn_1_CCC8(void);
 void fn_1_CDC8(void);
 void fn_1_D13C(void);

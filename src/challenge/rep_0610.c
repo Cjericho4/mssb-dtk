@@ -42,7 +42,18 @@ void fn_1_CC24(void) {
 
 // .text:0x0000CCC8 size:0x100
 void fn_1_CCC8(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    ChallengeTiming* timing = (ChallengeTiming*)scene->unk14;
+    if (timing != 0 && timing->time < timing->end) {
+        if (lbl_1_bss_5F69 != 0) {
+            fn_800385F0(&lbl_1_bss_30C0, 1.0f, 0.5f, 0.1f, 1.0f);
+        } else {
+            fn_800385F0(&lbl_1_bss_30C0, -1.0f, 0.5f, 0.1f, 1.0f);
+        }
+        lbl_1_bss_30C0.angle = lbl_1_data_F568;
+        fn_80037AA0(&lbl_1_bss_30C0, 0, fn_1_CB9C, scene->unk18, (ChallengeTiming*)scene->unk14);
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x0000CDC8 size:0x374
