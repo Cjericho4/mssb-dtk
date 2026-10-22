@@ -26,6 +26,6 @@ void fn_1_26D28(Rep7978Camera* camera, u16 buttons, u16 held, u16 pressed, Chall
 void fn_1_272DC(Rep7978Camera* camera, u32 mtxId);
 void fn_1_27330(Rep7978Camera* camera);
 void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
-void fn_1_273D8(void);
+void fn_1_273D8(Rep7978Camera* camera);
 
 #endif // !__CHALLENGE_rep_7978_H_

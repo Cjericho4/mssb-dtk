@@ -25,7 +25,7 @@ extern Rep7BF0View471D8 lbl_1_bss_471D8;
 void fn_80048BEC(Rep7BF0Unk471BC* arg0, s32 arg1, s32 arg2);
 
 void fn_1_2858C(void);
-void fn_1_289C0(void);
+void fn_1_289C0(Rep7978Camera* camera);
 void fn_1_289E0(void);
 void fn_1_28AE0(void);
 typedef struct ChallengeScriptGlobals {

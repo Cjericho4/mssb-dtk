@@ -82,5 +82,22 @@ void fn_1_28118(void) {
 
 // .text:0x00028200 size:0xF4
 void fn_1_28200(void) {
-    return;
+    ChallengeScene* scene = (ChallengeScene*)lbl_803CC1B8;
+    scene->loadingState = 0;
+    fn_800AD038(lbl_80366158.unk8);
+    scene->words[0] = (u32)_OSAllocFromHeap(0x20, 0xDC);
+    fn_1_273D8((Rep7978Camera*)scene->words[0]);
+    scene->words[2] = (u32)_OSAllocFromHeap(0x20, sizeof(ChallengeScript));
+    ((ChallengeScript*)scene->words[2])->kind = 0x10;
+    ((ChallengeScript*)scene->words[2])->enabled = 1;
+    ((Rep7978Camera*)scene->words[0])->up.y *= -1.0f;
+    scene->parameters[3] = 0.0f;
+    scene->parameters[4] = -1.0f;
+    scene->parameters[5] = 0.0f;
+    scene->value2C = 1.0f;
+    scene->value30 = 1.0f;
+    scene->choice = 0;
+    scene->cursor = 0;
+    scene->flags34 = 0;
+    lbl_803CC1B8->aFunctionPointer = fn_1_28118;
 }

@@ -21,6 +21,6 @@ void fn_1_27330(Rep7978Camera* camera) {
 }
 
 // .text:0x000273D8 size:0x188
-void fn_1_273D8(void) {
+void fn_1_273D8(Rep7978Camera* camera) {
     return;
 }

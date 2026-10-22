@@ -40,9 +40,13 @@ typedef struct ChallengeScene {
         /* 0x28 */ s32 mode28;
         };
         f32 parameters[6]; /* 0x14..0x28 */
+        u32 words[6];
     };
-    /* 0x2C */ u32 flags2C;
-    /* 0x30 */ u8 _pad30[4];
+    /* 0x2C */ union {
+        u32 flags2C;
+        f32 value2C;
+    };
+    /* 0x30 */ f32 value30;
     /* 0x34 */ u16 flags34;
     /* 0x36 */ u8 choice;
     /* 0x37 */ u8 cursor;
