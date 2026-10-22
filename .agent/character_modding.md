@@ -30,20 +30,32 @@ Addresses are RAM addresses; DOL file offset = RAM - 0x800E8300 + 0xE5300 for `.
 | `lbl_803CB7E0` | sdata | 4 x u16 | descriptor tier counts (54, 378, 54, 29). |
 
 ### 1.3 Load path (function chain)
-1. `fn_8001758C` (`FUN_8001758c(char*, int animationIndex, charID, team, roster, ...)`, gap_8001196C):
-   fills `AnimationStruct` (0x252.. fields), copies `inMemRoster[team][roster].stats.FieldingArm/BattingStance`
-   into `unk25A/unk25B`, computes `subfile = charID*19 (+1 for the equipment flag)` and does
-   `ARAMTransfer(lbl_803CB790[subfile], actor->unk8 buffer)` (with a cached-copy shortcut via
-   `g_hugeAnimStruct+0x2d3c/0x2d54`), or `fn_8002204C(charID, buf)`.
+1. `fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 arg6, u8 slotKind, u8 variant)`
+   (gap_8001196C.c, **now matched and typed** as `Gap8001196CAnim`): state 0 fills the slot record
+   (`charID` 0x252, `slotKind` 0x254, `team/player` 0x256/0x257, `variant` 0x259, roster bytes
+   0x26/0x27 -> 0x25A/0x25B, `isBatter = slotKind == 9` -> 0x278), computes
+   `track = charID*19 + (variant == 0 ? 1 : 0)`, and either memcpy's a cached batter/fielder model
+   (`g_hugeAnimStruct` 0x2D54/0x2D3C, keyed by charID at 0x2D5C/0x2D44), or
+   `fn_8002204C(charID, buf)` (variant != 0) falling back to `ARAMTransfer(&lbl_803CB790[track], buf)`;
+   state 1 waits for `lbl_803716B8.loadBusy == 0` then calls `fn_80017814(anim, anim->unk255, slotKind, fn_8001FDD4)`.
 2. `fn_80016344` / `fn_80016710` (called from game `fn_3_6B4C8`, `fn_3_6B5D8`, `fn_3_10C81C`, menus
-   `fn_2_481F4`): state machine that loads skeleton (`fn_80021BBC(charID, buf)` ->
-   descriptor `432+charID` or subfile track 15), animation banks (`lbl_803CB790[charID*19 + 16/17]`),
+   `fn_2_481F4`): state machine that loads skeleton (`fn_80021BBC(charID, buf)`, **now matched** in
+   gap_8001E460.c: `_OSAllocFromHeap(0x20, size)` if `buf == NULL`, then
+   `ARAMTransfer(&lbl_800EFD38[432 + charID], buf, 3, lbl_803716B8.skeletonAramAddrs[charID])` when
+   `lbl_803716B8.unk1EA & 2`, else `ARAMTransfer(&lbl_800F1D78[charID*19 + 15], buf, 0, NULL)`), animation banks (`lbl_803CB790[charID*19 + 16/17]`),
    and body/equipment subfiles; stores the actor in `g_hugeAnimStruct.AnimationStructPtrs[i]` (+0x2c50).
 3. `fn_80017814` (`FUN_80017814(ACTActor*, actorIndex, flag, userData)`): relocates the `.gpc` root
    header in place (words 0x08/0x0C/0x10 += base), then calls **`convertTextureHeader`**
    (= Ghidra `AdjustTextureHeaderPointers`, 0x800C0770, now matched in `src/Unknown/gap_800BD3A0.c`)
    on the texture archive pointed to by word 0 of the root header, then `fn_8002399C`
-   (`characterAndBallDisplayRelated`) -> **`f_InitActorWithLayout`** (0x800232E0).
+   (`characterAndBallDisplayRelated`, **now matched**: `memset(lbl_8017EBB0[slotIdx], 0, lbl_803CBC5C)`,
+   `layout->actorID = actorID`, `slot->actor = f_InitActorWithLayout(layout, lbl_8017EBB0[slotIdx])`,
+   `actor->skHeader = skHeader`, then resets the `Gap8002244CActorSlot` fields) -> **`f_InitActorWithLayout`** (0x800232E0).
+   Sub-items go through the load queue: `fn_8002244C(arg0, block, packedID)` (**now matched**) is the
+   queue callback that, given `packedID = charID << 16 | itemID`, stores the aligned size of descriptor
+   `54 + charID` at `block->size` and queues descriptor `54 + itemID` (`fn_80022CB4`, ring of 18
+   `Gap8002244CRecord`s in `lbl_803716B8`) into `block + size` with ARAM source
+   `lbl_803716B8.subItemAramAddrs[itemID]` and completion callback `fn_80022620`.
 4. `convertGeometryAndSknHeader` -> **`LoadGeoPalette`** (0x800BCB44, now matched in
    `src/Unknown/gap_800B993C.c`): converts the on-disc `GEOPalette`
    (`GeoPaletteHdr` -> `GeoDescriptor[] {layout, name}` -> `GeoLayout {position, color,
@@ -143,8 +155,8 @@ slots"): keep `charID` for gameplay/stats and add a `skin` byte per actor/player
   literals in `auto_*_data.s`) do not get relocated, and the RELs' dependencies on DOL symbol
   addresses are handled by the linker only for symbols it knows.
 * The code needed for Option C is small and now mostly in matched/typed files: `fn_8001758C`
-  (gap_8001196C.c, not matched yet), `fn_8002244C` (gap_8002244C.c, not matched), and the
-  roster -> actor copy.  `convertTextureHeader` and `LoadGeoPalette` are matched and typed
+  (gap_8001196C.c, matched), `fn_8002244C` and `fn_8002399C` (gap_8002244C.c, matched),
+  `fn_80021BBC` (gap_8001E460.c, matched), and the roster -> actor copy.  `convertTextureHeader` and `LoadGeoPalette` are matched and typed
   (`TextureArchiveHeader`, `GeoPaletteHdr`...), `f_InitActorWithLayout` and `DecompressDiskData`
   are unmatched (`f_InitActorWithLayout` is typed, best attempt in `.agent/attempts/`; `DecompressDiskData` keeps its inline-asm source), which does not block a shifted build.
 
