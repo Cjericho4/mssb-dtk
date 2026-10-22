@@ -711,8 +711,22 @@ void fn_3_D0918(void) {
 }
 
 // .text:0x000D1004 size:0x10C mapped:0x80710098
-void fn_3_D1004(void) {
-    return;
+void fn_3_D1004(StaC2SpinObj* obj, f32 x, f32 y, f32 z, f32 rotY, f32 angle) {
+    StaC2Bone* bone = ((StaC2Model*)obj->wrapper->boneData)->bones[3];
+    Vec axis = {0.0f, 1.0f, 0.0f};
+    Quaternion q;
+
+    obj->pos.x = x;
+    obj->pos.y = y;
+    obj->pos.z = z;
+    obj->angle = angle;
+    obj->ctrl.type = 0;
+    CTRLSetTranslation(&obj->ctrl, obj->pos.x, -obj->pos.y, obj->pos.z);
+    CTRLSetRotation(&obj->ctrl, 0.0f, rotY, 0.0f);
+    C_QUATRotAxisRad(&q, &axis, 0.017453292f * obj->angle);
+    PSQUATMultiply(&q, &obj->quat, &q);
+    PSQUATNormalize(&q, &q);
+    CTRLSetQuat(&bone->ctrl, q.x, q.y, q.z, q.w);
 }
 
 // .text:0x000D1110 size:0x16C mapped:0x807101A4
@@ -788,7 +802,7 @@ void fn_3_D141C(StaC2D1280Obj* obj) {
 }
 
 // .text:0x000D173C size:0x10C mapped:0x807107D0
-void fn_3_D173C(void) {
+void fn_3_D173C(StaC2SpinObj* obj) {
     return;
 }
 

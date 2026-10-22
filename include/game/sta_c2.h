@@ -15,6 +15,34 @@ typedef struct BoneWrapper {
     void* boneData; // Offset 0x00
 } BoneWrapper;
 
+
+/* Skinned model reached through BoneWrapper::boneData (same layout sta_c6.c uses). */
+typedef struct StaC2Bone {
+    /* 0x00 */ u8 _pad0[0x1C];
+    /* 0x1C */ Control ctrl;
+    u8 _padCtrlEnd[0xEC - 0x1C - sizeof(Control)];
+    /* 0xEC */ MtxPtr mtx;
+} StaC2Bone;
+
+typedef struct StaC2Model {
+    /* 0x00 */ u8 _pad0[0x6];
+    /* 0x06 */ u16 boneCount;
+    /* 0x08 */ u8 _pad8[0x10];
+    /* 0x18 */ StaC2Bone** bones;
+} StaC2Model;
+
+/* Object animated by fn_3_D1004 / fn_3_D173C: a Control followed by position, orientation and spin. */
+typedef struct StaC2SpinObj {
+    /* 0x00 */ Control ctrl;
+    u8 _pad3C[0x74 - sizeof(Control)];
+    /* 0x74 */ BoneWrapper* wrapper;
+    u8 _pad78[0xA0 - 0x78];
+    /* 0xA0 */ Vec pos;
+    /* 0xAC */ Quaternion quat;
+    u8 _padBC[0x4];
+    /* 0xC0 */ f32 angle;
+} StaC2SpinObj;
+
 // Main structure passed to fn_3_CFA8C
 typedef struct ActorObject {
     u8 _pad0[0x74];
@@ -200,12 +228,12 @@ s32 fn_3_D052C(void);
 void fn_3_D0534(void);
 f32 fn_3_D0854(StaC2RangeObj* obj);
 void fn_3_D0918(void);
-void fn_3_D1004(void);
+void fn_3_D1004(StaC2SpinObj* obj, f32 x, f32 y, f32 z, f32 rotY, f32 angle);
 void fn_3_D1110(struct StaC2D00D0Src* obj);
 void fn_3_D127C(void);
 void fn_3_D1280(struct StaC2D1280Obj* obj);
 void fn_3_D141C(struct StaC2D1280Obj* obj);
-void fn_3_D173C(void);
+void fn_3_D173C(StaC2SpinObj* obj);
 void fn_3_D196C(s32 idx);
 typedef struct StadiumActorAnim {
     u8 _pad0[0x1A];  /* 0x00 */
