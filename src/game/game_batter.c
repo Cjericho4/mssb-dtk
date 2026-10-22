@@ -1182,8 +1182,8 @@ void calculateHorizontalPower(void) {
 
 // UNUSED .text:0x00010A80 size:0x280 mapped:0x8064fb14
 void calculateBuntHorizontalAngle(void) {
-    int pullInd = 0;
     InputStruct* inputs;
+    int pullInd = 0;
     int horizAngle;
     int lowerBunt;
     int upperBunt;
