@@ -53,6 +53,7 @@ void fn_1_BEF4(s16 voiceID);
 u8 fn_800211F0(void);
 SND_VOICEID fn_1_BF34(u32 fxId);
 void fn_1_BFB0(void);
+extern u8 lbl_1_bss_2FDD;
 void fn_1_C188(void);
 
 #endif // !__CHALLENGE_rep_02A8_H_
