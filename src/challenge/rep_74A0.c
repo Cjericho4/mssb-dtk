@@ -11,8 +11,15 @@ void fn_1_1857C(void) {
 }
 
 // .text:0x00018E04 size:0xE0
-void fn_1_18E04(void) {
-    return;
+void fn_1_18E04(ChallengeOrbit* orbit, f32 angle) {
+    f32 sine;
+    f32 cosine;
+    f32 radians = 0.017453292f * angle;
+    sine = (f32)sin(radians);
+    cosine = (f32)cos(radians);
+    orbit->position.x = (sine * lbl_1_data_FB24.radius) / 100000.0f;
+    orbit->position.y = (cosine * lbl_1_data_FB24.radius) / 100000.0f;
+    orbit->position.z = 0.0f;
 }
 
 // .text:0x00018EE4 size:0x2F8
