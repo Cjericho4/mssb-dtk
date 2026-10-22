@@ -1,8 +1,37 @@
 #include "Unknown/gap_8002244C.h"
 
+/* inline copy of fn_80022CB4 (defined later in this unit, so -inline auto cannot pick it up) */
+static inline BOOL queueLoadInline(Gap8002244CDiskDesc* desc, void* dest, s32 mode, void* aramAddr,
+                                   Gap8002244CLoadCallback callback, s32 param) {
+    Gap8002244CRecord* rec;
+    s8 next = (lbl_803716B8.flag1C8 + 1) % 18;
+    if (next == lbl_803716B8.flag1C9 || (dest == NULL && callback == NULL)) {
+        return FALSE;
+    }
+    lbl_803716B8.pending1CA = 1;
+    rec = &lbl_803716B8.recs[lbl_803716B8.flag1C8];
+    rec->desc = desc;
+    rec->dest = dest;
+    rec->mode = mode;
+    rec->aramAddr = aramAddr;
+    rec->callback = callback;
+    rec->param = param;
+    lbl_803716B8.flag1C8 = next;
+    return TRUE;
+}
+
 // .text:0x8002244C size:0x100
-void fn_8002244C(void) {
-    return;
+void fn_8002244C(s32 arg0, Gap8002244CLoadBlock* block, s32 packedID) {
+    s32 charID = packedID >> 16;
+    u16 itemID = packedID;
+    s32 sizeIdx = MASTER_DESC_SUBITEM_BASE + charID;
+    Gap8002244CDiskDesc* sizeDesc = &lbl_800EFD38[sizeIdx];
+    u32 size = ((sizeDesc->sizeFlags & 0x0FFFFFFF) + 0x1F) & ~0x1F;
+
+    block->size = size;
+    block = (Gap8002244CLoadBlock*)(size + (u32)block);
+    queueLoadInline(&lbl_800EFD38[MASTER_DESC_SUBITEM_BASE + itemID], block, 3, lbl_803716B8.subItemAramAddrs[itemID],
+                    fn_80022620, 0);
 }
 
 // .text:0x8002254C size:0xD4
@@ -11,7 +40,7 @@ void fn_8002254C(void) {
 }
 
 // .text:0x80022620 size:0x14
-void fn_80022620(void) {
+void fn_80022620(s32 arg0, Gap8002244CLoadBlock* block, s32 packedID) {
     lbl_803716B8.unk1E8 = 0;
 }
 
@@ -70,20 +99,21 @@ void fn_80022B68(void) {
 }
 
 // .text:0x80022CB4 size:0xA4
-BOOL fn_80022CB4(s32 a, u32 b, s32 c, s32 d, u32 e, s32 f) {
+BOOL fn_80022CB4(Gap8002244CDiskDesc* desc, void* dest, s32 mode, void* aramAddr, Gap8002244CLoadCallback callback,
+                 s32 param) {
     Gap8002244CRecord* rec;
     s8 next = (lbl_803716B8.flag1C8 + 1) % 18;
-    if (next == lbl_803716B8.flag1C9 || (b == 0 && e == 0)) {
+    if (next == lbl_803716B8.flag1C9 || (dest == NULL && callback == NULL)) {
         return FALSE;
     }
     lbl_803716B8.pending1CA = 1;
     rec = &lbl_803716B8.recs[lbl_803716B8.flag1C8];
-    rec->unk0 = a;
-    rec->unk4 = b;
-    rec->unk8 = c;
-    rec->unkC = d;
-    rec->unk10 = e;
-    rec->unk14 = f;
+    rec->desc = desc;
+    rec->dest = dest;
+    rec->mode = mode;
+    rec->aramAddr = aramAddr;
+    rec->callback = callback;
+    rec->param = param;
     lbl_803716B8.flag1C8 = next;
     return TRUE;
 }

@@ -141,12 +141,28 @@ typedef struct Gap8002244CGameSettings {
 extern Gap8002244CGameSettings g_d_GameSettings;
 void fn_800A7568(void);
 void fn_800A6304(void);
+/* disc file descriptor, 16 bytes (see gap_8001E460.h DiskFileDesc) */
+typedef struct Gap8002244CDiskDesc {
+    /* 0x0 */ u32 flags;
+    /* 0x4 */ u32 sizeFlags;                 /* 0x40000000 | uncompressed size */
+    /* 0x8 */ u32 discOffset;
+    /* 0xC */ u32 compressedSize;
+} Gap8002244CDiskDesc;
+#define MASTER_DESC_SUBITEM_BASE 54
+extern Gap8002244CDiskDesc lbl_800EFD38[];
+/* memory block a sub-item is loaded into; the aligned file size is kept at 0xC */
+typedef struct Gap8002244CLoadBlock {
+    u8 _pad0[0xC];
+    /* 0xC */ u32 size;
+} Gap8002244CLoadBlock;
+typedef void (*Gap8002244CLoadCallback)(s32 arg0, Gap8002244CLoadBlock* block, s32 packedID);
 typedef struct Gap8002244CRecord {
-    s32 unk0;
-    u32 unk4;
-    s32 unk8, unkC;
-    u32 unk10;
-    s32 unk14;
+    /* 0x00 */ Gap8002244CDiskDesc* desc;
+    /* 0x04 */ void* dest;
+    /* 0x08 */ s32 mode;
+    /* 0x0C */ void* aramAddr;
+    /* 0x10 */ Gap8002244CLoadCallback callback;
+    /* 0x14 */ s32 param;
 } Gap8002244CRecord;
 typedef struct Gap8002244CFlags {
     u8 header[0x18];
@@ -159,7 +175,10 @@ typedef struct Gap8002244CFlags {
     u8 _pad1CB;
     u32 current; /* 0x1CC */
     u32 pending; /* 0x1D0 */
-    u8 _pad1D4[0x14];
+    u8 _pad1D4[8];
+    /* 0x1DC */ void** subItemAramAddrs;
+    /* 0x1E0 */ void** skeletonAramAddrs;
+    u8 _pad1E4[4];
     /* 0x1E8 */ u8 unk1E8;
     u8 unk1E9;
     u8 flags;
@@ -178,9 +197,9 @@ typedef struct Gap8002244CObj {
 
 extern s32 lbl_803CBC60;
 
-void fn_8002244C(void);
+void fn_8002244C(s32 arg0, Gap8002244CLoadBlock* block, s32 packedID);
 void fn_8002254C(void);
-void fn_80022620(void);
+void fn_80022620(s32 arg0, Gap8002244CLoadBlock* block, s32 packedID);
 void fn_80022634(void);
 void fn_800227A0(void);
 void fn_800227E4(void);
@@ -188,7 +207,8 @@ void fn_800229CC(void);
 void fn_80022A24(void);
 void fn_80022B14(void);
 void fn_80022B68(void);
-BOOL fn_80022CB4(s32 a, u32 b, s32 c, s32 d, u32 e, s32 f);
+BOOL fn_80022CB4(Gap8002244CDiskDesc* desc, void* dest, s32 mode, void* aramAddr, Gap8002244CLoadCallback callback,
+                 s32 param);
 void fn_80022D58(void);
 void f_InitBone(ActBone* parent, ActBoneLayout* layout, GameActor* actor, u16* numBones, ActMemBlock* mtxMem, ActMemBlock* boneMem);
 ActMemBlock* fn_80023078(ActDisplayObj* obj, ActDOLayout* layout, ActMemBlock* mem);
