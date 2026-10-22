@@ -139,10 +139,12 @@ ActMemBlock* fn_80023078(ActDisplayObj* obj, ActDOLayout* layout, ActMemBlock* m
 }
 #pragma dont_inline off
 
+#pragma dont_inline on
 // .text:0x800232E0 size:0x32C
 GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
     return;
 }
+#pragma dont_inline off
 
 #pragma dont_inline on
 // .text:0x8002360C size:0x2D4
@@ -157,8 +159,39 @@ void fn_800238E0(void) {
 }
 
 // .text:0x8002399C size:0x108
-void fn_8002399C(void) {
-    return;
+void fn_8002399C(Gap8002244CActorSlot* slot, u16 slotIdx, u16 actorID, ActLayout* layout, struct Gap8002244CSlotAux* aux,
+                 s32 skHeader) {
+    memset((u8*)lbl_8017EBB0[slotIdx], 0, lbl_803CBC5C);
+    layout->actorID = actorID;
+    slot->actor = f_InitActorWithLayout(layout, lbl_8017EBB0[slotIdx]);
+    fn_800B4724(slot->actor, skHeader);
+    slot->unkE = 0;
+    slot->unk54 = 1.0f;
+    slot->unk64 = 0;
+    slot->unk66 = 0;
+    slot->unk68 = 0;
+    slot->unk6D = 0;
+    slot->unk70 = 0;
+    slot->unk74 = 0;
+    slot->unk78 = 0;
+    slot->unk7C = 0;
+    slot->unk80 = 0;
+    slot->unk84 = 0;
+    slot->unk88 = 0;
+    slot->unk8C = 0;
+    slot->actorID = actorID;
+    slot->unk6C = 1;
+    if (aux != NULL) {
+        slot->aux = aux;
+        slot->unk58 = 1;
+        slot->unk5A = 1;
+        slot->unk59 = 1;
+        slot->unk60 = 0.0f;
+        if (slot->actor != NULL) {
+            slot->actor->unk99 = 0;
+        }
+    }
+    slot->unk8 = 0;
 }
 
 // .text:0x80023AA4 size:0x60

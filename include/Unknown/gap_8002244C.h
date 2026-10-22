@@ -217,7 +217,41 @@ void BuildBoneSkinOrientationMatrix(ActBone* root, Mtx m);
 void ACTSort(GameActor* actor);
 void DOSetWorldMatrix(ActDisplayObj* obj, Mtx m);
 void fn_800238E0(void);
-void fn_8002399C(void);
+/* per-slot actor record living at +0x34 of each 0x90 HugeAnimEntry68 (UnknownHeaders.h) */
+struct Gap8002244CSlotAux;
+typedef struct Gap8002244CActorSlot {
+    /* 0x00 */ GameActor* actor;
+    /* 0x04 */ struct Gap8002244CSlotAux* aux;
+    /* 0x08 */ u32 unk8;
+    /* 0x0C */ u16 actorID;
+    /* 0x0E */ u16 unkE;
+    u8 _pad10[0x44];
+    /* 0x54 */ f32 unk54;
+    /* 0x58 */ u8 unk58;
+    /* 0x59 */ u8 unk59;
+    /* 0x5A */ u8 unk5A;
+    u8 _pad5B[5];
+    /* 0x60 */ f32 unk60;
+    /* 0x64 */ u16 unk64;
+    /* 0x66 */ u16 unk66;
+    /* 0x68 */ u32 unk68;
+    /* 0x6C */ u8 unk6C;
+    /* 0x6D */ u8 unk6D;
+    u8 _pad6E[2];
+    /* 0x70 */ u32 unk70;
+    /* 0x74 */ u32 unk74;
+    /* 0x78 */ u32 unk78;
+    /* 0x7C */ u32 unk7C;
+    /* 0x80 */ u32 unk80;
+    /* 0x84 */ u32 unk84;
+    /* 0x88 */ u32 unk88;
+    /* 0x8C */ u32 unk8C;
+} Gap8002244CActorSlot;
+extern ActMemBlock* volatile lbl_8017EBB0[20]; /* per-slot actor memory blocks; volatile matches the original codegen */
+extern u32 lbl_803CBC5C;                     /* size of one actor memory block */
+void fn_800B4724(GameActor* actor, s32 skHeader);
+void fn_8002399C(Gap8002244CActorSlot* slot, u16 slotIdx, u16 actorID, ActLayout* layout, struct Gap8002244CSlotAux* aux,
+                 s32 skHeader);
 typedef struct Gap8002244CActor { u8 _pad0[0x1BC0]; } Gap8002244CActor;
 extern Gap8002244CActor* lbl_8017EB40[28];
 Gap8002244CActor* _OSAllocFromHeap(s32 alignment, u32 size);
