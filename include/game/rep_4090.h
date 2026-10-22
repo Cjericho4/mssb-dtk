@@ -6,7 +6,7 @@
 void fn_3_16C548(void);
 void fn_3_16C878(void);
 void fn_3_16CC2C(void);
-void fn_3_16D4D8(void);
+s32 fn_3_16D4D8(u8 idx, f32 f);
 void fn_3_16D5E4(void);
 
 #endif // !__GAME_rep_4090_H_
