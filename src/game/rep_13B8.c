@@ -734,7 +734,65 @@ void fn_3_85CB0(void) {
 
 // .text:0x00085EF4 size:0x158 mapped:0x806C4F88
 void fn_3_85EF4(s32 runnerIdx, s32 arg1) {
-    return;
+    s16 standing;
+    u8 cur;
+    InMemRunnerType* r = &g_Runners[runnerIdx];
+
+    if (r->runnerOnFieldOrOutOrScored != 1) {
+        return;
+    }
+    if (r->tagUpInd == 2 && arg1 != -1) {
+        return;
+    }
+    if (r->actionCode != 0 && r->actionStage != 0) {
+        if (r->actionInForwardDirectionInd == 1) {
+            r->baseRunningTowards = r->nextBase;
+        } else {
+            r->baseRunningTowards = r->currentBase;
+        }
+        return;
+    }
+    if (arg1 == 1) {
+        r->baseRunningTowards = r->nextBase;
+    }
+    if (arg1 == -1) {
+        cur = r->currentBase;
+        if (cur == 0) {
+            return;
+        }
+        if (r->runningDirectionCode == 1 && r->baseStandingOn >= 0 && r->tagUpInd == 0) {
+            if (r->baseRoundingState == 1) {
+                return;
+            }
+            r->runningDirectionCode = 2;
+            return;
+        }
+        standing = r->baseStandingOn;
+        if (!(standing < 0)) {
+            if (standing == 1) {
+                return;
+            }
+            if (runnerIdx == 0) {
+                return;
+            }
+            if (r->tagUpInd == 0) {
+                return;
+            }
+            r->baseRunningTowards = (standing + 3) & 3;
+        } else {
+            r->baseRunningTowards = cur;
+        }
+    }
+    if (arg1 == 0 && runnerIdx == 0 && r->currentBase == 0) {
+        return;
+    }
+    if (arg1 == 0) {
+        r->runningDirectionDesired = 2;
+    } else if (arg1 == 1) {
+        r->runningDirectionDesired = 1;
+    } else {
+        r->runningDirectionDesired = 3;
+    }
 }
 
 // .text:0x0008604C size:0xCC mapped:0x806C50E0
