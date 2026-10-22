@@ -57,6 +57,8 @@ typedef struct ChallengeScene {
         };
         f32 parameters[6]; /* 0x14..0x28 */
         u32 words[6];
+        u16 halfwords[12];
+        u8 bytes[24];
     };
     /* 0x2C */ union {
         u32 flags2C;

@@ -186,7 +186,26 @@ void fn_1_202A4(void) {
 
 // .text:0x0002040C size:0x110
 void fn_1_2040C(void) {
-    return;
+    Mtx mtx;
+    ChallengeScene* scene = (ChallengeScene*)lbl_803CC1B8;
+    scene->words[2] = 0;
+    scene->bytes[15] = 0;
+    scene->bytes[16] = 0;
+    scene->bytes[12] = 0;
+    scene->bytes[13] = 0;
+    scene->bytes[14] = 1;
+
+    C_MTXOrtho(lbl_1_bss_47010, 0.0f, 448.0f, 0.0f, 640.0f, 0.5f, -1.0f);
+    GXSetProjection(lbl_1_bss_47010, GX_ORTHOGRAPHIC);
+    PSMTXIdentity(mtx);
+    GXLoadPosMtxImm(mtx, GX_PNMTX0);
+    GXSetCurrentMtx(GX_PNMTX0);
+    GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
+    fn_80048C14(3);
+    fn_80048E00(0, 0x20);
+    fn_80048E00(1, 0);
+    fn_800AD038(lbl_80366158.unk8);
+    lbl_803CC1B8->aFunctionPointer = fn_1_2004C;
 }
 
 // .text:0x0002051C size:0x124
