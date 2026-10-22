@@ -341,8 +341,14 @@ void fn_1_23804(void) {
 }
 
 // .text:0x00023AD8 size:0x7C
-void fn_1_23AD8(void) {
-    return;
+void fn_1_23AD8(Mtx44 projection, Vec* eye, Vec* target) {
+    eye->x = 0.0f;
+    eye->y = 0.0f;
+    eye->z = -10.0f;
+    target->x = 0.0f;
+    target->y = 0.0f;
+    target->z = 0.0f;
+    C_MTXFrustum(projection, -0.175f, 0.175f, 0.25f, -0.25f, 1.0f, 512.0f);
 }
 
 // .text:0x00023B54 size:0x8BC
