@@ -435,12 +435,32 @@ void fn_1_10ACC(void) {
 }
 
 // .text:0x00010CEC size:0x140
-void fn_1_10CEC(void) {
-    return;
+void fn_1_10CEC(Rep0610Obj12F18* object) {
+    Mtx bone;
+    Mtx view;
+    s32 i;
+    s32 index;
+    u32 x, y, z;
+    ChallengeState* state = &lbl_1_bss_3070;
+    if (lbl_1_data_ABA8 == 0) {
+        PSMTXTrans(view, g_hugeAnimStruct.fielderStructs[state->modelIndex].unk34.x, g_hugeAnimStruct.fielderStructs[state->modelIndex].unk34.y, g_hugeAnimStruct.fielderStructs[state->modelIndex].unk34.z);
+        PSMTXConcat(object->mtx, view, view);
+        for (i = 0; (index = state->modelIndex), i < ((ChallengeModel*)g_hugeAnimStruct.ctrlOrBonePtr[index].unk34)->count; i++) {
+            if ((u32)i != state->selectedBone) {
+                x = 0x80008080; y = 0x80800080; z = 0x00808080;
+            } else if (state->blink++ & 0x20) {
+                x = 0xFF8080FF; y = 0x80FF80FF; z = 0x8080FFFF;
+            } else {
+                x = 0xFFFFFFFF; y = 0xFFFFFFFF; z = 0xFFFFFFFF;
+            }
+            fn_800B2C88((ChallengeModel*)g_hugeAnimStruct.ctrlOrBonePtr[index].unk34, i, bone);
+            fn_1_10E2C(bone, view, x, y, z);
+        }
+    }
 }
 
 // .text:0x00010E2C size:0x430
-void fn_1_10E2C(void) {
+void fn_1_10E2C(Mtx matrix, Mtx view, u32 x, u32 y, u32 z) {
     return;
 }
 
