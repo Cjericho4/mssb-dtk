@@ -43,6 +43,7 @@ Unknown/gap_8001E460.c:
 	extab       start:0x80005998 end:0x80005AD0
 	extabindex  start:0x800071C4 end:0x80007398
 	.text       start:0x8001E460 end:0x8002244C
+	.data       start:0x800EFBE8 end:0x800F7478
 
 Unknown/gap_8002244C.c:
 	extab       start:0x80005AD0 end:0x80005BC0

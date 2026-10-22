@@ -49,21 +49,14 @@ typedef struct Gap8001E460Flags {
     /* 0x55C */ s32 unk55C;
 } Gap8001E460Flags;
 extern Gap8001E460Flags lbl_803716B8;
-/* The character/stadium disc-data block.  fn_8002204C / fn_80021CA4 address every sub-table
- * relative to lbl_800EFBE8 (0x800EFBE8, DOL file 0xECBE8), so it is typed as one struct here.
- * Separate symbols exist for the parts: lbl_800EFD38 (master), lbl_800F1D78 (subfiles),
- * lbl_800F5D98 (sub-item files), lbl_800F71D8 (pair/kind tables). */
-typedef struct Gap8001E460DataBlock {
-    u8 _pad0[0x150];
-    /* 0x0150 */ DiskFileDesc master[516];             /* master descriptors: 0..53 body, 54+c*7+k sub-items, 432+c skeletons, 486+id stadium */
-    /* 0x2190 */ DiskFileDesc subfiles[54][19];        /* per-character disc files, track 15 = skeleton, 16/17 = anim banks */
-    /* 0x61B0 */ DiskFileDesc subItemFiles[54][6];     /* per-character sub-item (bat/glove/...) disc files */
-    u8 _pad71D8[0x77D0 - 0x71D8];
-    /* 0x77D0 */ s8 bodyItems[54][2];                  /* {master body index, sub-item id or -1} per character (ARAM path) */
-    /* 0x783C */ s8 subItemPairs[2][6][2];             /* [kind][itemSlot] = {sub-item k of the main file, k of the 2nd file} */
-    /* 0x7854 */ s8 subItemKind[54];                   /* per-character row of subItemPairs */
-} Gap8001E460DataBlock;
-extern Gap8001E460DataBlock lbl_800EFBE8;
+/* character / stadium disc tables, defined (with their retail contents) in gap_8001E460.c */
+extern DiskFileDesc lbl_800EFBE8[21];
+extern DiskFileDesc lbl_800F1D68[1];
+extern DiskFileDesc lbl_800F5D98[54 * 6];
+extern u8 lbl_800F71D8[0x1E0];
+extern s8 lbl_800F73B8[54][2];
+extern s8 lbl_800F7424[2][6][2];
+extern s8 lbl_800F743C[54];
 typedef struct Gap8001E460LoadStatus { u8 _pad0[0x715]; s8 allowLoad; } Gap8001E460LoadStatus;
 extern Gap8001E460LoadStatus lbl_803C6CF8;
 void fn_80022620(DiskFileDesc* desc, void* dest, s32 param);
@@ -73,11 +66,11 @@ void fn_80022634(void);
 #define MASTER_DESC_SUBITEM_BASE 54
 #define MASTER_DESC_SKELETON_BASE 432
 #define SUBITEMS_PER_CHAR 7
-extern DiskFileDesc lbl_800EFD38[];
+extern DiskFileDesc lbl_800EFD38[515];
 /* per-character subfile table, flat: 19 tracks per character, track 15 is the skeleton */
 #define SUBFILE_TRACKS 19
 #define SUBFILE_TRACK_SKELETON 15
-extern DiskFileDesc lbl_800F1D78[];
+extern DiskFileDesc lbl_800F1D78[54 * SUBFILE_TRACKS];
 void* ARAMTransfer(DiskFileDesc* desc, void* dest, s32 loadInfo, void* aramAddress);
 void* _OSAllocFromHeap(s32 heap, u32 size);
 typedef struct Gap8001E460Sound {
