@@ -23,6 +23,14 @@ ChallengeSortNode* fn_1_17F28(ChallengeSortNode* head, s32 count);
 Gap17EFCEntry* _OSAllocFromHeap(s32 alignment, u32 size);
 void fn_800246D4(s32 (*compare)(Gap17EFCEntry*, Gap17EFCEntry*), Gap17EFCEntry* first, Gap17EFCEntry* last, s32 size, s32 count);
 void fn_800ACFB0(Gap17EFCEntry* allocation);
+#include "Dolphin/mtx.h"
+#include "Dolphin/GX/GXTransform.h"
+typedef struct ChallengeRenderCamera {
+    Mtx44 projection;
+    Mtx view;
+    u8 _pad70[0x38];
+} ChallengeRenderCamera;
+ChallengeRenderCamera* fn_80052768(s32 index);
 void fn_1_17FF0(void);
 void fn_1_18174(void);
 
