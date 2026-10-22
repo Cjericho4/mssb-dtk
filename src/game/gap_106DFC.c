@@ -290,15 +290,12 @@ s32 fn_3_107C40(void) {
 
 // .text:0x00107C88 size:0x48 mapped:0x80746D1C
 s32 fn_3_107C88(void) {
-    s32* p = &g_Minigame.minigamePoints_current_Latest[1];
-    u8 count = g_Minigame.miniGameNumberOfParticipants;
-    s16 first = (s16)(g_Minigame.minigamePoints_current_Latest[0] >> 16);
-    s32 n = count - 1;
-    if (count > 1) {
-        do {
-            if ((s16)(*p >> 16) != first) return 0;
-            p++;
-        } while (--n);
+    u32 i;
+
+    for (i = 1; i < g_Minigame.miniGameNumberOfParticipants; i++) {
+        if (g_Minigame.minigamePointsPair[i].current != g_Minigame.minigamePointsPair[0].current) {
+            return 0;
+        }
     }
     return 1;
 }
@@ -321,12 +318,13 @@ u8 fn_3_107CD0(void) {
 s32 fn_3_107D34(u8* a, u8* b) {
     u8 ib = *b;
     u8 ia = *a;
-    s16 keyB = (s16)(g_Minigame.minigamePoints_current_Latest[ib] >> 16);
-    s16 keyA = (s16)(g_Minigame.minigamePoints_current_Latest[ia] >> 16);
-    if (keyB == keyA) {
-        return ia - ib;
+    s16 keyB = g_Minigame.minigamePointsPair[ib].current;
+    if (keyB == g_Minigame.minigamePointsPair[ia].current) {
+        goto same;
     }
-    return keyB - keyA;
+    return keyB - g_Minigame.minigamePointsPair[ia].current;
+same:
+    return ia - ib;
 }
 
 // .text:0x00107D70 size:0x44 mapped:0x80746E04
