@@ -73,9 +73,12 @@ extern Rep0610Camera68FC lbl_1_bss_68FC;
 void LITXForm(struct MenusLight* light, Mtx view);
 #include "Dolphin/GX/GXTransform.h"
 typedef struct Rep0610Unk67E0 {
-    /* 0x000 */ u8 _pad0[0x108];
+    /* 0x000 */ u8 _pad0[0x30];
+    /* 0x030 */ u32 context[0x36];
     /* 0x108 */ Vec pos;
-    /* 0x114 */ u8 _pad114[8];
+    /* 0x114 */ u8 _pad114[4];
+    /* 0x118 */ u8 useContext;
+    /* 0x119 */ u8 _pad119[3];
 } Rep0610Unk67E0;
 extern Rep0610Unk67E0 lbl_1_bss_67E0;
 typedef struct Rep0610Obj1073C {
@@ -119,6 +122,8 @@ typedef struct Rep0610Obj {
     /* 0x54 */ f32 value;
     /* 0x58 */ u8 _pad58[2];
     /* 0x5A */ u8 active;
+    /* 0x5B */ u8 _pad5B[0x15];
+    /* 0x70 */ u32 context;
 } Rep0610Obj;
 
 typedef struct Rep0610Ring {
@@ -199,7 +204,8 @@ void fn_1_131E4(void);
 void fn_1_1347C(void);
 void fn_1_135C0(void);
 void fn_1_14710(void);
-void fn_1_14888(void);
+void fn_1_14888(Rep0610Obj* obj);
+void fn_800B9AA8(u32 context);
 void fn_1_148CC(void);
 void fn_1_14928(void);
 void fn_1_1496C(void);

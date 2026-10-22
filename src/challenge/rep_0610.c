@@ -428,8 +428,12 @@ void fn_1_14710(void) {
 }
 
 // .text:0x00014888 size:0x44
-void fn_1_14888(void) {
-    return;
+void fn_1_14888(Rep0610Obj* obj) {
+    if (lbl_1_bss_67E0.useContext != 0) {
+        fn_800B9AA8((u32)&lbl_1_bss_67E0.context);
+    } else {
+        fn_800B9AA8(obj->context);
+    }
 }
 
 // .text:0x000148CC size:0x5C
