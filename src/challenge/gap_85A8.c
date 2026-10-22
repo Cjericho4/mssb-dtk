@@ -98,7 +98,31 @@ void fn_1_8B8C(void) {
 
 // .text:0x00008B90 size:0x10C
 void fn_1_8B90(void) {
-    return;
+    Gap85A8State* state = &lbl_1_common_bss_47674;
+    switch (state->active) {
+    case 0:
+        state->active++;
+        break;
+    case 1: {
+DrawingSceneStruct* scene = lbl_803CC1B8;
+    if (lbl_803C77B8.held & 8) {
+        if (--state->selection < 0) state->selection = 1;
+    } else if (lbl_803C77B8.held & 4) {
+        if (++state->selection == 2) state->selection = 0;
+    } else if (lbl_803C77B8.held & 0x100) {
+        if (state->selection == 0) {
+            scene->aFunctionPointer = fn_1_9AB0;
+        } else {
+            scene->aFunctionPointer = fn_1_88D0;
+        }
+    } else if (lbl_803C77B8.held & 0x200) {
+        state->active = 0;
+        fn_80035CA4(6);
+        scene->currentDrawingItem->loadingState = 1;
+    }
+        break;
+    }
+    }
 }
 
 // .text:0x00008C9C size:0x38
