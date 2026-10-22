@@ -529,8 +529,8 @@ void fn_1_1644C(void) {
 }
 
 // .text:0x00016558 size:0x38
-void fn_1_16558(void) {
-    return;
+s32 fn_1_16558(s32 table, s32 entry) {
+    return g_hugeAnimStruct.fielderStructs[lbl_1_bss_5F73].slots[table]->entries[entry].value;
 }
 
 // .text:0x00016590 size:0x50

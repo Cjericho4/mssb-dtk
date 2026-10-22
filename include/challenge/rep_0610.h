@@ -216,7 +216,7 @@ void fn_1_1620C(void);
 void fn_1_163FC(void);
 void fn_1_16400(s8 delta);
 void fn_1_1644C(void);
-void fn_1_16558(void);
+s32 fn_1_16558(s32 table, s32 entry);
 s32 fn_1_16590(void);
 void fn_1_165E0(void);
 void fn_1_168C8(void);
