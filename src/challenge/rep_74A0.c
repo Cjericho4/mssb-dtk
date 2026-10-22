@@ -52,13 +52,28 @@ s32 fn_1_19D1C(u32 flags) {
 }
 
 // .text:0x00019D60 size:0x48C
-void fn_1_19D60(void) {
+void fn_1_19D60(ChallengeRenderModel* model, s32 mode) {
     return;
 }
 
 // .text:0x0001A1EC size:0xA4
-void fn_1_1A1EC(void) {
-    return;
+void fn_1_1A1EC(ChallengeRenderTask* task, s32 mode) {
+    ChallengeRenderObject* object = task->object;
+    if (task->callback != 0) {
+        task->callback(task, mode);
+    }
+    if (object->model != 0) {
+        fn_800B2D5C(object);
+        GXInvalidateVtxCache();
+        fn_1_19D60(object->model, mode);
+    } else {
+        for (object = object->children; object != 0; object = object->next) {
+            if (object->model != 0) {
+                DOSetWorldMatrix(object->model, object->world);
+            }
+            fn_1_19D60(object->model, mode);
+        }
+    }
 }
 
 // .text:0x0001A290 size:0x124
