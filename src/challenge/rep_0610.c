@@ -255,7 +255,7 @@ void fn_1_F50C(void) {
 void fn_1_F6E4(void) {
     Rep0610Triple* dst = &lbl_1_data_F0BC;
     ChallengeState* state = &lbl_1_bss_3070;
-    Vec pos = lbl_1_rodata_731C;
+    Vec pos = {0.0f, 0.0f, 10.0f};
 
     fn_1_F798(dst, &lbl_1_data_F0A8, sizeof(Rep0610Triple));
     if (lbl_803C77B8.pressed & 0x100) {
