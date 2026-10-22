@@ -383,8 +383,8 @@ void batterHumanControlled(void) {
 void batterInBoxMovement(void) {
     f32 moveSpeedMult;
     s8 left_right, up_down;
-    BatterReachStruct* hitbox;
     InputStruct* inputs;
+    BatterReachStruct* hitbox;
     
     inputs = &g_Controls[g_GameLogic.teams[g_GameLogic.teamBatting]];
     hitbox = &BatterHitbox[g_Batter.charID];
@@ -955,8 +955,8 @@ void calculateContactAndHitType(void) {
 // .text:0x00011B9C size:0x334 mapped:0x80650c30
 void calculateBallHorizontalAngleHit(void) {
     int angleRangeLower, angleRangeUpper, angleRange, horizAngle;
-    BOOL isCharge = TRUE;
     InputStruct* inputs = &g_Controls[g_GameLogic.teams[g_GameLogic.teamBatting]];
+    BOOL isCharge = TRUE;
 
     if (ACTIVE_TUTORIAL) {
         inputs = &g_Practice.inputs[g_GameLogic.teamBatting];
