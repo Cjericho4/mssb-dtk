@@ -11,8 +11,28 @@ void fn_1_289C0(Rep7978Camera* camera) {
 }
 
 // .text:0x000289E0 size:0x100
-void fn_1_289E0(void) {
-    return;
+s32 fn_1_289E0(ChallengeScript* script, u16 buttons) {
+    ChallengeScriptGlobals* globals = &lbl_1_data_11300;
+    switch ((s8)globals->selection) {
+    case 0:
+        if (buttons & 0x100) globals->selection = 2;
+        else if (buttons & 0x400) {
+            globals->pending = 1;
+            globals->selection = 1;
+        }
+        break;
+    case 1:
+        if (buttons & 0x100) globals->selection = 2;
+        else if (buttons & 0x200) globals->selection = 0;
+        else if (buttons & 0x400) globals->pending = 1;
+        break;
+    case 2:
+        if (buttons & 0x100) globals->selection = 1;
+        else if (buttons & 0x200) globals->selection = 0;
+        break;
+    }
+    script->entries[script->timer].data = lbl_1_data_11424[(s8)globals->selection];
+    return 0;
 }
 
 // .text:0x00028AE0 size:0x154

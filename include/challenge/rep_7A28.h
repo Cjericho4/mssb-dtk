@@ -32,15 +32,6 @@ void fn_1_27D6C(void);
 void fn_1_27E50(void);
 void fn_1_27E98(void);
 void fn_1_28118(void);
-typedef struct ChallengeScript {
-    u32 unk0;
-    u32 unk4;
-    s32 kind;
-    u32 unkC;
-    u32 unk10;
-    s32 enabled;
-    u32 unk18;
-} ChallengeScript;
 void fn_1_28200(void);
 
 #endif // !__CHALLENGE_rep_7A28_H_

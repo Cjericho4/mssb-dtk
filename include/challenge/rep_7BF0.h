@@ -26,12 +26,15 @@ void fn_80048BEC(Rep7BF0Unk471BC* arg0, s32 arg1, s32 arg2);
 
 void fn_1_2858C(void);
 void fn_1_289C0(Rep7978Camera* camera);
-void fn_1_289E0(void);
+extern ChallengeScriptData* lbl_1_data_11424[];
+s32 fn_1_289E0(ChallengeScript* script, u16 buttons);
 void fn_1_28AE0(void);
 typedef struct ChallengeScriptGlobals {
     s32 bounds[4];
     u8 _pad10[0x24];
     s32 mode;
+    u8 selection;
+    u8 pending;
 } ChallengeScriptGlobals;
 extern ChallengeScriptGlobals lbl_1_data_11300;
 void fn_1_28C34(void);

@@ -4,6 +4,22 @@
 #include "mssbTypes.h"
 #include "UnknownHeaders.h"
 
+typedef struct ChallengeScriptData ChallengeScriptData;
+typedef struct ChallengeScriptEntry {
+    u32 unk0;
+    ChallengeScriptData* data;
+    u8 _pad8[0x24];
+} ChallengeScriptEntry;
+typedef struct ChallengeScript {
+    ChallengeScriptData* data;
+    s32 count;
+    s32 kind;
+    s32 state;
+    s32 timer;
+    s32 enabled;
+    ChallengeScriptEntry* entries;
+} ChallengeScript;
+
 typedef struct ChallengeAxes {
     u8 bytes[6];
 } ChallengeAxes;
