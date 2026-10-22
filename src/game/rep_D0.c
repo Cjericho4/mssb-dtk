@@ -24,8 +24,8 @@ BALL_COLLISION_TYPE checkCollision(VecSrcDst* inVec, CollisionStruct* outCollisi
         if (useBallCoords && (g_d_GameSettings.StadiumID == STADIUM_ID_WARIO_PALACE ||
                               g_d_GameSettings.StadiumID == STADIUM_ID_YOHSI_PARK ||
                               g_d_GameSettings.StadiumID == STADIUM_ID_DK_JUNGLE)) {
-            memcpy(&p.src, &g_Ball.AtBat_Contact_BallPos, sizeof(p.src));
-            memcpy(&p.dst, &g_Ball.pastCoordinates[4], sizeof(p.dst));
+            memcpy(&p.dst, &g_Ball.AtBat_Contact_BallPos, sizeof(p.dst));
+            memcpy(&p.src, &g_Ball.pastCoordinates[4], sizeof(p.src));
             p.src.y *= -1.f;
             p.dst.y *= -1.f;
         } else {
@@ -36,14 +36,16 @@ BALL_COLLISION_TYPE checkCollision(VecSrcDst* inVec, CollisionStruct* outCollisi
             if (collisionCheckType == 2 && (ret & BALL_COLLISION_TYPE_FOUL)) {
                 ret = BALL_COLLISION_TYPE_NONE;
             } else {
-                ret = processStadiumObjectFunction(g_d_GameSettings.StadiumID, v, ret, outCollision);
+                processStadiumObjectFunction(g_d_GameSettings.StadiumID, v, ret, outCollision);
+                goto done;
             }
         }
     }
     if (collisionCheckType != 3) {
-        ret = didCollideWithBoundingBoxes(inVec, outCollision, g_UNK_StadiumDetails.pCollisionBoxes,
-                                          g_UNK_StadiumDetails.numCollisionBoxes);
+        ret = didCollideWithBoundingBoxes(inVec, outCollision, g_UNK_StadiumDetails.pCollisionBoxes2,
+                                          g_UNK_StadiumDetails.numCollisionBoxes2);
     }
+done:
     return ret;
 }
 

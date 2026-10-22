@@ -30,7 +30,10 @@ typedef struct _StadiumTexEntry {
 
 typedef struct _UNK_StadiumCollision {
     StadiumTexEntry* _00;
-    artificial_padding(0, 0x714, void*);
+    u8 _pad_004[0x70a - 0x4];
+    s16 numCollisionBoxes2;        // 0x70a
+    CollisionBox* pCollisionBoxes2; // 0x70c
+    u8 _pad_710[0x714 - 0x710];
     union {
         u32 unk_714;         // 0x714
         struct { u8 _unk714_pad[3]; u8 unk_717; }; // 0x717
