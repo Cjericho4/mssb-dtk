@@ -13,7 +13,12 @@ void fn_1_A634(void);
 void fn_1_A714(void);
 BOOL fn_1_A718(void);
 s32 fn_1_A77C(void);
-void fn_1_A7B0(void);
+typedef struct ChallengeResource ChallengeResource;
+typedef struct ChallengeResources {
+    u32 unk0;
+    ChallengeResource* files[0xE3];
+} ChallengeResources;
+s32 fn_1_A7B0(void);
 extern u8 lbl_1_bss_2FDB;
 extern u8 lbl_1_data_1884[8];
 extern u8 lbl_1_bss_2FD9;

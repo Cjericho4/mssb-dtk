@@ -54,8 +54,9 @@ s32 fn_1_A77C(void) {
 }
 
 // .text:0x0000A7B0 size:0x34
-void fn_1_A7B0(void) {
-    return;
+s32 fn_1_A7B0(void) {
+    fn_80021518(0x33, (s32)((ChallengeResources*)&lbl_800EF808)->files[0x31]);
+    return 0;
 }
 
 // .text:0x0000A7E4 size:0x54
