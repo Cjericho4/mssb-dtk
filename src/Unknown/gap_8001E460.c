@@ -333,12 +333,145 @@ void* fn_80021BBC(s32 charID, void* buf) {
     return buf;
 }
 
-// .text:0x80021CA4 size:0x3A8
-void fn_80021CA4(void) {
-    return;
+/* ---- shared disc-load queue helpers (lbl_803716B8 ring, 18 records) ---------------------------
+ * These are inline copies of fn_80022CB4 (push) and the queue kick that gap_8002244C.c owns; the
+ * loaders below have them inlined in the retail binary. */
+static inline BOOL queueLoadInline(DiskFileDesc* desc, void* dest, s32 mode, void* aramAddr,
+                                   Gap8001E460DiskLoadCallback callback, s32 param) {
+    Gap8001E460LoadRecord* rec;
+    s8 next = (lbl_803716B8.head + 1) % 18;
+    if (next == lbl_803716B8.tail || (dest == NULL && callback == NULL)) {
+        return FALSE;
+    }
+    lbl_803716B8.pending = 1;
+    rec = &lbl_803716B8.recs[lbl_803716B8.head];
+    rec->desc = desc;
+    rec->dest = dest;
+    rec->mode = mode;
+    rec->aramAddr = aramAddr;
+    rec->callback = callback;
+    rec->param = param;
+    lbl_803716B8.head = next;
+    return TRUE;
 }
 
+/* Run the finished record's callback, then start the next ARAMTransfer (or idle the queue). */
+static inline void processLoadQueueInline(void) {
+    Gap8001E460LoadRecord* rec;
+    if (lbl_803716B8.pending != 0 && lbl_803C6CF8.allowLoad == 1) {
+        if (lbl_803716B8.current.callback != NULL) {
+            lbl_803716B8.current.callback(lbl_803716B8.current.desc, lbl_803716B8.current.dest, lbl_803716B8.current.param);
+        }
+        if (lbl_803716B8.tail != lbl_803716B8.head) {
+            rec = &lbl_803716B8.recs[lbl_803716B8.tail];
+            rec->dest = ARAMTransfer(rec->desc, rec->dest, rec->mode, rec->aramAddr);
+            lbl_803716B8.current = *rec;
+            lbl_803716B8.tail = (lbl_803716B8.tail + 1) % 18;
+        } else {
+            lbl_803716B8.current.callback = NULL;
+            lbl_803716B8.pending = 0;
+        }
+    }
+}
+
+/* fn_80021CA4 -- queue the load of a character's sub-item model pair (bat/glove/... track).
+ *
+ * charID   0..53 character slot; itemSlot 0..5 which sub-item pair; buf destination (NULL = allocate
+ * from the heap: aligned size of both master descriptors).  Returns buf, or NULL on a bad index.
+ *
+ * Tables (all relative to lbl_800EFBE8, see Gap8001E460DataBlock):
+ *   subItemKind[charID]            0x800F743C  row of subItemPairs used by this character
+ *   subItemPairs[kind][itemSlot]   0x800F7424  {k1, k2}: sub-item ids within the character's 7
+ *   master[54 + charID*7 + k]      0x800EFD38  master descriptors of the two sub-item files (ARAM path)
+ *   subItemFiles[charID][itemSlot] 0x800F5D98  disc descriptor for the pair (disc path)
+ *   lbl_803716B8.unk1EA bit 1      sub-items/skeletons resident in ARAM
+ *   lbl_803716B8.subItemAramAddrs  per-sub-item ARAM copies
+ * ARAM path: queues master[54+item1] with callback fn_8002244C(param = item1 << 16 | item2), which
+ * in turn queues item2 behind it.  Disc path: one ARAMTransfer of subItemFiles[charID][itemSlot].
+ * Chain position: called by the per-slot loaders after the body model (fn_8002204C).
+ * Variant hook: charID is only used to pick subItemKind/bodyItems rows and the 54+charID*7 range,
+ * so a (charID, skin) table of alternate sub-item ids/descriptors plugs in right here.
+ * Match status: NOT matched (same sub-table addressing issue as fn_8002204C: the retail code forms
+ * (lbl_800EFBE8+const)+index and reads sizes with lwzx; this body is semantically identical). */
+// .text:0x80021CA4 size:0x3A8
+u8* fn_80021CA4(s32 charID, s32 itemSlot, u8* buf) {
+    Gap8001E460DataBlock* data = &lbl_800EFBE8;
+    s32 kind;
+    s32 item1;
+    s32 item2;
+    u32 size1;
+    u32 size2;
+
+    if (charID < 0 || charID >= 54) {
+        return NULL;
+    }
+    if (itemSlot < 0 || itemSlot >= 6) {
+        return NULL;
+    }
+    {
+        s8 (*pairRows)[6][2] = data->subItemPairs;
+        kind = data->subItemKind[charID];
+        item1 = charID * SUBITEMS_PER_CHAR + pairRows[kind][itemSlot][0];
+        item2 = charID * SUBITEMS_PER_CHAR + pairRows[kind][itemSlot][1];
+    }
+    if (buf == NULL) {
+        size1 = ((data->master[MASTER_DESC_SUBITEM_BASE + item1].sizeFlags & 0x0FFFFFFF) + 0x1F) & ~0x1F;
+        size2 = ((data->master[MASTER_DESC_SUBITEM_BASE + item2].sizeFlags & 0x0FFFFFFF) + 0x1F) & ~0x1F;
+        buf = _OSAllocFromHeap(0x20, size1 + size2);
+    }
+    if (lbl_803716B8.unk1EA & 2) {
+        queueLoadInline(&data->master[MASTER_DESC_SUBITEM_BASE + item1], buf, 3, lbl_803716B8.subItemAramAddrs[item1],
+                        fn_8002244C, (item1 << 16) | item2);
+    } else {
+        queueLoadInline(&data->subItemFiles[charID][itemSlot], buf, 0, NULL, fn_80022620, 0);
+    }
+    lbl_803716B8.unk1E8 = 1;
+    fn_800B0A5C_insertQueue(fn_80022634, 0);
+    processLoadQueueInline();
+    return buf;
+}
+
+/* fn_8002204C -- queue the load of a character's body model (the track-0 .gpc / master body file).
+ *
+ * charID 0..53; buf destination (NULL = allocate aligned master[charID] size).  Returns buf or NULL.
+ * Tables: master[charID] (body descriptor, size), bodyItems[charID] = {master index to stream,
+ *   sub-item id or -1} at 0x800F73B8 (ARAM path, lbl_803716B8.unk1EA bit 0), subfiles[charID][0]
+ *   (disc path), lbl_803716B8.bodyAramAddrs[master index].
+ * ARAM path: queues master[bodyItems[c][0]]; if bodyItems[c][1] != -1 the completion callback is
+ * fn_8002254C with that sub-item id (it chains the sub-item load), else fn_80022620.
+ * Chain position: fn_8001758C(variant != 0) -> fn_8002204C -> load queue -> fn_80017814 once the
+ * file is in memory (lbl_803716B8.unk1E8 cleared by fn_80022620).
+ * Variant hook: every charID use here (bodyItems row, master size, subfiles row) is cosmetic, so a
+ * skin table that maps (charID, skin) -> {bodyItems pair, body descriptor, subfile row} is the
+ * natural place to redirect a clone's model without touching stats.
+ * Match status: NOT matched -- the retail code keeps &lbl_800EFBE8 in r31 and forms each table
+ * address as (r31 + table offset) + index (size read via lwzx); MWCC folds those constants for every
+ * struct/array form tried.  Semantics are identical. */
 // .text:0x8002204C size:0x400
 u8* fn_8002204C(s32 charID, u8* buf) {
-    return;
+    Gap8001E460DataBlock* data = &lbl_800EFBE8;
+    s32 bodyIndex;
+    s32 subItem;
+
+    if (charID < 0 || charID >= 54) {
+        return NULL;
+    }
+    if (buf == NULL) {
+        buf = _OSAllocFromHeap(0x20, data->master[charID].sizeFlags & 0x0FFFFFFF);
+    }
+    if (lbl_803716B8.unk1EA & 1) {
+        bodyIndex = data->bodyItems[charID][0];
+        subItem = data->bodyItems[charID][1];
+        if (subItem == -1) {
+            queueLoadInline(&data->master[bodyIndex], buf, 3, lbl_803716B8.bodyAramAddrs[bodyIndex], fn_80022620, 0);
+        } else {
+            queueLoadInline(&data->master[bodyIndex], buf, 3, lbl_803716B8.bodyAramAddrs[bodyIndex], fn_8002254C, subItem);
+        }
+    } else {
+        queueLoadInline(&data->subfiles[charID][0], buf, 0, NULL, fn_80022620, 0);
+    }
+    lbl_803716B8.unk1E8 = 1;
+    fn_800B0A5C_insertQueue(fn_80022634, 0);
+    processLoadQueueInline();
+    return buf;
 }
