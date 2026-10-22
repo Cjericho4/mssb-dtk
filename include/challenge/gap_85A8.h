@@ -6,10 +6,13 @@
 #include "game/rep_3448.h"
 
 typedef struct Gap85A8State {
-    /* 0x00 */ u8 _pad0[0xC];
+    /* 0x00 */ u8 _pad0[8];
+    /* 0x08 */ s32 mode;
     /* 0x0C */ u8 unkC;
-    /* 0x0D */ u8 _padD[2];
+    /* 0x0D */ u8 pending;
+    /* 0x0E */ u8 _padE;
     /* 0x0F */ u8 unkF;
+    /* 0x10 */ u8 previous;
 } Gap85A8State;
 extern Gap85A8State lbl_1_common_bss_47674;
 typedef struct Gap85A8Cursor {

@@ -36,7 +36,24 @@ void fn_1_86BC(void) {
 
 // .text:0x000086E4 size:0x8C
 void fn_1_86E4(void) {
-    return;
+    Gap85A8State* state = &lbl_1_common_bss_47674;
+    if (state->pending == 0) return;
+    switch (state->mode) {
+    case 0:
+        if (state->unkF == state->previous) return;
+        state->previous = state->unkF;
+        state->unkF = 0;
+        break;
+    case 1:
+        state->previous = state->unkF;
+        state->unkF = 1;
+        break;
+    case 2:
+        state->previous = state->unkF;
+        state->unkF = 2;
+        break;
+    }
+    state->pending = 0;
 }
 
 // .text:0x00008770 size:0x15C
