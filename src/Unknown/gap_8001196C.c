@@ -36,9 +36,173 @@ void LoadModel(void) {
 }
 
 #pragma dont_inline on
+/* ---- fn_80012B90 helpers ---------------------------------------------------------------------- */
+
+/* Queue one bat/glove model of pair `entry` into `obj` (fn_80021CA4 itemSlot = which file pair). */
+static inline void startSubItemLoad(Gap8001196CSubItemEntry* entry, Gap8001196CStadiumObj* obj, s32 itemSlot) {
+    lbl_803CBC1C = obj;
+    lbl_803CBC0C = 1;
+    fn_80021CA4(entry->charID, itemSlot, obj->buf);
+}
+
+/* Once the load queue is idle (lbl_803716B8.unk1E8 == 0): relocate the 4 root-header words of the
+ * sub-item file, build its actor (layout/geo from the words picked by lbl_803CB7C4[0]/[1]) in
+ * g_hugeAnimStruct.subItemActorEntries[obj->index0], bind the body's texture archive, hook the
+ * optional extra block (word [2]) and the skin part (word [3]).  Returns TRUE when done. */
+static inline BOOL finishSubItemLoad(void) {
+    Gap8001196CStadiumObj* obj;
+    Gap8001196CRootHeader* root;
+    struct Gap8001196CActLayout* layout;
+    struct Gap8001196CGeoFile* geo;
+    Gap8001196CActorSlot* actorSlot;
+    u8* texture = lbl_803CBC08;
+
+    if (lbl_803716B8.loadBusy != 0) {
+        return FALSE;
+    }
+    obj = lbl_803CBC1C;
+    lbl_803CBC0C = 0;
+    root = (Gap8001196CRootHeader*)obj->buf;
+    if (((Gap8001196CRootHeader*)obj->buf)->texture != 0) {
+        ((Gap8001196CRootHeader*)obj->buf)->texture += (u32)root;
+    }
+    if (((Gap8001196CRootHeader*)obj->buf)->layout != 0) {
+        ((Gap8001196CRootHeader*)obj->buf)->layout += (u32)root;
+    }
+    if (((Gap8001196CRootHeader*)obj->buf)->geo != 0) {
+        ((Gap8001196CRootHeader*)obj->buf)->geo += (u32)root;
+    }
+    if (((Gap8001196CRootHeader*)obj->buf)->skn != 0) {
+        ((Gap8001196CRootHeader*)obj->buf)->skn += (u32)root;
+    }
+    layout = (struct Gap8001196CActLayout*)((u32*)obj->buf)[lbl_803CB7C4[0]];
+    geo = (struct Gap8001196CGeoFile*)((u32*)obj->buf)[lbl_803CB7C4[1]];
+    actorSlot = &g_hugeAnimStruct.subItemActorEntries[obj->index0].slot;
+    LoadActorLayout(layout);
+    convertGeometryAndSknHeader(geo, NULL);
+    haveActLayoutPointToGeoHeader(layout, geo);
+    fn_800BD190(geo, (struct Gap8001196CTexArchive*)texture);
+    fn_800238E0(g_hugeAnimStruct.subItemActorEntries, obj->index0, layout);
+    if (((Gap8001196CRootHeader*)obj->buf)->geo != 0) {
+        fn_80025DDC((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]]);
+        fn_80025C58((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]], actorSlot);
+    }
+    obj->unk4 = (u8*)((u32*)obj->buf)[lbl_803CB7C4[3]];
+    fn_80025FFC((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]], &obj->unk4, obj);
+    lbl_803CBC1C = NULL;
+    return TRUE;
+}
+
+/* fn_80012B90 -- load a character's three bat/glove model pairs, one step per call.
+ *
+ * anim: slot record (charID 0x252, slotKind 0x254, roster bytes 0x25A/0x25B).  Returns 1 when all
+ * six sub-item models are in and anim->subItems points at g_hugeAnimStruct.subItemSets[slotKind].
+ * Step counter lbl_803CBC04 (0x803CBC04) runs 0..8, three steps per pair:
+ *   step 0/3/6 (init pair k = step/3): entry = subItemSets[slotKind].items[k]; entry->textureArchive
+ *     = the body model's texture archive (root word 0 of anim->fileBuffer, also kept in
+ *     lbl_803CBC08), charID/arm/stance from the slot, slotKind (step 0) or 9, obj0/obj1 actor
+ *     entry indices = (k + slotKind*3)*2 and +1.
+ *   step 1, 2: load the pair selected by `arm` (itemSlot 1-arm'/3-arm', into obj0 or obj1),
+ *     toggling `arm` after each so both hands are loaded.
+ *   step 4: itemSlot 1 -> obj1; step 5: itemSlot 0 -> obj0; step 7: itemSlot 5 -> obj1;
+ *   step 8: itemSlot 4 -> obj0, then anim->subItems = &subItemSets[slotKind], step = 0.
+ * Each load goes through fn_80021CA4 (ARAM master descriptors 54 + charID*7 + k, or disc file
+ * lbl_800F5D98[charID*6 + itemSlot]) and finishSubItemLoad() above.
+ * Chain position: fn_80016710 state 5 (non mode-2 games); fn_80013680 is the mode-2 variant.
+ * Variant hook: the sub-item files are chosen by charID inside fn_80021CA4; a (charID, skin)
+ * table there covers this function unchanged.
+ * Match status: NOT matched (first full decompile; see diff note in .scratch/fable_notes.md). */
 // .text:0x80012B90 size:0xAF0
 u8 fn_80012B90(struct Gap8001196CAnim* anim) {
-    return;
+    Gap8001196CSubItemEntry* entry;
+    s32 slotKind = anim->slotKind;
+    s32 charID = anim->charID;
+    s32 pairIndex;
+    u8 armFlag;
+    s32 itemSlot;
+
+    if (lbl_803CBC04 < 3) {
+        entry = &g_hugeAnimStruct.subItemEntries[slotKind * 3];
+    } else if (lbl_803CBC04 < 6) {
+        entry = &g_hugeAnimStruct.subItemEntries[slotKind * 3 + 1];
+    } else if (lbl_803CBC04 < 9) {
+        entry = &g_hugeAnimStruct.subItemEntries[slotKind * 3 + 2];
+    }
+    switch (lbl_803CBC04) {
+    case 0:
+    case 3:
+    case 6:
+        entry->textureArchive = (u8*)((Gap8001196CRootHeader*)anim->fileBuffer)->texture;
+        lbl_803CBC08 = entry->textureArchive;
+        entry->charID = charID;
+        if (lbl_803CBC04 == 0) {
+            entry->prevSlotKind = entry->slotKind;
+            entry->slotKind = anim->slotKind;
+        } else {
+            entry->prevSlotKind = 9;
+            entry->slotKind = 9;
+        }
+        entry->arm = anim->rosterUnk26;
+        entry->stance = anim->rosterUnk27;
+        entry->valid = 1;
+        pairIndex = lbl_803CBC04 / 3 + slotKind * 3;
+        lbl_803CBC04++;
+        entry->obj0.index0 = pairIndex * 2;
+        entry->obj1.index0 = pairIndex * 2 + 1;
+        break;
+    case 1:
+    case 2:
+        armFlag = entry->arm == 0;
+        if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+            if (armFlag == entry->arm) {
+                itemSlot = 1 - armFlag;
+            } else {
+                itemSlot = 3 - armFlag;
+            }
+            startSubItemLoad(entry, armFlag ? &entry->obj0 : &entry->obj1, itemSlot);
+        }
+        if (finishSubItemLoad()) {
+            entry->arm = entry->arm == 0;
+            lbl_803CBC04++;
+        }
+        break;
+    case 4:
+        if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+            startSubItemLoad(entry, &entry->obj1, 1);
+        }
+        if (finishSubItemLoad()) {
+            lbl_803CBC04 = 5;
+        }
+        break;
+    case 5:
+        if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+            startSubItemLoad(entry, &entry->obj0, 0);
+        }
+        if (finishSubItemLoad()) {
+            lbl_803CBC04 = 6;
+        }
+        break;
+    case 7:
+        if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+            startSubItemLoad(entry, &entry->obj1, 5);
+        }
+        if (finishSubItemLoad()) {
+            lbl_803CBC04 = 8;
+        }
+        break;
+    case 8:
+        if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+            startSubItemLoad(entry, &entry->obj0, 4);
+        }
+        if (finishSubItemLoad()) {
+            anim->subItems = &g_hugeAnimStruct.subItemEntries[slotKind * 3];
+            lbl_803CBC04 = 0;
+            lbl_803CBC08 = NULL;
+            return 1;
+        }
+        break;
+    }
+    return 0;
 }
 #pragma dont_inline off
 
@@ -155,8 +319,8 @@ static inline u8 loadStadiumObject(u8 charID, s32 slot, Gap8001196CStadiumObj* o
         lbl_803CBBFA = 1;
     }
     if (lbl_803C6CF8.allowLoad == 1) {
-        obj->charID = charID;
-        obj->slot = slot;
+        obj->index0 = charID;
+        obj->index1 = slot;
         obj->unk4 = obj->buf;
         fn_80025FFC(((Gap8001196CModelFile*)g_hugeAnimStruct.slots[slot].fileBuffer)->unk10, &obj->unk4, obj);
         lbl_803CBBFA = 0;

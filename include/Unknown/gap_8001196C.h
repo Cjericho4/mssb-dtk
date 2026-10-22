@@ -28,15 +28,35 @@ BOOL fn_80016344(u8 charID, s32 slot, u8 stance, s32 player);
 BOOL fn_80016710(u8 charID, s32 slot);
 BOOL fn_80016F7C(void);
 typedef struct Gap8001196CModelFile { u8 _pad0[0x10]; u8* unk10; } Gap8001196CModelFile; /* relocated .gpc root header */
+/* a loaded extra model (stadium object or a character's bat/glove sub-item) */
 typedef struct Gap8001196CStadiumObj {
-    /* 0x00 */ u8* buf;
-    /* 0x04 */ u8* unk4;
+    /* 0x00 */ u8* buf;                      /* file buffer (relocated root header: 4 word offsets) */
+    /* 0x04 */ u8* unk4;                     /* selected part of the file (word lbl_803CB7C4[3]) */
     u8 _pad8[0x58];
-    /* 0x60 */ u8 charID;
-    /* 0x61 */ u8 slot;
+    /* 0x60 */ u8 index0;                    /* charID (stadium objects) / actor-entry index (sub-items) */
+    /* 0x61 */ u8 index1;                    /* slot (stadium objects) */
     u8 _pad62[2];
 } Gap8001196CStadiumObj;                     /* 0x64 */
+/* one bat/glove pair of a character: two sub-item models plus bookkeeping (fn_80012B90) */
+typedef struct Gap8001196CSubItemEntry {
+    /* 0x00 */ Gap8001196CStadiumObj obj0;
+    /* 0x64 */ Gap8001196CStadiumObj obj1;
+    /* 0xC8 */ u8* textureArchive;           /* the character body's texture archive (shared) */
+    /* 0xCC */ u8 valid;
+    /* 0xCD */ u8 arm;                       /* roster byte 0x26 (fielding arm); toggled while loading the pair */
+    /* 0xCE */ u8 stance;                    /* roster byte 0x27 */
+    /* 0xCF */ s8 charID;
+    /* 0xD0 */ u8 slotKind;
+    /* 0xD1 */ u8 prevSlotKind;
+    u8 _padD2[2];
+} Gap8001196CSubItemEntry;                   /* 0xD4 */
+
 extern Gap8001196CStadiumObj lbl_80118220[13];
+extern u8 lbl_803CBC04;                      /* fn_80012B90 step 0..8 */
+extern u8* lbl_803CBC08;                     /* texture archive handed to fn_800BD190 */
+extern u8 lbl_803CBC0C;                      /* a sub-item load is in flight */
+extern Gap8001196CStadiumObj* lbl_803CBC1C;  /* sub-item object being loaded */
+extern u8 lbl_803CB7C4[4];                   /* which root-header word holds layout/geo/extra/skin for sub-items */
 extern u8 lbl_803CBBFA;
 extern s16 lbl_800EEB18[54];                 /* charID -> model id (-1 = none) */
 struct Gap8001196CLoadArg;
@@ -78,6 +98,7 @@ typedef struct Gap8001196CAnim {
             /* 0x024 */ u8* animBank;        /* track 16 (17 for the batter slot) or the skeleton from fn_80021BBC */
             u8 _pad28[4];
             /* 0x02C */ struct Gap8001196CStadiumObj* stadiumObj;
+            /* 0x030 */ struct Gap8001196CSubItemEntry* subItems; /* &g_hugeAnimStruct.subItemEntries[slotKind*3] once fn_80012B90 is done */
         };
     };
     u8 _pad34[0x60 - 0x34];
@@ -163,6 +184,8 @@ typedef struct Gap8001196CActorSlot {
     u8 _pad5B;
 } Gap8001196CActorSlot;                      /* 0x5C here; the real record runs past the entry */
 typedef struct Gap8001196CActorEntry { u8 _pad0[0x34]; Gap8001196CActorSlot slot; } Gap8001196CActorEntry; /* 0x90 */
+struct Gap8001196CActLayout;
+void fn_800238E0(Gap8001196CActorEntry* entries, s32 index, struct Gap8001196CActLayout* layout);
 /* relocated .gpc root header (offsets become pointers in fn_80017814) */
 typedef struct Gap8001196CRootHeader {
     /* 0x00 */ u32 texture;
@@ -179,7 +202,10 @@ typedef struct Gap8001196CAnimTable {
     /* 0x00B0 */ void* unkB0;
     /* 0x00B4 */ void* unkB4;
     /* 0x00B8 */ void* unkB8;
-    u8 _padBC[0xC04 - 0xBC];
+    u8 _padBC[0x13C - 0xBC];
+    /* 0x013C */ Gap8001196CActorEntry* subItemActorEntries; /* actor entries for bats/gloves */
+    /* 0x0140 */ Gap8001196CSubItemEntry subItemEntries[12]; /* [slotKind*3 + k], three bat/glove pairs per slot kind (0x140..0xB30) */
+    u8 _padB30[0xC04 - 0xB30];
     /* 0x0C04 */ Gap8001196CAnim slots[13];
     /* 0x2C50 */ Gap8001196CAnim* slotPtrs[13];
     u8 _pad2C84[0x2CAC - 0x2C84];
