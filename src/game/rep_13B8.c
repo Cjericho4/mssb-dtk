@@ -1254,29 +1254,17 @@ void fn_3_8A4E4(void) {
 
 // .text:0x0008A5A4 size:0x74 mapped:0x806C9638
 void fn_3_8A5A4(void) {
-    InMemRunnerType* runners = g_Runners;
-    s16 value = -1;
+    InMemRunnerType* r;
+    s32 i;
 
-    runners[0].rosterID = value;
-    runners[0]._121 = 0xA;
-    runners[0].delayBeforeStartingToRun = 0x1E;
-    runners[0].leadoffDistancePercent = lbl_3_rodata_1498;
-    runners[0].someCollisionCheck = 0;
-    runners[1].rosterID = value;
-    runners[1]._121 = 0xA;
-    runners[1].delayBeforeStartingToRun = 0x1E;
-    runners[1].leadoffDistancePercent = lbl_3_rodata_1498;
-    runners[1].someCollisionCheck = 0;
-    runners[2].rosterID = value;
-    runners[2]._121 = 0xA;
-    runners[2].delayBeforeStartingToRun = 0x1E;
-    runners[2].leadoffDistancePercent = lbl_3_rodata_1498;
-    runners[2].someCollisionCheck = 0;
-    runners[3].rosterID = value;
-    runners[3]._121 = 0xA;
-    runners[3].delayBeforeStartingToRun = 0x1E;
-    runners[3].leadoffDistancePercent = lbl_3_rodata_1498;
-    runners[3].someCollisionCheck = 0;
+    for (i = 0; i < 4; i++) {
+        r = &g_Runners[i];
+        r->rosterID = -1;
+        r->_121 = 0xA;
+        r->delayBeforeStartingToRun = 0x1E;
+        r->leadoffDistancePercent = 0.1f;
+        r->someCollisionCheck = 0;
+    }
 }
 
 // .text:0x0008A618 size:0x19C mapped:0x806C96AC
