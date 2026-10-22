@@ -2,6 +2,10 @@
 #define __CHALLENGE_gap_17EFC_H_
 
 #include "mssbTypes.h"
+#include "Dolphin/GX/GXPixel.h"
+#include "Dolphin/GX/GXGeometry.h"
+#include "Dolphin/GX/GXLight.h"
+#include "Dolphin/GX/GXTev.h"
 
 typedef struct ChallengeSortNode {
     struct ChallengeSortNode* next;
