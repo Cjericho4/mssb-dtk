@@ -32,6 +32,7 @@ void fn_3_76558(void) {
 
 // .text:0x00076A9C size:0x1DC
 void fn_3_76A9C(void) {
+    InMemRunnerType* p;
     InMemRunnerType* runner;
     u8* stat;
     s32 runs;
@@ -55,13 +56,13 @@ void fn_3_76A9C(void) {
         }
     }
     runs = g_Scores.team[g_GameLogic.homeTeamBattingInd_fieldingTeam].score - g_Scores.prevScore;
-    runner = &g_Runners[3];
-    for (i = 3; i >= 0; i--, runner--) {
+    p = &g_Runners[3];
+    for (i = 3; i >= 0; i--, p--) {
         if (runs <= 0) {
             break;
         }
-        if (runner->runnerOnFieldOrOutOrScored == 3) {
-            stat = &lbl_803537E4[g_GameLogic.teamBatting][runner->rosterID].runsScored;
+        if (p->runnerOnFieldOrOutOrScored == 3) {
+            stat = &lbl_803537E4[g_GameLogic.teamBatting][p->rosterID].runsScored;
             if (*stat < 0xFE) {
                 (*stat)++;
             } else {
@@ -69,7 +70,7 @@ void fn_3_76A9C(void) {
             }
             runs--;
             if (g_d_GameSettings.exhibitionMatchInd == 0 && g_GameLogic.teamBatting == lbl_3_common_bss_37400.playerIndex) {
-                fn_3_161588(11, runner->rosterID);
+                fn_3_161588(11, p->rosterID);
             }
         }
     }
