@@ -88,11 +88,27 @@ void fn_1_1A3B4(void) {
 
 // .text:0x0001A774 size:0xDC
 void fn_1_1A774(void) {
-    return;
+    s32 i;
+    s32 r, g, b, a;
+    ChallengeSelection* selection = &lbl_1_bss_69F0;
+    hugeAnimStruct* animations = &g_hugeAnimStruct;
+    Mtx matrix;
+    ChallengeModelGroup* model = (ChallengeModelGroup*)animations->ctrlOrBonePtr[selection->group].unk34;
+    if (selection->selected < model->count) {
+        for (i = 0; i < ((ChallengeModelGroup*)animations->ctrlOrBonePtr[selection->group].unk34)->count; i++) {
+            if (i == selection->selected) {
+                r = 0; g = 255; b = 255; a = 255;
+            } else {
+                r = 0; g = 128; b = 128; a = 64;
+            }
+            fn_800B2C88((ChallengeModelGroup*)animations->ctrlOrBonePtr[selection->group].unk34, i, matrix);
+            fn_1_1A850(matrix, selection->matrix, r, g, b, a);
+        }
+    }
 }
 
 // .text:0x0001A850 size:0x554
-void fn_1_1A850(void) {
+void fn_1_1A850(Mtx matrix, Mtx view, s32 r, s32 g, s32 b, s32 a) {
     return;
 }
 

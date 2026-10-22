@@ -47,8 +47,20 @@ void fn_1_19D60(ChallengeRenderModel* model, s32 mode);
 void fn_1_1A1EC(ChallengeRenderTask* task, s32 mode);
 void fn_1_1A290(void);
 void fn_1_1A3B4(void);
+typedef struct ChallengeModelGroup {
+    u8 _pad0[6];
+    u16 count;
+} ChallengeModelGroup;
+typedef struct ChallengeSelection {
+    u16 selected;
+    u8 group;
+    u8 _pad3[0x189];
+    Mtx matrix;
+} ChallengeSelection;
+extern ChallengeSelection lbl_1_bss_69F0;
+void fn_800B2C88(ChallengeModelGroup* model, u16 index, Mtx matrix);
 void fn_1_1A774(void);
-void fn_1_1A850(void);
+void fn_1_1A850(Mtx matrix, Mtx view, s32 r, s32 g, s32 b, s32 a);
 void fn_1_1ADA4(void);
 void fn_1_1B038(void);
 void fn_1_1B0FC(void);
