@@ -64,6 +64,12 @@ void fn_1_7E04(f32 scale);
 void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 void fn_800B806C(s32 index, f32 t, f32 b, f32 l, f32 r, f32 nearZ, f32 farZ, f32 scale);
 #include "Dolphin/GX/GXTransform.h"
+#include "challenge/challenge.h"
+extern u8 lbl_1_bss_C2;
+extern u8 lbl_1_data_85C;
+s32 fn_80048EA8(s32 index);
+void fn_80048E00(s32 index, s32 value);
+void fn_80048C14(s32 mode);
 void fn_1_7EF8(void);
 void fn_1_7FF8(void);
 void fn_1_8368(void);

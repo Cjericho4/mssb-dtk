@@ -125,7 +125,23 @@ void fn_1_7E04(f32 scale) {
 
 // .text:0x00007EF8 size:0x100
 void fn_1_7EF8(void) {
-    return;
+    switch (lbl_803C77B8.pressed) {
+    case 4:
+    case 8:
+        lbl_1_bss_C2 = !lbl_1_bss_C2;
+        break;
+    case 1:
+        fn_80048E00(lbl_1_bss_C2, fn_80048EA8(lbl_1_bss_C2) - 1);
+        break;
+    case 2:
+        fn_80048E00(lbl_1_bss_C2, fn_80048EA8(lbl_1_bss_C2) + 1);
+        break;
+    case 0x100:
+        lbl_1_data_85C = !lbl_1_data_85C;
+        if (lbl_1_data_85C != 0) fn_80048C14(0x3F);
+        else fn_80048C14(0);
+        break;
+    }
 }
 
 // .text:0x00007FF8 size:0x370
