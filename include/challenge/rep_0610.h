@@ -27,7 +27,9 @@ typedef struct ChallengeState {
     /* 0x0011 */ u8 unk11;
     /* 0x0012 */ u8 _pad12[0x16];
     /* 0x0028 */ s32 selection;
-    /* 0x002C */ u8 _pad2C[0x20];
+    /* 0x002C */ u8 _pad2C[0xC];
+    /* 0x0038 */ s32 page;
+    /* 0x003C */ u8 _pad3C[0x10];
     /* 0x004C */ s32 queued;
     /* 0x0050 */ u8 _pad50[0x154];
     /* 0x01A4 */ u8 phase;
@@ -219,6 +221,12 @@ void fn_1_E9F8(Rep0610Ring* ring, s32 index, s32 steps);
 void fn_1_EA20(void);
 void fn_1_ECF8(void);
 void fn_1_F040(void);
+typedef struct ChallengeCopyValues {
+    Rep0610Triple base;
+    s32 extra;
+} ChallengeCopyValues;
+extern ChallengeCopyValues* lbl_1_data_F278[3];
+extern ChallengeCopyValues lbl_1_data_F284;
 void fn_1_F0D0(void);
 void fn_1_F1D8(void);
 void fn_1_F2F8(void);

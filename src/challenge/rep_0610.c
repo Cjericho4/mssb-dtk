@@ -263,7 +263,25 @@ void fn_1_F040(void) {
 
 // .text:0x0000F0D0 size:0x108
 void fn_1_F0D0(void) {
-    return;
+    ChallengeState* state = &lbl_1_bss_3070;
+    fn_1_F798(&lbl_1_data_F278[state->page]->base, &lbl_1_data_F284.base, sizeof(ChallengeCopyValues));
+    if (lbl_803C77B8.pressed & 0x1000) {
+        state->page = (state->page + 1) % 3;
+    } else if (lbl_803C77B8.buttons & 0x100) {
+        if (lbl_803C77B8.held & 0x100) {
+            ChallengeScene* entry;
+            s32 selection = state->selection;
+            lbl_1_data_F278[2]->base.values[0] = selection;
+            lbl_1_data_F278[1]->base.values[0] = selection;
+            lbl_1_data_F278[0]->base.values[0] = selection;
+            entry = (ChallengeScene*)fn_800B0A5C_insertQueue(fn_1_F1D8, 0);
+            entry->words[3] = 0xF0;
+            entry->words[4] = 4;
+        }
+    } else if (lbl_803C77B8.pressed & 0x200) {
+        state->unkC = 0;
+        state->unk2F01 = 10;
+    }
 }
 
 // .text:0x0000F1D8 size:0x120
