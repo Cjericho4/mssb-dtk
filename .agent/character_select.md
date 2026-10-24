@@ -107,6 +107,20 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
      `fn_2_348C` (0x144, **matched 2026-10-23**) is the same locked-unique loop standing alone
      (no `bl` to it in menus.rel): `for i<6: locked = (charUnlocked[i] == 0); for c<54: if
      (lbl_803CB748[i] == lbl_800E8558[c].uniqueIdx) charTaken[c] = locked`.
+   * `fn_2_4970(u8 side, s32 captainID)` (**matched 2026-10-23**): undo the latest pick of a side (B button
+     path of `fn_2_CE44`, captainID = `lbl_8034E9A0.players[side]`).  Finds the slot whose
+     `lbl_803C6724.order[side][k]` equals the cursor `lbl_2_bss_F468.cursor[side]`; captain slot -> only
+     step the cursor back; else record `prevCursor[side]`, step back, and release the slot's character:
+     `markSlotTaken()` (the fn_2_C698 body as a static inline: charTaken=1, `fn_800506E8(owner, id, 1)`
+     cell badge, `fn_80067B40(side, id, 1)` family taken) then `fn_800506E8(side, id, 0)`,
+     `fn_80067B40(side, id, 0)`, `charTaken[id] = 0`; challenge mode (GameModeSelected 5) instead
+     un-takes the family *base* (`fn_80067AC8(id, 0)`) only if no other member of the family is still
+     on the team.  Then `selectionFlags/teams(-1)/unk4A[side][slot]` are cleared, `flags37[side] = 0`,
+     `fn_800625A4(side, 0x10)`.  `lbl_2_bss_F468.flags37/flags3D[side]` are "pick pending" bytes: when
+     set, the release happens without moving the cursor.  `fn_800506E8(value, charID, set)` (DOL,
+     matched) finds the `lbl_800FDE84` grid cell holding charID's base and writes `value`
+     (controller index) or -1 into `lbl_803C6028.slots[cell]`: that is the per-cell "picked by Pn"
+     badge, keyed by **base charID**, so a clone donor's cell is what gets badged.
 4. `fn_800415A8` (0xAD4): CPU team builder (colour columns 1..4).
 5. game.rel `fn_3_B4124`, `fn_3_10C450`: roster → `inMemRoster` copy (skin byte lands here).
 6. `fn_80067B40(arg0 unused, s16 charID, u8 value)`: 8 register-choice diffs left (key should land

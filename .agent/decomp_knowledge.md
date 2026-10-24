@@ -398,4 +398,15 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
 *   The sibling `fn_2_348C` (same loop as a standalone function) has the plain non-inlined colouring
     (uq r6, walkers r7..r10, i r11, lk r12) with `locked` NOT coalesced into the load temp: start from
     the direct form with `locked = (g.unlocked[i] == 0)`.
-
+*   **The scheduler reorders stores to different global symbols** (fn_2_4970): the target's tail
+    `stb 0x26(sel); stbx -1; stb 0x3d(F468); stb 0x4a(sel)` came from source order
+    `selectionFlags = 0; flags3D = 0; teams = -1; unk4A = 0` (the stbx hoisted over the F468 store).
+    When a store group matches instruction-for-instruction but its temps are permuted (zero in r6
+    instead of r5, address in r5 instead of r4), permute the *store statements* among different
+    symbols: the pre-scheduling order decides which temps interfere, the scheduler then hides it.
+*   fn_2_4970 also wanted: `s32 state = cursor[side]` as a named local used in the unrolled search
+    loop and stored later (a promoted global load instead gives a write-back `stwx` after the loop);
+    the slot character as `s8 c` declared after it (r7/r8 order); `u8 found` declared before
+    `s8 family` (r25/r24).  `-inline noauto` in the RELs means every duplicated block really is a
+    `static inline` in the source; fn_2_C698's body is one (`markSlotTaken`) and fn_2_C698 still
+    matches as a one-line wrapper around it.

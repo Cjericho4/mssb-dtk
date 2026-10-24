@@ -22,18 +22,29 @@ typedef struct MenusTeamSelections {
         struct { s8 first[9]; s8 second[9]; };
         s8 teams[2][9];
     };
-    s8 order[2][9];
-    u8 selectionFlags[2][9];
+    s8 order[2][9];        /* 0x14 */
+    u8 selectionFlags[2][9]; /* 0x26 */
+    u8 unk38[2][9];        /* 0x38 */
+    u8 unk4A[2][9];        /* 0x4A cleared with the slot in fn_2_4970 */
 } MenusTeamSelections;
 extern MenusTeamSelections lbl_803C6724;
 
 typedef struct Menus1254State {
-    s32 states[4];
+    union {
+        s32 states[4];
+        struct {
+            s32 cursor[2];     /* 0x0 per side: roster slot the cursor is on (0..8) */
+            s32 prevCursor[2]; /* 0x8 per side: cursor before the last pick was undone (fn_2_4970) */
+        };
+    };
     s32 options[4];
     u8 _pad20[0xE];
     u8 unk2E;
     s8 teamIndices[2];
-    u8 _pad31[0x10];
+    u8 _pad31[6];
+    u8 flags37[4];  /* 0x37 per side: pick in progress (cleared by fn_2_4970) */
+    u8 _pad3B[2];
+    u8 flags3D[4];  /* 0x3D per side */
     u8 flags41[4];
     u8 flags45[4];
     u8 _pad49[6];
@@ -96,7 +107,7 @@ s32 fn_2_33BC(void);
 void fn_2_348C(void);
 s32 fn_2_35D0(u8 index);
 void fn_2_3624(void);
-void fn_2_4970(void);
+void fn_2_4970(u8 side, s32 captainID);
 void fn_2_5184(void);
 void fn_2_52CC(void);
 void fn_2_5444(void);

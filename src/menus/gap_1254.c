@@ -1,7 +1,8 @@
 #include "menus/gap_1254.h"
 extern s16 lbl_80108EDC[][5];
 extern void fn_800506E8(s32 controller, s32 id, s32 enabled);
-extern void fn_80067B40(u8 side, u8 id, s32 enabled);
+extern u8 fn_80067B40(u8 side, u8 id, s32 enabled);
+extern s16 fn_80067AC8(s16 key, s8 column);
 #include "menus/gap_0.h"
 #include "game/gap_B3B70.h"
 #include "musyx/musyx.h"
@@ -372,9 +373,204 @@ void fn_2_3624(void) {
     return;
 }
 
-// .text:0x00004970 size:0x814
-void fn_2_4970(void) {
-    return;
+/*
+ * Register the character sitting in roster slot `index` of `side` (lbl_803C6724.teams[side][index])
+ * as taken on the select grid.  This is the body of fn_2_C698 and is inlined into fn_2_4970,
+ * fn_2_7DDC, fn_2_C7DC and fn_2_CA60 (RELs build with -inline noauto, so it has to be an explicit
+ * static inline).
+ *
+ *   1. lbl_8034E9A0.charTaken[id] = 1 (charsOnCharacterGridSelected, +0x4757);
+ *   2. fn_800506E8(owner, id, 1): write `owner` into lbl_803C6028.slots[cell] for the grid cell
+ *      (lbl_800FDE84) that holds id's base character, i.e. the "picked by Pn" badge on the cell.
+ *      owner = lbl_8034E9A0.controllerIndices[side] (+0x46F8), except when g_d_GameSettings._10 == 0
+ *      and side != 0 (two players on one side / second team driven by the other pad): the pad that
+ *      is not player 0's;
+ *   3. fn_80067B40(side, id, 1): set the taken flag of every colour variant in id's family
+ *      (lbl_80108EDC row) so the next pick of that character steps to the next free colour.
+ * GameModeSelected == 5 (challenge mode): only team 0 exists (lbl_803C6724.first) and the badge is
+ * always controller 0.
+ */
+static inline void markSlotTaken(u8 index, u8 side) {
+    s32 id;
+    if (g_d_GameSettings.GameModeSelected != 5) {
+        id = lbl_803C6724.teams[side][index];
+        lbl_8034E9A0.charTaken[id] = 1;
+        if (g_d_GameSettings._10 == 0 && side != 0) {
+            if (lbl_8034E9A0.controllerIndices[0] == 0) fn_800506E8(1, id, 1);
+            else fn_800506E8(0, id, 1);
+        } else fn_800506E8(lbl_8034E9A0.controllerIndices[side], id, 1);
+        fn_80067B40(side, (u8)id, 1);
+    } else {
+        id = lbl_803C6724.first[index];
+        fn_800506E8(0, id, 1);
+        lbl_8034E9A0.charTaken[id] = 1;
+        fn_80067B40(side, (u8)id, 1);
+    }
+}
+
+static inline void releaseSlot(u8 side, s32 slot) {
+    u8 found = 0;
+    s8 family = 0;
+    s32 i;
+    s32 j;
+    if (g_d_GameSettings.GameModeSelected != 5) {
+        fn_800506E8(side, lbl_803C6724.teams[side][slot], 0);
+        fn_80067B40(side, lbl_803C6724.teams[side][slot], 0);
+        lbl_8034E9A0.charTaken[lbl_803C6724.teams[side][slot]] = 0;
+    } else if (fn_80067B40(side, lbl_803C6724.teams[side][slot], 2)) {
+        for (i = 0; i < 9; i++) {
+            for (j = 0; j < 5; j++) {
+                if (lbl_803C6724.teams[side][slot] == lbl_80108EDC[i][j]) {
+                    family = i;
+                    goto found_family;
+                }
+            }
+        }
+    found_family:
+        for (i = 0; i < 9; i++) {
+            for (j = 0; j < 5; j++) {
+                if (lbl_803C6724.teams[side][i] == lbl_80108EDC[family][j] && lbl_80108EDC[family][j] != -1 &&
+                    lbl_803C6724.teams[side][i] != lbl_803C6724.teams[side][slot]) {
+                    found = 1;
+                }
+            }
+        }
+        if (!found) {
+            fn_800506E8(side, fn_80067AC8(lbl_803C6724.teams[side][slot], 0), 0);
+            lbl_8034E9A0.charTaken[fn_80067AC8(lbl_803C6724.teams[side][slot], 0)] = 0;
+        }
+    } else {
+        fn_800506E8(side, lbl_803C6724.teams[side][slot], 0);
+        lbl_8034E9A0.charTaken[lbl_803C6724.teams[side][slot]] = 0;
+    }
+}
+
+/*
+ * Undo the latest pick of `side` on the roster screen (B button path of fn_2_CE44, which passes
+ * lbl_8034E9A0.players[side] (+0x46E0) as captainID).
+ *
+ *   slot = the roster slot whose pick order lbl_803C6724.order[side][slot] (+0x14) equals the
+ *          side's cursor lbl_2_bss_F468.cursor[side] (states[0..1]).
+ *   If that slot holds the captain: just step the cursor back (wrap 0 -> 8); nothing is freed.
+ *   Otherwise, if no pick is pending for the side (lbl_2_bss_F468.flags37/flags3D[side] both 0):
+ *     remember the cursor in prevCursor[side] (+0x8), step it back, and if the slot holds a real
+ *     character (not -1 / 0x36 = empty) release it; if a pick is pending: release the slot's
+ *     character without moving the cursor and clear flags3D[side].
+ *   Release = markSlotTaken() (re-register, so the family walk below starts from a consistent
+ *   state) then:
+ *     normal modes: fn_800506E8(side, id, 0) (clear the cell badge), fn_80067B40(side, id, 0)
+ *       (clear the taken flag of the whole colour family), charTaken[id] = 0;
+ *     challenge mode (GameModeSelected == 5): if id has a colour family (fn_80067B40(..., 2) is
+ *       the query form) find its row in lbl_80108EDC and, unless another member of that family is
+ *       still on the team, un-badge and un-take the family's base character (fn_80067AC8(id, 0));
+ *       if it has no family un-badge/un-take id itself;
+ *   then clear the slot: selectionFlags[side][slot] = 0, teams[side][slot] = -1,
+ *   unk4A[side][slot] = 0.  Finally flags37[side] = 0 and fn_800625A4(side, 0x10) (DOL, stub:
+ *   per-side UI command 0x10, "pick undone").
+ *
+ * Match notes: `state` (cursor) and `c` (slot character, s8) must be named locals in that order
+ * (r7/r8); `found` is declared before `family` (r25/r24); the pending branch's `flags3D[side] = 0`
+ * is written between the selectionFlags and teams stores: the scheduler hoists the stbx over it,
+ * and any other placement changes the tail's register colouring.
+ */
+void fn_2_4970(u8 side, s32 captainID) {
+    s32 slot;
+    s32 k;
+    u8 found = 0;
+    s8 family = 0;
+    s32 i;
+    s32 j;
+    s32 state = lbl_2_bss_F468.states[side];
+    s8 c;
+
+    for (k = 0; k < 9; k++) {
+        if (lbl_803C6724.order[side][k] == state) slot = k;
+    }
+    c = lbl_803C6724.teams[side][slot];
+    if (c == captainID) {
+        lbl_2_bss_F468.states[side]--;
+        if (lbl_2_bss_F468.states[side] < 0) lbl_2_bss_F468.states[side] = 8;
+    } else {
+        if (lbl_2_bss_F468.flags37[side] == 0 && lbl_2_bss_F468.flags3D[side] == 0) {
+            lbl_2_bss_F468.prevCursor[side] = state;
+            lbl_2_bss_F468.states[side]--;
+            if (lbl_2_bss_F468.states[side] < 0) lbl_2_bss_F468.states[side] = 8;
+            if (c != -1 && c != 0x36) {
+                markSlotTaken(slot, side);
+                if (g_d_GameSettings.GameModeSelected != 5) {
+                    fn_800506E8(side, lbl_803C6724.teams[side][slot], 0);
+                    fn_80067B40(side, lbl_803C6724.teams[side][slot], 0);
+                    lbl_8034E9A0.charTaken[lbl_803C6724.teams[side][slot]] = 0;
+                } else if (fn_80067B40(side, lbl_803C6724.teams[side][slot], 2)) {
+                    for (i = 0; i < 9; i++) {
+                        for (j = 0; j < 5; j++) {
+                            if (lbl_803C6724.teams[side][slot] == lbl_80108EDC[i][j]) {
+                                family = i;
+                                goto found_family;
+                            }
+                        }
+                    }
+                found_family:
+                    for (i = 0; i < 9; i++) {
+                        for (j = 0; j < 5; j++) {
+                            if (lbl_803C6724.teams[side][i] == lbl_80108EDC[family][j] && lbl_80108EDC[family][j] != -1 &&
+                                lbl_803C6724.teams[side][i] != lbl_803C6724.teams[side][slot]) {
+                                found = 1;
+                            }
+                        }
+                    }
+                    if (!found) {
+                        fn_800506E8(side, fn_80067AC8(lbl_803C6724.teams[side][slot], 0), 0);
+                        lbl_8034E9A0.charTaken[fn_80067AC8(lbl_803C6724.teams[side][slot], 0)] = 0;
+                    }
+                } else {
+                    fn_800506E8(side, lbl_803C6724.teams[side][slot], 0);
+                    lbl_8034E9A0.charTaken[lbl_803C6724.teams[side][slot]] = 0;
+                }
+                lbl_803C6724.selectionFlags[side][slot] = 0;
+                lbl_803C6724.teams[side][slot] = -1;
+                lbl_803C6724.unk4A[side][slot] = 0;
+            }
+        } else {
+            markSlotTaken(slot, side);
+            if (g_d_GameSettings.GameModeSelected != 5) {
+                fn_800506E8(side, lbl_803C6724.teams[side][slot], 0);
+                fn_80067B40(side, lbl_803C6724.teams[side][slot], 0);
+                lbl_8034E9A0.charTaken[lbl_803C6724.teams[side][slot]] = 0;
+            } else if (fn_80067B40(side, lbl_803C6724.teams[side][slot], 2)) {
+                for (i = 0; i < 9; i++) {
+                    for (j = 0; j < 5; j++) {
+                        if (lbl_803C6724.teams[side][slot] == lbl_80108EDC[i][j]) {
+                            family = i;
+                            goto found_family2;
+                        }
+                    }
+                }
+            found_family2:
+                for (i = 0; i < 9; i++) {
+                    for (j = 0; j < 5; j++) {
+                        if (lbl_803C6724.teams[side][i] == lbl_80108EDC[family][j] && lbl_80108EDC[family][j] != -1 &&
+                            lbl_803C6724.teams[side][i] != lbl_803C6724.teams[side][slot]) {
+                            found = 1;
+                        }
+                    }
+                }
+                if (!found) {
+                    fn_800506E8(side, fn_80067AC8(lbl_803C6724.teams[side][slot], 0), 0);
+                    lbl_8034E9A0.charTaken[fn_80067AC8(lbl_803C6724.teams[side][slot], 0)] = 0;
+                }
+            } else {
+                fn_800506E8(side, lbl_803C6724.teams[side][slot], 0);
+                lbl_8034E9A0.charTaken[lbl_803C6724.teams[side][slot]] = 0;
+            }
+            lbl_803C6724.selectionFlags[side][slot] = 0;
+            lbl_2_bss_F468.flags3D[side] = 0;
+            lbl_803C6724.teams[side][slot] = -1;
+            lbl_803C6724.unk4A[side][slot] = 0;
+        }
+        lbl_2_bss_F468.flags37[side] = 0;
+    }
+    fn_800625A4(side, 0x10);
 }
 
 // .text:0x00005184 size:0x148
@@ -689,22 +885,9 @@ void fn_2_C484(void) {
 }
 
 // .text:0x0000C698 size:0x144
+/* Standalone markSlotTaken (see above fn_2_4970). */
 void fn_2_C698(u8 index, u8 side) {
-    s32 id;
-    if (g_d_GameSettings.GameModeSelected != 5) {
-        id = lbl_803C6724.teams[side][index];
-        lbl_8034E9A0.charTaken[id] = 1;
-        if (g_d_GameSettings._10 == 0 && side != 0) {
-            if (lbl_8034E9A0.controllerIndices[0] == 0) fn_800506E8(1, id, 1);
-            else fn_800506E8(0, id, 1);
-        } else fn_800506E8(lbl_8034E9A0.controllerIndices[side], id, 1);
-        fn_80067B40(side, (u8)id, 1);
-    } else {
-        id = lbl_803C6724.first[index];
-        fn_800506E8(0, id, 1);
-        lbl_8034E9A0.charTaken[id] = 1;
-        fn_80067B40(side, (u8)id, 1);
-    }
+    markSlotTaken(index, side);
 }
 
 // .text:0x0000C7DC size:0x284
