@@ -327,8 +327,12 @@ Rio. How it differs from the recommendation below:
   case (`li r0, N` at 0x7556C + 8*(N-1); label 0 at 0x7559C). `--colour-word none` (default)
   rewrites the 4-byte addend of each donor's entry to 0x7559C, after checking every retail addend
   against the C switch and every case instruction. menus.rel is re-packed in place in aaaa.dat
-  (355584 B, room 372736 B). Label 0 is what every single-colour character (Mario) shows; its
-  exact on-screen look is unverified. `--colour-word donor` keeps the retail entries.
+  (355584 B, room 372736 B). Label 0 is what every single-colour character (Mario) shows (the
+  non-family `else` branch also sets pane 0xAE to frame 0). `--colour-word donor` keeps the retail
+  entries. **Open question for Rio:** the retail name textures already read "Blue Toad" / "Purple
+  Toad" (see the before/after sheet), so pane 0xAE / sequence 0x7B is not a "Purple" + "Toad" prefix;
+  what it draws for variants (and where) has not been seen. Check on the roster screen that the
+  clone's label looks like Mario's, and what a retail variant's looks like.
 
 Extend `clone_character.py --ui source` with **data changes in these two files**, retaining the
 existing unique-index/announcer/voice/HUD changes. For each donor S and source C:
