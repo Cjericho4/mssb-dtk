@@ -28,6 +28,7 @@ instead of searching prose. Each fact has one home (the "owns" column); other do
 | `data_map.md` | every descriptor table and file in ZZZZ.dat / aaaa.dat, formats, coverage, UI slots, unknowns | ~7k |
 | `roster_flow.md` | roster → match data flow (R2): copy sites, skin-byte audit, actor drivers, re-load points, phase-3 skin design | ~8k |
 | `decomp_knowledge.md` | compiler idioms and matching tricks by date; §1 and §13 are the most reused | ~14k |
+| `code_quality.md` | proposed code-quality rules, cleanup checklist, lint/tool ideas, current problems (not yet adopted) | ~3k |
 | `handoff_fn_2_3624.md` | state of the one unmatched phase-1 function | ~2k |
 | `character_modding.md` | retired stub pointing at the report | skip |
 | `*_codex_notes.md` | give-up logs from Codex batches (menus, dol, challenge); grep for a function name | skip |
