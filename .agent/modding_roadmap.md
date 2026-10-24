@@ -35,8 +35,13 @@ alongside for the byte-exact rebuild goal, but a later phase never waits on a ma
    +0x18AEE800; exact texture formulas, palette aliases, descriptor copies and patcher steps recorded.
    Pick/ready/auto-fill/open, cursor and L-colour refresh paths have documented C bodies;
    new matches `fn_2_7265C` / `fn_800363D8` (3963 -> 3965 total).
-   Read-only inspector verifies all 162 mappings. **Still to do:** implement the two-file patcher
-   extension and test in Rio; the older large-banner archive hypothesis remains unverified.
+   Read-only inspector verifies all 162 mappings.
+   **2026-10-24: patcher extension implemented** (`--ui source`): donor name, mini picture and grid
+   portrait := source's (pictures recoloured, private palettes, shared buffers never written), both
+   files re-packed in place; colour word dropped by default (`--colour-word none|donor`, one menus.rel
+   relocation addend per clone); GUI checkbox under Advanced. Offline tests pass (`test_clone.py`
+   incl. aliased-buffer and forced-relocation configs, `test_matrix.py --menu-art`).
+   **Still to do:** user test in Rio; the older large-banner archive hypothesis remains unverified.
    Optional `fn_2_3624` match refinement remains at five scheduling feedback lines.
 3. **Skin picker in the menu: no lost slots.** The real goal: choose a character, then a colour or
    skin, without replacing another character. A per-player skin byte (`StatTable.UnusedBytes[0]`),

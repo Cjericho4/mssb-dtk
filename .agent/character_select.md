@@ -179,11 +179,13 @@ Not presentation: `lbl_800EF508` was first mistaken for portraits; it is sound o
    at it).
 4. Nothing per grid index is copied (announcer SFX, voice bank, `fn_8004B284` row): with 1+2 the clone
    resolves to the source's grid index everywhere.
+5. (Phase 2, §8.3) charID-keyed menu art: roster preview name, mini picture and grid portrait of S :=
+   C's (pictures recoloured), and the colour word dropped (`--colour-word none`, default).
 
 Confirmed scope: this redirects announcer/voice, unique-index presentation and the HUD card.
 The claim that it also fixed every menu/grid face was wrong (§7): the charID-keyed files in §8
-were not patched. A base donor's records row changes because it is `isBase`. `--ui donor` skips
-1..3. The menu-art extension recommended in §8 has not yet been added to the patcher.
+were not patched by 1..4; step 5 (implemented 2026-10-24, §8.3) adds them. A base donor's records
+row changes because it is `isBase`. `--ui donor` skips 1..3 and 5.
 
 ## 7. User test feedback (2026-10-23, Project Rio, default four-Toad clones, `--ui source`)
 - Working: picking an extra Toad gives Mario's voice and announcer call.
@@ -300,6 +302,33 @@ some entries alias each other. All 54 name textures share one palette. Grid port
 54 distinct pixel and palette buffers.
 
 ### 8.3 Concrete patcher recommendation
+
+**Implemented 2026-10-24** in `clone_character.py --ui source` (`patch_menu_art`, `MenuTextures`,
+`patch_colour_word`); checked by `test_clone.py` and `test_matrix.py --menu-art`. Not yet seen in
+Rio. How it differs from the recommendation below:
+
+- **Header retargeting, not copying.** All three donor textures (name, mini picture, grid portrait)
+  get the source's pixel offset in their header; the name also keeps the shared text palette. The
+  two pictures get a private 512-byte palette recoloured with `rc.for_palette()` (as the HUD card).
+  It goes into a buffer that no header references any more, in order: the donor's old palette, its
+  old pixels, buffers freed by earlier donors (each donor's 1344-byte name pixels are always freed).
+  The files therefore never grow and nothing shared is written; the aliased mini pictures
+  (12/42, 20/43, 27/52/53, 48/49/51) are covered (`--slot 42 --slot 53 --slot 49 --slot 51` test).
+  Appending is kept as a last-resort path (`MenuTextures._alloc`).
+- **In place.** Optimal LZSS re-packs fit easily: common 420-421 KB of 429072 B, grid 303.8 KB of
+  309936 B (about 8.8 KB / 6 KB spare for the default config). If a file did not fit (or with the
+  test-only `--relocate-menu-art`) it is appended to ZZZZ.dat and every tuple copy is rewritten.
+- **Descriptor copies (full 16-byte tuple search) differ from the table below:** common file:
+  main.dol x2, menus.rel x0, game.rel x5, **challenge.rel x1** (.data file offset 0x41818); grid
+  file: main.dol x2, **menus.rel x9** (one more than listed), game.rel x5, **challenge.rel x1**
+  (0x418F8). The patcher asserts these counts when it moves a file.
+- **Colour word:** `jumptable_2_data_2D844` (menus .data, 42 entries for charIDs 12..53) is empty
+  in the file; each entry is an `R_PPC_ADDR32` self-relocation against .text whose addend is the
+  case (`li r0, N` at 0x7556C + 8*(N-1); label 0 at 0x7559C). `--colour-word none` (default)
+  rewrites the 4-byte addend of each donor's entry to 0x7559C, after checking every retail addend
+  against the C switch and every case instruction. menus.rel is re-packed in place in aaaa.dat
+  (355584 B, room 372736 B). Label 0 is what every single-colour character (Mario) shows; its
+  exact on-screen look is unverified. `--colour-word donor` keeps the retail entries.
 
 Extend `clone_character.py --ui source` with **data changes in these two files**, retaining the
 existing unique-index/announcer/voice/HUD changes. For each donor S and source C:
