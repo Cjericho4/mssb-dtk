@@ -382,8 +382,41 @@ void fn_2_25850(DrawingSceneStruct* scene, Rep0788Item* item) {
 }
 
 // .text:0x0002587C size:0x1A0
-void fn_2_2587C(void) {
-    return;
+/* Challenge ending presentation, script lbl_2_data_1059C pane 1:
+ * logical resource 0x17 / sequence 0x64 (ZZZZ+0x19135800).
+ * Command 2 shows it, enables playback and starts the fixed timeline at zero.
+ * Commands 5 -> 6 -> 7 stop playback and hide it. No character/unique index
+ * is read: the long CI4 strips and character animations are embedded references
+ * in this timeline, not the selected team's character-name banners. */
+void fn_2_2587C(DrawingSceneStruct* scene, Rep0788Item* item) {
+    s32 result = fn_2_53BC8(item);
+    if ((s16)result != -1) item->state = result;
+    switch (item->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
+        item->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 1;
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x5C = 0;
+        item->state = 0x25;
+        break;
+    case 3: break;
+    case 4: break;
+    case 5:
+        item->state = 6;
+        break;
+    case 6:
+        lbl_80371C30[scene->unkIndex + item->index].obj->field_0x68 = 0;
+        item->state = 7;
+        break;
+    case 7:
+        lbl_80371C30[scene->unkIndex + item->index].obj->flags &= ~2;
+        break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x00025A1C size:0x2C
