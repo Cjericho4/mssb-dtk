@@ -15,6 +15,11 @@ alongside for the byte-exact rebuild goal, but a later phase never waits on a ma
 - **GUI** (`tools/modding/clone_gui.py`): PRSH-style theme, colour-region checkboxes, full preview,
   lag fixed; Windows exe built by `.github/workflows/build-gui.yml`.
 
+- **Data map** (`.agent/data_map.md`, `tools/datamap/mssb_files.py`, 2026-10-24): all 67
+  descriptor tables, 1,571 files, 56.6% of ZZZZ.dat referenced (the rest is dead space usable with
+  `replace --reuse-gaps`), list/info/extract/replace for any file with every descriptor copy
+  updated, and lossless text-bank export/import (dialogue, bios, tutorials).
+
 ## In progress
 - Phase 2's last step: menu names / mini pictures / grid portraits + colour word in the patcher and GUI
   (branch `gui-tool`), then the user's Rio test.
