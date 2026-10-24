@@ -1,7 +1,11 @@
 # Character modding roadmap
 
-The order the user set (2026-10-23). Finish a phase before starting the next unless the user says
-otherwise. Details live in `.agent/character_modding_report.md` and `.agent/character_select.md`.
+The order the user set (2026-10-23). Details live in `.agent/character_modding_report.md` and
+`.agent/character_select.md`.
+
+**Bar for modding work: "understood and documented", not "100% matched".** A function is ready for
+modding once it has a complete, documented C body that is semantically faithful. Matching continues
+alongside for the byte-exact rebuild goal, but a later phase never waits on a match.
 
 ## Done
 - Data-only clone patcher (`tools/modding/clone_character.py`): recoloured clones on donor slots,
@@ -10,21 +14,28 @@ otherwise. Details live in `.agent/character_modding_report.md` and `.agent/char
 
 ## In progress
 - **GUI** for non-technical users (`tools/modding/clone_gui.py` + a Windows exe build), branch `gui-tool`.
-- **Phase 1: character-select functions**, one agent per function until it matches, merging each and
-  asking the user before starting the next. Order: `fn_2_2FC0` (running) → `fn_2_4970` → `fn_2_7DDC` →
-  `fn_2_DFAC` → `fn_2_3624`.
 
-## Next
-- **Phase 2: custom sprites everywhere.** Trace how the menus pick portraits, mini-screen sprites and
-  name banners. Today they show the donor's own portrait (see `character_select.md` §7). Then make
-  clones show the source's (or a custom recoloured) portrait in every menu.
-- **Phase 3: chemistry for clones.** Parked until phase 2 works. Give clone↔source and clone↔clone good
-  chemistry instead of the source's self-chemistry.
-
-## Later: after everything needed for modded characters is mapped and understood
-- **Phase 4: animations.**
-  1. Map which subfile track (2..14, 16..18 per character in `lbl_800F1D78`) holds which moves.
-  2. Parse/document the anim bank (SDK charPipeline `ANIMGet` format) and skeleton (track 15),
-     eventually exporting to Blender.
-  3. Swap whole animation banks between characters (data-only, patcher already rewires tracks).
-  4. Author new animations: a Blender → game converter against the character's skeleton.
+## Phases
+1. **Character-select code: understood and documented, matched where practical.**
+   One agent per function until it matches; merge each and ask the user before starting the next.
+   Order: `fn_2_2FC0` (running) → `fn_2_4970` → `fn_2_7DDC` → `fn_2_DFAC` → `fn_2_3624`.
+   Phase 2 may start once these are decompiled and documented, even if some don't match yet.
+2. **Custom sprites everywhere.** Trace how the menus pick portraits, mini-screen sprites and name
+   banners. Today clones show the donor's own portrait in menus (`character_select.md` §7). Make
+   clones show the source's, or a custom recoloured, portrait on every screen.
+3. **Skin picker in the menu: no lost slots.** The real goal: choose a character, then a colour or
+   skin, without replacing another character. A per-player skin byte (`StatTable.UnusedBytes[0]`),
+   chosen in the select code instead of moving the pick to another charID, rendered through a
+   `skinPairs[charID][skin]` extension of the body/overlay mechanism (`lbl_800F73B8`), plus the
+   sprites from phase 2. Design notes: `character_modding_report.md` §4c, `character_select.md`.
+4. **Chemistry for clones.** Give clone↔source and clone↔clone good chemistry instead of the
+   source's self-chemistry (a few lines in the patcher).
+5. **Animations.**
+   1. Map which subfile track (2..14, 16..18 per character in `lbl_800F1D78`) holds which moves.
+   2. Parse/document the anim bank (SDK charPipeline `ANIMGet` format) and skeleton (track 15),
+      eventually exporting to Blender.
+   3. Swap whole animation banks between characters (data-only; the patcher already rewires tracks).
+   4. Author new animations: a Blender → game converter against the character's skeleton.
+6. **New characters beyond 54.** Every per-character table is 54 entries, the select grid has 32
+   cells, and portrait/announcer/stat files and many bounds checks (`charID < 0x36`) are fixed-size.
+   Needs table relocation and code changes on top of everything above (`character_select.md`).
