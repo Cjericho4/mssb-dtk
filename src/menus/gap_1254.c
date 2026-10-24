@@ -945,8 +945,64 @@ void fn_2_52CC(void) {
 }
 
 // .text:0x00005444 size:0x3A4
+/* Ready action: persist the challenge lineup, or hand the shared pad over to
+ * side 1, or wait for both independent sides. UI commands 0x11/0x13 animate
+ * completion; pictures continue to be selected by the scene callbacks. */
 void fn_2_5444(u8 side) {
-    return;
+    s32 n;
+    s32 cell;
+    lbl_2_bss_F468.flags3D[side] = 0;
+    if (g_d_GameSettings.GameModeSelected == 5) {
+        for (n = 0; n < 9; n++) {
+            starMissionCompletionTracker.lineup[n].charID = lbl_803C6724.teams[0][n];
+            starMissionCompletionTracker.lineup[n].slot = n;
+            starMissionCompletionTracker.lineup[n].order = lbl_803C6724.order[0][n];
+            inMemRoster[0][n].stats.CharID = lbl_803C6724.teams[0][n];
+            lbl_80354720[0][n].unk2 = lbl_803C6724.order[0][n];
+        }
+        fn_800625A4(0, 0x13);
+        fn_800625A4(1, 0x13);
+        lbl_2_bss_F468.unk2E = 0;
+        lbl_2_bss_100B4 = 1;
+        lbl_803CBBCC->state = 8;
+        return;
+    }
+    if (g_d_GameSettings._10 == 0 && lbl_2_bss_100B8.selectionFlags[0] != 0) {
+        fn_800625A4(1, 0x11);
+        lbl_8034E9A0.unk472A = 0xFF;
+        lbl_2_bss_F468.unk36 = 0x1E;
+        lbl_803CBBCC->state = 3;
+        return;
+    }
+    if (g_d_GameSettings._10 == 0) {
+        lbl_2_bss_100B8.selectionFlags[0] = 1;
+        lbl_803C66B0.padSide[0] = 1;
+        lbl_2_bss_F468.cursor[lbl_803C66B0.padSide[0]] = 10;
+        lbl_803C5EA4.unkE = 1;
+        if (lbl_8034E9A0.charTaken[lbl_2_bss_F410.gridPick[1]] != 0) {
+            for (cell = 0; cell < 32; cell++) {
+                if (lbl_8034E9A0.charTaken[lbl_800FDE84[cell]] == 0) {
+                    lbl_2_bss_F410.gridPick[1] = lbl_800FDE84[cell];
+                    break;
+                }
+            }
+        }
+        switch (lbl_8034E9A0.controllerIndices[1]) {
+        case 0: fn_80050138(1, lbl_2_bss_F410.gridPick[1], -1, -1, -1, 0); break;
+        case 1: fn_80050138(1, -1, lbl_2_bss_F410.gridPick[1], -1, -1, 0); break;
+        case 2: fn_80050138(1, -1, -1, lbl_2_bss_F410.gridPick[1], -1, 0); break;
+        case 3: fn_80050138(1, -1, -1, -1, lbl_2_bss_F410.gridPick[1], 0); break;
+        }
+        fn_800625A4(0, 0x11);
+    } else if (g_d_GameSettings._10 == 1) {
+        lbl_2_bss_100B8.selectionFlags[side] = 1;
+        fn_800625A4(side, 0x11);
+        if (lbl_2_bss_100B8.selectionFlags[0] != 0 && lbl_2_bss_100B8.selectionFlags[1] != 0) {
+            lbl_2_bss_F468.unk4F = 1;
+            lbl_2_bss_F468.unk36 = 0x1E;
+            lbl_803CBBCC->state = 7;
+        }
+    }
 }
 
 // .text:0x000057E8 size:0x8
