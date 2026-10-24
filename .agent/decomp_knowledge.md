@@ -358,3 +358,17 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
 *   **Two bss symbols indexed by the same byte with swapped `lis` pairing:** inline `B[idx]` at each use instead of a pointer local (fn_1_16400, fn_1_16590).
 *   **`volatile` local pointer** pins load order when the compiler forward-substitutes a value into its store (fn_3_104B20).
 *   **Negative results (don't retry):** `i = count = 0` always folds to `li` (target `li; mr` is a strength-reduced induction variable); `(a + b) + 12` as an index never yields `add; addi; slwi`; a store-zero and a call-arg zero are never shared in one register; constant-arm ternaries/if-else go branchless.
+
+## 12. DecompressDiskData notes (Fable, 2026-10-23)
+
+*   Target: `stmw r27` (5 saved regs, only r27 = lookBack and r31 = global base used) and a guard-less,
+    un-unrolled `mtctr r6; bdnz` byte-copy loop (`subf r5,r27,r4; lbz; stb; addi r4`).  In this binary
+    `stmw` only ever starts at r27 or lower (93×r27, 64×r26, 0×r28..r30): MWCC switches to stmw at
+    exactly 5 saved GPRs, so the three ghost registers are real allocations.
+*   Under `-O4,p` every `for` shape (`for(;n;n--)`, `for(i=0;i<n;i++)`, `dst[i]=dst[i-lb]`) becomes a ctr
+    loop but gets unrolled ×8 (`srwi. r0,rN,3` prologue); `do{}while(--n)` stays `subic./bne`; a
+    pointer-compare loop isn't ctr-converted; `volatile` reads/`volatile u8*` don't stop the unroller;
+    `#pragma opt_unroll_loops off` had no effect; `-O3` on the unit gives the same 31-line diff (and the
+    other 4 functions still match, so flags aren't the answer).  Still open: what source shape yields
+    a non-unrolled ctr loop here, and what occupied r28..r30.  Candidates tried are in
+    `.scratch/dd/` form: a..q.
