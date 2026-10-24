@@ -66,6 +66,16 @@ extern MenusSystemState lbl_803297E0;
 /* DOL character-select helpers used by fn_2_2FC0 (see .agent/character_select.md); same signatures as
    include/Unknown/gap_80064754.h and gap_80067AC8.h, repeated here because those headers' lbl_8034E9A0
    view conflicts with MenusSaveState. */
+/* Menus view of the DOL select-grid state lbl_803C6028 (include/Unknown/gap_800506E8.h has the DOL one;
+   its lbl_800E8558 view conflicts with MenusLineupChoice). */
+typedef struct MenusGridState {
+    u8 _pad0[0x28];
+    s8 slots[0x24];  /* 0x28 per grid cell (lbl_800FDE84): controller index that picked it, or -1 (fn_800506E8) */
+    u8 _pad4C[0x28];
+    u8 unk74[4];     /* 0x74 per controller index: 1 for the second side's pad when one pad drives both sides */
+} MenusGridState;
+extern MenusGridState lbl_803C6028;
+extern u8 lbl_800FDE84[36]; /* exhibition select-grid cells: base charID per cell, 0xFF = empty */
 extern u8 lbl_803CB748[6]; /* unique indices that need an unlock; g_d_GameSettings.charUnlocked[i] is their flag */
 void fn_800684A4(void);
 void fn_80067F70(s32 player);               /* auto-pick a free colour for player's selection */

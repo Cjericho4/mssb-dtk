@@ -38,7 +38,9 @@ typedef struct MenusGameChoiceState {
     u32 unk0;
     u8 _pad4[0xC];
     s32 selections[2];
-    u8 _pad18[0x2C];
+    u8 _pad18[8];
+    s32 gridPick[2]; /* 0x20 per side: charID the select-grid cursor starts on (fn_2_7DDC) */
+    u8 _pad28[0x1C];
     s32 option; /* 0x44 */
     u8 _pad48[8];
     u32 selection;

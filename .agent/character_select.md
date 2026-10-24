@@ -121,6 +121,17 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
      matched) finds the `lbl_800FDE84` grid cell holding charID's base and writes `value`
      (controller index) or -1 into `lbl_803C6028.slots[cell]`: that is the per-cell "picked by Pn"
      badge, keyed by **base charID**, so a clone donor's cell is what gets badged.
+   * `fn_2_7DDC(void)` (**matched 2026-10-23**): opens the roster screen (callers `fn_2_86EC`, `fn_2_CCBC`,
+     `fn_2_110B0`).  Clears the taken flags (not in challenge mode), builds the pad-role bytes for
+     `fn_80050FE8` (DOL stub) from `lbl_8034E9A0.controllerIndices` and `g_d_GameSettings._10`, sets both
+     cursors (`lbl_2_bss_F468.cursor[]`) to 10 (9 after menu 0xB or in challenge mode), then: challenge
+     mode = `markChallengeRecruits()` (recruited `starMissionCompletionTracker.missions[c]._31 == 1` ->
+     free, else taken; badge unless the family base is recruited) + team 0's charIDs taken with their
+     whole family; normal = `markLockedCharsTaken()` + both teams' charIDs taken/badged/family-taken.
+     Then per side `lbl_2_bss_F410.gridPick[side]` = charID 0 (P1) / 9 (P2), or the first free cell of
+     `lbl_800FDE84[0..31]`, placed with `fn_80050138` (DOL stub), and `fn_800625A4(side, 9|0xA)`.
+     Nothing in it chooses portraits/banners: everything is keyed by charID or by base charID
+     (`fn_800506E8`'s cell lookup).
 4. `fn_800415A8` (0xAD4): CPU team builder (colour columns 1..4).
 5. game.rel `fn_3_B4124`, `fn_3_10C450`: roster → `inMemRoster` copy (skin byte lands here).
 6. `fn_80067B40(arg0 unused, s16 charID, u8 value)`: 8 register-choice diffs left (key should land

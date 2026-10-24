@@ -15,6 +15,9 @@ extern s16 fn_80067AC8(s16 key, s8 column);
 extern void sndFXRelated(s32 id);
 #include "menus/rep_0568.h"
 #include "menus/gap_16870.h"
+#include "menus/gap_8782C.h"
+extern void fn_80050FE8(u8 pad0, u8 pad1, u8 pad2, u8 pad3, s32 arg4, s32 arg5);
+extern void fn_80050138(s32 arg0, s32 pick0, s32 pick1, s32 pick2, s32 pick3, s32 arg5);
 
 extern void fn_800AD038(u32 value);
 extern void fn_8004EEF4(s32 a, s32 b, s32 c, s32 d, s32 enabled);
@@ -691,9 +694,174 @@ void fn_2_7D44(void) {
     fn_2_16A74(3, 0);
 }
 
+/*
+ * Challenge mode: per charID, recruited characters (starMissionCompletionTracker.missions[c]._31 == 1)
+ * are free and un-badged; the others are taken, with the grid cell badged by controller 0 unless the
+ * character's colour-family base (fn_80067AC8(c, 0)) is already recruited.
+ */
+static inline void markChallengeRecruits(void) {
+    s32 i;
+    s32 base;
+    for (i = 0; i < 54; i++) {
+        if (starMissionCompletionTracker.missions[i]._31 == 1) {
+            lbl_8034E9A0.charTaken[i] = 0;
+            fn_800506E8(0, i, 0);
+        } else {
+            lbl_8034E9A0.charTaken[i] = 1;
+            base = fn_80067AC8(i, 0);
+            if (base != -1 && starMissionCompletionTracker.missions[base]._31 == 1) fn_800506E8(0, i, 0);
+            else fn_800506E8(0, i, 1);
+        }
+    }
+}
+
+/*
+ * Open the character-select (roster) screen: reset the select-grid state for both sides.
+ * Callers: fn_2_86EC, fn_2_CCBC, fn_2_110B0 (src/menus/gap_1254.c).
+ *
+ *   1. Outside challenge mode (g_d_GameSettings.GameModeSelected != 5) clear the 54 taken flags
+ *      (lbl_8034E9A0.charTaken, charsOnCharacterGridSelected); lbl_8034E9A0.unk48AD = 0;
+ *      lbl_803C66B0.unk0 = 2.
+ *   2. Pad roles pads[4] (one byte per controller) for fn_80050FE8 (DOL, stub): after the previous
+ *      menu 9 only unk5A is set; otherwise unk59 = (g_d_GameSettings._10 == 0 && !challenge).  With
+ *      _10 == 0 player 0's pad (lbl_8034E9A0.controllerIndices[0], +0x46F8) gets role 1 and the other
+ *      pad (1 if player 0 is on pad 0, else 0) role 2; with _10 != 0 both players' pads get role 1.
+ *      fn_80050FE8(pads, 0, !challenge), fn_2_7265C(), lbl_8034E9A0.unk472A = 0xFF.
+ *   3. Both cursors (lbl_2_bss_F468.cursor[0..1]) start at 10, or 9 after menu 0xB / in challenge
+ *      mode (9/10 are the two non-slot cursor positions, see fn_2_CE44 and fn_2_4970).
+ *   4. Taken flags and cell badges:
+ *      challenge mode: markChallengeRecruits() (per charID: recruited = free, otherwise taken with the
+ *        cell badged by controller 0 unless the family base is recruited), then every charID on team 0
+ *        (lbl_803C6724.first[i]) is taken, badged and its whole lbl_80108EDC colour family is taken
+ *        (walking the row until -1); lbl_2_bss_F468.flags37[0] = 1;
+ *      otherwise: markLockedCharsTaken() (locked uniques, lbl_803CB748), then every charID on both
+ *        teams is taken, badged with its owning pad (same rule as markSlotTaken, but written out:
+ *        -1 slots are skipped and the charID is re-read for each call) and its family is taken.
+ *   5. Per side: lbl_803C6028.unk74[controllerIndices[side]] = (_10 == 0 && side != 0);
+ *      lbl_2_bss_F410.gridPick[side] = side ? 9 : 0 (the charID the grid cursor starts on), moved to
+ *      the first free exhibition cell lbl_800FDE84[0..31] if that one is taken; then fn_80050138(1,
+ *      pick for pad 0..3, 0) (DOL, stub) places the pad's cursor there.
+ *   6. fn_800625A4(0/1, 0xA) after menu 9 or in challenge mode (unless coming from menu 0xB), else
+ *      (0/1, 9); lbl_803C66B0.unk0 = 2.
+ *
+ * Nothing here picks portraits or name banners: the grid is keyed by base charID (lbl_800FDE84
+ * cells, fn_800506E8 badges by lbl_800E8558[c].baseCharID) and the taken flags by charID.
+ *
+ * Match notes: the 54-charID recruit loop must be a static inline (its i/base webs then precede the
+ * strength-reduced walkers: i r23, walkers r24/r25).  The other three loops are plain code and share
+ * ONE variable `i` (team-0 slots, the outer side loop, and the final side loop: r24, r24, r27) with
+ * `k` for the inner slot loop (r23); declaring k before i or giving the final loop its own variable
+ * permutes r23/r24/r27.  The cursor condition is written `!= 0xB && != 5` with the 10 block first.
+ */
 // .text:0x00007DDC size:0x910
 void fn_2_7DDC(void) {
-    return;
+    u8 pads[4];
+    s32 i;
+    s32 k;
+    s32 cell;
+    s32 g;
+    s32 j;
+    s32 m;
+
+    if (g_d_GameSettings.GameModeSelected != 5) memset(lbl_8034E9A0.charTaken, 0, sizeof(lbl_8034E9A0.charTaken));
+    lbl_8034E9A0.unk48AD = 0;
+    lbl_803C66B0.unk0 = 2;
+    memset(pads, 0xFF, 4);
+    if (lbl_803CBBCC->previousSelection == 9) {
+        lbl_803C66B0.unk59 = 0;
+        lbl_803C66B0.unk5A = 1;
+    } else {
+        if (g_d_GameSettings._10 == 0 && g_d_GameSettings.GameModeSelected != 5) lbl_803C66B0.unk59 = 1;
+        else lbl_803C66B0.unk59 = 0;
+        lbl_803C66B0.unk5A = 1;
+    }
+    memset(pads, 0, 4);
+    if (g_d_GameSettings._10 == 0) {
+        pads[lbl_8034E9A0.controllerIndices[0]] = 1;
+        if (lbl_8034E9A0.controllerIndices[0] == 0) pads[1] = 2;
+        else pads[0] = 2;
+    } else {
+        pads[lbl_8034E9A0.controllerIndices[1]] = 1;
+        pads[lbl_8034E9A0.controllerIndices[0]] = 1;
+    }
+    if (g_d_GameSettings.GameModeSelected != 5) fn_80050FE8(pads[0], pads[1], pads[2], pads[3], 0, 1);
+    else fn_80050FE8(pads[0], pads[1], pads[2], pads[3], 0, 0);
+    fn_2_7265C();
+    lbl_8034E9A0.unk472A = 0xFF;
+    if (lbl_803CBBCC->previousSelection != 0xB && g_d_GameSettings.GameModeSelected != 5) {
+        lbl_2_bss_F468.cursor[0] = 10;
+        lbl_2_bss_F468.cursor[1] = 10;
+    } else {
+        lbl_2_bss_F468.cursor[0] = 9;
+        lbl_2_bss_F468.cursor[1] = 9;
+    }
+    if (g_d_GameSettings.GameModeSelected == 5) {
+        markChallengeRecruits();
+        for (i = 0; i < 9; i++) {
+            lbl_8034E9A0.charTaken[lbl_803C6724.first[i]] = 1;
+            fn_800506E8(0, lbl_803C6724.first[i], 1);
+            if (fn_80067B40(0, lbl_803C6724.first[i], 2)) {
+                for (g = 0; g < 9; g++) {
+                    for (j = 0; j < 5; j++) {
+                        if (lbl_803C6724.first[i] == lbl_80108EDC[g][j]) {
+                            for (m = 0; m < 5; m++) {
+                                if (lbl_80108EDC[g][m] == -1) goto next_k;
+                                lbl_8034E9A0.charTaken[lbl_80108EDC[g][m]] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+        next_k:;
+        }
+        lbl_2_bss_F468.flags37[0] = 1;
+    } else {
+        markLockedCharsTaken();
+        for (i = 0; i < 2; i++) {
+            for (k = 0; k < 9; k++) {
+                if (lbl_803C6724.teams[i][k] == -1) continue;
+                lbl_8034E9A0.charTaken[lbl_803C6724.teams[i][k]] = 1;
+                if (g_d_GameSettings._10 == 0 && i != 0) {
+                    if (lbl_8034E9A0.controllerIndices[0] == 0) fn_800506E8(1, lbl_803C6724.teams[i][k], 1);
+                    else fn_800506E8(0, lbl_803C6724.teams[i][k], 1);
+                } else {
+                    fn_800506E8(lbl_8034E9A0.controllerIndices[i], lbl_803C6724.teams[i][k], 1);
+                }
+                fn_80067B40(i, lbl_803C6724.teams[i][k], 1);
+            }
+        }
+    }
+    for (i = 0; i < 2; i++) {
+        if (g_d_GameSettings._10 == 0 && i != 0) lbl_803C6028.unk74[lbl_8034E9A0.controllerIndices[i]] = 1;
+        else lbl_803C6028.unk74[lbl_8034E9A0.controllerIndices[i]] = 0;
+        if (i != 0) lbl_2_bss_F410.gridPick[i] = 9;
+        else lbl_2_bss_F410.gridPick[i] = 0;
+        if (lbl_8034E9A0.charTaken[lbl_2_bss_F410.gridPick[i]] != 0) {
+            for (cell = 0; cell < 32; cell++) {
+                if (lbl_8034E9A0.charTaken[lbl_800FDE84[cell]] == 0 && lbl_800FDE84[cell] != 0xFF) {
+                    lbl_2_bss_F410.gridPick[i] = lbl_800FDE84[cell];
+                    break;
+                }
+            }
+        }
+        switch (lbl_8034E9A0.controllerIndices[i]) {
+        case 0: fn_80050138(1, lbl_2_bss_F410.gridPick[i], -1, -1, -1, 0); break;
+        case 1: fn_80050138(1, -1, lbl_2_bss_F410.gridPick[i], -1, -1, 0); break;
+        case 2: fn_80050138(1, -1, -1, lbl_2_bss_F410.gridPick[i], -1, 0); break;
+        case 3: fn_80050138(1, -1, -1, -1, lbl_2_bss_F410.gridPick[i], 0); break;
+        }
+    }
+    if (lbl_803CBBCC->previousSelection == 9) {
+        fn_800625A4(0, 0xA);
+        fn_800625A4(1, 0xA);
+    } else if (lbl_803CBBCC->previousSelection != 0xB && g_d_GameSettings.GameModeSelected == 5) {
+        fn_800625A4(0, 0xA);
+        fn_800625A4(1, 0xA);
+    } else {
+        fn_800625A4(0, 9);
+        fn_800625A4(1, 9);
+    }
+    lbl_803C66B0.unk0 = 2;
 }
 
 // .text:0x000086EC size:0x94

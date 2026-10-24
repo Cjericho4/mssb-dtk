@@ -410,3 +410,17 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
     `s8 family` (r25/r24).  `-inline noauto` in the RELs means every duplicated block really is a
     `static inline` in the source; fn_2_C698's body is one (`markSlotTaken`) and fn_2_C698 still
     matches as a one-line wrapper around it.
+*   **fn_2_7DDC (menus, matched): one loop variable reused across several plain loops is what sets
+    the saved-register pattern.** Target had r23/r24 for the counters of three loops and r27 for a
+    fourth.  Giving each loop its own `s32` always coloured the last loop's counter below its
+    walkers (r23/r24); the match came from one variable `i` for the team-0 slot loop, the outer
+    side loop and the final side loop (webs r24, r24, r27: the third web is created after that
+    loop's walkers) plus `k` for the inner slot loop, declared `i` then `k`.  Only the 54-entry
+    recruit loop needed a `static inline` (counter r23 ahead of its walkers, as in §13).  When a
+    counter permutation survives every declaration order, try *sharing* variables between loops
+    (and splitting a shared one) before reaching for helpers.
+*   A `lbz` + `cmpwi` (not `cmplwi`) against a small constant with no `extsb` means the byte field
+    is signed (`s8`): `starMissionCompletionTracker.missions[c]._31` is `E(s8, ...)` now.
+*   `if (a == X || b == Y) {P} else {Q}` and `if (a != X && b != Y) {Q} else {P}` differ in block
+    order: the target emits the block of the branch that falls through first, so pick the form whose
+    first block comes first in the asm (fn_2_7DDC's cursor 9/10 wanted the `!=`/`&&` form).
