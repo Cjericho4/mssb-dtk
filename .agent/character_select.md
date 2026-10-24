@@ -42,8 +42,14 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
      54 chemistry bytes (+0x3B..) and the ids 0..53 into two stack arrays, selection-sorts them by
      chemistry descending, and stores the sorted id list at `lbl_8034E9A0 + 0x478D + idx*54`
      ("characters ranked by chemistry with this player", used by the roster UI).
-   * `fn_80067F70` (0x534, stub): the remaining candidate for "next free colour" (loops bounded by
-     `0x36`, uses `lbl_80108EDC` + `fn_80067AC8`).  **Decompile this one first.**  menus.rel callers: `fn_2_2FC0`, `fn_2_3624`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_DFAC`
+   * `fn_80067F70(u8 idx)` (0x534, stub, asm read): the **auto-pick**.  Stores `selected[idx]` into
+     `lbl_803C6724[idx*9+2]`, calls `fn_80067C48(idx)` (chemistry ranking), builds a 54-byte stack
+     list of ranked ids whose taken flag is 0 (unrolled 9×6), compacts the −1 holes, then
+     `randRange_FUN_80042bf0(0, 19)` picks one of the first 20 candidates (retry while −1), marks it
+     taken and marks its whole `lbl_80108EDC` family taken (same walk as fn_80067B40).  So the "next
+     free colour" for a *human* pick is decided in menus.rel (fn_2_2FC0/3624/4970/7DDC/DFAC use
+     `fn_80067AC8(charID, column)` to step to the next family column); the DOL side only has the
+     taken flags, the family walk and this CPU picker.  menus.rel callers: `fn_2_2FC0`, `fn_2_3624`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_DFAC`
      (src/menus/gap_1254).  CPU teams: `fn_800415A8` tries family columns 1..4.
    * There is no colour button in the UI: the n-th pick of a family base gets the next free member.
 3. charID → roster: game.rel `fn_3_B4124` / `fn_3_10C450` memcpy the `CharacterStats` row (CharID at
@@ -83,8 +89,8 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
 
 1. `fn_80067C48` (0x328) and `fn_80067F70` (0x534), gap_80067AC8.c: the colour resolution; the
    skin hook goes here.  Both only use `lbl_80108EDC`, `lbl_8034E9A0` and `fn_80067AC8`.
-2. `fn_800698F8` (0x170): `findCharacterID`, grid index mapping (asm dumped above; a 32-entry
-   `mainCharArray` scan, then a 22-entry `secondaryCharacterArray` scan with a per-variant switch).
+2. `fn_800698F8` (0x170): decompiled (24 diffs: prologue hoist + local jump-table name), body in
+   gap_80067AC8.c; `lbl_8034E9A0.useAltBirdoGrid` (0x48AE) added to the struct.
 3. menus.rel `fn_2_2FC0`, `fn_2_3624`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_DFAC` (src/menus/gap_1254):
    the roster screen logic that calls the above.
 4. `fn_800415A8` (0xAD4): CPU team builder (colour columns 1..4).

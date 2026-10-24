@@ -72,12 +72,24 @@ typedef struct Gap80067AC8Stats {
     u8 _pad46E8[0x21]; u8 indices[2];
     u8 _pad470B[0x4757 - 0x470B];
     /* 0x4757 */ u8 charsOnCharacterGridSelected[54]; /* per-charID "taken" flag on the roster grid */
+    /* 0x478D */ u8 rankedByChemistry[5][54];          /* fn_80067C48: ids sorted by chemistry per selected player */
+    u8 _pad489B[0x48AE - 0x489B];
+    /* 0x48AE */ u8 useAltBirdoGrid;                   /* fn_800698F8: Birdo (grid 0x11) reports grid 0x20 once */
 } Gap80067AC8Stats;
 typedef struct Gap80067AC8RosterEntry { u8 _pad0[0x24]; s16 id; u8 _pad26[0x7A]; } Gap80067AC8RosterEntry;
 extern Gap80067AC8Stats lbl_8034E9A0;
 extern Gap80067AC8RosterEntry inMemRoster[2][9];
 void fn_80069854(void);
-void fn_800698F8(void);
+typedef struct Gap80067AC8PanicStrings {
+    char file[0x10];     /* "mb_subfunc.c" */
+    char notFound[0x1C]; /* 0x10 */
+    char badIndex[0x1C]; /* 0x2C */
+} Gap80067AC8PanicStrings;
+extern Gap80067AC8PanicStrings lbl_800E69B8;
+extern u8 lbl_80108DB8[33]; /* mainCharArray: grid index -> base charID */
+extern u8 lbl_80108DDC[22]; /* secondaryCharacterArray: colour-variant charIDs */
+void OSPanic(char* file, s32 line, char* msg, ...);
+s32 fn_800698F8(s32 charID);
 void fn_80069A68(void);
 void fn_80069A98(void);
 void fn_80069AD4(void);

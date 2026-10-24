@@ -136,8 +136,52 @@ void fn_80069854(void) {
 }
 
 // .text:0x800698F8 size:0x170
-void fn_800698F8(void) {
-    return;
+/* fn_800698F8 -- findCharacterID: charID -> roster-grid index (0..31, or 0x20 for the alternate
+ * Birdo cell when lbl_8034E9A0.useAltBirdoGrid is set; the flag is cleared on every call).
+ * Base characters are found in lbl_80108DB8 (mainCharArray, 32 scanned); colour variants in
+ * lbl_80108DDC map to their family base's grid cell (piantas 0x15, nokis 0x16, toads 0x0D,
+ * magikoopas 0x19, koopa 0x0C, paratroopa 0x14, shy guys 0x10, dry bones 0x1F, bros 0x17).
+ * A charID in neither table OSPanics ("mb_subfunc.c" lines 0x95/0x99).  Names, portraits and the
+ * announcer call-out are keyed by this index, which is why variants share their base's.
+ * Match status: NOT matched -- 24 lines: retail hoists &lbl_800E69B8 into r31 in the prologue and
+ * the switch's local jump table is named jumptable_801091F4; logic verified against the asm. */
+s32 fn_800698F8(s32 charID) {
+    s32 i;
+    s32 grid;
+    for (i = 0; i < 32; i++) {
+        if (lbl_80108DB8[i] == charID) {
+            if (i == 0x11 && lbl_8034E9A0.useAltBirdoGrid != 0) {
+                i = 0x20;
+            }
+            lbl_8034E9A0.useAltBirdoGrid = 0;
+            return i;
+        }
+    }
+    if (i == 0x20) {
+        for (i = 0; i < 22; i++) {
+            if (lbl_80108DDC[i] == charID) {
+                grid = charID;
+                switch (i) {
+                case 0: case 1: grid = 0x15; break;
+                case 2: case 3: grid = 0x16; break;
+                case 4: case 5: case 6: case 7: grid = 0x0D; break;
+                case 8: case 9: case 10: grid = 0x19; break;
+                case 11: grid = 0x0C; break;
+                case 12: grid = 0x14; break;
+                case 13: case 14: case 15: case 16: grid = 0x10; break;
+                case 17: case 18: case 19: grid = 0x1F; break;
+                case 20: case 21: grid = 0x17; break;
+                }
+                lbl_8034E9A0.useAltBirdoGrid = 0;
+                return grid;
+            }
+        }
+        if (i == 0x16) {
+            OSPanic(lbl_800E69B8.file, 0x95, lbl_800E69B8.notFound);
+        }
+    }
+    OSPanic(lbl_800E69B8.file, 0x99, lbl_800E69B8.badIndex);
+    return 0;
 }
 
 // .text:0x80069A68 size:0x30
