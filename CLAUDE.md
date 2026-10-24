@@ -79,32 +79,46 @@ The toolchain consists of:
 
 ### Rules (full text and rationale: `.agent/code_quality.md` §1)
 
-1. **Name only what you understand.** Otherwise keep `fn_`/`lbl_`/`unk_0xNN`. Rename in C, headers and
-   `config/GYQE01/**/symbols.txt` in one commit, then rebuild and check the match count.
-2. **Naming:** globals `g_camelCase`, file statics `s` + camelCase, static helpers lowerCamel
-   (`satAddS16`). Never keep Ghidra junk suffixes (`randRange_FUN_80042bf0` → `randRange`).
-3. **Struct fields:** `unk_0xNN` until understood, then a real name with a `/* 0xNN */` offset comment.
-   Padding is `_padNN[]`, never a named field.
-4. **One type per memory object, one prototype per function.** Every declaration of a function must
-   agree with its owning header and its definition. Stubs get the real signature, not `(void)`.
-5. **`STATIC_ASSERT(sizeof(T) == 0xNN)`** (`mssbTypes.h`) after any struct whose size a table or
-   stride depends on.
-6. **No `void*`, no `*(T*)((u8*)p + off)`** (see "Struct Usage" below).
+Apply these rules to new or cleaned-up game code. Legacy violations outside the cleanup scope
+can remain for a separate pass; SDK/library interfaces retain their established API types and names.
+
+1. **Name only what you understand.** Otherwise keep `fn_`/`lbl_` and offset-based field names.
+   Rename in C, headers and `config/GYQE01/**/symbols.txt` in one commit, then rebuild and check matches.
+2. **Naming:** named global variables use `g_camelCase`, file-static variables `s` + camelCase,
+   and static helpers lowerCamel (`satAddS16`). Preserve established subsystem conventions for
+   external functions. Remove Ghidra junk suffixes (`randRange_FUN_80042bf0` → `randRange`).
+3. **Struct fields:** new unknown fields use `unk_0xNN`; existing layouts also use `unkNN`/`unkN`.
+   Once understood, use a real name with a `/* 0xNN */` offset comment. Padding uses `_padNN[]`
+   (or a scalar byte for one byte), never a name that implies meaningful data.
+4. **One type per memory object, one prototype per function.** Include the owning header rather
+   than repeating declarations. Existing conflicting struct views may block inclusion; document
+   the conflict and any prototype disagreement until the types can be reconciled. A `FAKEMATCH`
+   note explains codegen, but does not establish type correctness. Stubs need evidence-backed
+   parameter/return declarations, not placeholder `(void)` signatures.
+5. **`STATIC_ASSERT(sizeof(T) == 0xNN)`** (`mssbTypes.h`) after non-trivial structs with known complete
+   layouts, especially those used as table elements or strides. Add offset checks where needed;
+   do not claim the size of a partial view is the full object's size.
+6. **Use typed structs for objects, not `void*` or manual byte offsets** (see "Struct Usage" below).
+   File-buffer relocation may convert offsets to pointers inside a clearly named relocation helper.
 7. **No meaningful magic numbers:** charIDs use `CHAR_ID` (`CHAR_ID_NONE`, `NUM_CHOOSABLE_CHARACTERS`);
-   add an enum or `#define` for other IDs, counts and flags. Pure arithmetic literals are fine.
-8. **One-line summary above every non-trivial function** saying what it does for the game, with units
-   (frames, cents, fixed-point) where relevant. Keep the `// .text:0x... size:0x...` header.
+   use existing constants or add an enum/`#define` for other IDs, counts and flags. Pure arithmetic
+   literals and saturation limits are fine.
+8. **One-line summary above every non-trivial implemented function** saying what it does for the game,
+   with units (frames, cents, fixed-point) where relevant. Keep the `// .text:0x... size:0x...` header.
+   Empty unmatched stubs do not need invented descriptions.
 9. **Mark every matching trick** with `/* FAKEMATCH: <what it forces> */`: register-only temporaries,
-   odd casts, reordered statements, pragmas, inlines kept only for codegen. A pragma that changes
-   nothing is deleted, not kept "just in case".
+   odd casts, reordered statements, pragmas, inlines kept only for codegen. Delete a pragma when
+   removing it preserves matches and does not regress affected functions.
 10. **No slop in committed code:** no m2c names (`temp_r3`, `var_r31`, `arg0`, `sp10`) in matched
     functions, no commented-out attempts, no unused locals, no numbered copy-paste helpers.
 
 ### Struct Usage
 
-**NEVER use pointer arithmetic with manual offsets.** Always define and use proper structs.
+**Do not access object fields through manual byte offsets.** Define and use proper structs.
+File-buffer relocation is the limited exception described in rule 6.
 
-**NEVER use void* as an argument or return type.** Always define structs to represent needed arguments.  Name the structs based off their usage.
+**Use typed arguments and return values for game objects.** Name structs after their usage.
+Preserve SDK/library APIs; opaque file buffers can use byte pointers until their layout is understood.
 
 **BAD - Pointer Arithmetic:**
 
@@ -119,12 +133,12 @@ f32 getField(void* arg0) {
 ```c
 // In the appropriate header file
 typedef struct {
-    u8 _pad[0x94];
+    u8 _pad0[0x94];
     f32 someField;  // 0x94
 } SomeStruct;
 
-f32 getField(SomeStruct* arg0) {
-    return arg0->someField;
+f32 getField(SomeStruct* object) {
+    return object->someField;
 }
 ```
 
@@ -152,7 +166,7 @@ If you write code with pointer arithmetic:
 - **STOP immediately**
 - Create proper struct definitions first
 - Then write the function using struct access
-- This applies even if the pointer arithmetic "works" - it's always wrong in a decompilation project
+- This applies to object-field access; use the rule 6 helper exception for file relocation.
 
 ## Tasks
 
