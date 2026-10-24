@@ -97,3 +97,50 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
 5. game.rel `fn_3_B4124`, `fn_3_10C450`: roster → `inMemRoster` copy (skin byte lands here).
 6. `fn_80067B40(arg0 unused, s16 charID, u8 value)`: 8 register-choice diffs left (key should land
    in r7, walkers r6/r4); value == 2 is the "query only" mode.
+
+## 6. UI / announcer lookup map (2026-10-23, pass 5) and the `--ui source` patch
+
+Everything that *presents* a character is keyed by the **unique index** (0..31, one per distinct
+character; variants share their base's) or, for one HUD element, by **charID** into a per-charID
+texture set.  The two unique-index routes agree for all 54 retail charIDs (test_clone.py checks it):
+`lbl_800E8558[charID].uniqueIdx` == `fn_800698F8(charID)`.
+
+| What | Keyed by | Lookup | Asset |
+|---|---|---|---|
+| Announcer name call-out | unique (via `fn_800698F8`) | `fn_800628D4(charID)` (matched this pass): `useAltBirdoGrid = 1; sfx = lbl_80108DF4[grid]; sndFXStartEx(sfx, lbl_80108B18[0], 63, 0); sndFXCtrl(h, 0x5B, 0)` | `lbl_80108DF4` 33 u16 SFX ids 0x1C4..0x1E5 (Musyx group loaded by menus/game; entry 0x20 = Birdo alt).  Callers: menus `fn_2_12A70` (captain pick), game `fn_3_10CC20` x2 (batter/pitcher intro), `fn_3_B49D4` |
+| Character voice bank | unique (via `fn_800698F8`) | game `fn_3_90F48` / `fn_3_90B14` / `fn_3_5A28C`: `fn_800216F8(grid + 5, cb)` then `fn_80021518(lbl_3_data_8148[grid], file)` = `sndPushGroup` | `lbl_800EF508[5 + grid]` (48 DiskFileDesc, uncompressed Musyx project/sdir/pool files in ZZZZ.dat; 0..4 and 38..47 are common/stadium banks), group id `lbl_3_data_8148[33]` (game.rel .data 0x8148) |
+| Per-grid gameplay row | unique (via `fn_800698F8`) | DOL `fn_8004B284`: `lbl_800FBF10 + 0x214 + grid*14 + k*2` -> `getAnimRelatedCoordinates` | `lbl_800FBF10` (u16[33][7] at +0x214) |
+| Small portraits in menus (lineup/team/results) and in-game | unique (`lbl_800E8558[c].uniqueIdx`) | menus `fn_2_4EB2C` (slot 0x15), `fn_2_5ED3C` (slot 0xA); game `fn_3_59F40` (slot 0x14) via `fn_80035838(desc, slot)` | ZZZZ.dat 0x18ED7000 (menus `lbl_2_data_1324C` / `lbl_2_data_20BF0`, game `lbl_3_data_3D60+0x70`): 180 textures, the 32 CI8 50x50 at indices 53..84 are unique 0..31 (byte-identical to the 54-file's for the 26 base cells) |
+| HUD batter/pitcher card | **charID** | game `fn_3_91D1C` (rep_16B8): pane frame `pane->unk5C = stats.CharID << 16` (also `fn_3_EA340`, `fn_3_EAEF4`, `fn_3_EB6E0`, `fn_3_11F02C`, `fn_3_121304`, `fn_3_127B68`, `fn_3_11E364/7C4`) | ZZZZ.dat 0x1A6B3000 (DOL `lbl_800EEFD0+0x10` -> slot 0xD in `fn_80020388`, `lbl_800E8AA8+0x70`; game `lbl_3_data_21EC8/F538/10598 +0x10`): 102 textures, the 54 CI8 50x50 + 256-entry RGB5A3 TLUT at indices 30..83 are charID 0..53 (each colour variant has its own) |
+| Name banners (menus) | unique (presumed; not traced to a draw site) | `fn_2_4E970` loads `lbl_2_data_132DC` into slot 0x17 | ZZZZ.dat 0x19135800: 75 x 420x20 + 64 x 400x20 CI4 |
+| Records / star screens | unique, only if `isBase` | `fn_2_1C860`, `fn_2_45204`, `fn_2_454E8`, `fn_8006CDC0`: `lbl_80109AE8 + unique*0x64` | DOL `lbl_80109AE8` |
+| Unlock flags | unique | `fn_2_348C`, `fn_2_7DDC`: `lbl_803CB748` (6 locked uniques) -> taken flag per charID | |
+| Select grid cells | **grid cell -> base charID** (not the reverse) | `lbl_800FDE84`, `lbl_800FE5D4`, `fn_2_F200` scans `lbl_80108DB8`, `fn_800675C4` | untouched by the patcher |
+| Gameplay checks by kind | unique | game `rep_1200` (`lbl_3_data_76FC[unique*3]`), `gap_106DFC` (`lbl_803616CC + unique*0x16`), `cmplwi 0x19/0xE/0x14/0x1A/0x1E` special cases, `fn_3_6BD6C` | |
+
+Not presentation: `lbl_800EF508` was first mistaken for portraits; it is sound only (`fn_80021518` is
+`sndPushGroup`).  `fn_80035838(desc, slotId)` loads a UI resource into a numbered slot,
+`fn_80035B50(id)` finds the slot, `fn_800363D8(layout, pane, field, list, index)` sets a pane texture.
+
+### What the patcher does (`clone_character.py --ui source`, default)
+
+1. `lbl_800E8558[S].uniqueIdx := lbl_800E8558[C].uniqueIdx` (family/base/colour untouched, so the
+   colour assignment on the grid still works).
+2. `fn_800698F8` head (DOL 0x800698F8, 16 instructions) rewritten to `return lbl_800E8558[charID].uniqueIdx`
+   with the Birdo flag contract kept (`cmpwi 0x11` / `useAltBirdoGrid` -> 0x20, flag cleared on every
+   return).  **No data-only route exists for a variant donor:** the switch cases are `li r3, <base cell>`
+   (no `li r3, 0`), `mainCharArray` holds one charID per cell, and the variant loop count (0x16) and the
+   jump table are fixed; pointing a jump-table entry at the `li r3, 0` after `OSPanic` would skip the
+   flag clear.  `lbl_80108DB8` / `lbl_80108DDC` / `jumptable_801091F4` are left alone (`fn_2_F200`
+   iterates `mainCharArray` as the candidate list).
+3. HUD portrait file: texture `30 + S` := texture `30 + C` (CI8 indices copied, TLUT recoloured with the
+   slot's spec), file re-packed with the optimal LZSS encoder **in place** (134-135 KB vs the retail
+   136224 B slot; descriptors untouched because the uncompressed size is unchanged and the decoder stops
+   at it).
+4. Nothing per grid index is copied (announcer SFX, voice bank, `fn_8004B284` row): with 1+2 the clone
+   resolves to the source's grid index everywhere.
+
+Consequences: a colour-variant donor (Toad 29..32, Shy Guy 44..47, ...) keeps the select grid intact
+and shows/sounds as the source in lineups, HUD, results and the announcer.  A main-character donor
+(Luigi) is itself the clone: its grid cell shows the source's face/name (two "Mario" cells) and, being
+`isBase`, its records row becomes the source's.  `--ui donor` skips 1..3.
