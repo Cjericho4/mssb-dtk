@@ -698,11 +698,14 @@ static inline u8 loadStadiumObject(u8 charID, s32 slot, Gap8001196CStadiumObj* o
  * Chain position: runs after fn_8001758C/fn_80017814 built the actor; the model files themselves
  * are not touched here.  Variant hook: none for a texture skin; a model-swapping skin only needs
  * the lbl_800EEB18 lookup keyed on (charID, skin).
- * Match status: NOT matched -- only the two state-4 CSE temps (&slots[slot].fileBuffer and
- * slot*0x27c) are allocated r26 after the params here but r30/r29 before them in the target;
- * everything else is identical. */
+ * Match status: NOT matched (32 lines, 2026-10-24) -- only the two state-4 CSE temps
+ * (&slots[slot].fileBuffer and slot*0x27c) are allocated r26/r30 here but r30/r29 (above the
+ * params r26..r28) in the target; everything else is identical.  charID is an s32 parameter (the
+ * target passes it to fn_80017098 with a plain mr) that the inlined helper takes as u8.  Tried: an
+ * explicit `u8** fileBuffer` local (materialised eagerly, worse), helper parameter order, `!x`
+ * forms; see .agent/decomp_knowledge.md section 14. */
 // .text:0x80016344 size:0x3CC
-BOOL fn_80016344(u8 charID, s32 slot, u8 stance, s32 player) {
+BOOL fn_80016344(s32 charID, s32 slot, u8 stance, s32 player) {
     if (g_hugeAnimStruct.loadState == 6) {
         return TRUE;
     }
@@ -753,10 +756,11 @@ BOOL fn_80016344(u8 charID, s32 slot, u8 stance, s32 player) {
  * fn_80012B90 and returns TRUE without clearing loadState; other states queue
  * fn_80017098(0, 0, 0, slot, 1, charID).  Returns TRUE when loaded.
  * Variant hook / tables: as fn_80016344.
- * Match status: NOT matched -- same two CSE temps as fn_80016344, swapped (r29/r30) inside each
- * inlined loadStadiumObject copy; everything else identical. */
+ * Match status: NOT matched (28 lines, 2026-10-24) -- same two CSE temps as fn_80016344, swapped
+ * (r29/r30) inside each inlined loadStadiumObject copy (the target itself swaps them between its
+ * two copies); everything else identical. */
 // .text:0x80016710 size:0x450
-BOOL fn_80016710(u8 charID, s32 slot) {
+BOOL fn_80016710(s32 charID, s32 slot) {
     if (g_hugeAnimStruct.loadState == 6) {
         return TRUE;
     }

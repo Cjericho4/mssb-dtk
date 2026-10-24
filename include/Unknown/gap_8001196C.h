@@ -24,8 +24,8 @@ void fn_80014F40(void);
 BOOL fn_8001500C(s32 team, s32 player, s32 slotKind);
 void fn_80015468(void);
 void fn_8001594C(void);
-BOOL fn_80016344(u8 charID, s32 slot, u8 stance, s32 player);
-BOOL fn_80016710(u8 charID, s32 slot);
+BOOL fn_80016344(s32 charID, s32 slot, u8 stance, s32 player);
+BOOL fn_80016710(s32 charID, s32 slot);
 BOOL fn_80016F7C(void);
 typedef struct Gap8001196CModelFile { u8 _pad0[0x10]; u8* unk10; } Gap8001196CModelFile; /* relocated .gpc root header */
 /* a loaded extra model (stadium object or a character's bat/glove sub-item) */
