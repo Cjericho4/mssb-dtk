@@ -250,14 +250,14 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 
 ### Known Unfixable Patterns (don't spend attempts)
 *   **Unrolled g_Runners loops with regs off-by-one in allocation order** (fn_3_88C24, fn_3_8A618) and **`lis r3/r4` swap after PSVECScale** (fn_3_E4658, E4760, E48D0): no loop/inline/reorder form fixed them.
-*   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.
-*   **`lwzu` on a global counter** (`lis; lwzu r3,sym+0x8@l(r4); stw r3,0(r4)`): no struct/union/pointer form reproduces it; likely a separate static in the original (fn_3_16943C).
+*   **Dead double `b end; b end` after a 2-case switch dispatch** (`cmpwi 1; beq; bge; cmpwi 0; bge; b; b`): default/return/case-order/local tried. Before giving up, try the two later fixes for dead branches in dispatches: a case body that is `return;` (§6) and explicit adjacent empty `case N: break;` arms (§9). Seen in 22 unmatched fns incl. fn_3_21C90, fn_3_21DE4, fn_3_3904, fn_3_39858, fn_3_45394, fn_3_BD504, fn_3_E7B20, fn_3_EC014, fn_3_1133C4, fn_3_15FB84.
+*   **`lwzu` on a global counter** (`lis; lwzu r3,sym+0x8@l(r4); stw r3,0(r4)`): no struct/union/pointer form reproduces it; likely a separate static in the original (fn_3_16943C). A `sym+N@l` addend is the merged-symbol signature of §8: try splitting the symbol.
 *   **File-static bss block off one base with array members** (rep_18E8 lbl_3_bss_17F8..1900): overlay struct works for scalars (sta_c0 9F38) but array sub-bases get folded; real `static` defs don't help under `-pool off` (fn_3_A2B6C, fn_3_A2C9C; also fn_3_EECF4, fn_3_1048E0).
-*   **Same-file static data off one base register** (`addi r4,r31,0x4f44` from `&lbl_3_data_1C0A8`): extern symbols reload `lis`/`addi` per use (fn_3_1048E0).
+*   **Same-file static data off one base register** (`addi r4,r31,0x4f44` from `&lbl_3_data_1C0A8`): extern symbols reload `lis`/`addi` per use (fn_3_1048E0). **Solved in the DOL:** define the data as initialized arrays in the same unit and give the unit a `.data` split; MWCC then addresses all of them off one anchor (`fn_8002204C` / `fn_80021CA4`, `character_modding_report.md` §6). Not yet tried for fn_3_1048E0 (game.rel, `-pool off`).
 *   **Adjacent-constant compares merged into a range check** (`== 9 || == 10` → `subi`/`cmplwi 1`) when the target keeps them separate (fn_3_B7CDC, fn_3_B7C2C). **Possible workaround** (worked for fn_3_5C418): compare as unsigned, `(u32)x == 1 || (u32)x == 2`, and write intended ranges as `(u8)(x - 0x13) <= 3`. Retry B7CDC/B7C2C with this.
 *   **Field offset `0x34` folded into the index of an `lwzx`** instead of the base (rep_3310: fn_3_119EE0, fn_3_119E30, fn_3_11881C, fn_3_11897C, fn_3_1194AC).
 *   **Nested-struct field load folded** (`addi r3,r31,0x10; lwz r3,0xc(r3)` → `lwz 0x1c(r31)`) (fn_3_A32B8).
-*   **Same callee with differing arg counts in one file** (`fn_800216F8`: 2 args in fn_3_90860/90928/90A18, 3 in fn_3_90C14) — one prototype can't satisfy both.
+*   **Same callee with differing arg counts in one file** (`fn_800216F8`: 2 args in fn_3_90860/90928/90A18, 3 in fn_3_90C14) — one prototype can't satisfy both; an unprototyped declaration (next subsection) is the untried workaround. Check the callee's prologue for the real count first (§14).
 
 ### Unprototyped Calls (`fn_80034E20`)
 `fn_80034E20` is declared without a prototype (`void fn_80034E20();`), so call it with the arguments the target actually passes. Most callers pass two (no `r5` setup); adding a third `&lbl_803CC1B8` argument was the cause of several "NONMATCHING: 2-arg call" notes.
@@ -275,6 +275,7 @@ A comprehensive context gatherer.
 An instruction-level analyzer for iterative refinement.
 *   **Usage**: `python3 tools/feedback_diff.py game/game/game_batter atBat_batter`
 *   **Focus**: Identifies **Missing**, **Extra**, and **Mismatched** operands (offsets/constants) while ignoring register swaps in the early stages.
+*   **Diff counts in `.agent/` docs** ("N lines") are the number of feedback entries it prints: `python3 tools/feedback_diff.py <fn> | grep -c 'Mismatch\|Missing\|Extra'`. It prints every entry (no cap). Counts drift when shared headers change, so treat them as size hints and re-run before quoting.
 
 Always use feedback_diff.py to compare the decompiled code to the original assembly.
 
@@ -318,7 +319,7 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
 *   **`frsp` after `fadds`** on a +-constant adjustment disappears with an if/else; a ternary emits it (fn_3_433E0).
 *   **Argument load order follows parameter order**: if `f1` loads before `r3`, the prototype is `(f32, s16)`, not `(s16, f32)` (fn_3_B7E44).
 *   **Insights from Fable's batch**: declare an element pointer BEFORE a `Vec v = {...}` initializer (fn_3_FD51C). Use an `s8` field and `s8` local for repeated `extsb` per compare (fn_3_E11E0). Use `sinf_kludge`/`cosf_kludge` instead of out-param `getComponentsFromRad` (fn_3_9F79C). Write `g_hugeAnimStruct.entries_2D94[k]` with k = offset/0x28 instead of "Ext" casts (fn_3_119878). Take `e = &t[i]` as the first loop statement to order strength-reduced walkers, and use `do {} while (++i < N)` to keep a base init before a call (fn_3_1356F8).
-*   **`tools/feedback_diff.py` caps its output at 10 lines**: count the `*` lines from `tools/sbs.py` for a true diff size, and treat a failed build as "no result" (sbs shows the previous build).
+*   **Diff size:** count `tools/feedback_diff.py` entries (§2) or the `*` lines from `tools/sbs.py`; treat a failed build as "no result" (sbs shows the previous build).
 
 ## 7. Allocation-order findings from the fable-stuck pass (2026-10-16)
 
@@ -368,16 +369,10 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
 *   Under `-O4,p` every `for` shape (`for(;n;n--)`, `for(i=0;i<n;i++)`, `dst[i]=dst[i-lb]`) becomes a ctr
     loop but gets unrolled ×8 (`srwi. r0,rN,3` prologue); `do{}while(--n)` stays `subic./bne`; a
     pointer-compare loop isn't ctr-converted; `volatile` reads/`volatile u8*` don't stop the unroller;
-    `#pragma opt_unroll_loops off` had no effect; `-O3` on the unit gives the same 31-line diff (and the
+    `#pragma opt_unroll_loops off` had no effect; `-O3` on the unit gives the same diff (and the
     other 4 functions still match, so flags aren't the answer).  Still open: what source shape yields
     a non-unrolled ctr loop here, and what occupied r28..r30.  Candidates tried are in
     `.scratch/dd/` form: a..q.
-*   fn_80016344 / fn_80016710 (shelved 2026-10-23): making `&g_hugeAnimStruct.slots[slot].fileBuffer`
-    an explicit first local (`Gap8001196CModelFile** file`) in the inlined `loadStadiumObject` does not
-    change the allocation: the params still take r27..r29 and the address temp r26.  Target wants the
-    address temp in r30 and `slot*0x27c` in r29, params in r26..r28.  Next idea: give the helper its
-    own `slot`-derived pointer parameter from the caller (so the temp exists before the params are
-    first used), or move the state-4 body out of the inline helper.
 
 ## 13. Nested loop in a static inline: web order and promoted-load write-back (Fable, 2026-10-23)
 
@@ -452,8 +447,10 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
     so it takes two arguments; the apparent third (`obj` in r5) was the address materialisation.
 *   **Two CSE temps vs. parameters (fn_80016344/fn_80016710, still open):** the target colours
     `slot*0x27c` r29 and `&slots[slot].fileBuffer` r30 above the params r26..r28 (and swaps them
-    between the two inlined copies in fn_80016710).  Tried this pass: an explicit `u8** fileBuffer`
-    local (materialised eagerly, worse) and the helper's parameter order (no change).
+    between the two inlined copies in fn_80016710).  Tried: an explicit `u8** fileBuffer` /
+    `Gap8001196CModelFile** file` first local in the inlined `loadStadiumObject` (materialised
+    eagerly, worse) and the helper's parameter order (no change).  Untried: pass a `slot`-derived
+    pointer into the helper from the caller, or move the state-4 body out of the inline.
 *   **Inlined loop with a raw byte reused by two `(s8)` compares** (fn_8001500C): the target keeps the
     `lbz` in a register and re-extends (`extsb`) at each compare; `(s8)(flag = p->index1) != -2` in
     the loop condition plus `(s8)flag == -1` in the body gives that shape (one load, two `extsb`).
