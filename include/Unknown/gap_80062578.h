@@ -55,7 +55,9 @@ typedef union Gap80062578Words {
 } Gap80062578Words;
 extern Gap80062578Words lbl_803C663C;
 typedef struct Gap80062578Stats {
-    u8 _pad0[0x48B3];
+    u8 _pad0[0x48AE];
+    /* 0x48AE */ u8 useAltBirdoGrid; /* fn_800698F8: Birdo (grid 0x11) reports grid 0x20 once */
+    u8 _pad48AF[0x48B3 - 0x48AF];
     /* 0x48B3 */ u8 unk48B3;
 } Gap80062578Stats;
 extern Gap80062578Stats lbl_8034E9A0;
@@ -76,7 +78,11 @@ s32 fn_800627F8(void);
 void fn_8006282C(void);
 s32 fn_8006285C(void);
 u32 fn_80062890(s32 index);
-void fn_800628D4(void);
+extern u16 lbl_80108DF4[]; /* announcer name call-out SFX per grid index (33) */
+extern u8 lbl_80108B18[];  /* [0] = call-out volume */
+s32 fn_800698F8(s32 charID);
+u32 sndFXCtrl(u32 handle, u8 ctrl, u8 value);
+u32 fn_800628D4(s32 charID);
 void fn_80062948(void);
 void fn_8006295C(void);
 void initializeUnknown(void);

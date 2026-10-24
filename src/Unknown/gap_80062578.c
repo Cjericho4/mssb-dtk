@@ -79,8 +79,17 @@ u32 fn_80062890(s32 index) {
 }
 
 // .text:0x800628D4 size:0x74
-void fn_800628D4(void) {
-    return;
+/* Announcer name call-out for a character: the SFX is keyed by the roster-grid index
+ * (fn_800698F8), so colour variants share their base's call-out.  useAltBirdoGrid is set so that
+ * Birdo (grid 0x11) uses the alternate entry 0x20 of lbl_80108DF4.  Returns the voice handle. */
+u32 fn_800628D4(s32 charID) {
+    u32 handle;
+    u16 sfx;
+    lbl_8034E9A0.useAltBirdoGrid = 1;
+    sfx = lbl_80108DF4[fn_800698F8(charID)];
+    handle = sndFXStartEx(sfx, lbl_80108B18[0], 63, 0);
+    sndFXCtrl(handle, 0x5B, 0);
+    return handle;
 }
 
 // .text:0x80062948 size:0x14

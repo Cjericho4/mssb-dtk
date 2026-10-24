@@ -1,5 +1,5 @@
 #include "menus/rep_0438.h"
-extern void fn_800628D4(s32 player);
+extern u32 fn_800628D4(s32 charID);
 extern u8 lbl_2_bss_100B4;
 #include "menus/gap_4B1AC.h"
 #include "menus/gap_D08.h"
