@@ -1458,10 +1458,21 @@ extern UnkSimulationRelatedStruct unkSimulationRelatedStruct;
 
 extern f32 vecDotProduct(VecXYZ* a, VecXYZ* b);
 
+/* Challenge-mode lineup entry written by the roster "ready" action (menus fn_2_3624 / fn_2_5444)
+   from the team-0 roster; fn_2_33BC compares the batting orders. */
+typedef struct _ChallengeLineupEntry {
+    /*0x0*/ s16 charID;
+    /*0x1*/ u8 slot;
+    /*0x3*/ s8 order;
+    /*0x4*/ u8 _pad4[2];
+} ChallengeLineupEntry; // size: 0x6
+
 // Whole 0x4508-byte block at 0x80361C50 (Ghidra splits it into several labels).
 typedef struct _ChallengeSaveData {
     /*0x0000*/ ChallengeTrackingStruct missions[54];
-    /*0x0AF8*/ u8 _padAF8[0x43D6 - 0xAF8];
+    /*0x0AF8*/ u8 _padAF8[0x40B8 - 0xAF8];
+    /*0x40B8*/ ChallengeLineupEntry lineup[9];
+    /*0x40EE*/ u8 _pad40EE[0x43D6 - 0x40EE];
     /*0x43D6*/ u8 unk43D6[54];
     /*0x440C*/ u8 _pad440C[0x4415 - 0x440C];
     /*0x4415*/ u8 challengeDifficulty;

@@ -326,11 +326,10 @@ void fn_2_323C(void) {
 
 // .text:0x000033BC size:0xD0
 s32 fn_2_33BC(void) {
-    MenusLineupView* view = (MenusLineupView*)&starMissionCompletionTracker;
     s32 result = 1;
     s32 i;
     for (i = 1; i < 9; i++) {
-        if (view->lineup[0].value == view->lineup[i].value) result = 0;
+        if (starMissionCompletionTracker.lineup[0].order == starMissionCompletionTracker.lineup[i].order) result = 0;
     }
     return result;
 }
@@ -397,6 +396,11 @@ static inline void markSlotTaken(u8 index, u8 side) {
     }
 }
 
+/* Put charID `id` into roster slot `slot` of `side` (lbl_803C6724.teams). */
+static inline void setTeamSlot(u8 side, u8 slot, s32 id) {
+    lbl_803C6724.teams[side][slot] = id;
+}
+
 /* Close the side's roster popup if one is open (flags45[side]); returns 1 when it did (the button
    press is then consumed).  Body of fn_2_35D0, inlined into fn_2_3624. */
 static inline s32 closePopup(u8 index) {
@@ -413,9 +417,355 @@ s32 fn_2_35D0(u8 index) {
     return closePopup(index);
 }
 
+/*
+ * Handle one controller's input while editing the character-select roster. `pad` is the
+ * controller-input index; lbl_803C66B0.padSide maps it to a team. A pending flags5D UI command
+ * blocks input. Directions follow the roster's 0..8 layout, with 9 = ready and 10 = clear team;
+ * a popup uses left/right to choose its column instead of moving the roster cursor.
+ *
+ * A confirms ready or picks up/swaps batting-order positions; B cancels a move; R closes a
+ * popup/cancels editing; L cycles a roster character's colour family; Z opens the slot popup.
+ * lbl_2_bss_F468 holds cursors, popup/move state and ready flags. lbl_803C6724 holds charIDs and
+ * order[side][slot], which maps physical slots to cursor positions. Colour cycling searches
+ * lbl_80108EDC's 9 x 5 family table, rejects a colour already present on either team, writes the
+ * new charID and calls markSlotTaken to update charTaken, grid badges and family taken flags.
+ *
+ * Ready uses lbl_2_bss_100B8.selectionFlags and lbl_803CBBCC->state to advance the scene. In
+ * one-pad play it transfers input to team 1 and places that team's grid cursor via fn_80050138
+ * (lbl_2_bss_F410.gridPick, lbl_800FDE84 and controllerIndices). Challenge ready copies team 0
+ * into inMemRoster, starMissionCompletionTracker.lineup and lbl_80354720 before leaving.
+ * Cursor/move changes request the DOL UI transition with fn_800625A4(side, command); this handler
+ * does not load portrait/name textures. Sound IDs 0x1B7..0x1BF use lbl_800EFBA4's menu volumes.
+ *
+ * Match-sensitive details: side is s32 and declared last; slot follows the swap temporaries.
+ * The challenge copies chain their two destinations to preserve the original load/store order.
+ */
 // .text:0x00003624 size:0x134C
 void fn_2_3624(u8 pad) {
-    return;
+    MenusPlayerInput in;
+    u8 handled;
+    s32 k;
+    s32 i;
+    s32 j;
+    s32 next;
+    s32 t;
+    s32 cell;
+    s32 b;
+    s32 vb;
+    s32 a;
+    s32 va;
+    s8 slot;
+    s8 c;
+    s8 state;
+    s32 n;
+    s32 side;
+    side = lbl_803C66B0.padSide[pad];
+    memset(&in, 0, sizeof(in));
+    if (lbl_803C66B0.flags5D[side] != 0) return;
+    in.unk0 = lbl_8034E9A0.input[pad].unk0;
+    in.unk2 = lbl_8034E9A0.input[pad].unk2;
+    in.buttons = lbl_8034E9A0.input[pad].buttons;
+
+    if (in.buttons & 8) {
+        if (lbl_2_bss_F468.flags45[side] != 0) return;
+        if (lbl_2_bss_F468.cursor[side] == 9) {
+            lbl_2_bss_F468.cursor[side] = 2;
+            fn_800625A4(side, 0xE);
+            sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+            return;
+        }
+        if (lbl_2_bss_F468.cursor[side] == 10) {
+            if (lbl_2_bss_F468.flags37[side] != 0) {
+                lbl_2_bss_F468.cursor[side] = 9;
+                fn_800625A4(side, 0x18);
+            } else {
+                lbl_2_bss_F468.cursor[side] = 2;
+                fn_800625A4(side, 0xE);
+            }
+            sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+            return;
+        }
+        lbl_2_bss_F468.prevCursor[side] = lbl_2_bss_F468.cursor[side];
+        switch (lbl_2_bss_F468.cursor[side]) {
+        case 0: lbl_2_bss_F468.cursor[side] = 5; break;
+        case 1: lbl_2_bss_F468.cursor[side] = 0; break;
+        case 2: lbl_2_bss_F468.cursor[side] = 8; break;
+        case 3: lbl_2_bss_F468.cursor[side] = 7; break;
+        case 4: lbl_2_bss_F468.cursor[side] = 6; break;
+        case 5: lbl_2_bss_F468.cursor[side] = 7; break;
+        case 6: lbl_2_bss_F468.cursor[side] = 4; break;
+        case 8:
+            if (lbl_2_bss_F468.flags37[side] != 0 && lbl_2_bss_F468.unk5F[side] == 0) lbl_2_bss_F468.cursor[side] = 9;
+            else lbl_2_bss_F468.cursor[side] = 2;
+            break;
+        case 7: lbl_2_bss_F468.cursor[side] = 1; break;
+        }
+        if (lbl_2_bss_F468.prevCursor[side] != lbl_2_bss_F468.cursor[side]) fn_800625A4(side, 0xE);
+        sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+        return;
+    }
+    if (in.buttons & 4) {
+        if (lbl_2_bss_F468.flags45[side] != 0) return;
+        if (lbl_2_bss_F468.cursor[side] == 9) {
+            lbl_2_bss_F468.cursor[side] = 8;
+            fn_800625A4(side, 0xE);
+            sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+            return;
+        }
+        lbl_2_bss_F468.prevCursor[side] = lbl_2_bss_F468.cursor[side];
+        switch (lbl_2_bss_F468.cursor[side]) {
+        case 0: lbl_2_bss_F468.cursor[side] = 1; break;
+        case 2:
+            if (lbl_2_bss_F468.flags37[side] != 0 && lbl_2_bss_F468.unk5F[side] == 0) lbl_2_bss_F468.cursor[side] = 9;
+            else lbl_2_bss_F468.cursor[side] = 8;
+            break;
+        case 4: lbl_2_bss_F468.cursor[side] = 6; break;
+        case 3: lbl_2_bss_F468.cursor[side] = 0; break;
+        case 5: lbl_2_bss_F468.cursor[side] = 0; break;
+        case 6: lbl_2_bss_F468.cursor[side] = 5; break;
+        case 7: lbl_2_bss_F468.cursor[side] = 4; break;
+        case 8: lbl_2_bss_F468.cursor[side] = 2; break;
+        case 1: lbl_2_bss_F468.cursor[side] = 7; break;
+        }
+        if (lbl_2_bss_F468.prevCursor[side] != lbl_2_bss_F468.cursor[side]) fn_800625A4(side, 0xE);
+        sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+        return;
+    }
+    if (in.buttons & 1) {
+        if (lbl_2_bss_F468.flags45[side] != 0) {
+            if (lbl_2_bss_F468.unk47[side] != 1) return;
+            lbl_2_bss_F468.unk47[side] = 0;
+            lbl_2_bss_F468.unk49[side] = 0;
+            sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+            return;
+        }
+        if (lbl_2_bss_F468.cursor[side] == 9) {
+            lbl_2_bss_F468.cursor[side] = 0;
+            fn_800625A4(side, 0xE);
+            sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+            return;
+        }
+        lbl_2_bss_F468.prevCursor[side] = lbl_2_bss_F468.cursor[side];
+        switch (lbl_2_bss_F468.cursor[side]) {
+        case 0: lbl_2_bss_F468.cursor[side] = 4; break;
+        case 1:
+            if (lbl_2_bss_F468.flags37[side] == 0) return;
+            if (lbl_2_bss_F468.unk5F[side] != 0) return;
+            lbl_2_bss_F468.cursor[side] = 9;
+            break;
+        case 2: lbl_2_bss_F468.cursor[side] = 3; break;
+        case 3: lbl_2_bss_F468.cursor[side] = 5; break;
+        case 7: lbl_2_bss_F468.cursor[side] = 6; break;
+        case 8: lbl_2_bss_F468.cursor[side] = 7; break;
+        case 4: lbl_2_bss_F468.cursor[side] = 2; break;
+        case 10: lbl_2_bss_F468.cursor[side] = 1; break;
+        case 5: lbl_2_bss_F468.cursor[side] = 4; break;
+        case 6: lbl_2_bss_F468.cursor[side] = 8; break;
+        }
+        if (lbl_2_bss_F468.prevCursor[side] != lbl_2_bss_F468.cursor[side]) fn_800625A4(side, 0xE);
+        sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+        return;
+    }
+    if (in.buttons & 2) {
+        if (lbl_2_bss_F468.flags45[side] != 0) {
+            if (lbl_2_bss_F468.unk47[side] != 0) return;
+            lbl_2_bss_F468.unk47[side] = 1;
+            lbl_2_bss_F468.unk49[side] = 0;
+            sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+            return;
+        }
+        if (lbl_2_bss_F468.cursor[side] == 9) {
+            lbl_2_bss_F468.cursor[side] = 0;
+            fn_800625A4(side, 0xE);
+            sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+            return;
+        }
+        lbl_2_bss_F468.prevCursor[side] = lbl_2_bss_F468.cursor[side];
+        switch (lbl_2_bss_F468.cursor[side]) {
+        case 0:
+            if (lbl_2_bss_F468.flags37[side] != 0 && lbl_2_bss_F468.unk5F[side] == 0) {
+                lbl_2_bss_F468.cursor[side] = 9;
+                fn_800625A4(side, 0x18);
+            } else {
+                lbl_2_bss_F468.cursor[side] = 2;
+                fn_800625A4(side, 0xE);
+            }
+            break;
+        case 1:
+            if (lbl_2_bss_F468.flags37[side] == 0) return;
+            if (lbl_2_bss_F468.unk5F[side] != 0) return;
+            lbl_2_bss_F468.cursor[side] = 9;
+            break;
+        case 4: lbl_2_bss_F468.cursor[side] = 5; break;
+        case 5: lbl_2_bss_F468.cursor[side] = 3; break;
+        case 6: lbl_2_bss_F468.cursor[side] = 7; break;
+        case 7: lbl_2_bss_F468.cursor[side] = 8; break;
+        case 2: lbl_2_bss_F468.cursor[side] = 4; break;
+        case 8: lbl_2_bss_F468.cursor[side] = 6; break;
+        case 3: lbl_2_bss_F468.cursor[side] = 2; break;
+        }
+        if (lbl_2_bss_F468.prevCursor[side] != lbl_2_bss_F468.cursor[side]) fn_800625A4(side, 0xE);
+        sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+        return;
+    }
+    if (in.unk2 & 0x100) {
+        handled = closePopup(side);
+        if (handled) return;
+        if (lbl_2_bss_F468.cursor[side] == 9) {
+            lbl_2_bss_F468.flags59[side] = cell = 0;
+            lbl_2_bss_F468.unk61[side] = -1;
+            lbl_2_bss_F468.unk65[side] = 1;
+            if (g_d_GameSettings.GameModeSelected == 5) {
+                for (n = 0; n < 9; n++) {
+                    starMissionCompletionTracker.lineup[n].charID =
+                        inMemRoster[0][n].stats.CharID = lbl_803C6724.teams[0][n];
+                    starMissionCompletionTracker.lineup[n].slot = n;
+                    starMissionCompletionTracker.lineup[n].order =
+                        lbl_80354720[0][n].unk2 = lbl_803C6724.order[0][n];
+                }
+                lbl_2_bss_F468.unk2E = 0;
+                lbl_2_bss_100B4 = 1;
+                lbl_803CBBCC->state = 8;
+            } else if (g_d_GameSettings._10 == 0) {
+                if (side != 0) {
+                    lbl_2_bss_F468.unk36 = 0x1E;
+                    lbl_803CBBCC->state = 3;
+                } else {
+                    lbl_2_bss_100B8.selectionFlags[0] = 1;
+                    lbl_803C66B0.padSide[0] = 1;
+                    lbl_2_bss_F468.cursor[lbl_803C66B0.padSide[0]] = 10;
+                    lbl_803C5EA4.unkE = 1;
+                    if (lbl_8034E9A0.charTaken[lbl_2_bss_F410.gridPick[1]] != 0) {
+                        for (; cell < 32; cell++) {
+                            if (lbl_8034E9A0.charTaken[lbl_800FDE84[cell]] == 0) {
+                                lbl_2_bss_F410.gridPick[1] = lbl_800FDE84[cell];
+                                break;
+                            }
+                        }
+                    }
+                    switch (lbl_8034E9A0.controllerIndices[1]) {
+                    case 0: fn_80050138(1, lbl_2_bss_F410.gridPick[1], -1, -1, -1, 0); break;
+                    case 1: fn_80050138(1, -1, lbl_2_bss_F410.gridPick[1], -1, -1, 0); break;
+                    case 2: fn_80050138(1, -1, -1, lbl_2_bss_F410.gridPick[1], -1, 0); break;
+                    case 3: fn_80050138(1, -1, -1, -1, lbl_2_bss_F410.gridPick[1], 0); break;
+                    }
+                }
+            } else {
+                lbl_2_bss_100B8.selectionFlags[side] = 1;
+                if (lbl_2_bss_100B8.selectionFlags[0] != 0 && lbl_2_bss_100B8.selectionFlags[1] != 0) {
+                    lbl_2_bss_F468.unk4F = 1;
+                    lbl_2_bss_F468.unk36 = 0x1E;
+                    lbl_803CBBCC->state = 7;
+                }
+            }
+            fn_800625A4(side, 0x1B);
+        } else {
+            if (lbl_2_bss_F468.unk5F[side] == 0) {
+                lbl_2_bss_F468.unk61[side] = lbl_2_bss_F468.cursor[side];
+                fn_800625A4(side, 0x1C);
+            } else {
+                for (k = 0; k < 9; k++) {
+                    if (lbl_803C6724.order[side][k] == lbl_2_bss_F468.unk61[side]) {
+                        a = k;
+                        va = lbl_2_bss_F468.unk61[side];
+                    }
+                    if (lbl_803C6724.order[side][k] == lbl_2_bss_F468.cursor[side]) {
+                        b = k;
+                        vb = lbl_2_bss_F468.cursor[side];
+                    }
+                }
+                lbl_803C6724.order[side][a] = vb;
+                lbl_803C6724.order[side][b] = va;
+                fn_800625A4(side, 0x1C);
+            }
+        }
+        sndFXStartEx(0x1B8, lbl_800EFBA4.confirmVolume, 0x3F, 0);
+        return;
+    }
+    if (in.unk2 & 0x200) {
+        handled = closePopup(side);
+        if (handled) return;
+        if (lbl_2_bss_F468.unk5F[side] != 0) fn_800625A4(side, 0x1D);
+        sndFXStartEx(0x1B9, lbl_800EFBA4.alertVolume, 0x3F, 0);
+        return;
+    }
+    if (in.unk2 & 0x20) {
+        handled = closePopup(side);
+        if (handled) return;
+        if (lbl_2_bss_F468.unk5F[side] != 0) lbl_2_bss_F468.unk5F[side] = 0;
+        fn_800625A4(side, 0x1B);
+        sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+        lbl_2_bss_F468.flags59[side] = 0;
+        return;
+    }
+    if (in.unk2 & 0x40) {
+        handled = closePopup(side);
+        if (handled) return;
+        if (g_d_GameSettings.GameModeSelected == 5) return;
+        state = lbl_2_bss_F468.cursor[side];
+        for (k = 0; k < 9; k++) {
+            if (lbl_803C6724.order[side][k] == state) {
+                slot = k;
+                break;
+            }
+        }
+        c = lbl_803C6724.teams[side][slot];
+        if (c == -1 || c == 0x36) {
+            sndFXStartEx(0x1BA, lbl_800EFBA4.unk3, 0x3F, 0);
+            return;
+        }
+        if (lbl_2_bss_F468.cursor[side] != 9) {
+            lbl_2_bss_F468.unk50[side] = i = 0;
+            for (; i < 9; i++) {
+                for (j = 0; j < 5; j++) {
+                    if (c == lbl_80108EDC[i][j]) {
+                        lbl_2_bss_F468.unk50[side] = 1;
+                        goto found;
+                    }
+                }
+            }
+        found:
+            if (lbl_2_bss_F468.unk50[side] == 0) return;
+            if (lbl_80108EDC[i][j] != -1 && j < 4) {
+                next = j + 1;
+                if (next == 5 || lbl_80108EDC[i][next] == -1) next = 0;
+                for (t = 0; t < 2; t++) {
+                    for (k = 0; k < 9; k++) {
+                        if (lbl_803C6724.teams[t][k] == lbl_80108EDC[i][next]) goto cycled;
+                    }
+                }
+                setTeamSlot(side, slot, lbl_80108EDC[i][next]);
+            } else {
+                setTeamSlot(side, slot, lbl_80108EDC[i][0]);
+            }
+        cycled:
+            markSlotTaken(slot, side);
+            sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
+        } else {
+            sndFXStartEx(0x1BA, lbl_800EFBA4.unk3, 0x3F, 0);
+        }
+        return;
+    }
+    if (in.unk2 & 0x10) {
+        handled = closePopup(side);
+        if (handled) return;
+        for (k = 0; k < 9; k++) {
+            if (lbl_803C6724.order[side][k] == lbl_2_bss_F468.cursor[side]) {
+                slot = k;
+                break;
+            }
+        }
+        if (lbl_2_bss_F468.cursor[side] == 9) return;
+        c = lbl_803C6724.teams[side][slot];
+        if (c != -1 && c != 0x36) {
+            if (lbl_2_bss_F468.flags41[side] == 0) {
+                lbl_2_bss_F468.flags45[side] = 1;
+                lbl_2_bss_F468.unk4B[side] = 1;
+                lbl_2_bss_F468.unk47[side] = 0;
+                sndFXStartEx(0x1BF, lbl_800EFBA4.unk8, 0x3F, 0);
+            }
+        }
+    }
 }
 
 static inline void releaseSlot(u8 side, s32 slot) {

@@ -5,19 +5,6 @@
 #include "UnknownHeaders.h"
 #include "menus/gap_3C03C.h"
 
-/* Menus view of the challenge save data: the 9-slot lineup written by the roster "ready" action
-   (fn_2_3624 / fn_2_5444) from lbl_803C6724 team 0: 6-byte entries starting at 0x40B8. */
-typedef struct MenusLineupEntry {
-    s16 charID;  /* 0x0 teams[0][i] */
-    u8 slot;     /* 0x2 i */
-    s8 value;    /* 0x3 order[0][i] (batting order), the byte fn_2_33BC compares */
-    u8 _pad4[2];
-} MenusLineupEntry;
-
-typedef struct MenusLineupView {
-    u8 _pad0[0x40B8];
-    MenusLineupEntry lineup[9]; /* 0x40B8 */
-} MenusLineupView;
 
 typedef struct MenusTeamSelections {
     u8 _pad0[2];
