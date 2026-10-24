@@ -23,6 +23,14 @@ alongside for the byte-exact rebuild goal, but a later phase never waits on a ma
 2. **Custom sprites everywhere.** Trace how the menus pick portraits, mini-screen sprites and name
    banners. Today clones show the donor's own portrait in menus (`character_select.md` §7). Make
    clones show the source's, or a custom recoloured, portrait on every screen.
+   **2026-10-24: selection/roster trace understood and documented** (`character_select.md` §8).
+   Found charID-keyed common names/52x60 mini images at ZZZZ+0x1A9FE800 and grid portraits at
+   +0x18AEE800; exact texture formulas, palette aliases, descriptor copies and patcher steps recorded.
+   Pick/ready/auto-fill/open, cursor and L-colour refresh paths have documented C bodies;
+   new matches `fn_2_7265C` / `fn_800363D8` (3963 -> 3965 total).
+   Read-only inspector verifies all 162 mappings. **Still to do:** implement the two-file patcher
+   extension and test in Rio; the older large-banner archive hypothesis remains unverified.
+   Optional `fn_2_3624` match refinement remains at five scheduling feedback lines.
 3. **Skin picker in the menu: no lost slots.** The real goal: choose a character, then a colour or
    skin, without replacing another character. A per-player skin byte (`StatTable.UnusedBytes[0]`),
    chosen in the select code instead of moving the pick to another charID, rendered through a

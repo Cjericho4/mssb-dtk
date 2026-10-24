@@ -163,6 +163,8 @@ void fn_2_1BAC(void) {
     memset(&lbl_8034E978, 0, sizeof(MenusSceneTransition));
 }
 
+/* Button-to-SFX dispatch only: exact button values A=confirm, B=alert,
+ * directions=move. This switch does not inspect a character or bind UI art. */
 // .text:0x00001C34 size:0xF4
 void fn_2_1C34(u16 buttons) {
     switch (buttons) {
@@ -435,8 +437,10 @@ s32 fn_2_35D0(u8 index) {
  * one-pad play it transfers input to team 1 and places that team's grid cursor via fn_80050138
  * (lbl_2_bss_F410.gridPick, lbl_800FDE84 and controllerIndices). Challenge ready copies team 0
  * into inMemRoster, starMissionCompletionTracker.lineup and lbl_80354720 before leaving.
- * Cursor/move changes request the DOL UI transition with fn_800625A4(side, command); this handler
- * does not load portrait/name textures. Sound IDs 0x1B7..0x1BF use lbl_800EFBA4's menu volumes.
+ * Cursor changes request command0xE: menus fn_2_81628 -> fn_2_7DAB8 -> fn_2_74F40
+ * refreshes the charID-keyed name/stats. fn_2_776A0 also refreshes hover changes and consumes
+ * the L-colour unk50 flag to update the charID-keyed mini image (common sequence0x83).
+ * This input handler does not load portrait/name textures. Sound IDs 0x1B7..0x1BF use lbl_800EFBA4's menu volumes.
  *
  * Match-sensitive details: side is s32 and declared last; slot follows the swap temporaries.
  * The challenge copies chain their two destinations to preserve the original load/store order.
@@ -1581,7 +1585,8 @@ static inline void clearSideTeam(u8 side) {
  * Portraits/names are not chosen here: the only keys that leave this function are the charID
  * (teams[], charTaken[], chemistry, announcer) and the base charID's grid cell (fn_800506E8).
  * The visual update is driven by the UI state byte lbl_803C66B0.flags5D[side] that fn_800625A4
- * sets (consumed by the DOL select-screen code, gap_800528AC.c: fn_800559EC / fn_80060184).
+ * sets: menus fn_2_81628 dispatches command0xF to fn_2_7F8BC, which sets the mini image
+ * charID frame and calls fn_2_74F40 for the charID-keyed name. See character_select.md section8.
  *
  * Match notes: the parameter is an int (its unmasked uses: cursor[side], teams[side], flags41[side]);
  * sideCaptain() and clearSideTeam() take u8 (every use inside them is clrlwi'd), as does
