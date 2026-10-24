@@ -147,10 +147,10 @@ and shows/sounds as the source in lineups, HUD, results and the announcer.  A ma
 
 ## 7. User test feedback (2026-10-23, Project Rio, default four-Toad clones, `--ui source`)
 - Working: picking an extra Toad gives Mario's voice and announcer call.
-- **Bug: menus and in-menu mini-screen sprites always showed Purple Toad** for every clone (not Blue/Yellow/Green).
-  So the menus don't take their portrait from the unique index (fn_800698F8 rewrite) or the charID-keyed HUD
-  file. Hypothesis: the menus pick by family + colour column (`lbl_80108EDC`, the last Toad colour = Purple), likely
-  in the menus character-select code (fn_2_2FC0/3624/4970/7DDC/DFAC). Needs tracing: which file and texture
-  index the menu portraits/name banners use, and how the index is computed.
-- **Chemistry:** clones copy Mario's chemistry row/column, so clone↔Mario and clone↔clone have Mario's
+- **Bug: menus and in-menu mini-screen sprites show the donor's own portrait** (the user could pick only one
+  Toad without a multi-pick mod; it got the Purple Toad slot and the menus showed Purple Toad). So the menus
+  don't take their portrait from the unique index (fn_800698F8 rewrite) or the charID-keyed HUD file. Needs
+  tracing: which file and texture index the menu portraits/name banners use, and how the index is computed
+  (likely menus character-select code fn_2_2FC0/3624/4970/7DDC/DFAC).
+- **Chemistry (parked until custom sprites work everywhere, per user):** clones copy Mario's chemistry row/column, so clone↔Mario and clone↔clone have Mario's
   self-chemistry (none). Expected: good chemistry between Mario and his clones and among the clones.
