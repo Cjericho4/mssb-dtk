@@ -28,41 +28,66 @@ typedef struct MenuUiFileHeader {
     u32 spriteBankOffset;
     u32 unused[3];
 } MenuUiFileHeader;
+typedef struct MenuUiSequenceTable MenuUiSequenceTable;
+typedef struct MenuUiSequence MenuUiSequence;
+typedef struct MenuUiFrameList MenuUiFrameList;
+typedef union MenuUiRecord MenuUiRecord;
+
 typedef struct MenuUiSpriteBank {
     u16 width, height;
     u8 frameRate, recordWords;
     u16 flags;
-    u32 sequencesOffset;
+    /* Disk offset becomes a pointer during bank relocation. */
+    union { u32 sequencesOffset; MenuUiSequenceTable* sequences; };
 } MenuUiSpriteBank;
 typedef struct MenuUiSequenceTable {
     u32 count;
     u32 size;
-    u32 sequenceOffsets[1];
+    /* Same storage before/after relocation. */
+    union { u32 sequenceOffsets[1]; MenuUiSequence* sequences[1]; };
 } MenuUiSequenceTable;
 typedef struct MenuUiSequence {
     u32 flagsAndListCount; /* high bit is a flag; mask before indexing */
     u32 size;
-    u32 listOffsets[1];
+    /* lists[0] is the header list; image layer N is lists[N+1]. */
+    union { u32 listOffsets[1]; MenuUiFrameList* lists[1]; };
 } MenuUiSequence;
-typedef struct MenuUiFrameList {
-    u16 count;
-    u16 fullRecordBytes;
-    /* Variable-size records follow. Retail character lists are stored in
-     * descending frame order. Type 0 is a full template; type 2 replaces words. */
-} MenuUiFrameList;
 typedef struct MenuUiFrame {
     u16 type;
     u16 frame;
-    u16 flags;
-    u16 textureIndex;
-    u32 words[9]; /* full retail character-name/image records are 0x2C bytes */
+    union {
+        struct { u16 flags, textureIndex; u32 remaining[9]; };
+        u32 words[10];
+        u8 bytes[40];
+    }; /* +4: payload; full character records are 0x2C bytes */
 } MenuUiFrame;
 typedef struct MenuUiWordDelta {
     u16 type;
     u16 frame;
     u16 changedWordCount;
     u16 recordWords;
+    u16 wordIndices[1];
     /* u16 wordIndices[], padded to words, then u32 replacementWords[];
      * indices address the full template after its first 4-byte word. */
 } MenuUiWordDelta;
+/* Type 3 uses byte offsets/lengths relative to the expanded payload (+4),
+ * followed by concatenated replacement bytes. Both delta types carry total
+ * packed length in recordWords. Runtime relocation fixes table pointers only. */
+typedef struct MenuUiByteRange { u16 offset, size; } MenuUiByteRange;
+typedef struct MenuUiRangeDelta {
+    u16 type, frame, rangeCount, recordWords;
+    MenuUiByteRange ranges[1];
+} MenuUiRangeDelta;
+union MenuUiRecord {
+    MenuUiFrame frame;
+    MenuUiWordDelta delta;
+    MenuUiRangeDelta ranges;
+    u32 words[1];
+    u8 bytes[1];
+};
+struct MenuUiFrameList {
+    u16 count;
+    u16 fullRecordBytes;
+    MenuUiRecord records[1];
+};
 #endif

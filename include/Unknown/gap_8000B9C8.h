@@ -2,6 +2,10 @@
 #define __UNKNOWN_gap_8000B9C8_H_
 
 #include "mssbTypes.h"
+#include "menus/menu_ui.h"
+typedef union Gap80035DD4Query Gap80035DD4Query;
+u8* memset(u8* memory, s32 value, u32 size);
+u8* memcpy(u8* dst, const u8* src, u32 size);
 typedef struct Gap8000B9C8Direction { f32 sine, cosine; } Gap8000B9C8Direction;
 f64 sin(f64 angle);
 f64 cos(f64 angle);
@@ -28,7 +32,7 @@ void fn_8000B9C8(void);
 void fn_8000BA3C(void);
 void fn_8000C194(void);
 void fn_8000CC4C(void);
-void fn_8000CEF0(void);
+u32 fn_8000CEF0(MenuUiSpriteBank* data, s32 sequence, s32 list, s32 frame, Gap80035DD4Query* out);
 void fn_8000D164(void);
 void fn_8000D838(void);
 void fn_8000D8A4(void);
