@@ -99,7 +99,11 @@ extern s32 lbl_803CBC28;                     /* index of that entry */
 
 /* per-slot animation/actor record (AnimationStruct in UnknownHeaders.h), 0x27C bytes */
 typedef struct Gap8001196CAnim {
-    /* 0x000 */ struct Gap8001196CActor* actor;
+    union {
+        /* 0x000 */ struct Gap8001196CActor* actor;
+        /* FAKEMATCH: array view preserves the retail attachment countdown walker. */
+        struct Gap8001196CActor* actors[1];
+    };
     u8 _pad4[4];
     /* 0x008 */ u8* fileBuffer;              /* body .gpc / anim bank buffer */
     u8 _padC[4];

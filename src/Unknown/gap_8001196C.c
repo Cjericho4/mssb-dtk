@@ -226,19 +226,19 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
 
 /* ---- fn_80013680 helpers ---------------------------------------------------------------------- */
 
-/* Hook sub-item model k (0 = obj0, 1 = obj1) of anim->subItems onto the owning actor: the owner's
- * bone lbl_803CB7B4[k] (via anim->boneIndices) receives the attachment of the first bone of the
- * sub-item actor (g_hugeAnimStruct.subItemActorEntries[index0]) that carries one.  Only done when
- * the character has a glove list (lbl_800EEAAC[charID] >= 0).  The retail code wraps the body in a
- * one-iteration count-down loop; it is written out flat here. */
+/* Attach the first occupied sub-item bone to its owner bone, when a glove list exists. */
 static inline void attachSubItemBone(Gap8001196CAnim* anim, s32 k) {
-    Gap8001196CAnim* owner = g_hugeAnimStruct.slotPtrs[anim->slotKind];
+    Gap8001196CAnim* owner = g_hugeAnimStruct.slotPtrs[(s8)anim->slotKind];
     Gap8001196CSubItemEntry* sub;
     Gap8001196CActor* subActor;
+    Gap8001196CActor* actor;
+    /* FAKEMATCH: declare the bone counter before the destination bone for register order. */
+    s32 n;
     Gap8001196CBone* ownerBone;
     Gap8001196CBone* subBone;
-    u16 boneIdx;
-    s32 n;
+    s32 boneIdx;
+    s32 boneList;
+    s32 actorIndex;
     s32 index;
 
     if (owner != NULL) {
@@ -246,41 +246,58 @@ static inline void attachSubItemBone(Gap8001196CAnim* anim, s32 k) {
     } else {
         boneIdx = 0xFFFF;
     }
-    if ((s32)boneIdx == 0xFFFF) {
+    if (boneIdx == 0xFFFF) {
         return;
     }
-    if (lbl_800EEAAC[owner->charID] < 0) {
-        return;
-    }
-    sub = owner->subItems;
-    if (sub == NULL) {
-        return;
-    }
-    index = (k == 0) ? sub->obj0.index0 : sub->obj1.index0;
-    ownerBone = owner->actor->boneArray[boneIdx];
-    subActor = g_hugeAnimStruct.subItemActorEntries[index].slot.actor;
-    if (subActor == NULL) {
-        return;
-    }
-    n = subActor->totalBones;
+    boneList = lbl_800EEAAC[owner->charID];
+    /* FAKEMATCH: retain the retail one-iteration countdown and signed-halfword test. */
+    actorIndex = 0;
     do {
-        n--;
-        subBone = subActor->boneArray[n];
-        if (subBone->attachment != 0) {
-            ownerBone->attachment = subBone->attachment;
-            return;
+        actor = owner->actors[actorIndex];
+        if ((s16)boneList >= 0) {
+            sub = owner->subItems;
+            if (sub != NULL) {
+                index = (k == 0) ? sub->obj0.index0 : sub->obj1.index0;
+                ownerBone = actor->boneArray[boneIdx];
+                subActor = g_hugeAnimStruct.subItemActorEntries[index].slot.actor;
+                if (subActor == NULL) {
+                    return;
+                }
+                n = subActor->totalBones;
+                do {
+                    n--;
+                    subBone = subActor->boneArray[n];
+                    if (subBone->attachment != 0) {
+                        ownerBone->attachment = subBone->attachment;
+                        return;
+                    }
+                } while (n != 0);
+                return;
+            }
         }
-    } while (n != 0);
+    } while (actorIndex-- != 0);
+}
+
+/* Finalize a challenge sub-item load once the queue is idle.
+ * FAKEMATCH: the byte result preserves the caller's clrlwi test after inlining. */
+static inline u8 finishChallengeSubItemLoad(u8* texture) {
+    if (lbl_803716B8.loadBusy == 0) {
+        finishSubItemLoad(texture);
+        return 1;
+    }
+    return 0;
 }
 
 /* Fill a free/stolen sub-item entry for this slot record (fn_80013680 first phase). */
-static inline void claimSubItemEntry(Gap8001196CSubItemEntry* entry, Gap8001196CAnim* anim) {
+static inline void claimSubItemEntry(Gap8001196CSubItemEntry* entry, u8 i, Gap8001196CAnim* anim,
+                                     s32 charID, s32 slotKind) {
     entry->textureArchive = lbl_803CBC00;
-    entry->charID = anim->charID;
-    entry->prevSlotKind = entry->slotKind;
-    entry->slotKind = (s8)anim->slotKind;
-    entry->arm = anim->rosterUnk26;
-    entry->stance = anim->rosterUnk27;
+    /* FAKEMATCH: index the table again to preserve the retail aliasing and address reload. */
+    g_hugeAnimStruct.subItemEntries[i].charID = charID;
+    g_hugeAnimStruct.subItemEntries[i].prevSlotKind = g_hugeAnimStruct.subItemEntries[i].slotKind;
+    g_hugeAnimStruct.subItemEntries[i].slotKind = slotKind;
+    g_hugeAnimStruct.subItemEntries[i].arm = anim->rosterUnk26;
+    g_hugeAnimStruct.subItemEntries[i].stance = anim->rosterUnk27;
 }
 
 /* fn_80013680 -- mode-2 (challenge) bat/glove loader: reuse or load one sub-item pair per slot.
@@ -299,7 +316,7 @@ static inline void claimSubItemEntry(Gap8001196CSubItemEntry* entry, Gap8001196C
  * Chain position: fn_80016344 state 5 and fn_80016710 state 5 in mode 2 (fn_80012B90 otherwise).
  * Variant hook: as fn_80012B90 (file choice happens in fn_80021CA4); the cache compares charID,
  * so a (charID, skin) key must be part of the entry compare if skins differ in sub-items.
- * Match status: NOT matched (first full decompile; see .scratch/fable_notes.md). */
+ * Match status: NOT matched; see .agent/handoff_fn_80013680.md. */
 // .text:0x80013680 size:0xB84
 u8 fn_80013680(struct Gap8001196CAnim* anim) {
     Gap8001196CSubItemEntry* entry;
@@ -307,24 +324,29 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
     s32 slotKind = (s8)anim->slotKind;
     u8 i;
     u8 j;
-    u8 armByte;
+    s32 armByte;
     BOOL armSet;
     BOOL isFielder;
-    BOOL armMatchesClass;
+    s32 armMatchesClass;
     s32 itemSlot;
+    u8* texture;
 
     if (lbl_803CBBFB == 0) {
         lbl_803CBBFB = 1;
         lbl_803CBC00 = (u8*)((Gap8001196CRootHeader*)anim->fileBuffer)->texture;
         for (i = 0; i < 13; i++) {
-            entry = &g_hugeAnimStruct.subItemEntries[i];
-            if (entry->charID != charID || entry->arm != anim->rosterUnk26 || entry->stance != anim->rosterUnk27 ||
-                entry->slotKind != -1 || entry->textureArchive != lbl_803CBC00) {
+            if (g_hugeAnimStruct.subItemEntries[i].charID != charID ||
+                g_hugeAnimStruct.subItemEntries[i].arm != anim->rosterUnk26 ||
+                g_hugeAnimStruct.subItemEntries[i].stance != anim->rosterUnk27 ||
+                g_hugeAnimStruct.subItemEntries[i].slotKind != -1 ||
+                g_hugeAnimStruct.subItemEntries[i].textureArchive != lbl_803CBC00) {
                 continue;
             }
-            if ((slotKind < 9 && entry->prevSlotKind < 9) || (slotKind >= 9 && entry->prevSlotKind >= 9)) {
-                entry->slotKind = slotKind;
-                anim->subItems = entry;
+            /* FAKEMATCH: re-read the slot byte instead of using the cached slotKind. */
+            if (((s8)anim->slotKind < 9 && g_hugeAnimStruct.subItemEntries[i].prevSlotKind < 9) ||
+                ((s8)anim->slotKind >= 9 && g_hugeAnimStruct.subItemEntries[i].prevSlotKind >= 9)) {
+                g_hugeAnimStruct.subItemEntries[i].slotKind = slotKind;
+                anim->subItems = &g_hugeAnimStruct.subItemEntries[i];
                 anim->subItems->valid = 1;
                 attachSubItemBone(anim, 0);
                 attachSubItemBone(anim, 1);
@@ -337,9 +359,9 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
         }
         if (lbl_803CBBFC == 0 && lbl_803CBBFD == 0) {
             for (i = 0; i < 13; i++) {
-                entry = &g_hugeAnimStruct.subItemEntries[i];
-                if (entry->slotKind == slotKind && entry->slotKind < 9) {
-                    entry->slotKind = -1;
+                if (g_hugeAnimStruct.subItemEntries[i].slotKind == slotKind &&
+                    g_hugeAnimStruct.subItemEntries[i].slotKind < 9) {
+                    g_hugeAnimStruct.subItemEntries[i].slotKind = -1;
                     break;
                 }
             }
@@ -347,7 +369,7 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
                 entry = &g_hugeAnimStruct.subItemEntries[i];
                 if (entry->slotKind == -1) {
                     lbl_803CBC20 = entry;
-                    claimSubItemEntry(entry, anim);
+                    claimSubItemEntry(entry, i, anim, charID, slotKind);
                     break;
                 }
             }
@@ -361,7 +383,7 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
                         }
                     }
                     if (j == 13) {
-                        claimSubItemEntry(entry, anim);
+                        claimSubItemEntry(entry, i, anim, charID, slotKind);
                         break;
                     }
                 }
@@ -373,12 +395,18 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
     if (lbl_803CBBFB == 0) {
         return 0;
     }
-    armByte = (slotKind < 9) ? anim->rosterUnk26 : anim->rosterUnk27;
+    if (slotKind < 9) {
+        armByte = anim->rosterUnk26;
+    } else {
+        armByte = anim->rosterUnk27;
+    }
     armSet = armByte != 0;
     isFielder = slotKind < 9;
-    armMatchesClass = armSet == isFielder;
+    /* FAKEMATCH: narrow the predicate to retain the retail extrwi result. */
+    armMatchesClass = (u8)(isFielder == armSet);
     while (TRUE) {
         if (lbl_803CBBFC == 0) {
+            texture = lbl_803CBC00;
             entry = lbl_803CBC20;
             if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
                 if (isFielder && entry->arm != 0) {
@@ -390,14 +418,16 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
                 }
                 startSubItemLoad(entry, &entry->obj1, itemSlot);
             }
-            if (lbl_803716B8.loadBusy != 0) {
+            if (!finishChallengeSubItemLoad(texture)) {
                 break;
             }
-            finishSubItemLoad(lbl_803CBC08);
             lbl_803CBBFC = 1;
             continue;
         }
         if (lbl_803CBBFD == 0) {
+            /* FAKEMATCH: recompute the predicate at the second model-load site. */
+            armMatchesClass = (u8)(isFielder == armSet);
+            texture = lbl_803CBC00;
             entry = lbl_803CBC20;
             if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
                 if (isFielder && entry->arm != 1) {
@@ -409,8 +439,7 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
                 }
                 startSubItemLoad(entry, &entry->obj0, itemSlot);
             }
-            if (lbl_803716B8.loadBusy == 0) {
-                finishSubItemLoad(lbl_803CBC08);
+            if (finishChallengeSubItemLoad(texture)) {
                 lbl_803CBBFD = 1;
             }
         }
