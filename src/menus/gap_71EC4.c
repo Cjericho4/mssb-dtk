@@ -3,6 +3,7 @@ extern void (*lbl_2_data_2A2EC[])(Rep0B08Obj*);
 
 extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "UnknownHeaders.h"
+#include "musyx/musyx.h"
 #include "menus/gap_D08.h"
 #include "menus/rep_10C0.h"
 #include "menus/rep_0438.h"
@@ -597,18 +598,124 @@ void fn_2_76650(void) {
 }
 
 // .text:0x00076874 size:0x57C
-void fn_2_76874(void) {
+void fn_2_76874(DrawingSceneStruct* scene, s32 side) {
     return;
 }
 
 // .text:0x00076DF0 size:0x8B0
-void fn_2_76DF0(void) {
+void fn_2_76DF0(DrawingSceneStruct* scene, s32 side) {
     return;
 }
 
 // .text:0x000776A0 size:0x994
-void fn_2_776A0(void) {
-    return;
+/* Per-pad roster scene maintenance (called by fn_2_81628 even when no command
+ * is pending). This is the second preview path alongside command0xE:
+ * cursor/grid hover changes refresh name/stats, and L's unk50 flag refreshes
+ * the charID-keyed mini image at pane0x58+side*9+cursor. The remaining paths
+ * animate Start/ready and the Z popup. */
+void fn_2_776A0(DrawingSceneStruct* scene, s32 pad) {
+    u8 side = lbl_803C66B0.padSide[pad];
+    u16 buttons = lbl_8034E9A0.input[pad].unk2;
+    s8 captainCursor;
+    s32 i;
+    s32 slot;
+    s32 count;
+    if (lbl_803C66B0.unk0 == 2 && lbl_2_bss_F468.flags45[side] == 0) {
+        if (lbl_2_bss_F468.flags41[side] == 0) {
+            if (lbl_2_bss_F468.prevCursor[side] != lbl_2_bss_F468.cursor[side]) fn_2_74F40(scene, side);
+        } else if (lbl_2_bss_F468.previousGridPick[side] != lbl_2_bss_F410.gridPick[side]) fn_2_74F40(scene, side);
+    }
+    if ((buttons & 0x800) && lbl_803CBBCC->selection == 10) {
+        if (lbl_2_bss_F468.startAllowed[side] && g_d_GameSettings.GameModeSelected != 5 &&
+            lbl_2_bss_F468.startAnimating[side] == 0) {
+            if (lbl_803C66B0.disabled[side]) {
+                fn_80062674(side);
+                lbl_803C66B0.flags[side] = 2;
+            } else {
+                if (g_d_GameSettings._10 == 0 && side != 0) lbl_803C66B0.flags5D[side] = 0;
+                sndFXStartEx(0x1B8, lbl_800EFBA4.confirmVolume, 0x3F, 0);
+            }
+            for (i = 0; i < 9; i++) {
+                if (lbl_803C6724.teams[side][i] == lbl_8034E9A0.players[side]) {
+                    captainCursor = lbl_803C6724.order[side][i];
+                    break;
+                }
+            }
+            for (i = 0; i < 9; i++) {
+                if (i != captainCursor) menuPane(scene, side * 9 + i + 0x34)->field_0x68 = 4;
+            }
+            menuPane(scene, side * 9 + captainCursor + 0x34)->field_0x68 = 1;
+            fn_2_75BE4(scene, side);
+            menuPane(scene, side + 0x91)->field_0x68 = 1;
+            if (lbl_2_bss_F468.prevCursor[side] == 9) {
+                menuPane(scene, side + 0x93)->field_0x68 = 4;
+                menuPane(scene, pad + 0x95)->field_0x5C = 0xA0000;
+                menuPane(scene, side + 0x95)->field_0x68 = 4;
+            } else if (lbl_2_bss_F468.prevCursor[side] == 10) {
+                menuPane(scene, side + 0x93)->field_0x68 = 4;
+            } else {
+                menuPane(scene, side * 9 + lbl_2_bss_F468.prevCursor[side] + 0x46)->field_0x5C = 0xF0000;
+                menuPane(scene, side * 9 + lbl_2_bss_F468.prevCursor[side] + 0x46)->field_0x68 = 4;
+                menuPane(scene, side + 0x93)->field_0x68 = 4;
+            }
+            for (i = 0; i < 9; i++) {
+                menuPane(scene, side + 0x97)->flags &= ~2;
+                menuPane(scene, side + 0xAC)->flags &= ~2;
+                menuPane(scene, side * 9 + i + 0x22)->flags &= ~2;
+            }
+            lbl_2_bss_F468.startAnimating[side] = 1;
+        }
+    }
+    if (lbl_803C66B0.unk0 == 2 && lbl_2_bss_F468.flags45[side] == 0) {
+        if (lbl_2_bss_F468.unk50[side]) {
+            for (slot = 0; slot < 9; slot++) {
+                if (lbl_803C6724.order[side][slot] == lbl_2_bss_F468.cursor[side]) break;
+            }
+            menuPane(scene, side * 9 + lbl_2_bss_F468.cursor[side] + 0x58)->field_0x5C =
+                lbl_803C6724.teams[side][slot] << 16;
+            fn_2_74F40(scene, side);
+            lbl_2_bss_F468.unk50[side] = 0;
+        }
+    }
+    if (lbl_2_bss_F468.startAnimating[side]) {
+        for (i = 0; i < 9; i++) {
+            if (lbl_803C6724.teams[side][i] == lbl_8034E9A0.players[side]) {
+                captainCursor = lbl_803C6724.order[side][i];
+                break;
+            }
+        }
+        if (!!fn_80042DA8(scene, side * 9 + captainCursor + 0x34, 20) == 1) {
+            lbl_2_bss_F468.startAnimating[side] = 0;
+            lbl_2_bss_F468.startAllowed[side] = 0;
+        }
+    }
+    if (lbl_2_bss_F468.unk4B[side]) {
+        if (lbl_2_bss_F468.flags45[side]) {
+            switch (lbl_2_bss_F468.unk47[side]) {
+            case 0: fn_2_76DF0(scene, side); return;
+            case 1: fn_2_76874(scene, side); return;
+            }
+        } else {
+            if (lbl_2_bss_F468.unk47[side] == 0) {
+                if ((menuPane(scene, side + 0xB4)->field_0x5C >> 16) > 5)
+                    menuPane(scene, side + 0xB4)->field_0x5C = 0x50000;
+                menuPane(scene, side + 0xB4)->field_0x68 = 4;
+                menuPane(scene, side + 0xB6)->field_0x68 = 4;
+                menuPane(scene, side + 0xC6)->field_0x68 = 4;
+                count = !!fn_80042DA8(scene, side + 0xB4, 0);
+                count += !!fn_80042DA8(scene, side + 0xB6, 0);
+                count += !!fn_80042DA8(scene, side + 0xC6, 0);
+                if (count == 3) lbl_2_bss_F468.unk4B[side] = 0;
+            } else {
+                if ((menuPane(scene, side + 0xB4)->field_0x5C >> 16) > 5)
+                    menuPane(scene, side + 0xB4)->field_0x5C = 0x50000;
+                menuPane(scene, side + 0xB4)->field_0x68 = 4;
+                menuPane(scene, side + 0xE2)->field_0x68 = 4;
+                if (!!fn_80042DA8(scene, side + 0xE2, 0) == 1) lbl_2_bss_F468.unk4B[side] = 0;
+            }
+            lbl_2_bss_F468.unk49[side] = 0;
+        }
+    }
 }
 
 // .text:0x00078034 size:0x28

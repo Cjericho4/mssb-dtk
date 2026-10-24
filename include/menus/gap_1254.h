@@ -34,7 +34,8 @@ typedef struct Menus1254State {
         };
     };
     s32 options[4];
-    u8 _pad20[0xE];
+    s32 previousGridPick[2]; /* 0x20 cached hovered grid charID per side */
+    u8 _pad28[6];
     u8 unk2E;
     s8 teamIndices[2];
     u8 _pad31[5];
@@ -53,7 +54,8 @@ typedef struct Menus1254State {
     u8 _pad4D[2];
     u8 unk4F;
     u8 unk50[2];    /* 0x50 per side: colour cycle (L) found the slot's colour family */
-    u8 _pad52[4];
+    u8 startAllowed[2]; /* 0x52 */
+    u8 startAnimating[2]; /* 0x54 */
     u8 unk56;
     u8 _pad57[2];
     u8 flags59[4];  /* 0x59 per side: this side still takes roster input (fn_2_6608 gates fn_2_3624 on it) */
