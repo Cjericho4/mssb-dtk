@@ -253,3 +253,20 @@ for Windows with the standard library only.  What this pass established:
   already has `master[charID].size` smaller than the body it loads (BlueToad 29: 0x18028 vs body 13's
   0x195B0; BlueShyGuy 44: 0x5BE0 vs 0x16320), and `fn_8002204C` only uses it when `buf == NULL`, which
   no caller does.  Do not "fix" it by resizing the entry.
+
+## 9. Recipe 4b/4c status (source-level), 2026-10-23
+
+Not built tonight, on purpose:
+* **4b is already what the engine does.** The per-actor texture swap in `fn_80017814` would
+  reimplement `fn_8002254C`'s body + overlay load.  The data-only patcher uses that mechanism, so a
+  second, untested binary would only widen tonight's test matrix.
+* **4c needs a per-roster-entry skin source, not a per-charID byte.** `StatTable.UnusedBytes[0]`
+  is per charID: the roster `memcpy` copies the same `CharacterStats` row for every Mario, so three
+  Marios would all get skin 0.  Design for next time: in `fn_8001758C`, derive `skin` from the actor's
+  team/player bytes (0x256/0x257) by counting earlier same-team roster entries with the same charID
+  ("n-th duplicate gets skin n"), then index a `skinPairs[charID][skin]` extension of `lbl_800F73B8`
+  in gap_8001E460.c (body entry + overlay entry).  `fn_8001758C` and `fn_8002204C` are matched, so
+  this is a `--non-matching` build with two `Equivalent` units (`gap_8001196C.c`, `gap_8001E460.c`)
+  plus the overlays appended to the blob exactly as `clone_character.py` does (reuse its
+  `lzss_compress`, blob move and `fn_800227E4` size patch).  Everything else (animations, skeleton,
+  gloves, stats, menus) keeps using charID, so no roster slot is lost.
