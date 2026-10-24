@@ -25,7 +25,7 @@ extern s16 lbl_80108EDC[][5];
 s16 fn_80067AC8(s16 key, s8 column);
 u8 fn_80067B40(s32 arg0, s16 charID, u8 value);
 void fn_80067C48(void);
-void fn_80067F70(void);
+void fn_80067F70(s32 player);
 void fn_800684A4(void);
 void fn_80068514(void);
 void fn_8006862C(void);

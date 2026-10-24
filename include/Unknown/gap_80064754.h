@@ -19,13 +19,13 @@ u8 translateStarSwing(u8 id);
 s32 fn_80064918(s16 id);
 void fn_8006496C(void);
 void fn_800649BC(void);
-void unsure_FillRosterPositions(void);
-void characterSelectScreen(void);
+void unsure_FillRosterPositions(s32 player);
+void characterSelectScreen(s32 player);
 void fn_80066EAC(void);
 void fn_800670A0(void);
 void fn_800671FC(void);
 void fn_80067264(void);
 void fn_800675C4(void);
-void fn_800678CC(void);
+void fn_800678CC(s32 player);
 
 #endif // !__UNKNOWN_gap_80064754_H_

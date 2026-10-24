@@ -727,11 +727,11 @@ void fn_2_42EB0(void) {
     s32 j;
     for (i = 0; i < 54; i++) {
         MenusLineupChoice* choice = &lbl_800E8558[i];
-        if (choice->enabled == 1) {
+        if (choice->isBase == 1) {
             Gap3C03CObj* obj = &lbl_2_bss_1A8248->gap3C03CObjects[i];
             if (obj->unk31 == 1) {
                 MenusLineupSlot* slot;
-                team = &choice->team;
+                team = &choice->uniqueIdx;
                 for (j = 0; j < 10; j++) {
                     s32 minimum;
                     s32 id = lbl_80109AE8[*team][j].id;
@@ -856,9 +856,9 @@ void fn_2_44504(void) {
 // .text:0x00044E2C size:0xE8
 s32 fn_2_44E2C(s32 index) {
     MenusLineupChoice* choice = &lbl_800E8558[index];
-    if (choice->enabled == 1) {
+    if (choice->isBase == 1) {
         u8 team;
-        u8* teamField = &choice->team;
+        u8* teamField = &choice->uniqueIdx;
         MenusLineupSlot* slot;
         s32 count = 0;
         s32 i;

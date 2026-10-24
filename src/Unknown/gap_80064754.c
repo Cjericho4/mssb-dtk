@@ -174,12 +174,12 @@ void fn_800649BC(void) {
 }
 
 // .text:0x80064A04 size:0x13E8
-void unsure_FillRosterPositions(void) {
+void unsure_FillRosterPositions(s32 player) {
     return;
 }
 
 // .text:0x80065DEC size:0x10C0
-void characterSelectScreen(void) {
+void characterSelectScreen(s32 player) {
     return;
 }
 
@@ -217,6 +217,6 @@ void fn_800675C4(void) {
 }
 
 // .text:0x800678CC size:0x1FC
-void fn_800678CC(void) {
+void fn_800678CC(s32 player) {
     return;
 }

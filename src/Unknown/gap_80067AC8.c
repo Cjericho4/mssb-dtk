@@ -56,7 +56,7 @@ void fn_80067C48(void) {
 }
 
 // .text:0x80067F70 size:0x534
-void fn_80067F70(void) {
+void fn_80067F70(s32 player) {
     return;
 }
 

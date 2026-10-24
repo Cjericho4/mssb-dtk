@@ -231,9 +231,82 @@ void fn_2_2D1C(void) {
     return;
 }
 
+/*
+ * Locked-character pass of the roster rebuild (inlined into fn_2_2FC0 below).
+ *
+ * lbl_803CB748[6] holds the unique indices (0..31) of the six characters that need an unlock;
+ * g_d_GameSettings.charUnlocked[i] (0x1A..0x1F) is the matching unlock flag.  Every charID whose
+ * lbl_800E8558[charID].uniqueIdx (0x2 of each 6-byte characterStaticIndexes row) is a still-locked
+ * unique gets its charsOnCharacterGridSelected flag (lbl_8034E9A0 + 0x4757) set, so the colour walk
+ * treats it as taken; unlocked ones get it cleared (0 after the memset anyway).
+ *
+ * Must stay a separate static inline: inlining puts the helper's i/j/locked webs ahead of the
+ * strength-reduced walkers (i=r7, j=r6, lk=r4, walkers r9..r12), and the compiler then promotes
+ * the hoisted lbl_803CB748[i] load to r8 with a write-back store (stb r8,0(r12)) after the inner
+ * loop.  Written inline in fn_2_2FC0 the same code colours the walkers first (r6..r9) and never
+ * matches.  The inner loop runs 54 (all charIDs) and is unrolled 9x6 by the compiler.
+ */
+static inline void markLockedCharsTaken(void) {
+    s32 i;
+    s32 j;
+    s32 locked;
+    for (i = 0; i < 6; i++) {
+        locked = !g_d_GameSettings.charUnlocked[i];
+        for (j = 0; j < 54; j++) {
+            if (lbl_803CB748[i] == lbl_800E8558[j].uniqueIdx) lbl_8034E9A0.charTaken[j] = locked;
+        }
+    }
+}
+
+/*
+ * Character-select roster rebuild, driven by the menu mode (lbl_803297E0.mode, 0xCF5F).
+ *
+ *   mode 9  : fn_800684A4() first (DOL, still a stub; touches lbl_8034E9A0), then if `rebuild` the full rebuild below.
+ *   mode 10 : full rebuild.
+ *   mode 12 : only the tail (fn_800671FC, and fn_800649BC if `finish`).
+ *   other   : nothing.
+ *
+ * Full rebuild (modes 9/10):
+ *   1. clear the 54 per-charID taken flags charsOnCharacterGridSelected (lbl_8034E9A0 + 0x4757);
+ *   2. mark both players' current picks (lbl_8034E9A0 + 0x46E0 / 0x46E4) as taken;
+ *   3. mark every colour variant of a still-locked character as taken (markLockedCharsTaken);
+ *   4. fn_80067F70(0/1): DOL auto-pick of a free colour per player (marks the pick and its whole
+ *      lbl_80108EDC colour family taken);
+ *   5. fn_2_8940, fn_800678CC(0/1), unsure_FillRosterPositions(0/1), characterSelectScreen(0/1),
+ *      fn_80069854: rebuild the two rosters / select-screen state from the picks;
+ *   6. if `rebuild`, fall into the mode-12 tail.
+ *
+ * Callers: fn_2_3204 -> fn_2_2FC0(lbl_803297E0.mode, 1, 1); gap_8E6A4.c -> fn_2_2FC0(9, 0, 1).
+ */
 // .text:0x00002FC0 size:0x244
-void fn_2_2FC0(u8 mode, s32 update, s32 reset) {
-    return;
+void fn_2_2FC0(u8 mode, s32 finish, s32 rebuild) {
+    switch (mode) {
+    case 9:
+        fn_800684A4();
+        if (rebuild == 0) return;
+        /* fallthrough */
+    case 10:
+        memset(lbl_8034E9A0.charTaken, 0, sizeof(lbl_8034E9A0.charTaken));
+        lbl_8034E9A0.charTaken[lbl_8034E9A0.players[0]] = 1;
+        lbl_8034E9A0.charTaken[lbl_8034E9A0.players[1]] = 1;
+        markLockedCharsTaken();
+        fn_80067F70(0);
+        fn_80067F70(1);
+        fn_2_8940();
+        fn_800678CC(0);
+        fn_800678CC(1);
+        unsure_FillRosterPositions(0);
+        unsure_FillRosterPositions(1);
+        characterSelectScreen(0);
+        characterSelectScreen(1);
+        fn_80069854();
+        if (rebuild == 0) return;
+        /* fallthrough */
+    case 12:
+        fn_800671FC();
+        if (finish != 0) fn_800649BC();
+        break;
+    }
 }
 
 // .text:0x00003204 size:0x38
@@ -598,7 +671,7 @@ void fn_2_C698(u8 index, u8 side) {
     s32 id;
     if (g_d_GameSettings.GameModeSelected != 5) {
         id = lbl_803C6724.teams[side][index];
-        lbl_8034E9A0.lineupFlags[id] = 1;
+        lbl_8034E9A0.charTaken[id] = 1;
         if (g_d_GameSettings._10 == 0 && side != 0) {
             if (lbl_8034E9A0.controllerIndices[0] == 0) fn_800506E8(1, id, 1);
             else fn_800506E8(0, id, 1);
@@ -607,7 +680,7 @@ void fn_2_C698(u8 index, u8 side) {
     } else {
         id = lbl_803C6724.first[index];
         fn_800506E8(0, id, 1);
-        lbl_8034E9A0.lineupFlags[id] = 1;
+        lbl_8034E9A0.charTaken[id] = 1;
         fn_80067B40(side, (u8)id, 1);
     }
 }

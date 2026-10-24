@@ -52,6 +52,19 @@ typedef struct MenusSystemState {
 } MenusSystemState;
 extern MenusSystemState lbl_803297E0;
 
+/* DOL character-select helpers used by fn_2_2FC0 (see .agent/character_select.md); same signatures as
+   include/Unknown/gap_80064754.h and gap_80067AC8.h, repeated here because those headers' lbl_8034E9A0
+   view conflicts with MenusSaveState. */
+extern u8 lbl_803CB748[6]; /* unique indices that need an unlock; g_d_GameSettings.charUnlocked[i] is their flag */
+void fn_800684A4(void);
+void fn_80067F70(s32 player);               /* auto-pick a free colour for player's selection */
+void fn_800678CC(s32 player);
+void unsure_FillRosterPositions(s32 player);
+void characterSelectScreen(s32 player);
+void fn_80069854(void);
+void fn_800671FC(void);
+void fn_800649BC(void);
+
 void fn_2_1254(void);
 void fn_2_1258(void);
 void fn_2_12A0(s16* value, s16 amount);
@@ -76,7 +89,7 @@ void fn_2_1F30(void);
 void fn_2_27E0(void);
 void fn_2_2BB8(void);
 void fn_2_2D1C(void);
-void fn_2_2FC0(u8 mode, s32 update, s32 reset);
+void fn_2_2FC0(u8 mode, s32 finish, s32 rebuild);
 void fn_2_3204(void);
 void fn_2_323C(void);
 s32 fn_2_33BC(void);

@@ -26,6 +26,10 @@ typedef struct _GameInitVariables {
     union {
         /*0x13*/ u8 _13;
         /*0x13*/ u8 miniGameLevels[0x20 - 0x13]; // indexed by MINI_GAME_ID
+        struct {
+            /*0x13*/ u8 _pad13[7];
+            /*0x1A*/ u8 charUnlocked[6]; // per locked unique index (lbl_803CB748[i]): 1 once unlocked
+        };
     };
     /*0x20*/ s16 _20[4][2];
     /*0x30*/ s16 challengeMinigame_baseCoinsEarned;

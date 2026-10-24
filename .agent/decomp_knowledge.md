@@ -378,3 +378,24 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
     address temp in r30 and `slot*0x27c` in r29, params in r26..r28.  Next idea: give the helper its
     own `slot`-derived pointer parameter from the caller (so the temp exists before the params are
     first used), or move the state-4 body out of the inline helper.
+
+## 13. Nested loop in a static inline: web order and promoted-load write-back (Fable, 2026-10-23)
+
+*   **fn_2_2FC0 (menus, matched)**: a 6x54 nested loop (`for i<6: locked = !g.unlocked[i]; for j<54:
+    if (tbl6[i] == rows[j].uniqueIdx) flags[j] = locked`) written directly in the function colours
+    the strength-reduced walkers first (r6..r9) and the user locals after (i/j/locked r10..r12), 136
+    diff lines however the locals are declared, typed or `register`'d.  The target has the locals
+    first (lk r4, j r6, i r7) and the walkers r9..r12, plus a `stb r8, 0(r12)` write-back of the
+    hoisted `tbl6[i]` load after the inner loop.  Moving the whole nested loop into a `static inline
+    void helper(void)` called from the case gives both at once: the inlined helper's locals get their
+    webs ahead of the loop-optimiser temps, and the compiler promotes `tbl6[i]` to a register for the
+    inner loop and writes it back (the stb) even though nothing stores to it.  Do not fake the
+    write-back with `tbl6[i] = tbl6[i]` (it also matches but is noise).  `!x` keeps the predicate in
+    the load temp (r4); `x == 0` gives it its own register.
+*   **Count the unrolled copies, not the `mtctr` value**: 9 copies x ctr 6 = 54 iterations.  The dead
+    counter after unrolling is bumped by copies-1 (`addi r6, r6, 0x8` for 9 copies), so a `+7` vs
+    `+8` diff means the trip count is wrong, not the loop form.
+*   The sibling `fn_2_348C` (same loop as a standalone function) has the plain non-inlined colouring
+    (uq r6, walkers r7..r10, i r11, lk r12) with `locked` NOT coalesced into the load temp: start from
+    the direct form with `locked = (g.unlocked[i] == 0)`.
+

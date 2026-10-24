@@ -34,11 +34,14 @@ typedef struct MenusSortEntry {
     s32 value;
 } MenusSortEntry;
 
+/* lbl_800E8558 (Ghidra characterStaticIndexes): one 6-byte row per charID (54 rows). */
 typedef struct MenusLineupChoice {
-    u8 _pad0[2];
-    u8 team;
-    u8 enabled;
-    u8 _pad4[2];
+    u8 family;    /* 0x0 colour family 0..9 (0 = none) */
+    u8 baseCharID; /* 0x1 */
+    u8 uniqueIdx; /* 0x2 0..31, shared by colour variants (portrait/name/voice key) */
+    u8 isBase;    /* 0x3 1 for the 26 base characters */
+    u8 isCaptain; /* 0x4 */
+    u8 colourIdx; /* 0x5 */
 } MenusLineupChoice;
 typedef struct MenusLineupSlot {
     s16 id;

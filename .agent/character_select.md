@@ -42,7 +42,7 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
      54 chemistry bytes (+0x3B..) and the ids 0..53 into two stack arrays, selection-sorts them by
      chemistry descending, and stores the sorted id list at `lbl_8034E9A0 + 0x478D + idx*54`
      ("characters ranked by chemistry with this player", used by the roster UI).
-   * `fn_80067F70(u8 idx)` (0x534, stub, asm read): the **auto-pick**.  Stores `selected[idx]` into
+   * `fn_80067F70(s32 player)` (0x534, stub, asm read; the player index is passed as 0/1): the **auto-pick**.  Stores `selected[idx]` into
      `lbl_803C6724[idx*9+2]`, calls `fn_80067C48(idx)` (chemistry ranking), builds a 54-byte stack
      list of ranked ids whose taken flag is 0 (unrolled 9×6), compacts the −1 holes, then
      `randRange_FUN_80042bf0(0, 19)` picks one of the first 20 candidates (retry while −1), marks it
@@ -91,8 +91,20 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
    skin hook goes here.  Both only use `lbl_80108EDC`, `lbl_8034E9A0` and `fn_80067AC8`.
 2. `fn_800698F8` (0x170): decompiled (24 diffs: prologue hoist + local jump-table name), body in
    gap_80067AC8.c; `lbl_8034E9A0.useAltBirdoGrid` (0x48AE) added to the struct.
-3. menus.rel `fn_2_2FC0`, `fn_2_3624`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_DFAC` (src/menus/gap_1254):
-   the roster screen logic that calls the above.
+3. menus.rel `fn_2_2FC0` (**matched 2026-10-23**), `fn_2_3624`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_DFAC`
+   (src/menus/gap_1254): the roster screen logic that calls the above.
+   * `fn_2_2FC0(u8 mode, s32 finish, s32 rebuild)`: the roster rebuild entry, keyed on the menu mode
+     (`lbl_803297E0.mode`).  Modes 9/10: memset the 54 taken flags (`charsOnCharacterGridSelected`,
+     `lbl_8034E9A0.charTaken`), mark both players' picks (`lbl_8034E9A0 + 0x46E0/0x46E4`) taken, then
+     for each of the 6 locked uniques `lbl_803CB748[i]` set the taken flag of every charID with that
+     `lbl_800E8558[c].uniqueIdx` to `!g_d_GameSettings.charUnlocked[i]` (bytes 0x1A..0x1F), then
+     `fn_80067F70(0/1)` (auto-pick + family walk), `fn_2_8940`, `fn_800678CC(0/1)`,
+     `unsure_FillRosterPositions(0/1)`, `characterSelectScreen(0/1)`, `fn_80069854`; mode 12 (or
+     `rebuild` after 9/10): `fn_800671FC` and, if `finish`, `fn_800649BC`.  Mode 9 runs `fn_800684A4`
+     first.  Callers: `fn_2_3204` (mode, 1, 1), `fn_2_8ED4C` (9, 0, 1).  So locked characters are
+     excluded from the colour walk the same way as already-picked ones: a modded extra charID is
+     only hidden from picking if its uniqueIdx is one of the six in `lbl_803CB748` and the flag is 0.
+     `fn_2_348C` (0x144, still a stub) is the same locked-unique loop standing alone.
 4. `fn_800415A8` (0xAD4): CPU team builder (colour columns 1..4).
 5. game.rel `fn_3_B4124`, `fn_3_10C450`: roster → `inMemRoster` copy (skin byte lands here).
 6. `fn_80067B40(arg0 unused, s16 charID, u8 value)`: 8 register-choice diffs left (key should land
