@@ -12,7 +12,7 @@ instead of searching prose.
 | Extend the clone patcher / GUI | `tools/modding/README_WINDOWS.md`, `character_modding_report.md` §TL;DR, §3, §8; `character_select.md` §6 (UI lookups), §8.2–8.3 (menu art) |
 | Find, extract or replace a game file | `data_map.md` §1 TL;DR, §4 (tables), §5 (formats); tool: `tools/datamap/README.md` |
 | Edit in-game text | `data_map.md` §1, §6; `tools/datamap/README.md` (text-export / text-import) |
-| Skin picker (phase 3) | `modding_roadmap.md` phase 3; `character_modding_report.md` §4c; `roster_flow.md` (R2, once written) |
+| Skin picker (phase 3) | `roster_flow.md` §6 (design), §1–§5 (data flow); `modding_roadmap.md` phase 3 |
 | Character load chain (models, textures, skeleton, gloves) | `character_modding_report.md` §1–§3 |
 | Menu portraits, names, colour word | `character_select.md` §8.1–8.3 |
 | What's planned / status | `modding_roadmap.md`; live status on the GitHub board (users/Cjericho4/projects/3, issues on Cjericho4/mssb-dtk) |
@@ -28,6 +28,7 @@ instead of searching prose.
 | `character_select.md` | select/roster flow, UI and announcer lookups, menu art files and index math | ~10k |
 | `data_map.md` | every descriptor table and file in ZZZZ.dat / aaaa.dat, formats, coverage, unknowns | ~7k |
 | `decomp_knowledge.md` | compiler idioms and matching tricks by date; §1 and §13 are the most reused | ~12k |
+| `roster_flow.md` | roster → match data flow (R2): copy sites, skin-byte audit, loader path, re-load points, phase-3 design | ~7k |
 | `handoff_fn_2_3624.md` | state of the one unmatched phase-1 function | ~1k |
 | `*_codex_notes.md` | give-up logs from Codex batches (menus, dol, challenge); grep for a function name | skip |
 | `attempts/`, `categorize/`, `workflows/` | best non-matching attempts, difficulty CSV, parallel-batch procedure | as needed |
