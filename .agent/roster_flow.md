@@ -176,7 +176,8 @@ so the original `StatTable` almost certainly ends its first byte block at +0x1D 
 
 ## 4. Every reader and writer of `inMemRoster` bytes +0x05..+0x1F
 
-Method: `scan_roster.py` (scratch tool, not committed) taints every register derived from
+Method: `.agent/probe/scan_roster.py` (`python3 .agent/probe/scan_roster.py inMemRoster a0
+$(grep -rl inMemRoster build/GYQE01/*/asm build/GYQE01/asm)`) taints every register derived from
 `inMemRoster@l` (`addi`, `add`, `mr`, `addi` chains, update-form loads) inside each function of
 every `.s` unit that mentions the symbol (DOL 7 units, game.rel 25, menus 4, challenge 0) and
 reports each load/store displacement mod 0xA0, every `memcpy`/`memset` with a tainted r3/r4, and
@@ -344,14 +345,15 @@ re-copy in `characterSelectScreen` can be deferred for a first test by making th
 |---|---|---|---|
 | `fn_2_DFAC`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_2FC0`, `fn_2_A040`, `fn_2_5F80` | menus gap_1254 | | MATCH |
 | `fn_2_3624`, `fn_2_5444`, `fn_2_102C8` | menus gap_1254 | | documented, non-matching |
-| `fn_2_8940` | menus gap_1254 | 0x3B8 | decompiled this pass (see commit) |
+| `fn_2_8940` | menus gap_1254 | 0x3B8 | **MATCH** (this pass; `copyStatsRow` / `COPY_STATS_ROW` helper, `CharacterStats` layout fixed) |
 | `fn_2_8CF8`, `fn_2_9ACC`, `fn_2_11EA8`, `fn_2_5163C`, `fn_2_20D08` | menus | | stubs; purpose documented above (m2c read) |
 | `characterSelectScreen` | DOL gap_80064754 | 0x10C0 | stub; documented (asm + m2c) |
 | `unsure_FillRosterPositions`, `fn_800678CC`, `fn_80066EAC`, `fn_80068838`, `fn_800415A8` | DOL | | stubs; roles documented |
-| `transferStatsToInMemRoster` | DOL gap_80041348 | 0x514 | decompiled this pass |
+| `transferStatsToInMemRoster` | DOL gap_80041348 | 0x514 | decompiled this pass, 26 diff lines (saved-register numbering, one CSE'd base) |
 | `fn_800471F4`, `fn_80047CE0`, `pauseMenuSelection`, `startGameRelated`, `fn_8005A350` | DOL | | stubs; roles documented |
 | `fn_3_B4124`, `fn_3_10C450`, `fn_80069854`, `fn_80017098`, `fn_8001758C`, `fn_8002204C` | | | MATCH |
 | `fn_3_6BD6C`, `fn_3_6BA64`, `fn_3_6B4C8`, `fn_3_6B5D8`, `fn_3_6B870` | game gap_6B4C8 | | C bodies present |
-| `fn_8001500C` | DOL gap_8001196C | 0x45C | decompiled this pass |
+| `fn_8001500C` | DOL gap_8001196C | 0x45C | decompiled this pass, 48 diff lines (loop temporaries one register apart) |
 | `fn_80015468`, `fn_8001594C`, `fn_80011BE4`, `fn_80018270` | DOL gap_8001196C | | stubs; documented in section 5 |
-| `fn_80016344`, `fn_80016710`, `fn_80017814` | DOL gap_8001196C | | documented, non-matching (see the commit log of this pass for the attempts) |
+| `fn_80016344`, `fn_80016710` | DOL gap_8001196C | 0x3CC, 0x450 | documented, non-matching: 32 / 28 lines (two CSE temps vs. params; `charID` is s32, `fn_80025FFC` takes 2 args) |
+| `fn_80017814` | DOL gap_8001196C | 0x514 | documented, non-matching (54 lines, prologue scheduling; not attempted this pass) |

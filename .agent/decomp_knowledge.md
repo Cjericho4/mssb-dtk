@@ -424,3 +424,38 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
 *   `if (a == X || b == Y) {P} else {Q}` and `if (a != X && b != Y) {Q} else {P}` differ in block
     order: the target emits the block of the branch that falls through first, so pick the form whose
     first block comes first in the asm (fn_2_7DDC's cursor 9/10 wanted the `!=`/`&&` form).
+
+## 14. Roster-copy pass findings (Fable, 2026-10-24, R2)
+
+*   **`CharacterStats` is a union now.** `StatTable` holds a `u32`, so MWCC pads it to 0x3C and the
+    old `StatTable stats; ChemistryTable chemistry;` layout put the chemistry row at 0x3C instead of
+    0x3B (the asm says 0x3B).  `include/game/UnknownHomes_Game.h` overlays the trailing fields on the
+    stats block through an anonymous union; `UnusedShorts` are `u16` (the copies use `lhz`/`sth`).
+*   **The same inlined copy helper compiles two ways.** `COPY_STATS_ROW(dst, src)` (memcpy 0x1E +
+    scalar fields + memcpy per small array + 21 halfwords) matched `fn_2_8940` through pointer
+    walkers (`*dst, *src`, dst/src declared *before* the loop counters: `src` r19 above `team`/`n`),
+    while the DOL `transferStatsToInMemRoster` re-materialises `inMemRoster[side][slot]` and
+    `lbl_8034E9A0.stats[row][col]` per field and keeps only the memcpy arguments in r25/r26: write
+    those as global lvalues, not through a pointer local (`entry`), or the field stores go through
+    the pointer.
+*   `lha`+`lhau`: an `lhau r0, 0x24(r28)` on the roster entry means the compiler CSE'd
+    `&inMemRoster[side][slot].stats.CharID` for three uses (flag test, division input, store); no
+    pointer local is needed, three uses of the same lvalue produce it.
+*   **Widened byte before `/ 2`, `% 2`:** `u8 hand = tbl[c]; arm = hand / 2` gives `extrwi 7, 24`;
+    the target's `extrwi 8, 23` + the signed `% 2` sequence came from `s32 hand = tbl[c];
+    arm = (hand >> 1) & 0xFF; stance = hand % 2` (fn_2_8940).
+*   **A `u8` parameter forwarded with a plain `mr` to another call is really `s32`**: `fn_80016344`
+    / `fn_80016710` pass charID to `fn_80017098` as `mr r8, r26` (no `clrlwi`); declaring the
+    parameter `s32` and letting the inlined helper take `u8` reproduces both the `clrlslwi` table
+    index and the plain `mr`.
+*   **Argument count from the callee's prologue:** `fn_80025FFC` only tests r3/r4 and sets r5 itself,
+    so it takes two arguments; the apparent third (`obj` in r5) was the address materialisation.
+*   **Two CSE temps vs. parameters (fn_80016344/fn_80016710, still open):** the target colours
+    `slot*0x27c` r29 and `&slots[slot].fileBuffer` r30 above the params r26..r28 (and swaps them
+    between the two inlined copies in fn_80016710).  An explicit `u8** fileBuffer` local is
+    materialised eagerly (worse); helper parameter order and `!x` forms change nothing.
+*   **Inlined loop with a raw byte reused by two `(s8)` compares** (fn_8001500C): the target keeps the
+    `lbz` in a register and re-extends (`extsb`) at each compare; `(s8)(flag = p->index1) != -2` in
+    the loop condition plus `(s8)flag == -1` in the body gives that shape (one load, two `extsb`).
+*   `-inline auto` (DOL) does not inline a 70-line `static inline` helper (it became a `bl`); keep DOL
+    helpers small or write the body flat.
