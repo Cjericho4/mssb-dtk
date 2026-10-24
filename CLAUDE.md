@@ -29,7 +29,7 @@ Progress is tracked at: https://decomp.dev/roeming/mssb-dtk
 - `orig/GYQE01/` original game files (main.dol, REL files)
 - `tools/` custom Python decompilation and build tools
   - `tools/aidecomp/` ADS Dashboard web app (FastAPI + uvicorn)
-- `.agent/` AI agent workflow files and knowledge base
+- `.agent/` AI agent workflow files and knowledge base. **Start at `.agent/INDEX.md`**: it says which doc sections to read per task; grep `.agent/addresses.md` for any address or table name instead of reading whole docs.
 - `exported_symbols.csv` Ghidra-exported symbols with names, addresses, types, namespaces, and ref counts
 - `in_game.h` Ghidra-exported C definitions (structs, enums, typedefs, function prototypes)
 
