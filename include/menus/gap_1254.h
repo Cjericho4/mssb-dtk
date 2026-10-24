@@ -18,6 +18,12 @@ typedef struct MenusTeamSelections {
     u8 unk4A[2][9];        /* 0x4A cleared with the slot in fn_2_4970 */
 } MenusTeamSelections;
 extern MenusTeamSelections lbl_803C6724;
+typedef struct MenusAutoFillStrategy {
+    u8 _pad0[2];
+    u8 current; /* 0x2 random 0..2 */
+    u8 previous; /* 0x3 avoid repeating the last strategy */
+} MenusAutoFillStrategy;
+extern MenusAutoFillStrategy lbl_803CBD24;
 
 typedef struct Menus1254State {
     union {
@@ -34,7 +40,7 @@ typedef struct Menus1254State {
     u8 _pad31[5];
     u8 unk36;       /* 0x36 scene-transition timer/mode set to 0x1E when the roster screen is left */
     u8 flags37[4];  /* 0x37 per side: pick in progress (cleared by fn_2_4970) */
-    u8 _pad3B[2];
+    u8 reservedOtherPick[2]; /* 0x3B temporarily reserve other side's hovered char during auto-fill */
     u8 flags3D[2];  /* 0x3D per side */
     u8 unk3F;       /* 0x3F challenge mode: set while the roster is locked (fn_2_DFAC refuses picks with the alert sound) */
     u8 _pad40;
@@ -83,7 +89,7 @@ extern u8 lbl_803CB748[6]; /* unique indices that need an unlock; g_d_GameSettin
 void fn_800684A4(void);
 void fn_80067F70(s32 player);               /* auto-pick a free colour for player's selection */
 void fn_800678CC(s32 player);
-void unsure_FillRosterPositions(s32 player);
+void unsure_FillRosterPositions(u8 player);
 void characterSelectScreen(s32 player);
 void fn_80069854(void);
 void fn_800671FC(void);
@@ -156,7 +162,7 @@ void fn_2_A288(void);
 BOOL fn_2_A50C(void);
 BOOL fn_2_A62C(void);
 void fn_2_A6E0(void);
-void fn_2_ABC0(void);
+void fn_2_ABC0(u8 side);
 void fn_2_AEE8(void);
 void fn_2_B324(void);
 void fn_2_B508(void);
@@ -176,9 +182,9 @@ void fn_2_EAE0(void);
 void fn_2_EC34(void);
 void fn_2_EC54(s32 side);
 void fn_2_ED94(void);
-void fn_2_F200(void);
-void fn_2_FAA0(void);
-void fn_2_FCB4(void);
+void fn_2_F200(u8 side);
+void fn_2_FAA0(u8 side);
+void fn_2_FCB4(u8 side);
 void fn_2_102C8(u8 side);
 void fn_2_104FC(void);
 void fn_2_110B0(void);

@@ -11,6 +11,7 @@ extern s16 fn_80067AC8(s16 key, s8 column);
 #include "menus/gap_D08.h"
 #include "menus/gap_71EC4.h"
 #include "string.h"
+extern s32 randRange_FUN_80042bf0(s32 min, s32 max);
 
 extern void sndFXRelated(s32 id);
 #include "menus/rep_0568.h"
@@ -1351,7 +1352,7 @@ void fn_2_A6E0(void) {
 }
 
 // .text:0x0000ABC0 size:0x328
-void fn_2_ABC0(void) {
+void fn_2_ABC0(u8 side) {
     return;
 }
 
@@ -1698,23 +1699,62 @@ void fn_2_ED94(void) {
 }
 
 // .text:0x0000F200 size:0x8A0
-void fn_2_F200(void) {
+void fn_2_F200(u8 side) {
     return;
 }
 
 // .text:0x0000FAA0 size:0x214
-void fn_2_FAA0(void) {
+void fn_2_FAA0(u8 side) {
     return;
 }
 
 // .text:0x0000FCB4 size:0x614
-void fn_2_FCB4(void) {
+void fn_2_FCB4(u8 side) {
     return;
 }
 
 // .text:0x000102C8 size:0x234
+/* Auto-fill, not a picture loader. Temporarily protect the other side's pending
+ * grid character, choose a different fill strategy from last time, then rebuild
+ * positions and request animation 0x16. A full team instead moves to Ready.
+ * The temporary reservation is released after either path. */
 void fn_2_102C8(u8 side) {
-    return;
+    s32 other;
+    s32 i;
+    s32 empty = 0;
+    for (i = 0; i < 9; i++) {
+        if (lbl_803C6724.teams[side][i] == -1 || lbl_803C6724.teams[side][i] == 54) empty++;
+    }
+    other = side ^ 1;
+    if (lbl_2_bss_F468.flags41[other] != 0) {
+        if (lbl_8034E9A0.charTaken[lbl_2_bss_F410.gridPick[other]] == 0) {
+            lbl_8034E9A0.charTaken[lbl_2_bss_F410.gridPick[other]] = 1;
+            lbl_2_bss_F468.reservedOtherPick[side] = 1;
+        }
+    }
+    if (empty != 0) {
+        do {
+            lbl_803CBD24.current = randRange_FUN_80042bf0(0, 2);
+        } while (lbl_803CBD24.previous == lbl_803CBD24.current);
+        fn_2_ABC0(side);
+        switch (lbl_803CBD24.current) {
+        case 0: fn_2_FCB4(side); break;
+        case 1: fn_2_FAA0(side); break;
+        case 2: fn_2_F200(side); break;
+        }
+        fn_800678CC(side);
+        unsure_FillRosterPositions(side);
+        fn_800625A4(side, 0x16);
+        lbl_803CBD24.previous = lbl_803CBD24.current;
+        lbl_2_bss_F468.flags37[side] = 1;
+    } else {
+        lbl_2_bss_F468.cursor[side] = 9;
+        fn_800625A4(side, 0x11);
+    }
+    if (lbl_2_bss_F468.reservedOtherPick[side] != 0) {
+        lbl_2_bss_F468.reservedOtherPick[side] = 0;
+        lbl_8034E9A0.charTaken[lbl_2_bss_F410.gridPick[other]] = 0;
+    }
 }
 
 // .text:0x000104FC size:0xBB4
