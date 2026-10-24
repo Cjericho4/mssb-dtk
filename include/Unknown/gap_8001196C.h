@@ -21,7 +21,7 @@ void fn_80014A18(void);
 void fn_80014D4C(void);
 void fn_80014E50(void);
 void fn_80014F40(void);
-void fn_8001500C(void);
+BOOL fn_8001500C(s32 team, s32 player, s32 slotKind);
 void fn_80015468(void);
 void fn_8001594C(void);
 BOOL fn_80016344(u8 charID, s32 slot, u8 stance, s32 player);
@@ -32,7 +32,9 @@ typedef struct Gap8001196CModelFile { u8 _pad0[0x10]; u8* unk10; } Gap8001196CMo
 typedef struct Gap8001196CStadiumObj {
     /* 0x00 */ u8* buf;                      /* file buffer (relocated root header: 4 word offsets) */
     /* 0x04 */ u8* unk4;                     /* selected part of the file (word lbl_803CB7C4[3]) */
-    u8 _pad8[0x55];
+    u8 _pad8[0x28];
+    /* 0x30 */ u8* unk30;                    /* extra block of the character .gpc when the entry is reused (fn_8001500C) */
+    u8 _pad34[0x29];
     /* 0x5D */ u8 unk5D;
     u8 _pad5E[2];
     /* 0x60 */ u8 index0;                    /* charID (stadium objects) / actor-entry index (sub-items) */
@@ -71,7 +73,7 @@ extern s16 lbl_800EEB18[54];                 /* charID -> model id (-1 = none) *
 struct Gap8001196CLoadArg;
 void* fn_80021BBC(s32 charID, void* buf);
 u8* fn_80021ADC(s32 modelID, u8* buf);
-void fn_80025FFC(u8* model, u8** out, Gap8001196CStadiumObj* obj);
+void fn_80025FFC(u8* model, u8** out);  /* 2 args: the asm only reads r3/r4 and sets r5 itself */
 void ANIMGet(u8* animBank);
 /* queue task filled by fn_80017098 and consumed by fn_800177B4 */
 typedef struct Gap8001196CLoadTask {
@@ -88,7 +90,12 @@ typedef struct Gap8001196CLoadTask {
 } Gap8001196CLoadTask;
 Gap8001196CLoadTask* fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
 BOOL fn_80017098(s32 team, s32 player, s32 arg1B, s32 slotKind, s32 variant, s32 charIDOverride);
-void fn_80017340(void);
+s32 fn_80017340(s32 slot);
+/* stadium-object policy flags (sdata, 8 bytes): unk3 = every batter/runner slot gets one, unk4 = only the batter */
+typedef struct Gap8001196CStadiumFlags { u8 _pad0[3]; u8 unk3; u8 unk4; u8 _pad5[3]; } Gap8001196CStadiumFlags;
+extern Gap8001196CStadiumFlags lbl_803CBC34;
+extern u8 lbl_803CBBF9;                      /* fn_8001500C: a free lbl_80118220 entry has been chosen (lbl_803CBC28) */
+extern s32 lbl_803CBC28;                     /* index of that entry */
 
 /* per-slot animation/actor record (AnimationStruct in UnknownHeaders.h), 0x27C bytes */
 typedef struct Gap8001196CAnim {
@@ -242,7 +249,7 @@ typedef struct Gap8001196CAnimTable {
             u8 _pad2D5E[0x2D6A - 0x2D5E];
             /* 0x2D6A */ s8 slotOwner[13];   /* slotKind using slots[i], -1 = free (fn_80017098) */
             /* 0x2D77 */ u8 loadState;       /* fn_80016344/fn_80016710 state: 1 queued, 2..5 loading, 6 done */
-            u8 _pad2D78;
+            /* 0x2D78 */ u8 reused;          /* fn_80017098 result: the slot was already loaded (fn_8001500C) */
             /* 0x2D79 */ u8 currentSlot;     /* slot index being loaded */
             u8 _pad2D7A[5];
             /* 0x2D7F */ u8 loadedCharID[9];

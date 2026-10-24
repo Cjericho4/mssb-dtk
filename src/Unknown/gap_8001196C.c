@@ -88,7 +88,7 @@ static inline BOOL finishSubItemLoad(void) {
         fn_80025C58((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]], actorSlot);
     }
     obj->unk4 = (u8*)((u32*)obj->buf)[lbl_803CB7C4[3]];
-    fn_80025FFC((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]], &obj->unk4, obj);
+    fn_80025FFC((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]], &obj->unk4);
     lbl_803CBC1C = NULL;
     return TRUE;
 }
@@ -448,9 +448,163 @@ void fn_80014F40(void) {
     return;
 }
 
+/* fn_8001500C -- per-slot load state machine for the batter and runner slots (game side).
+ *
+ * team / player: inMemRoster[team][player] is the character to load; slotKind: 9 batter, 10..12
+ * runners (game.rel fn_3_6BA64 calls it with g_GameLogic.teamBatting, g_Runners[i].rosterID, 9 + i).
+ * Returns TRUE when the slot is ready.  g_hugeAnimStruct.loadState (0x2D77): 2 register
+ * slotPtrs[slotKind] = &slots[currentSlot], 3 wait for fn_80017340 then decide whether a stadium
+ * object is needed (lbl_803CBC34 flags; reused slots that already own one skip to 5 / done),
+ * 4 stadium object: reuse the lbl_80118220 entry already holding this charID (index1 == -1), else
+ * take the first free one (lbl_803CBC28) and stream lbl_800EEB18[charID] through fn_80021ADC /
+ * fn_80025FFC, 5 fn_80013680 (bats/gloves), anything else: fn_80017098(team, player, 1, slotKind,
+ * variant = (slotKind == 9), -1) -- the batter gets the ARAM hi-detail body, runners the disc
+ * low-detail body (subfile track 1).  A reused slot (0x2D78) with its sub-items already loaded is
+ * reported ready at once.
+ * Chain position: game.rel fn_3_6BA64 -> here -> fn_80017098 -> fn_8001758C.  Variant hook: none
+ * here; the roster entry is read by fn_80017098/fn_8001758C.
+ * Match status: NOT matched (48 diff lines): same instructions; the inlined helper's loop
+ * temporaries (k / obj / zero-extended charID / flag) and its return flag are numbered one register
+ * apart, plus scheduling around the lbl_803CBC28 / lbl_800EEB18 reads. */
+/* Attach the stadium/extra object of a batter or runner slot (fn_8001500C state 4).  First reuse the
+ * lbl_80118220 entry already holding this charID (index1 == -1, released); otherwise pick the first
+ * released or free (-2) entry (lbl_803CBC28, lbl_803CBBF9 marks that the choice was made) and stream
+ * lbl_800EEB18[charID] into it (fn_80021ADC), binding it with fn_80025FFC once loads are allowed.
+ * Returns 1 when done (or nothing to attach), 0 to retry next frame. */
+static inline u8 attachRunnerStadiumObject(s32 slotKind) {
+    u8 flag;
+    Gap8001196CAnim* anim;
+    Gap8001196CStadiumObj* obj;
+    s32 k;
+    s32 idx;
+    s16 modelID;
+    u8 charID;
+    u8 done;
+
+    anim = g_hugeAnimStruct.slotPtrs[slotKind];
+    charID = anim->charID;
+    if (lbl_803CBBF9 == 0) {
+        for (k = 0; (s8)(flag = lbl_80118220[k].index1) != -2; k++) {
+            if (charID == (s8)lbl_80118220[k].index0 && (s8)flag == -1) {
+                obj = &lbl_80118220[k];
+                anim->stadiumObj = obj;
+                obj->index0 = charID;
+                obj->index1 = slotKind;
+                obj->unk30 = ((Gap8001196CModelFile*)anim->fileBuffer)->unk10;
+                return 1;
+            }
+        }
+        lbl_803CBBF9 = 1;
+        for (k = 0; (s8)(flag = lbl_80118220[k].index1) != -2; k++) {
+            if ((s8)flag == -1) {
+                break;
+            }
+        }
+        lbl_803CBC28 = k;
+    }
+    idx = lbl_803CBC28;
+    modelID = lbl_800EEB18[charID];
+    lbl_80118220[idx].unk5D = 0;
+    if (modelID == -1 || ((Gap8001196CModelFile*)anim->fileBuffer)->unk10 == NULL) {
+        anim->stadiumObj = NULL;
+        done = 1;
+    } else {
+        if (lbl_803CBBFA == 0) {
+            fn_80021ADC(modelID, lbl_80118220[idx].buf);
+            lbl_803CBBFA = 1;
+        }
+        if (lbl_803C6CF8.allowLoad == 1) {
+            obj = &lbl_80118220[idx];
+            obj->index0 = charID;
+            obj->index1 = slotKind;
+            obj->unk4 = obj->buf;
+            fn_80025FFC(((Gap8001196CModelFile*)anim->fileBuffer)->unk10, &obj->unk4);
+            anim->stadiumObj = obj;
+            lbl_803CBBFA = 0;
+            done = 1;
+        } else {
+            done = 0;
+        }
+    }
+    if (done) {
+        lbl_803CBBF9 = 0;
+        return 1;
+    }
+    return 0;
+}
+
 // .text:0x8001500C size:0x45C
-void fn_8001500C(void) {
-    return;
+BOOL fn_8001500C(s32 team, s32 player, s32 slotKind) {
+    Gap8001196CAnim* anim;
+    s32 result;
+
+    if (g_hugeAnimStruct.loadState == 1) {
+        return FALSE;
+    }
+    if (g_hugeAnimStruct.loadState == 2) {
+        g_hugeAnimStruct.slotPtrs[slotKind] = &g_hugeAnimStruct.slots[g_hugeAnimStruct.currentSlot];
+        g_hugeAnimStruct.bankLoadStep = 0;
+        g_hugeAnimStruct.loadState = 3;
+    }
+    if (g_hugeAnimStruct.loadState == 3) {
+        if (fn_80017340(g_hugeAnimStruct.currentSlot) != 0) {
+            if (g_hugeAnimStruct.reused != 0) {
+                anim = g_hugeAnimStruct.slotPtrs[slotKind];
+                if (anim->stadiumObj != NULL) {
+                    if (anim->subItems == NULL) {
+                        g_hugeAnimStruct.loadState = 5;
+                        return FALSE;
+                    }
+                    g_hugeAnimStruct.loadState = 0;
+                    return TRUE;
+                }
+            }
+            if (lbl_803CBC34.unk3 != 0) {
+                g_hugeAnimStruct.loadState = 4;
+            } else if (lbl_803CBC34.unk4 != 0 && slotKind == 9) {
+                g_hugeAnimStruct.loadState = 4;
+            } else {
+                g_hugeAnimStruct.loadState = 5;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+    if (g_hugeAnimStruct.loadState == 4) {
+        if (attachRunnerStadiumObject(slotKind)) {
+            if (g_hugeAnimStruct.reused != 0 && g_hugeAnimStruct.slotPtrs[slotKind]->subItems != NULL) {
+                g_hugeAnimStruct.loadState = 0;
+                return TRUE;
+            }
+            g_hugeAnimStruct.loadState = 5;
+        } else {
+            return FALSE;
+        }
+    }
+    if (g_hugeAnimStruct.loadState == 5) {
+        if (fn_80013680(g_hugeAnimStruct.slotPtrs[slotKind])) {
+            g_hugeAnimStruct.loadState = 0;
+            return TRUE;
+        }
+        return FALSE;
+    }
+    if (slotKind == 9) {
+        g_hugeAnimStruct.reused = fn_80017098(team, player, 1, slotKind, 1, -1);
+    } else {
+        g_hugeAnimStruct.reused = fn_80017098(team, player, 1, slotKind, 0, -1);
+    }
+    result = g_hugeAnimStruct.reused;
+    if (result != 0) {
+        if (slotKind == 9) {
+            g_hugeAnimStruct.loadState = 2;
+            return FALSE;
+        }
+        if (g_hugeAnimStruct.slotPtrs[slotKind]->subItems == NULL) {
+            g_hugeAnimStruct.loadState = 5;
+            return FALSE;
+        }
+    }
+    return result;
 }
 
 // .text:0x80015468 size:0x4E4
@@ -522,7 +676,7 @@ static inline u8 loadStadiumObject(u8 charID, s32 slot, Gap8001196CStadiumObj* o
         obj->index0 = charID;
         obj->index1 = slot;
         obj->unk4 = obj->buf;
-        fn_80025FFC(((Gap8001196CModelFile*)g_hugeAnimStruct.slots[slot].fileBuffer)->unk10, &obj->unk4, obj);
+        fn_80025FFC(((Gap8001196CModelFile*)g_hugeAnimStruct.slots[slot].fileBuffer)->unk10, &obj->unk4);
         lbl_803CBBFA = 0;
         g_hugeAnimStruct.slots[slot].stadiumObj = obj;
         return 1;
@@ -873,7 +1027,7 @@ BOOL fn_80017098(s32 team, s32 player, s32 arg1B, s32 slotKind, s32 variant, s32
 }
 
 // .text:0x80017340 size:0x24C
-void fn_80017340(void) {
+s32 fn_80017340(s32 slot) {
     return;
 }
 
