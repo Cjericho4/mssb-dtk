@@ -51,8 +51,73 @@ void fn_8005138C(void) {
 }
 
 // .text:0x80051D00 size:0x488
+/* Open the DOL select grid. Its texture lookup sequence 0x19 (resource 9)
+ * supplies textures by GRID charID; taken cells show frame25
+ * and controller badges, while unavailable cells substitute charID54.
+ * lbl_800FDE60 is the per-cell draw order, FDE84 the base-character grid.
+ * No unique-index or family conversion occurs at this texture binding. */
 void fn_80051D00(void) {
-    return;
+    MenuGridScene* scene = lbl_803CC1B8;
+    s32 cell;
+    s32 i;
+    u8 charID;
+    s8 controller;
+    if (lbl_803C6028.unk8E == 1) return;
+    fn_80034E20(scene, lbl_800FCA60);
+    if (lbl_803C6028.unk8F == 1)
+        lbl_80371C30[scene->paneBase + 2].pane->sequence = 0x14;
+    lbl_80371C30[scene->paneBase + 1].pane->frame = 0x320000;
+    for (cell = 0; cell < 36; cell++) {
+        if (lbl_800FDE84[cell] == 0xFF) {
+            lbl_80371C30[scene->paneBase + cell + 0x2F].pane->flags &= ~2;
+            lbl_80371C30[scene->paneBase + cell + 3].pane->flags &= ~2;
+        } else {
+            charID = lbl_800FDE84[cell];
+            if ((s8)lbl_803C6028.cellUnavailable[cell] != 0) charID = 54;
+            fn_800363D8(scene, cell + 0x2F, 1, 0x19, charID);
+            lbl_80371C30[scene->paneBase + cell + 0x2F].pane->order = lbl_800FDE60[cell];
+            if (lbl_803C6028.unk8F == 1) {
+                for (i = 0; i < 12; i++) {
+                    if (lbl_800E854C[i] == charID) {
+                        lbl_80371C30[scene->paneBase + cell + 0x2F].pane->frame = 0x50000;
+                        lbl_80371C30[scene->paneBase + cell + 0x2F].pane->playMode = 0;
+                        break;
+                    }
+                }
+            }
+            if (charID < 54) {
+                if (g_d_GameSettings.exhibitionMatchInd == 0) {
+                    if (starMissionCompletionTracker.characterFlags[charID])
+                        lbl_80371C30[scene->paneBase + cell + 0x53].pane->flags |= 2;
+                } else if (lbl_80361B20.characterFlags[charID])
+                    lbl_80371C30[scene->paneBase + cell + 0x53].pane->flags |= 2;
+            }
+        }
+        lbl_80371C30[scene->paneBase + cell + 0x77].pane->flags &= ~2;
+        lbl_80371C30[scene->paneBase + cell + 0x77].pane->order = lbl_800FDE60[cell];
+        controller = lbl_803C6028.slots[cell];
+        if (controller >= 0) {
+            lbl_80371C30[scene->paneBase + cell + 0x2F].pane->frame = 0x190000;
+            lbl_80371C30[scene->paneBase + cell + 0x2F].pane->playMode = 0;
+            lbl_80371C30[scene->paneBase + cell + 3].pane->frame = 0x190000;
+            lbl_80371C30[scene->paneBase + cell + 3].pane->playMode = 0;
+            lbl_80371C30[scene->paneBase + cell + 0x77].pane->flags |= 2;
+            lbl_80371C30[scene->paneBase + cell + 0x77].pane->frame = 0x190000;
+            lbl_80371C30[scene->paneBase + cell + 0x77].pane->playMode = 0;
+            if (lbl_803C6028.alternateBadge[controller])
+                fn_800363D8(scene, cell + 0x77, 1, 0x1A, controller + 4);
+            else fn_800363D8(scene, cell + 0x77, 1, 0x1A, controller);
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        lbl_80371C30[scene->paneBase + i + 0x2B].pane->frame = i << 16;
+        if (lbl_803C6028.alternateBadge[i]) fn_800363D8(scene, i + 0x9B, 1, 0x1A, i + 4);
+        else fn_800363D8(scene, i + 0x9B, 1, 0x1A, i);
+    }
+    lbl_803C6028.unk7C = 0;
+    lbl_803C6028.unk92 = 0;
+    scene->state = 0;
+    lbl_803CC1B8->update = fn_8005138C;
 }
 
 // .text:0x80052188 size:0x28

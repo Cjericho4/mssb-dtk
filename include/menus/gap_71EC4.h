@@ -57,7 +57,7 @@ typedef struct MenusSubsceneState {
 } MenusSubsceneState;
 extern MenusSubsceneState lbl_803CBCD8;
 
-typedef struct MenusSceneScript MenusSceneScript;
+#include "menus/menu_ui.h"
 struct DrawingSceneStruct;
 void fn_80034E20(struct DrawingSceneStruct* scene, MenusSceneScript* script);
 typedef struct MenusSceneFlags {
