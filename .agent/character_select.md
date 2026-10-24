@@ -104,7 +104,9 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
      first.  Callers: `fn_2_3204` (mode, 1, 1), `fn_2_8ED4C` (9, 0, 1).  So locked characters are
      excluded from the colour walk the same way as already-picked ones: a modded extra charID is
      only hidden from picking if its uniqueIdx is one of the six in `lbl_803CB748` and the flag is 0.
-     `fn_2_348C` (0x144, still a stub) is the same locked-unique loop standing alone.
+     `fn_2_348C` (0x144, **matched 2026-10-23**) is the same locked-unique loop standing alone
+     (no `bl` to it in menus.rel): `for i<6: locked = (charUnlocked[i] == 0); for c<54: if
+     (lbl_803CB748[i] == lbl_800E8558[c].uniqueIdx) charTaken[c] = locked`.
 4. `fn_800415A8` (0xAD4): CPU team builder (colour columns 1..4).
 5. game.rel `fn_3_B4124`, `fn_3_10C450`: roster → `inMemRoster` copy (skin byte lands here).
 6. `fn_80067B40(arg0 unused, s16 charID, u8 value)`: 8 register-choice diffs left (key should land

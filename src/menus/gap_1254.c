@@ -330,9 +330,31 @@ s32 fn_2_33BC(void) {
     return result;
 }
 
+/*
+ * Standalone copy of markLockedCharsTaken (the locked-character pass of the roster rebuild).
+ *
+ * For each of the six unlockable unique indices lbl_803CB748[i] (0..31; sdata), every charID whose
+ * lbl_800E8558[charID].uniqueIdx matches gets its charsOnCharacterGridSelected flag
+ * (lbl_8034E9A0.charTaken, +0x4757) set to 1 while g_d_GameSettings.charUnlocked[i] (+0x1A..0x1F)
+ * is still 0, and cleared once unlocked.  So a locked character and all its colour variants are
+ * excluded from the colour walk exactly like an already-picked one.  No `bl` to it exists in
+ * menus.rel; fn_2_2FC0 uses the inlined helper instead.
+ *
+ * Match notes: as a standalone function the plain nested loop colours uq r6, walkers r7..r10,
+ * i r11, locked r12; `locked = (x == 0)` keeps locked in its own register (the `!x` form of the
+ * inlined helper would coalesce it into the load temp).
+ */
 // .text:0x0000348C size:0x144
 void fn_2_348C(void) {
-    return;
+    s32 i;
+    s32 j;
+    s32 locked;
+    for (i = 0; i < 6; i++) {
+        locked = (g_d_GameSettings.charUnlocked[i] == 0);
+        for (j = 0; j < 54; j++) {
+            if (lbl_803CB748[i] == lbl_800E8558[j].uniqueIdx) lbl_8034E9A0.charTaken[j] = locked;
+        }
+    }
 }
 
 // .text:0x000035D0 size:0x54
