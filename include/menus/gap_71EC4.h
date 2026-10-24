@@ -28,10 +28,9 @@ typedef struct MenusInputFlags {
         };
         u8 disabled[4];
     };
-    u8 unk59;
-    u8 unk5A;
+    u8 padSide[2]; /* 0x59 per pad slot (P1/P2): the roster side it drives; [0] becomes 1 once P1 is ready in one-pad mode (fn_2_7DDC, fn_2_3624) */
     u8 _pad5B[2];
-    u8 flags5D[4];
+    u8 flags5D[4]; /* 0x5D per side: roster UI state set by fn_800625A4 (0 = idle, 0xB = busy) */
 } MenusInputFlags;
 extern MenusInputFlags lbl_803C66B0;
 
@@ -64,7 +63,11 @@ void fn_80034E20(struct DrawingSceneStruct* scene, MenusSceneScript* script);
 typedef struct MenusSceneFlags {
     u8 _pad0[5];
     u8 unk5;
-    u8 _pad6[0x30];
+    u8 _pad6[4];
+    u8 unkA[2];   /* 0xA per side: set by fn_2_DFAC when a pick lands in a roster slot (slot in unkC) */
+    u8 unkC[2];   /* 0xC per side: roster slot of the last confirmed pick */
+    u8 unkE;      /* 0xE set when pad 0 moves on to side 1 in one-pad mode (fn_2_3624) */
+    u8 _padF[0x27];
     u8 unk36;
     u8 unk37;
     u8 unk38;

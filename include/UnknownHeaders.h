@@ -1218,7 +1218,9 @@ typedef struct SoundConfig {
     u8 _pad4[0x2];
     u8 volume;       /* 0x6 */
     u8 unk7;         /* 0x7 */
-} SoundConfig;
+    u8 unk8;         /* 0x8 roster popup open (SFX 0x1BF, fn_2_3624) */
+    u8 _pad9[7];
+} SoundConfig; /* size 0x10 */
 extern SoundConfig lbl_800EFBA4;
 s32 rand();                                         /* extern */
 extern s16 lbl_3_bss_170[];

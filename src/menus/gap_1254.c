@@ -25,6 +25,7 @@ extern void fn_8004EEF4(s32 a, s32 b, s32 c, s32 d, s32 enabled);
 extern u8 lbl_2_bss_100B4;
 
 extern u32 lbl_803CB750;
+extern u32 fn_800628D4(s32 charID);
 extern void fn_800625A4(s32 index, s32 command);
 
 // .text:0x00001254 size:0x4
@@ -361,21 +362,6 @@ void fn_2_348C(void) {
     }
 }
 
-// .text:0x000035D0 size:0x54
-s32 fn_2_35D0(u8 index) {
-    if (lbl_2_bss_F468.flags45[index]) {
-        lbl_2_bss_F468.flags45[index] = 0;
-        sndFXRelated(0x200);
-        return 1;
-    }
-    return 0;
-}
-
-// .text:0x00003624 size:0x134C
-void fn_2_3624(void) {
-    return;
-}
-
 /*
  * Register the character sitting in roster slot `index` of `side` (lbl_803C6724.teams[side][index])
  * as taken on the select grid.  This is the body of fn_2_C698 and is inlined into fn_2_4970,
@@ -409,6 +395,27 @@ static inline void markSlotTaken(u8 index, u8 side) {
         lbl_8034E9A0.charTaken[id] = 1;
         fn_80067B40(side, (u8)id, 1);
     }
+}
+
+/* Close the side's roster popup if one is open (flags45[side]); returns 1 when it did (the button
+   press is then consumed).  Body of fn_2_35D0, inlined into fn_2_3624. */
+static inline s32 closePopup(u8 index) {
+    if (lbl_2_bss_F468.flags45[index]) {
+        lbl_2_bss_F468.flags45[index] = 0;
+        sndFXRelated(0x200);
+        return 1;
+    }
+    return 0;
+}
+
+// .text:0x000035D0 size:0x54
+s32 fn_2_35D0(u8 index) {
+    return closePopup(index);
+}
+
+// .text:0x00003624 size:0x134C
+void fn_2_3624(u8 pad) {
+    return;
 }
 
 static inline void releaseSlot(u8 side, s32 slot) {
@@ -587,7 +594,7 @@ void fn_2_52CC(void) {
 }
 
 // .text:0x00005444 size:0x3A4
-void fn_2_5444(void) {
+void fn_2_5444(u8 side) {
     return;
 }
 
@@ -723,7 +730,8 @@ static inline void markChallengeRecruits(void) {
  *      (lbl_8034E9A0.charTaken, charsOnCharacterGridSelected); lbl_8034E9A0.unk48AD = 0;
  *      lbl_803C66B0.unk0 = 2.
  *   2. Pad roles pads[4] (one byte per controller) for fn_80050FE8 (DOL, stub): after the previous
- *      menu 9 only unk5A is set; otherwise unk59 = (g_d_GameSettings._10 == 0 && !challenge).  With
+ *      menu 9 pad slot 0 drives side 0 (lbl_803C66B0.padSide = {0, 1}); otherwise padSide[0] =
+ *      (g_d_GameSettings._10 == 0 && !challenge) (pad 0 starts on side 1 in one-pad mode).  With
  *      _10 == 0 player 0's pad (lbl_8034E9A0.controllerIndices[0], +0x46F8) gets role 1 and the other
  *      pad (1 if player 0 is on pad 0, else 0) role 2; with _10 != 0 both players' pads get role 1.
  *      fn_80050FE8(pads, 0, !challenge), fn_2_7265C(), lbl_8034E9A0.unk472A = 0xFF.
@@ -768,12 +776,12 @@ void fn_2_7DDC(void) {
     lbl_803C66B0.unk0 = 2;
     memset(pads, 0xFF, 4);
     if (lbl_803CBBCC->previousSelection == 9) {
-        lbl_803C66B0.unk59 = 0;
-        lbl_803C66B0.unk5A = 1;
+        lbl_803C66B0.padSide[0] = 0;
+        lbl_803C66B0.padSide[1] = 1;
     } else {
-        if (g_d_GameSettings._10 == 0 && g_d_GameSettings.GameModeSelected != 5) lbl_803C66B0.unk59 = 1;
-        else lbl_803C66B0.unk59 = 0;
-        lbl_803C66B0.unk5A = 1;
+        if (g_d_GameSettings._10 == 0 && g_d_GameSettings.GameModeSelected != 5) lbl_803C66B0.padSide[0] = 1;
+        else lbl_803C66B0.padSide[0] = 0;
+        lbl_803C66B0.padSide[1] = 1;
     }
     memset(pads, 0, 4);
     if (g_d_GameSettings._10 == 0) {
@@ -1084,9 +1092,224 @@ void fn_2_CE44(void) {
     return;
 }
 
+/* Captain charID of a side (lbl_8034E9A0.players[side], +0x46E0).  The three branches are what the
+   binary does: the same load whichever mode or side (presumably different arrays once). */
+static inline s32 sideCaptain(u8 side) {
+    if (g_d_GameSettings.GameModeSelected != 5) return lbl_8034E9A0.players[side];
+    if (side != 0) return lbl_8034E9A0.players[side];
+    return lbl_8034E9A0.players[side];
+}
+
+/* Roster cursor position 10 ("clear team"): release every non-captain pick of the side. */
+static inline void clearSideTeam(u8 side) {
+    s32 k;
+    lbl_2_bss_F468.flags3D[side] = 0;
+    if (g_d_GameSettings.GameModeSelected != 5) {
+        if (lbl_2_bss_F468.flags37[side] == 0) {
+            fn_2_102C8(side);
+            lbl_2_bss_F468.cursor[side] = 9;
+        } else {
+            for (k = 0; k < 9; k++) {
+                if (lbl_8034E9A0.players[side] != lbl_803C6724.teams[side][k]) {
+                    lbl_8034E9A0.charTaken[lbl_803C6724.teams[side][k]] = 0;
+                    fn_800506E8(lbl_8034E9A0.controllerIndices[side], lbl_803C6724.teams[side][k], 0);
+                    fn_80067B40(side, lbl_803C6724.teams[side][k], 0);
+                    lbl_803C6724.teams[side][k] = -1;
+                    lbl_803C6724.unk4A[side][k] = 0;
+                    lbl_803C6724.selectionFlags[side][k] = 0;
+                }
+            }
+            lbl_2_bss_F468.flags37[side] = 0;
+            lbl_2_bss_F468.flags43[side] = 1;
+            fn_800625A4(side, 0x19);
+        }
+    }
+}
+
+/*
+ * Roster screen: the A button of `side` (0 = P1 / team 0, 1 = P2 / team 1).  Caller: fn_2_ED94
+ * (the per-pad input dispatcher of the roster screen).  Nothing happens while the side's UI state
+ * (lbl_803C66B0.flags5D[0], set by fn_800625A4) is 0xB.
+ *
+ *   slot  = the roster slot whose pick order lbl_803C6724.order[side][slot] (+0x14) equals the side's
+ *           cursor lbl_2_bss_F468.cursor[side] (first match; 0 if none).
+ *   captain = lbl_8034E9A0.players[side] (+0x46E0), see sideCaptain().
+ *
+ * A. No grid pick pending (lbl_2_bss_F468.flags41[side] == 0): the cursor is on the roster.
+ *    cursor 9  ("ready"): fn_2_5444(side) commits the lineup (challenge mode: copies team 0 into
+ *              starMissionCompletionTracker +0x40B8.. / inMemRoster / lbl_80354720 and advances the
+ *              scene; otherwise UI state 0x11 and, with both sides ready, the next scene) + click.
+ *    cursor 10 ("clear"/"auto-fill"): refused with the alert sound when challenge mode has the roster
+ *              locked (lbl_2_bss_F468.unk3F); otherwise clearSideTeam(side): with no pick in progress
+ *              (flags37[side] == 0) fn_2_102C8(side) auto-fills the empty slots (random choice of
+ *              fn_2_FCB4 / fn_2_FAA0 / fn_2_F200, then fn_800678CC, unsure_FillRosterPositions, UI
+ *              state 0x16) and parks the cursor on 9; with a pick in progress every non-captain slot
+ *              is released (charTaken = 0, fn_800506E8(pad, id, 0) un-badges the grid cell,
+ *              fn_80067B40(side, id, 0) frees the colour family, teams/unk4A/selectionFlags cleared),
+ *              flags37[side] = 0, flags43[side] = 1 and UI state 0x19.  Then the confirm click.
+ *    cursor 0..8: picking the captain's own slot, or a locked challenge roster, gives the alert
+ *              sound; otherwise flags41[side] = 1 (the next A press confirms a grid pick) and UI
+ *              state 0xD (grid cursor shown).
+ * B. Grid pick pending (flags41[side] != 0): confirm lbl_2_bss_F410.gridPick[side] (+0x20, the charID
+ *    under the pad cursor on the select grid, kept by the DOL fn_80050138/fn_8005xxxx code).
+ *    Refused (alert) if that charID is taken (lbl_8034E9A0.charTaken, +0x4757) or -1, silently if
+ *    the challenge roster is locked, and with the alert when both pads share one controller
+ *    (g_d_GameSettings._10 == 1) and the other side is confirming the same charID.
+ *    1. Free the slot's previous character c = teams[side][slot] (not -1 / 0x36): normal modes
+ *       un-badge, free its colour family and clear its taken flag; challenge mode first refuses the
+ *       swap (alert) when the free characters (charTaken == 0, counted over all 54) are no more than
+ *       the slots still to fill (8 - picked non-captain slots), then un-badges/un-takes either the
+ *       family base (fn_80067AC8(c, 0)) when c has a colour family (fn_80067B40(..., 2) is the
+ *       query form) and no other family member stays on the team, or c itself.
+ *    2. teams[side][slot] = gridPick; unk4A[side][slot] = 1 (slot picked by a human this visit);
+ *       fn_800628D4(charID) plays the announcer call-out (keyed by unique index via
+ *       fn_800698F8); fn_800678CC(side) refreshes the side's captain banner index
+ *       (lbl_8034E9A0 + 0x470D + side = captainIdx * 4 + 3 from lbl_80108ED0[12]);
+ *       markSlotTaken(slot, side) (taken flag, grid-cell badge by pad, colour family taken).
+ *    3. lbl_803C5EA4.unkC[side] = slot, unkA[side] = 1 (tells the scene code which slot changed);
+ *       selectionFlags[side][slot] = Static_Stats_Tables[charID].chemistry[captain] (the row is
+ *       indexed [charID / 9][charID % 9], 0xA0 bytes each, chemistry at +0x3B); UI state 0xF
+ *       (pick landed); and when a pick was in progress (flags37[side]) the pending flag is cleared.
+ *
+ * Portraits/names are not chosen here: the only keys that leave this function are the charID
+ * (teams[], charTaken[], chemistry, announcer) and the base charID's grid cell (fn_800506E8).
+ * The visual update is driven by the UI state byte lbl_803C66B0.flags5D[side] that fn_800625A4
+ * sets (consumed by the DOL select-screen code, gap_800528AC.c: fn_800559EC / fn_80060184).
+ *
+ * Match notes: the parameter is an int (its unmasked uses: cursor[side], teams[side], flags41[side]);
+ * sideCaptain() and clearSideTeam() take u8 (every use inside them is clrlwi'd), as does
+ * markSlotTaken(); `slot` is s8 (extsb before each use, clrlwi for markSlotTaken's u8 index);
+ * `state` is the cursor cast to s8 and the slot search breaks on the first match with `state ==
+ * order[...]`; `pick` is a local assigned after the release calls (r19); `count` is s32 and
+ * `free` s8, compared as `free <= 8 - (s8)count`.
+ */
 // .text:0x0000DFAC size:0xB34
-void fn_2_DFAC(void) {
-    return;
+void fn_2_DFAC(s32 side) {
+    s8 slot = 0;
+    s8 family = -1;
+    s32 captain;
+    s32 count = 0;
+    s8 free = 0;
+    s8 state;
+    s32 pick;
+    s32 k;
+    s32 i;
+    s32 j;
+    s8 c;
+    s32 locked;
+
+    state = lbl_2_bss_F468.cursor[side];
+    captain = sideCaptain(side);
+    if (lbl_803C66B0.flags5D[0] == 0xB) return;
+    for (k = 0; k < 9; k++) {
+        if (state == lbl_803C6724.order[side][k]) {
+            slot = k;
+            break;
+        }
+    }
+    if (lbl_2_bss_F468.flags41[side] == 0) {
+        if (lbl_2_bss_F468.cursor[side] == 9) {
+            fn_2_5444(side);
+            fn_2_1C34(0x100);
+            return;
+        }
+        if (lbl_2_bss_F468.cursor[side] == 10) {
+            locked = 0;
+            if (g_d_GameSettings.GameModeSelected == 5 && lbl_2_bss_F468.unk3F != 0) locked = 1;
+            if (locked) {
+                sndFXStartEx(0x1BA, lbl_800EFBA4.unk3, 0x3F, 0);
+                return;
+            }
+            clearSideTeam(side);
+            fn_2_1C34(0x100);
+            return;
+        }
+        if (lbl_803C6724.teams[side][slot] == lbl_8034E9A0.players[side]) {
+            sndFXStartEx(0x1BA, lbl_800EFBA4.unk3, 0x3F, 0);
+            return;
+        }
+        locked = 0;
+        if (g_d_GameSettings.GameModeSelected == 5 && lbl_2_bss_F468.unk3F != 0) locked = 1;
+        if (locked) {
+            sndFXStartEx(0x1BA, lbl_800EFBA4.unk3, 0x3F, 0);
+            return;
+        }
+        lbl_2_bss_F468.flags41[side] = 1;
+        fn_800625A4(side, 0xD);
+        fn_2_1C34(0x100);
+        return;
+    }
+    if (lbl_8034E9A0.charTaken[lbl_2_bss_F410.gridPick[side]] != 0 || lbl_2_bss_F410.gridPick[side] == -1) {
+        sndFXStartEx(0x1BA, lbl_800EFBA4.unk3, 0x3F, 0);
+        return;
+    }
+    locked = 0;
+    if (g_d_GameSettings.GameModeSelected == 5 && lbl_2_bss_F468.unk3F != 0) locked = 1;
+    if (locked) return;
+    if (g_d_GameSettings._10 == 1 && lbl_2_bss_F410.gridPick[side] != -1 &&
+        lbl_2_bss_F410.gridPick[side] == lbl_2_bss_F410.gridPick[side ^ 1] && lbl_2_bss_F468.flags41[side ^ 1] != 0) {
+        sndFXStartEx(0x1BA, lbl_800EFBA4.unk3, 0x3F, 0);
+        return;
+    }
+    if (g_d_GameSettings.GameModeSelected != 5) {
+        c = lbl_803C6724.teams[side][slot];
+        if (c != -1 && c != 0x36) {
+            fn_800506E8(side, c, 0);
+            lbl_8034E9A0.charTaken[lbl_803C6724.teams[side][slot]] = 0;
+            fn_80067B40(side, lbl_803C6724.teams[side][slot], 0);
+        }
+    } else {
+        for (k = 0; k < 9; k++) {
+            if (lbl_803C6724.teams[side][k] != -1 && lbl_803C6724.teams[side][k] != 0x36 && lbl_803C6724.teams[side][k] != captain) count++;
+        }
+        for (i = 0; i < 54; i++) {
+            if (lbl_8034E9A0.charTaken[i] == 0) free++;
+        }
+        if (free <= 8 - (s8)count) {
+            if (lbl_803C6724.teams[side][slot] != -1 && lbl_803C6724.teams[side][slot] != 0x36) {
+                sndFXStartEx(0x1BA, lbl_800EFBA4.unk3, 0x3F, 0);
+                return;
+            }
+        }
+        c = lbl_803C6724.teams[side][slot];
+        if (c != -1 && c != 0x36) {
+            if (fn_80067B40(side, c, 2)) {
+                for (i = 0; i < 9; i++) {
+                    for (j = 0; j < 5; j++) {
+                        if (lbl_803C6724.teams[side][slot] == lbl_80108EDC[i][j]) {
+                            family = i;
+                            goto found_family;
+                        }
+                    }
+                }
+            found_family:
+                if (family != -1) {
+                    for (i = 0; i < 9; i++) {
+                        for (j = 0; j < 5; j++) {
+                            if (lbl_803C6724.teams[side][i] == lbl_80108EDC[family][j] && i != slot && lbl_80108EDC[family][j] != -1) goto place;
+                        }
+                    }
+                    fn_800506E8(side, fn_80067AC8(lbl_803C6724.teams[side][slot], 0), 0);
+                    lbl_8034E9A0.charTaken[fn_80067AC8(lbl_803C6724.teams[side][slot], 0)] = 0;
+                }
+            } else {
+                fn_800506E8(side, lbl_803C6724.teams[side][slot], 0);
+                lbl_8034E9A0.charTaken[lbl_803C6724.teams[side][slot]] = 0;
+            }
+        }
+    }
+place:
+    pick = lbl_2_bss_F410.gridPick[side];
+    lbl_803C6724.teams[side][slot] = pick;
+    lbl_803C6724.unk4A[side][slot] = 1;
+    fn_800628D4(lbl_803C6724.teams[side][slot]);
+    fn_800678CC(side);
+    markSlotTaken(slot, side);
+    lbl_803C5EA4.unkC[side] = slot;
+    lbl_803C5EA4.unkA[side] = 1;
+    lbl_803C6724.selectionFlags[side][slot] = lbl_8034E9A0.stats[pick / 9][pick % 9].chemistry[captain];
+    fn_800625A4(side, 0xF);
+    if (lbl_2_bss_F468.flags37[side] != 0) lbl_2_bss_F468.flags41[side] = 0;
 }
 
 // .text:0x0000EAE0 size:0x154
@@ -1140,7 +1363,7 @@ void fn_2_FCB4(void) {
 }
 
 // .text:0x000102C8 size:0x234
-void fn_2_102C8(void) {
+void fn_2_102C8(u8 side) {
     return;
 }
 
@@ -1184,8 +1407,8 @@ void fn_2_120D0(void) {
     lbl_8034E9A0.unk48AD = 1;
     lbl_8034E9A0.unk4755 = 3;
     lbl_803C66B0.unk0 = 0;
-    lbl_803C66B0.unk5A = 0;
-    lbl_803C66B0.unk59 = 0;
+    lbl_803C66B0.padSide[1] = 0;
+    lbl_803C66B0.padSide[0] = 0;
     lbl_8034E9A0.unk472A = 0xFF;
     lbl_8034E9A0.unk48AF = 1;
     lbl_8034E9A0.unk48B1 = 1;

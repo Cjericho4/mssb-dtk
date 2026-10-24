@@ -5,15 +5,18 @@
 #include "UnknownHeaders.h"
 #include "menus/gap_3C03C.h"
 
-/* Menus view of the challenge save data: the 9-slot lineup of s8 values starting at 0x40BB. */
+/* Menus view of the challenge save data: the 9-slot lineup written by the roster "ready" action
+   (fn_2_3624 / fn_2_5444) from lbl_803C6724 team 0: 6-byte entries starting at 0x40B8. */
 typedef struct MenusLineupEntry {
-    s8 value;
-    u8 _pad1[5];
+    s16 charID;  /* 0x0 teams[0][i] */
+    u8 slot;     /* 0x2 i */
+    s8 value;    /* 0x3 order[0][i] (batting order), the byte fn_2_33BC compares */
+    u8 _pad4[2];
 } MenusLineupEntry;
 
 typedef struct MenusLineupView {
-    u8 _pad0[0x40BB];
-    MenusLineupEntry lineup[9]; /* 0x40BB */
+    u8 _pad0[0x40B8];
+    MenusLineupEntry lineup[9]; /* 0x40B8 */
 } MenusLineupView;
 
 typedef struct MenusTeamSelections {
@@ -41,18 +44,31 @@ typedef struct Menus1254State {
     u8 _pad20[0xE];
     u8 unk2E;
     s8 teamIndices[2];
-    u8 _pad31[6];
+    u8 _pad31[5];
+    u8 unk36;       /* 0x36 scene-transition timer/mode set to 0x1E when the roster screen is left */
     u8 flags37[4];  /* 0x37 per side: pick in progress (cleared by fn_2_4970) */
     u8 _pad3B[2];
-    u8 flags3D[4];  /* 0x3D per side */
-    u8 flags41[4];
-    u8 flags45[4];
-    u8 _pad49[6];
+    u8 flags3D[2];  /* 0x3D per side */
+    u8 unk3F;       /* 0x3F challenge mode: set while the roster is locked (fn_2_DFAC refuses picks with the alert sound) */
+    u8 _pad40;
+    u8 flags41[2];  /* 0x41 per side: a grid pick is pending, the next A press on the roster confirms it (fn_2_DFAC) */
+    u8 flags43[2];  /* 0x43 per side: set by fn_2_DFAC when the "clear team" roster action (cursor 10) ran */
+    u8 flags45[2];  /* 0x45 per side: a popup (Z on a slot) is open; fn_2_35D0 consumes it */
+    u8 unk47[2];    /* 0x47 per side: popup column (0/1), moved with left/right (fn_2_3624) */
+    u8 unk49[2];    /* 0x49 per side: cleared with unk47 */
+    u8 unk4B[2];    /* 0x4B per side: set with flags45 when the popup opens */
+    u8 _pad4D[2];
     u8 unk4F;
-    u8 _pad50[6];
+    u8 unk50[2];    /* 0x50 per side: colour cycle (L) found the slot's colour family */
+    u8 _pad52[4];
     u8 unk56;
     u8 _pad57[2];
-    u8 flags59[4];
+    u8 flags59[4];  /* 0x59 per side: this side still takes roster input (fn_2_6608 gates fn_2_3624 on it) */
+    u8 _pad5D[2];
+    u8 unk5F[2];    /* 0x5F per side: "move" mode, a slot was picked up to swap (A), unk61 holds its cursor */
+    s8 unk61[2];    /* 0x61 per side: cursor of the picked-up slot, -1 when none */
+    u8 _pad63[2];
+    u8 unk65[2];    /* 0x65 per side: set by the ready action */
 } Menus1254State;
 
 extern Menus1254State lbl_2_bss_F468;
@@ -116,11 +132,11 @@ void fn_2_323C(void);
 s32 fn_2_33BC(void);
 void fn_2_348C(void);
 s32 fn_2_35D0(u8 index);
-void fn_2_3624(void);
+void fn_2_3624(u8 pad);
 void fn_2_4970(u8 side, s32 captainID);
 void fn_2_5184(void);
 void fn_2_52CC(void);
-void fn_2_5444(void);
+void fn_2_5444(u8 side);
 s32 fn_2_57E8(s32 arg0, s32 arg1);
 void fn_2_57F0(void);
 void fn_2_5F80(void);
@@ -168,7 +184,7 @@ void fn_2_CA60(void);
 void fn_2_CCBC(void);
 void fn_2_CCE0(void);
 void fn_2_CE44(void);
-void fn_2_DFAC(void);
+void fn_2_DFAC(s32 side);
 void fn_2_EAE0(void);
 void fn_2_EC34(void);
 void fn_2_EC54(s32 side);
@@ -176,7 +192,7 @@ void fn_2_ED94(void);
 void fn_2_F200(void);
 void fn_2_FAA0(void);
 void fn_2_FCB4(void);
-void fn_2_102C8(void);
+void fn_2_102C8(u8 side);
 void fn_2_104FC(void);
 void fn_2_110B0(void);
 BOOL fn_2_112F4(DrawingSceneStruct* scene, s32 offset, s32 index, u16* ids, u16 value);

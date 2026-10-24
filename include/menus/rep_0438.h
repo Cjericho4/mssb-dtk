@@ -9,8 +9,17 @@ typedef struct MenusPlayerInput {
     u16 buttons;
 } MenusPlayerInput;
 
+/* Menus view of one Static_Stats_Tables row (0xA0 bytes, = game/UnknownHomes_Game.h's CharacterStats with the
+   chemistry row as an array). */
+typedef struct MenusCharacterStats {
+    u8 _pad0[0x3B];      /* 0x00 StatTable (game/UnknownHomes_Game.h) */
+    u8 chemistry[54];    /* 0x3B per-charID chemistry with this character */
+    u8 _pad71[0x2F];
+} MenusCharacterStats;
+
 typedef struct MenusSaveState {
-    u8 _pad0[0x46E0];
+    MenusCharacterStats stats[6][9]; /* 0x0 Static_Stats_Tables, 54 rows indexed [charID / 9][charID % 9] (fn_2_DFAC) */
+    u8 _pad21C0[0x46E0 - 0x21C0];
     s32 players[2];
     u32 timeHigh;
     u32 timeLow;
