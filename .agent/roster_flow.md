@@ -268,7 +268,9 @@ and runners; the data-only patcher is unaffected because it patches tracks 0 and
 ### 5.6 Lifetime
 * `fn_80011BE4(slot)` (0x80011BE4, 0xC4, stub; asm read): `slotPtrs[slot] = NULL`, releases the
   stadium object (`index1 = -1`, `unk5C = -2`) and the sub-item entry, clears `unk25C`, and sets
-  `loadedCharID[]` entries equal to `slot`… to -1.  Called by `fn_3_6B870` (runners whose base is
+  every `slotOwner[i]` (0x2D6A, 13 bytes) equal to `slot` to -1 (frees the owner mapping; the same
+  loop shape ends `fn_8001594C` at 0x80016200).  `loadedCharID[]` (0x2D7F) is pruned separately by
+  `fn_80015468`.  Called by `fn_3_6B870` (runners whose base is
   empty, all four batter/runner slots at 3 outs), `fn_3_B4124`, minigame resets.
 * Fielders persist through a half-inning; the other team's nine are loaded at the change by
   `fn_3_6BD6C`.  Slots are reused when `fn_80017098`'s scan matches (same team/player/charID/…),
@@ -282,7 +284,9 @@ and runners; the data-only patcher is unaffected because it patches tracks 0 and
 
 ### 6.1 Storage
 1. **Menu choice:** `lbl_803C6724.unk38[2][9]` (DOL .bss, +0x38), verified unreferenced by every
-   module: rename it `skin[2][9]`.  Written by the L-button path in `fn_2_3624` / `fn_2_A040`
+   module (no field access, and no `memcpy`/`memset` over the object either: the scanner's
+   call rows for `lbl_803C6724` are only scalar arguments; `lbl_803C66B0`'s 0x64-byte reset in
+   `fn_2_1BAC` ends before it): rename it `skin[2][9]`.  Written by the L-button path in `fn_2_3624` / `fn_2_A040`
    (cycle `skin[side][slot]` modulo `skinCount[charID]` instead of changing `teams[side][slot]` for
    characters that have skins), cleared with the slot in `fn_2_4970` and `fn_2_DFAC`, read by the
    mini-image refresh (`fn_2_776A0`, `fn_2_74F40`) to pick a frame.
@@ -338,6 +342,17 @@ re-copy in `characterSelectScreen` can be deferred for a first test by making th
   slot stayed loaded; adding the 0x253 compare closes it.
 * The overlay mechanism replaces the texture archive in place: a skin archive must have the same
   texture count/dimensions as the base (the patcher already checks this).
+* The override path (`fn_80016344` / `fn_80016710` -> `fn_80017098(0, player, ...)`) hard-codes
+  `team = 0`, so `fn_8001758C` reads `inMemRoster[0][player]` for 0x26/0x27 and would read the skin
+  from team 0 even for a team-1 captain cutscene.  Retail behaviour for arm/stance; the design
+  inherits it (use `lbl_8034E9A0.indices[team]` with the right team if it matters).
+* "Slot 0 = pitcher" in 2.3 step 5 is inferred from the `lbl_80108EC4` pitcher list and the
+  `lbl_80109054` preference rows, not verified against the game's position numbering.
+* The audit scanner is a linear register-taint pass without control flow: a roster pointer stored
+  to a global and reloaded elsewhere would be missed (no such store was seen in the hits).
+* Shared-header changes from this pass (`CharacterStats` union, `fn_80025FFC` with two arguments):
+  the match count confirms no matched function regressed, but the unmatched callers of
+  `fn_80025FFC` (`fn_80012B90`'s helper, `fn_80016344`, `fn_80016710`) changed shape.
 
 ## 7. Function status on this path
 

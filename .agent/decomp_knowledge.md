@@ -452,8 +452,8 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
     so it takes two arguments; the apparent third (`obj` in r5) was the address materialisation.
 *   **Two CSE temps vs. parameters (fn_80016344/fn_80016710, still open):** the target colours
     `slot*0x27c` r29 and `&slots[slot].fileBuffer` r30 above the params r26..r28 (and swaps them
-    between the two inlined copies in fn_80016710).  An explicit `u8** fileBuffer` local is
-    materialised eagerly (worse); helper parameter order and `!x` forms change nothing.
+    between the two inlined copies in fn_80016710).  Tried this pass: an explicit `u8** fileBuffer`
+    local (materialised eagerly, worse) and the helper's parameter order (no change).
 *   **Inlined loop with a raw byte reused by two `(s8)` compares** (fn_8001500C): the target keeps the
     `lbz` in a register and re-extends (`extsb`) at each compare; `(s8)(flag = p->index1) != -2` in
     the loop condition plus `(s8)flag == -1` in the body gives that shape (one load, two `extsb`).

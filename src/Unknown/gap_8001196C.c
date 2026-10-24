@@ -702,8 +702,8 @@ static inline u8 loadStadiumObject(u8 charID, s32 slot, Gap8001196CStadiumObj* o
  * (&slots[slot].fileBuffer and slot*0x27c) are allocated r26/r30 here but r30/r29 (above the
  * params r26..r28) in the target; everything else is identical.  charID is an s32 parameter (the
  * target passes it to fn_80017098 with a plain mr) that the inlined helper takes as u8.  Tried: an
- * explicit `u8** fileBuffer` local (materialised eagerly, worse), helper parameter order, `!x`
- * forms; see .agent/decomp_knowledge.md section 14. */
+ * explicit `u8** fileBuffer` local (materialised eagerly, worse) and the helper parameter order;
+ * see .agent/decomp_knowledge.md section 14. */
 // .text:0x80016344 size:0x3CC
 BOOL fn_80016344(s32 charID, s32 slot, u8 stance, s32 player) {
     if (g_hugeAnimStruct.loadState == 6) {
