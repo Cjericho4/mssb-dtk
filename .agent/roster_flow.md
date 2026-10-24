@@ -239,7 +239,7 @@ cursor 9 -> 10.  Then per cursor:
 
 ### 5.3 `fn_8001500C(team, player, slotKind)` (0x8001500C, 0x45C, decompiled, 48 lines): batter and runners
 loadState 2 -> `slotPtrs[slotKind] = &slots[currentSlot]`, 3 -> `fn_80017340()` + stadium-object
-decision (`lbl_803CBC34` bytes), 4 -> stadium object (`loadStadiumObject`), 5 -> `fn_80013680`,
+decision (`lbl_803CBC34` bytes), 4 -> per-model script object (`loadStadiumObject`, legacy name; `character_modding_report.md` §1.1), 5 -> `fn_80013680`,
 else **`fn_80017098(team, player, 1, slotKind, variant = (slotKind == 9), -1)`**: the batter gets
 the ARAM hi-detail body, runners the low-detail disc body.
 
