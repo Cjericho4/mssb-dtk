@@ -2,6 +2,7 @@
 #define __UNKNOWN_gap_80035DD4_H_
 
 #include "mssbTypes.h"
+#include "menus/menu_ui.h"
 typedef struct Gap80035DD4Request Gap80035DD4Request;
 typedef struct Gap80035DD4Actor Gap80035DD4Actor;
 typedef struct Gap80035DD4RenderState { u8 _pad0[0x78]; s32 index; } Gap80035DD4RenderState;
@@ -23,6 +24,8 @@ typedef struct Gap80035DD4Node {
     u8 _pad0[0x64];
     /* 0x64 */ u16 frame;
     /* 0x66 */ u8 model;
+    u8 _pad67[0xAC - 0x67];
+    u16 textureOverrides[10]; /* 0xAC per-layer texture index, FFFF means no override */
 } Gap80035DD4Node;
 typedef struct Gap80035DD4Slot {
     Gap80035DD4Node* node;
@@ -31,18 +34,20 @@ typedef struct Gap80035DD4Slot {
 extern Gap80035DD4Slot lbl_80371C30[];
 typedef struct Gap80035DD4Model {
     u8 _pad0[0x38];
-    /* 0x38 */ s32 data;
+    /* 0x38 */ MenuUiSpriteBank* data;
 } Gap80035DD4Model;
 extern Gap80035DD4Model lbl_803C4BE0[20];
-typedef struct Gap80035DD4Query {
-    u8 _pad0[0x14];
-    /* 0x14 */ s16 x;
-    /* 0x16 */ s16 y;
-    /* 0x18 */ u8 _pad18[0x4];
-    /* 0x1C */ s32 result;
-    u8 _pad20[0x30];
+typedef union Gap80035DD4Query {
+    struct {
+        u8 _pad0[0x14];
+        s16 x, y;
+        u8 _pad18[4];
+        s32 result;
+        u8 _pad20[0x30];
+    };
+    MenuUiFrame frame;
 } Gap80035DD4Query;
-void fn_8000CEF0(s32 data, s32 frame, s32 a, s32 b, Gap80035DD4Query* out);
+u32 fn_8000CEF0(MenuUiSpriteBank* data, s32 sequence, s32 list, s32 frame, Gap80035DD4Query* out);
 typedef struct Gap80035DD4Xform {
     u8 _pad0[0xC];
     /* 0x0C */ Gap80035DD4Vec vel;
@@ -96,7 +101,7 @@ void fn_80036134(void);
 s32 fn_80036214(Gap80035DD4Task* task, s32 index, s32 a, s32 b);
 void fn_80036270(Gap80035DD4Task* task, s32 index, s32 a, s32 b, s16* x, s16* y);
 void fn_800362F0(void);
-void fn_800363D8(void);
+void fn_800363D8(Gap80035DD4Task* task, s32 pane, u32 layer, s32 sequence, s32 frame);
 void fn_8003649C(void);
 void fn_8003656C(void);
 void fn_8003664C(void);

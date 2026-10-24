@@ -51,8 +51,19 @@ void fn_800362F0(void) {
 }
 
 // .text:0x800363D8 size:0xC4
-void fn_800363D8(void) {
-    return;
+/* Bind a per-layer texture override from a sprite-bank sequence/frame.
+ * The resource belongs to the destination pane; sequence is NOT a pane ID.
+ * fn_8000CEF0 expands list 0's record and its +6 textureIndex is copied into
+ * overrides[layer]. An invalid query selects texture0; layers >=10 do nothing. */
+void fn_800363D8(Gap80035DD4Task* task, s32 pane, u32 layer, s32 sequence, s32 frame) {
+    Gap80035DD4Query query;
+    u16 texture;
+    if (layer < 10) {
+        if (fn_8000CEF0(lbl_803C4BE0[lbl_80371C30[task->baseIndex + pane].node->model].data,
+                           sequence, 0, frame, &query)) texture = query.frame.textureIndex;
+        else texture = 0;
+        lbl_80371C30[task->baseIndex + pane].node->textureOverrides[layer] = texture;
+    }
 }
 
 // .text:0x8003649C size:0xD0
