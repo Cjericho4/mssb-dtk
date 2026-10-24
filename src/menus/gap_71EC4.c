@@ -32,6 +32,10 @@ extern void fn_800626EC(s32);
 extern void fn_80062674(s32);
 #include "menus/gap_1254.h"
 
+static inline Struct_80371C30_Inner* menuPane(DrawingSceneStruct* scene, s32 index) {
+    return lbl_80371C30[scene->unkIndex + index].obj;
+}
+
 static inline void menuSetTransition(u8 mode) {
     lbl_8034E978.state = mode;
     lbl_8034E978.previous = lbl_8034E978.current;
@@ -714,8 +718,80 @@ void fn_2_7D85C(void) {
 }
 
 // .text:0x0007DAB8 size:0x6DC
-void fn_2_7DAB8(void) {
-    return;
+/* UI command 0xE: move roster focus from prevCursor to cursor. The card and
+ * controller badge play focus animations; the mini portrait's charID frame is
+ * retained. fn_2_74F40 refreshes the hovered character's name and ratings.
+ * A picked-up card in swap mode is held at its resting frames. */
+void fn_2_7DAB8(DrawingSceneStruct* scene, s32 side) {
+    s32 current;
+    s32 previous;
+    s32 currentSlot;
+    s32 previousSlot;
+    s32 heldSlot;
+    s32 held;
+    s32 i;
+    s32 base = side * 9;
+    if (lbl_803C66B0.flags[side] != 0) return;
+    current = lbl_2_bss_F468.cursor[side];
+    previous = lbl_2_bss_F468.prevCursor[side];
+    for (i = 0; i < 9; i++) {
+        if (lbl_803C6724.order[side][i] == current) currentSlot = i;
+        if (lbl_803C6724.order[side][i] == previous) previousSlot = i;
+    }
+    if (previous != 9 && previous != 10 && previous < 9) {
+        if (previous != lbl_2_bss_F468.unk61[side]) {
+            menuPane(scene, base + previous + 0x46)->field_0x5C = 0xF0000;
+            menuPane(scene, base + previous + 0x46)->field_0x68 = 4;
+            if (lbl_803C6724.teams[side][previousSlot] != -1 && lbl_803C6724.teams[side][previousSlot] != 54) {
+                menuPane(scene, base + previous + 0x34)->field_0x5C = 0xA0000;
+                menuPane(scene, base + previous + 0x34)->field_0x68 = 1;
+            }
+        }
+        menuPane(scene, base + previous + 0x22)->flags &= ~2;
+    }
+    if (current != 9 && current != 10 && current < 9 && current != lbl_2_bss_F468.unk61[side]) {
+        menuPane(scene, base + current + 0x46)->field_0x5C = 0;
+        menuPane(scene, base + current + 0x46)->field_0x68 = 1;
+        if (lbl_803C6724.teams[side][currentSlot] != -1 && lbl_803C6724.teams[side][currentSlot] != 54) {
+            menuPane(scene, base + current + 0x34)->field_0x5C = 0x140000;
+            menuPane(scene, base + current + 0x34)->field_0x68 = 4;
+        }
+        if (lbl_2_bss_F468.flags41[side] == 0) {
+            menuPane(scene, base + current + 0x22)->flags |= 2;
+            menuPane(scene, base + current + 0x22)->field_0x68 = 1;
+        }
+    }
+    fn_2_74F40(scene, side);
+    if (current == 9) menuPane(scene, side + 0x95)->field_0x68 = 1;
+    else if (current == 10) menuPane(scene, side + 0x91)->field_0x68 = 1;
+    else {
+        if ((menuPane(scene, side + 0x95)->field_0x5C >> 16) > 10) {
+            menuPane(scene, side + 0x95)->field_0x5C = 0xA0000;
+            menuPane(scene, side + 0x95)->field_0x68 = 4;
+        }
+        if ((menuPane(scene, side + 0x91)->field_0x5C >> 16) > 10 || previous == 10) {
+            menuPane(scene, side + 0x91)->field_0x5C = 0xA0000;
+            menuPane(scene, side + 0x91)->field_0x68 = 4;
+        }
+    }
+    if (lbl_2_bss_F468.unk5F[side]) {
+        held = lbl_2_bss_F468.unk61[side];
+        if (previous == held || current == held) {
+            for (i = 0; i < 9; i++) {
+                if (lbl_803C6724.order[side][i] == held) heldSlot = i;
+            }
+            lbl_2_bss_F468.unk61[side] = held;
+            if (lbl_803C6724.teams[side][heldSlot] != -1 && lbl_803C6724.teams[side][heldSlot] != 54) {
+                menuPane(scene, base + held + 0x34)->field_0x5C = 0xA0000;
+                menuPane(scene, base + held + 0x34)->field_0x68 = 0;
+            }
+            menuPane(scene, base + held + 0x46)->field_0x5C = 0xF0000;
+            menuPane(scene, base + held + 0x46)->field_0x68 = 0;
+            if (current == held) menuPane(scene, base + held + 0x22)->flags |= 2;
+        } else menuPane(scene, base + held + 0x22)->flags &= ~2;
+    }
+    fn_800626EC(side);
+    lbl_803C66B0.flags[side] = 1;
 }
 
 // .text:0x0007E194 size:0x1EC
