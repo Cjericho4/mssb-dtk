@@ -100,10 +100,10 @@ void fn_800649BC(void);
 
 void fn_2_1254(void);
 void fn_2_1258(void);
-void fn_2_12A0(s16* value, s16 amount);
-void fn_2_12CC(u8* value, u16 amount);
-void fn_2_12F8(u16* value, u16 amount);
-void fn_2_1328(u32* value, u16 amount);
+void satAddS16(s16* value, s16 amount);
+void satAddU8(u8* value, u16 amount);
+void satAddU16(u16* value, u16 amount);
+void satAddS32(u32* value, u16 amount);
 void fn_2_1354(MenusSortEntry* entries, s32 count, s32 descending);
 void fn_2_145C(void);
 s32 fn_2_148C(u16* text);
