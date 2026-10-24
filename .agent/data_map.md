@@ -21,7 +21,7 @@ from `mssb_files.py coverage/list/tables` and `test_mssb_files.py`. Rerun those 
 * Every listed file decompresses to its declared size (`MSSB_SLOW=1 test_mssb_files.py`).
   1,492 files are LZSS 11/4 (`flags 0x40B`), 1 is LZSS 14/5 (`0x50E`, the boot model) and 78 are
   stored.
-* New finds in this pass: the **five text banks** (all game dialogue, character bios and tutorials:
+* Main finds: the **five text banks** (all game dialogue, character bios and tutorials:
   a lossless `text-export`/`text-import` exists), an **82 MB opening HVQM4 movie** at
   ZZZZ+0x12000, the **MusyX sound-group table** (48 groups, 1,861 samples), the per-stadium
   **field-object sets**, the **Challenge board and map** files, and nine identical copies of the
@@ -106,13 +106,13 @@ id comes from this table (0 = every row is a copy of a file owned elsewhere). Lo
 | `rel` | DOL `0x800E8AA8` | 3 / 3 | aaaa | REL modules (LZSS in aaaa.dat) (rel 3) | 0 menus.rel, 1 game.rel, 2 challenge.rel | fn_800097A0 (boot state machine) -> ARAMTransfer |
 | `boot` | DOL `0x800E8AD8` | 3 / 3 | ZZZZ | boot files (model 1, unknown 1, texarc 1) | 0 .gpc model with one 1024x132 CI4 texture (LZSS 14/5), 1 stored binary, 2 small CI4 texture archive | fn_800097A0 (boot state machine) |
 | `res` | DOL `0x800E8B08` | 62 / 62 | ZZZZ | common UI resources (resource id 0..61) (ui 45, texarc 17) | resource id: 1 HUD portraits (charID->30+c), 5 lineup portraits, 15 menu common (names/mini images), 29 select-grid portraits, 30 title/main menu, 38..44 stadium art (38 + stadium); guesses: 0 HUD, 6..13 full-screen screens, 16..28 captain banners/emblems, 45..61 stills | fn_800097A0 / fn_80035838(desc, slot); the same 62 rows are copied into game.rel/challenge.rel |
-| `res_dol2` | DOL `0x800EEFD0` | 62 / 0 | ZZZZ | common UI resources (copy 2) (ui 45, texarc 17) | resource id (same as res) | fn_80020278 / fn_80020388: res_dol2[lbl_803CB7CC[stadium] + 0x26] |
+| `res_dol2` | DOL `0x800EEFD0` | 62 / 0 | ZZZZ | common UI resources (copy 2) (ui 45, texarc 17) | resource id (same as res) | fn_80020388: res_dol2[lbl_803CB7CC[stadium] + 0x26] into slot 0xD (stadium art); fn_80020278(n): res_dol2[n + 0x2D] (stills 45..61) by ARAMTransfer into a heap buffer |
 | `game_common` | DOL `0x800EE910` | 5 / 5 | ZZZZ | field/game common set (unknown 2, sectioned 2, text 1) | 0..1 0x140-header data, 2..3 actor sets (guess), 4 text bank (23 minigame strings) | fn_800188C0 |
 | `sound` | DOL `0x800EF508` | 48 / 48 | ZZZZ | MusyX sound groups (stored) (musyx 48) | sound group slot (each file = proj+pool+sdir+samp; group id at +0x24) | fn_800215F8 / fn_80021758 |
 | `stadium` | DOL `0x800EFBE8` | 21 / 13 | ZZZZ | stadium models (stadium 21) | stadium*3 + variant (g_d_GameSettings.unk9 / unkA): Mario Stadium, Bowser Castle, Wario Palace, Yoshi Park, Peach Garden, DK Jungle, Toy Field | game.rel manageStadiumLoading -> ARAMTransfer; relocated by fn_3_5EC0 |
 | `master` | DOL `0x800EFD38` | 515 / 345 | blob | ARAM master descriptors (blob-relative) (sectioned 215, script 192, anim 54, model 33, texarc 21) | 0..32 bodies, 33..53 texture overlays (via lbl_800F73B8[charID]), 54+charID*7+k attachments (k 0..3 models, 4..6 event scripts), 432+charID track-15 ANIM bank, 486+id per-model event scripts (id = lbl_800EEB18[charID]) | fn_800227E4 streams the blob to ARAM; fn_8002204C / fn_8002254C / fn_80021BBC / fn_8002244C / fn_80021ADC read members |
 | `blob` | DOL `0x800F1D68` | 1 / 1 | ZZZZ | ARAM blob (master[515]) (blob 1) | - | fn_800227E4 (ARAM alloc size hard-coded at 0x800227EC/F4) |
-| `subfile` | DOL `0x800F1D78` | 1026 / 652 | ZZZZ | per-character disc subfiles (anim 918, model 108) | charID*19 + track (0/1 body hi/lo, 2..14 & 16..18 animation banks, 15 skeleton) | fn_8001758C / fn_80016344 / fn_80016710 / fn_80016B60 / fn_80021BBC |
+| `subfile` | DOL `0x800F1D78` | 1026 / 652 | ZZZZ | per-character disc subfiles (anim 918, model 108) | charID*19 + track (0/1 body hi/lo, 2..18 ANIM banks; 15 = the 12-sequence bank also in master 432+charID) | fn_8001758C / fn_80016344 / fn_80016710 / fn_80016B60 / fn_80021BBC |
 | `subitem` | DOL `0x800F5D98` | 324 / 198 | ZZZZ | per-character sub-item models (bat/glove) (sectioned 324) | charID*6 + itemSlot | fn_80021CA4 / fn_8002244C (disc path) |
 | `model_script` | DOL `0x800F71D8` | 30 / 30 | ZZZZ | per-model event scripts (disc fallback of master 486+id) (script 29, unknown 1) | model id from lbl_800EEB18[charID] (colour variants share their base's id) | fn_80021ADC |
 | `menu_title` | DOL `0x800FB5B0` | 1 / 0 | ZZZZ | title/main menu UI (copy) (ui 1) | - | fn_8004A1BC |
@@ -188,16 +188,16 @@ strings at DOL `0x800E33A0`. It doesn't point into ZZZZ.dat, so it's not a file 
   `ARAMTransfer(&lbl_3_data_10ACC[stadium])` in `g_hugeAnimStruct.stadiumObjectLoadingPtr`.
 * **Characters**: `subfile` = `charID*19 + track`. Track 0/1 = hi/lo `.gpc` body. Tracks 2..14 and
   16..18 = ANIM banks (Mario: 30, 16, 45, 12, 2, 12, 3, 30, 30, 16, 16, 45, 16, 12, 12, 12, 12
-  sequences). Track 15 = a 12-sequence ANIM bank (called the "skeleton" in earlier notes, but it's
-  an ANIM bank like the others; `fn_80021BBC`). `master` tiers: 0..32 bodies, 33..53 texture
+  sequences). Track 15 = a 12-sequence ANIM bank (`fn_80021BBC`; there is no separate skeleton
+  file, the bones are in the body's actor layout). `master` tiers: 0..32 bodies, 33..53 texture
   overlays (`lbl_800F73B8[charID] = {body, overlay}`), 54+charID*7+k attachments (k 0..3 =
   hand/glove/bat models with a 1-sequence ANIM bank at +0x20, k 4..6 = keyed event scripts),
   432+charID = the track-15 bank, 486+id = 29 keyed event scripts. The model-id map
-  `lbl_800EEB18[charID]` picks id, and colour variants share their base's id. Earlier notes called
-  this "stadium objects". `model_script` (DOL `0x800F71D8`, 30 rows) is its disc fallback
+  `lbl_800EEB18[charID]` picks id, and colour variants share their base's id (values:
+  `character_modding_report.md` §3). `model_script` (DOL `0x800F71D8`, 30 rows) is its disc fallback
   (`fn_80021ADC`).
-* **Common UI resources** (`res`, 62 rows = boot table rows 6..67): one resource id, nine
-  copies. In game.rel, `fn_3_5BD40` loads `lbl_3_data_6130[1]` into slot 0xC (HUD portraits),
+* **Common UI resources** (`res`, 62 rows = boot table rows 6..67): one resource id, up to nine
+  copies. Boot (`fn_800097A0`) loads res 37 into UI slot 0 and res 15 into slot 1. In game.rel, `fn_3_5BD40` loads `lbl_3_data_6130[1]` into slot 0xC (HUD portraits),
   `fn_3_AF10C` loads `[2]` into slot 0x13 and the minigame loader loads `[minigame + 6]`.
   `fn_80020388` loads `res_dol2[lbl_803CB7CC[stadium] + 0x26]` into slot 0xD. `lbl_803CB7CC` is
   `{0..6}`, so res 38..44 is one illustration per stadium.
@@ -205,14 +205,14 @@ strings at DOL `0x800E33A0`. It doesn't point into ZZZZ.dat, so it's not a file 
 | res | ZZZZ offset | Contents | Known use |
 |---:|---|---|---|
 | 0 | 0x1A635000 | UI, 369 textures, 284 sequences | in-game HUD |
-| 1 | 0x1A6B3000 | UI, 102 textures | HUD batter/pitcher cards, charID c -> texture 30+c (`clone_character.py --ui`) |
+| 1 | 0x1A6B3000 | UI, 102 textures | HUD batter/pitcher cards (game.rel `fn_3_5BD40`, slot 0xC), charID c -> texture 30+c (`clone_character.py --ui`) |
 | 2 | 0x1A6D4800 | UI, 55 textures | game.rel slot 0x13 |
 | 3 | 0x1A6E8000 | UI, 504 textures, 389 sequences | large in-game UI set |
 | 4 | 0x1A748800 | UI, 88 textures | |
 | 5 | 0x18ED7000 | UI, 180 textures | lineup/results portraits, uniqueIdx u -> 53+u |
 | 6..13 | 0x1A769800.. | UI, 21..30 textures each, 640x448 | eight full-screen screens |
 | 14 | 0x1A9E3800 | UI, 69 textures | |
-| 15 | 0x1A9FE800 | UI, 440 textures, 313 sequences | menu common file: roster names c<29?c:c+28, mini images 153+c (`character_select.md` §8) |
+| 15 | 0x1A9FE800 | UI, 440 textures, 313 sequences | menu common file, boot-loaded into UI slot 1: roster names c<29?c:c+28, mini images 153+c (`character_select.md` §8) |
 | 16 | 0x0E97A800 | UI, 144 textures (153x54) | captain banners |
 | 17..28 | 0x0EA16800.. | UI, 12 textures each | twelve captain/team emblem sets (one per captain) |
 | 29 | 0x18AEE800 | UI, 202 textures | select-grid portraits, charID c -> 4+c |
@@ -221,9 +221,9 @@ strings at DOL `0x800E33A0`. It doesn't point into ZZZZ.dat, so it's not a file 
 | 32 | 0x18F0E000 | UI, 74 textures | |
 | 33 | 0x191B8800 | UI, 25 textures | menu_set slot 2 |
 | 34..36 | 0x06C96000, 0x06CC3000, 0x18D43800 | UI, 640x448 screens | opening/attract stills |
-| 37 | 0x1AA67800 | UI, 19 strips 640x48 | |
+| 37 | 0x1AA67800 | UI, 19 strips 640x48 | boot-loaded into UI slot 0 (`fn_800097A0`) |
 | 38..44 | 0x1AA74800.. | UI, 1..2 textures | one illustration per stadium (38 + stadium id, `fn_80020388`, slot 0xD) |
-| 45..61 | 0x1AA81000.. | stored texture archive, one 640x256 CI8 | 17 stills (stadium previews / loading pictures) |
+| 45..61 | 0x1AA81000.. | stored texture archive, one 640x256 CI8 | 17 stills (stadium previews / loading pictures; `fn_80020278`) |
 
 ## 5. File families and formats
 

@@ -6,7 +6,8 @@ know where a per-player skin byte can live so that it survives from the menu int
 read by the loaders that pick the body and textures.
 
 Addresses are DOL RAM unless prefixed `fn_2_` (menus.rel) / `fn_3_` (game.rel).  Function status
-is from `build/GYQE01/report.json` at the end of this pass.  The reader/writer audit in section 4
+is from `build/GYQE01/report.json` and `tools/feedback_diff.py` (2026-10-24).  The model load chain
+below `fn_8001758C` is in `character_modding_report.md` §1.  The reader/writer audit in section 4
 comes from a register-taint scan of every `.s` unit that references `inMemRoster`
 (`scan_roster.py`, described there); the rest from reading the matched C and the target asm.
 
@@ -87,7 +88,7 @@ comes from a register-taint scan of every `.s` unit that references `inMemRoster
 ### 2.3 Finalisation (`fn_2_3204 -> fn_2_2FC0(lbl_803297E0.mode, finish=1, rebuild=1)`, matched)
 Mode 9/10 (also `fn_2_8ED4C -> fn_2_2FC0(9, 0, 1)` and `fn_2_8EEC8`, `fn_2_11698`, `fn_2_323C`):
 1. `charTaken` reset, captains taken, `markLockedCharsTaken()`, `fn_80067F70(0/1)` (CPU auto-pick).
-2. **`fn_2_8940`** (menus 0x8940, 0x3B8, now decompiled in this pass): for side 0..1, n 0..8:
+2. **`fn_2_8940`** (menus .text 0x8940, 0x3B8, MATCH): for side 0..1, n 0..8:
    `copyStatsRow(&inMemRoster[side][n], &Static_Stats_Tables[teams[side][n]])` (section 3.4),
    `lbl_80354720[side][n].unk2 = order[side][n]`; in challenge mode side 0's `FieldingArm/
    BattingStance` come from the per-character handedness save `lbl_2_bss_3A8[lineup[n].charID]`.
@@ -98,7 +99,7 @@ Mode 9/10 (also `fn_2_8ED4C -> fn_2_2FC0(9, 0, 1)` and `fn_2_8EEC8`, `fn_2_11698
    (`fn_80067264`, `fn_800675C4`); no roster write.
 4. `unsure_FillRosterPositions(side)` (0x80064A04, 0x13E8, stub): reads `lbl_803C6724`,
    `lbl_8034E9A0`, three `randRange` calls; no `inMemRoster` access.
-5. **`characterSelectScreen(side)`** (0x80065DEC, 0x10C0, stub; asm + m2c read this pass): the
+5. **`characterSelectScreen(side)`** (0x80065DEC, 0x10C0, stub; asm + m2c read): the
    fielding-position assignment.  Snapshots the nine current `inMemRoster[side][i].stats.CharID`
    and `lbl_803C6724.order[side][i]`; builds `pos[9]` (stack, -1 = empty) with the first slot's
    (captain's) preferred position `lbl_80109054[class*5]`, pitchers from `lbl_80108EC4`, each
@@ -132,7 +133,7 @@ copy.  `fn_800415A8` (0x800415A8, 0xAD4, stub) builds CPU teams the same way.
 * **Debug team select (game.rel `maybeProcessTeamData`, rep_0):** pad-driven; `ARAMTransfer
   (lbl_3_data_0)` then `memcpy(inMemRoster[0], buf + a*0x5A0, 0x5A0)`, `memcpy(inMemRoster[1],
   buf + b*0x5A0, 0x5A0)`.  Not reachable from the menus.
-* **Star toggle (`transferStatsToInMemRoster(side)`, 0x800426DC, 0x514, decompiled this pass):**
+* **Star toggle (`transferStatsToInMemRoster(side)`, 0x800426DC, 0x514, decompiled, 26 lines):**
   called by `startGameRelated` (pre-game lineup screen, 0x80048EB8) and `fn_8005A350` (star menu).
   Not in challenge mode.  slot = `lbl_803297E0+0xCF46+side` (1-based cursor) - 1; requires
   `lbl_80361B20.characterFlags[CharID]` (star unlocked); toggles `resetData[side*9+slot] ^= 1` and
@@ -216,7 +217,8 @@ with the *slot* (not the player) across the field-wise re-copies and is reset by
 | `fn_3_6BA64` | every at-bat (states calling it in gap_5985C.c:637, gap_B3B70.c:783/835, gap_AC9F8.c:714/1019) after `fn_3_6B870` unloaded the runner slots | for runner i = 3..0: `fn_8001500C(g_GameLogic.teamBatting, g_Runners[i].rosterID, 9 + i)` if `rosterID >= 0` |
 | `fn_3_6B4C8` (`fn_3_22C20`, star cutscene) | | `fn_80016344(lbl_8034E9A0.selected[humanTeam], 12, 1, lbl_8034E9A0.indices[humanTeam])` then re-points `slotPtrs` |
 | `fn_3_6B5D8` (`fn_3_5BD40`) | | `fn_80016344(lbl_80353A90.field_0x103, 9, 0, 0)` |
-| menus `rep_08E8` (0x486EC) | character preview | `fn_80016710(charID, slot)` |
+| menus `fn_2_481F4` (rep_08E8) | character preview | `fn_80016710(charID, slot)` |
+| game `fn_3_10C81C` (gap_106DFC) | minigames | `fn_80016710` (×2) |
 
 ### 5.2 `fn_8001594C(team)` (0x8001594C, 0x9F8, stub; asm read): the nine fielders
 State byte `g_hugeAnimStruct+0x2D7B` is the fielder slot being loaded, `+0x2D77` the shared
@@ -235,7 +237,7 @@ cursor 9 -> 10.  Then per cursor:
   index playing this position; 9 if none) and **`fn_80017098(team, k, 0, cursor, variant = 0, -1)`**;
   on reuse (returns 1) loadState = 2.
 
-### 5.3 `fn_8001500C(team, player, slotKind)` (0x8001500C, 0x45C, decompiled this pass): batter and runners
+### 5.3 `fn_8001500C(team, player, slotKind)` (0x8001500C, 0x45C, decompiled, 48 lines): batter and runners
 loadState 2 -> `slotPtrs[slotKind] = &slots[currentSlot]`, 3 -> `fn_80017340()` + stadium-object
 decision (`lbl_803CBC34` bytes), 4 -> stadium object (`loadStadiumObject`), 5 -> `fn_80013680`,
 else **`fn_80017098(team, player, 1, slotKind, variant = (slotKind == 9), -1)`**: the batter gets
@@ -258,12 +260,11 @@ the ARAM hi-detail body, runners the low-detail disc body.
   (runner) from game.rel, and invalidated (-1) by `fn_80018270` (allocation) and `fn_3_5AE9C`
   (scene init).  They are keyed on charID only.
 
-### 5.5 Variant byte, corrected
+### 5.5 Variant byte
 `Gap8001196CAnim.variant` (0x259) = 1: body from the ARAM blob through `lbl_800F73B8` (hi-detail
 track-0 file + optional texture overlay); = 0: body streamed from disc, subfile track 1 (low-detail).
-Callers: batter (slotKind 9) 1, runners 0, fielders 0, `fn_80016344`/`fn_80016710` 1.  The earlier
-note in `character_modding_report.md` §8 ("every caller passes variant = 1") was wrong for fielders
-and runners; the data-only patcher is unaffected because it patches tracks 0 and 1 and the ARAM pair.
+Callers: batter (slotKind 9) 1, runners 0, fielders 0, `fn_80016344`/`fn_80016710` 1.  The
+data-only patcher covers both because it patches tracks 0 and 1 and the ARAM pair.
 
 ### 5.6 Lifetime
 * `fn_80011BE4(slot)` (0x80011BE4, 0xC4, stub; asm read): `slotPtrs[slot] = NULL`, releases the
@@ -314,7 +315,7 @@ and runners; the data-only patcher is unaffected because it patches tracks 0 and
 | `fn_80017098` reuse scan (matched) | add `slots[i].skin == inMemRoster[team][player].stats.UnusedBytes[0]` (the scan already keys on player, so this only matters if a skin changes mid-match; cheap to add) |
 | `fn_8002204C` (matched; `gap_8001E460.c`) | `lbl_800F73B8[charID]` -> `skinPairs[charID][skin]` = `{bodyEntry, overlayEntry}` (skin 0 = retail row); overlays appended to the ARAM blob exactly as `clone_character.py` does (blob move + `fn_800227E4` size immediates) |
 | model caches `fn_80014E50` / `fn_80014F40` / the two compares in `fn_8001758C` | compare `(charID, skin)` or skip the cache when `skin != 0` |
-| `fn_80016344` / `fn_80016710` / `fn_80017814` / anim banks / skeleton / gloves / `jumptable_800EEC40` / stats / voice | unchanged (all keyed on charID; a texture skin needs none of them) |
+| `fn_80016344` / `fn_80016710` / `fn_80017814` / anim banks (incl. track 15) / gloves / `jumptable_800EEC40` / stats / voice | unchanged (all keyed on charID; a texture skin needs none of them) |
 
 ### 6.4 Data
 * `skinPairs[54][N]` (s8 pairs) and `skinSubfiles[54][N-1]` (`DiskFileDesc`, low-detail bodies for
@@ -350,25 +351,25 @@ re-copy in `characterSelectScreen` can be deferred for a first test by making th
   `lbl_80109054` preference rows, not verified against the game's position numbering.
 * The audit scanner is a linear register-taint pass without control flow: a roster pointer stored
   to a global and reloaded elsewhere would be missed (no such store was seen in the hits).
-* Shared-header changes from this pass (`CharacterStats` union, `fn_80025FFC` with two arguments):
+* Shared-header changes made with R2 (`CharacterStats` union, `fn_80025FFC` with two arguments):
   the match count confirms no matched function regressed, but the unmatched callers of
   `fn_80025FFC` (`fn_80012B90`'s helper, `fn_80016344`, `fn_80016710`) changed shape.
 
 ## 7. Function status on this path
 
-| Function | Module / unit | Size | Status after this pass |
+| Function | Module / unit | Size | Status (2026-10-24) |
 |---|---|---|---|
 | `fn_2_DFAC`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_2FC0`, `fn_2_A040`, `fn_2_5F80` | menus gap_1254 | | MATCH |
 | `fn_2_3624`, `fn_2_5444`, `fn_2_102C8` | menus gap_1254 | | documented, non-matching |
-| `fn_2_8940` | menus gap_1254 | 0x3B8 | **MATCH** (this pass; `copyStatsRow` / `COPY_STATS_ROW` helper, `CharacterStats` layout fixed) |
+| `fn_2_8940` | menus gap_1254 | 0x3B8 | **MATCH** (`copyStatsRow` / `COPY_STATS_ROW` helper, `CharacterStats` layout fixed) |
 | `fn_2_8CF8`, `fn_2_9ACC`, `fn_2_11EA8`, `fn_2_5163C`, `fn_2_20D08` | menus | | stubs; purpose documented above (m2c read) |
 | `characterSelectScreen` | DOL gap_80064754 | 0x10C0 | stub; documented (asm + m2c) |
 | `unsure_FillRosterPositions`, `fn_800678CC`, `fn_80066EAC`, `fn_80068838`, `fn_800415A8` | DOL | | stubs; roles documented |
-| `transferStatsToInMemRoster` | DOL gap_80041348 | 0x514 | decompiled this pass, 26 diff lines (saved-register numbering, one CSE'd base) |
+| `transferStatsToInMemRoster` | DOL gap_80041348 | 0x514 | decompiled, 26 lines (saved-register numbering, one CSE'd base) |
 | `fn_800471F4`, `fn_80047CE0`, `pauseMenuSelection`, `startGameRelated`, `fn_8005A350` | DOL | | stubs; roles documented |
 | `fn_3_B4124`, `fn_3_10C450`, `fn_80069854`, `fn_80017098`, `fn_8001758C`, `fn_8002204C` | | | MATCH |
 | `fn_3_6BD6C`, `fn_3_6BA64`, `fn_3_6B4C8`, `fn_3_6B5D8`, `fn_3_6B870` | game gap_6B4C8 | | C bodies present |
-| `fn_8001500C` | DOL gap_8001196C | 0x45C | decompiled this pass, 48 diff lines (loop temporaries one register apart) |
+| `fn_8001500C` | DOL gap_8001196C | 0x45C | decompiled, 48 lines (loop temporaries one register apart) |
 | `fn_80015468`, `fn_8001594C`, `fn_80011BE4`, `fn_80018270` | DOL gap_8001196C | | stubs; documented in section 5 |
 | `fn_80016344`, `fn_80016710` | DOL gap_8001196C | 0x3CC, 0x450 | documented, non-matching: 32 / 28 lines (two CSE temps vs. params; `charID` is s32, `fn_80025FFC` takes 2 args) |
-| `fn_80017814` | DOL gap_8001196C | 0x514 | documented, non-matching (54 lines, prologue scheduling; not attempted this pass) |
+| `fn_80017814` | DOL gap_8001196C | 0x514 | documented, non-matching (48 lines, prologue scheduling) |
