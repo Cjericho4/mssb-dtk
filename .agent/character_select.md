@@ -37,9 +37,13 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
    * `fn_80067B40(charID, value, mode)` (decompiled this pass, see gap_80067AC8.c): writes `value`
      into the taken flag of every member of charID's family unless `mode == 2`; returns 1 if the
      charID is in a family.
-   * `fn_80067C48` (0x328, stub) and `fn_80067F70` (0x534, stub): resolve a duplicate pick into a
-     free colour (loops bounded by `0x36`, partly random).  **These are where "next free colour" is
-     chosen.**  menus.rel callers: `fn_2_2FC0`, `fn_2_3624`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_DFAC`
+   * `fn_80067C48(u8 idx)` (0x328, stub, asm read): NOT colour resolution. It takes roster entry
+     `lbl_8034E9A0.selected[idx]` (team = v/9, slot = v%9 → `CharacterStats` row), copies the row's
+     54 chemistry bytes (+0x3B..) and the ids 0..53 into two stack arrays, selection-sorts them by
+     chemistry descending, and stores the sorted id list at `lbl_8034E9A0 + 0x478D + idx*54`
+     ("characters ranked by chemistry with this player", used by the roster UI).
+   * `fn_80067F70` (0x534, stub): the remaining candidate for "next free colour" (loops bounded by
+     `0x36`, uses `lbl_80108EDC` + `fn_80067AC8`).  **Decompile this one first.**  menus.rel callers: `fn_2_2FC0`, `fn_2_3624`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_DFAC`
      (src/menus/gap_1254).  CPU teams: `fn_800415A8` tries family columns 1..4.
    * There is no colour button in the UI: the n-th pick of a family base gets the next free member.
 3. charID → roster: game.rel `fn_3_B4124` / `fn_3_10C450` memcpy the `CharacterStats` row (CharID at
@@ -85,4 +89,5 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
    the roster screen logic that calls the above.
 4. `fn_800415A8` (0xAD4): CPU team builder (colour columns 1..4).
 5. game.rel `fn_3_B4124`, `fn_3_10C450`: roster → `inMemRoster` copy (skin byte lands here).
-6. `fn_80067B40` register tuning (first decompile in this pass, not yet matched).
+6. `fn_80067B40(arg0 unused, s16 charID, u8 value)`: 8 register-choice diffs left (key should land
+   in r7, walkers r6/r4); value == 2 is the "query only" mode.

@@ -17,18 +17,21 @@ s16 fn_80067AC8(s16 key, s8 column) {
 }
 
 // .text:0x80067B40 size:0x108
-/* fn_80067B40 -- mark every colour variant of `key`'s family as taken/free on the roster grid.
- * key: charID (u8 compare; -1 = nothing to do); value: byte written into
- * lbl_8034E9A0.charsOnCharacterGridSelected[member] for each family member of lbl_80108EDC[row];
- * mode == 2 means "do not write" (query only).  Returns 1 when key belongs to a family, else 0.
- * Match status: NOT matched (first decompile; the retail loop over the 5 members is fully unrolled). */
-u8 fn_80067B40(s16 key, s16 value, u8 mode) {
+/* fn_80067B40 -- mark every colour variant of charID's family as taken/free on the roster grid.
+ * arg0: unused (passed by callers, not read); charID: the picked character (compared as u8, so
+ * -1 never matches: a 0xFF charID returns 0 immediately); value: byte written into
+ * lbl_8034E9A0.charsOnCharacterGridSelected[member] for each member of the family row of
+ * lbl_80108EDC that contains charID, except value == 2 which only queries.  Returns 1 when charID
+ * belongs to a colour family, else 0.  The retail compiler fully unrolls the 5-member loop.
+ * Match status: NOT matched -- 8 lines: the u8 key lands in r7 (fresh reg) and the row/column
+ * walkers in r6/r4 in retail; here the key stays in r4.  Explicit walkers made it worse. */
+u8 fn_80067B40(s32 arg0, s16 charID, u8 value) {
     s32 i;
     s32 j;
     s32 k;
     s16 member;
-    u8 id = key;
-    if (id == 0xFF) {
+    s32 id = (u8)charID;
+    if (id == -1) {
         return 0;
     }
     for (i = 0; i < 9; i++) {
@@ -36,7 +39,7 @@ u8 fn_80067B40(s16 key, s16 value, u8 mode) {
             if (id == lbl_80108EDC[i][j]) {
                 for (k = 0; k < 5; k++) {
                     member = lbl_80108EDC[i][k];
-                    if (member != -1 && mode != 2) {
+                    if (member != -1 && value != 2) {
                         lbl_8034E9A0.charsOnCharacterGridSelected[member] = value;
                     }
                 }
