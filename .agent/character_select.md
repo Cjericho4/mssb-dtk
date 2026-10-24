@@ -1,8 +1,9 @@
-# Character select / roster: how a pick becomes a charID (partial map, 2026-10-23)
+# Character select / roster: how a pick becomes a charID, and the menu art it shows
 
-Goal: a real per-player colour/skin choice, and eventually more than 54 characters.  This is the
-map of the code and tables involved.  Function status from `build/GYQE01/report.json`;
-addresses are DOL RAM unless prefixed `fn_2_` (menus.rel) / `fn_3_` (game.rel).
+Home of the select-screen tables, the UI/announcer lookups and the menu art (§8). The roster →
+match copy and the phase-3 skin design live in `roster_flow.md`; the model load chain in
+`character_modding_report.md`. Status from `build/GYQE01/report.json` and `tools/feedback_diff.py`
+(2026-10-24). Addresses are DOL RAM unless prefixed `fn_2_` (menus.rel) / `fn_3_` (game.rel).
 
 ## 1. Tables
 
@@ -34,10 +35,11 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
    `fn_8004E5B4` (matched, captain grid), `fn_8004D460` / `fn_8004D4F0` (matched, other grid set).
 2. Colour assignment: a family's members are "taken" in `charsOnCharacterGridSelected`.
    * `fn_80067AC8(charID, column)` (matched): family row lookup; returns `row[column]` or −1.
-   * `fn_80067B40(charID, value, mode)` (decompiled this pass, see gap_80067AC8.c): writes `value`
-     into the taken flag of every member of charID's family unless `mode == 2`; returns 1 if the
+   * `fn_80067B40(arg0 unused, s16 charID, u8 value)` (decompiled, not matched: 8 register-choice
+     lines, key should land in r7, walkers r6/r4; gap_80067AC8.c): writes `value` into the taken
+     flag of every member of charID's family unless `value == 2` (query only); returns 1 if the
      charID is in a family.
-   * `fn_80067C48(u8 idx)` (0x328, stub, asm read): NOT colour resolution. It takes roster entry
+   * `fn_80067C48(u8 idx)` (0x328, stub, asm read): chemistry ranking, not colour resolution. It takes roster entry
      `lbl_8034E9A0.selected[idx]` (team = v/9, slot = v%9 → `CharacterStats` row), copies the row's
      54 chemistry bytes (+0x3B..) and the ids 0..53 into two stack arrays, selection-sorts them by
      chemistry descending, and stores the sorted id list at `lbl_8034E9A0 + 0x478D + idx*54`
@@ -47,29 +49,21 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
      list of ranked ids whose taken flag is 0 (unrolled 9×6), compacts the −1 holes, then
      `randRange_FUN_80042bf0(0, 19)` picks one of the first 20 candidates (retry while −1), marks it
      taken and marks its whole `lbl_80108EDC` family taken (same walk as fn_80067B40).  So the "next
-     free colour" for a *human* pick is decided in menus.rel (fn_2_2FC0/3624/4970/7DDC/DFAC use
-     `fn_80067AC8(charID, column)` to step to the next family column); the DOL side only has the
-     taken flags, the family walk and this CPU picker.  menus.rel callers: `fn_2_2FC0`, `fn_2_3624`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_DFAC`
+     free colour" for a *human* pick is decided in menus.rel (the L-button cycle `fn_2_3624` →
+     `fn_2_A040`; fn_2_2FC0/4970/7DDC/DFAC use `fn_80067AC8(charID, column)` to step to the next
+     family column); the DOL side only has the taken flags, the family walk and this CPU picker.  menus.rel callers: `fn_2_2FC0`, `fn_2_3624`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_DFAC`
      (src/menus/gap_1254).  CPU teams: `fn_800415A8` tries family columns 1..4.
    * There is no colour button in the UI: the n-th pick of a family base gets the next free member.
 3. charID → roster: game.rel `fn_3_B4124` / `fn_3_10C450` memcpy the `CharacterStats` row (CharID at
    +0x24) into `inMemRoster[team][slot]`; `fn_8001758C` later copies `stats.CharID` into the actor.
 4. Announcer/voice and some lineup portraits use **unique/grid index** (`fn_800698F8` =
-   `findCharacterID`). The select grid, roster mini images and preview names have separate
-   **charID** lookups, including colour variants. See §8; the earlier universal-grid-key claim
-   was disproved by §7's test and the phase-2 trace.
+   `findCharacterID`). The select grid, roster mini images, preview names and the HUD card use
+   **charID**, with separate art for each colour variant (§6, §8).
 
 ## 3. Where a per-player skin choice could live
 
-* Storage: `inMemRoster[team][slot].stats.UnusedBytes[0]` (per roster entry, survives into the
-  actor via `fn_8001758C` → `AnimationStruct._rest253`).  It must be set per *entry*, not per charID
-  (the stats row is shared by every copy of a character).
-* UI: the natural hook is the colour resolution in `fn_80067C48` / `fn_80067F70`: instead of (or in
-  addition to) moving the pick to another charID, write a skin index into the roster entry and keep
-  the charID.  The menus.rel callers above are where the pick is confirmed.
-* Rendering: `lbl_800F73B8[charID]` → `{body, overlay}` is the ARAM texture mechanism; a
-  `skinPairs[charID][skin]` extension consulted by `fn_8002204C` (matched) gives the look.  See
-  `.agent/character_modding_report.md` §9.
+Moved to `roster_flow.md` §6 (storage, copy sites, loader hooks). The UI hook is the L-button
+colour cycle in menus `fn_2_3624` / `fn_2_A040`, not `fn_80067C48` / `fn_80067F70` (§2).
 
 ## 4. What must change to exceed 54 characters
 
@@ -86,15 +80,17 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
 * Practical path: keep 54 charIDs, add skins (section 3).  Going beyond 54 means relocating every
   table in a `--non-matching` build (`gap_8001E460.c` already defines the disc tables as C arrays).
 
-## 5. Next functions to decompile (ranked)
+## 5. Select-screen functions: notes and status
 
-1. `fn_80067C48` (0x328) and `fn_80067F70` (0x534), gap_80067AC8.c: the colour resolution; the
-   skin hook goes here.  Both only use `lbl_80108EDC`, `lbl_8034E9A0` and `fn_80067AC8`.
-2. `fn_800698F8` (0x170): decompiled (24 diffs: prologue hoist + local jump-table name), body in
-   gap_80067AC8.c; `lbl_8034E9A0.useAltBirdoGrid` (0x48AE) added to the struct.
-3. menus.rel `fn_2_2FC0` (**matched 2026-10-23**), `fn_2_3624`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_DFAC`
-   (src/menus/gap_1254): the roster screen logic that calls the above.
-   * `fn_2_2FC0(u8 mode, s32 finish, s32 rebuild)`: the roster rebuild entry, keyed on the menu mode
+Matched: `fn_2_2FC0`, `fn_2_348C`, `fn_2_4970`, `fn_2_7DDC`, `fn_2_DFAC`, `fn_2_C698`, `fn_2_A040`,
+`fn_80067AC8`. Not matched: `fn_2_3624` (5 lines, `handoff_fn_2_3624.md`, issue #4), `fn_80067B40`
+(8 lines, §2), `fn_800698F8` (36 lines: prologue hoist + local jump-table name; adds
+`lbl_8034E9A0.useAltBirdoGrid` 0x48AE). Stubs, next to decompile in gap_80067AC8.c:
+`fn_80067C48` (0x328) and `fn_80067F70` (0x534) (§2; they only use `lbl_80108EDC`, `lbl_8034E9A0`
+and `fn_80067AC8`), and `fn_800415A8` (0xAD4, CPU team builder, family columns 1..4).
+
+1. menus.rel roster screen logic (src/menus/gap_1254.c):
+   * `fn_2_2FC0(u8 mode, s32 finish, s32 rebuild)` (MATCH): the roster rebuild entry, keyed on the menu mode
      (`lbl_803297E0.mode`).  Modes 9/10: memset the 54 taken flags (`charsOnCharacterGridSelected`,
      `lbl_8034E9A0.charTaken`), mark both players' picks (`lbl_8034E9A0 + 0x46E0/0x46E4`) taken, then
      for each of the 6 locked uniques `lbl_803CB748[i]` set the taken flag of every charID with that
@@ -105,10 +101,10 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
      first.  Callers: `fn_2_3204` (mode, 1, 1), `fn_2_8ED4C` (9, 0, 1).  So locked characters are
      excluded from the colour walk the same way as already-picked ones: a modded extra charID is
      only hidden from picking if its uniqueIdx is one of the six in `lbl_803CB748` and the flag is 0.
-     `fn_2_348C` (0x144, **matched 2026-10-23**) is the same locked-unique loop standing alone
+     `fn_2_348C` (0x144, MATCH) is the same locked-unique loop standing alone
      (no `bl` to it in menus.rel): `for i<6: locked = (charUnlocked[i] == 0); for c<54: if
      (lbl_803CB748[i] == lbl_800E8558[c].uniqueIdx) charTaken[c] = locked`.
-   * `fn_2_4970(u8 side, s32 captainID)` (**matched 2026-10-23**): undo the latest pick of a side (B button
+   * `fn_2_4970(u8 side, s32 captainID)` (MATCH): undo the latest pick of a side (B button
      path of `fn_2_CE44`, captainID = `lbl_8034E9A0.players[side]`).  Finds the slot whose
      `lbl_803C6724.order[side][k]` equals the cursor `lbl_2_bss_F468.cursor[side]`; captain slot -> only
      step the cursor back; else record `prevCursor[side]`, step back, and release the slot's character:
@@ -122,7 +118,7 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
      matched) finds the `lbl_800FDE84` grid cell holding charID's base and writes `value`
      (controller index) or -1 into `lbl_803C6028.slots[cell]`: that is the per-cell "picked by Pn"
      badge, keyed by **base charID**, so a clone donor's cell is what gets badged.
-   * `fn_2_7DDC(void)` (**matched 2026-10-23**): opens the roster screen (callers `fn_2_86EC`, `fn_2_CCBC`,
+   * `fn_2_7DDC(void)` (MATCH): opens the roster screen (callers `fn_2_86EC`, `fn_2_CCBC`,
      `fn_2_110B0`).  Clears the taken flags (not in challenge mode), builds the pad-role bytes for
      `fn_80050FE8` (DOL stub) from `lbl_8034E9A0.controllerIndices` and `g_d_GameSettings._10`, sets both
      cursors (`lbl_2_bss_F468.cursor[]`) to 10 (9 after menu 0xB or in challenge mode), then: challenge
@@ -133,25 +129,22 @@ fn_2_C484, fn_2_DFAC, fn_2_F200, fn_2_FAA0, fn_2_FCB4.
      `lbl_800FDE84[0..31]`, placed with `fn_80050138` (DOL stub), and `fn_800625A4(side, 9|0xA)`.
      Nothing in it chooses portraits/banners: everything is keyed by charID or by base charID
      (`fn_800506E8`'s cell lookup).
-4. `fn_800415A8` (0xAD4): CPU team builder (colour columns 1..4).
-5. game.rel `fn_3_B4124`, `fn_3_10C450`: roster → `inMemRoster` copy (skin byte lands here).
-6. `fn_80067B40(arg0 unused, s16 charID, u8 value)`: 8 register-choice diffs left (key should land
-   in r7, walkers r6/r4); value == 2 is the "query only" mode.
+2. Roster → `inMemRoster` copies (menus `fn_2_8940`, DOL `characterSelectScreen`, game.rel
+   `fn_3_B4124` / `fn_3_10C450`): `roster_flow.md` §2.
 
-## 6. UI / announcer lookup map (2026-10-23, pass 5) and the `--ui source` patch
+## 6. UI / announcer lookup map and the `--ui source` patch
 
-This was the phase-1 lookup map. **Correction from phase 2:** select-grid portraits, roster mini
-images and preview names also use **charID**, with separate art for variants (§8). The
-unique-index routes below still agree for all 54 retail charIDs (test_clone.py checks it):
-`lbl_800E8558[charID].uniqueIdx` == `fn_800698F8(charID)`.
+Unique-index routes below agree for all 54 retail charIDs (test_clone.py checks
+`lbl_800E8558[charID].uniqueIdx == fn_800698F8(charID)`). The charID-keyed menu art (preview name,
+mini image, grid portrait) is in §8.
 
 | What | Keyed by | Lookup | Asset |
 |---|---|---|---|
-| Announcer name call-out | unique (via `fn_800698F8`) | `fn_800628D4(charID)` (matched this pass): `useAltBirdoGrid = 1; sfx = lbl_80108DF4[grid]; sndFXStartEx(sfx, lbl_80108B18[0], 63, 0); sndFXCtrl(h, 0x5B, 0)` | `lbl_80108DF4` 33 u16 SFX ids 0x1C4..0x1E5 (Musyx group loaded by menus/game; entry 0x20 = Birdo alt).  Callers: menus `fn_2_12A70` (captain pick), game `fn_3_10CC20` x2 (batter/pitcher intro), `fn_3_B49D4` |
+| Announcer name call-out | unique (via `fn_800698F8`) | `fn_800628D4(charID)` (MATCH): `useAltBirdoGrid = 1; sfx = lbl_80108DF4[grid]; sndFXStartEx(sfx, lbl_80108B18[0], 63, 0); sndFXCtrl(h, 0x5B, 0)` | `lbl_80108DF4` 33 u16 SFX ids 0x1C4..0x1E5 (Musyx group loaded by menus/game; entry 0x20 = Birdo alt).  Callers: menus `fn_2_12A70` (captain pick), game `fn_3_10CC20` x2 (batter/pitcher intro), `fn_3_B49D4` |
 | Character voice bank | unique (via `fn_800698F8`) | game `fn_3_90F48` / `fn_3_90B14` / `fn_3_5A28C`: `fn_800216F8(grid + 5, cb)` then `fn_80021518(lbl_3_data_8148[grid], file)` = `sndPushGroup` | `lbl_800EF508[5 + grid]` (48 DiskFileDesc, uncompressed Musyx project/sdir/pool files in ZZZZ.dat; 0..4 and 38..47 are common/stadium banks), group id `lbl_3_data_8148[33]` (game.rel .data 0x8148) |
 | Per-grid gameplay row | unique (via `fn_800698F8`) | DOL `fn_8004B284`: `lbl_800FBF10 + 0x214 + grid*14 + k*2` -> `getAnimRelatedCoordinates` | `lbl_800FBF10` (u16[33][7] at +0x214) |
 | Small portraits in menus (lineup/team/results) and in-game | unique (`lbl_800E8558[c].uniqueIdx`) | menus `fn_2_4EB2C` (slot 0x15), `fn_2_5ED3C` (slot 0xA); game `fn_3_59F40` (slot 0x14) via `fn_80035838(desc, slot)` | ZZZZ.dat 0x18ED7000 (menus `lbl_2_data_1324C` / `lbl_2_data_20BF0`, game `lbl_3_data_3D60+0x70`): 180 textures, the 32 CI8 50x50 at indices 53..84 are unique 0..31 (byte-identical to the 54-file's for the 26 base cells) |
-| HUD batter/pitcher card | **charID** | game `fn_3_91D1C` (rep_16B8): pane frame `pane->unk5C = stats.CharID << 16` (also `fn_3_EA340`, `fn_3_EAEF4`, `fn_3_EB6E0`, `fn_3_11F02C`, `fn_3_121304`, `fn_3_127B68`, `fn_3_11E364/7C4`) | ZZZZ.dat 0x1A6B3000 (DOL `lbl_800EEFD0+0x10` -> slot 0xD in `fn_80020388`, `lbl_800E8AA8+0x70`; game `lbl_3_data_21EC8/F538/10598 +0x10`): 102 textures, the 54 CI8 50x50 + 256-entry RGB5A3 TLUT at indices 30..83 are charID 0..53 (each colour variant has its own) |
+| HUD batter/pitcher card | **charID** | game `fn_3_91D1C` (rep_16B8): pane frame `pane->unk5C = stats.CharID << 16` (also `fn_3_EA340`, `fn_3_EAEF4`, `fn_3_EB6E0`, `fn_3_11F02C`, `fn_3_121304`, `fn_3_127B68`, `fn_3_11E364/7C4`) | ZZZZ.dat 0x1A6B3000 = `res[1]`. Loaded in-game by game.rel `fn_3_5BD40` from `lbl_3_data_6130+0x10` into UI slot **0xC**. Other copies of the descriptor (not loaders of it): DOL `res` 0x800E8B18 and `res_dol2` 0x800EEFE0, game `lbl_3_data_3D80/F538/10598/21EC8 +0x10`, challenge `debug_browser[2]`. 102 textures, the 54 CI8 50x50 + 256-entry RGB5A3 TLUT at indices 30..83 are charID 0..53 (each colour variant has its own) |
 | Challenge Special ending / staff-roll presentation (§8.4) | fixed animation timeline; no character key | `fn_2_4E970` loads `lbl_2_data_132DC` into slot0x17; `24238` / `2587C` play sequence0x64 | ZZZZ.dat 0x19135800: 427 textures, including 139 long CI4 strips; no clone patch needed |
 | Records / star screens | unique, only if `isBase` | `fn_2_1C860`, `fn_2_45204`, `fn_2_454E8`, `fn_8006CDC0`: `lbl_80109AE8 + unique*0x64` | DOL `lbl_80109AE8` |
 | Unlock flags | unique | `fn_2_348C`, `fn_2_7DDC`: `lbl_803CB748` (6 locked uniques) -> taken flag per charID | |
@@ -182,20 +175,17 @@ Not presentation: `lbl_800EF508` was first mistaken for portraits; it is sound o
 5. (Phase 2, §8.3) charID-keyed menu art: roster preview name, mini picture and grid portrait of S :=
    C's (pictures recoloured), and the colour word dropped (`--colour-word none`, default).
 
-Confirmed scope: this redirects announcer/voice, unique-index presentation and the HUD card.
-The claim that it also fixed every menu/grid face was wrong (§7): the charID-keyed files in §8
-were not patched by 1..4; step 5 (implemented 2026-10-24, §8.3) adds them. A base donor's records
-row changes because it is `isBase`. `--ui donor` skips 1..3 and 5.
+Scope: 1..4 redirect announcer/voice, unique-index presentation and the HUD card; 5 covers the
+charID-keyed menu art. A base donor's records row changes because it is `isBase`. `--ui donor`
+skips 1..3 and 5.
 
-## 7. User test feedback (2026-10-23, Project Rio, default four-Toad clones, `--ui source`)
-- Working: picking an extra Toad gives Mario's voice and announcer call.
-- **Bug: menus and in-menu mini-screen sprites show the donor's own portrait** (the user could pick only one
-  Toad without a multi-pick mod; it got the Purple Toad slot and the menus showed Purple Toad). So the menus
-  don't take their portrait from the unique index (fn_800698F8 rewrite) or the charID-keyed HUD file. Needs
-  tracing: which file and texture index the menu portraits/name banners use, and how the index is computed
-  (likely menus character-select code fn_2_2FC0/3624/4970/7DDC/DFAC).
-- **Chemistry (parked until custom sprites work everywhere, per user):** clones copy Mario's chemistry row/column, so clone↔Mario and clone↔clone have Mario's
-  self-chemistry (none). Expected: good chemistry between Mario and his clones and among the clones.
+## 7. User test feedback (2026-10-23, Project Rio, four Toad clones of Mario, `--ui source`)
+
+- Working: an extra Toad gets Mario's voice and announcer call.
+- Menus showed the donor's own portrait: the menu art is charID-keyed (§8), now patched by step 5
+  (§8.3); Rio re-test pending (issue #2).
+- Chemistry: clones copy Mario's row/column, so clone↔Mario and clone↔clone get Mario's
+  self-chemistry (none). Wanted: good chemistry among them (phase 4, issue #6).
 
 ## 8. Menu portraits, banners and sprites
 
@@ -222,12 +212,12 @@ colour cycle:  fn_2_3624 -> teams[side][slot] changes, unk50[side] = 1
 
 `fn_800625A4` only writes `lbl_803C66B0.flags5D[side]` and clears the transition-stage
 bytes. The command-0xE consumer is **menus `fn_2_81628`**, not DOL `fn_800559EC` or
-`fn_80060184`. Its `jumptable_2_data_2D920` indexes commands 9..0x1D.
+`fn_80060184`. Its `jumptable_2_data_2D920` (menus `.data+0x2D920`, 21 entries) indexes commands 9..0x1D.
 
-| Function | Role and relevant key | Body/status this pass |
+| Function | Role and relevant key | Status |
 |---|---|---|
-| `fn_2_DFAC` | Confirm charID from `gridPick[side]`, update roster/taken flags, announcer, chemistry; request 0xF. No art loaded here. | Existing match preserved; misleading dispatcher comment corrected. |
-| `fn_2_1C34` | Exact button-value switch: A=0x1B8 confirm, B=0x1B9 alert, directions=0x1B7 move. Other listed buttons do nothing. No character key. | Existing match rechecked; documented. |
+| `fn_2_DFAC` | Confirm charID from `gridPick[side]`, update roster/taken flags, announcer, chemistry; request 0xF. No art loaded here. | **MATCH**. |
+| `fn_2_1C34` | Exact button-value switch: A=0x1B8 confirm, B=0x1B9 alert, directions=0x1B7 move. Other listed buttons do nothing. No character key. | **MATCH**. |
 | `fn_2_102C8` | Count empty/54 team slots; temporarily reserve the other side's pending pick; choose nonrepeating random fill strategy 0..2 (`FCB4`/`FAA0`/`F200`), rebuild positions and request 0x16. Full team -> cursor9, command0x11. Release temporary reservation afterward. | Complete documented C, non-matching; side/other registers and scheduling remain. |
 | `fn_2_5444` | Ready: challenge copies team0 charIDs/order into save lineup, in-memory roster and batting-order data, sends 0x13 to both sides and advances state8. Shared pad hands control to side1 or exits state3; two-pad mode waits for both ready, then state7. | Complete documented C, non-matching; unrolled copy/register scheduling remains. |
 | `fn_2_7265C` | Open grid: scan 54 `lbl_80361B20.characterFlags` for transition1/2; challenge uses 0x13 and once-only extra queues. Queue `fn_80051D00`. | **MATCH**. |
@@ -259,9 +249,9 @@ constants0x40B; 0x40000000 marks the compressed size word.
 
 | Art | File and descriptor | Runtime key -> texture index | Retail format |
 |---|---|---|---|
-| Roster preview name | **0x1A9FE800**, unpacked0x106568, packed0x68C10; DOL `lbl_800E8AA8+0x150` = **0x800E8BF8**, also `lbl_800EEFD0+0xF0` | Common slot1, sequence0x82, charID c -> **c if c<29, else c+28** | 54 × **111x18 CI4** (GX8), shared 16-entry **RGB565** TLUT (format0). |
+| Roster preview name | **0x1A9FE800** (`res[15]`), unpacked0x106568, packed0x68C10; DOL `res` 0x800E8B08+0xF0 = **0x800E8BF8**, also `res_dol2` 0x800EEFD0+0xF0 | Common slot1, sequence0x82, charID c -> **c if c<29, else c+28** | 54 × **111x18 CI4** (GX8), shared 16-entry **RGB565** TLUT (format0). |
 | Roster/mini-screen character image | Same common file (440 total textures) | Common slot1, sequence0x83, c -> **153+c**; frame54 placeholder -> texture434 | 54 × **52x60 CI8** (GX9), 256-entry **RGB5A3** TLUT (format2). |
-| Select-grid portrait | **0x18AEE800**, unpacked0xADFFC, packed0x4BAB0; DOL `lbl_800E8AA8+0x230` = **0x800E8CD8**; menus `lbl_2_data_180+0x2D4` / `lbl_2_data_720+0x604` | Slot9, query sequence0x19, grid charID c -> **4+c**; unavailable54 -> texture118 | 54 × **50x50 CI8**, 256-entry **RGB5A3** TLUT. |
+| Select-grid portrait | **0x18AEE800** (`res[29]`), unpacked0xADFFC, packed0x4BAB0; DOL `res` 0x800E8B08+0x1D0 = **0x800E8CD8**, also `res_dol2` 0x800EEFD0+0x1D0; nine menus.rel copies (§8.3) | Slot9, query sequence0x19, grid charID c -> **4+c**; unavailable54 -> texture118 | 54 × **50x50 CI8**, 256-entry **RGB5A3** TLUT. |
 | Existing HUD card | 0x1A6B3000 (§6) | charID c -> 30+c | 50x50 CI8, RGB5A3; already patched. |
 | Other small lineup/results portraits | 0x18ED7000 (§6) | uniqueIdx u -> 53+u | 32 × 50x50 CI8; unique-index redirection already covers source appearance. |
 
@@ -269,9 +259,8 @@ Grid cell identity and art identity are separate: the grid stores **base** charI
 donor need not have its own visible grid cell. Patching portrait `4+S` fixes every consumer that
 actually asks for S; it does not change the base Toad cell into an independently selectable clone.
 
-The earlier candidate `0x19135800`/slot0x17 is **the fixed Challenge ending presentation**, not
-the roster name resource or a charID/unique-index name bank. The trace and no-patch verdict are
-in §8.4.
+`0x19135800` (slot 0x17) is the fixed Challenge ending presentation, not a roster name bank
+(§8.4).
 
 Named views are in `include/menus/menu_ui.h`: `MenusSceneScript`, `MenuUiFileHeader`,
 `MenuUiSpriteBank`, `MenuUiSequenceTable`, `MenuUiSequence`, `MenuUiFrameList`, `MenuUiFrame`,
@@ -297,96 +286,57 @@ python tools/modding/inspect_menu_ui.py orig/GYQE01
 ```
 
 The inspector validates both retail descriptors, expands the actual character lists and checks
-every frame's texture/format. It also reports **48 pixel/palette buffers for 54 mini images**:
-some entries alias each other. All 54 name textures share one palette. Grid portraits have
-54 distinct pixel and palette buffers.
+every frame's texture/format. It reports **48 pixel/palette buffers for 54 mini images**: four
+alias groups share one buffer each, {12,42} {20,43} {27,52,53} {48,49,51} (54 − 6 = 48). All 54
+name textures share one palette. Grid portraits have 54 distinct pixel and palette buffers.
 
-### 8.3 Concrete patcher recommendation
+### 8.3 Patcher implementation (`clone_character.py --ui source`)
 
-**Implemented 2026-10-24** in `clone_character.py --ui source` (`patch_menu_art`, `MenuTextures`,
-`patch_colour_word`); checked by `test_clone.py` and `test_matrix.py --menu-art`. Not yet seen in
-Rio. How it differs from the recommendation below:
+Implemented 2026-10-24 (`patch_menu_art`, `MenuTextures`, `patch_colour_word`); checked by
+`test_clone.py` and `test_matrix.py --menu-art`; Rio test pending (issue #2). For each donor S and
+source C (e.g. donor 29 from Mario 0: common **name57 ← name0**, **sprite182 ← sprite153**, grid
+**portrait33 ← portrait4**, plus HUD **59 ← 30** from §6):
 
-- **Header retargeting, not copying.** All three donor textures (name, mini picture, grid portrait)
-  get the source's pixel offset in their header; the name also keeps the shared text palette. The
-  two pictures get a private 512-byte palette recoloured with `rc.for_palette()` (as the HUD card).
-  It goes into a buffer that no header references any more, in order: the donor's old palette, its
-  old pixels, buffers freed by earlier donors (each donor's 1344-byte name pixels are always freed).
-  The files therefore never grow and nothing shared is written; the aliased mini pictures
-  (12/42, 20/43, 27/52/53, 48/49/51) are covered (`--slot 42 --slot 53 --slot 49 --slot 51` test).
-  Appending is kept as a last-resort path (`MenuTextures._alloc`).
-- **In place.** Optimal LZSS re-packs fit easily: common 420-421 KB of 429072 B, grid 303.8 KB of
-  309936 B (about 8.8 KB / 6 KB spare for the default config). If a file did not fit (or with the
-  test-only `--relocate-menu-art`) it is appended to ZZZZ.dat and every tuple copy is rewritten.
-- **Descriptor copies (full 16-byte tuple search) differ from the table below:** common file:
-  main.dol x2, menus.rel x0, game.rel x5, **challenge.rel x1** (.data file offset 0x41818); grid
-  file: main.dol x2, **menus.rel x9** (one more than listed), game.rel x5, **challenge.rel x1**
-  (0x418F8). The patcher asserts these counts when it moves a file.
-- **Colour word:** `jumptable_2_data_2D844` (menus .data, 42 entries for charIDs 12..53) is empty
-  in the file; each entry is an `R_PPC_ADDR32` self-relocation against .text whose addend is the
-  case (`li r0, N` at 0x7556C + 8*(N-1); label 0 at 0x7559C). `--colour-word none` (default)
-  rewrites the 4-byte addend of each donor's entry to 0x7559C, after checking every retail addend
-  against the C switch and every case instruction. menus.rel is re-packed in place in aaaa.dat
-  (355584 B, room 372736 B). Label 0 is what every single-colour character (Mario) shows (the
-  non-family `else` branch also sets pane 0xAE to frame 0). `--colour-word donor` keeps the retail
-  entries. **Open question for Rio:** the retail name textures already read "Blue Toad" / "Purple
-  Toad" (see the before/after sheet), so pane 0xAE / sequence 0x7B is not a "Purple" + "Toad" prefix;
-  what it draws for variants (and where) has not been seen. Check on the roster screen that the
-  clone's label looks like Mario's, and what a retail variant's looks like.
+- **Header retargeting, not copying.** The donor's name (`name(c) = c<29 ? c : c+28`), mini picture
+  (153+c) and grid portrait (4+c) headers get the source's pixel offset; the name keeps the shared
+  text palette. The two pictures get a private 512-byte palette recoloured with `rc.for_palette()`
+  (as the HUD card), placed in a buffer no header references any more, in order: the donor's old
+  palette, its old pixels, buffers freed by earlier donors (each donor's 1344-byte name pixels are
+  always freed). Files never grow and nothing shared is written; the aliased mini pictures (§8.2)
+  are covered (`--slot 42 --slot 53 --slot 49 --slot 51` test). Appending is a last-resort path
+  (`MenuTextures._alloc`).
+- **In place.** Optimal LZSS re-packs fit: common 420-421 KB of 429072 B, grid 303.8 KB of
+  309936 B. If a file did not fit (or with the test-only `--relocate-menu-art`) it is appended to
+  ZZZZ.dat on a 0x20 boundary and **every full 16-byte descriptor tuple** below is rewritten (the
+  patcher asserts the counts). In-place, size-preserving re-packs leave them valid.
+- **Colour word** (pane 0xAE + side, common sequence 0x7B, labels 0..6, gated by
+  `fn_80067B40(0, charID, 2)`; challenge hides it): `fn_2_74F40` switches on charID through
+  `jumptable_2_data_2D844` (menus `.data+0x2D844`, 0xA8 = 42 entries for charIDs 12..53). The table
+  is empty in the file; each entry is an `R_PPC_ADDR32` relocation against `.text` whose addend is
+  the case (`li r0, N` at `.text+0x7556C + 8*(N-1)`, label 0 at `0x7559C`). `--colour-word none`
+  (default) rewrites each donor's addend to 0x7559C (what Mario and every single-colour character
+  shows) after checking every retail addend; menus.rel is re-packed in place in aaaa.dat
+  (355584 B, room 372736 B). `--colour-word donor` keeps the retail entries. **Open for Rio:** the
+  retail name textures already read "Blue Toad" / "Purple Toad", so what label 1..6 draws for
+  variants has not been seen.
+- Nothing changes in roster charIDs, `lbl_800FDE84`, `lbl_80108EDC`, chemistry or model keys.
 
-Extend `clone_character.py --ui source` with **data changes in these two files**, retaining the
-existing unique-index/announcer/voice/HUD changes. For each donor S and source C:
+Descriptor copies (full-tuple search, `mssb_files.py info res.15 / res.29`; ids from `data_map.md`
+§4; challenge.rel's are the sprite debug browser, §8.4):
 
-1. Common file: set texture `name(S)` to source `name(C)` (`name(c)=c<29?c:c+28`). All names have
-   identical dimensions/format. Copy the CI4 pixels or redirect the donor header's pixel offset;
-   keep the shared text palette. This fixes the name used by the roster preview.
-2. Common file: set texture **153+S** to source **153+C**, optionally recolouring the source TLUT
-   with the slot's palette transform. **Do not overwrite a shared donor pixel/TLUT buffer.**
-   For source appearance, redirect the donor header's pixel/TLUT offsets to the source buffers.
-   For independent recolours, allocate private pixel and 512-byte palette buffers and point only
-   that donor header at them. This fixes picked cards, initial rosters and L-colour updates alike.
-3. Grid file: set texture **4+S** to **4+C**, copying CI8 pixels and recoloured 512-byte TLUT, or
-   redirect headers for un-recoloured source appearance. No grid/family/base-charID edits needed.
-4. The colour prefix is a separate policy: retain the donor prefix, or make clone cases in
-   `74F40` select label0. The source name pixels can be correct even with a donor colour word.
-   For a data-only default, retain the prefix; suppressing it requires the tiny switch change.
-5. Repack the resources. Prefer the existing in-place method if the new compressed file fits the
-   old reserved slot and the unpacked size is unchanged; validate by decompressing again.
-   If private buffers grow the file or it does not fit, append the packed resource to ZZZZ.dat
-   on a 0x20 boundary and rewrite **all matching descriptor tuples**, including copies in RELs.
-   Appended pixel/TLUT buffers use archive-relative offsets; preserve existing bank/table offsets.
-   Repack changed RELs into aaaa.dat through the patcher's existing descriptor machinery.
-
-For example, donor29 from Mario0 needs common **name57 <- name0**, common **sprite182 <- sprite153**,
-grid **portrait33 <- portrait4**, plus the already-existing HUD **59 <- 30** and unique-index fix.
-No changes to actual roster charIDs, `lbl_800FDE84`, `lbl_80108EDC`, chemistry or model keys are
-needed for those image/name replacements.
-
-Descriptor aliases to update **if relocation/unpacked-size changes require descriptor edits**:
-
-| Module | Common file descriptor | Grid file descriptor |
+| Module | Common file (`res[15]`), ×8 | Grid file (`res[29]`), ×17 |
 |---|---|---|
-| DOL | `lbl_800E8AA8+0x150`, `lbl_800EEFD0+0xF0` | `lbl_800E8AA8+0x230`, `lbl_800EEFD0+0x1D0` |
-| menus.rel | None found (uses boot-loaded common slot1) | `.data+0x454`, `+0xD24`, `+0x1324`, `+0x18C4`, `+0x2A9C4`, `+0x2B3EC`, `+0x2E1FC`, `+0x302CC` |
-| game.rel | Each of `lbl_3_data_3D80`, `6130`, `F538`, `10598`, `21EC8` **+0xF0** | Same five bases **+0x1D0** |
+| DOL ×2 | `res` 0x800E8BF8, `res_dol2` 0x800EF0C0 | `res` 0x800E8CD8, `res_dol2` 0x800EF1A0 |
+| menus.rel | none (uses the boot-loaded common slot 1) | ×9: `menu_set`..`menu_set_i` slot 1 = `.data+0x454`, `0xD24`, `0x1324`, `0x18C4`, `0x1CE4`, `0x2A9C4`, `0x2B3EC`, `0x2E1FC`, `0x302CC` |
+| game.rel ×5 | `lbl_3_data_3D80`, `6130`, `F538`, `10598`, `21EC8` **+0xF0** | same five bases **+0x1D0** |
+| challenge.rel ×1 | `debug_browser[16]` `.data+0xFC98` (file offset 0x41818) | `debug_browser[30]` `.data+0xFD78` (file offset 0x418F8) |
 
-These are descriptor starts, not their offset-word addresses. Compare the full original tuple
-before replacing, rather than globally replacing an offset word. No copies found in challenge.rel.
-In-place, size-preserving replacement leaves these aliases valid automatically.
-
-For independent recolours in the **32-portrait** lineup/results resource, the existing unique-index
-route still makes source and clones share art. The two-file change above fixes source appearance
-there through the existing unique-index patch, and independent recolours in the newly traced
-54-character menus. Distinct recolours in every 32-index consumer need a further change: expand
-that portrait bank to 54 frames using the charID-keyed 50x50 art, and change those callers from
-`uniqueIdx` to charID (or explicitly route them to a loaded 54-image bank). Do not recolour the
-source's shared `53+uniqueIdx` texture and call it a per-clone fix. That extension was not
-implemented or runtime-tested here.
-
-A single global charID->uniqueIdx hook would not fix these files: these are 54-frame banks with
-variant-specific images, while uniqueIdx addresses a different 32-character ordering. If choosing
-a code-remap alternative, use a separate 54-entry **UI charID** map at these identified frame/query
-sites, preserving stats, taken flags, grid badges and model charIDs.
+**Not done:** distinct recolours in the **32-portrait** lineup/results resource (res 5, uniqueIdx
+u → 53+u) still show the source's art for clones. That needs the bank expanded to 54 frames from
+the charID-keyed 50x50 art and its callers switched from `uniqueIdx` to charID (or a separate
+54-entry UI charID map at those sites). Do not recolour the source's shared `53+uniqueIdx`
+texture. A single global charID→uniqueIdx hook would not fix the §8 files: they are 54-frame
+banks with variant-specific images.
 
 ### 8.4 Large banner archive
 
@@ -477,7 +427,7 @@ lists with all four query-record cases, and checks nested-sequence bounds and al
 coverage. It prints metadata only and writes no assets. `--sequences` lists each layer's
 flags and fixed indices so the examples and graph can be checked independently of this prose.
 
-**Decoder details added this pass:** `fn_8000CEF0` skips `count-frame-1` packed records in
+**Decoder details:** `fn_8000CEF0` skips `count-frame-1` packed records in
 descending order; its `frame` argument is an ordinal, not a search for a stored key time.
 Type0 zero-fills80 bytes and copies the first full template (0x2C in the character lists);
 type1 copies an independent80-byte full record. Type2 starts with the template payload,
@@ -487,19 +437,8 @@ For image records the texture halfword is at **+6**, beside flags at+4. The comp
 body is committed non-matching; table-address folding, register choices and delta-loop codegen
 remain different after three attempts. No match was lost.
 
-### 8.5 Verification and remaining scope
+### 8.5 Remaining scope
 
-`ninja` green; baseline **3963 -> 3965** matches. New matches: `fn_2_7265C`, `fn_800363D8`.
-All other new bodies are complete semantic decompilations, explicitly non-matching. Existing
-`fn_2_1C34` and `fn_80036214` rechecked MATCH. `fn_2_3624` remains at its original five scheduling
-feedback lines; its optional match refinement was not attempted in this pass.
-
-The dispatcher/initial-population routines (`81628`, `8279C`, `7AE3C`) were inspected in assembly;
-their existing stubs remain. The art-selection path now has documented bodies through pick,
-cursor, colour refresh and grid texture binding. Generic sprite querying now has a complete C body; rendering remains assembly-inspected. Patcher implementation and a new Project Rio run remain future work:
-this pass establishes the data/code targets, not an already-tested patched game. The older large-banner hypothesis has now been resolved in §8.4. No assets were exported,
-and no runtime Rio test was performed for this documentation pass.
-
-2026-10-24 follow-up: `fn_8000CEF0` semantic body committed; `fn_2_2587C` newly matched.
-`ninja` green, **3965 -> 3966** matches; read-only banner inspector verified all101 sequences
-and139 long strips. Both descriptor copies (including the debug browser) are documented above.
+The dispatcher/initial-population routines (`fn_2_81628`, `fn_2_8279C`, `fn_2_7AE3C`) are stubs,
+read in assembly. Sprite rendering (`fn_8000D838` / `fn_8000D164`) is assembly-inspected only. The
+patched game has not been run in Rio yet (issue #2).
