@@ -534,8 +534,36 @@ void fn_2_75B58(void) {
 }
 
 // .text:0x00075BE4 size:0x4B4
+/* Refresh the five team-chemistry stars after a pick. Average only nonzero
+ * selectionFlags for non-captains; this does not load portraits or names. */
 void fn_2_75BE4(DrawingSceneStruct* scene, s32 side) {
-    return;
+    s32 sum = 0;
+    s32 count = 0;
+    s32 average = 0;
+    s8 stars = 0;
+    s32 i;
+    for (i = 0; i < 9; i++) {
+        if (lbl_803C6724.selectionFlags[side][i] != 0 &&
+            lbl_803C6724.teams[side][i] != lbl_8034E9A0.players[side]) {
+            sum += lbl_803C6724.selectionFlags[side][i];
+            count++;
+        }
+    }
+    if (count) average = sum / count;
+    if (average >= 70) stars = 5;
+    else if (average <= 69 && average >= 55) stars = 4;
+    else if (average <= 54 && average >= 35) stars = 3;
+    else if (average <= 34 && average >= 15) stars = 2;
+    else if (average <= 14 && average > 0) stars = 1;
+    lbl_8034E9A0.chemistryStars[side] = stars;
+    for (i = 0; i < 5; i++) {
+        if ((menuPane(scene, side * 5 + i + 0x6E)->field_0x5C >> 16) == 30)
+            menuPane(scene, side * 5 + i + 0x6E)->field_0x68 = 1;
+    }
+    for (i = 0; i < stars; i++) {
+        menuPane(scene, side * 5 + i + 0x6E)->field_0x5C = 0;
+        menuPane(scene, side * 5 + i + 0x6E)->field_0x68 = 1;
+    }
 }
 
 // .text:0x00076098 size:0x4
