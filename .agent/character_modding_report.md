@@ -150,7 +150,7 @@ and per-index file meanings: `data_map.md` §4 (`stadium`, `master`, `subfile`, 
 | `lbl_800F73B8` † | 0x800F73B8 (0xF43B8) | 54 × 2 s8 | `{bodyEntry, overlayEntry or −1}` (values below) |
 | `lbl_800F7424` † / `lbl_800F743C` † | 0x800F7424 / 0x800F743C | 2 × 6 × 2 / 54 | sub-item pair rows `{k1, k2}` / per-character row index (`fn_80021CA4`) |
 | `lbl_800EEAAC` | 0x800EEAAC (0xEBAAC) | 54 × u16 | glove/attachment bone-list base, = charID*6 (verified) |
-| `lbl_800EEB18` | 0x800EEB18 | 54 × s16 | per-model script id (values below; variants share their base's id) |
+| `lbl_800EEB18` | 0x800EEB18 | 54 × s16 | per-model script id (values below; variants share their base's id); read by fn_8001500C, fn_8001594C, fn_80016344, fn_80016710, fn_80019C00, fn_8001A3FC |
 | `jumptable_800EEC40` | 0x800EEC40 | 48 entries | per-charID setup switch (§1.1) |
 | `lbl_803CB790` / `lbl_803CB7E0` | sdata | pointer / 4 × u16 | runtime subfile table / master tier counts |
 

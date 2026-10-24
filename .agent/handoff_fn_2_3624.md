@@ -7,12 +7,12 @@
 - **Down from 414 operand mismatches + 30 missing/extra lines to FIVE feedback lines.**
   All instructions outside the colour-search initializer match, including the prologue, register
   allocation, challenge-mode loop, swap loop, colour cycling, markSlotTaken and final Z popup path.
-- `ninja` succeeds; report match count remains **3963**. No MATCH yet.
+- `ninja` succeeds; no MATCH yet (still 5 lines on main, 2026-10-24; total matches 3967).
 - No queue/progress files changed. Untracked `.venv` is pre-existing; preserve it.
 - The user's explicit continuation overrides AGENTS.md's attempt limit and authorizes commits.
   On MATCH commit `matched fn_2_3624`, no trailers. Before every commit run
   `ninja build/GYQE01/report.json && python3 tools/find_matches.py build/GYQE01/report.json | wc -l`;
-  never below 3963. When out of budget without matching, commit best as `wip fn_2_3624`.
+  never below the current count (3967 on 2026-10-24). When out of budget without matching, commit best as `wip fn_2_3624`.
 
 ## Changes that worked
 
