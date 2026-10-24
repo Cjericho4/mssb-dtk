@@ -152,7 +152,7 @@ unique-index routes below still agree for all 54 retail charIDs (test_clone.py c
 | Per-grid gameplay row | unique (via `fn_800698F8`) | DOL `fn_8004B284`: `lbl_800FBF10 + 0x214 + grid*14 + k*2` -> `getAnimRelatedCoordinates` | `lbl_800FBF10` (u16[33][7] at +0x214) |
 | Small portraits in menus (lineup/team/results) and in-game | unique (`lbl_800E8558[c].uniqueIdx`) | menus `fn_2_4EB2C` (slot 0x15), `fn_2_5ED3C` (slot 0xA); game `fn_3_59F40` (slot 0x14) via `fn_80035838(desc, slot)` | ZZZZ.dat 0x18ED7000 (menus `lbl_2_data_1324C` / `lbl_2_data_20BF0`, game `lbl_3_data_3D60+0x70`): 180 textures, the 32 CI8 50x50 at indices 53..84 are unique 0..31 (byte-identical to the 54-file's for the 26 base cells) |
 | HUD batter/pitcher card | **charID** | game `fn_3_91D1C` (rep_16B8): pane frame `pane->unk5C = stats.CharID << 16` (also `fn_3_EA340`, `fn_3_EAEF4`, `fn_3_EB6E0`, `fn_3_11F02C`, `fn_3_121304`, `fn_3_127B68`, `fn_3_11E364/7C4`) | ZZZZ.dat 0x1A6B3000 (DOL `lbl_800EEFD0+0x10` -> slot 0xD in `fn_80020388`, `lbl_800E8AA8+0x70`; game `lbl_3_data_21EC8/F538/10598 +0x10`): 102 textures, the 54 CI8 50x50 + 256-entry RGB5A3 TLUT at indices 30..83 are charID 0..53 (each colour variant has its own) |
-| Large banner archive (earlier name-banner hypothesis; not the roster names in §8) | unverified | `fn_2_4E970` loads `lbl_2_data_132DC` into slot 0x17 | ZZZZ.dat 0x19135800: 75 x 420x20 + 64 x 400x20 CI4 |
+| Challenge Special ending / staff-roll presentation (§8.4) | fixed animation timeline; no character key | `fn_2_4E970` loads `lbl_2_data_132DC` into slot0x17; `24238` / `2587C` play sequence0x64 | ZZZZ.dat 0x19135800: 427 textures, including 139 long CI4 strips; no clone patch needed |
 | Records / star screens | unique, only if `isBase` | `fn_2_1C860`, `fn_2_45204`, `fn_2_454E8`, `fn_8006CDC0`: `lbl_80109AE8 + unique*0x64` | DOL `lbl_80109AE8` |
 | Unlock flags | unique | `fn_2_348C`, `fn_2_7DDC`: `lbl_803CB748` (6 locked uniques) -> taken flag per charID | |
 | Select grid cells | **grid cell -> base charID** (not the reverse) | `lbl_800FDE84`, `lbl_800FE5D4`, `fn_2_F200` scans `lbl_80108DB8`, `fn_800675C4` | untouched by the patcher |
@@ -267,8 +267,9 @@ Grid cell identity and art identity are separate: the grid stores **base** charI
 donor need not have its own visible grid cell. Patching portrait `4+S` fixes every consumer that
 actually asks for S; it does not change the base Toad cell into an independently selectable clone.
 
-The earlier candidate `0x19135800`/slot0x17 is **not the roster name resource**. Its character-name
-interpretation and indexing remain unverified; do not patch it based on the old assumption.
+The earlier candidate `0x19135800`/slot0x17 is **the fixed Challenge ending presentation**, not
+the roster name resource or a charID/unique-index name bank. The trace and no-patch verdict are
+in §8.4.
 
 Named views are in `include/menus/menu_ui.h`: `MenusSceneScript`, `MenuUiFileHeader`,
 `MenuUiSpriteBank`, `MenuUiSequenceTable`, `MenuUiSequence`, `MenuUiFrameList`, `MenuUiFrame`,
@@ -283,7 +284,7 @@ relative list-offset table. The character image/name list is list0 (the second l
 after the header list). **Records are stored in descending frame order**; their frame halfword
 is not a texture index. Type0 supplies a full 0x2C-byte template; type2 supplies replacement
 words. The expanded record's texture is at +6. `fn_8000CEF0` is the generic query decoder
-(assembly inspected; existing stub retained), while `fn_8000D838`/`fn_8000D164` drive sprite
+(complete documented C, non-matching; three refinement attempts), while `fn_8000D838`/`fn_8000D164` drive sprite
 rendering. These are UI animation records, not skeletal `ANIMBank` tracks.
 
 Reproduce all 162 mappings without exporting assets:
@@ -354,7 +355,106 @@ variant-specific images, while uniqueIdx addresses a different 32-character orde
 a code-remap alternative, use a separate 54-entry **UI charID** map at these identified frame/query
 sites, preserving stats, taken flags, grid badges and model charIDs.
 
-### 8.4 Verification and remaining scope
+### 8.4 Large banner archive
+
+**Verdict: a character clone does not need this archive patched.** ZZZZ.dat **0x19135800** is
+an authored **Challenge Special ending / staff-roll presentation**, with animated character
+illustrations and long text strips. It is not the roster-name bank, and none of its texture
+choices on this path is keyed by charID, family, colour or `uniqueIdx`. The screen identification
+is from the static scene/animation trace below; it has not been checked in a new Rio run.
+
+**Loader and screens.** The exact descriptor is `{0x40B, 0x4023491C, 0x19135800, 0x82928}`:
+unpacked **0x23491C**, LZSS-packed **0x82928**. In menus.rel it is
+`lbl_2_data_132DC` (`.data+0x132DC`). Already-matched **`fn_2_4E970`** calls
+`fn_80035838(descriptor, 0x17)` and returns whether loading succeeded.
+
+The live call site in **`fn_2_1B7B4`**, at `0x1BAEC..0x1BB1C`, takes this load path when the
+special-transition flag `lbl_2_bss_1A8248->unk44F4` is set and **difficulty byte +0x4415 >=3**
+(Special; the other difficulties bypass this presentation). The following stages queue the movie
+helper `fn_2_37460`, then at `0x1BB98..0x1BB9C` start the UI with **`fn_2_2460C`**. That queues
+**`fn_2_24238`**, which instantiates script **`lbl_2_data_1059C`** through `fn_2_4E878` /
+`fn_80034E20`. Its **pane1 binds logical resource0x17 / sequence0x64**, and callback table
+`lbl_2_data_105FC` binds pane1 to **`fn_2_2587C`**. Pane0 is a separate common-resource pane.
+`fn_2_2587C` now has a **MATCH** C body: command2 shows the pane, enables playback and resets
+its 16.16 frame to **zero**; commands5/6/7 stop and hide it. It never reads a character ID.
+`fn_2_24238` performs the normal scene draw/update and removes the scene on panel shutdown.
+The standalone load wrapper `fn_2_1B52C` also calls `4E970`, but no reference to `1B52C` was
+found in the original code/data; it is not evidence of another reachable player screen.
+
+**Slot0x17 is reused.** `fn_2_4EABC` loads a *different* descriptor, `lbl_2_data_1326C`
+(ZZZZ+0x18E92800), into the same logical slot during the ordinary Challenge scene path
+`fn_2_379D0`. That path queues `fn_2_245C8` / `fn_2_2416C` with script `1061C`. Those ordinary
+Challenge panes must not be attributed to the ending archive merely because their resource ID
+is also0x17. `fn_2_4E898` / `fn_2_4E8E0` release the reused slot.
+
+There is a second descriptor copy at **challenge.rel `.data+0xFB98`**, the first entry of
+`lbl_1_data_FB98`. It belongs to the **sprite/resource debug browser**, not the character-select
+screen: `fn_1_26AF8` counts resource descriptors; `fn_1_26928` changes the selected resource
+ordinal with directional input; **`fn_1_267F4`** loads that descriptor into **slot0**, creates
+the sprite viewer and enters `fn_1_25F98`. Thus resource ordinal0 can display this same archive
+in the browser. The browser's keys are resource/sequence/frame selections, not roster IDs.
+No full descriptor copies were found in the DOL or game.rel. If deliberately relocating this
+archive later, update **both** the menus and challenge descriptors.
+
+**Texture inventory.** There are **427 texture headers** and **101 sequences (0..0x64)**.
+All textures have **16-entry palettes**, including the CI8 ones. The bank is 640x448 at 60fps;
+`recordWords=20` means an **80-byte expanded query buffer**, even when a list's template is only
+0x2C bytes. The long strips are:
+
+| Dimensions | Count | Texture indices | Format |
+|---|---:|---|---|
+| 400x20 | 64 | 95..143, 223..233, 406, 409..411 | CI4 (GX8), RGB565 TLUT0 |
+| 420x20 | 75 | 234..291, 407..408, 412..426 | CI4 (GX8), RGB565 TLUT0 |
+
+The remaining **288** textures are illustrations/animation frames and presentation elements:
+**254 CI4** (253 RGB565, one RGB5A3 at index147, 447x57), and **34 CI8 / RGB5A3 TLUT2**
+(8x56x80, 9x85x78, 10x71x87, 7x71x78). These are not 32 or 54 equal-sized character-name
+entries. The full dimensions/counts/index ranges of the remaining CI4 textures are reproduced
+by the inspector below; sizes range from16x16 to640x100, including the 640x29 and640x25 strips,
+595x88 panel,357x86 graphic and numerous variable-sized animation cells.
+
+**Actual indexing.** `sequence0x64` is a fixed timeline: its header ends at **frame9900**
+(mode1), with additional stored transition keys through10876. Its records reference other
+sequences through **record flags high byte3 / index at+6**; leaf texture records have
+**flags high byte4 / texture index at+6**. The packed-bank traversal in `fn_8000BA3C`
+(`0x8000C104..0x8000C13C`) follows the nested sequence index and subtracts the record's start
+time; this is authored timing, not a character lookup. Do not mistake these nested indices
+for textures or assume that every expanded +6 field is an image when its flags say otherwise.
+
+The complete conservative sequence0x64 graph references **425 textures**, including **all139
+long strips**; only texture44 and50 are outside that query-record graph. For example, nested
+sequence0x3A's layers0..5 reference **96,97,98,99,100,141** directly, and sequence0x35's
+layers0..6 reference **234,235,236,249,224,223,143**. The sequence0x64 timeline chooses these
+panels at fixed times. There is **no `base+charID`, `base+uniqueIdx`, or clone texture-index
+formula** here. Editing it would customize the fixed ending/browser presentation for everyone,
+not fix a donor's roster label or portrait. The charID patches in §8.3 remain sufficient for
+the menu images traced there; this verdict does not claim that every other game UI is covered.
+
+**Read-only reproduction:**
+
+```
+export PATH=$PWD/.venv/bin:$PATH
+python tools/inspect_banner_archive.py orig/GYQE01
+python tools/inspect_banner_archive.py orig/GYQE01 --sequences
+```
+
+The script imports the existing disc/LZSS/texture readers, validates the retail descriptor,
+prints every texture size/format/index range and both descriptor aliases, expands all image
+lists with all four query-record cases, and checks nested-sequence bounds and all139-strip
+coverage. It prints metadata only and writes no assets. `--sequences` lists each layer's
+flags and fixed indices so the examples and graph can be checked independently of this prose.
+
+**Decoder details added this pass:** `fn_8000CEF0` skips `count-frame-1` packed records in
+descending order; its `frame` argument is an ordinal, not a search for a stored key time.
+Type0 zero-fills80 bytes and copies the first full template (0x2C in the character lists);
+type1 copies an independent80-byte full record. Type2 starts with the template payload,
+copies its own first word (type/frame), then overwrites indexed words backwards from the packed
+record's tail: **output word = 1 + wordIndex**. Type3 copies byte ranges relative to output+4.
+For image records the texture halfword is at **+6**, beside flags at+4. The complete typed C
+body is committed non-matching; table-address folding, register choices and delta-loop codegen
+remain different after three attempts. No match was lost.
+
+### 8.5 Verification and remaining scope
 
 `ninja` green; baseline **3963 -> 3965** matches. New matches: `fn_2_7265C`, `fn_800363D8`.
 All other new bodies are complete semantic decompilations, explicitly non-matching. Existing
@@ -363,7 +463,10 @@ feedback lines; its optional match refinement was not attempted in this pass.
 
 The dispatcher/initial-population routines (`81628`, `8279C`, `7AE3C`) were inspected in assembly;
 their existing stubs remain. The art-selection path now has documented bodies through pick,
-cursor, colour refresh and grid texture binding. Generic sprite decoding was inspected rather
-than fully decompiled. Patcher implementation and a new Project Rio run remain future work:
-this pass establishes the data/code targets, not an already-tested patched game. In particular,
-the older large-banner archive hypothesis is still unverified and is not claimed as covered.
+cursor, colour refresh and grid texture binding. Generic sprite querying now has a complete C body; rendering remains assembly-inspected. Patcher implementation and a new Project Rio run remain future work:
+this pass establishes the data/code targets, not an already-tested patched game. The older large-banner hypothesis has now been resolved in §8.4. No assets were exported,
+and no runtime Rio test was performed for this documentation pass.
+
+2026-10-24 follow-up: `fn_8000CEF0` semantic body committed; `fn_2_2587C` newly matched.
+`ninja` green, **3965 -> 3966** matches; read-only banner inspector verified all101 sequences
+and139 long strips. Both descriptor copies (including the debug browser) are documented above.
