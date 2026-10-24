@@ -17,8 +17,34 @@ s16 fn_80067AC8(s16 key, s8 column) {
 }
 
 // .text:0x80067B40 size:0x108
-void fn_80067B40(void) {
-    return;
+/* fn_80067B40 -- mark every colour variant of `key`'s family as taken/free on the roster grid.
+ * key: charID (u8 compare; -1 = nothing to do); value: byte written into
+ * lbl_8034E9A0.charsOnCharacterGridSelected[member] for each family member of lbl_80108EDC[row];
+ * mode == 2 means "do not write" (query only).  Returns 1 when key belongs to a family, else 0.
+ * Match status: NOT matched (first decompile; the retail loop over the 5 members is fully unrolled). */
+u8 fn_80067B40(s16 key, s16 value, u8 mode) {
+    s32 i;
+    s32 j;
+    s32 k;
+    s16 member;
+    u8 id = key;
+    if (id == 0xFF) {
+        return 0;
+    }
+    for (i = 0; i < 9; i++) {
+        for (j = 0; j < 5; j++) {
+            if (id == lbl_80108EDC[i][j]) {
+                for (k = 0; k < 5; k++) {
+                    member = lbl_80108EDC[i][k];
+                    if (member != -1 && mode != 2) {
+                        lbl_8034E9A0.charsOnCharacterGridSelected[member] = value;
+                    }
+                }
+                return 1;
+            }
+        }
+    }
+    return 0;
 }
 
 // .text:0x80067C48 size:0x328

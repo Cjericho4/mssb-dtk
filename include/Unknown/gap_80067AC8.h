@@ -23,7 +23,7 @@ void fn_80021518(s32 id, u32 sound);
 
 extern s16 lbl_80108EDC[][5];
 s16 fn_80067AC8(s16 key, s8 column);
-void fn_80067B40(void);
+u8 fn_80067B40(s16 key, s16 value, u8 mode);
 void fn_80067C48(void);
 void fn_80067F70(void);
 void fn_800684A4(void);
@@ -70,6 +70,8 @@ BOOL fn_800697B0(void);
 typedef struct Gap80067AC8Stats {
     u8 _pad0[0x46E0]; s32 selected[2];
     u8 _pad46E8[0x21]; u8 indices[2];
+    u8 _pad470B[0x4757 - 0x470B];
+    /* 0x4757 */ u8 charsOnCharacterGridSelected[54]; /* per-charID "taken" flag on the roster grid */
 } Gap80067AC8Stats;
 typedef struct Gap80067AC8RosterEntry { u8 _pad0[0x24]; s16 id; u8 _pad26[0x7A]; } Gap80067AC8RosterEntry;
 extern Gap80067AC8Stats lbl_8034E9A0;
