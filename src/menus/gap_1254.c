@@ -1319,47 +1319,7 @@ void fn_2_893C(void) {
  * 0xA0 row are never copied: they are structure padding in the original layout.
  * See .agent/roster_flow.md section 3. */
 static inline void copyStatsRow(CharacterStats* dst, CharacterStats* src) {
-    memcpy(dst, src, 0x1E);
-    dst->stats.CharID = src->stats.CharID;
-    dst->stats.FieldingArm = src->stats.FieldingArm;
-    dst->stats.BattingStance = src->stats.BattingStance;
-    memcpy(&dst->stats.SlapContactSize, &src->stats.SlapContactSize, 2);
-    memcpy(&dst->stats.SlapHitPower, &src->stats.SlapHitPower, 2);
-    dst->stats.BuntingContactSize = src->stats.BuntingContactSize;
-    dst->stats.HitTrajectoryPushPull = src->stats.HitTrajectoryPushPull;
-    dst->stats.HitTrajectoryHighLow = src->stats.HitTrajectoryHighLow;
-    dst->stats.Speed = src->stats.Speed;
-    dst->stats.ThrowingArm = src->stats.ThrowingArm;
-    dst->stats.CharacterClass = src->stats.CharacterClass;
-    dst->stats.Weight = src->stats.Weight;
-    dst->stats.Captain = src->stats.Captain;
-    dst->stats.CaptainStarHitPitch = src->stats.CaptainStarHitPitch;
-    memcpy(&dst->stats.NonCaptainStarSwing, &src->stats.NonCaptainStarSwing, 2);
-    dst->stats.FieldingStats = src->stats.FieldingStats;
-    memcpy(&dst->stats.BattingStatBar, &src->stats.BattingStatBar, 4);
-    memcpy(&dst->chemistry, &src->chemistry, sizeof(ChemistryTable));
-    dst->BytesAfterChemistry[0] = src->BytesAfterChemistry[0];
-    dst->UnusedShorts[0] = src->UnusedShorts[0];
-    dst->UnusedShorts[1] = src->UnusedShorts[1];
-    dst->UnusedShorts[2] = src->UnusedShorts[2];
-    dst->UnusedShorts[3] = src->UnusedShorts[3];
-    dst->UnusedShorts[4] = src->UnusedShorts[4];
-    dst->UnusedShorts[5] = src->UnusedShorts[5];
-    dst->UnusedShorts[6] = src->UnusedShorts[6];
-    dst->UnusedShorts[7] = src->UnusedShorts[7];
-    dst->UnusedShorts[8] = src->UnusedShorts[8];
-    dst->UnusedShorts[9] = src->UnusedShorts[9];
-    dst->UnusedShorts[10] = src->UnusedShorts[10];
-    dst->UnusedShorts[11] = src->UnusedShorts[11];
-    dst->UnusedShorts[12] = src->UnusedShorts[12];
-    dst->UnusedShorts[13] = src->UnusedShorts[13];
-    dst->UnusedShorts[14] = src->UnusedShorts[14];
-    dst->UnusedShorts[15] = src->UnusedShorts[15];
-    dst->UnusedShorts[16] = src->UnusedShorts[16];
-    dst->UnusedShorts[17] = src->UnusedShorts[17];
-    dst->UnusedShorts[18] = src->UnusedShorts[18];
-    dst->UnusedShorts[19] = src->UnusedShorts[19];
-    dst->UnusedShorts[20] = src->UnusedShorts[20];
+    COPY_STATS_ROW(*dst, *src);
 }
 
 /* fn_2_8940 -- build both in-memory rosters from the roster-screen picks (pick order).
