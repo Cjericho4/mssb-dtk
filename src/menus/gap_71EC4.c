@@ -19,6 +19,7 @@ extern s32 lbl_2_bss_A840;
 extern void fn_800363D8(DrawingSceneStruct* scene, s32 index, s32 enabled, s32 value, s32 order);
 
 extern void fn_80053FE8(void);
+extern void fn_80051D00(void);
 extern s32 fn_80042DA8(DrawingSceneStruct* scene, s32 index, s32 value);
 extern void fn_8004E2EC(void);
 extern void fn_8004F964(void);
@@ -103,8 +104,35 @@ void fn_2_72630(void) {
 }
 
 // .text:0x0007265C size:0x1B8
+/* Open the select-grid scene. Challenge mode queues its two extra scenes once.
+ * The 54-byte flag scan chooses transition 1 (none set) or 2 (some set);
+ * challenge always uses transition 0x13. This does not select a texture:
+ * fn_80051D00 is the queued DOL grid-scene initializer. */
 void fn_2_7265C(void) {
-    return;
+    GameInitVariables* settings;
+    s32 i;
+    s32 transition;
+    s32 any = 0;
+    settings = &g_d_GameSettings;
+    if (settings->GameModeSelected == 5 && lbl_803C5EA4.rosterSceneQueued == 0) {
+        lbl_803C5EA4.rosterSceneQueued = 1;
+        fn_800B0A5C_insertQueue(fn_80053FE8, 0x3000);
+        fn_800B0A5C_insertQueue(fn_2_82DE8, 0x3000);
+    }
+    for (i = 0; i < 54; i++) {
+        if (lbl_80361B20.characterFlags[i] != 0) {
+            any = 1;
+            break;
+        }
+    }
+    if (settings->GameModeSelected != 5) {
+        if (any) transition = 2;
+        else transition = 1;
+    } else transition = 0x13;
+    lbl_8034E978.state = transition;
+    lbl_8034E978.previous = lbl_8034E978.current;
+    lbl_8034E978.current = lbl_800FEF70.entries[transition].next;
+    fn_800B0A5C_insertQueue(fn_80051D00, 0x3000);
 }
 
 // .text:0x00072814 size:0xAC

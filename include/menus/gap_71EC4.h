@@ -67,7 +67,9 @@ typedef struct MenusSceneFlags {
     u8 unkA[2];   /* 0xA per side: set by fn_2_DFAC when a pick lands in a roster slot (slot in unkC) */
     u8 unkC[2];   /* 0xC per side: roster slot of the last confirmed pick */
     u8 unkE;      /* 0xE set when pad 0 moves on to side 1 in one-pad mode (fn_2_3624) */
-    u8 _padF[0x27];
+    u8 _padF[2];
+    u8 rosterSceneQueued; /* 0x11 challenge roster helpers have been queued */
+    u8 _pad12[0x24];
     u8 unk36;
     u8 unk37;
     u8 unk38;
