@@ -130,11 +130,12 @@ void transferStatsToInMemRoster(u8 side) {
 }
 
 // .text:0x80042BF0 size:0x54
-void randRange_FUN_80042bf0(void) {
+s32 randRange(s32 low, s32 high) {
+    return 0;
     return;
 }
 
 // .text:0x80042C44 size:0xF4
-void sndFXRelated(void) {
+void sndFXRelated(s32 id) {
     return;
 }

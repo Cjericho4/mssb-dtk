@@ -17,6 +17,7 @@ typedef struct MenusTeamSelections {
     u8 unk38[2][9];        /* 0x38 */
     u8 unk4A[2][9];        /* 0x4A cleared with the slot in fn_2_4970 */
 } MenusTeamSelections;
+STATIC_ASSERT(sizeof(MenusTeamSelections) == 0x5C);
 extern MenusTeamSelections lbl_803C6724;
 typedef struct MenusAutoFillStrategy {
     u8 _pad0[2];

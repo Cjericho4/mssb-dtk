@@ -96,7 +96,7 @@ extern u8 lbl_800FDE84[0x744];
 void fn_800506E8(s8 value, s32 index, BOOL set);
 void fn_80050760(void);
 BOOL fn_80050F78(s32 mode);
-void fn_80050FE8(void);
+void fn_80050FE8(u8 pad0, u8 pad1, u8 pad2, u8 pad3, s32 arg4, s32 arg5);
 void fn_8005138C(void);
 void fn_80051D00(void);
 void fn_80052188(void);

@@ -1,35 +1,36 @@
 #include "menus/gap_1254.h"
-extern s16 lbl_80108EDC[][5];
-extern void fn_800506E8(s32 controller, s32 id, s32 enabled);
-extern u8 fn_80067B40(u8 side, u8 id, s32 enabled);
-extern s16 fn_80067AC8(s16 key, s8 column);
-#include "menus/gap_0.h"
-#include "game/gap_B3B70.h"
-#include "musyx/musyx.h"
-#include "menus/rep_0438.h"
-#include "game/rep_3448.h"
-#include "menus/gap_D08.h"
-#include "menus/gap_71EC4.h"
 #include "string.h"
-extern s32 randRange_FUN_80042bf0(s32 min, s32 max);
-
-extern void sndFXRelated(s32 id);
-#include "menus/rep_0568.h"
+#include "musyx/musyx.h"
+#include "game/gap_B3B70.h"
+#include "game/rep_3448.h"
+#include "menus/gap_0.h"
+#include "menus/gap_D08.h"
 #include "menus/gap_16870.h"
+#include "menus/gap_71EC4.h"
 #include "menus/gap_8782C.h"
-extern void fn_80050FE8(u8 pad0, u8 pad1, u8 pad2, u8 pad3, s32 arg4, s32 arg5);
-extern void fn_80050138(s32 arg0, s32 pick0, s32 pick1, s32 pick2, s32 pick3, s32 arg5);
+#include "menus/rep_0438.h"
+#include "menus/rep_0568.h"
 
-extern void fn_800AD038(u32 value);
-extern void fn_8004EEF4(s32 a, s32 b, s32 c, s32 d, s32 enabled);
+/* DOL functions and data owned by Unknown/gap_8*.h.  Those headers can't be included here yet: each
+ * declares its own struct view of shared globals (lbl_803297E0, lbl_80361B20, ...), which clash.
+ * Keep these prototypes identical to the owning header until the views are merged. */
+extern s16 lbl_80108EDC[][5];                                    /* gap_80067AC8.h */
+extern s16 fn_80067AC8(s16 key, s8 column);                      /* gap_80067AC8.h */
+extern u8 fn_80067B40(u8 side, u8 id, s32 enabled);              /* header says (s32, s16, u8); its body is unmatched, settle the types when it matches */
+extern s32 randRange(s32 low, s32 high);                         /* gap_80041348.h */
+extern void sndFXRelated(s32 id);                                /* gap_80041348.h */
+extern void fn_8004EEF4(s32 a, s32 b, s32 c, s32 d, s32 enabled); /* gap_8004CA48.h */
+extern void fn_80050138(s32 arg0, s32 pick0, s32 pick1, s32 pick2, s32 pick3, s32 arg5); /* gap_8004CA48.h */
+extern void fn_800506E8(s32 controller, s32 id, s32 enabled);    /* gap_800506E8.h */
+extern void fn_80050FE8(u8 pad0, u8 pad1, u8 pad2, u8 pad3, s32 arg4, s32 arg5); /* gap_800506E8.h */
+extern void fn_800625A4(s32 index, s32 command);                 /* gap_80062578.h */
+extern u32 fn_800628D4(s32 charID);                              /* gap_80062578.h */
+extern void fn_80066EAC(s32 side);                               /* gap_80064754.h */
+extern void fn_800AD038(s32 start);                               /* gap_800A97D0.h */
 
 extern u8 lbl_2_bss_100B4;
 extern u8 lbl_2_bss_3A8[54]; /* per-charID handedness byte (challenge save): bit 0 stance, bits 1.. arm */
-extern void fn_80066EAC(s32 side);
-
 extern u32 lbl_803CB750;
-extern u32 fn_800628D4(s32 charID);
-extern void fn_800625A4(s32 index, s32 command);
 
 // .text:0x00001254 size:0x4
 void fn_2_1254(void) {
@@ -42,25 +43,25 @@ void fn_2_1258(void) {
 }
 
 // .text:0x000012A0 size:0x2C
-void fn_2_12A0(s16* value, s16 amount) {
+void satAddS16(s16* value, s16 amount) {
     if (*value < 0x7FFF - amount) *value += amount;
     else *value = 0x7FFF;
 }
 
 // .text:0x000012CC size:0x2C
-void fn_2_12CC(u8* value, u16 amount) {
+void satAddU8(u8* value, u16 amount) {
     if (*value + amount > 0xFF) *value = 0xFF;
     else *value += amount;
 }
 
 // .text:0x000012F8 size:0x30
-void fn_2_12F8(u16* value, u16 amount) {
+void satAddU16(u16* value, u16 amount) {
     if (*value + amount > 0xFFFF) *value = 0xFFFF;
     else *value += amount;
 }
 
 // .text:0x00001328 size:0x2C
-void fn_2_1328(u32* value, u16 amount) {
+void satAddS32(u32* value, u16 amount) {
     u32 result = *value + amount;
     if (result > 0x7FFFFFFF) *value = 0x7FFFFFFF;
     else *value = result;
@@ -717,7 +718,7 @@ void fn_2_3624(u8 pad) {
             }
         }
         c = lbl_803C6724.teams[side][slot];
-        if (c == -1 || c == 0x36) {
+        if (c == CHAR_ID_NONE || c == NUM_CHOOSABLE_CHARACTERS) {
             sndFXStartEx(0x1BA, lbl_800EFBA4.unk3, 0x3F, 0);
             return;
         }
@@ -764,7 +765,7 @@ void fn_2_3624(u8 pad) {
         }
         if (lbl_2_bss_F468.cursor[side] == 9) return;
         c = lbl_803C6724.teams[side][slot];
-        if (c != -1 && c != 0x36) {
+        if (c != CHAR_ID_NONE && c != NUM_CHOOSABLE_CHARACTERS) {
             if (lbl_2_bss_F468.flags41[side] == 0) {
                 lbl_2_bss_F468.flags45[side] = 1;
                 lbl_2_bss_F468.unk4B[side] = 1;
@@ -862,7 +863,7 @@ void fn_2_4970(u8 side, s32 captainID) {
             lbl_2_bss_F468.prevCursor[side] = state;
             lbl_2_bss_F468.states[side]--;
             if (lbl_2_bss_F468.states[side] < 0) lbl_2_bss_F468.states[side] = 8;
-            if (c != -1 && c != 0x36) {
+            if (c != CHAR_ID_NONE && c != NUM_CHOOSABLE_CHARACTERS) {
                 markSlotTaken(slot, side);
                 if (g_d_GameSettings.GameModeSelected != 5) {
                     fn_800506E8(side, lbl_803C6724.teams[side][slot], 0);
@@ -1712,26 +1713,26 @@ void fn_2_DFAC(s32 side) {
     }
     if (g_d_GameSettings.GameModeSelected != 5) {
         c = lbl_803C6724.teams[side][slot];
-        if (c != -1 && c != 0x36) {
+        if (c != CHAR_ID_NONE && c != NUM_CHOOSABLE_CHARACTERS) {
             fn_800506E8(side, c, 0);
             lbl_8034E9A0.charTaken[lbl_803C6724.teams[side][slot]] = 0;
             fn_80067B40(side, lbl_803C6724.teams[side][slot], 0);
         }
     } else {
         for (k = 0; k < 9; k++) {
-            if (lbl_803C6724.teams[side][k] != -1 && lbl_803C6724.teams[side][k] != 0x36 && lbl_803C6724.teams[side][k] != captain) count++;
+            if (lbl_803C6724.teams[side][k] != CHAR_ID_NONE && lbl_803C6724.teams[side][k] != NUM_CHOOSABLE_CHARACTERS && lbl_803C6724.teams[side][k] != captain) count++;
         }
         for (i = 0; i < 54; i++) {
             if (lbl_8034E9A0.charTaken[i] == 0) free++;
         }
         if (free <= 8 - (s8)count) {
-            if (lbl_803C6724.teams[side][slot] != -1 && lbl_803C6724.teams[side][slot] != 0x36) {
+            if (lbl_803C6724.teams[side][slot] != -1 && lbl_803C6724.teams[side][slot] != NUM_CHOOSABLE_CHARACTERS) {
                 sndFXStartEx(0x1BA, lbl_800EFBA4.unk3, 0x3F, 0);
                 return;
             }
         }
         c = lbl_803C6724.teams[side][slot];
-        if (c != -1 && c != 0x36) {
+        if (c != CHAR_ID_NONE && c != NUM_CHOOSABLE_CHARACTERS) {
             if (fn_80067B40(side, c, 2)) {
                 for (i = 0; i < 9; i++) {
                     for (j = 0; j < 5; j++) {
@@ -1842,7 +1843,7 @@ void fn_2_102C8(u8 side) {
     }
     if (empty != 0) {
         do {
-            lbl_803CBD24.current = randRange_FUN_80042bf0(0, 2);
+            lbl_803CBD24.current = randRange(0, 2);
         } while (lbl_803CBD24.previous == lbl_803CBD24.current);
         fn_2_ABC0(side);
         switch (lbl_803CBD24.current) {

@@ -1,8 +1,9 @@
 # Code quality for mssb-dtk: rules, cleanup, tooling
 
-> **Status (2026-10-24):** proposed, not yet adopted. The rules attributed to other projects (zeldaret, pret,
-> SM64, Melee, …) were written from the agent's knowledge without opening those projects' docs; verify a
-> citation before quoting it. The findings about this repo (§4) come from real greps and file reads.
+> **Status (2026-10-24): adopted.** The ten rules are summarised in `CLAUDE.md` "Code Quality
+> Standards"; this file keeps the rationale. Citations of other projects (zeldaret, pret, SM64, Melee, …)
+> were written from memory, not from those projects' docs; verify one before quoting it. §4 findings come
+> from real greps; §4a records the first cleanup pass.
 
 Goal: matched C that a human (or a modding tool author) can read. A match proves the bytes; it proves
 nothing about the names, types or comments. Every rule below is safe to apply to matched code because
@@ -145,6 +146,29 @@ Good examples to copy: the provenance comment on the generated tables (`gap_8001
 behavioural comments on `finishSubItemLoad` (`gap_8001196C.c:48-51`), the handedness note
 (`gap_1254.c:27`), and the small saturating helpers (`gap_1254.c:44-67`) (which only need names
 like `SatAddS16`).
+
+## 4a. First cleanup pass (2026-10-24, branch `code-quality`)
+Scope: `src/menus/gap_1254.c`, `src/Unknown/gap_8001196C.c` and the stubs their externs point at.
+Match count 3967 before and after; no function's fuzzy score dropped.
+- **Prototypes:** stubs `randRange`, `sndFXRelated`, `fn_80066EAC`, `fn_80050FE8`, `fn_8004EEF4`,
+  `fn_80050138`, `fn_800625A4` now carry the real signature in header and definition (were `(void)`).
+  `randRange_FUN_80042bf0` renamed `randRange` (symbols.txt too).
+- **Rule 6 is blocked by duplicate struct views.** Every `Unknown/gap_8*.h` that `gap_1254.c` needs
+  fails to include there: each declares its own type for a shared global (`lbl_803297E0`,
+  `lbl_80361B20`, `lbl_803C66B0`, `fn_80034CEC`'s argument, ...). So `gap_1254.c` keeps one grouped,
+  commented block of externs that agree with the owning headers. Merging the views is its own issue.
+- **Two prototypes cannot agree yet:** `fn_800506E8`'s matched body needs `(s8, s32, BOOL)` but its
+  callers in `gap_1254.c` only match with `s32` (4 functions unmatch otherwise; marked FAKEMATCH).
+  `fn_80067B40` (unmatched) has a different signature in its header than at its callers.
+- **Magic numbers:** charID checks use `CHAR_ID_NONE` / `NUM_CHOOSABLE_CHARACTERS`.
+- **Names:** `satAddS16/U8/U16/S32` (were `fn_2_12A0/12CC/12F8/1328`), `g_subItemLoadObj`,
+  `g_subItemLoadBusy` (were `lbl_803CBC1C`, `lbl_803CBC0C`).
+- **`#pragma dont_inline` was harmful.** All seven pragma lines in `gap_8001196C.c` were removed:
+  no match changed, and the helpers now inline, taking `fn_80012B90` from 26% to 88% and
+  `fn_80013680` from 32% to 81%. Lesson: test a pragma by deleting it.
+- **Repeated `obj->buf` casts are load-bearing** in `finishSubItemLoad`: using the `root` local makes
+  `fn_80012B90` 140 diff lines worse. Kept and marked FAKEMATCH.
+- `STATIC_ASSERT` added to `mssbTypes.h`, first use on `MenusTeamSelections` (0x5C).
 
 ## 5. Python modding-tool guidelines (tools/modding, tools/datamap)
 - Stdlib only, Python 3.8+ (no walrus-heavy 3.10 syntax: no `match`, no `X | Y` types); `pathlib`

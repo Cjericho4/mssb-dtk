@@ -11,7 +11,6 @@ extern Gap80064754Mode lbl_800E8754;
 extern u8 lbl_803CB8D0;
 typedef struct Gap80064754Unlocks { u8 _pad0[0xF5]; /* 0xF5 */ u8 unkF5; } Gap80064754Unlocks;
 extern Gap80064754Unlocks lbl_80361B20;
-s32 randRange_FUN_80042bf0(s32 low, s32 high);
 
 s32 translateStarPitchHitIndex(u8 id);
 u8 translateStarPitch(u8 id);
@@ -21,7 +20,8 @@ void fn_8006496C(void);
 void fn_800649BC(void);
 void unsure_FillRosterPositions(s32 player);
 void characterSelectScreen(s32 player);
-void fn_80066EAC(void);
+s32 randRange(s32 low, s32 high); /* gap_80041348.c; that header clashes here (lbl_80361B20 view) */
+void fn_80066EAC(s32 side);
 void fn_800670A0(void);
 void fn_800671FC(void);
 void fn_80067264(void);

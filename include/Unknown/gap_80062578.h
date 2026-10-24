@@ -67,7 +67,7 @@ typedef struct Gap80062578Scene {
 } Gap80062578Scene;
 
 BOOL fn_80062578(void);
-void fn_800625A4(void);
+void fn_800625A4(s32 index, s32 command);
 void fn_80062674(s32 index);
 void fn_800626EC(s32 index);
 void fn_80062744(void);

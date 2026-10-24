@@ -35,13 +35,12 @@ void LoadModel(void) {
     return;
 }
 
-#pragma dont_inline on
 /* ---- fn_80012B90 helpers ---------------------------------------------------------------------- */
 
 /* Queue one bat/glove model of pair `entry` into `obj` (fn_80021CA4 itemSlot = which file pair). */
 static inline void startSubItemLoad(Gap8001196CSubItemEntry* entry, Gap8001196CStadiumObj* obj, s32 itemSlot) {
-    lbl_803CBC1C = obj;
-    lbl_803CBC0C = 1;
+    g_subItemLoadObj = obj;
+    g_subItemLoadBusy = 1;
     fn_80021CA4(entry->charID, itemSlot, obj->buf);
 }
 
@@ -60,9 +59,10 @@ static inline BOOL finishSubItemLoad(void) {
     if (lbl_803716B8.loadBusy != 0) {
         return FALSE;
     }
-    obj = lbl_803CBC1C;
-    lbl_803CBC0C = 0;
+    obj = g_subItemLoadObj;
+    g_subItemLoadBusy = 0;
     root = (Gap8001196CRootHeader*)obj->buf;
+    /* FAKEMATCH: the relocations below re-read obj->buf instead of using root; using root is 140 diff lines worse */
     if (((Gap8001196CRootHeader*)obj->buf)->texture != 0) {
         ((Gap8001196CRootHeader*)obj->buf)->texture += (u32)root;
     }
@@ -89,7 +89,7 @@ static inline BOOL finishSubItemLoad(void) {
     }
     obj->unk4 = (u8*)((u32*)obj->buf)[lbl_803CB7C4[3]];
     fn_80025FFC((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]], &obj->unk4);
-    lbl_803CBC1C = NULL;
+    g_subItemLoadObj = NULL;
     return TRUE;
 }
 
@@ -153,7 +153,7 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
     case 1:
     case 2:
         armFlag = entry->arm == 0;
-        if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+        if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             if (armFlag == entry->arm) {
                 itemSlot = 1 - armFlag;
             } else {
@@ -167,7 +167,7 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
         }
         break;
     case 4:
-        if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+        if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             startSubItemLoad(entry, &entry->obj1, 1);
         }
         if (finishSubItemLoad()) {
@@ -175,7 +175,7 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
         }
         break;
     case 5:
-        if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+        if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             startSubItemLoad(entry, &entry->obj0, 0);
         }
         if (finishSubItemLoad()) {
@@ -183,7 +183,7 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
         }
         break;
     case 7:
-        if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+        if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             startSubItemLoad(entry, &entry->obj1, 5);
         }
         if (finishSubItemLoad()) {
@@ -191,7 +191,7 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
         }
         break;
     case 8:
-        if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+        if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             startSubItemLoad(entry, &entry->obj0, 4);
         }
         if (finishSubItemLoad()) {
@@ -204,9 +204,7 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
     }
     return 0;
 }
-#pragma dont_inline off
 
-#pragma dont_inline on
 /* ---- fn_80013680 helpers ---------------------------------------------------------------------- */
 
 /* Hook sub-item model k (0 = obj0, 1 = obj1) of anim->subItems onto the owning actor: the owner's
@@ -363,7 +361,7 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
     while (TRUE) {
         if (lbl_803CBBFC == 0) {
             entry = lbl_803CBC20;
-            if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+            if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
                 if (isFielder && entry->arm != 0) {
                     itemSlot = 3;
                 } else if (armMatchesClass) {
@@ -381,7 +379,7 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
         }
         if (lbl_803CBBFD == 0) {
             entry = lbl_803CBC20;
-            if (lbl_803CBC0C == 0 && lbl_803C6CF8.allowLoad == 1) {
+            if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
                 if (isFielder && entry->arm != 1) {
                     itemSlot = 2;
                 } else if (armMatchesClass) {
@@ -411,7 +409,6 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
     }
     return 0;
 }
-#pragma dont_inline off
 
 // .text:0x80014204 size:0x3F4
 void fn_80014204(void) {
@@ -806,7 +803,6 @@ BOOL fn_80016710(s32 charID, s32 slot) {
     return FALSE;
 }
 
-#pragma dont_inline on
 // .text:0x80016B60 size:0x41C
 /* fn_80016B60 -- stream a slot's five animation banks, one step per call.
  *
@@ -907,7 +903,6 @@ BOOL fn_80016B60(Gap8001196CAnim* anim) {
     }
     return FALSE;
 }
-#pragma dont_inline off
 
 // .text:0x80016F7C size:0x11C
 BOOL fn_80016F7C(void) {
@@ -942,7 +937,6 @@ BOOL fn_80016F7C(void) {
     return FALSE;
 }
 
-#pragma dont_inline on
 // .text:0x80017098 size:0x2A8
 /* fn_80017098 -- request a character load into a slot (or reuse a slot that already has it).
  *

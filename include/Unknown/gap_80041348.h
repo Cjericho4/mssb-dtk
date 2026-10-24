@@ -37,7 +37,7 @@ void fn_800415A8(void);
 void capApplicationFunction(void);
 void fn_80042598(void);
 void transferStatsToInMemRoster(u8 side);
-void randRange_FUN_80042bf0(void);
-void sndFXRelated(void);
+s32 randRange(s32 low, s32 high);
+void sndFXRelated(s32 id);
 
 #endif // !__UNKNOWN_gap_80041348_H_

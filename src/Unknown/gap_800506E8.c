@@ -41,7 +41,7 @@ BOOL fn_80050F78(s32 mode) {
 }
 
 // .text:0x80050FE8 size:0x3A4
-void fn_80050FE8(void) {
+void fn_80050FE8(u8 pad0, u8 pad1, u8 pad2, u8 pad3, s32 arg4, s32 arg5) {
     return;
 }
 

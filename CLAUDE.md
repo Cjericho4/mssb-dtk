@@ -77,6 +77,29 @@ The toolchain consists of:
 
 ## Code Quality Standards
 
+### Rules (full text and rationale: `.agent/code_quality.md` §1)
+
+1. **Name only what you understand.** Otherwise keep `fn_`/`lbl_`/`unk_0xNN`. Rename in C, headers and
+   `config/GYQE01/**/symbols.txt` in one commit, then rebuild and check the match count.
+2. **Naming:** globals `g_camelCase`, file statics `s` + camelCase, static helpers lowerCamel
+   (`satAddS16`). Never keep Ghidra junk suffixes (`randRange_FUN_80042bf0` → `randRange`).
+3. **Struct fields:** `unk_0xNN` until understood, then a real name with a `/* 0xNN */` offset comment.
+   Padding is `_padNN[]`, never a named field.
+4. **One type per memory object, one prototype per function.** Every declaration of a function must
+   agree with its owning header and its definition. Stubs get the real signature, not `(void)`.
+5. **`STATIC_ASSERT(sizeof(T) == 0xNN)`** (`mssbTypes.h`) after any struct whose size a table or
+   stride depends on.
+6. **No `void*`, no `*(T*)((u8*)p + off)`** (see "Struct Usage" below).
+7. **No meaningful magic numbers:** charIDs use `CHAR_ID` (`CHAR_ID_NONE`, `NUM_CHOOSABLE_CHARACTERS`);
+   add an enum or `#define` for other IDs, counts and flags. Pure arithmetic literals are fine.
+8. **One-line summary above every non-trivial function** saying what it does for the game, with units
+   (frames, cents, fixed-point) where relevant. Keep the `// .text:0x... size:0x...` header.
+9. **Mark every matching trick** with `/* FAKEMATCH: <what it forces> */`: register-only temporaries,
+   odd casts, reordered statements, pragmas, inlines kept only for codegen. A pragma that changes
+   nothing is deleted, not kept "just in case".
+10. **No slop in committed code:** no m2c names (`temp_r3`, `var_r31`, `arg0`, `sp10`) in matched
+    functions, no commented-out attempts, no unused locals, no numbered copy-paste helpers.
+
 ### Struct Usage
 
 **NEVER use pointer arithmetic with manual offsets.** Always define and use proper structs.
@@ -222,5 +245,7 @@ Before declaring a decompilation complete, verify:
 - [ ] All struct field accesses use `->` or `.` operators
 - [ ] No `void*` parameters that should be typed structs
 - [ ] Struct sizes match the assembly access patterns
+- [ ] Prototypes agree with the owning header; matching tricks carry a `FAKEMATCH` comment
+- [ ] `python3 tools/find_matches.py build/GYQE01/report.json | wc -l` did not drop
 - [ ] `ninja` builds successfully
 - [ ] `python3 tools/feedback_diff.py <function_name>` reports `MATCH!`

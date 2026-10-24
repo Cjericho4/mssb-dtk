@@ -211,7 +211,7 @@ BOOL fn_8004EE84(s32 kind) {
 }
 
 // .text:0x8004EEF4 size:0x218
-void fn_8004EEF4(void) {
+void fn_8004EEF4(s32 a, s32 b, s32 c, s32 d, s32 enabled) {
     return;
 }
 
@@ -249,6 +249,6 @@ void fn_8004FDE8(void) {
 }
 
 // .text:0x80050138 size:0x5B0
-void fn_80050138(void) {
+void fn_80050138(s32 arg0, s32 pick0, s32 pick1, s32 pick2, s32 pick3, s32 arg5) {
     return;
 }

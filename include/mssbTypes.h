@@ -278,4 +278,10 @@ typedef u8 bool;
 #define false FALSE
 #endif
 
+/* Compile-time check, e.g. STATIC_ASSERT(sizeof(Foo) == 0x30).  A false condition is a negative
+ * array size error; emits no code or data.  Use at most once per line. */
+#define STATIC_ASSERT_CAT2(a, b) a##b
+#define STATIC_ASSERT_CAT(a, b) STATIC_ASSERT_CAT2(a, b)
+#define STATIC_ASSERT(cond) typedef char STATIC_ASSERT_CAT(static_assert_line_, __LINE__)[(cond) ? 1 : -1]
+
 #endif // !__MSSB_TYPES_H_

@@ -6,7 +6,7 @@ BOOL fn_80062578(void) {
 }
 
 // .text:0x800625A4 size:0xD0
-void fn_800625A4(void) {
+void fn_800625A4(s32 index, s32 command) {
     return;
 }
 

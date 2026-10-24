@@ -1,5 +1,6 @@
 #include "menus/gap_71EC4.h"
 extern void (*lbl_2_data_2A2EC[])(Rep0B08Obj*);
+extern void fn_800625A4(s32 index, s32 command); /* gap_80062578.h; header clashes here (lbl_803C66B0 view) */
 
 extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "UnknownHeaders.h"
@@ -28,7 +29,6 @@ extern void fn_80051D00(void);
 extern s32 fn_80042DA8(DrawingSceneStruct* scene, s32 index, s32 value);
 extern void fn_8004E2EC(void);
 extern void fn_8004F964(void);
-extern void fn_800625A4(s32, s32);
 extern void fn_800626EC(s32);
 extern void fn_80062674(s32);
 #include "menus/gap_1254.h"

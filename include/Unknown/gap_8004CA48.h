@@ -68,12 +68,12 @@ void fn_8004E504(s32 convert, s32 a, s32 b, s32 c, s32 d);
 void fn_8004E5B4(s8 value, s32 charIndex, s32 enable);
 void fn_8004E62C(void);
 BOOL fn_8004EE84(s32 kind);
-void fn_8004EEF4(void);
+void fn_8004EEF4(s32 a, s32 b, s32 c, s32 d, s32 enabled);
 void fn_8004F10C(void);
 void fn_8004F964(void);
 s32 fn_8004FD64(s32 index);
 void fn_8004FDA0(s32 value);
 void fn_8004FDE8(void);
-void fn_80050138(void);
+void fn_80050138(s32 arg0, s32 pick0, s32 pick1, s32 pick2, s32 pick3, s32 arg5);
 
 #endif // !__UNKNOWN_gap_8004CA48_H_

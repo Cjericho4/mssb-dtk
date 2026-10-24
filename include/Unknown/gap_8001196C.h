@@ -58,8 +58,8 @@ typedef struct Gap8001196CSubItemEntry {
 extern Gap8001196CStadiumObj lbl_80118220[13];
 extern u8 lbl_803CBC04;                      /* fn_80012B90 step 0..8 */
 extern u8* lbl_803CBC08;                     /* texture archive handed to fn_800BD190 */
-extern u8 lbl_803CBC0C;                      /* a sub-item load is in flight */
-extern Gap8001196CStadiumObj* lbl_803CBC1C;  /* sub-item object being loaded */
+extern u8 g_subItemLoadBusy;                      /* a sub-item load is in flight */
+extern Gap8001196CStadiumObj* g_subItemLoadObj;  /* sub-item object being loaded */
 extern u8 lbl_803CB7C4[4];                   /* which root-header word holds layout/geo/extra/skin for sub-items */
 extern u8 lbl_803CB7B4[8];                   /* bone ids the two sub-item models attach to ([0] obj0, [1] obj1) */
 extern u8 lbl_803CBBFB;                      /* fn_80013680: entry chosen, loads in progress */

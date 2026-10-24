@@ -168,7 +168,7 @@ void fn_8006496C(void) {
 
 // .text:0x800649BC size:0x48
 void fn_800649BC(void) {
-    g_d_GameSettings.side = randRange_FUN_80042bf0(0, 1);
+    g_d_GameSettings.side = randRange(0, 1);
     lbl_800E8754.mode = 3;
     lbl_800E8754.option = lbl_803CB8D0;
 }
@@ -184,7 +184,7 @@ void characterSelectScreen(s32 player) {
 }
 
 // .text:0x80066EAC size:0x1F4
-void fn_80066EAC(void) {
+void fn_80066EAC(s32 side) {
     return;
 }
 
@@ -197,10 +197,10 @@ void fn_800670A0(void) {
 void fn_800671FC(void) {
     u8 stadium;
     if (lbl_80361B20.unkF5 != 0) {
-        stadium = randRange_FUN_80042bf0(0, 5);
+        stadium = randRange(0, 5);
     } else {
         do {
-            stadium = randRange_FUN_80042bf0(0, 5);
+            stadium = randRange(0, 5);
         } while (stadium == 1);
     }
     g_d_GameSettings.stadium = stadium;
