@@ -52,7 +52,8 @@ alongside for the byte-exact rebuild goal, but a later phase never waits on a ma
    skin, without replacing another character. A per-player skin byte (`StatTable.UnusedBytes[0]`),
    chosen in the select code instead of moving the pick to another charID, rendered through a
    `skinPairs[charID][skin]` extension of the body/overlay mechanism (`lbl_800F73B8`), plus the
-   sprites from phase 2. Design notes: `character_modding_report.md` §4c, `character_select.md`.
+   sprites from phase 2. Design notes: `roster_flow.md` §6 (the R2 result: where the byte survives and
+   where it is re-applied), `character_modding_report.md` §4c, `character_select.md`.
 4. **Chemistry for clones.** Give clone↔source and clone↔clone good chemistry instead of the
    source's self-chemistry (a few lines in the patcher).
 5. **Animations.**
@@ -75,10 +76,16 @@ the "enables" line says what each unlocks. Status: ⏳ not started, 🟡 in prog
   `tools/datamap/mssb_files.py` (list / info / extract / replace into a new folder or ISO, updating
   every descriptor copy). Docs: `.agent/data_map.md`. *Enables:* finding anything instantly;
   replacing any asset safely; the base for every other track.
-- **R2. Roster → match data flow** ⏳ (Fable). How a picked team becomes the match roster
-  (`fn_3_B4124`, `fn_3_10C450`, `inMemRoster` / `StatTable`) and reaches the character loaders
-  (`fn_80016344`, `fn_80016710`, `fn_80017814` are documented but unmatched). *Enables:* phase 3's
-  per-player skin byte surviving from the menu into the match. **Critical path.**
+- **R2. Roster → match data flow** ✅ (Fable, 2026-10-24, branch `fable-r2`). Documented in
+  `.agent/roster_flow.md`: the exhibition copy is `fn_2_8940` (pick order, now matched) +
+  `characterSelectScreen` (re-copy in fielding-position order), re-copies in-game by the star toggle
+  (`transferStatsToInMemRoster`, decompiled) and substitutions (`fn_800471F4`); fielders/runners load
+  with `variant = 0` (disc track 1), only the batter uses the ARAM pair; `fn_8001500C` decompiled.
+  `StatTable` +0x05..+0x1F has no field reader/writer anywhere, but +0x05..+0x1D sit inside the
+  `memcpy(0x1E)` of every rebuild and +0x1E/+0x1F are padding that stays with the slot. Design in
+  roster_flow.md §6: menu choice in the free `lbl_803C6724.unk38[2][9]`, entry byte +0x05 re-applied
+  at the three static->entry copies, slot byte 0x253 (free) read in `fn_8001758C`, body pair /
+  track-1 subfile keyed on (charID, skin). `fn_80016344/710/17814` remain documented, unmatched.
 - **R3. Character stats and gameplay tables, fully named** ⏳ (Fable for the readers, then a write-up).
   The 54×0xA0 `CharacterStats` rows (ZZZZ+0x06CF8800), game.rel per-character tables (hitbox,
   charge frames, running timing, voice, 0x7E34, 0x17000), DOL `lbl_800FB798` 15×54 animation

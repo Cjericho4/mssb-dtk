@@ -139,8 +139,18 @@ alternative `TextureArchiveHeader` (loaded or embedded per skin) **before** it's
 The archive must have the same texture count and dimensions as the original.
 
 ### 4c. Full source-level skin variant (no lost slots, recommended end state)
+*R2 result (2026-10-24, `.agent/roster_flow.md` §6): the design below is confirmed, with three
+corrections. (1) `UnusedBytes[0]` is inside the `memcpy(dst, src, 0x1E)` that every roster rebuild
+starts with, so the byte is reset from the static row at ready (`fn_2_8940`), at the fielding-position
+re-copy (`characterSelectScreen`), at the in-game star toggle (`transferStatsToInMemRoster`) and at
+lineup edits; those copy sites must re-apply it from the menu choice (`lbl_803C6724.unk38[2][9]`, free).
+(2) Fielders and runners load with `variant = 0`, i.e. the low-detail body from disc track
+`charID*19 + 1`, not the ARAM pair: the skin must redirect both `fn_8002204C` (batter) and the
+`ARAMTransfer(&lbl_803CB790[track])` fallback in `fn_8001758C` (everyone else). (3) The batter/runner
+model caches (`cachedBatterCharID`, `cachedFielderCharID`) are keyed on charID only.*
 * **Store the skin:** `StatTable.UnusedBytes[0]` per roster entry (`inMemRoster`, +0x05). Copy it in
-  `fn_8001758C` into a spare `AnimationStruct` byte (`_rest253`), next to the arm/stance copy.
+  `fn_8001758C` into a spare `AnimationStruct` byte (`_rest253`, verified unused by every module),
+  next to the arm/stance copy.
 * **Switch these lookups to `(charID, skin)`:**
   1. `fn_8001758C`: the subfile track index (`charID*19 + (variant==0)`)
   2. `fn_8002204C`: `lbl_800F73B8[charID]`, master `[charID]` size, `lbl_800F1D78[charID*19 + 0]`
@@ -225,8 +235,11 @@ for Windows with the standard library only.  What this pass established:
 * **The ARAM path is the in-game path.** `fn_800227E4` allocates a hard-coded 0x4D6600 B of ARAM
   (`lis r3,0x4d / addi r3,r3,0x6600` @ 0x800227EC/F4), sets every tier's ARAM address to
   `aramBase + master[i].offset`, streams master[515] disc→ARAM and the callback sets
-  `lbl_803716B8.unk1EA |= 0xF`.  Every `fn_80017098` caller passes `variant = 1`, i.e. bodies come from
-  ARAM via `lbl_800F73B8`.  Track 0 is only the pre-blob fallback.
+  `lbl_803716B8.unk1EA |= 0xF`.  **Correction (R2, roster_flow.md §5.5):** only the batter
+  (`fn_8001500C`, slotKind 9) and the menu/cutscene loads (`fn_80016344`/`fn_80016710`) pass
+  `variant = 1` (ARAM body via `lbl_800F73B8`); the nine fielders (`fn_8001594C`) and the runners
+  pass `variant = 0` and stream the low-detail body from disc track `charID*19 + 1`.  The patcher is
+  unaffected because it patches tracks 0 and 1 and the ARAM pair.
 * **Retail variants are body + texture overlay.** Verified: `track0(BlueToad) == master[13]` with
   `master[34]` written at `+0x20`; overlay length == `layoutOff − 0x20`; variant track files differ
   from the base only inside the texture region.  So a clone on donor S is `pair[S] = {source body,
