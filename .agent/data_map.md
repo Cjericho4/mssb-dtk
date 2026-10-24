@@ -96,29 +96,30 @@ The ARAM blob: 345 member files use 99.91% of its 0x4D6600 bytes.
 ## 4. Descriptor tables
 
 Ids are what `mssb_files.py` uses: a file's id is `<table>.<index>` of the first row naming it,
-and every other row is an alias. "rows / own files" = descriptor rows in the table / files whose
+and every other row is an alias. Index meanings marked "guess" or "not traced" are inferred from the
+content, not from a caller. "rows / own files" = descriptor rows in the table / files whose
 id comes from this table (0 = every row is a copy of a file owned elsewhere). Loader names are from
 `config/GYQE01/*symbols.txt` (`tools/datamap/dev_tables.py` regenerates the raw list).
 
 | id | location | rows / own files | in | what | index | loader |
 |---|---|---|---|---|---|---|
 | `rel` | DOL `0x800E8AA8` | 3 / 3 | aaaa | REL modules (LZSS in aaaa.dat) (rel 3) | 0 menus.rel, 1 game.rel, 2 challenge.rel | fn_800097A0 (boot state machine) -> ARAMTransfer |
-| `boot` | DOL `0x800E8AD8` | 3 / 3 | ZZZZ | boot files (model 1, unknown 1, texarc 1) | 0 boot 3D model (LZSS 14/5), 1 stored binary, 2 font-ish CI4 texture archive | fn_800097A0 (boot state machine) |
-| `res` | DOL `0x800E8B08` | 62 / 62 | ZZZZ | common UI resources (resource id 0..61) (ui 45, texarc 17) | resource id: 0 HUD, 1 HUD portraits (charID->30+c), 5 lineup portraits, 6..13 fullscreen screens, 15 menu common (names/mini images), 16..28 captain/team emblems, 29 select-grid portraits, 30 title/main menu, 45..61 640x256 stills | fn_800097A0 / fn_80035838(desc, slot); the same 62 rows are copied into game.rel/challenge.rel |
+| `boot` | DOL `0x800E8AD8` | 3 / 3 | ZZZZ | boot files (model 1, unknown 1, texarc 1) | 0 .gpc model with one 1024x132 CI4 texture (LZSS 14/5), 1 stored binary, 2 small CI4 texture archive | fn_800097A0 (boot state machine) |
+| `res` | DOL `0x800E8B08` | 62 / 62 | ZZZZ | common UI resources (resource id 0..61) (ui 45, texarc 17) | resource id: 1 HUD portraits (charID->30+c), 5 lineup portraits, 15 menu common (names/mini images), 29 select-grid portraits, 30 title/main menu, 38..44 stadium art (38 + stadium); guesses: 0 HUD, 6..13 full-screen screens, 16..28 captain banners/emblems, 45..61 stills | fn_800097A0 / fn_80035838(desc, slot); the same 62 rows are copied into game.rel/challenge.rel |
 | `res_dol2` | DOL `0x800EEFD0` | 62 / 0 | ZZZZ | common UI resources (copy 2) (ui 45, texarc 17) | resource id (same as res) | fn_80020278 / fn_80020388: res_dol2[lbl_803CB7CC[stadium] + 0x26] |
-| `game_common` | DOL `0x800EE910` | 5 / 5 | ZZZZ | field/game common set (unknown 2, sectioned 2, text 1) | 0..1 0x140-header field data, 2..3 field effect/actor sets, 4 text bank (23 strings) | fn_800188C0 |
+| `game_common` | DOL `0x800EE910` | 5 / 5 | ZZZZ | field/game common set (unknown 2, sectioned 2, text 1) | 0..1 0x140-header data, 2..3 actor sets (guess), 4 text bank (23 minigame strings) | fn_800188C0 |
 | `sound` | DOL `0x800EF508` | 48 / 48 | ZZZZ | MusyX sound groups (stored) (musyx 48) | sound group slot (each file = proj+pool+sdir+samp; group id at +0x24) | fn_800215F8 / fn_80021758 |
 | `stadium` | DOL `0x800EFBE8` | 21 / 13 | ZZZZ | stadium models (stadium 21) | stadium*3 + variant (g_d_GameSettings.unk9 / unkA): Mario Stadium, Bowser Castle, Wario Palace, Yoshi Park, Peach Garden, DK Jungle, Toy Field | game.rel manageStadiumLoading -> ARAMTransfer; relocated by fn_3_5EC0 |
-| `master` | DOL `0x800EFD38` | 515 / 345 | blob | ARAM master descriptors (blob-relative) (sectioned 215, script 192, anim 54, model 33, texarc 21) | 0..32 bodies, 33..53 texture overlays (via lbl_800F73B8[charID]), 54+charID*7+k sub-items, 432+charID skeleton, 486+id stadium objects | fn_800227E4 streams the blob to ARAM; fn_8002204C / fn_8002254C / fn_80021BBC / fn_8002244C / fn_80021ADC read members |
+| `master` | DOL `0x800EFD38` | 515 / 345 | blob | ARAM master descriptors (blob-relative) (sectioned 215, script 192, anim 54, model 33, texarc 21) | 0..32 bodies, 33..53 texture overlays (via lbl_800F73B8[charID]), 54+charID*7+k attachments (k 0..3 models, 4..6 event scripts), 432+charID track-15 ANIM bank, 486+id per-model event scripts (id = lbl_800EEB18[charID]) | fn_800227E4 streams the blob to ARAM; fn_8002204C / fn_8002254C / fn_80021BBC / fn_8002244C / fn_80021ADC read members |
 | `blob` | DOL `0x800F1D68` | 1 / 1 | ZZZZ | ARAM blob (master[515]) (blob 1) | - | fn_800227E4 (ARAM alloc size hard-coded at 0x800227EC/F4) |
 | `subfile` | DOL `0x800F1D78` | 1026 / 652 | ZZZZ | per-character disc subfiles (anim 918, model 108) | charID*19 + track (0/1 body hi/lo, 2..14 & 16..18 animation banks, 15 skeleton) | fn_8001758C / fn_80016344 / fn_80016710 / fn_80016B60 / fn_80021BBC |
 | `subitem` | DOL `0x800F5D98` | 324 / 198 | ZZZZ | per-character sub-item models (bat/glove) (sectioned 324) | charID*6 + itemSlot | fn_80021CA4 / fn_8002244C (disc path) |
-| `stadobj` | DOL `0x800F71D8` | 30 / 30 | ZZZZ | stadium objects (disc fallback of master 486+id) (script 29, unknown 1) | stadium-object id | fn_80021ADC |
+| `model_script` | DOL `0x800F71D8` | 30 / 30 | ZZZZ | per-model event scripts (disc fallback of master 486+id) (script 29, unknown 1) | model id from lbl_800EEB18[charID] (colour variants share their base's id) | fn_80021ADC |
 | `menu_title` | DOL `0x800FB5B0` | 1 / 0 | ZZZZ | title/main menu UI (copy) (ui 1) | - | fn_8004A1BC |
 | `text_sys` | DOL `0x80109044` | 1 / 1 | ZZZZ | system text bank (11 strings, to ARAM) (text 1) | - | fn_800697B0 |
 | `opening` | DOL `0x801092C8` | 3 / 2 | ZZZZ | opening movie set (ui 1, hvqm 1, unknown 1) | 0 opening HVQM4 movie (82 MB, stored), 1 0x20-rooted data, 2 UI resource (= res.34) | fn_8006AF9C |
 | `stats` | menus `.data+0xC8` | 1 / 1 | ZZZZ | CharacterStats block (54 x 0xA0 + tail) (stats 1) | - | fn_2_554 (menus boot); game.rel maybeProcessTeamData reads the same file |
-| `menu_set` | menus `.data+0x444` | 16 / 0 | ZZZZ | menu scene resource set (16 logical slots) (ui 16) | logical UI slot: 0 title/main menu, 1 grid portraits, 2 0x191B8800, 3 captain banners, 4..15 captain emblems | fn_2_27E0 (and 8 identical copies, see aliases) |
+| `menu_set` | menus `.data+0x444` | 16 / 0 | ZZZZ | menu scene resource set (16 logical slots) (ui 16) | logical UI slot: 0 title/main menu (res.30), 1 grid portraits (res.29), 2 res.33, 3 res.16, 4..15 res.17..28 | fn_2_27E0 (and 8 identical copies, see aliases) |
 | `menu_set_b` | menus `.data+0xD14` | 16 / 0 | ZZZZ | menu scene resource set (copy) (ui 16) | logical UI slot | fn_2_6D3C |
 | `menu_set_c` | menus `.data+0x1314` | 16 / 0 | ZZZZ | menu scene resource set (copy) (ui 16) | logical UI slot | fn_2_11340 |
 | `menu_set_d` | menus `.data+0x18B4` | 16 / 0 | ZZZZ | menu scene resource set (copy) (ui 16) | logical UI slot | inside lbl_2_data_15C8 (no direct code reference) |
@@ -127,11 +128,11 @@ id comes from this table (0 = every row is a copy of a file owned elsewhere). Lo
 | `menu_set_g` | menus `.data+0x2B3DC` | 16 / 0 | ZZZZ | menu scene resource set (character select) (ui 16) | logical UI slot (1 = grid portraits) | fn_2_73994 / fn_2_760CC / fn_2_7BFF8 (character select) |
 | `menu_set_h` | menus `.data+0x2E1EC` | 16 / 0 | ZZZZ | menu scene resource set (copy) (ui 16) | logical UI slot | fn_2_834F0 |
 | `menu_set_i` | menus `.data+0x302BC` | 16 / 0 | ZZZZ | menu scene resource set (copy) (ui 16) | logical UI slot | inside lbl_2_data_2FFF8 (no direct code reference) |
-| `menu_char_a` | menus `.data+0x241C` | 54 / 54 | ZZZZ | per-character menu 3D model A (stadium 54) | charID | fn_2_17C88 / fn_2_17ED8 / fn_2_18148 / fn_2_188EC |
-| `menu_ball` | menus `.data+0x4B90` | 1 / 1 | ZZZZ | shared .gpc model (42 textures) (model 1) | - | fn_2_1B1BC |
+| `menu_char_a` | menus `.data+0x241C` | 54 / 54 | ZZZZ | per-character menu 3D scene A (stadium 54) | charID (use: guess, select/intro poses) | fn_2_17C88 / fn_2_17ED8 / fn_2_18148 / fn_2_188EC |
+| `menu_model42` | menus `.data+0x4B90` | 1 / 1 | ZZZZ | shared .gpc model (42 textures) (model 1) | - | fn_2_1B1BC |
 | `movie` | menus `.data+0x12170` | 2 / 2 | ZZZZ | HVQM4 movies (stored) (hvqm 2) | 0 short movie, 1 attract/intro | fn_2_37630 -> sNp movie streamer (fn_800A6E24) |
 | `text_menu` | menus `.data+0x12298` | 1 / 1 | ZZZZ | menu text bank (954 strings) (text 1) | - | fn_2_409CC |
-| `menu_char_b` | menus `.data+0x12EC0` | 54 / 0 | ZZZZ | per-character menu 3D model B (stadium 54) | charID | fn_2_47540 / fn_2_477C0 / fn_2_478F4 / fn_2_481F4 |
+| `menu_char_b` | menus `.data+0x12EC0` | 54 / 0 | ZZZZ | per-character menu 3D scene B (same files as A) (stadium 54) | charID | fn_2_47540 / fn_2_477C0 / fn_2_478F4 / fn_2_481F4 |
 | `challenge_ui` | menus `.data+0x1323C` | 11 / 9 | ZZZZ | Challenge-mode UI resources (ui 11) | 3 Challenge scene (lbl_2_data_1326C), 10 Challenge Special ending / staff roll (lbl_2_data_132DC) | fn_2_4EB64 / fn_2_4E970 / fn_2_4EABC -> fn_80035838 |
 | `menu_1f884` | menus `.data+0x1F884` | 2 / 0 | ZZZZ | menu UI pair (ui 2) | - | fn_2_53408 |
 | `menu_1ff84` | menus `.data+0x1FF84` | 3 / 2 | ZZZZ | options/records set (ui 1, text 1, stadium 1) | 0 UI, 1 text bank (599 strings), 2 scene | fn_2_549B4 |
@@ -147,7 +148,7 @@ id comes from this table (0 = every row is a copy of a file owned elsewhere). Lo
 | `game_res_b` | game `.data+0xF538` | 62 / 0 | ZZZZ | common UI resources (copy) (ui 45, texarc 17) | resource id | fn_3_AF10C |
 | `game_res_c` | game `.data+0x10578` | 64 / 0 | ZZZZ | results/replay resource set (ui 45, texarc 17, text 1, sectioned 1) | 0 text bank (168 strings), 1 actor set, 2..63 = res 0..61 | fn_3_B43E8 |
 | `field` | game `.data+0x10ACC` | 7 / 7 | ZZZZ | per-stadium field object sets (sectioned 7) | stadium (0..6) | fn_3_B9BB4 (g_hugeAnimStruct.stadiumObjectLoadingPtr) |
-| `game_ball` | game `.data+0x11380` | 1 / 0 | ZZZZ | shared .gpc model (copy) (model 1) | - | fn_3_BF878 |
+| `game_model42` | game `.data+0x11380` | 1 / 0 | ZZZZ | shared .gpc model (copy) (model 1) | - | fn_3_BF878 |
 | `game_115ec` | game `.data+0x115EC` | 1 / 1 | ZZZZ | 44-section data file (sectioned 1) | - | fn_3_BEFF8 |
 | `camera` | game `.data+0x20FDC` | 1 / 1 | ZZZZ | camera data (unknown 1) | - | fn_3_106E50 (g_Camera.unk1B4) |
 | `minigame_res` | game `.data+0x21EC8` | 62 / 0 | ZZZZ | common UI resources (minigame copy) (ui 45, texarc 17) | resource id (minigame index + 6 picks a screen) | fn_3_10B8D0 / fn_3_10F3D8 / fn_3_10FDC8 |
@@ -158,15 +159,15 @@ id comes from this table (0 = every row is a copy of a file owned elsewhere). Lo
 | `menu_title_ch` | challenge `.data+0xB70` | 1 / 0 | ZZZZ | title/main menu UI (copy) (ui 1) | - | fn_1_88D0 |
 | `challenge_map_ui` | challenge `.data+0xF0C` | 11 / 11 | ZZZZ | Challenge map UI pieces (ui 11) | piece id | fn_1_8CD4 / fn_1_8DBC / fn_1_8F34 |
 | `sound_ch` | challenge `.data+0x196C` | 50 / 0 | ZZZZ | MusyX sound groups (Challenge copy) (musyx 50) | sound group slot | fn_1_9F04 |
-| `challenge_board` | challenge `.data+0xA3D8` | 86 / 34 | ZZZZ | Challenge board data (sectioned 44, script 29, stadium 10, unknown 3) | 0..1 board maps, 2..31 = stadobj, 32.. models | fn_1_16978 |
+| `challenge_board` | challenge `.data+0xA3D8` | 86 / 34 | ZZZZ | Challenge board data (sectioned 44, script 29, stadium 10, unknown 3) | 0..1 = game_common.0/1, 2..31 = model_script.0..29, 32..85 board pieces (use not traced) | fn_1_16978 |
 | `challenge_a950` | challenge `.data+0xA950` | 1 / 0 | ZZZZ | menu 3D scene (copy) (stadium 1) | - | fn_1_10560 |
-| `challenge_ball` | challenge `.data+0xADE0` | 1 / 0 | ZZZZ | shared .gpc model (copy) (model 1) | - | fn_1_10560 |
+| `challenge_model42` | challenge `.data+0xADE0` | 1 / 0 | ZZZZ | shared .gpc model (copy) (model 1) | - | fn_1_10560 |
 | `challenge_models` | challenge `.data+0xF968` | 24 / 24 | ZZZZ | Challenge map models (sectioned 16, model 8) | model id | fn_1_1CBE4 |
 | `debug_browser` | challenge `.data+0xFB98` | 63 / 0 | ZZZZ | sprite/resource debug browser list (ui 46, texarc 17) | browser ordinal (0 = ending archive, 1.. = res) | fn_1_26AF8 / fn_1_26928 / fn_1_267F4 |
 | `challenge_104f4` | challenge `.data+0x104F4` | 1 / 1 | ZZZZ | small data file (sectioned 1) | - | fn_1_20F8C |
 | `stadium_ch2` | challenge `.data+0x10518` | 21 / 0 | ZZZZ | stadium models (copy) (stadium 21) | stadium*3 + variant | fn_1_2004C |
 | `stadium_ch3` | challenge `.data+0x10674` | 21 / 0 | ZZZZ | stadium models (copy) (stadium 21) | stadium*3 + variant | fn_1_1DCE4 |
-| `challenge_ball2` | challenge `.data+0x108F8` | 1 / 0 | ZZZZ | shared .gpc model (copy) (model 1) | - | fn_1_27BB8 |
+| `challenge_model42b` | challenge `.data+0x108F8` | 1 / 0 | ZZZZ | shared .gpc model (copy) (model 1) | - | fn_1_27BB8 |
 | `movie_viewer` | challenge `.data+0x112D8` | 1 / 0 | ZZZZ | debug movie viewer (TEST MOVIE 0) (hvqm 1) | movie id | challenge rep_7BA0 (0x28398) -> fn_800ADB04 |
 | `partial_ch` | challenge `.data+0xA940` | 1 / 1 | ZZZZ | header read (0x200 bytes of a 0x15450-byte file) (unknown 1) | - | fn_1_10560 |
 
@@ -193,7 +194,7 @@ strings at DOL `0x800E33A0`. It doesn't point into ZZZZ.dat, so it's not a file 
   hand/glove/bat models with a 1-sequence ANIM bank at +0x20, k 4..6 = keyed event scripts),
   432+charID = the track-15 bank, 486+id = 29 keyed event scripts. The model-id map
   `lbl_800EEB18[charID]` picks id, and colour variants share their base's id. Earlier notes called
-  this "stadium objects". `stadobj` (DOL `0x800F71D8`, 30 rows) is its disc fallback
+  this "stadium objects". `model_script` (DOL `0x800F71D8`, 30 rows) is its disc fallback
   (`fn_80021ADC`).
 * **Common UI resources** (`res`, 62 rows = boot table rows 6..67): one resource id, nine
   copies. In game.rel, `fn_3_5BD40` loads `lbl_3_data_6130[1]` into slot 0xC (HUD portraits),
@@ -287,7 +288,7 @@ export PATH=$PWD/.venv/bin:$PATH
 python3 tools/datamap/mssb_files.py tables
 python3 tools/datamap/mssb_files.py coverage orig/GYQE01 --probe
 python3 tools/datamap/mssb_files.py list orig/GYQE01 --csv files.csv
-python3 tools/datamap/test_mssb_files.py                       # 19 tests, ~20 s
+python3 tools/datamap/test_mssb_files.py                       # 21 tests (2 need MSSB_SLOW=1), ~20 s
 MSSB_SLOW=1 python3 tools/datamap/test_mssb_files.py RealDisc  # + full decompress, real replace (~2.5 min)
 python3 tools/datamap/dev_tables.py orig/GYQE01                # raw table runs + referencing functions
 ```
