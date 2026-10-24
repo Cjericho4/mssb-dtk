@@ -372,3 +372,9 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
     other 4 functions still match, so flags aren't the answer).  Still open: what source shape yields
     a non-unrolled ctr loop here, and what occupied r28..r30.  Candidates tried are in
     `.scratch/dd/` form: a..q.
+*   fn_80016344 / fn_80016710 (shelved 2026-10-23): making `&g_hugeAnimStruct.slots[slot].fileBuffer`
+    an explicit first local (`Gap8001196CModelFile** file`) in the inlined `loadStadiumObject` does not
+    change the allocation: the params still take r27..r29 and the address temp r26.  Target wants the
+    address temp in r30 and `slot*0x27c` in r29, params in r26..r28.  Next idea: give the helper its
+    own `slot`-derived pointer parameter from the caller (so the temp exists before the params are
+    first used), or move the state-4 body out of the inline helper.
