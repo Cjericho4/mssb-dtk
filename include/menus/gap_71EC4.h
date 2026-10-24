@@ -69,7 +69,7 @@ typedef struct MenusSceneFlags {
     u8 unkE;      /* 0xE set when pad 0 moves on to side 1 in one-pad mode (fn_2_3624) */
     u8 _padF[2];
     u8 rosterSceneQueued; /* 0x11 challenge roster helpers have been queued */
-    u8 _pad12[0x24];
+    s16 teamsMirror[2][9]; /* 0x12 lbl_803C6724.teams widened to s16 (fn_2_8940) */
     u8 unk36;
     u8 unk37;
     u8 unk38;

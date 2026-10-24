@@ -1433,13 +1433,21 @@ typedef struct _ChemistryTable {
     /*0x035*/ u8 BoomerangBro;
 } ChemistryTable; // size: 0x36
 
+/* One 0xA0-byte roster / stats row.  StatTable holds a u32 so the compiler pads it to 0x3C; the
+   chemistry row really starts at 0x3B, hence the union (fn_2_8940's copy and the asm agree on 0x3B).
+   The copies in roster code never touch 0x1E/0x1F, 0x72/0x73, 0x9E/0x9F: original padding. */
 typedef struct _CharacterStats {
-
-    /*0x000*/ StatTable stats;
-    /*0x03B*/ ChemistryTable chemistry;
-    /*0x071*/ u8 BytesAfterChemistry[3];
-    /*0x074*/ s16 UnusedShorts[21];
-} CharacterStats;
+    union {
+        /*0x000*/ StatTable stats;
+        struct {
+            u8 _statBytes[0x3B];
+            /*0x03B*/ ChemistryTable chemistry;
+            /*0x071*/ u8 BytesAfterChemistry[3];
+            /*0x074*/ u16 UnusedShorts[21];
+            /*0x09E*/ u8 _pad9E[2];
+        };
+    };
+} CharacterStats; // size: 0xA0
 
 extern CharacterStats inMemRoster[TEAMS_PER_GAME][PLAYERS_PER_TEAM];
 

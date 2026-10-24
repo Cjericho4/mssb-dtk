@@ -24,6 +24,8 @@ extern void fn_800AD038(u32 value);
 extern void fn_8004EEF4(s32 a, s32 b, s32 c, s32 d, s32 enabled);
 
 extern u8 lbl_2_bss_100B4;
+extern u8 lbl_2_bss_3A8[54]; /* per-charID handedness byte (challenge save): bit 0 stance, bits 1.. arm */
+extern void fn_80066EAC(s32 side);
 
 extern u32 lbl_803CB750;
 extern u32 fn_800628D4(s32 charID);
@@ -1311,9 +1313,94 @@ void fn_2_893C(void) {
     return;
 }
 
+/* Copy one Static_Stats_Tables row into a roster entry, field by field (the same inlined helper is
+ * used by every DOL/menus roster copier: fn_2_8CF8, fn_2_9ACC, characterSelectScreen,
+ * transferStatsToInMemRoster, fn_800471F4, ...).  Bytes 0x1E/0x1F, 0x72/0x73 and 0x9E/0x9F of the
+ * 0xA0 row are never copied: they are structure padding in the original layout.
+ * See .agent/roster_flow.md section 3. */
+static inline void copyStatsRow(CharacterStats* dst, CharacterStats* src) {
+    memcpy(dst, src, 0x1E);
+    dst->stats.CharID = src->stats.CharID;
+    dst->stats.FieldingArm = src->stats.FieldingArm;
+    dst->stats.BattingStance = src->stats.BattingStance;
+    memcpy(&dst->stats.SlapContactSize, &src->stats.SlapContactSize, 2);
+    memcpy(&dst->stats.SlapHitPower, &src->stats.SlapHitPower, 2);
+    dst->stats.BuntingContactSize = src->stats.BuntingContactSize;
+    dst->stats.HitTrajectoryPushPull = src->stats.HitTrajectoryPushPull;
+    dst->stats.HitTrajectoryHighLow = src->stats.HitTrajectoryHighLow;
+    dst->stats.Speed = src->stats.Speed;
+    dst->stats.ThrowingArm = src->stats.ThrowingArm;
+    dst->stats.CharacterClass = src->stats.CharacterClass;
+    dst->stats.Weight = src->stats.Weight;
+    dst->stats.Captain = src->stats.Captain;
+    dst->stats.CaptainStarHitPitch = src->stats.CaptainStarHitPitch;
+    memcpy(&dst->stats.NonCaptainStarSwing, &src->stats.NonCaptainStarSwing, 2);
+    dst->stats.FieldingStats = src->stats.FieldingStats;
+    memcpy(&dst->stats.BattingStatBar, &src->stats.BattingStatBar, 4);
+    memcpy(&dst->chemistry, &src->chemistry, sizeof(ChemistryTable));
+    dst->BytesAfterChemistry[0] = src->BytesAfterChemistry[0];
+    dst->UnusedShorts[0] = src->UnusedShorts[0];
+    dst->UnusedShorts[1] = src->UnusedShorts[1];
+    dst->UnusedShorts[2] = src->UnusedShorts[2];
+    dst->UnusedShorts[3] = src->UnusedShorts[3];
+    dst->UnusedShorts[4] = src->UnusedShorts[4];
+    dst->UnusedShorts[5] = src->UnusedShorts[5];
+    dst->UnusedShorts[6] = src->UnusedShorts[6];
+    dst->UnusedShorts[7] = src->UnusedShorts[7];
+    dst->UnusedShorts[8] = src->UnusedShorts[8];
+    dst->UnusedShorts[9] = src->UnusedShorts[9];
+    dst->UnusedShorts[10] = src->UnusedShorts[10];
+    dst->UnusedShorts[11] = src->UnusedShorts[11];
+    dst->UnusedShorts[12] = src->UnusedShorts[12];
+    dst->UnusedShorts[13] = src->UnusedShorts[13];
+    dst->UnusedShorts[14] = src->UnusedShorts[14];
+    dst->UnusedShorts[15] = src->UnusedShorts[15];
+    dst->UnusedShorts[16] = src->UnusedShorts[16];
+    dst->UnusedShorts[17] = src->UnusedShorts[17];
+    dst->UnusedShorts[18] = src->UnusedShorts[18];
+    dst->UnusedShorts[19] = src->UnusedShorts[19];
+    dst->UnusedShorts[20] = src->UnusedShorts[20];
+}
+
+/* fn_2_8940 -- build both in-memory rosters from the roster-screen picks (pick order).
+ *
+ * For side 0..1, slot n 0..8: inMemRoster[side][n] := Static_Stats_Tables[lbl_803C6724.teams[side][n]]
+ * (copyStatsRow) and lbl_80354720[side][n].unk2 := lbl_803C6724.order[side][n] (batting order link).
+ * Challenge mode (GameModeSelected 5): side 0's fielding arm / batting stance come from the saved
+ * per-character handedness byte lbl_2_bss_3A8[lineup[n].charID] (arm = byte / 2, stance = byte % 2).
+ * Then lbl_803C5EA4.teamsMirror[2][9] (s16) mirrors the picks and fn_80066EAC(0/1) rebuilds the
+ * per-slot chemistry rows.  Called from fn_2_2FC0 (roster finalisation, before characterSelectScreen
+ * reorders the entries by fielding position) and fn_2_61A0.
+ * Skin hook (phase 3): after copyStatsRow, write the per-slot skin into the entry here
+ * (.agent/roster_flow.md section 6.2). */
 // .text:0x00008940 size:0x3B8
 void fn_2_8940(void) {
-    return;
+    CharacterStats* src;
+    s32 team;
+    s32 n;
+    s32 charID;
+    s32 hand;
+
+    for (team = 0; team < 2; team++) {
+        for (n = 0; n < 9; n++) {
+            charID = lbl_803C6724.teams[team][n];
+            src = (CharacterStats*)&lbl_8034E9A0.stats[charID / 9][charID % 9];
+            copyStatsRow(&inMemRoster[team][n], src);
+            lbl_80354720[team][n].unk2 = lbl_803C6724.order[team][n];
+            if (team == 0 && g_d_GameSettings.GameModeSelected == 5) {
+                hand = lbl_2_bss_3A8[starMissionCompletionTracker.lineup[n].charID];
+                inMemRoster[team][n].stats.FieldingArm = (hand >> 1) & 0xFF;
+                inMemRoster[team][n].stats.BattingStance = hand % 2;
+            }
+        }
+    }
+    for (team = 0; team < 2; team++) {
+        for (n = 0; n < 9; n++) {
+            lbl_803C5EA4.teamsMirror[team][n] = lbl_803C6724.teams[team][n];
+        }
+    }
+    fn_80066EAC(0);
+    fn_80066EAC(1);
 }
 
 // .text:0x00008CF8 size:0x8E0
