@@ -437,7 +437,7 @@ void fn_2_74E14(void) {
 
 // .text:0x00074F40 size:0xC18
 /* Refresh the roster/captain stat panel. Pane 0xB0+side is a charID-keyed
- * name animation (resource slot 8, layout 0x82); 0xAE+side is a hard-coded
+ * name animation (resource slot 1, layout 0x82); 0xAE+side is a hard-coded
  * colour label. Neither lookup uses uniqueIdx. Stat bars use the displayed
  * ratings at CharacterStats +0x37..0x3A, not the gameplay simulation values.
  * The roster cursor is an order value, so search order[] before reading teams[].
@@ -530,7 +530,7 @@ void fn_2_75B58(void) {
 }
 
 // .text:0x00075BE4 size:0x4B4
-void fn_2_75BE4(void) {
+void fn_2_75BE4(DrawingSceneStruct* scene, s32 side) {
     return;
 }
 
@@ -792,8 +792,32 @@ void fn_2_7F714(void) {
 }
 
 // .text:0x0007F8BC size:0x240
-void fn_2_7F8BC(void) {
-    return;
+/* UI command 0xF: a confirmed pick animates its roster card, assigns the
+ * mini portrait (common resource 1, sequence 0x83, frame = charID), refreshes
+ * chemistry and name/stat previews, then waits for animation completion.
+ * order[] maps the visible cursor position back to the underlying team slot. */
+void fn_2_7F8BC(DrawingSceneStruct* scene, s32 side) {
+    s8 slot;
+    s32 i;
+    s8 cursor;
+    if (lbl_803C66B0.flags[side] == 0) {
+        cursor = lbl_2_bss_F468.cursor[side];
+        for (i = 0; i < 9; i++) {
+            if (lbl_803C6724.order[side][i] == cursor) {
+                slot = i;
+                break;
+            }
+        }
+        lbl_80371C30[scene->unkIndex + cursor + side * 9 + 0x34].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + cursor + side * 9 + 0x34].obj->field_0x5C = 0;
+        lbl_80371C30[scene->unkIndex + cursor + side * 9 + 0x34].obj->field_0x68 = 1;
+        lbl_80371C30[scene->unkIndex + cursor + side * 9 + 0x58].obj->field_0x5C =
+            lbl_803C6724.teams[side][slot] << 16;
+        fn_2_75BE4(scene, side);
+        fn_2_74F40(scene, side);
+        fn_800626EC(side);
+        lbl_803C66B0.flags[side] = 1;
+    }
 }
 
 // .text:0x0007FAFC size:0x5B4
