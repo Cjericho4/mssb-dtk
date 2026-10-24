@@ -248,3 +248,8 @@ for Windows with the standard library only.  What this pass established:
   54 s16 animation parameters.
 * Pure-Python LZSS (11/4) round-trips every retail file tried and compresses Mario's body to 76992 B
   (retail 77284 B).
+* **Base donors (e.g. `--slot Luigi:green`):** the clone's overlay goes into the donor's own body entry
+  (`master[1]`), so `master[1].sizeFlags` becomes the archive size (0xC2C0).  That is harmless: retail
+  already has `master[charID].size` smaller than the body it loads (BlueToad 29: 0x18028 vs body 13's
+  0x195B0; BlueShyGuy 44: 0x5BE0 vs 0x16320), and `fn_8002204C` only uses it when `buf == NULL`, which
+  no caller does.  Do not "fix" it by resizing the entry.
