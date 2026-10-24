@@ -207,7 +207,7 @@ typedef struct Gap8001196CActorSlot {
 } Gap8001196CActorSlot;                      /* 0x5C here; the real record runs past the entry */
 typedef struct Gap8001196CActorEntry { u8 _pad0[0x34]; Gap8001196CActorSlot slot; } Gap8001196CActorEntry; /* 0x90 */
 struct Gap8001196CActLayout;
-void fn_800238E0(Gap8001196CActorEntry* entries, s32 index, struct Gap8001196CActLayout* layout);
+void fn_800238E0(Gap8001196CActorEntry* entries, s32 index, s32 actorID, struct Gap8001196CActLayout* layout);
 /* relocated .gpc root header (offsets become pointers in fn_80017814) */
 typedef struct Gap8001196CRootHeader {
     /* 0x00 */ u32 texture;

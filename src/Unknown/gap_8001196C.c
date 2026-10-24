@@ -47,42 +47,41 @@ static inline void startSubItemLoad(Gap8001196CSubItemEntry* entry, Gap8001196CS
 /* Once the load queue is idle (lbl_803716B8.loadBusy == 0): relocate the 4 root-header words of the
  * sub-item file, build its actor (layout/geo from the words picked by lbl_803CB7C4[0]/[1]) in
  * g_hugeAnimStruct.subItemActorEntries[obj->index0], bind the body's texture archive, hook the
- * optional extra block (word [2]) and the skin part (word [3]).  Returns TRUE when done. */
-static inline BOOL finishSubItemLoad(void) {
+ * optional extra block (word [2]) and the skin part (word [3]).  Caller checks readiness. */
+static inline void finishSubItemLoad(u8* texture) {
     Gap8001196CStadiumObj* obj;
-    Gap8001196CRootHeader* root;
     struct Gap8001196CActLayout* layout;
     struct Gap8001196CGeoFile* geo;
     Gap8001196CActorSlot* actorSlot;
-    u8* texture = lbl_803CBC08;
 
-    if (lbl_803716B8.loadBusy != 0) {
-        return FALSE;
-    }
     obj = g_subItemLoadObj;
     g_subItemLoadBusy = 0;
-    root = (Gap8001196CRootHeader*)obj->buf;
     /* FAKEMATCH: re-read obj->buf for each relocation to preserve load scheduling after inlining. */
     if (((Gap8001196CRootHeader*)obj->buf)->texture != 0) {
-        ((Gap8001196CRootHeader*)obj->buf)->texture += (u32)root;
+        ((Gap8001196CRootHeader*)obj->buf)->texture =
+            (u32)obj->buf + ((Gap8001196CRootHeader*)obj->buf)->texture;
     }
     if (((Gap8001196CRootHeader*)obj->buf)->layout != 0) {
-        ((Gap8001196CRootHeader*)obj->buf)->layout += (u32)root;
+        ((Gap8001196CRootHeader*)obj->buf)->layout =
+            (u32)obj->buf + ((Gap8001196CRootHeader*)obj->buf)->layout;
     }
     if (((Gap8001196CRootHeader*)obj->buf)->geo != 0) {
-        ((Gap8001196CRootHeader*)obj->buf)->geo += (u32)root;
+        ((Gap8001196CRootHeader*)obj->buf)->geo =
+            (u32)obj->buf + ((Gap8001196CRootHeader*)obj->buf)->geo;
     }
     if (((Gap8001196CRootHeader*)obj->buf)->skn != 0) {
-        ((Gap8001196CRootHeader*)obj->buf)->skn += (u32)root;
+        ((Gap8001196CRootHeader*)obj->buf)->skn =
+            (u32)obj->buf + ((Gap8001196CRootHeader*)obj->buf)->skn;
     }
+    /* FAKEMATCH: form the actor-slot address before selecting the file headers. */
+    actorSlot = &g_hugeAnimStruct.subItemActorEntries[obj->index0].slot;
     layout = (struct Gap8001196CActLayout*)((u32*)obj->buf)[lbl_803CB7C4[0]];
     geo = (struct Gap8001196CGeoFile*)((u32*)obj->buf)[lbl_803CB7C4[1]];
-    actorSlot = &g_hugeAnimStruct.subItemActorEntries[obj->index0].slot;
     LoadActorLayout(layout);
     convertGeometryAndSknHeader(geo, NULL);
     haveActLayoutPointToGeoHeader(layout, geo);
     fn_800BD190(geo, (struct Gap8001196CTexArchive*)texture);
-    fn_800238E0(g_hugeAnimStruct.subItemActorEntries, obj->index0, layout);
+    fn_800238E0(g_hugeAnimStruct.subItemActorEntries, obj->index0, obj->index0, layout);
     if (((Gap8001196CRootHeader*)obj->buf)->geo != 0) {
         fn_80025DDC((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]]);
         fn_80025C58((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]], actorSlot);
@@ -90,7 +89,30 @@ static inline BOOL finishSubItemLoad(void) {
     obj->unk4 = (u8*)((u32*)obj->buf)[lbl_803CB7C4[3]];
     fn_80025FFC((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]], &obj->unk4);
     g_subItemLoadObj = NULL;
-    return TRUE;
+}
+
+/* Advance the alternating-hand pair when its model load completes.
+ * FAKEMATCH: inline scope keeps the load temporaries ahead of the caller register webs. */
+static inline void loadAlternatingSubItem(Gap8001196CSubItemEntry* entry) {
+    u8* texture;
+    Gap8001196CStadiumObj* obj;
+    u8 armFlag;
+    s32 itemSlot;
+    texture = lbl_803CBC08;
+    armFlag = entry->arm == 0;
+    if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
+        itemSlot = 1 - armFlag;
+        if (armFlag != entry->arm) {
+            itemSlot = 3 - armFlag;
+        }
+        obj = armFlag ? &entry->obj0 : &entry->obj1;
+        startSubItemLoad(entry, obj, itemSlot);
+    }
+    if (lbl_803716B8.loadBusy == 0) {
+        finishSubItemLoad(texture);
+        entry->arm = entry->arm == 0;
+        lbl_803CBC04++;
+    }
 }
 
 /* fn_80012B90 -- load a character's three bat/glove model pairs, one step per call.
@@ -111,15 +133,14 @@ static inline BOOL finishSubItemLoad(void) {
  * Chain position: fn_80016710 state 5 (non mode-2 games); fn_80013680 is the mode-2 variant.
  * Variant hook: the sub-item files are chosen by charID inside fn_80021CA4; a (charID, skin)
  * table there covers this function unchanged.
- * Match status: NOT matched (first full decompile; see diff note in .scratch/fable_notes.md). */
+ * Match status: NOT matched; see .agent/handoff_fn_80012B90.md. */
 // .text:0x80012B90 size:0xAF0
 u8 fn_80012B90(struct Gap8001196CAnim* anim) {
+    u8* texture;
     Gap8001196CSubItemEntry* entry;
-    s32 slotKind = (s8)anim->slotKind;
     s32 charID = anim->charID;
+    s32 slotKind = (s8)anim->slotKind;
     s32 pairIndex;
-    u8 armFlag;
-    s32 itemSlot;
 
     if (lbl_803CBC04 < 3) {
         entry = &g_hugeAnimStruct.subItemEntries[slotKind * 3];
@@ -132,8 +153,8 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
     case 0:
     case 3:
     case 6:
-        entry->textureArchive = (u8*)((Gap8001196CRootHeader*)anim->fileBuffer)->texture;
-        lbl_803CBC08 = entry->textureArchive;
+        lbl_803CBC08 = (u8*)((Gap8001196CRootHeader*)anim->fileBuffer)->texture;
+        entry->textureArchive = lbl_803CBC08;
         entry->charID = charID;
         if (lbl_803CBC04 == 0) {
             entry->prevSlotKind = entry->slotKind;
@@ -145,56 +166,54 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
         entry->arm = anim->rosterUnk26;
         entry->stance = anim->rosterUnk27;
         entry->valid = 1;
-        pairIndex = lbl_803CBC04 / 3 + slotKind * 3;
+        /* FAKEMATCH: keep the quotient ahead of the slot multiplier. */
+        pairIndex = lbl_803CBC04 / 3;
+        pairIndex += slotKind * 3;
         lbl_803CBC04++;
         entry->obj0.index0 = pairIndex * 2;
         entry->obj1.index0 = pairIndex * 2 + 1;
         break;
     case 1:
     case 2:
-        armFlag = entry->arm == 0;
-        if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
-            if (armFlag == entry->arm) {
-                itemSlot = 1 - armFlag;
-            } else {
-                itemSlot = 3 - armFlag;
-            }
-            startSubItemLoad(entry, armFlag ? &entry->obj0 : &entry->obj1, itemSlot);
-        }
-        if (finishSubItemLoad()) {
-            entry->arm = entry->arm == 0;
-            lbl_803CBC04++;
-        }
+        loadAlternatingSubItem(entry);
         break;
     case 4:
+        texture = lbl_803CBC08;
         if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             startSubItemLoad(entry, &entry->obj1, 1);
         }
-        if (finishSubItemLoad()) {
+        if (lbl_803716B8.loadBusy == 0) {
+            finishSubItemLoad(texture);
             lbl_803CBC04 = 5;
         }
         break;
     case 5:
+        texture = lbl_803CBC08;
         if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             startSubItemLoad(entry, &entry->obj0, 0);
         }
-        if (finishSubItemLoad()) {
+        if (lbl_803716B8.loadBusy == 0) {
+            finishSubItemLoad(texture);
             lbl_803CBC04 = 6;
         }
         break;
     case 7:
+        texture = lbl_803CBC08;
         if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             startSubItemLoad(entry, &entry->obj1, 5);
         }
-        if (finishSubItemLoad()) {
+        if (lbl_803716B8.loadBusy == 0) {
+            finishSubItemLoad(texture);
             lbl_803CBC04 = 8;
         }
         break;
     case 8:
+        texture = lbl_803CBC08;
         if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             startSubItemLoad(entry, &entry->obj0, 4);
         }
-        if (finishSubItemLoad()) {
+        if (lbl_803716B8.loadBusy == 0) {
+            finishSubItemLoad(texture);
             anim->subItems = &g_hugeAnimStruct.subItemEntries[slotKind * 3];
             lbl_803CBC04 = 0;
             lbl_803CBC08 = NULL;
@@ -371,9 +390,10 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
                 }
                 startSubItemLoad(entry, &entry->obj1, itemSlot);
             }
-            if (!finishSubItemLoad()) {
+            if (lbl_803716B8.loadBusy != 0) {
                 break;
             }
+            finishSubItemLoad(lbl_803CBC08);
             lbl_803CBBFC = 1;
             continue;
         }
@@ -389,7 +409,8 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
                 }
                 startSubItemLoad(entry, &entry->obj0, itemSlot);
             }
-            if (finishSubItemLoad()) {
+            if (lbl_803716B8.loadBusy == 0) {
+                finishSubItemLoad(lbl_803CBC08);
                 lbl_803CBBFD = 1;
             }
         }

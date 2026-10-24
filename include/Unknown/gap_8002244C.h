@@ -216,7 +216,9 @@ GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem);
 void BuildBoneSkinOrientationMatrix(ActBone* root, Mtx m);
 void ACTSort(GameActor* actor);
 void DOSetWorldMatrix(ActDisplayObj* obj, Mtx m);
-void fn_800238E0(void);
+struct Gap8001196CActorEntry;
+struct Gap8001196CActLayout;
+void fn_800238E0(struct Gap8001196CActorEntry* entries, s32 index, s32 actorID, struct Gap8001196CActLayout* layout);
 /* per-slot actor record living at +0x34 of each 0x90 HugeAnimEntry68 (UnknownHeaders.h) */
 struct Gap8002244CSlotAux;
 typedef struct Gap8002244CActorSlot {

@@ -285,7 +285,7 @@ void BuildBoneSkinOrientationMatrix(ActBone* root, Mtx m) {
 #pragma dont_inline off
 
 // .text:0x800238E0 size:0xBC
-void fn_800238E0(void) {
+void fn_800238E0(struct Gap8001196CActorEntry* entries, s32 index, s32 actorID, struct Gap8001196CActLayout* layout) {
     return;
 }
 
