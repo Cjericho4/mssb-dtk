@@ -19,6 +19,10 @@ extern s32 lbl_2_bss_A840;
 extern void fn_800363D8(DrawingSceneStruct* scene, s32 index, s32 enabled, s32 value, s32 order);
 
 extern void fn_80053FE8(void);
+extern u8 lbl_800FE5D4[12];
+extern u8 lbl_800FE930[][6];
+extern u8 fn_80067B40(u8 side, u8 id, s32 mode);
+extern s32 fn_80036214(DrawingSceneStruct* scene, s32 pane, s32 list, s32 index);
 extern void fn_80051D00(void);
 extern s32 fn_80042DA8(DrawingSceneStruct* scene, s32 index, s32 value);
 extern void fn_8004E2EC(void);
@@ -432,8 +436,92 @@ void fn_2_74E14(void) {
 }
 
 // .text:0x00074F40 size:0xC18
+/* Refresh the roster/captain stat panel. Pane 0xB0+side is a charID-keyed
+ * name animation (resource slot 8, layout 0x82); 0xAE+side is a hard-coded
+ * colour label. Neither lookup uses uniqueIdx. Stat bars use the displayed
+ * ratings at CharacterStats +0x37..0x3A, not the gameplay simulation values.
+ * The roster cursor is an order value, so search order[] before reading teams[].
+ * Retail assumes every ordinary cursor has an order[] entry. */
 void fn_2_74F40(DrawingSceneStruct* scene, s32 index) {
-    return;
+    s32 charID;
+    s32 i;
+    s32 rating[4];
+    s32 pane[4];
+    s32 colour;
+    u32 texture;
+    MenusCharacterStats* stats;
+    if (lbl_803CBBCC->selection == 9 || lbl_803C66B0.flags5D[index] == 0xB) {
+        if (g_d_GameSettings.GameModeSelected != 5)
+            charID = lbl_800FE5D4[lbl_2_bss_F410.selections[index]];
+        else
+            charID = lbl_800FE930[lbl_80361B20.challengeCaptainPage][lbl_2_bss_F410.selections[0]];
+        stats = &lbl_8034E9A0.stats[charID / 9][charID % 9];
+        rating[0] = stats->pitchingDisplay;
+        rating[1] = stats->runningDisplay;
+        rating[2] = stats->battingDisplay;
+        rating[3] = stats->fieldingDisplay;
+        goto bars;
+    }
+    if (lbl_2_bss_F468.flags41[index]) {
+        charID = lbl_2_bss_F410.gridPick[index];
+        lbl_80371C30[scene->unkIndex + index + 0xB2].obj->flags &= ~2;
+    } else if (lbl_2_bss_F468.cursor[index] != 9 && lbl_2_bss_F468.cursor[index] != 10) {
+        for (i = 0; i < 9; i++) {
+            if (lbl_803C6724.order[index][i] == (s8)lbl_2_bss_F468.cursor[index])
+                charID = lbl_803C6724.teams[index][i];
+        }
+    } else charID = -1;
+    if (charID != -1 && fn_80067B40(0, (u8)charID, 2) && g_d_GameSettings.GameModeSelected != 5) {
+        lbl_80371C30[scene->unkIndex + index + 0xB2].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + index + 0xB2].obj->field_0x5C = 0;
+        lbl_80371C30[scene->unkIndex + index + 0xB2].obj->field_0x68 = 1;
+        switch (charID) {
+        case 13: case 16: case 20: case 22: case 25: case 34: case 42: case 50: case 52: colour = 1; break;
+        case 21: case 24: case 29: case 33: case 44: case 51: case 53: colour = 2; break;
+        case 23: case 30: case 36: case 45: colour = 3; break;
+        case 12: case 26: case 27: case 31: case 35: case 43: case 46: case 49: colour = 4; break;
+        case 32: colour = 5; break;
+        case 47: colour = 6; break;
+        default: colour = 0; break;
+        }
+        lbl_80371C30[scene->unkIndex + index + 0xAE].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + index + 0xAE].obj->field_0x5C = colour << 16;
+    } else {
+        lbl_80371C30[scene->unkIndex + index + 0xB2].obj->flags &= ~2;
+        if (lbl_2_bss_F468.cursor[index] != 9 && lbl_2_bss_F468.cursor[index] != 10) {
+            lbl_80371C30[scene->unkIndex + index + 0xAE].obj->flags |= 2;
+            lbl_80371C30[scene->unkIndex + index + 0xAE].obj->field_0x5C = 0;
+        }
+    }
+    lbl_80371C30[scene->unkIndex + index + 0xAC].obj->flags |= 2;
+    if (charID >= 0 && charID < 54) {
+        stats = &lbl_8034E9A0.stats[charID / 9][charID % 9];
+        rating[0] = stats->pitchingDisplay;
+        rating[1] = stats->runningDisplay;
+        rating[2] = stats->battingDisplay;
+        rating[3] = stats->fieldingDisplay;
+        lbl_80371C30[scene->unkIndex + index + 0xB0].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + index + 0xB0].obj->field_0x5C = charID << 16;
+        lbl_80371C30[scene->unkIndex + index + 0xAC].obj->field_0x5C = 0;
+        lbl_80371C30[scene->unkIndex + index + 0xAC].obj->field_0x68 = 1;
+    } else {
+        lbl_80371C30[scene->unkIndex + index + 0xB0].obj->flags &= ~2;
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->flags &= ~2;
+        return;
+    }
+bars:
+    pane[0] = 0x9C; pane[1] = 0x9E; pane[2] = 0x9B; pane[3] = 0x9D;
+    for (i = 0; i < 4; i++) {
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x5C = 0;
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x68 = 1;
+        lbl_80371C30[scene->unkIndex + index * 4 + pane[i]].obj->field_0x5C = (rating[i] - 1) << 16;
+        texture = fn_80036214(scene, 0xAB, 0, (rating[i] + 1) / 2 - 1);
+        lbl_80371C30[scene->unkIndex + index * 4 + pane[i] + 8].obj->field_0x5C = (rating[i] - 1) << 16;
+        lbl_80371C30[scene->unkIndex + index * 4 + pane[i] + 8].obj->field_0x58 = texture;
+    }
+    if (lbl_803CBBCC->selection == 9 || lbl_803C66B0.flags5D[index] == 0xB)
+        lbl_80371C30[scene->unkIndex + index + 0xAE].obj->flags &= ~2;
 }
 
 // .text:0x00075B58 size:0x8C

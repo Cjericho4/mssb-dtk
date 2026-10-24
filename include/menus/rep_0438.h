@@ -12,7 +12,11 @@ typedef struct MenusPlayerInput {
 /* Menus view of one Static_Stats_Tables row (0xA0 bytes, = game/UnknownHomes_Game.h's CharacterStats with the
    chemistry row as an array). */
 typedef struct MenusCharacterStats {
-    u8 _pad0[0x3B];      /* 0x00 StatTable (game/UnknownHomes_Game.h) */
+    u8 _pad0[0x37];
+    u8 battingDisplay; /* 0x37 menu ratings, 1..10 */
+    u8 pitchingDisplay; /* 0x38 */
+    u8 runningDisplay; /* 0x39 */
+    u8 fieldingDisplay; /* 0x3A */      /* 0x00 StatTable (game/UnknownHomes_Game.h) */
     u8 chemistry[54];    /* 0x3B per-charID chemistry with this character */
     u8 _pad71[0x2F];
 } MenusCharacterStats;

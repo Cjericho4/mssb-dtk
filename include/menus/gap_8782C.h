@@ -30,7 +30,8 @@ typedef struct MenusRosterState {
     u8 characterFlags[54]; /* 0x00 roster transition scans for any set character flag */
     u8 _pad36[0xAE];
     u8 options[4];
-    u8 _padE8[0xD];
+    u8 _padE8[0xC];
+    u8 challengeCaptainPage; /* 0xF4 six captain entries per page */
     u8 unkF5;
     u8 mode;
 } MenusRosterState;
