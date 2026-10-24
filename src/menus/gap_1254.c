@@ -1,6 +1,7 @@
 #include "menus/gap_1254.h"
 #include "string.h"
 #include "musyx/musyx.h"
+#include "Dolphin/pad.h"
 #include "game/gap_B3B70.h"
 #include "game/rep_3448.h"
 #include "menus/gap_0.h"
@@ -13,7 +14,7 @@
 
 /* DOL functions and data owned by Unknown/gap_8*.h.  Those headers can't be included here yet: each
  * declares its own struct view of shared globals (lbl_803297E0, lbl_80361B20, ...), which clash.
- * Keep these prototypes identical to the owning header until the views are merged. */
+ * Declarations agree with the owning headers except the two conflicts documented below. */
 extern s16 lbl_80108EDC[][5];                                    /* gap_80067AC8.h */
 extern s16 fn_80067AC8(s16 key, s8 column);                      /* gap_80067AC8.h */
 extern u8 fn_80067B40(u8 side, u8 id, s32 enabled);              /* header says (s32, s16, u8); its body is unmatched, settle the types when it matches */
@@ -21,7 +22,9 @@ extern s32 randRange(s32 low, s32 high);                         /* gap_80041348
 extern void sndFXRelated(s32 id);                                /* gap_80041348.h */
 extern void fn_8004EEF4(s32 a, s32 b, s32 c, s32 d, s32 enabled); /* gap_8004CA48.h */
 extern void fn_80050138(s32 arg0, s32 pick0, s32 pick1, s32 pick2, s32 pick3, s32 arg5); /* gap_8004CA48.h */
-extern void fn_800506E8(s32 controller, s32 id, s32 enabled);    /* gap_800506E8.h */
+/* FAKEMATCH: keep the first parameter s32 to avoid caller-side extsb; the owning header/body
+ * uses (s8, s32, BOOL). Narrowing it loses matches in fn_2_4970/7DDC/C698/DFAC. */
+extern void fn_800506E8(s32 controller, s32 id, s32 enabled);
 extern void fn_80050FE8(u8 pad0, u8 pad1, u8 pad2, u8 pad3, s32 arg4, s32 arg5); /* gap_800506E8.h */
 extern void fn_800625A4(s32 index, s32 command);                 /* gap_80062578.h */
 extern u32 fn_800628D4(s32 charID);                              /* gap_80062578.h */
@@ -29,7 +32,7 @@ extern void fn_80066EAC(s32 side);                               /* gap_80064754
 extern void fn_800AD038(s32 start);                               /* gap_800A97D0.h */
 
 extern u8 lbl_2_bss_100B4;
-extern u8 lbl_2_bss_3A8[54]; /* per-charID handedness byte (challenge save): bit 0 stance, bits 1.. arm */
+extern u8 lbl_2_bss_3A8[NUM_CHOOSABLE_CHARACTERS]; /* per-charID handedness byte (challenge save): bit 0 stance, bits 1.. arm */
 extern u32 lbl_803CB750;
 
 // .text:0x00001254 size:0x4
@@ -42,24 +45,28 @@ void fn_2_1258(void) {
     return;
 }
 
+/* Add to a signed counter, capping at 0x7FFF (no lower-bound clamp). */
 // .text:0x000012A0 size:0x2C
 void satAddS16(s16* value, s16 amount) {
     if (*value < 0x7FFF - amount) *value += amount;
     else *value = 0x7FFF;
 }
 
+/* Add to an unsigned byte counter, capping at 0xFF. */
 // .text:0x000012CC size:0x2C
 void satAddU8(u8* value, u16 amount) {
     if (*value + amount > 0xFF) *value = 0xFF;
     else *value += amount;
 }
 
+/* Add to an unsigned halfword counter, capping at 0xFFFF. */
 // .text:0x000012F8 size:0x30
 void satAddU16(u16* value, u16 amount) {
     if (*value + amount > 0xFFFF) *value = 0xFFFF;
     else *value += amount;
 }
 
+/* Add in unsigned arithmetic, then cap the result at the signed 32-bit maximum. */
 // .text:0x00001328 size:0x2C
 void satAddS32(u32* value, u16 amount) {
     u32 result = *value + amount;
@@ -67,6 +74,7 @@ void satAddS32(u32* value, u16 amount) {
     else *value = result;
 }
 
+/* Sort menu entries by value, ascending or descending as requested. */
 // .text:0x00001354 size:0x108
 void fn_2_1354(MenusSortEntry* entries, s32 count, s32 descending) {
     u32 i;
@@ -102,6 +110,7 @@ void fn_2_145C(void) {
     return;
 }
 
+/* Measure encoded menu text in pixels, using 11- or 22-pixel glyph widths. */
 // .text:0x0000148C size:0x6C
 s32 fn_2_148C(u16* text) {
     s32 width = 0;
@@ -128,6 +137,7 @@ s32 fn_2_14F8(s32 first, s32 second) {
     return first;
 }
 
+/* Advance and return the menu random-number generator state. */
 // .text:0x00001554 size:0x24
 u32 fn_2_1554(void) {
     return lbl_803CB750 = lbl_803CB750 * 0x5D588B65 + 1;
@@ -143,6 +153,7 @@ void fn_2_1800(void) {
     return;
 }
 
+/* Build the controller list with controller 0 first, padding disconnected slots with -1. */
 // .text:0x00001A88 size:0x124
 void fn_2_1A88(void) {
     s32 i;
@@ -156,6 +167,7 @@ void fn_2_1A88(void) {
     while (count < 4) lbl_8034E9A0.controllerIndices[count++] = -1;
 }
 
+/* Clear the character-select scene and transition state. */
 // .text:0x00001BAC size:0x88
 void fn_2_1BAC(void) {
     memset(lbl_803C66B0.resetData, 0, sizeof(lbl_803C66B0.resetData));
@@ -171,26 +183,27 @@ void fn_2_1BAC(void) {
 // .text:0x00001C34 size:0xF4
 void fn_2_1C34(u16 buttons) {
     switch (buttons) {
-    case 0x100:
+    case PAD_BUTTON_A:
         sndFXStartEx(0x1B8, lbl_800EFBA4.confirmVolume, 0x3F, 0);
         break;
-    case 0x200:
+    case PAD_BUTTON_B:
         sndFXStartEx(0x1B9, lbl_800EFBA4.alertVolume, 0x3F, 0);
         break;
-    case 1:
-    case 2:
-    case 4:
-    case 8:
+    case PAD_BUTTON_LEFT:
+    case PAD_BUTTON_RIGHT:
+    case PAD_BUTTON_DOWN:
+    case PAD_BUTTON_UP:
         sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
         break;
-    case 3: break;
-    case 0x20: break;
-    case 0x40: break;
-    case 0x400: break;
-    case 0x800: break;
+    case (PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT): break;
+    case PAD_TRIGGER_R: break;
+    case PAD_TRIGGER_L: break;
+    case PAD_BUTTON_X: break;
+    case PAD_BUTTON_Y: break;
     }
 }
 
+/* Initialize the roster screen flags and hovered-character sentinel. */
 // .text:0x00001D28 size:0x2C
 void fn_2_1D28(void) {
     lbl_8034E9A0.unk472A = 0xFF;
@@ -200,13 +213,14 @@ void fn_2_1D28(void) {
     lbl_8034E9A0.unk48B3 = 0;
 }
 
+/* Move a menu value up or down with wraparound in the range [0, count). */
 // .text:0x00001D54 size:0x70
 void fn_2_1D54(s32* value, u8 index, s32 count) {
     u16 buttons = lbl_8034E9A0.input[index].buttons;
-    if (buttons & 8) {
+    if (buttons & PAD_BUTTON_UP) {
         --*value;
         if (*value < 0) *value = count - 1;
-    } else if (buttons & 4) {
+    } else if (buttons & PAD_BUTTON_DOWN) {
         ++*value;
         if (*value == count) *value = 0;
     }
@@ -251,7 +265,7 @@ void fn_2_2D1C(void) {
  * unique gets its charsOnCharacterGridSelected flag (lbl_8034E9A0 + 0x4757) set, so the colour walk
  * treats it as taken; unlocked ones get it cleared (0 after the memset anyway).
  *
- * Must stay a separate static inline: inlining puts the helper's i/j/locked webs ahead of the
+ * FAKEMATCH: must stay a separate static inline: inlining puts the helper's i/j/locked webs ahead of the
  * strength-reduced walkers (i=r7, j=r6, lk=r4, walkers r9..r12), and the compiler then promotes
  * the hoisted lbl_803CB748[i] load to r8 with a write-back store (stb r8,0(r12)) after the inner
  * loop.  Written inline in fn_2_2FC0 the same code colours the walkers first (r6..r9) and never
@@ -263,7 +277,7 @@ static inline void markLockedCharsTaken(void) {
     s32 locked;
     for (i = 0; i < 6; i++) {
         locked = !g_d_GameSettings.charUnlocked[i];
-        for (j = 0; j < 54; j++) {
+        for (j = 0; j < NUM_CHOOSABLE_CHARACTERS; j++) {
             if (lbl_803CB748[i] == lbl_800E8558[j].uniqueIdx) lbl_8034E9A0.charTaken[j] = locked;
         }
     }
@@ -320,6 +334,7 @@ void fn_2_2FC0(u8 mode, s32 finish, s32 rebuild) {
     }
 }
 
+/* Rebuild character-select state for the current menu mode. */
 // .text:0x00003204 size:0x38
 void fn_2_3204(void) {
     fn_2_2FC0(lbl_803297E0.mode, 1, 1);
@@ -330,6 +345,7 @@ void fn_2_323C(void) {
     return;
 }
 
+/* Report whether the first challenge lineup order differs from all remaining entries. */
 // .text:0x000033BC size:0xD0
 s32 fn_2_33BC(void) {
     s32 result = 1;
@@ -350,7 +366,7 @@ s32 fn_2_33BC(void) {
  * excluded from the colour walk exactly like an already-picked one.  No `bl` to it exists in
  * menus.rel; fn_2_2FC0 uses the inlined helper instead.
  *
- * Match notes: as a standalone function the plain nested loop colours uq r6, walkers r7..r10,
+ * FAKEMATCH: as a standalone function the plain nested loop colours uq r6, walkers r7..r10,
  * i r11, locked r12; `locked = (x == 0)` keeps locked in its own register (the `!x` form of the
  * inlined helper would coalesce it into the load temp).
  */
@@ -361,7 +377,7 @@ void fn_2_348C(void) {
     s32 locked;
     for (i = 0; i < 6; i++) {
         locked = (g_d_GameSettings.charUnlocked[i] == 0);
-        for (j = 0; j < 54; j++) {
+        for (j = 0; j < NUM_CHOOSABLE_CHARACTERS; j++) {
             if (lbl_803CB748[i] == lbl_800E8558[j].uniqueIdx) lbl_8034E9A0.charTaken[j] = locked;
         }
     }
@@ -445,7 +461,7 @@ s32 fn_2_35D0(u8 index) {
  * the L-colour unk50 flag to update the charID-keyed mini image (common sequence0x83).
  * This input handler does not load portrait/name textures. Sound IDs 0x1B7..0x1BF use lbl_800EFBA4's menu volumes.
  *
- * Match-sensitive details: side is s32 and declared last; slot follows the swap temporaries.
+ * FAKEMATCH: side is s32 and declared last; slot follows the swap temporaries.
  * The challenge copies chain their two destinations to preserve the original load/store order.
  */
 // .text:0x00003624 size:0x134C
@@ -474,7 +490,7 @@ void fn_2_3624(u8 pad) {
     in.unk2 = lbl_8034E9A0.input[pad].unk2;
     in.buttons = lbl_8034E9A0.input[pad].buttons;
 
-    if (in.buttons & 8) {
+    if (in.buttons & PAD_BUTTON_UP) {
         if (lbl_2_bss_F468.flags45[side] != 0) return;
         if (lbl_2_bss_F468.cursor[side] == 9) {
             lbl_2_bss_F468.cursor[side] = 2;
@@ -512,7 +528,7 @@ void fn_2_3624(u8 pad) {
         sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
         return;
     }
-    if (in.buttons & 4) {
+    if (in.buttons & PAD_BUTTON_DOWN) {
         if (lbl_2_bss_F468.flags45[side] != 0) return;
         if (lbl_2_bss_F468.cursor[side] == 9) {
             lbl_2_bss_F468.cursor[side] = 8;
@@ -539,7 +555,7 @@ void fn_2_3624(u8 pad) {
         sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
         return;
     }
-    if (in.buttons & 1) {
+    if (in.buttons & PAD_BUTTON_LEFT) {
         if (lbl_2_bss_F468.flags45[side] != 0) {
             if (lbl_2_bss_F468.unk47[side] != 1) return;
             lbl_2_bss_F468.unk47[side] = 0;
@@ -574,7 +590,7 @@ void fn_2_3624(u8 pad) {
         sndFXStartEx(0x1B7, lbl_800EFBA4.menuVolume, 0x3F, 0);
         return;
     }
-    if (in.buttons & 2) {
+    if (in.buttons & PAD_BUTTON_RIGHT) {
         if (lbl_2_bss_F468.flags45[side] != 0) {
             if (lbl_2_bss_F468.unk47[side] != 0) return;
             lbl_2_bss_F468.unk47[side] = 1;
@@ -776,6 +792,7 @@ void fn_2_3624(u8 pad) {
     }
 }
 
+/* Release a roster slot and its grid badge, preserving a colour family still on the team. */
 static inline void releaseSlot(u8 side, s32 slot) {
     u8 found = 0;
     s8 family = 0;
@@ -836,7 +853,7 @@ static inline void releaseSlot(u8 side, s32 slot) {
  *   unk4A[side][slot] = 0.  Finally flags37[side] = 0 and fn_800625A4(side, 0x10) (DOL, stub:
  *   per-side UI command 0x10, "pick undone").
  *
- * Match notes: `state` (cursor) and `c` (slot character, s8) must be named locals in that order
+ * FAKEMATCH: `state` (cursor) and `c` (slot character, s8) must be named locals in that order
  * (r7/r8); `found` is declared before `family` (r25/r24); the pending branch's `flags3D[side] = 0`
  * is written between the selectionFlags and teams stores: the scheduler hoists the stbx over it,
  * and any other placement changes the tail's register colouring.
@@ -896,7 +913,7 @@ void fn_2_4970(u8 side, s32 captainID) {
                     lbl_8034E9A0.charTaken[lbl_803C6724.teams[side][slot]] = 0;
                 }
                 lbl_803C6724.selectionFlags[side][slot] = 0;
-                lbl_803C6724.teams[side][slot] = -1;
+                lbl_803C6724.teams[side][slot] = CHAR_ID_NONE;
                 lbl_803C6724.unk4A[side][slot] = 0;
             }
         } else {
@@ -933,7 +950,7 @@ void fn_2_4970(u8 side, s32 captainID) {
             }
             lbl_803C6724.selectionFlags[side][slot] = 0;
             lbl_2_bss_F468.flags3D[side] = 0;
-            lbl_803C6724.teams[side][slot] = -1;
+            lbl_803C6724.teams[side][slot] = CHAR_ID_NONE;
             lbl_803C6724.unk4A[side][slot] = 0;
         }
         lbl_2_bss_F468.flags37[side] = 0;
@@ -1013,8 +1030,8 @@ void fn_2_5444(u8 side) {
 }
 
 // .text:0x000057E8 size:0x8
-s32 fn_2_57E8(s32 arg0, s32 arg1) {
-    return (s8)arg1;
+s32 fn_2_57E8(s32 unused, s32 value) {
+    return (s8)value;
 }
 
 // .text:0x000057F0 size:0x790
@@ -1022,6 +1039,7 @@ void fn_2_57F0(void) {
     return;
 }
 
+/* Restore both selected teams from the saved batting-order links and in-memory rosters. */
 // .text:0x00005F80 size:0x118
 void fn_2_5F80(void) {
     s32 team;
@@ -1039,12 +1057,14 @@ void fn_2_5F80(void) {
     }
 }
 
+/* Move the side to Ready and request its ready animation. */
 // .text:0x00006098 size:0x3C
 void fn_2_6098(u8 index) {
     lbl_2_bss_F468.states[index] = 9;
     fn_800625A4(index, 0x17);
 }
 
+/* Return the selected captain charID for a side. */
 // .text:0x000060D4 size:0x64
 s32 fn_2_60D4(u8 index) {
     if (g_d_GameSettings.GameModeSelected != 5) return lbl_8034E9A0.players[index];
@@ -1052,6 +1072,7 @@ s32 fn_2_60D4(u8 index) {
     return lbl_8034E9A0.players[index];
 }
 
+/* Start the roster transition for both sides and advance to menu state 8. */
 // .text:0x00006138 size:0x68
 void fn_2_6138(void) {
     fn_800625A4(0, 0x13);
@@ -1102,6 +1123,7 @@ void fn_2_7504(void) {
     return;
 }
 
+/* Initialize the four controller selection entries, clearing state when returning from menu 9. */
 // .text:0x00007D44 size:0x98
 void fn_2_7D44(void) {
     if (lbl_803CBBCC->previousSelection == 9) {
@@ -1123,7 +1145,7 @@ void fn_2_7D44(void) {
 static inline void markChallengeRecruits(void) {
     s32 i;
     s32 base;
-    for (i = 0; i < 54; i++) {
+    for (i = 0; i < NUM_CHOOSABLE_CHARACTERS; i++) {
         if (starMissionCompletionTracker.missions[i]._31 == 1) {
             lbl_8034E9A0.charTaken[i] = 0;
             fn_800506E8(0, i, 0);
@@ -1169,7 +1191,7 @@ static inline void markChallengeRecruits(void) {
  * Nothing here picks portraits or name banners: the grid is keyed by base charID (lbl_800FDE84
  * cells, fn_800506E8 badges by lbl_800E8558[c].baseCharID) and the taken flags by charID.
  *
- * Match notes: the 54-charID recruit loop must be a static inline (its i/base webs then precede the
+ * FAKEMATCH: the 54-charID recruit loop must be a static inline (its i/base webs then precede the
  * strength-reduced walkers: i r23, walkers r24/r25).  The other three loops are plain code and share
  * ONE variable `i` (team-0 slots, the outer side loop, and the final side loop: r24, r24, r27) with
  * `k` for the inner slot loop (r23); declaring k before i or giving the final loop its own variable
@@ -1241,7 +1263,7 @@ void fn_2_7DDC(void) {
         markLockedCharsTaken();
         for (i = 0; i < 2; i++) {
             for (k = 0; k < 9; k++) {
-                if (lbl_803C6724.teams[i][k] == -1) continue;
+                if (lbl_803C6724.teams[i][k] == CHAR_ID_NONE) continue;
                 lbl_8034E9A0.charTaken[lbl_803C6724.teams[i][k]] = 1;
                 if (g_d_GameSettings._10 == 0 && i != 0) {
                     if (lbl_8034E9A0.controllerIndices[0] == 0) fn_800506E8(1, lbl_803C6724.teams[i][k], 1);
@@ -1291,6 +1313,7 @@ void fn_2_86EC(void) {
     return;
 }
 
+/* Return the roster cursor limit for the selected mode. */
 // .text:0x00008780 size:0x14
 s32 fn_2_8780(s32 mode) {
     s32 result = 9;
@@ -1298,6 +1321,7 @@ s32 fn_2_8780(s32 mode) {
     return result;
 }
 
+/* Map a roster index to the alternate page by adding ten when requested. */
 // .text:0x00008794 size:0x14
 s32 fn_2_8794(s32 mode, s32 index) {
     if (mode != 0) index += 10;
@@ -1404,6 +1428,7 @@ restart:
     return result;
 }
 
+/* Cycle a roster slot through its colour family while avoiding characters already selected. */
 // .text:0x0000A040 size:0x160
 void fn_2_A040(s32 group, s32 choice, u8 team, u8 slot) {
     s32 i,j;
@@ -1429,6 +1454,7 @@ void fn_2_A288(void) {
     return;
 }
 
+/* Report whether the two selected teams share a charID. */
 // .text:0x0000A50C size:0x120
 BOOL fn_2_A50C(void) {
     s32 i;
@@ -1442,6 +1468,7 @@ BOOL fn_2_A50C(void) {
     return FALSE;
 }
 
+/* Report whether the selected teams share a charID other than 255. */
 // .text:0x0000A62C size:0xB4
 BOOL fn_2_A62C(void) {
     s32 i, j;
@@ -1494,6 +1521,7 @@ void fn_2_BF90(void) {
     return;
 }
 
+/* Find a colour family with another variant on team 0, or return -1. */
 // .text:0x0000C324 size:0x160
 s8 fn_2_C324(s32 character) {
     s32 found=-1;
@@ -1535,6 +1563,7 @@ void fn_2_CA60(void) {
     return;
 }
 
+/* Open the roster screen and run its follow-up initialization. */
 // .text:0x0000CCBC size:0x24
 void fn_2_CCBC(void) {
     fn_2_7DDC();
@@ -1573,7 +1602,7 @@ static inline void clearSideTeam(u8 side) {
                     lbl_8034E9A0.charTaken[lbl_803C6724.teams[side][k]] = 0;
                     fn_800506E8(lbl_8034E9A0.controllerIndices[side], lbl_803C6724.teams[side][k], 0);
                     fn_80067B40(side, lbl_803C6724.teams[side][k], 0);
-                    lbl_803C6724.teams[side][k] = -1;
+                    lbl_803C6724.teams[side][k] = CHAR_ID_NONE;
                     lbl_803C6724.unk4A[side][k] = 0;
                     lbl_803C6724.selectionFlags[side][k] = 0;
                 }
@@ -1636,7 +1665,7 @@ static inline void clearSideTeam(u8 side) {
  * sets: menus fn_2_81628 dispatches command0xF to fn_2_7F8BC, which sets the mini image
  * charID frame and calls fn_2_74F40 for the charID-keyed name. See character_select.md section8.
  *
- * Match notes: the parameter is an int (its unmasked uses: cursor[side], teams[side], flags41[side]);
+ * FAKEMATCH: the parameter is an int (its unmasked uses: cursor[side], teams[side], flags41[side]);
  * sideCaptain() and clearSideTeam() take u8 (every use inside them is clrlwi'd), as does
  * markSlotTaken(); `slot` is s8 (extsb before each use, clrlwi for markSlotTaken's u8 index);
  * `state` is the cursor cast to s8 and the slot search breaks on the first match with `state ==
@@ -1722,11 +1751,11 @@ void fn_2_DFAC(s32 side) {
         for (k = 0; k < 9; k++) {
             if (lbl_803C6724.teams[side][k] != CHAR_ID_NONE && lbl_803C6724.teams[side][k] != NUM_CHOOSABLE_CHARACTERS && lbl_803C6724.teams[side][k] != captain) count++;
         }
-        for (i = 0; i < 54; i++) {
+        for (i = 0; i < NUM_CHOOSABLE_CHARACTERS; i++) {
             if (lbl_8034E9A0.charTaken[i] == 0) free++;
         }
         if (free <= 8 - (s8)count) {
-            if (lbl_803C6724.teams[side][slot] != -1 && lbl_803C6724.teams[side][slot] != NUM_CHOOSABLE_CHARACTERS) {
+            if (lbl_803C6724.teams[side][slot] != CHAR_ID_NONE && lbl_803C6724.teams[side][slot] != NUM_CHOOSABLE_CHARACTERS) {
                 sndFXStartEx(0x1BA, lbl_800EFBA4.unk3, 0x3F, 0);
                 return;
             }
@@ -1782,6 +1811,7 @@ void fn_2_EC34(void) {
     if (lbl_2_bss_F468.unk56 == 0) lbl_2_bss_F468.unk56 = 1;
 }
 
+/* Clear selection flags and leave the roster screen outside challenge mode. */
 // .text:0x0000EC54 size:0x140
 void fn_2_EC54(s32 side) {
     s32 i;
@@ -1832,7 +1862,7 @@ void fn_2_102C8(u8 side) {
     s32 i;
     s32 empty = 0;
     for (i = 0; i < 9; i++) {
-        if (lbl_803C6724.teams[side][i] == -1 || lbl_803C6724.teams[side][i] == 54) empty++;
+        if (lbl_803C6724.teams[side][i] == CHAR_ID_NONE || lbl_803C6724.teams[side][i] == NUM_CHOOSABLE_CHARACTERS) empty++;
     }
     other = side ^ 1;
     if (lbl_2_bss_F468.flags41[other] != 0) {
@@ -1876,6 +1906,7 @@ void fn_2_110B0(void) {
     return;
 }
 
+/* Set a scene object value when its current frame matches the requested ID. */
 // .text:0x000112F4 size:0x4C
 BOOL fn_2_112F4(DrawingSceneStruct* scene, s32 offset, s32 index, u16* ids, u16 value) {
     Struct_80371C30_Inner* obj = lbl_80371C30[scene->unkIndex + offset].obj;
@@ -1901,6 +1932,7 @@ void fn_2_11EA8(void) {
     return;
 }
 
+/* Reset character-select input state and start the next scene transition. */
 // .text:0x000120D0 size:0x9C
 void fn_2_120D0(void) {
     lbl_8034E9A0.unk48AD = 1;
@@ -1917,6 +1949,7 @@ void fn_2_120D0(void) {
     g_d_GameSettings._10 = 0;
 }
 
+/* Assign controller roles for one- or two-controller roster selection. */
 // .text:0x0001216C size:0xCC
 void fn_2_1216C(void) {
     s8 modes[4];

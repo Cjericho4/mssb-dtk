@@ -151,12 +151,15 @@ like `SatAddS16`).
 Scope: `src/menus/gap_1254.c`, `src/Unknown/gap_8001196C.c` and the stubs their externs point at.
 Match count 3967 before and after; no function's fuzzy score dropped.
 - **Prototypes:** stubs `randRange`, `sndFXRelated`, `fn_80066EAC`, `fn_80050FE8`, `fn_8004EEF4`,
-  `fn_80050138`, `fn_800625A4` now carry the real signature in header and definition (were `(void)`).
+  `fn_80050138`, `fn_800625A4` now carry caller-compatible signatures in header and definition (were `(void)`).
+  These remain provisional C types until the bodies are decompiled: for example, the target masks
+  `sndFXRelated`'s input to 16 bits and `fn_80066EAC`'s side to 8 bits; an `s32` caller declaration
+  alone does not prove the original parameter width.
   `randRange_FUN_80042bf0` renamed `randRange` (symbols.txt too).
 - **Rule 6 is blocked by duplicate struct views.** Every `Unknown/gap_8*.h` that `gap_1254.c` needs
   fails to include there: each declares its own type for a shared global (`lbl_803297E0`,
   `lbl_80361B20`, `lbl_803C66B0`, `fn_80034CEC`'s argument, ...). So `gap_1254.c` keeps one grouped,
-  commented block of externs that agree with the owning headers. Merging the views is its own issue.
+  commented block of externs; the two disagreements are listed below. Merging the views is its own issue.
 - **Two prototypes cannot agree yet:** `fn_800506E8`'s matched body needs `(s8, s32, BOOL)` but its
   callers in `gap_1254.c` only match with `s32` (4 functions unmatch otherwise; marked FAKEMATCH).
   `fn_80067B40` (unmatched) has a different signature in its header than at its callers.
@@ -167,7 +170,8 @@ Match count 3967 before and after; no function's fuzzy score dropped.
   no match changed, and the helpers now inline, taking `fn_80012B90` from 26% to 88% and
   `fn_80013680` from 32% to 81%. Lesson: test a pragma by deleting it.
 - **Repeated `obj->buf` casts are load-bearing** in `finishSubItemLoad`: using the `root` local makes
-  `fn_80012B90` 140 diff lines worse. Kept and marked FAKEMATCH.
+  `fn_80012B90` worse. Review reproduced 330 → 437 feedback lines by replacing only the repeated
+  named-field casts with `root->`; the earlier 140-line figure did not reproduce. Kept and marked FAKEMATCH.
 - `STATIC_ASSERT` added to `mssbTypes.h`, first use on `MenusTeamSelections` (0x5C).
 
 ## 5. Python modding-tool guidelines (tools/modding, tools/datamap)

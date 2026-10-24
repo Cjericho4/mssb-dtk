@@ -133,7 +133,7 @@ void fn_2_4970(u8 side, s32 captainID);
 void fn_2_5184(void);
 void fn_2_52CC(void);
 void fn_2_5444(u8 side);
-s32 fn_2_57E8(s32 arg0, s32 arg1);
+s32 fn_2_57E8(s32 unused, s32 value);
 void fn_2_57F0(void);
 void fn_2_5F80(void);
 void fn_2_6098(u8 index);

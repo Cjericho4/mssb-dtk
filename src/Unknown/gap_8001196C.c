@@ -44,7 +44,7 @@ static inline void startSubItemLoad(Gap8001196CSubItemEntry* entry, Gap8001196CS
     fn_80021CA4(entry->charID, itemSlot, obj->buf);
 }
 
-/* Once the load queue is idle (lbl_803716B8.unk1E8 == 0): relocate the 4 root-header words of the
+/* Once the load queue is idle (lbl_803716B8.loadBusy == 0): relocate the 4 root-header words of the
  * sub-item file, build its actor (layout/geo from the words picked by lbl_803CB7C4[0]/[1]) in
  * g_hugeAnimStruct.subItemActorEntries[obj->index0], bind the body's texture archive, hook the
  * optional extra block (word [2]) and the skin part (word [3]).  Returns TRUE when done. */
@@ -62,7 +62,7 @@ static inline BOOL finishSubItemLoad(void) {
     obj = g_subItemLoadObj;
     g_subItemLoadBusy = 0;
     root = (Gap8001196CRootHeader*)obj->buf;
-    /* FAKEMATCH: the relocations below re-read obj->buf instead of using root; using root is 140 diff lines worse */
+    /* FAKEMATCH: re-read obj->buf for each relocation to preserve load scheduling after inlining. */
     if (((Gap8001196CRootHeader*)obj->buf)->texture != 0) {
         ((Gap8001196CRootHeader*)obj->buf)->texture += (u32)root;
     }
@@ -904,6 +904,7 @@ BOOL fn_80016B60(Gap8001196CAnim* anim) {
     return FALSE;
 }
 
+/* Load animation banks for four slots; in mode 6, share their tables with slots 4 through 7. */
 // .text:0x80016F7C size:0x11C
 BOOL fn_80016F7C(void) {
     Gap8001196CAnim* src;
@@ -1029,8 +1030,9 @@ s32 fn_80017340(s32 slot) {
     return;
 }
 
+/* Stream the character body and populate the slot record, advancing the caller's load state. */
 // .text:0x8001758C size:0x228
-BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 arg6, u8 slotKind, u8 variant) {
+BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 unk258, u8 slotKind, u8 variant) {
     Gap8001196CAnim* anim = &g_hugeAnimStruct.slots[slot];
     s32 track;
     Gap8001196CRosterEntry* entry;
@@ -1043,7 +1045,7 @@ BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 arg6, u8
             anim->player = player;
             anim->slotKind = slotKind;
             anim->charID = charID;
-            anim->unk258 = arg6;
+            anim->unk258 = unk258;
             anim->variant = variant;
             track = anim->charID * SUBFILE_TRACKS;
             entry = &inMemRoster[team][player];

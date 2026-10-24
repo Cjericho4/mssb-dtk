@@ -279,7 +279,7 @@ u8* fn_8002204C(s32 charID, u8* buf);
 void* ARAMTransfer(Gap8001196CDiskDesc* desc, void* dest, u8 loadInfo, void* aramAddress);
 void* memcpy(void* dest, const void* src, u32 n);
 BOOL fn_80016B60(Gap8001196CAnim* anim);
-BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 arg6, u8 slotKind, u8 variant);
+BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 unk258, u8 slotKind, u8 variant);
 void fn_800177B4(void);
 void fn_80017814(Gap8001196CAnim* anim, s32 index, s32 slotKind, void (*callback)(struct Gap8001E460Object*));
 struct Gap8001196CTexArchive;
