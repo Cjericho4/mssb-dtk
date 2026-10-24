@@ -93,14 +93,14 @@ byte-exact C arrays at the top of `src/Unknown/gap_8001E460.c`
 | Table | RAM (DOL off) | Shape | Meaning |
 |---|---|---|---|
 | `lbl_800EFBE8` | 0x800EFBE8 | 21 × 16 B | misc disc-file descriptors (anchor of the unit's `.data`) |
-| `lbl_800EFD38` + `lbl_800F1D68` | 0x800EFD38 (0xECD38) | 516 × 16 B | **master descriptors** `{flags, 0x40000000\|size, offset, compSize}`; tiers from `lbl_803CB7E0` = {54, 378, 54, 29}: 0..53 bodies, `54 + charID*7 + k` sub-items, `432 + charID` skeletons, `486 + id` stadium objects |
-| `lbl_800F1D78` | 0x800F1D78 (0xEED78) | 54 × 19 × 16 B | **per-character disc subfiles**, index `charID*19 + track`: tracks 0/1 = the two model `.gpc` files (body vs equipment assignment inferred, not verified), 2..14 anim banks, **15 skeleton**, 16..18 more anim banks |
+| `lbl_800EFD38` + `lbl_800F1D68` | 0x800EFD38 (0xECD38) | 516 × 16 B | **master descriptors** `{flags, 0x40000000\|size, offset, compSize}`; offsets are relative to the 4.9 MB section-2 blob (entry 515 = `{0, 0x4D6600, disc 0x1A15E800, 0x4D6600}`, streamed to ARAM by `fn_800227E4`). Tiers from `lbl_803CB7E0` = {54, 378, 54, 29}: **0..53 is NOT charID-indexed**: 0..32 are the 33 base bodies, 33..53 are 21 texture overlays, mapped through `lbl_800F73B8`; `54 + charID*7 + k` sub-items, `432 + charID` skeletons, `486 + id` stadium objects |
+| `lbl_800F1D78` | 0x800F1D78 (0xEED78) | 54 × 19 × 16 B | **per-character disc subfiles**, index `charID*19 + track`: tracks 0/1 = the two body `.gpc` files (**verified:** track 0 = hi-detail body, byte-identical to the ARAM master body; track 1 = low-detail body, same 37 bones, `skinFileID` 1), 2..14 anim banks, **15 skeleton**, 16..18 more anim banks |
 | `lbl_800F5D98` | 0x800F5D98 | 54 × 6 × 16 B | disc files for sub-items (`charID*6 + itemSlot`) |
-| `lbl_800F73B8` | 0x800F73B8 (0xF43B8) | 54 × 2 s8 | **body-item pairs** `{masterIdx, subItem or -1}`, used when bodies are resident in ARAM (`lbl_803716B8.unk1EA & 1`) |
+| `lbl_800F73B8` | 0x800F73B8 (0xF43B8) | 54 × 2 s8 | **body/overlay pairs** `{bodyEntry, overlayEntry or -1}` (ARAM path, the normal in-game path). `fn_8002254C` decompresses `master[overlay]` straight over the body's texture archive (`block + root->texture`): the overlay is a same-size replacement `TextureArchiveHeader`. E.g. BlueToad 29 = `{13, 34}`, Paragoomba 41 = `{29, -1}` |
 | `lbl_800F7424` | 0x800F7424 | 2 × 6 × 2 | sub-item pair rows `{k1, k2}` |
 | `lbl_800F743C` | 0x800F743C | 54 | per-character sub-item row index |
 | `lbl_800EEAAC` | 0x800EEAAC (0xEBAAC) | 54 × u16 | glove/attachment bone-list base (= charID*6 in retail) |
-| `lbl_800EEB18` | 0x800EEB18 | 54 × u16 | model ID map (identity in retail; -1 = none) → stadium-object tier |
+| `lbl_800EEB18` | 0x800EEB18 | 54 × s16 | model ID map → stadium-object tier (**not** identity: variants map to their base's id, e.g. Toads → 13, Piantas → 19; -1 = none) |
 | `jumptable_800EEC40` | 0x800EEC40 | 48 entries | per-charID setup switch in `fn_80017814` |
 | `lbl_803CB790` | sdata | pointer | runtime pointer to the subfile table |
 
@@ -213,3 +213,38 @@ arrays in `gap_8001E460.c` reproduced the codegen exactly:
 5. **Doc cleanup (done in this commit):** `.agent/character_modding.md` said "Mario = 2 → fn_800638B4" (charID 2 is DK; Mario is 0) and that DecompressDiskData kept inline asm (it is now C).
 6. Dump the retail body-item pairs (`lbl_800F73B8`) and model map values into the notes. They're
    now readable directly from the C arrays.
+
+## 8. Pass 4 (2026-10-23): the patcher, and what it corrected
+
+`tools/modding/clone_character.py` (+ `test_clone.py`, `README_WINDOWS.md`) implements recipe 4a
+for Windows with the standard library only.  What this pass established:
+
+* **Open question 1 resolved.** Track 0 is the hi-detail body (== master body entry, 256×256
+  textures); track 1 the low-detail body (`skinFileID` 1).  Both are full models with the same 37-bone
+  layout and both get recoloured.
+* **The ARAM path is the in-game path.** `fn_800227E4` allocates a hard-coded 0x4D6600 B of ARAM
+  (`lis r3,0x4d / addi r3,r3,0x6600` @ 0x800227EC/F4), sets every tier's ARAM address to
+  `aramBase + master[i].offset`, streams master[515] disc→ARAM and the callback sets
+  `lbl_803716B8.unk1EA |= 0xF`.  Every `fn_80017098` caller passes `variant = 1`, i.e. bodies come from
+  ARAM via `lbl_800F73B8`.  Track 0 is only the pre-blob fallback.
+* **Retail variants are body + texture overlay.** Verified: `track0(BlueToad) == master[13]` with
+  `master[34]` written at `+0x20`; overlay length == `layoutOff − 0x20`; variant track files differ
+  from the base only inside the texture region.  So a clone on donor S is `pair[S] = {source body,
+  O}` where O is S's own overlay entry (or its body entry when no other slot uses it) repointed at a
+  recoloured copy of the source's archive.  The blob must grow for that; other data follows it on disc,
+  so the patcher moves the blob to the end of ZZZZ.dat and patches master[515] and the two
+  immediates (the only `.text` change, 8 bytes).
+* **Disc offsets** are file-relative offsets into ZZZZ.dat (`ARAMTransfer` → `DVDFastOpen(entry)` →
+  `DVDReadAsyncPrio(file, staging, min(comp,0x8000), desc->offset)`).  Reads always land in a staging
+  buffer that only the LZSS thread drains, so **files must stay compressed** (clearing bit 30 does not
+  work).  Appending to ZZZZ.dat is safe: nothing references the last 0x5C0 bytes and Dolphin rebuilds
+  the FST from the folder (`sys/fst.bin` is patched anyway).
+* **Selection UI:** there is no colour button.  `lbl_800E8558` (family/base/colour per slot) and
+  `lbl_80108EDC` (9 family lists) make the roster screen hand out the next free colour when a family's
+  base is picked several times.  Names/portraits/announcer stay the donor's (grid-index keyed, no
+  per-charID name table exists).  Stats: `ZZZZ.dat+0x06CF8800`, 54 × 0xA0 `CharacterStats`, loaded by
+  menus.rel at boot; game.rel `.data` (section 5) holds voice base 0x8168, BatterHitbox 0x6EF8, charge
+  frames 0x7690, runner timing 0x7870, 0x7E34, 0x17000, all charID-indexed; DOL `lbl_800FB798` is 15 ×
+  54 s16 animation parameters.
+* Pure-Python LZSS (11/4) round-trips every retail file tried and compresses Mario's body to 76992 B
+  (retail 77284 B).
