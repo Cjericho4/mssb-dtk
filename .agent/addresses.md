@@ -9,7 +9,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800E8AA8 | `lbl_800E8AA8` (0x440) = `rel` | 3 REL descriptors: 0 menus, 1 game, 2 challenge (LZSS, in aaaa.dat); followed by `boot` and `res` in the same symbol; read by fn_800097A0 | DM §4 |
 | 0x800E8AD8 | `boot` | 3 boot files: LZSS 14/5 model, stored binary, small CI4 texarc | DM §4 |
 | 0x800E8B08 | `res` | 62 common UI resource descriptors, resource id 0..61 (`res[n]` = 0x800E8B08 + n*0x10) | DM §4 |
-| 0x800E8B18 (res+0x10) | `res[1]` | HUD card file; in-game it is loaded by game.rel fn_3_5BD40 from its own copy into UI slot 0xC; charID c -> texture 30+c | CS §6 |
+| 0x800E8B18 (res+0x10) | `res[1]` | HUD card file; in-game loaded by game.rel fn_3_5BD40 from its own copy (lbl_3_data_6130+0x10) into UI slot 0xC (only fixed-offset loader found); charID c -> texture 30+c | CS §6 |
 | 0x800E8BF8 (res+0xF0) | `res[15]` | menu common file, boot-loaded into UI slot 1: names c<29?c:c+28, mini images 153+c; ZZZZ+0x1A9FE800 | CS §8.2 |
 | 0x800E8CD8 (res+0x1D0) | `res[29]` | select-grid portraits, charID c -> 4+c; ZZZZ+0x18AEE800 | CS §8.2 |
 | 0x800E8D58 (res+0x250) | `res[37]` | strips file, boot-loaded into UI slot 0 | DM §4 |
@@ -95,7 +95,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_800BD190 | bind textures to geo | (geo, tex) | CMR §1 |
 | convertTextureHeader (0x800C0770) / LoadGeoPalette (0x800BCB44) | texture / palette fixups | MATCH | CMR §2 |
 | DecompressDiskData (0x800A6654) | LZSS expansion | bit 30 of size word = compressed; 36 lines | CMR §2; DK §12 |
-| fn_80012B90 / fn_80013680 | bat/glove loaders | first decompile, 619 / 693 lines | CMR §2 |
+| fn_80012B90 / fn_80013680 | bat/glove loaders | first decompile, hundreds of lines | CMR §2 |
 | fn_800638B4, fn_80063010, fn_8004B7B4, fn_800637BC, fn_800637D4, fn_8004BD6C, fn_80052634, fn_80062ED4 | per-charID setup | cases 2 / 33..36 / 19 / 20,43 / 41 / 38,41 / 14,37 / 16,44..47 of jumptable_800EEC40 | CMR §1.1 |
 | fn_800B2B74 / fn_800B2B54 / fn_800B2BA8 / fn_800B2C08 / fn_800BD548 / fn_8001FC4C | fn_80017814 bone setup calls | ids 19/25/36, 3/2/1/46 | CMR §1.1 |
 | fn_8001500C, fn_8001594C, fn_80016344, fn_80016710, fn_80019C00, fn_8001A3FC | model-map readers | read lbl_800EEB18[charID] | CMR §3 |
@@ -213,7 +213,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_3_6BD6C | fielder driver | -> fn_8001594C(teamFielding) at half-inning changes | RF §5.1 |
 | fn_3_6BA64 | batter/runner driver | -> fn_8001500C per at-bat | RF §5.1 |
 | fn_3_6B870 | unload runners | fn_80011BE4 | RF §5.6 |
-| fn_3_6B4C8 / fn_3_6B5D8 | fn_80016344 callers | star cutscene / fn_3_5BD40 | RF §5.1 |
+| fn_3_6B4C8 / fn_3_6B5D8 | fn_80016344 callers | fn_3_6B4C8 (star cutscene) / fn_3_6B5D8 (called from fn_3_5BD40) | RF §5.1 |
 | fn_3_10C81C | fn_80016710 caller | minigames | RF §5.1 |
 | fn_3_5EC0 | stadium relocation | 16-word stadium root loader | DM §2 |
 | fn_3_64DC | stadium loader copy | stadium_game table | DM §4 |

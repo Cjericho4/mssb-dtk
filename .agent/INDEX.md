@@ -35,6 +35,6 @@ instead of searching prose. Each fact has one home (the "owns" column); other do
 
 ## Conventions
 - Bar for modding work: understood and documented; matching is not required.
-- Function status in docs: MATCH, "N lines" (`tools/feedback_diff.py` entries, `decomp_knowledge.md` §2), or "stub" (asm only). Re-run before quoting.
+- Function status in docs, where given: MATCH, "N lines" (`tools/feedback_diff.py` entries, `decomp_knowledge.md` §2), or "stub" (asm only). Re-run before quoting.
 - Commits: no Co-Authored-By or other trailer lines. Match count (`tools/find_matches.py`) must never drop.
 - User runs mods on Windows (Dolphin / Project Rio); tools are stdlib Python 3.8+.

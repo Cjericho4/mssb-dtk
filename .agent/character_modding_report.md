@@ -130,7 +130,7 @@ except the last row. Diff counts are `tools/feedback_diff.py` lines (`decomp_kno
 | `fn_80017814` | gap_8001196C.c | relocation, textures, actor, switch | 48 lines: prologue, bone-loop init, call-arg scheduling |
 | `f_InitActorWithLayout` | gap_8002244C.c | carve actor/skin/bones | 111 lines: original keeps cursor/skin object in stack memory |
 | `DecompressDiskData` | File_0x800a64e0.c | LZSS | 36 lines: saved-register set, ctr loop (`decomp_knowledge.md` §12) |
-| `fn_80012B90` / `fn_80013680` | gap_8001196C.c | bat/glove loaders | first decompile, registers untuned (619 / 693 lines) |
+| `fn_80012B90` / `fn_80013680` | gap_8001196C.c | bat/glove loaders | first decompile, registers untuned (hundreds of lines) |
 | `fn_8002254C`, `fn_800227E4`, `fn_80021ADC` | gap_8002244C.c / gap_8001E460.c | overlay / blob / script loaders | asm only (behaviour read from asm) |
 
 ## 3. Character tables
