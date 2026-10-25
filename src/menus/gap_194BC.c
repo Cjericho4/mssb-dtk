@@ -2,6 +2,7 @@
 #include "Dolphin/GX/GXFrameBuffer.h"
 #include "musyx/musyx.h"
 #include "menus/gap_D08.h"
+#include "menus/gap_94854.h"
 extern s32 lbl_2_bss_1598;
 extern GXColor lbl_2_data_2E3C;
 #include "menus/gap_1B1BC.h"
@@ -24,8 +25,14 @@ void fn_2_194E8(void) {
 }
 
 // .text:0x00019520 size:0x34
+// Copies the current sound settings into the menus preferences block.
 void fn_2_19520(void) {
-    return;
+    u8 a = lbl_800EF808.unk398;
+    u8 b = lbl_80366158.unk1F;
+    u8 c = lbl_800EF808.soundMode;
+    lbl_2_bss_1033C.enabled = a;
+    lbl_2_bss_1033C.unk8 = b;
+    lbl_2_bss_1033C.soundMode = c;
 }
 
 // .text:0x00019554 size:0x84
@@ -48,8 +55,14 @@ void fn_2_195DC(void) {
 }
 
 // .text:0x00019778 size:0x34
+// Copies the current sound settings into the menus preferences block (second copy).
 void fn_2_19778(void) {
-    return;
+    u8 a = lbl_800EF808.unk398;
+    u8 b = lbl_80366158.unk1F;
+    u8 c = lbl_800EF808.soundMode;
+    lbl_2_bss_1033C.enabled = a;
+    lbl_2_bss_1033C.unk8 = b;
+    lbl_2_bss_1033C.soundMode = c;
 }
 
 // .text:0x000197AC size:0x558

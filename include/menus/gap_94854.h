@@ -10,7 +10,9 @@ typedef struct MenusPreferences {
     s16 selected;
     u8 _pad4[2];
     s8 enabled;
-    u8 _pad7[4];
+    u8 soundMode;
+    u8 unk8;
+    u8 _pad9[2];
     u8 flagB;
     u8 _padC[2];
     u8 unkE;
