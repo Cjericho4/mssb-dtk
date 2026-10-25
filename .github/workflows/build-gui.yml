@@ -40,6 +40,7 @@ jobs:
       run: |
         python -m py_compile tools/modding/clone_character.py tools/modding/clone_gui.py tools/modding/gui_theme.py
         python tools/modding/clone_gui.py --selftest --expect-fonts --expect-fast-lzss
+        python tools/modding/clone_gui.py --selftest --profile-resize
 
     - name: Build the .exe
       run: >
