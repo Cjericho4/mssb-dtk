@@ -367,6 +367,7 @@ int RandomInt_Game(int max) {
 }
 
 // .text:0x0009EE24 size:0x94 mapped:0x806DDEB8
+// Advances the global random seed and returns it modulo |max|, signed like max.
 int fn_3_9EE24(int max) {
     int ret;
     int r2;
@@ -378,10 +379,11 @@ int fn_3_9EE24(int max) {
     if (max <= 1) {
         return 0;
     }
-    ret = unkSimulationRelatedStruct._00 + g_d_GameSettings.FrameCountWhileNotAtMainMenu +
-          (g_d_GameSettings.FrameCountWhileNotAtMainMenu >> 1) - g_Ball.StaticRandomInt1 +
-          ((u8)g_Ball.StaticRandomInt2) + (unkSimulationRelatedStruct._00 / max);
-    unkSimulationRelatedStruct._00 = ret;
+    g_UnkSimulation_31AC0.randomSeed =
+        g_UnkSimulation_31AC0.randomSeed + g_d_GameSettings.FrameCountWhileNotAtMainMenu +
+        (g_d_GameSettings.FrameCountWhileNotAtMainMenu >> 1) - g_Ball.StaticRandomInt1 +
+        ((u8)g_Ball.StaticRandomInt2) + (g_UnkSimulation_31AC0.randomSeed / max);
+    ret = g_UnkSimulation_31AC0.randomSeed;
     r2 = ret % (u32)max;
     if (r2 < 0) {
         r2 = -r2;

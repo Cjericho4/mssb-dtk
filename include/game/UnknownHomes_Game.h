@@ -2665,7 +2665,8 @@ extern void fn_3_6C854(int, int);
 extern u32 playSoundEffect(int);
 
 typedef struct UnkSimulation31AC0 {
-    u8 _pad0[0x5];
+    /* 0x0 */ u32 randomSeed;
+    u8 _pad4;
     u8 unk5;
     u8 unk6;
     u8 unk7;
