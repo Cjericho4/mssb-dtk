@@ -52,7 +52,8 @@ jobs:
     - name: Self-test (.exe)
       shell: pwsh
       run: |
-        $p = Start-Process -FilePath dist\MSSB-Clone-Maker.exe -ArgumentList '--selftest','--expect-fonts','--expect-fast-lzss' -Wait -PassThru
+        $p = Start-Process -FilePath dist\MSSB-Clone-Maker.exe -ArgumentList '--selftest','--expect-fonts','--expect-fast-lzss','--log','selftest.log' -Wait -PassThru
+        Get-Content selftest.log
         if ($p.ExitCode -ne 0) { throw "MSSB-Clone-Maker.exe --selftest exited with $($p.ExitCode)" }
         Get-Item dist\MSSB-Clone-Maker.exe | Format-List Name, Length
 
