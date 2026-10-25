@@ -22,6 +22,8 @@ alongside for the byte-exact rebuild goal, but a later phase never waits on a ma
 - Rio tests by the user: menu art (#2), restyled GUI + non-Mario clones (#3).
 - `fn_2_3624` match, five lines left (#4, `handoff_fn_2_3624.md`).
 - Docs consolidation (#19).
+- Clone Maker port to Tauri (Rust core + web UI), Windows first (#30; stages #31–#34, Mac #35). The
+  Python patcher stays the reference: the Rust output must be byte-identical (`tools/clonemaker/difftest.py`).
 
 ## Phases
 1. **Character-select code: understood and documented, matched where practical.**
