@@ -23,12 +23,12 @@ animation-window tables. Tool: `mssb_files.py stats-export / stats-import` (`too
   *Star unlocked* is save data (`lbl_80361B20.characterFlags[charID]`), not the row.
 * **Chemistry** is the row's +0x3B..+0x70: 0..99, 50 with itself, stored twice (A,B and B,A;
   symmetric in retail). In-match checks compare it (plus a Challenge item bonus, capped at 100)
-  with 90 (`lbl_3_data_4638`).
+  with 90 for positive links and 20 for anti-chemistry throws (`lbl_3_data_4638`, section 4.1).
 * **game.rel tables** (section 6): batter reach box (`BatterHitbox`), charge frames, runner turn /
   lead-off frames, fielder action frames, voice ids, foot-contact heights. Layout known for all;
-  meaning medium to low for the runner, fielder and foot tables.
-* **DOL `lbl_800FB798`** is 15 consecutive s16[54] tables: frame windows (start, end; 99 = never)
-  in which `fn_8004B284` / `fn_8004BEB0` / `fn_8004C510` attach an effect to a bone (section 7).
+  runner/fielder timing reads are traced in section 6; the foot table remains less certain.
+* **DOL `lbl_800FB798`** is 15 consecutive s16[54] tables: seven start/end pairs and
+  one exact-frame event. All animation IDs are mapped in section 7; 99 usually disables an event.
 
 ## 1. Load chain
 
@@ -122,11 +122,27 @@ Row byte +0x3B+k is this character's chemistry with charID k. Retail: 5..99, dia
 symmetric, colour variants share rows (21–23, 24–26, 29–32, 33–36, 44–47, 48–51). Readers:
 `fn_3_6D658(team, a, b)` (game; adds `lbl_3_data_5FC4.unk_28` when the Challenge chemistry item
 is bought, caps at 100) compared against `lbl_3_data_4638` = s16 {90, 20, 90, 90} by `fn_3_ABDD0`,
-`fn_3_4DC14`, `fn_3_8913C` (which in-match effect each one gates: not traced). Batting with
+`fn_3_4DC14`, `fn_3_8913C` (effects and exact inequalities below). Batting with
 chemistry links on base multiplies power by `lbl_3_data_4618.chemBattingMult`. Menus: star
 display `fn_2_75BE4` (character_select.md §8.1), ranking `fn_80067C48` (character_select.md §2),
 per-slot rows at `lbl_8034E9A0+0x47F9` (`fn_80066EAC`). Phase 4 edits only the 54×54 bytes;
 keep both directions equal.
+
+### 4.1 Threshold gates, traced in retail code (2026-10-24)
+
+The four halfwords have independent uses; 20 is an **exclusive upper bound**, not a second
+positive-chemistry threshold. Confidence **high** for each branch and state change:
+
+| Offset / value | Reader and evidence | Gate in play |
+|---|---|---|
+| +0 / 90 | `fn_3_ABDD0` (`makeThrowVariables` in exported_symbols.csv), 0xABEBC..0xABEFC | Chemistry >=90 between thrower and receiving fielder enables `g_FieldingLogic`+0x13E, provided target is base 0..3 and recipient +0x1F5 equals that base. This is the chemistry-throw state; it selects voice type 0 at 0xAC998, versus regular type 5. Later code consumes/decrements throw-speed state +0x106 and can change the chemistry state 1 -> 2 (0xAC534..0xAC574). This does not establish a universal speed multiplier for every throw. |
+| +2 / 20 | same function, 0xABF00..0xABF94 | Chemistry <20 permits a random anti-chemistry throw. Chance is mapped with bytes at 0x4908/4909 (both 20 in retail), then tested against RandomInt_Game(100); practice with `g_Practice`+0x1C2 >=0 suppresses it. Success sets `g_Ball.IsAntichemistryThrow` and perturbs the intended throw angle (0xAC088..0xAC0C8); voice type 10 at 0xAC9B4. Thus low chemistry enables a probabilistic inaccurate throw, not a guaranteed error on every throw. |
+| +4 / 90 | `fn_3_4DC14` (`bobbleDirection`), 0x4DCB4..0x4DD30 and 0x4DDC8..0x4DE54 | On a bobble, choose the nearest other fielder whose chemistry >=90 and distance is below the appropriate `lbl_3_data_4618` limit. The subsequent ball direction is aimed toward that teammate with random angular spread, and speed uses the chemistry-indexed `lbl_3_data_5CDC` multiplier. Plays SFX 0x1AB. This is bobble assistance, rather than a catch-success threshold. |
+| +6 / 90 | `fn_3_8913C`, 0x897F8..0x8984C | For each occupied runner slot 1..3, chemistry >=90 with the batter increments `g_Batter.chemLinksOnBase` and sets its bit in +0xAB. `game_batter.c` then uses `chemBattingMult[links-1]` for positive charged power. |
+
+`in_game.h` independently names +0x13E `IsChemistryThrow` and voice types 0/5/10
+chemistryThrow/regularThrow/antiChemThrow. These support the branch tracing; they are not the
+sole evidence. No threshold is a chemistry catch-probability stat.
 
 Header note: `ChemistryTable` names 0x0C `RedKoopa` and 0x2A `GreenKoopa`; `CHAR_ID` says 0x0C is
 `KOOPA_GREEN` (the tool uses the CHAR_ID names).
@@ -143,11 +159,30 @@ Header note: `ChemistryTable` names 0x0C `RedKoopa` and 0x2A `GreenKoopa`; `CHAR
   the captain's block index (0..5, else `OSPanic`) and copies it into
   `lbl_803C6724.teams[0]` and `starMissionCompletionTracker.lineup`. `fn_80068838` reads block 11.
   High.
-* Lineups 1..3 (captain + 4, captain + 4, captain alone) are read by `fn_2_A288` (lineup 1),
-  `fn_2_4C3EC`, `fn_2_B920`, `fn_2_BF90` (all stubs): probably CPU / Challenge opponent teams.
-  Low.
-* The 9 bytes after each lineup (0x0A) are read by the debug path as a per-member value
-  defaulting to 0x0A in `lbl_80354720` (a position / link byte); real readers unknown. Low.
+* **Lineups 1/2 are roster-select templates; lineup 3 is the captain-only fallback. High.**
+  `fn_2_A288` checks both candidate templates against the opposing captain: it starts at
+  block+0x12+1 and checks eight member bytes, then advances by 0x12 for the second template
+  (0xA3A8..0xA4C0), so it deliberately excludes each template's own captain slot.
+  `fn_2_B920` calls that check and randomly selects a usable template: result 0 -> lineup 1,
+  result 1 -> lineup 2, none -> lineup 3 (0xBB4C..0xBBE8). It copies the chosen side-0 template
+  to `lbl_803C6724.teams[0]`; side 1 starts with lineup 3 (0xBBE8..0xBCEC).
+  `fn_2_BF90` independently starts side 1 with lineup 0. Thus these are menu team presets,
+  not four CPU difficulty levels. The exact UI conditions choosing each entry path are not
+  fully traced. Retail export corrects the earlier shorthand "captain +4": lineup 1 has
+  **4..7** members and lineup 2 **4..5**, varying by captain; every lineup 3 has one.
+  `fn_2_4C3EC` reads lineup 0 while forming the Challenge availability mask, not lineups 1..3.
+* **The nine 0x0A bytes feed a debug batting-order/link field; authoring intent still uncertain.**
+  High confidence for data flow, medium for the sentinel interpretation. In `maybeProcessTeamData`,
+  0x128..0x214, each of nine roster slots searches lineup-0 members for its slot index. On a hit,
+  byte `block[9 + memberIndex]` goes into `lbl_80354720[team][slot].unk2`; missing entries default
+  to 10 as well. Normal menu code writes `lbl_803C6724.order` into that same field
+  (`fn_2_4970`, `fn_2_8940`), and `fn_2_5F80` uses it to restore batting-order links.
+  Retail `stats-export` and `extract stats.0` confirm all **432** extra bytes are 0x0A,
+  including unused lineups. No normal roster-select reader of these extra bytes was found.
+  Ten is outside the nine valid order slots, consistent with "unassigned"; it is not evidence
+  for an AI difficulty or character stat. The debug loader also treats the first 0x4380 bytes
+  as twelve nine-row teams, unlike the normal 54-row file, so do not assume its schema is the
+  retail menu schema. Keep the JSON key `extra` until an active authoring/use case is established.
 
 ## 6. game.rel per-character tables (section 5 `.data`)
 
@@ -157,8 +192,8 @@ Indexed by charID; retail values for Mario / DK / Peach.
 |---|---|---|---|---|---|---|
 | 0x6EF8 | `BatterHitbox` | 54 × `BatterReachStruct` (9 f32) | setInMemBatterConstants, calculateContactAndHitType, batterInBoxMovement, setBatterContactConstants, fn_3_1F998 | bat reach box: horizontal near/far, vertical front/back, bat offset x/z, box move speed, pitching height, trimmed bat (0/1) | {-0.65 .55 -0.2 1.5 -2.1 -1.0 .05 1 0} / {-0.55 .65 0.4 1.4 -2.65 -1.0 .05 1 1} / {-0.75 .5 .1 1.5 -1.9 -1.3 .05 1 0} | high (fields named in header) |
 | 0x7690 | `ChargePowerConstants` | 54 × u8[2] | setDefaultInMemBatter | `g_Batter.frameFullyCharged`, `frameChargeDownBegins` | 30,60 / 60,60 / 30,60 | high |
-| 0x7870 | – | 54 × s16[3] | fn_3_631AC, fn_3_63874 (runner) | [0] frames of a turn-around (vs runner `framesSinceLastDirectionChange`); [1] lead-off anim 0x35 length (minus `leadOffTotalFrameCountDown`); [2] anim 0x2E start frame (-10) | 25,75,42 / 25,75,42 / 27,55,32 | low |
-| 0x7E34 | `bodyCheckFrameRelatedConstants` | 54 × u8[4] | fn_3_60E90, fn_3_A96FC (fielder) | [0] start frame passed to anims 0x21/0x23; [1] frame threshold vs `g_FieldingLogic`+0xF6; [2] action length written to +0xF6; [3] window subtracted from [2] | 13,30,120,5 / 6,8,120,5 / 6,8,120,5 | low |
+| 0x7870 | – | 54 × s16[3] | fn_3_631AC, fn_3_63874 (runner) | [0] turn-around state duration; [1] lead-off animation end-frame anchor; [2] animation 0x2E entry-frame anchor (minus 10). Evidence below. | 25,75,42 / 25,75,42 / 27,55,32 | high (timing/data flow), unknown (physical meaning of 0x2E) |
+| 0x7E34 | `bodyCheckFrameRelatedConstants` | 54 × u8[4] | fn_3_60E90, fn_3_A96FC (fielder) | [0] body-check reaction animation entry frame; [1] countdown threshold before looped reaction starts; [2] knockback/recovery countdown; [3] elapsed frames before collision-result processing. Evidence below. | 13,30,120,5 / 6,8,120,5 / 6,8,120,5 | high (timer operations), medium (animation labels) |
 | 0x8148 | `unkCharacterArray` | voice group ids | m_sound | see character_select.md §6 | | (CS) |
 | 0x8168 | `characterSoundArray` | 54 × u16 | fn_3_90220 | voice SFX base id | 324 / 298 / 272 | high (CS §1) |
 | 0x17000 | – | 54 × s32 | fn_3_BC274, fn_3_BC2DC | foot height threshold ×1e-5 (bones 0x1E / 0x22 vs the actor's y) -> anim-slot flag bits 2/3 at +0x276 (foot down: dust / footsteps) | 55000 / 50000 / 50000 (babies 24000) | medium |
@@ -167,22 +202,70 @@ Neighbours that are per *something else*: 0x76FC `hitByPitchHitboxes`, 0x7760 `r
 0x79B4 `FielderHitboxConsts`, 0x7F10 `barrelCollisionHitboxes`, 0x4744 (contact lerp table).
 A clone with a new charID needs a row in every table above (character_modding_report.md §8).
 
+### 6.1 Timing evidence (2026-10-24)
+
+* **Runner +0, high:** `fn_3_63874` chooses tracking state 7 while turningAroundInd is set and
+  framesSinceLastDirectionChange < this value, otherwise state 2. It is a turn-state cutoff,
+  not a speed/acceleration scalar.
+* **Runner +2, high:** `fn_3_631AC` at 0x637B8..0x637F8 (tracking state 0x10, selected by
+  leadOffStatus ==2) starts nonlooped animation **0x35** at `value - leadOffTotalFrameCountDown`.
+  `in_game.h` calls it RunnerWalkAwayFrom2ndBase. The anchor gives the correct elapsed frame
+  when resuming a lead-off; it is not independently proven to be the entire animation length.
+* **Runner +4, high for formula, still unknown for physical animation:** same function at
+  0x63298..0x63300 selects **0x2E** at `value - 10` during the initial <10 frames of direction
+  change, for family/grid IDs 0x0E/0x14/0x1A/0x1E and outside secondary mode 6.
+  Ghidra's name is only Runner_Tpose; no stronger animation name is justified.
+* **Fielder +0/+1, high for formula:** `fn_3_60E90`, 0x61070..0x61100, enters nonlooped
+  animation **0x21** at byte 0, or starts looped **0x23** at that frame once
+  `bodyCheckStageCountdown <= byte 1`. The exported enum calls 0x23 FielderStunned;
+  0x21's FielderTagBase? label is uncertain and is not adopted as a field name.
+* **Fielder +2/+3, high:** `fn_3_A96FC` (`fielderBodyCheck_setStatus+Pos+Velo` in the export)
+  enters stage 3 with countdown = byte 2 (0xA97B0..0xA9804), applies decaying knockback velocity,
+  decrements each frame, and at exactly `countdown == byte2 - byte3` calls `fn_3_A9354(idx,0)`
+  and updates knockout/ball-control flags (0xA9820..0xA986C). Stage ends at countdown <=0.
+  Thus byte 3 is elapsed frames to that processing event, **not a final-five-frames window**.
+  Byte 2 is 120 and byte 3 is 5 in the cited Mario/DK/Peach rows. The exact collision-result
+  handling of `fn_3_A9354` remains unnamed; the event itself is established.
+
 ## 7. DOL animation event windows (`lbl_800FB798` .. `lbl_800FBD80`, 15 × s16[54])
 
-Fifteen consecutive 0x6C tables. `fn_8004B284(slot, anim, kind, frame)` switches on the animation
-and uses six (start, end) pairs: 798/804, 870/8DC, 948/9B4, A20/A8C, AF8/B64, BD0/C3C. When the
-current frame is inside [start, end] it spawns an effect at a bone picked from `lbl_800FBF10`
-(+0x214 table, by `fn_800698F8(charID)` and the pair index). `fn_8004BEB0` uses the pair CA8/D14,
-`fn_8004C510` the single frame D80. 99 = never. Mario / DK / Peach: 804 = 28 / 36 / 14,
-870..8DC = 20..32 / 20..27 / 5..13, D80 = 22 / 99 / 28. Which animation each pair belongs to: not
-traced (the jump table `jumptable_800FC318` maps animation ids). Medium (layout), low (meaning).
+The complete animation mapping is now traced. **High confidence for IDs/table associations**;
+**medium for physical animation names**, which use the user-defined exported enum in `in_game.h`
+(`EnumCharacterAnimation_short/int`) and agree with runner/fielder call sites.
 
-## 8. Still unknown (R3 partial)
+| Start / end table | Animation ID | Exported animation name | Selection evidence |
+|---|---|---|---|
+| 0x800FB798 / 0x800FB804 | 0x32 (50) | RunnerDiveTurnAround | `jumptable_800FC318[0x32-0x1A]` -> fn_8004B284+0x5C |
+| 0x800FB870 / 0x800FB8DC | 0x33 (51) | Runner_BodyCheck | jump table -> +0xC0 |
+| 0x800FB948 / 0x800FB9B4 | 0x34 (52) | RunnerDiveTurnSide | jump table -> +0x124 |
+| 0x800FBA20 / 0x800FBA8C | 0x1A (26) | FielderPickUpBall | jump table -> +0x188 |
+| 0x800FBAF8 / 0x800FBB64 | 0x1B (27) | FielderDive | jump table -> +0x1EC |
+| 0x800FBBD0 / 0x800FBC3C | 0x30 (48) | RunnerSkidStop | jump table -> +0x250 |
+| 0x800FBCA8 / 0x800FBD14 | 0x10 (16) | FielderOnFire | `lbl_800FBDEC[0x10]` =1 -> `lbl_800FBE64[1]` = fn_8004BEB0 |
+| 0x800FBD80 (single frame) | 0x62 (98) | BatterHitByBall | `lbl_800FBDEC[0x62]` =9 -> fn_8004ACF4 -> callback [2] = fn_8004C510 |
 
-* Meaning of the 0x7870, 0x7E34 and 0x17000 fields beyond "frame / threshold" (section 6), and
-  which animation each DOL window pair serves (section 7).
-* Captain lineups 1..3 and the 0x0A bytes (section 5); the `lbl_3_data_4638[1]` = 20 threshold.
-* What the chemistry checks gate in play (throws, catches, batting links).
+`fn_8004B284` accepts an inclusive [start,end] frame interval, chooses a bone from
+`lbl_800FBF10+0x214` by grid and pair kind (0,1,2,4,5,6), and spawns an effect there.
+The final single-frame callback checks **frame equality**, not an interval, and gets the slot's
+coordinates with `fn_8001B728(slot,4,...)`. Its wrapper also marks a special early hit-by-pitch
+flag for Dry Bones IDs 48..51 at frame <0.5. Do not describe all fifteen arrays as bone windows.
+`fn_8004BEB0` also uses an inclusive interval; its separate per-character coordinates are in
+`lbl_800FC494`. Retail Mario / DK / Peach examples remain 804 =28/36/14,
+870..8DC =20..32 / 20..27 / 5..13, D80 =22/99/28. The common 99 values appear to disable events
+for these animations; a universal "never" interpretation outside their frame lengths is not proven.
+
+## 8. Still unknown (R3)
+
+* Physical identity of runner animation 0x2E and why those four grid families enter it at
+  table+4 minus ten. Tried both exported animation enums and both timing readers; only the
+  numeric frame formula is established (section 6.1).
+* The 0x17000 foot-height table's exact dust/footstep effect selection (outside this pass).
+* Original authoring meaning / active retail use of the captain extra 0x0A bytes beyond their
+  debug batting-order/link destination. Tried all four menu captain-table readers and the
+  debug loader; ordinary menu paths copy only the nine character IDs (section 5).
+* Full UI path selection for captain-template presets, and a single physical name for every
+  body-check reaction animation. The roster-template exclusion logic and timer operations are
+  established; no speculative C names were added for those uncertain parts.
 
 ## 9. Reproduce
 
@@ -190,3 +273,9 @@ traced (the jump table `jumptable_800FC318` maps animation ids). Medium (layout)
 `test_stats_round_trip_and_edit`, `test_stats_retail`, `MSSB_SLOW=1` `test_real_stats_import_identical`)
 pin the layout and retail values. Game tables: `.obj` blocks in
 `build/GYQE01/game/asm/auto_04_*_data.s`; readers: grep the symbol in `build/GYQE01/**/asm`.
+
+2026-10-24 evidence reproduction in this checkout: `stats-export orig/GYQE01 /tmp/r3-stats.json`
+and `extract orig/GYQE01 stats.0 /tmp/r3-retail` (read-only input). Captain counts and all 432
+extra bytes were checked against those retail outputs. Animation dispatch and all gameplay
+branches above were read from `build/GYQE01/{asm,game/asm,menus/asm}` and cross-checked with
+`src/`, `exported_symbols.csv`, and `in_game.h`; no game assets are checked in with these notes.

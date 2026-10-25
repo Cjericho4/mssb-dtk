@@ -40,7 +40,18 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800F73B8 (0xF43B8) | `lbl_800F73B8` | 54x2 s8 {bodyEntry, overlayEntry or -1} per charID; retail values in CMR §3 | CMR §3 |
 | 0x800F7424 / 0x800F743C | `lbl_800F7424` / `lbl_800F743C` | 2x6x2 sub-item pair rows {k1,k2} / 54 per-character row index | CMR §3 |
 | 0x800F7478 | end of gap_8001E460.c `.data` split | split is 0x800EFBE8..0x800F7478 | CMR §6 |
-| 0x800FB798..0x800FBD80 | `lbl_800FB798` + 14 more 0x6C tables | 15 x s16[54] animation frame windows (start, end; 99 = never) for bone effects | ST §7 |
+| 0x800FB798..0x800FBD80 | `lbl_800FB798` + 14 more 0x6C tables | 15 x s16[54]: 7 intervals + one exact-frame event; animation IDs mapped, 99 usually disables | ST §7 |
+| 0x800FB798 / 804 | runner dive turn-around window | anim 0x32, fn_8004B284 +0x5C | ST §7 |
+| 0x800FB870 / 8DC | runner body-check window | anim 0x33, +0xC0 | ST §7 |
+| 0x800FB948 / 9B4 | runner dive side-turn window | anim 0x34, +0x124 | ST §7 |
+| 0x800FBA20 / A8C | fielder pickup window | anim 0x1A, +0x188 | ST §7 |
+| 0x800FBAF8 / B64 | fielder dive window | anim 0x1B, +0x1EC | ST §7 |
+| 0x800FBBD0 / C3C | runner skid-stop window | anim 0x30, +0x250 | ST §7 |
+| 0x800FBCA8 / D14 | fielder on-fire window | anim 0x10, fn_8004BEB0 | ST §7 |
+| 0x800FBD80 | hit-by-pitch exact-frame event | anim 0x62 via fn_8004ACF4 -> fn_8004C510 | ST §7 |
+| 0x800FBDEC / 0x800FBE64 | animation callback routing | byte[117] -> callback pointer[11]; establishes 0x10 and 0x62 window IDs | ST §7 |
+| g_FieldingLogic +0xF6 / +0x13E | bodyCheckStageCountdown / chemistryThrowState | timer stages in fn_3_A96FC / 90-chem throw qualification in fn_3_ABDD0 | ST §6.1, §4.1 |
+
 | 0x800FB5B0 | `menu_title` | title/main-menu UI copy (res 30) | DM §4 |
 | 0x800FBF10 (+0x214) | `lbl_800FBF10` | u16[33][7] per-grid gameplay row, grid*14+k*2 (fn_8004B284) | CS §6 |
 | 0x800FDE84 | `lbl_800FDE84` | 36 u8 roster grid cells -> base charID (0xFF empty); 26 used | CS §1 |
@@ -119,7 +130,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_800628D4 | announcer call-out | sets useAltBirdoGrid, plays lbl_80108DF4[grid]; MATCH | CS §6 |
 | fn_80067AC8 | family column lookup | row[column] of lbl_80108EDC or -1; MATCH | CS §2 |
 | fn_80067B40 | family taken-flag writer | (unused, charID, value); value 2 = query; 8 lines | CS §2 |
-| fn_8004B284 / fn_8004BEB0 / fn_8004C510 | anim event windows | read lbl_800FB798.. tables, spawn effect at a bone | ST §7 |
+| fn_8004B284 / fn_8004BEB0 / fn_8004C510 | anim events | 6 bone windows / on-fire interval / hit-by-pitch exact frame; mapped in ST | ST §7 |
 | fn_80067C48 | chemistry ranking | sorts ids by chemistry into lbl_8034E9A0+0x478D+idx*54; stub, next to decompile | CS §2, §5 |
 | fn_80067F70 | CPU auto-pick | random from top 20 ranked free ids, marks family taken; stub, next to decompile | CS §2, §5 |
 | fn_800506E8 | cell badge writer | lbl_803C6028.slots[cell] by base charID; MATCH | CS §5 |
@@ -152,7 +163,8 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 |---|---|---|---|
 | fn_2_554 | stats loader (boot) | loads stats.0 (ZZZZ+0x6CF8800) into lbl_8034E9A0 | ST §1 |
 | fn_2_12238 / fn_2_12CD8 / fn_2_12F88 | Challenge start team | copies captain block lineup 0 (lbl_8034E9A0+0x4380+i*0x48) to team 0 | ST §5 |
-| fn_2_A288 / fn_2_4C3EC / fn_2_B920 / fn_2_BF90 | captain lineups 1..3 | read the captain blocks; stubs | ST §5 |
+| fn_2_A288 / fn_2_B920 | captain templates 1/2/3 | exclude opponent captain from templates 1/2, choose an available one or captain-only 3 | ST §5 |
+| fn_2_4C3EC / fn_2_BF90 | captain lineup 0 | Challenge availability mask / side-1 starting roster | ST §5 |
 | fn_2_2FC0 | roster rebuild | (mode, finish, rebuild); taken flags, locked uniques, auto-pick, fn_2_8940; MATCH | CS §5; RF §2.3 |
 | fn_2_3204 / fn_2_8ED4C | fn_2_2FC0 callers | (mode,1,1) / (9,0,1) | CS §5; RF §2.3 |
 | fn_2_8940 | roster copy | Static_Stats_Tables[teams] -> inMemRoster in pick order; MATCH | RF §2.3 |
@@ -243,10 +255,10 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | game .data+0x8148 | `lbl_3_data_8148` | voice group ids, 33 entries | CS §6 |
 | game .data+0x6EF8 | `BatterHitbox` | 54 x BatterReachStruct (9 f32): batter reach box | ST §6 |
 | game .data+0x7690 | `ChargePowerConstants` | 54 x u8[2]: frameFullyCharged, frameChargeDownBegins | ST §6 |
-| game .data+0x7870 | runner frames | 54 x s16[3]: turn-around, lead-off anim, anim 0x2E start (low confidence) | ST §6 |
-| game .data+0x7E34 | `bodyCheckFrameRelatedConstants` | 54 x u8[4] fielder action frames (low confidence) | ST §6 |
+| game .data+0x7870 | runner frames | 54 x s16[3]: turn-state cutoff, lead-off frame anchor, anim 0x2E anchor minus 10 (formulas high) | ST §6 |
+| game .data+0x7E34 | `bodyCheckFrameRelatedConstants` | 54 x u8[4]: reaction start / countdown threshold / knockback duration / elapsed frames to result processing | ST §6 |
 | game .data+0x17000 | foot height | 54 x s32, /100000 = foot-down height (bones 0x1E/0x22) | ST §6 |
-| game .data+0x4638 | chemistry thresholds | s16 {90, 20, 90, 90} | ST §4 |
+| game .data+0x4638 | chemistry thresholds | s16 {90 throw qualification, 20 exclusive anti-chem upper bound, 90 bobble assistance, 90 batting links} | ST §4.1 |
 | game .data+0x76FC (unique*3) | `lbl_3_data_76FC` | gameplay check by kind (rep_1200) | CS §6 |
 | game .data+0x3D60 | `game_set` | 69 rows; rows 2..63 = res 0..61 (`lbl_3_data_3D80`); row 7 (+0x70) lineup portraits | DM §4 |
 | game .data+0x3D80 / 0x6130 / 0xF538 / 0x10598 / 0x21EC8 | res copies (game_set+0x20, game_res_a, game_res_b, game_res_c+0x20, minigame_res) | +0x10 HUD card, +0xF0 common, +0x1D0 grid descriptor | CS §6, §8.3; DM §4 |

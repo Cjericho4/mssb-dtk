@@ -607,7 +607,8 @@ typedef struct FieldingLogic {
     /* 0xEA */ u8 _padEA[0xEC - 0xEA];
     /* 0xEC */ s16 unkEC;
     /* 0xEE */ s16 unkEE;
-    /* 0xF0 */ u8 _padF0[0xF8 - 0xF0];
+    /* 0xF0 */ u8 _padF0[0xF6 - 0xF0];
+    /* 0xF6 */ s16 bodyCheckStageCountdown; /* fn_3_A96FC; frame timing: stats.md section 6.1 */
     /* 0xF8 */ u8 unk_F8[9];
     /* 0x101 */ u8 unk101[5];
     /* 0x106 */ u8 unk106;
@@ -656,7 +657,8 @@ typedef struct FieldingLogic {
     /* 0x13B */ u8 unk_13B;           // Preserving your previous find
     
     /* 0x13C */ u8 unk13C;
-    /* 0x13D */ u8 _pad13D[0x13F - 0x13D];
+    /* 0x13D */ u8 _pad13D;
+    /* 0x13E */ u8 chemistryThrowState; /* 0 inactive; 1/2 active, fn_3_ABDD0 */
     /* 0x13F */ u8 unk13F;
     /* 0x140 */ u8 _pad140[0x144 - 0x140];
     /* 0x144 */ u8 unk144;
