@@ -240,7 +240,7 @@ strings at DOL `0x800E33A0`. It doesn't point into ZZZZ.dat, so it's not a file 
 | `text` | 5 | `{u16 count, u16 0x0131, u32 offsets[count]}` + strings of u16 glyph codes ending in 0x4000. Glyphs: A-Z 0x20.., a-z 0x3E.., 0-9 0x0F.., `! " ' ( ) , - . ?` = 00 01 06 07 08 0B 0C 0D 1E. Control: 0x4001 newline, 0x4002 space, 0x40xx colour/box/voice. `>= 0x8000` = icons | lossless `text-export` / `text-import` |
 | `hvqm` | 3 | Hudson HVQM4 1.3 movies, stored (3.3 MB, 24 MB, 82 MB) | header |
 | `rel` | 3 | REL modules (LZSS in aaaa.dat) | section table |
-| `stats` | 1 | `CharacterStats[54]` (0xA0 each) + a 0x2520-byte tail (chemistry and other team data) | |
+| `stats` | 1 | `CharacterStats[54]` (0xA0 each), 0x21C0 zero bytes, 12 captain-team blocks: `stats.md` §1, §5 | `stats-export` / `stats-import` |
 | unknown | 8 | `camera.0` (0x73538, `{0x4F0, 0x5F0, ...}` header), `game_common.0/1` (0x140-word header), `opening.1`, `game_set.1`, `boot.1` (stored 0xB5D6), `partial_ch.0` (0x20-byte float records, only 0x200 B read) | head bytes |
 
 MusyX groups: 48 sound-group slots (`sound`, DOL `0x800EF508`, loaders `fn_800215F8` /
@@ -254,7 +254,7 @@ MusyX. It's the 15 DVD-streamed `snd/my_snd_h/*.adp` files in the FST.
 | Goal | Files | How |
 |---|---|---|
 | **Dialogue, bios, tutorials, minigame text** | `text_menu.0`, `menu_1ff84.1`, `game_284e8.0`, `game_common.4`, `text_sys.0` | `text-export`, edit, `text-import`, `replace`. Lengths are free (stored files; growing ones are appended). Fan translations are now a text-editing job. |
-| **Stats / chemistry** | `stats.0` (ZZZZ+0x6CF8800, stored) | edit the 0xA0 rows, `replace` (same size, in place) |
+| **Stats / chemistry** | `stats.0` (ZZZZ+0x6CF8800, stored) | `stats-export`, edit the JSON, `stats-import` (`stats.md`) |
 | **Character models / recolours** | `subfile.(c*19+0/1)`, `master.0..53` | `extract`, edit `.gpc` textures, `replace`. Overlays keep their size. `clone_character.py` builds on the same tables. |
 | **Animations** | 17 ANIM banks per character (`subfile.c*19+2..18`), `master.432+c` | swapping banks between characters is a descriptor copy. Banks can be re-imported with `replace`. |
 | **Menus, HUD, portraits, logos** | 65 UI files (`res.*`, `challenge_ui.*`, `menu_*`) | texture archives inside UI files: same-size edits in place, bigger files appended. Every copy is updated automatically (up to 21 rows). |
@@ -276,7 +276,7 @@ MusyX. It's the 15 DVD-streamed `snd/my_snd_h/*.adp` files in the FST.
    are absent: the name pointers are 0).
 3. **Formats without a parser:** the keyed event `script` records, `camera.0`, the 0x140-word
    `game_common.0/1` field files, the stadium sections beyond layout/geo/texture, and `boot.1`.
-   Also the meaning of the stats tail (0x2520 bytes after the 54 rows).
+   (The stats tail is now in `stats.md` §5.)
 4. aaaa.dat `0x0..0x800` header (u16 values with u16 zero padding): never read by the game.
 5. Glyph codes 0x02..0x05, 0x09, 0x0A, 0x0E, 0x19..0x1D, 0x1F and `>= 0x8000` (button icons)
    aren't named. The text tools keep them as `{XXXX}`.

@@ -75,11 +75,13 @@ the "enables" line says what each unlocks. Status: ⏳ not started, 🟡 in prog
   roster_flow.md §6: menu choice in the free `lbl_803C6724.unk38[2][9]`, entry byte +0x05 re-applied
   at the three static->entry copies, slot byte 0x253 (free) read in `fn_8001758C`, body pair /
   track-1 subfile keyed on (charID, skin). `fn_80016344/710/17814` remain documented, unmatched.
-- **R3. Character stats and gameplay tables, fully named** ⏳ (#11).
-  The 54×0xA0 `CharacterStats` rows (ZZZZ+0x06CF8800), game.rel per-character tables (hitbox,
-  charge frames, running timing, voice, 0x7E34, 0x17000), DOL `lbl_800FB798` 15×54 animation
-  parameters, star skills and abilities. *Enables:* a stat editor (power, speed, abilities), tuned
-  clone stats, and chemistry editing (phase 4).
+- **R3. Character stats and gameplay tables** 🟡 partial (#11). Documented in `stats.md`:
+  `stats.0` layout (54 rows, zero block, 12 captain-team blocks), every `CharacterStats` field
+  traced to its reader (high confidence), star skills / abilities / star bonus, chemistry,
+  game.rel tables 0x6EF8, 0x7690, 0x7870, 0x7E34, 0x8168, 0x17000 and the 15 DOL animation-window
+  tables. Tool: `mssb_files.py stats-export / stats-import` (byte-identical round trip, tested).
+  Open: meaning of the runner (0x7870), fielder (0x7E34) and DOL window fields, captain lineups
+  1..3, what the chemistry thresholds gate.
 - **R4. Voices and sounds** ⏳ (#12). Per-character voice banks (`lbl_800EF508`, Musyx group files,
   `lbl_3_data_8148`), announcer SFX ids (`lbl_80108DF4`), the sample format, and `snd/` music
   streams. *Enables:* custom voices, voice swaps independent of the character, custom music.
@@ -92,4 +94,4 @@ the "enables" line says what each unlocks. Status: ⏳ not started, 🟡 in prog
   resource, sequence and font (`inspect_menu_ui.py` is the start). *Enables:* custom names, logos and
   menu art for new or renamed characters.
 
-Suggested order: R3 next (most visible to players), then R4–R7 as the phases need them.
+Suggested order: R4–R7 as the phases need them; R3 leftovers (stats.md §8) when phase 4 needs them.
