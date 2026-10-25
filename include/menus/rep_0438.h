@@ -20,6 +20,7 @@ typedef struct MenusCharacterStats {
     u8 chemistry[54];    /* 0x3B per-charID chemistry with this character */
     u8 _pad71[0x2F];
 } MenusCharacterStats;
+STATIC_ASSERT(sizeof(MenusCharacterStats) == 0xA0);
 
 typedef struct MenusSaveState {
     MenusCharacterStats stats[6][9]; /* 0x0 Static_Stats_Tables, 54 rows indexed [charID / 9][charID % 9] (fn_2_DFAC) */
