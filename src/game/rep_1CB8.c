@@ -83,6 +83,17 @@ s32 fn_3_B7E10(f32 f1, f32 f2) {
 }
 
 // .text:0x000B7E44 size:0xAC mapped:0x806F6ED8
+// Classifies a distance against a band whose width falls off linearly with the angle from 0x400 (0 = out of range, 2 = beyond the far edge).
 s32 fn_3_B7E44(f32 arg0, s16 arg1) {
-    return 0;
+    f32 v;
+    s32 a;
+    if (arg1 < 0x1E0 || arg1 > 0x620) {
+        return 0;
+    }
+    a = __abs(arg1 - 0x400);
+    v = 0.06 * (s16)(0x200 - a);
+    if (63.0f + v < arg0) {
+        return 2;
+    }
+    return 55.0f + v < arg0;
 }
