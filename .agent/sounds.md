@@ -72,7 +72,7 @@ file (stored, no LZSS)          from fn_80021650 / fn_80021758 -> fn_80021518
 | 4 | 0 | 0x0 | menus options/records SFX (2 looping samples) | `fn_800627C4`; menus `fn_2_549B4` | medium |
 | 5..36 | `lbl_3_data_8148[u]` | 13 per bank | voice bank of unique index u = row - 5 (§3) | `fn_3_5A28C` / `fn_3_90B14` / `fn_3_90DD8` -> `fn_3_90F48` | high |
 | 37 | 32 | 0x1C4..0x1E6 | announcer names, menu music 0x1E4, 0x1E6 (§4) | menus `fn_2_6D3C`, game `fn_3_90928` -> `fn_8006285C` (0x20) | high |
-| 38 | 49 | 0x284..0x2C8 | menu set: clips copied from eight voice banks (Mario, Peach, DK, Yoshi, Bowser, Wario, Bowser Jr, Toad; same sample ids) + menu SFX/jingles | menus `fn_2_1B7B4` -> `fn_800627F8` (0x31) | high (load), medium (use) |
+| 38 | 49 | 0x284..0x2C8 | menu set: clips copied from eight voice banks (Mario, Peach, DK, Yoshi, Bowser, Wario, Bowser Jr, Toad; same sample ids) + menu SFX/jingles | menus `fn_2_1B7B4` queues row 0x26; `fn_800627F8` pushes gid 0x31 from `resources[38]` (link between them not traced) | high (each), medium (use) |
 | 39..45 | `lbl_3_data_81D4[s]` = 42, 43, 44, 52, 2, 1, 6 | | stadium SFX, row 0x27 + stadium (Mario Stadium, Bowser Castle, Wario Palace, Yoshi Park, Peach Garden, DK Jungle, Toy Field) | `fn_3_90A18` -> `fn_3_90798` | high |
 | 46 | 51 | 0x2D6..0x30E | in-match SFX, loaded unless game mode 6 (which loads row 45 instead) | `fn_3_59F40` -> `fn_3_90764` (0x33) | high (load) |
 | 47 | 53 | 0x317..0x318 | two SFX | `fn_80069A68` (0x35) | high (load) |
@@ -115,8 +115,8 @@ Anim names are the Ghidra enum `EnumCharacterAnimation_short` (in_game.h).
 * All 33 name calls are one-sample SFX in `sound.37` (22050 Hz, 0.7..2.3 s); the SFX ids are not
   in u order (DK 0x1CA, Daisy 0x1C7, Birdo 0x1CD, Birdo alt 0x1E5 = sample 0x1B7). (high)
 * `sound.37` SFX 0x1E4 = layer of two 76.6 s 32 kHz samples (0x33B, 0x33C: left/right),
-  started by `fn_80062A94` with a fade: the menu background music. 0x1E6 (sample 0x2B, 44.1 kHz)
-  is played by two DOL sites in `gap_800528AC`. (high)
+  started by `fn_80062A94` with a fade: the menu background music (high). 0x1E6 (sample 0x2B,
+  44.1 kHz): two `li r3, 0x1E6` sites in `gap_800528AC`, not confirmed as SFX arguments (low).
 * Umpire / "strike" / "home run" calls are not in `sound.37`; candidates are the 22050..48000 Hz
   samples of `sound.1`/`sound.46` (not identified). (unknown)
 * Changing what the announcer says for a character: replace that name's sample with
@@ -187,9 +187,11 @@ What the clone patcher does (`character_select.md` §6, `clone_character.py`):
 * **Gap:** the menu captain clips in `sound.38` reuse captains' sample ids; a `sound-import` into a
   captain's voice bank leaves the menu copy unchanged (and whichever group is pushed first wins
   while both are loaded). (high)
-* ARAM: a bank lives in MusyX's 8 MB ARAM while loaded and 18 banks load per match, plus `sound.1`
-  (4.1 MB) and stadium/common groups. Retail headroom is unmeasured; keep replacements near the
-  retail size (`sound-import` reports growth). (medium)
+* ARAM: a pushed group's samples live in MusyX's 8 MB ARAM until popped. Groups are pushed and
+  popped around scenes: `fn_800214D0` = `sndPopGroup`, called by `fn_3_9081C` (row 1),
+  `fn_3_908E8` (announcer), `fn_3_909B0` (stadium row), `fn_3_90AB0(charID)` (a voice bank), each
+  followed by `fn_800ACFB0` (free). Peak residency during a match is not traced; keep
+  replacements near the retail size (`sound-import` reports growth). (medium)
 
 ## 7. Unknown / not done
 * Lines 1, 2, 6, 8, 12 triggers; `fn_3_657E4` (line 7 / 9) context.
