@@ -238,14 +238,14 @@ void fn_3_EF408(StaC5SpotObj* obj) {
 }
 
 // .text:0x000EF55C size:0x258 mapped:0x8072E5F0
-u8 fn_3_EF55C(EF55C_Arg* arg0) {
+u8 fn_3_EF55C(EF55C_Arg arg0, u8 arg1) {
     return 0;
 }
 
 // .text:0x000EF7B4 size:0x4C mapped:0x8072E848
-s32 fn_3_EF7B4(EF55C_Arg* arg0) {
-    EF55C_Arg local = *arg0;
-    return fn_3_EF55C(&local) != 0;
+// Forwards a by-value position and an index to fn_3_EF55C and returns whether it succeeded.
+s32 fn_3_EF7B4(EF55C_Arg arg0, u8 arg1) {
+    return fn_3_EF55C(arg0, arg1) != 0;
 }
 
 // .text:0x000EF800 size:0x90 mapped:0x8072E894
