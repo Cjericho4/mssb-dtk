@@ -257,7 +257,7 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Adjacent-constant compares merged into a range check** (`== 9 || == 10` → `subi`/`cmplwi 1`) when the target keeps them separate (fn_3_B7CDC, fn_3_B7C2C). **Possible workaround** (worked for fn_3_5C418): compare as unsigned, `(u32)x == 1 || (u32)x == 2`, and write intended ranges as `(u8)(x - 0x13) <= 3`. Retry B7CDC/B7C2C with this.
 *   **Field offset `0x34` folded into the index of an `lwzx`** instead of the base (rep_3310: fn_3_119EE0, fn_3_119E30, fn_3_11881C, fn_3_11897C, fn_3_1194AC).
 *   **Nested-struct field load folded** (`addi r3,r31,0x10; lwz r3,0xc(r3)` → `lwz 0x1c(r31)`) (fn_3_A32B8).
-*   **Same callee with differing arg counts in one file** (`fn_800216F8`: 2 args in fn_3_90860/90928/90A18, 3 in fn_3_90C14) — one prototype can't satisfy both; an unprototyped declaration (next subsection) is the untried workaround. Check the callee's prologue for the real count first (§14).
+*   ~~Same callee with differing arg counts~~ **Solved (fn_3_90B14, fn_3_90C14):** the 3rd arg was never real. `fn_800216F8` takes `(u8 fileID, s32 (*cb)(void))`; with that prototype instead of `void fn_800216F8();` the `li r5,0` / `sth r5` sharing comes out. An unprototyped decl changes scheduling around the call: when a near-miss calls a K&R-declared function, give it the real prototype first.
 
 ### Unprototyped Calls (`fn_80034E20`)
 `fn_80034E20` is declared without a prototype (`void fn_80034E20();`), so call it with the arguments the target actually passes. Most callers pass two (no `r5` setup); adding a third `&lbl_803CC1B8` argument was the cause of several "NONMATCHING: 2-arg call" notes.

@@ -133,7 +133,7 @@ s32 fn_3_90B14(u8 charID, s32 altCharID) {
         }
         index = fn_800698F8(lbl_3_common_bss_34C58._2D);
         scene->loadingState = 0;
-        fn_800216F8((u8)(index + 5), fn_3_90F48, 0);
+        fn_800216F8((u8)(index + 5), fn_3_90F48);
         lbl_3_common_bss_34C58._2C++;
     } else if (scene->loadingState != 0) {
         if (++lbl_3_common_bss_34C58._2C == 5) {
@@ -144,8 +144,22 @@ s32 fn_3_90B14(u8 charID, s32 altCharID) {
 }
 
 // .text:0x00090C14 size:0x9C mapped:0x806CFCA8
-void fn_3_90C14(void) {
-    return;
+// Starts loading charID's file on the first call, then reports when the scene finishes loading.
+s32 fn_3_90C14(s32 charID) {
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 index;
+
+    if (lbl_3_common_bss_34C58._2C == 0) {
+        lbl_3_common_bss_34C58._2D = charID;
+        index = fn_800698F8(charID);
+        scene->loadingState = 0;
+        fn_800216F8((u8)(index + 5), fn_3_90F48);
+        lbl_3_common_bss_34C58._2C++;
+    } else if (scene->loadingState != 0) {
+        lbl_3_common_bss_34C58._2C++;
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x00090CB0 size:0x128 mapped:0x806CFD44

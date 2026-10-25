@@ -25,8 +25,8 @@ s32 fn_3_90A18(void);
 void fn_3_90AB0(s32 charID);
 extern s32 fn_800698F8(s32 charID);
 s32 fn_3_90B14(u8 charID, s32 altCharID);
-void fn_800216F8(); // (u8 fileID, callback, ...)
-void fn_3_90C14(void);
+void fn_800216F8(u8 fileID, s32 (*callback)(void));
+s32 fn_3_90C14(s32 charID);
 void fn_3_90CB0(void);
 void fn_3_90DD8(void);
 s32 fn_3_90F48(void);
