@@ -1,6 +1,6 @@
 # Address lookup (GYQE01 modding): grep an address or symbol name; each row points at the doc section that owns the fact. Rows and docs must agree: fix both together.
 
-DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 0xE5300. REL symbols (`fn_2_`/`lbl_2_` menus, `fn_3_`/`lbl_3_` game, `fn_1_`/`lbl_1_` challenge) are section offsets: the RELs are relocated at load, so they have no fixed RAM address. Docs: CMR `character_modding_report.md`, CS `character_select.md`, DM `data_map.md`, RF `roster_flow.md`, RM `modding_roadmap.md`, DK `decomp_knowledge.md`, ST `stats.md`, AN `animations.md`. Status = `tools/feedback_diff.py` lines (DK §2), 2026-10-24.
+DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 0xE5300. REL symbols (`fn_2_`/`lbl_2_` menus, `fn_3_`/`lbl_3_` game, `fn_1_`/`lbl_1_` challenge) are section offsets: the RELs are relocated at load, so they have no fixed RAM address. Docs: CMR `character_modding_report.md`, CS `character_select.md`, DM `data_map.md`, RF `roster_flow.md`, RM `modding_roadmap.md`, DK `decomp_knowledge.md`, SN `sounds.md`, ST `stats.md`, AN `animations.md`. Status = `tools/feedback_diff.py` lines (DK §2), 2026-10-24.
 
 ## 1. DOL tables and globals
 
@@ -16,14 +16,17 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800E8558 | `lbl_800E8558` / `characterStaticIndexes` | 54x6 B {family, baseCharID, uniqueIdx, isBase, isCaptain, colourIdx} per charID | CS §1 |
 | 0x800E869C | `lbl_800E869C` | 32 B grid index -> base charID (twin of mainCharArray) | CS §1 |
 | 0x800E86F0 | `lbl_800E86F0` (Ghidra `stonNiceContactIncrement`) | 12 star-player bonus bytes {50 x7, 20, 20, 50 x3} | ST §3; RF §2.4 |
-| 0x800E33A0 | music path strings | 15 `snd/my_snd_h/*.adp` paths; order = music track index | DM §4 |
+| 0x800E63A0 | music path strings | 15 `snd/my_snd_h/*.adp` paths, named by `lbl_800E87B4` | SN §5.1 |
+| 0x800E87B4 | `lbl_800E87B4` | 15 music tracks {path, size, 0, size}; only the path is used (fn_8006877C, game fn_3_8B094) | SN §5.1 |
 | 0x800EE910 | `game_common` | 5 field/game common files (4 = 23 minigame strings) | DM §4 |
 | 0x800EEAAC (0xEBAAC) | `lbl_800EEAAC` | 54 u16 glove/attachment bone-list base (= charID*6 retail) | CMR §1.1, §3 |
 | 0x800EEB18 | `lbl_800EEB18` | 54 s16 charID -> per-model script id (variants share base id, -1 none); master 486+id; retail values in CMR §3 | CMR §3; DM §4 |
 | 0x800EEC40 | `jumptable_800EEC40` | 48-entry per-charID setup switch in fn_80017814 | CMR §1.1 |
 | 0x800EEFD0 | `lbl_800EEFD0` = `res_dol2` | copy 2 of the 62 UI resources; fn_80020388 loads [lbl_803CB7CC[stadium]+0x26] (stadium art) into slot 0xD, fn_80020278(n) loads [n+0x2D] (stills) | DM §4 |
 | 0x800EEFE0 / 0x800EF0C0 / 0x800EF1A0 | `res_dol2[1]` / `[15]` / `[29]` | copies of the HUD card / common / grid descriptors | CS §6, §8.3 |
-| 0x800EF508 | `sound` / `lbl_800EF508` | 48 MusyX group descriptors (stored); voice bank = [5+grid] | DM §4 |
+| 0x800EF508 | `sound` / `lbl_800EF508` | 48 MusyX group descriptors (stored); voice bank = [5+u]; every row | SN §2 |
+| 0x800EF808 | `lbl_800EF808` | sound state: resources[48] (+4), pushed gids (+0x340), roster slot being loaded unk39A | SN §3 |
+| 0x800EFBB4 | `lbl_800EFBB4` | sndInit config {64 voices, 48, 16, 1 studio, flags 1, ARAM 0x800000} | SN §2 |
 | 0x800EFBE8 | `stadium` / `lbl_800EFBE8` | 21 stadium model descriptors, index stadium*3+variant (13 distinct); anchor of gap_8001E460.c `.data` | DM §4; CMR §6 |
 | 0x800EFD38 (0xECD38) | `master` / `lbl_800EFD38` | 515 ARAM master descriptors {flags,0x40000000\|size,blob offset,comp}; blob-relative | DM §4; CMR §3 |
 | 0x800EFD38 +[0..32] | master bodies | 33 base body models (not charID-indexed) | CMR §3 |
@@ -60,7 +63,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x80108B18 | `lbl_80108B18` | announcer sndFX arg table ([0] used by fn_800628D4) | CS §6 |
 | 0x80108DB8 | `lbl_80108DB8` / `mainCharArray` | 33 u8 grid index -> base charID | CS §1 |
 | 0x80108DDC | `lbl_80108DDC` / `secondaryCharacterArray` | 22 u8 variant charIDs, mapped via jumptable_801091F4 | CS §1 |
-| 0x80108DF4 | `lbl_80108DF4` | 33 u16 announcer name SFX ids 0x1C4..0x1E5 per grid index (0x20 = Birdo alt) | CS §6 |
+| 0x80108DF4 | `lbl_80108DF4` | 33 u16 announcer name SFX ids 0x1C4..0x1E5 per unique index (0x20 = Birdo alt), samples in sound.37 | SN §4; CS §6 |
 | 0x80108EC4 / 0x80109054 | `lbl_80108EC4` / `lbl_80109054` | pitcher list / per-class preferred fielding positions (class*5+k) | RF §2.3 |
 | 0x80108EDC | `lbl_80108EDC` | 9x5 s16 colour-family lists (-1 padded); symbol 0x11C long | CS §1 |
 | 0x80109044 | `text_sys` | system text bank, 11 strings, to ARAM | DM §4 |
@@ -158,8 +161,10 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_8000D838 / fn_8000D164 | sprite rendering | asm only | CS §8.2 |
 | fn_8000BA3C | packed-bank traversal | nested sequence index at 0x8000C104..C13C | CS §8.4 |
 | fn_8004B284 | per-grid gameplay row | lbl_800FBF10+0x214 | CS §6 |
-| fn_800216F8 / fn_80021518 | voice bank load | sndPushGroup path (lbl_800EF508[5+grid]) | CS §6 |
-| fn_800215F8 / fn_80021758 | sound group loaders | table `sound` | DM §4 |
+| fn_800216F8 / fn_80021518 | sound group load / push | queue a row load; fn_80021518(gid, res) = sndPushGroup(proj, gid, samp, sdir, pool) | SN §2 |
+| fn_8006877C / LoadFile / fn_800A8E30 | music stream start | track -> lbl_800E87B4 row -> DVDFastOpen + DVDPrepareStreamAsync(0, 0) | SN §5.1 |
+| fn_80062A94 | menu music | sndFXStartEx(0x1E4) with fade (sound.37) | SN §4 |
+| fn_800215F8 / fn_80021758 / fn_80021650 | sound group loaders | ARAMTransfer the row, relocate the 4 chunk offsets, call back | SN §2 |
 | fn_80020388 | stadium art loader | res_dol2[lbl_803CB7CC[stadium]+0x26] into UI slot 0xD | DM §4 |
 | fn_80020278 | stills loader | res_dol2[n+0x2D] (res 45..61) by ARAMTransfer into a heap buffer | DM §4 |
 | fn_800188C0 | game_common loader | table 0x800EE910 | DM §4 |
@@ -247,12 +252,13 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_3_5EC0 | stadium relocation | 16-word stadium root loader | DM §2 |
 | fn_3_64DC | stadium loader copy | stadium_game table | DM §4 |
 | manageStadiumLoading | stadium loader | reads lbl_800EFBE8[unk9*3+unkA] | DM §4 |
-| fn_3_90220 | voice SFX base | game .data+0x8168 | CS §1 |
+| fn_3_90220 / fn_3_90150 | `playCharacterSound(charID, line)` | SFX lbl_3_data_8168[charID] + line; 26 call sites = voice-line table | SN §3 |
 | setInMemBatterConstants (fn_3_6DE60) / fn_3_6EBB4 / fn_3_6D964 / setFielderValues | row -> actor | copy CharacterStats fields into g_Batter / g_Pitcher / runner / fielder | ST §2 |
 | fn_3_6EF1C | Challenge item buffs | scales inMemRoster stats by lbl_3_data_5FC4 at game start | ST §2 |
 | fn_3_6D658 | chemistry(team, a, b) | static row +0x3B+b, + Challenge item bonus, max 100; compared with lbl_3_data_4638 {90,20,90,90} | ST §4 |
 | checkFieldingStat (fn_3_6D604) | ability test | inMemRoster[t][s].FieldingStats & (1 << bit) | ST §3 |
-| fn_3_90F48 / fn_3_90B14 / fn_3_5A28C | voice bank loaders | fn_800216F8(grid+5), lbl_3_data_8148[grid] | CS §6 |
+| fn_3_90F48 / fn_3_90B14 / fn_3_5A28C | voice bank loaders | fn_800216F8(u+5), push lbl_3_data_8148[u]; 5A28C loops over all 18 roster slots | SN §3 |
+| fn_3_9056C / fn_3_90674 / fn_3_906FC | MusyX songs | sndSeqPlayEx(group 29, song, game_set.0 arrangement) | SN §5.2 |
 | fn_3_91D1C | HUD card pane | pane->unk5C = CharID<<16 (+ EA340, EAEF4, EB6E0, 11F02C, 121304, 127B68) | CS §6 |
 | fn_3_10CC20 / fn_3_B49D4 | announcer callers | batter/pitcher intro | CS §6 |
 | fn_3_59F40 / fn_3_5A28C | game_set loaders | slot 0x14 portraits (row 7 = res 5) | DM §4; CS §6 |
@@ -265,8 +271,12 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_3_BF878 / fn_3_BEFF8 / fn_3_106E50 / fn_3_1665E4 | misc loaders | model42 / 44-section / camera / results text | DM §4 |
 | game .data+0x0 | `stats_game` | stats.0 descriptor for the debug loader maybeProcessTeamData (file as 12 teams x 9 rows) | DM §4; ST §1 |
 | game .data+0x7EC | `stadium_game` | 21 stadium descriptors | DM §4 |
-| game .data+0x8168 | `characterSoundArray` | voice SFX base, 54 u16 per charID | CS §1; ST §6 |
-| game .data+0x8148 | `lbl_3_data_8148` | voice group ids, 33 entries | CS §6 |
+| game .data+0x8168 | `characterSoundArray` | voice SFX base, 54 u16 per charID (lines base+0..12) | SN §3 |
+| game .data+0x8148 | `lbl_3_data_8148` | u8[32] voice group id per unique index (symbols.txt says float) | SN §3 |
+| game .data+0x7F7C | `lbl_3_data_7F7C` | s16[32][4] per unique index: anim frame of voice line 0 (HR end) / 7 (championship) | SN §3 |
+| game .data+0x81D4 | `lbl_3_data_81D4` | u8[7] stadium SFX group ids (rows 39..45) | SN §2 |
+| game .data+0x8530 | `lbl_3_data_8530` | voice line volume[0x180] / pan[0x180] | SN §3 |
+| game .data+0x88E0 | `lbl_3_data_88E0` | 19 SongEntry {group, song, _} in-match songs | SN §5.2 |
 | game .data+0x6EF8 | `BatterHitbox` | 54 x BatterReachStruct (9 f32): batter reach box | ST §6 |
 | game .data+0x7690 | `ChargePowerConstants` | 54 x u8[2]: frameFullyCharged, frameChargeDownBegins | ST §6 |
 | game .data+0x7870 | runner frames | 54 x s16[3]: turn-state cutoff, lead-off frame anchor, anim 0x2E anchor minus 10 (formulas high) | ST §6 |
@@ -291,6 +301,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | challenge .data+0xF0C | `challenge_map_ui` | 11 map UI pieces | DM §4 |
 | challenge .data+0xAC | music track index | 15 rows as if concatenated .adp; loader fn_1_1E0; not a file table | DM §4 |
 | challenge .data+0x196C | `sound_ch` | 50-row MusyX copy (fn_1_9F04) | DM §4 |
+| challenge .data+0xFC0 / 0x17A4 / 0x17C4 | `lbl_1_data_FC0` / `17A4` / `17C4` | copies of the voice gid + SFX base tables; 17A4 = gids in another order, 17C4 = 18 bases (fn_1_A8B4, fn_1_B5B8) | SN §2 |
 | challenge .data+0xA3D8 | `challenge_board` | 86 rows: 0..1 game_common, 2..31 model_script, 32..85 pieces | DM §4 |
 | challenge .data+0xA940 / 0xA950 / 0xADE0 | partial_ch / scene / model42 | header read 0x200 of 0x15450 B file (fn_1_10560) | DM §4 |
 | challenge .data+0xF968 | `challenge_models` | 24 map models (fn_1_1CBE4) | DM §4 |
@@ -349,9 +360,11 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | ANIM bank | `anim` | ANIMBank version 0x007B7960, sequences 0xC each | DM §5 |
 | UI file | `ui` | MenuUiFileHeader {texarc @0x20, sprite bank}; bank+8 -> seq table | DM §5; CS §8.2 |
 | text bank | `text` | {u16 count,u16 0x0131,u32 offsets[]}, u16 glyphs end 0x4000 | DM §5 |
-| musyx group | `musyx` | {0x20,size}x4 chunks proj/pool/sdir/samp; group id u16 at +0x24 | DM §5 |
+| musyx group | `musyx` | {0x20,size}x4 chunks proj/sdir/pool/samp; group id u16 at +0x24 | SN §2 |
 | text banks (5) | text_menu.0, menu_1ff84.1, game_284e8.0, game_common.4, text_sys.0 | export/import lossless | DM §6 |
-| sound rows 5..22 | voice groups | 18-sample groups ids 27..10, probably per-character voices | DM §5 |
+| sound rows 5..36 / 37 / 39..45 | voice banks / announcer / stadium SFX | sound.(5+u) voice of unique index u; sound.37 names + menu music; 0x27+stadium | SN §2 |
+| game_set.0 | MusyX song arrangements | 19 sections = in-match songs of group 29 | SN §5.2 |
+| snd/my_snd_h/*.adp | music streams | DVD stream ADPCM, stereo 48 kHz; star_01/03 unused | SN §5.1 |
 | LZSS 11/4 | flags 0x40B | 1,492 files; 1 file LZSS 14/5 (0x50E); 78 stored | DM §1 |
 | coverage | referenced 56.61% / gaps 43.10% | 194 MB in 7 gaps free for --reuse-gaps; retail ISO 1,459,978,240 B | DM §3 |
 

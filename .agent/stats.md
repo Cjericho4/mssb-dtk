@@ -230,8 +230,8 @@ Indexed by charID; retail values for Mario / DK / Peach.
 | 0x7690 | `ChargePowerConstants` | 54 × u8[2] | setDefaultInMemBatter | `g_Batter.frameFullyCharged`, `frameChargeDownBegins` | 30,60 / 60,60 / 30,60 | high |
 | 0x7870 | – | 54 × s16[3] | fn_3_631AC, fn_3_63874 (runner) | [0] turn-around state duration; [1] lead-off animation end-frame anchor; [2] animation 0x2E entry-frame anchor (minus 10). Evidence below. | 25,75,42 / 25,75,42 / 27,55,32 | high (timing/data flow), unknown (physical meaning of 0x2E) |
 | 0x7E34 | `bodyCheckFrameRelatedConstants` | 54 × u8[4] | fn_3_60E90, fn_3_A96FC (fielder) | [0] body-check reaction animation entry frame; [1] countdown threshold before looped reaction starts; [2] knockback/recovery countdown; [3] elapsed frames before collision-result processing. Evidence below. | 13,30,120,5 / 6,8,120,5 / 6,8,120,5 | high (timer operations), medium (animation labels) |
-| 0x8148 | `unkCharacterArray` | voice group ids | m_sound | see character_select.md §6 | | (CS) |
-| 0x8168 | `characterSoundArray` | 54 × u16 | fn_3_90220 | voice SFX base id | 324 / 298 / 272 | high (CS §1) |
+| 0x8148 | `unkCharacterArray` | u8[32] voice group id per unique index | fn_3_90F48 | see sounds.md §3 | | (SN) |
+| 0x8168 | `characterSoundArray` | 54 × u16 | fn_3_90220 | voice SFX base id (lines +0..12) | 324 / 298 / 272 | high (SN §3) |
 | 0x17000 | – | 54 × s32 | fn_3_BC274, fn_3_BC2DC | foot height threshold ×1e-5 (bones 0x1E / 0x22 vs the actor's y) -> anim-slot flag bits 2/3 at +0x276 (foot down: dust / footsteps) | 55000 / 50000 / 50000 (babies 24000) | medium |
 
 Neighbours that are per *something else*: 0x76FC `hitByPitchHitboxes`, 0x7760 `runnerConstants?`,

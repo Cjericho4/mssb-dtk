@@ -23,7 +23,7 @@ from `mssb_files.py coverage/list/tables` and `test_mssb_files.py`. Rerun those 
   stored.
 * Main finds: the **five text banks** (all game dialogue, character bios and tutorials:
   a lossless `text-export`/`text-import` exists), an **82 MB opening HVQM4 movie** at
-  ZZZZ+0x12000, the **MusyX sound-group table** (48 groups, 1,861 samples), the per-stadium
+  ZZZZ+0x12000, the **MusyX sound-group table** (48 groups, 842 samples; `sounds.md`), the per-stadium
   **field-object sets**, the **Challenge board and map** files, and nine identical copies of the
   16-slot **menu resource set**.
 
@@ -108,7 +108,7 @@ id comes from this table (0 = every row is a copy of a file owned elsewhere). Lo
 | `res` | DOL `0x800E8B08` | 62 / 62 | ZZZZ | common UI resources (resource id 0..61) (ui 45, texarc 17) | resource id: 1 HUD portraits (charID->30+c), 5 lineup portraits, 15 menu common (names/mini images), 29 select-grid portraits, 30 title/main menu, 38..44 stadium art (38 + stadium); guesses: 0 HUD, 6..13 full-screen screens, 16..28 captain banners/emblems, 45..61 stills | fn_800097A0 / fn_80035838(desc, slot); the same 62 rows are copied into game.rel/challenge.rel |
 | `res_dol2` | DOL `0x800EEFD0` | 62 / 0 | ZZZZ | common UI resources (copy 2) (ui 45, texarc 17) | resource id (same as res) | fn_80020388: res_dol2[lbl_803CB7CC[stadium] + 0x26] into slot 0xD (stadium art); fn_80020278(n): res_dol2[n + 0x2D] (stills 45..61) by ARAMTransfer into a heap buffer |
 | `game_common` | DOL `0x800EE910` | 5 / 5 | ZZZZ | field/game common set (unknown 2, sectioned 2, text 1) | 0..1 0x140-header data, 2..3 actor sets (guess), 4 text bank (23 minigame strings) | fn_800188C0 |
-| `sound` | DOL `0x800EF508` | 48 / 48 | ZZZZ | MusyX sound groups (stored) (musyx 48) | sound group slot (each file = proj+pool+sdir+samp; group id at +0x24) | fn_800215F8 / fn_80021758 |
+| `sound` | DOL `0x800EF508` | 48 / 48 | ZZZZ | MusyX sound groups (stored) (musyx 48) | sound group slot (each file = proj+sdir+pool+samp; 5+u = voice bank of unique index u; rows: `sounds.md` §2) | fn_800215F8 / fn_80021758 |
 | `stadium` | DOL `0x800EFBE8` | 21 / 13 | ZZZZ | stadium models (stadium 21) | stadium*3 + variant (g_d_GameSettings.unk9 / unkA): Mario Stadium, Bowser Castle, Wario Palace, Yoshi Park, Peach Garden, DK Jungle, Toy Field | game.rel manageStadiumLoading -> ARAMTransfer; relocated by fn_3_5EC0 |
 | `master` | DOL `0x800EFD38` | 515 / 345 | blob | ARAM master descriptors (blob-relative) (sectioned 215, script 192, anim 54, model 33, texarc 21) | 0..32 bodies, 33..53 texture overlays (via lbl_800F73B8[charID]), 54+charID*7+k attachments (k 0..3 models, 4..6 event scripts), 432+charID track-15 ANIM bank, 486+id per-model event scripts (id = lbl_800EEB18[charID]) | fn_800227E4 streams the blob to ARAM; fn_8002204C / fn_8002254C / fn_80021BBC / fn_8002244C / fn_80021ADC read members |
 | `blob` | DOL `0x800F1D68` | 1 / 1 | ZZZZ | ARAM blob (master[515]) (blob 1) | - | fn_800227E4 (ARAM alloc size hard-coded at 0x800227EC/F4) |
@@ -236,18 +236,15 @@ strings at DOL `0x800E33A0`. It doesn't point into ZZZZ.dat, so it's not a file 
 | `ui` | 65 | `MenuUiFileHeader {texture archive @0x20, sprite bank}`; sprite bank -> sequence table -> frame lists (`include/menus/menu_ui.h`, `tools/modding/inspect_menu_ui.py`) | texture list, sequence count |
 | `texarc` | 39 | bare `TextureArchiveHeader {u16 count, u16 0, 0x20-byte headers}`; texture overlays (master 33..53), stills | texture list |
 | `script` | 158 | `{u32 count, u32 0x28, ...}` 0x28-byte header + count offsets to keyed records (`0x0064 0005 ...`) | entry count |
-| `musyx` | 48 | stored: `{0x20, size}` x4 chunk table: proj, pool, sdir (0x20-byte entries), samp (DSP-ADPCM); u16 group id at +0x24 | chunk sizes, sample count |
+| `musyx` | 48 | stored: `{0x20, size}` x4 chunk table: proj, sdir (0x20-byte entries), pool, samp (DSP-ADPCM); u16 group id at +0x24; full layout `sounds.md` §2 | `sound-list` / `sound-export` |
 | `text` | 5 | `{u16 count, u16 0x0131, u32 offsets[count]}` + strings of u16 glyph codes ending in 0x4000. Glyphs: A-Z 0x20.., a-z 0x3E.., 0-9 0x0F.., `! " ' ( ) , - . ?` = 00 01 06 07 08 0B 0C 0D 1E. Control: 0x4001 newline, 0x4002 space, 0x40xx colour/box/voice. `>= 0x8000` = icons | lossless `text-export` / `text-import` |
 | `hvqm` | 3 | Hudson HVQM4 1.3 movies, stored (3.3 MB, 24 MB, 82 MB) | header |
 | `rel` | 3 | REL modules (LZSS in aaaa.dat) | section table |
 | `stats` | 1 | `CharacterStats[54]` (0xA0 each), 0x21C0 zero bytes, 12 captain-team blocks: `stats.md` §1, §5 | `stats-export` / `stats-import` |
 | unknown | 8 | `camera.0` (0x73538, `{0x4F0, 0x5F0, ...}` header), `game_common.0/1` (0x140-word header), `opening.1`, `game_set.1`, `boot.1` (stored 0xB5D6), `partial_ch.0` (0x20-byte float records, only 0x200 B read) | head bytes |
 
-MusyX groups: 48 sound-group slots (`sound`, DOL `0x800EF508`, loaders `fn_800215F8` /
-`fn_80021758`; Challenge has its own 50-row copy). Rows 5..22 are 18-sample groups with ids
-27..10, probably per-character voice sets (not traced). Large groups: row 1 (gid 28, 386 samples, 4.1 MB), row 3
-(gid 28, 249 samples), row 37 (gid 32, 3.2 MB) and row 46 (gid 51, 121 samples). Music isn't
-MusyX. It's the 15 DVD-streamed `snd/my_snd_h/*.adp` files in the FST.
+MusyX groups (what each row is, voices, announcer, sample format) and the two music systems
+(`snd/my_snd_h/*.adp` streams, MusyX songs) are owned by `sounds.md`.
 
 ## 6. What each family enables for modding
 
@@ -259,8 +256,8 @@ MusyX. It's the 15 DVD-streamed `snd/my_snd_h/*.adp` files in the FST.
 | **Animations** | 17 ANIM banks per character (`subfile.c*19+2..18`), `master.432+c` | swapping banks between characters is a descriptor copy. Banks can be re-imported with `replace`. |
 | **Menus, HUD, portraits, logos** | 65 UI files (`res.*`, `challenge_ui.*`, `menu_*`) | texture archives inside UI files: same-size edits in place, bigger files appended. Every copy is updated automatically (up to 21 rows). |
 | **Stadiums** | `stadium.0..20` (13 distinct), `field.0..6` | replace the stadium model or field-object set per stadium / variant |
-| **Voices / SFX** | `sound.0..47` (stored MusyX groups) | replace a group with a re-built proj/pool/sdir/samp of the same layout |
-| **Music** | `snd/my_snd_h/*.adp` (FST) | replace the .adp in an extracted folder. The challenge music table and `lbl_800E33A0` paths name them. |
+| **Voices / SFX** | `sound.0..47` (stored MusyX groups) | `sound-export` / `sound-import` (WAV), `voice-swap` (`sounds.md` §6) |
+| **Music** | `snd/my_snd_h/*.adp` (FST) | replace the .adp in an extracted folder; any length works (`sounds.md` §5) |
 | **Movies** | `movie.0/1`, `opening.0` | replace with another HVQM4 1.3 stream |
 | **Free space** | 194 MB of unreferenced ZZZZ.dat | `replace --reuse-gaps` keeps the ISO at retail size |
 

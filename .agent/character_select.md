@@ -18,7 +18,7 @@ match copy and the phase-3 skin design live in `roster_flow.md`; the model load 
 | `lbl_8034E9A0 + 0x4757` (`charsOnCharacterGridSelected`) | .bss | 54 u8 | per-charID "taken" flags while building rosters |
 | `lbl_8034E9A0` (`Static_Stats_Tables`) | .bss 0x4C28 | 54 × 0xA0 `CharacterStats` first | loaded from ZZZZ.dat+0x06CF8800 by menus.rel `gap_0.c:161` at boot; copied into `inMemRoster[team][slot]` by game.rel `fn_3_B4124` / `fn_3_10C450` (`memcpy(..., &lbl_8034E9A0[charId], 0xA0)`) |
 | `lbl_80108DF4` | DOL | 33 u16 | announcer name call-out SFX per grid index (`fn_800628D4`) |
-| game.rel `.data+0x8168` | game.rel | 54 u16 | voice SFX base per charID (`m_sound.c` `fn_3_90220`) |
+| game.rel `.data+0x8168` | game.rel | 54 u16 | voice SFX base per charID (`sounds.md` §3) |
 | `lbl_803CB748` | sdata | 6 u8 | unique indices that need an unlock (`fn_80024C04`, matched) |
 
 Readers of `lbl_800E8558` (DOL): fn_80024C04, fn_8004D460/4F0, fn_8004E504/5B4, fn_80050138,
@@ -141,7 +141,7 @@ mini image, grid portrait) is in §8.
 | What | Keyed by | Lookup | Asset |
 |---|---|---|---|
 | Announcer name call-out | unique (via `fn_800698F8`) | `fn_800628D4(charID)` (MATCH): `useAltBirdoGrid = 1; sfx = lbl_80108DF4[grid]; sndFXStartEx(sfx, lbl_80108B18[0], 63, 0); sndFXCtrl(h, 0x5B, 0)` | `lbl_80108DF4` 33 u16 SFX ids 0x1C4..0x1E5 (Musyx group loaded by menus/game; entry 0x20 = Birdo alt).  Callers: menus `fn_2_12A70` (captain pick), game `fn_3_10CC20` x2 (batter/pitcher intro), `fn_3_B49D4` |
-| Character voice bank | unique (via `fn_800698F8`) | game `fn_3_90F48` / `fn_3_90B14` / `fn_3_5A28C`: `fn_800216F8(grid + 5, cb)` then `fn_80021518(lbl_3_data_8148[grid], file)` = `sndPushGroup` | `lbl_800EF508[5 + grid]` (48 DiskFileDesc, uncompressed Musyx project/sdir/pool files in ZZZZ.dat; 0..4 and 38..47 are common/stadium banks), group id `lbl_3_data_8148[33]` (game.rel .data 0x8148) |
+| Character voice bank | unique (via `fn_800698F8`) | game `fn_3_90F48`: row `5 + u`, group `lbl_3_data_8148[u]`; SFX `lbl_3_data_8168[charID] + line` | `sounds.md` §3 |
 | Per-grid gameplay row | unique (via `fn_800698F8`) | DOL `fn_8004B284`: `lbl_800FBF10 + 0x214 + grid*14 + k*2` -> `getAnimRelatedCoordinates` | `lbl_800FBF10` (u16[33][7] at +0x214) |
 | Small portraits in menus (lineup/team/results) and in-game | unique (`lbl_800E8558[c].uniqueIdx`) | menus `fn_2_4EB2C` (slot 0x15), `fn_2_5ED3C` (slot 0xA); game `fn_3_59F40` (slot 0x14) via `fn_80035838(desc, slot)` | ZZZZ.dat 0x18ED7000 (menus `lbl_2_data_1324C` / `lbl_2_data_20BF0`, game `lbl_3_data_3D60+0x70`): 180 textures, the 32 CI8 50x50 at indices 53..84 are unique 0..31 (byte-identical to the 54-file's for the 26 base cells) |
 | HUD batter/pitcher card | **charID** | game `fn_3_91D1C` (rep_16B8): pane frame `pane->unk5C = stats.CharID << 16` (also `fn_3_EA340`, `fn_3_EAEF4`, `fn_3_EB6E0`, `fn_3_11F02C`, `fn_3_121304`, `fn_3_127B68`, `fn_3_11E364/7C4`) | ZZZZ.dat 0x1A6B3000 = `res[1]`. Loaded in-game by game.rel `fn_3_5BD40` from `lbl_3_data_6130+0x10` into UI slot **0xC** (the only fixed-offset load of it in the asm; the other tables are loaded by computed index). Other copies of the descriptor: DOL `res` 0x800E8B18 and `res_dol2` 0x800EEFE0, game `lbl_3_data_3D80/F538/10598/21EC8 +0x10`, challenge `debug_browser[2]`. 102 textures, the 54 CI8 50x50 + 256-entry RGB5A3 TLUT at indices 30..83 are charID 0..53 (each colour variant has its own) |
@@ -151,8 +151,7 @@ mini image, grid portrait) is in §8.
 | Select grid cells | **grid cell -> base charID** (not the reverse) | `lbl_800FDE84`, `lbl_800FE5D4`, `fn_2_F200` scans `lbl_80108DB8`, `fn_800675C4` | untouched by the patcher |
 | Gameplay checks by kind | unique | game `rep_1200` (`lbl_3_data_76FC[unique*3]`), `gap_106DFC` (`lbl_803616CC + unique*0x16`), `cmplwi 0x19/0xE/0x14/0x1A/0x1E` special cases, `fn_3_6BD6C` | |
 
-Not presentation: `lbl_800EF508` was first mistaken for portraits; it is sound only (`fn_80021518` is
-`sndPushGroup`).  `fn_80035838(desc, slotId)` loads a UI resource into a numbered slot,
+Not presentation: `lbl_800EF508` is the sound-group table (`sounds.md` §2).  `fn_80035838(desc, slotId)` loads a UI resource into a numbered slot,
 `fn_80035B50(id)` finds the slot, `fn_800363D8(layout, pane, field, list, index)` sets a pane texture.
 
 ### What the patcher does (`clone_character.py --ui source`, default)

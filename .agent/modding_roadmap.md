@@ -82,9 +82,14 @@ the "enables" line says what each unlocks. Status: ⏳ not started, 🟡 in prog
   tables. Tool: `mssb_files.py stats-export / stats-import` (byte-identical round trip, tested).
   Open: meaning of the runner (0x7870), fielder (0x7E34) and DOL window fields, captain lineups
   1..3, what the chemistry thresholds gate.
-- **R4. Voices and sounds** ⏳ (#12). Per-character voice banks (`lbl_800EF508`, Musyx group files,
-  `lbl_3_data_8148`), announcer SFX ids (`lbl_80108DF4`), the sample format, and `snd/` music
-  streams. *Enables:* custom voices, voice swaps independent of the character, custom music.
+- **R4. Voices and sounds** ✅ (#12). Documented in `.agent/sounds.md`: 48 MusyX groups (every
+  row's role and loader), voice bank = `sound.(5+u)` with group `lbl_3_data_8148[u]` and SFX
+  `lbl_3_data_8168[charID] + line` (13 lines, 8 of them traced to call sites), announcer names in
+  `sound.37`, DSP-ADPCM sample format, `.adp` music (stereo 48 kHz stream ADPCM, opened by path:
+  data-only swap) and MusyX songs (`game_set.0`). Tools: `mssb_files.py sound-list / sound-export /
+  sound-import / voice-swap / music-export` (identity round trip of all 48 groups, tested).
+  Open: lines 1, 2, 6, 8, 12; an `.adp` encoder; per-charID voice (needs a game.rel table edit);
+  the patcher's `--ui donor` voice gap (sounds.md §6).
 - **R5. Animation banks** 🟡 partial (#13, groundwork for phase 5). Documented in
   `animations.md`: code-backed track/action selection (7/8 unresolved), ANIM records and setting
   quantization, body hierarchy and bone-ID binding, sharing audit, playback and timing links.
