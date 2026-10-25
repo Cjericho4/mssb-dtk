@@ -8,13 +8,48 @@ void fn_3_B79AC(void) {
 }
 
 // .text:0x000B7C2C size:0xB0 mapped:0x806F6CC0
-void fn_3_B7C2C(void) {
-    return;
+// Casts a ray between the two points (y flipped) and reports whether it hits a wall-like surface.
+BOOL fn_3_B7C2C(Vec* start, Vec* end) {
+    VecSrcDst ray;
+    CollisionStruct hit;
+    u32 t;
+
+    ray.src.x = start->x;
+    ray.src.y = -start->y;
+    ray.src.z = start->z;
+    ray.dst.x = end->x;
+    ray.dst.y = -end->y;
+    ray.dst.z = end->z;
+    t = checkCollision(&ray, &hit, 0, 0) & 0x7F;
+    // FAKEMATCH: the negated != chain keeps one compare per value; an == || chain merges 2..5 and 7..8 into range checks.
+    if (!(t != BALL_COLLISION_TYPE_WALL && t != BALL_COLLISION_TYPE_STRUCTURE && t != BALL_COLLISION_TYPE_FOUL_LINE &&
+          t != BALL_COLLISION_TYPE_UNCLIMBABLE_WALL && t != BALL_COLLISION_TYPE_PIT_WALL && t != BALL_COLLISION_TYPE_PIT &&
+          t != BALL_COLLISION_TYPE_CHOMP_HAZARD)) {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x000B7CDC size:0x90 mapped:0x806F6D70
+// Casts a vertical ray at (x, z) and returns FALSE if it lands on grass, dirt, rough terrain, water or type 0x32.
 BOOL fn_3_B7CDC(f32 x, f32 z) {
-    return 0;
+    VecSrcDst ray;
+    CollisionStruct hit;
+    u32 t;
+
+    ray.src.x = x;
+    ray.src.y = -100.0f;
+    ray.src.z = z;
+    ray.dst.x = x;
+    ray.dst.y = 100.0f;
+    ray.dst.z = z;
+    t = checkCollision(&ray, &hit, 0, 0) & 0x7F;
+    // FAKEMATCH: negated != chain, as in fn_3_B7C2C, so 9 and 10 stay separate compares.
+    if (!(t != BALL_COLLISION_TYPE_GRASS && t != BALL_COLLISION_TYPE_DIRT && t != BALL_COLLISION_TYPE_ROUGH_TERRAIN &&
+          t != BALL_COLLISION_TYPE_WATER && t != 0x32)) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 // .text:0x000B7D6C size:0x6C mapped:0x806F6E00
