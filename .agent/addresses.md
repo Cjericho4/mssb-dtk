@@ -351,6 +351,8 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | CharacterStats +0x37/+0x38/+0x39/+0x3A | display ratings | batting, pitching, running, fielding (not texture ids) | CS §8.1 |
 | CharacterStats +0x3B.. | chemistry row | 54 bytes, 0..99, 50 self, symmetric | ST §4; CS §2 |
 | CharacterStats +0x20 / +0x34..+0x36 | abilities / stars | u32 ability mask; captain, swing, pitch star | ST §3 |
+| charID 0x0C / 0x2A | Green Koopa / Red Koopa | retail HUD textures 42/72 + both Ghidra enums; fixed ChemistryTable and catalogue colour swap | ST §4.2 |
+| charID 0x1C | Toadsworth | no colour suffix in CHAR_ID / Ghidra; removed catalogue ToadsworthR label | ST §4.2 |
 | StatTable.UnusedBytes[0] @ +0x05 | planned roster skin byte | no field access anywhere, but inside the memcpy(0x1E) of every roster copy: re-applied at the copy sites; static rows are per charID | RF §4, §6.1 |
 | StatTable +0x1E/+0x1F | padding | stays with the slot across field-wise copies; don't use | RF §3.4 |
 | Gap8001196CAnim (0x27C) | slot record | g_hugeAnimStruct.slots[13] at +0xC04 | RF §1; CMR §1 |

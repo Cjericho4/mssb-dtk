@@ -144,8 +144,44 @@ positive-chemistry threshold. Confidence **high** for each branch and state chan
 chemistryThrow/regularThrow/antiChemThrow. These support the branch tracing; they are not the
 sole evidence. No threshold is a chemistry catch-probability stat.
 
-Header note: `ChemistryTable` names 0x0C `RedKoopa` and 0x2A `GreenKoopa`; `CHAR_ID` says 0x0C is
-`KOOPA_GREEN` (the tool uses the CHAR_ID names).
+### 4.2 Character-ID naming audit (2026-10-24)
+
+**High confidence: 0x0C / 12 = Green Koopa, 0x2A / 42 = Red Koopa.** Keep the existing
+`CHAR_ID_KOOPA_GREEN` / `CHAR_ID_KOOPA_RED` values. Corrected the two `ChemistryTable`
+field names and the reversed `KoopaR` / `KoopaG` labels in `tools/datamap/catalog.py`;
+no chemistry bytes, character IDs, or field offsets were swapped.
+
+Evidence, with ID-only checks so the tool's own display labels do not decide the result:
+
+* Retail HUD archive `res.1` (ZZZZ+0x1A6B3000), textures **30+charID**: texture 42 (ID 12)
+  has green shell-colour texels; texture 72 (ID 42) has red. Local RGB5A3/CI8 palette analysis
+  using `clone_character.TextureFile` / `texture_colour_counts` counted **0 red / 27 green**
+  saturated opaque texels for ID12 and **30 red / 0 green** for ID42 (S>=0.5, V>=0.25;
+  red H<0.05 or >0.95, green 0.20<H<0.48). The same independent check gives red for ID20
+  (25/0), green for ID43 (0/26), agreeing with the Paratroopa names.
+* Both user-defined Ghidra enums, `enumCharacterID_byte` and `enumCharacterID_int` in
+  `in_game.h`, explicitly give `koopa(G)=12`, `koopaR=42`. Both name ID28 `toadsworth`.
+* Retail `stats-export`: both Koopa rows are balanced class, with identical chemistry rows
+  (including 50 with each other); ID12 charge power/speed =50/40, ID42 =60/30. Chemistry and
+  class therefore **cannot distinguish their colours**; these are consistency checks on row
+  identity, not colour evidence.
+* `lbl_800E8558` rows: ID12 `{1,12,12,1,0,0}`, ID42 `{1,12,12,0,0,1}`; both share family/base/
+  unique index 12, and the latter is its variant. Voice table `lbl_3_data_8168` gives both
+  SFX base 168; announcer lookup uses the shared unique index. Voice/announcer identity
+  likewise cannot distinguish colours and should not be relabelled as colour-specific audio.
+* `extract res.15` and `inspect_menu_ui.py` verify the name-frame map (ID12 -> texture12,
+  ID42 -> texture70, ID28 -> texture28) and all 162 name/mini/grid mappings. The name glyph
+  textures are distinct, share a greyscale palette, and were not treated as shell-colour evidence.
+  Extracted assets stayed outside the checkout; no assets were sent for image interpretation.
+
+Swept `include/`, `src/`, `tools/modding`, `tools/datamap` and `.agent` for character-name
+lists and ID/name comments. Normalizing colour prefix/suffix order and catalogue abbreviations,
+all **54** `ChemistryTable` fields, `clone_character.CHAR_NAMES`, `stats.NAMES`, and
+`catalog.CHAR_NAMES` now agree with `CHAR_ID`. The only other disagreement was catalogue ID28
+`ToadsworthR`: removed the unsupported R suffix to match both enums and the other tools.
+The clone patcher's default recolour specifications (e.g. a donor recoloured green) describe
+requested output colours, not the retail identity, so those remain intact. No further naming
+conflicts were found in the scoped source/header/doc sweep.
 
 ## 5. The rest of `stats.0`
 

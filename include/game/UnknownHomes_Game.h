@@ -1383,7 +1383,7 @@ typedef struct _StatTable {
 } StatTable; // size: 0x3B
 
 /* Chemistry of this row's character with each charID: 0..99, 50 with itself, symmetric in retail.
-   The names of 0x0C and 0x2A are swapped with respect to CHAR_ID (0x0C = CHAR_ID_KOOPA_GREEN). */
+   Field order follows CHAR_ID; Koopa colours verified from retail portraits (stats.md section 4.2). */
 typedef struct _ChemistryTable {
     /*0x000*/ u8 Mario;
     /*0x001*/ u8 Luigi;
@@ -1397,7 +1397,7 @@ typedef struct _ChemistryTable {
     /*0x009*/ u8 Bowser;
     /*0x00A*/ u8 Wario;
     /*0x00B*/ u8 Waluigi;
-    /*0x00C*/ u8 RedKoopa;
+    /*0x00C*/ u8 GreenKoopa;
     /*0x00D*/ u8 RedToad;
     /*0x00E*/ u8 Boo;
     /*0x00F*/ u8 Toadette;
@@ -1427,7 +1427,7 @@ typedef struct _ChemistryTable {
     /*0x027*/ u8 Dixie;
     /*0x028*/ u8 Goomba;
     /*0x029*/ u8 Paragoomba;
-    /*0x02A*/ u8 GreenKoopa;
+    /*0x02A*/ u8 RedKoopa;
     /*0x02B*/ u8 GreenParatroopa;
     /*0x02C*/ u8 BlueShyGuy;
     /*0x02D*/ u8 YellowShyGuy;
