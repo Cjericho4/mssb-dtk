@@ -1344,38 +1344,44 @@ typedef struct _ChallengeTrackingStruct {
     /*0x033*/ u8 _33;
 } ChallengeTrackingStruct; // size: 0x34
 
+/* Per-character stats.  54 rows in ZZZZ.dat+0x06CF8800 (file stats.0) are loaded at boot into
+   Static_Stats_Tables (lbl_8034E9A0) and copied per player into inMemRoster.  Ranges are the
+   retail ones; the readers and units are in .agent/stats.md section 2. */
 typedef struct _StatTable {
-    /*0x000*/ u8 CurveBallSpeed;
-    /*0x001*/ u8 FastBallSpeed;
-    /*0x002*/ u8 cursedBall;
-    /*0x003*/ u8 Curve;
-    /*0x004*/ u8 curveControl;
-    /*0x005*/ u8 UnusedBytes[27];
-    /*0x020*/ E(u32, FIELDING_ABILITIES) FieldingStats;
+    /*0x000*/ u8 CurveBallSpeed;        /* 110..130, -> g_Pitcher.curveBallSpeed (fn_3_6EBB4) */
+    /*0x001*/ u8 FastBallSpeed;         /* 150..175, -> g_Pitcher.fastBallSpeed */
+    /*0x002*/ u8 cursedBall;            /* 40..90, -> g_Pitcher.cursedBallStat; scales batted-ball power */
+    /*0x003*/ u8 Curve;                 /* 30..90, -> g_Pitcher.curveStat */
+    /*0x004*/ u8 curveControl;          /* 40..90, -> g_Pitcher.curveControlStat */
+    /*0x005*/ u8 UnusedBytes[25];       /* 0 in retail; copied with the row (memcpy 0x1E), never read */
+    /*0x01E*/ u8 _pad1E[2];             /* alignment padding: never copied */
+    /*0x020*/ E(u32, FIELDING_ABILITIES) FieldingStats; /* bit mask, bits 0..13 used (checkFieldingStat) */
     /*0x024*/ s16 CharID;
-    /*0x026*/ u8 FieldingArm;
-    /*0x027*/ u8 BattingStance;
-    /*0x028*/ u8 SlapContactSize;
-    /*0x029*/ u8 ChargeContactSize;
-    /*0x02A*/ u8 SlapHitPower;
-    /*0x02B*/ u8 ChargeHitPower;
-    /*0x02C*/ u8 BuntingContactSize;
-    /*0x02D*/ u8 HitTrajectoryPushPull;
-    /*0x02E*/ u8 HitTrajectoryHighLow;
-    /*0x02F*/ u8 Speed;
-    /*0x030*/ u8 ThrowingArm;
-    /*0x031*/ E(u8, CHARACTER_CLASS) CharacterClass;
-    /*0x032*/ u8 Weight;
-    /*0x033*/ u8 Captain;
-    /*0x034*/ u8 CaptainStarHitPitch;
-    /*0x035*/ u8 NonCaptainStarSwing;
-    /*0x036*/ u8 NonCaptainStarPitch;
-    /*0x037*/ u8 BattingStatBar;
+    /*0x026*/ u8 FieldingArm;           /* throwing hand 0/1, -> g_Pitcher.handedness, glove side */
+    /*0x027*/ u8 BattingStance;         /* E(BATTING_HAND) 0 right, 1 left, -> g_Batter.batterHand */
+    /*0x028*/ u8 SlapContactSize;       /* 30..90 */
+    /*0x029*/ u8 ChargeContactSize;     /* 10..45 */
+    /*0x02A*/ u8 SlapHitPower;          /* 5..60 */
+    /*0x02B*/ u8 ChargeHitPower;        /* 1..95 */
+    /*0x02C*/ u8 BuntingContactSize;    /* 10..80 */
+    /*0x02D*/ u8 HitTrajectoryPushPull; /* 0..2 */
+    /*0x02E*/ u8 HitTrajectoryHighLow;  /* 0..2 */
+    /*0x02F*/ u8 Speed;                 /* 10..90, runner speed */
+    /*0x030*/ u8 ThrowingArm;           /* 30..100, fielder throw strength */
+    /*0x031*/ E(u8, CHARACTER_CLASS) CharacterClass; /* 0..3 */
+    /*0x032*/ u8 Weight;                /* 0..4 */
+    /*0x033*/ u8 Captain;               /* 1 for the 12 captains */
+    /*0x034*/ u8 CaptainStarHitPitch;   /* E(CAPTAIN_STAR_TYPE) 0..12, batting and pitching captain star */
+    /*0x035*/ u8 NonCaptainStarSwing;   /* E(REGULAR_STAR_SWING) 1..3 */
+    /*0x036*/ u8 NonCaptainStarPitch;   /* 1 curve, 2 fastball, 3 change-up (g_Pitcher.nonCaptainStarPitch) */
+    /*0x037*/ u8 BattingStatBar;        /* menu ratings 1..10 (star: +2, capped at 10) */
     /*0x038*/ u8 PitchingStatBar;
     /*0x039*/ u8 RunningStatBar;
     /*0x03A*/ u8 FieldingStatBar;
 } StatTable; // size: 0x3B
 
+/* Chemistry of this row's character with each charID: 0..99, 50 with itself, symmetric in retail.
+   The names of 0x0C and 0x2A are swapped with respect to CHAR_ID (0x0C = CHAR_ID_KOOPA_GREEN). */
 typedef struct _ChemistryTable {
     /*0x000*/ u8 Mario;
     /*0x001*/ u8 Luigi;
@@ -1442,12 +1448,13 @@ typedef struct _CharacterStats {
         struct {
             u8 _statBytes[0x3B];
             /*0x03B*/ ChemistryTable chemistry;
-            /*0x071*/ u8 BytesAfterChemistry[3];
-            /*0x074*/ u16 UnusedShorts[21];
+            /*0x071*/ u8 BytesAfterChemistry[3]; /* [0] copied, never read, 0 in retail; [1..2] padding */
+            /*0x074*/ u16 UnusedShorts[21];        /* copied, never read, 0 in retail */
             /*0x09E*/ u8 _pad9E[2];
         };
     };
 } CharacterStats; // size: 0xA0
+STATIC_ASSERT(sizeof(CharacterStats) == 0xA0);
 
 extern CharacterStats inMemRoster[TEAMS_PER_GAME][PLAYERS_PER_TEAM];
 

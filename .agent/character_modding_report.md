@@ -278,10 +278,9 @@ original source *defined* the tables in the same file. Defining them as initiali
   not work). Appending to ZZZZ.dat is safe: nothing references its last 0x5C0 bytes, and Dolphin
   rebuilds the FST from the folder (`sys/fst.bin` is patched anyway).
 * **Selection UI:** no colour button; the L button cycles a family's free colours
-  (`roster_flow.md` §2.1). Stats: `ZZZZ.dat+0x06CF8800`, 54 × 0xA0 `CharacterStats`, loaded by
-  menus.rel at boot. Other charID-indexed tables: game.rel `.data` (section 5) voice base 0x8168,
-  BatterHitbox 0x6EF8, charge frames 0x7690, runner timing 0x7870, 0x7E34, 0x17000; DOL
-  `lbl_800FB798` 15 × 54 s16 animation parameters (R3, issue #11).
+  (`roster_flow.md` §2.1). Stats (`stats.0`) and every other charID-indexed table a clone needs a
+  row in (game.rel 0x6EF8, 0x7690, 0x7870, 0x7E34, 0x8168, 0x17000; DOL `lbl_800FB798..D80`):
+  `stats.md`.
 * Pure-Python LZSS (11/4) round-trips every retail file tried; optimal packing beats retail (Mario's
   body 76992 B vs 77284 B).
 * **Base donors (e.g. `--slot Luigi:green`):** the clone's overlay goes into the donor's own body

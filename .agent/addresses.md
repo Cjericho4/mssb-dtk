@@ -1,6 +1,6 @@
 # Address lookup (GYQE01 modding): grep an address or symbol name; each row points at the doc section that owns the fact. Rows and docs must agree: fix both together.
 
-DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 0xE5300. REL symbols (`fn_2_`/`lbl_2_` menus, `fn_3_`/`lbl_3_` game, `fn_1_`/`lbl_1_` challenge) are section offsets: the RELs are relocated at load, so they have no fixed RAM address. Docs: CMR `character_modding_report.md`, CS `character_select.md`, DM `data_map.md`, RF `roster_flow.md`, RM `modding_roadmap.md`, DK `decomp_knowledge.md`. Status = `tools/feedback_diff.py` lines (DK §2), 2026-10-24.
+DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 0xE5300. REL symbols (`fn_2_`/`lbl_2_` menus, `fn_3_`/`lbl_3_` game, `fn_1_`/`lbl_1_` challenge) are section offsets: the RELs are relocated at load, so they have no fixed RAM address. Docs: CMR `character_modding_report.md`, CS `character_select.md`, DM `data_map.md`, RF `roster_flow.md`, RM `modding_roadmap.md`, DK `decomp_knowledge.md`, ST `stats.md`. Status = `tools/feedback_diff.py` lines (DK §2), 2026-10-24.
 
 ## 1. DOL tables and globals
 
@@ -15,7 +15,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800E8D58 (res+0x250) | `res[37]` | strips file, boot-loaded into UI slot 0 | DM §4 |
 | 0x800E8558 | `lbl_800E8558` / `characterStaticIndexes` | 54x6 B {family, baseCharID, uniqueIdx, isBase, isCaptain, colourIdx} per charID | CS §1 |
 | 0x800E869C | `lbl_800E869C` | 32 B grid index -> base charID (twin of mainCharArray) | CS §1 |
-| 0x800E86F0 | `lbl_800E86F0` | 12 star-bonus ability bytes | RF §2.4 |
+| 0x800E86F0 | `lbl_800E86F0` (Ghidra `stonNiceContactIncrement`) | 12 star-player bonus bytes {50 x7, 20, 20, 50 x3} | ST §3; RF §2.4 |
 | 0x800E33A0 | music path strings | 15 `snd/my_snd_h/*.adp` paths; order = music track index | DM §4 |
 | 0x800EE910 | `game_common` | 5 field/game common files (4 = 23 minigame strings) | DM §4 |
 | 0x800EEAAC (0xEBAAC) | `lbl_800EEAAC` | 54 u16 glove/attachment bone-list base (= charID*6 retail) | CMR §1.1, §3 |
@@ -40,7 +40,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800F73B8 (0xF43B8) | `lbl_800F73B8` | 54x2 s8 {bodyEntry, overlayEntry or -1} per charID; retail values in CMR §3 | CMR §3 |
 | 0x800F7424 / 0x800F743C | `lbl_800F7424` / `lbl_800F743C` | 2x6x2 sub-item pair rows {k1,k2} / 54 per-character row index | CMR §3 |
 | 0x800F7478 | end of gap_8001E460.c `.data` split | split is 0x800EFBE8..0x800F7478 | CMR §6 |
-| 0x800FB798 | `lbl_800FB798` | 15x54 s16 per-character animation parameters | CMR §8 |
+| 0x800FB798..0x800FBD80 | `lbl_800FB798` + 14 more 0x6C tables | 15 x s16[54] animation frame windows (start, end; 99 = never) for bone effects | ST §7 |
 | 0x800FB5B0 | `menu_title` | title/main-menu UI copy (res 30) | DM §4 |
 | 0x800FBF10 (+0x214) | `lbl_800FBF10` | u16[33][7] per-grid gameplay row, grid*14+k*2 (fn_8004B284) | CS §6 |
 | 0x800FDE84 | `lbl_800FDE84` | 36 u8 roster grid cells -> base charID (0xFF empty); 26 used | CS §1 |
@@ -119,6 +119,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_800628D4 | announcer call-out | sets useAltBirdoGrid, plays lbl_80108DF4[grid]; MATCH | CS §6 |
 | fn_80067AC8 | family column lookup | row[column] of lbl_80108EDC or -1; MATCH | CS §2 |
 | fn_80067B40 | family taken-flag writer | (unused, charID, value); value 2 = query; 8 lines | CS §2 |
+| fn_8004B284 / fn_8004BEB0 / fn_8004C510 | anim event windows | read lbl_800FB798.. tables, spawn effect at a bone | ST §7 |
 | fn_80067C48 | chemistry ranking | sorts ids by chemistry into lbl_8034E9A0+0x478D+idx*54; stub, next to decompile | CS §2, §5 |
 | fn_80067F70 | CPU auto-pick | random from top 20 ranked free ids, marks family taken; stub, next to decompile | CS §2, §5 |
 | fn_800506E8 | cell badge writer | lbl_803C6028.slots[cell] by base charID; MATCH | CS §5 |
@@ -149,7 +150,9 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 
 | Address / offset | Name | Meaning | Where documented |
 |---|---|---|---|
-| fn_2_554 | stats loader (boot) | loads CharacterStats from ZZZZ+0x6CF8800 | DM §4 |
+| fn_2_554 | stats loader (boot) | loads stats.0 (ZZZZ+0x6CF8800) into lbl_8034E9A0 | ST §1 |
+| fn_2_12238 / fn_2_12CD8 / fn_2_12F88 | Challenge start team | copies captain block lineup 0 (lbl_8034E9A0+0x4380+i*0x48) to team 0 | ST §5 |
+| fn_2_A288 / fn_2_4C3EC / fn_2_B920 / fn_2_BF90 | captain lineups 1..3 | read the captain blocks; stubs | ST §5 |
 | fn_2_2FC0 | roster rebuild | (mode, finish, rebuild); taken flags, locked uniques, auto-pick, fn_2_8940; MATCH | CS §5; RF §2.3 |
 | fn_2_3204 / fn_2_8ED4C | fn_2_2FC0 callers | (mode,1,1) / (9,0,1) | CS §5; RF §2.3 |
 | fn_2_8940 | roster copy | Static_Stats_Tables[teams] -> inMemRoster in pick order; MATCH | RF §2.3 |
@@ -186,7 +189,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_2_8DB14 | menu scene select | by lbl_2_bss_1A824C->unk7746 - 0x19 | DM §7 |
 | fn_2_17C88 / 17ED8 / 18148 / 188EC | menu_char_a users | per-charID 3D scene A | DM §4 |
 | fn_2_47540 / 477C0 / 478F4 / 481F4 | menu_char_b users | per-charID 3D scene B | DM §4 |
-| menus .data+0xC8 | `stats` | CharacterStats block (ZZZZ+0x6CF8800), 54x0xA0 + 0x2520 tail | DM §4 |
+| menus .data+0xC8 | `stats` | descriptor of stats.0 (ZZZZ+0x6CF8800) | DM §4; ST §1 |
 | menus .data+0x444 / 0xD14 / 0x1314 / 0x18B4 / 0x1CD4 / 0x2A9B4 / 0x2B3DC / 0x2E1EC / 0x302BC | `menu_set`..`menu_set_i` | nine identical 16-slot menu resource sets (slot 1 = grid portraits); 0x2B3DC = character select (fn_2_73994/760CC/7BFF8) | DM §4 |
 | menus .data+0x454 / 0xD24 / 0x1324 / 0x18C4 / 0x1CE4 / 0x2A9C4 / 0x2B3EC / 0x2E1FC / 0x302CC | grid descriptor copies | slot 1 of the nine sets (9 copies) | CS §8.3 |
 | menus .data+0x241C | `menu_char_a` | 54 per-charID menu 3D scenes | DM §4 |
@@ -219,6 +222,10 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_3_64DC | stadium loader copy | stadium_game table | DM §4 |
 | manageStadiumLoading | stadium loader | reads lbl_800EFBE8[unk9*3+unkA] | DM §4 |
 | fn_3_90220 | voice SFX base | game .data+0x8168 | CS §1 |
+| setInMemBatterConstants (fn_3_6DE60) / fn_3_6EBB4 / fn_3_6D964 / setFielderValues | row -> actor | copy CharacterStats fields into g_Batter / g_Pitcher / runner / fielder | ST §2 |
+| fn_3_6EF1C | Challenge item buffs | scales inMemRoster stats by lbl_3_data_5FC4 at game start | ST §2 |
+| fn_3_6D658 | chemistry(team, a, b) | static row +0x3B+b, + Challenge item bonus, max 100; compared with lbl_3_data_4638 {90,20,90,90} | ST §4 |
+| checkFieldingStat (fn_3_6D604) | ability test | inMemRoster[t][s].FieldingStats & (1 << bit) | ST §3 |
 | fn_3_90F48 / fn_3_90B14 / fn_3_5A28C | voice bank loaders | fn_800216F8(grid+5), lbl_3_data_8148[grid] | CS §6 |
 | fn_3_91D1C | HUD card pane | pane->unk5C = CharID<<16 (+ EA340, EAEF4, EB6E0, 11F02C, 121304, 127B68) | CS §6 |
 | fn_3_10CC20 / fn_3_B49D4 | announcer callers | batter/pitcher intro | CS §6 |
@@ -230,12 +237,16 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_3_B9BB4 | field object sets | stores ARAMTransfer(&lbl_3_data_10ACC[stadium]) in stadiumObjectLoadingPtr | DM §4 |
 | fn_3_10B8D0 / 10F3D8 / 10FDC8 | minigame loaders | minigame_res [minigame+6] | DM §4 |
 | fn_3_BF878 / fn_3_BEFF8 / fn_3_106E50 / fn_3_1665E4 | misc loaders | model42 / 44-section / camera / results text | DM §4 |
-| game .data+0x0 | `stats_game` | CharacterStats block copy (maybeProcessTeamData) | DM §4 |
+| game .data+0x0 | `stats_game` | stats.0 descriptor for the debug loader maybeProcessTeamData (file as 12 teams x 9 rows) | DM §4; ST §1 |
 | game .data+0x7EC | `stadium_game` | 21 stadium descriptors | DM §4 |
-| game .data+0x8168 | voice base | 54 u16 per charID | CMR §8 |
+| game .data+0x8168 | `characterSoundArray` | voice SFX base, 54 u16 per charID | CS §1; ST §6 |
 | game .data+0x8148 | `lbl_3_data_8148` | voice group ids, 33 entries | CS §6 |
-| game .data+0x6EF8 / 0x7690 / 0x7870 | BatterHitbox / charge frames / runner timing | charID-indexed | CMR §8 |
-| game .data+0x7E34 / 0x17000 | per-charID tables | meaning unnamed (R3) | CMR §8 |
+| game .data+0x6EF8 | `BatterHitbox` | 54 x BatterReachStruct (9 f32): batter reach box | ST §6 |
+| game .data+0x7690 | `ChargePowerConstants` | 54 x u8[2]: frameFullyCharged, frameChargeDownBegins | ST §6 |
+| game .data+0x7870 | runner frames | 54 x s16[3]: turn-around, lead-off anim, anim 0x2E start (low confidence) | ST §6 |
+| game .data+0x7E34 | `bodyCheckFrameRelatedConstants` | 54 x u8[4] fielder action frames (low confidence) | ST §6 |
+| game .data+0x17000 | foot height | 54 x s32, /100000 = foot-down height (bones 0x1E/0x22) | ST §6 |
+| game .data+0x4638 | chemistry thresholds | s16 {90, 20, 90, 90} | ST §4 |
 | game .data+0x76FC (unique*3) | `lbl_3_data_76FC` | gameplay check by kind (rep_1200) | CS §6 |
 | game .data+0x3D60 | `game_set` | 69 rows; rows 2..63 = res 0..61 (`lbl_3_data_3D80`); row 7 (+0x70) lineup portraits | DM §4 |
 | game .data+0x3D80 / 0x6130 / 0xF538 / 0x10598 / 0x21EC8 | res copies (game_set+0x20, game_res_a, game_res_b, game_res_c+0x20, minigame_res) | +0x10 HUD card, +0xF0 common, +0x1D0 grid descriptor | CS §6, §8.3; DM §4 |
@@ -270,7 +281,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | ZZZZ+0x00000000..0x12000 | gap | 3 stored CMPR texarcs, unused | DM §3 |
 | ZZZZ+0x12000 | opening movie | 82 MB HVQM4, stored | DM §1 |
 | ZZZZ+0x06C96000 / 0x06CC3000 / 0x18D43800 | res 34..36 | 640x448 opening stills | DM §4 |
-| ZZZZ+0x06CF8800 | CharacterStats | 54x0xA0 stats (stored) + 0x2520 tail; edit in place | CMR §8; DM §6 |
+| ZZZZ+0x06CF8800 | `stats.0` | 0x46E0 stored: 54x0xA0 CharacterStats, 0x21C0 zero, 12x0x48 captain teams (+0x4380); stats-export/-import | ST §0, §5 |
 | ZZZZ+0x06CFD000 | MarioStadium | enumDiskLocations.MarioStadium, stadium row 0 | DM §4 |
 | ZZZZ+0x08F2E800..0x09438800 | gap | 5 MB, AdGCForm header, not loaded | DM §3 |
 | ZZZZ+0x0B95C800.. | Pianta rows | slot 21 t0 0B95C800 t1 0B96D800; t2 0B977800 t3 0B9AF000 t15 0BAD6800 shared | CMR §3 |
@@ -323,9 +334,11 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | Address / offset | Name | Meaning | Where documented |
 |---|---|---|---|
 | inMemRoster[team][slot].stats.CharID @ +0x24 | CharacterStats.CharID | s16 per-player charID | RF §1 |
+| CharacterStats +0x00..+0x9F | CharacterStats | every field: offset, range, reader | ST §2 |
 | CharacterStats size 0xA0 | CharacterStats | union over StatTable; chemistry at +0x3B (DK §14) | RF §1 |
 | CharacterStats +0x37/+0x38/+0x39/+0x3A | display ratings | batting, pitching, running, fielding (not texture ids) | CS §8.1 |
-| CharacterStats +0x3B.. | chemistry row | 54 bytes | CS §2 |
+| CharacterStats +0x3B.. | chemistry row | 54 bytes, 0..99, 50 self, symmetric | ST §4; CS §2 |
+| CharacterStats +0x20 / +0x34..+0x36 | abilities / stars | u32 ability mask; captain, swing, pitch star | ST §3 |
 | StatTable.UnusedBytes[0] @ +0x05 | planned roster skin byte | no field access anywhere, but inside the memcpy(0x1E) of every roster copy: re-applied at the copy sites; static rows are per charID | RF §4, §6.1 |
 | StatTable +0x1E/+0x1F | padding | stays with the slot across field-wise copies; don't use | RF §3.4 |
 | Gap8001196CAnim (0x27C) | slot record | g_hugeAnimStruct.slots[13] at +0xC04 | RF §1; CMR §1 |
