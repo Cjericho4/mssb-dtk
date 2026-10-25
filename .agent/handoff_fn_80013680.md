@@ -3,7 +3,8 @@
 2026-10-24, codex-matches-r3. Explicit unlimited continuation used; not MATCH.
 Best retained: **77 feedback entries, 98.66079% fuzzy** (started 307 / 96.4749%).
 Build succeeds; 3967 exact matches; no function fuzzy score decreased against the session baseline.
-The shared queue-buffer change also improves fn_80012B90 to 168 entries / 93.924286%.
+The shared queue-buffer change initially improved fn_80012B90 to 168 entries / 93.924286%.
+Its subsequent readiness-wrapper continuation reaches 78 entries / 98.828575%, with no change here.
 
 Retained changes:
 - Assign the raw slot byte in the first signed comparison and re-extend in the second;

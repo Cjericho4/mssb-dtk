@@ -92,6 +92,16 @@ static inline void finishSubItemLoad(u8* texture) {
     g_subItemLoadObj = NULL;
 }
 
+/* Finalize a sub-item load once the queue is idle.
+ * FAKEMATCH: the byte result preserves the caller's clrlwi test after inlining. */
+static inline u8 finishReadySubItemLoad(u8* texture) {
+    if (lbl_803716B8.loadBusy == 0) {
+        finishSubItemLoad(texture);
+        return 1;
+    }
+    return 0;
+}
+
 /* Advance the alternating-hand pair when its model load completes.
  * FAKEMATCH: inline scope keeps the load temporaries ahead of the caller register webs. */
 static inline void loadAlternatingSubItem(Gap8001196CSubItemEntry* entry) {
@@ -109,8 +119,7 @@ static inline void loadAlternatingSubItem(Gap8001196CSubItemEntry* entry) {
         obj = armFlag ? &entry->obj0 : &entry->obj1;
         startSubItemLoad(entry, obj, itemSlot);
     }
-    if (lbl_803716B8.loadBusy == 0) {
-        finishSubItemLoad(texture);
+    if (finishReadySubItemLoad(texture)) {
         entry->arm = entry->arm == 0;
         lbl_803CBC04++;
     }
@@ -183,8 +192,7 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
         if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             startSubItemLoad(entry, &entry->obj1, 1);
         }
-        if (lbl_803716B8.loadBusy == 0) {
-            finishSubItemLoad(texture);
+        if (finishReadySubItemLoad(texture)) {
             lbl_803CBC04 = 5;
         }
         break;
@@ -193,8 +201,7 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
         if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             startSubItemLoad(entry, &entry->obj0, 0);
         }
-        if (lbl_803716B8.loadBusy == 0) {
-            finishSubItemLoad(texture);
+        if (finishReadySubItemLoad(texture)) {
             lbl_803CBC04 = 6;
         }
         break;
@@ -203,8 +210,7 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
         if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             startSubItemLoad(entry, &entry->obj1, 5);
         }
-        if (lbl_803716B8.loadBusy == 0) {
-            finishSubItemLoad(texture);
+        if (finishReadySubItemLoad(texture)) {
             lbl_803CBC04 = 8;
         }
         break;
@@ -213,8 +219,7 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
         if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
             startSubItemLoad(entry, &entry->obj0, 4);
         }
-        if (lbl_803716B8.loadBusy == 0) {
-            finishSubItemLoad(texture);
+        if (finishReadySubItemLoad(texture)) {
             anim->subItems = &g_hugeAnimStruct.subItemEntries[slotKind * 3];
             lbl_803CBC04 = 0;
             lbl_803CBC08 = NULL;
@@ -279,16 +284,6 @@ static inline void attachSubItemBone(Gap8001196CAnim* anim, s32 k) {
         }
         actors--;
     } while (actorIndex-- != 0);
-}
-
-/* Finalize a challenge sub-item load once the queue is idle.
- * FAKEMATCH: the byte result preserves the caller's clrlwi test after inlining. */
-static inline u8 finishChallengeSubItemLoad(u8* texture) {
-    if (lbl_803716B8.loadBusy == 0) {
-        finishSubItemLoad(texture);
-        return 1;
-    }
-    return 0;
 }
 
 /* Fill a free/stolen sub-item entry for this slot record (fn_80013680 first phase). */
@@ -421,7 +416,7 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
                     }
                     startSubItemLoad(entry, &entry->obj1, itemSlot);
                 }
-                if (!finishChallengeSubItemLoad(texture)) {
+                if (!finishReadySubItemLoad(texture)) {
                     break;
                 }
                 lbl_803CBBFC = 1;
@@ -442,7 +437,7 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
                     }
                     startSubItemLoad(entry, &entry->obj0, itemSlot);
                 }
-                if (finishChallengeSubItemLoad(texture)) {
+                if (finishReadySubItemLoad(texture)) {
                     lbl_803CBBFD = 1;
                 }
             }
