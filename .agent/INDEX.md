@@ -36,6 +36,7 @@ instead of searching prose. Each fact has one home (the "owns" column); other do
 | `handoff_fn_2_3624.md` | state of the one unmatched phase-1 function | ~2k |
 | `character_modding.md` | retired stub pointing at the report | skip |
 | `*_codex_notes.md` | give-up logs from Codex batches (menus, dol, challenge); grep for a function name | skip |
+| `easy_wins_notes.md` | near-miss log for 15 small game/menus functions (decoded C + the one remaining diff each); grep for a function name | skip |
 | `attempts/`, `categorize/`, `workflows/`, `probe/` | best non-matching attempts, difficulty CSV, parallel-batch procedure, probe harness + roster scanner | as needed |
 
 ## Conventions
