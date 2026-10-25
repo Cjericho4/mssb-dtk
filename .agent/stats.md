@@ -18,8 +18,8 @@ animation-window tables. Tool: `mssb_files.py stats-export / stats-import` (`too
   copied with the row but never read; all zero in retail. +0x1E/+0x1F, +0x72/+0x73, +0x9E/+0x9F
   are padding. Free for mods (roster_flow.md §6.1 plans +0x05 as the skin byte).
 * **Star skills** live in the row (+0x34 captain star, +0x35 swing star, +0x36 pitch star, +0x20
-  abilities). The *star-player bonus* is not in the row: it is DOL `lbl_800E86F0` (+50 to the
-  batting/running/arm stats, +20 to pitch speeds, +2 bars) applied by `transferStatsToInMemRoster`.
+  abilities). The *star-player bonus* is not in the row: it is DOL `lbl_800E86F0` (+50 to every
+  stat except the two pitch speeds, which get +20; +2 per bar) applied by `transferStatsToInMemRoster`.
   *Star unlocked* is save data (`lbl_80361B20.characterFlags[charID]`), not the row.
 * **Chemistry** is the row's +0x3B..+0x70: 0..99, 50 with itself, stored twice (A,B and B,A;
   symmetric in retail). In-match checks compare it (plus a Challenge item bonus, capped at 100)
@@ -78,7 +78,7 @@ Readers were found by a register-taint scan of the asm over `inMemRoster` / `lbl
 | 0x34 | u8 | `captain_star` / CaptainStarHitPitch | 0..12 | `CAPTAIN_STAR_TYPE` -> `g_Batter.captainStarHitPitch` and `g_Pitcher.captainStarPitch` (+0x147); menus (`fn_2_760CC`) | high |
 | 0x35 | u8 | `star_swing` / NonCaptainStarSwing | 1..3 | `REGULAR_STAR_SWING` popfly/grounder/linedrive -> `g_Batter.noncaptainStarSwing` | high |
 | 0x36 | u8 | `star_pitch` / NonCaptainStarPitch | 1..3 | curve/fastball/change-up -> `g_Pitcher.nonCaptainStarPitch` (+0x148) | high |
-| 0x37..0x3A | u8 ×4 | `batting_bar` .. `fielding_bar` / ...StatBar | 1..9 | menu ratings (`fn_2_74F40`; character_select.md §8.1); no game.rel reader found | high |
+| 0x37..0x3A | u8 ×4 | `batting_bar` .. `fielding_bar` / ...StatBar | 1..9 | menu ratings (`fn_2_74F40`; character_select.md §8.1); the scan found no game.rel reader (scan is not exhaustive) | high |
 | 0x3B | u8[54] | `chemistry` / chemistry | 5..99 | section 4 | high |
 | 0x71 | u8 | `unknown."0x71"` / BytesAfterChemistry[0] | 0 | copied, never read | high |
 | 0x72 | u8[2] | (in `"0x71"`) | 0 | padding | high |
