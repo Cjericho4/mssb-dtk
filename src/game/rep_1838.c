@@ -383,6 +383,7 @@ int fn_3_9EE24(int max) {
         g_UnkSimulation_31AC0.randomSeed + g_d_GameSettings.FrameCountWhileNotAtMainMenu +
         (g_d_GameSettings.FrameCountWhileNotAtMainMenu >> 1) - g_Ball.StaticRandomInt1 +
         ((u8)g_Ball.StaticRandomInt2) + (g_UnkSimulation_31AC0.randomSeed / max);
+    // FAKEMATCH: read the stored seed back instead of keeping it in a temp (keeps the last add in r0).
     ret = g_UnkSimulation_31AC0.randomSeed;
     r2 = ret % (u32)max;
     if (r2 < 0) {
@@ -406,6 +407,7 @@ f32 RandomF32_Game_Range(f32 a, f32 b) {
 }
 
 // .text:0x0009EAE4 size:0xE8 mapped:0x806DDB78
+// Returns a random float in [a, b] with 0.001 resolution.
 f32 RandomF32_UNK_Range(f32 a, f32 b) {
     int n = (int)((b - a) * 1000.f) + 1;
     return fn_3_9EE24(n) * (1.f / 1000.f) + a;

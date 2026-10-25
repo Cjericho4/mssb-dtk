@@ -237,6 +237,7 @@ void fn_3_5A6A0(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     g_GameLogic.awayTeamBattingInd_battingTeam = arg0 ^ 1;
     g_GameLogic.homeTeamInd = arg1;
     g_GameLogic.teamBatting = arg1 ^ arg0;
+    // FAKEMATCH: read the stored global back instead of a temp (keeps the xor result in r7).
     g_GameLogic.teamFielding = g_GameLogic.teamBatting ^ 1;
     g_GameLogic._1C = arg2;
     g_GameLogic._20 = arg3;

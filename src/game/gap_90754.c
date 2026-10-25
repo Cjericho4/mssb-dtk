@@ -115,6 +115,7 @@ void fn_3_90AB0(s32 charID) {
 }
 
 // .text:0x00090B14 size:0x100 mapped:0x806CFBA8
+// Loads charID's file (or altCharID's on the retry pass) and returns 1 once loading finishes or there is nothing to load.
 s32 fn_3_90B14(u8 charID, s32 altCharID) {
     DrawingSceneStruct* scene = lbl_803CC1B8;
     s32 index;
