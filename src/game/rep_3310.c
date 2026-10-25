@@ -663,25 +663,25 @@ void fn_3_119934(void) {
 }
 
 // .text:0x00119C34 size:0x74 mapped:0x80758CC8
+// Initialises hugeAnim entries 31/32 from the current bss value.
 void fn_3_119C34(void) {
     HugeAnimEntry68* entries = g_hugeAnimStruct.entries_68;
     s32 unk74 = lbl_3_common_bss_32724.unk74;
-    f32* rodata33AC = &lbl_3_rodata_33AC;
-    f32 new_var;
-    u32 temp_r4;
+    f32 zero;
+    u32 isNonZero;
 
     entries[31].unk38 = unk74;
     entries[31].unk42 = 1;
-    new_var = *rodata33AC;
-    temp_r4 = (u32)(-unk74 | unk74) >> 31;
-    entries[32].unk0 = new_var;
+    zero = 0.0f;
+    isNonZero = (u32)(-unk74 | unk74) >> 31;
+    entries[32].unk0 = zero;
     entries[31].unk8C = 1;
-    entries[31].unk8D = temp_r4;
-    entries[31].unk8E = temp_r4;
-    entries[32].unk4 = new_var;
+    entries[31].unk8D = isNonZero;
+    entries[31].unk8E = isNonZero;
+    entries[32].unk4 = zero;
     entries[31].unk88 = 1.0f;
     entries[31].unk8E = 1;
-    entries[32].unk0 = new_var;
+    entries[32].unk0 = zero;
     entries[31].unk8D = 1;
     entries[31].unk8F = 2;
 }
