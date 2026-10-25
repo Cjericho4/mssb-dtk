@@ -41,7 +41,8 @@ void LoadModel(void) {
 static inline void startSubItemLoad(Gap8001196CSubItemEntry* entry, Gap8001196CStadiumObj* obj, s32 itemSlot) {
     g_subItemLoadObj = obj;
     g_subItemLoadBusy = 1;
-    fn_80021CA4(entry->charID, itemSlot, obj->buf);
+    /* FAKEMATCH: read through the queued object to retain the obj1 address in r5. */
+    fn_80021CA4(entry->charID, itemSlot, g_subItemLoadObj->buf);
 }
 
 /* Once the load queue is idle (lbl_803716B8.loadBusy == 0): relocate the 4 root-header words of the
@@ -229,8 +230,9 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
 /* Attach the first occupied sub-item bone to its owner bone, when a glove list exists. */
 static inline void attachSubItemBone(Gap8001196CAnim* anim, s32 k) {
     Gap8001196CAnim* owner = g_hugeAnimStruct.slotPtrs[(s8)anim->slotKind];
-    Gap8001196CSubItemEntry* sub;
     Gap8001196CActor* subActor;
+    /* FAKEMATCH: walker precedes actor so MWCC assigns the retail registers. */
+    Gap8001196CActor** actors;
     Gap8001196CActor* actor;
     /* FAKEMATCH: declare the bone counter before the destination bone for register order. */
     s32 n;
@@ -251,13 +253,13 @@ static inline void attachSubItemBone(Gap8001196CAnim* anim, s32 k) {
     }
     boneList = lbl_800EEAAC[owner->charID];
     /* FAKEMATCH: retain the retail one-iteration countdown and signed-halfword test. */
+    actors = owner->actors;
     actorIndex = 0;
     do {
-        actor = owner->actors[actorIndex];
+        actor = *actors;
         if ((s16)boneList >= 0) {
-            sub = owner->subItems;
-            if (sub != NULL) {
-                index = (k == 0) ? sub->obj0.index0 : sub->obj1.index0;
+            if (owner->subItems != NULL) {
+                index = (k == 0) ? owner->subItems->obj0.index0 : owner->subItems->obj1.index0;
                 ownerBone = actor->boneArray[boneIdx];
                 subActor = g_hugeAnimStruct.subItemActorEntries[index].slot.actor;
                 if (subActor == NULL) {
@@ -275,6 +277,7 @@ static inline void attachSubItemBone(Gap8001196CAnim* anim, s32 k) {
                 return;
             }
         }
+        actors--;
     } while (actorIndex-- != 0);
 }
 
@@ -320,16 +323,18 @@ static inline void claimSubItemEntry(Gap8001196CSubItemEntry* entry, u8 i, Gap80
 // .text:0x80013680 size:0xB84
 u8 fn_80013680(struct Gap8001196CAnim* anim) {
     Gap8001196CSubItemEntry* entry;
-    s32 charID = anim->charID;
     s32 slotKind = (s8)anim->slotKind;
     u8 i;
     u8 j;
+    /* FAKEMATCH: keep the raw byte for two separate signed comparisons. */
+    u8 slotByte;
     s32 armByte;
-    BOOL armSet;
-    BOOL isFielder;
+    u8 armSet;
+    u8 isFielder;
     s32 armMatchesClass;
     s32 itemSlot;
     u8* texture;
+    s32 charID = anim->charID;
 
     if (lbl_803CBBFB == 0) {
         lbl_803CBBFB = 1;
@@ -343,8 +348,8 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
                 continue;
             }
             /* FAKEMATCH: re-read the slot byte instead of using the cached slotKind. */
-            if (((s8)anim->slotKind < 9 && g_hugeAnimStruct.subItemEntries[i].prevSlotKind < 9) ||
-                ((s8)anim->slotKind >= 9 && g_hugeAnimStruct.subItemEntries[i].prevSlotKind >= 9)) {
+            if (((s8)(slotByte = anim->slotKind) < 9 && g_hugeAnimStruct.subItemEntries[i].prevSlotKind < 9) ||
+                ((s8)slotByte >= 9 && g_hugeAnimStruct.subItemEntries[i].prevSlotKind >= 9)) {
                 g_hugeAnimStruct.subItemEntries[i].slotKind = slotKind;
                 anim->subItems = &g_hugeAnimStruct.subItemEntries[i];
                 anim->subItems->valid = 1;
@@ -359,15 +364,15 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
         }
         if (lbl_803CBBFC == 0 && lbl_803CBBFD == 0) {
             for (i = 0; i < 13; i++) {
-                if (g_hugeAnimStruct.subItemEntries[i].slotKind == slotKind &&
+                if (g_hugeAnimStruct.subItemEntries[i].slotKind == (s8)anim->slotKind &&
                     g_hugeAnimStruct.subItemEntries[i].slotKind < 9) {
                     g_hugeAnimStruct.subItemEntries[i].slotKind = -1;
                     break;
                 }
             }
             for (i = 0; i < 13; i++) {
-                entry = &g_hugeAnimStruct.subItemEntries[i];
-                if (entry->slotKind == -1) {
+                if (g_hugeAnimStruct.subItemEntries[i].slotKind == -1) {
+                    entry = &g_hugeAnimStruct.subItemEntries[i];
                     lbl_803CBC20 = entry;
                     claimSubItemEntry(entry, i, anim, charID, slotKind);
                     break;
@@ -392,70 +397,69 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
         lbl_803CBC20->obj1.unk5D = 0;
         lbl_803CBC20->obj0.unk5D = 0;
     }
-    if (lbl_803CBBFB == 0) {
-        return 0;
-    }
-    if (slotKind < 9) {
-        armByte = anim->rosterUnk26;
-    } else {
-        armByte = anim->rosterUnk27;
-    }
-    armSet = armByte != 0;
-    isFielder = slotKind < 9;
-    /* FAKEMATCH: narrow the predicate to retain the retail extrwi result. */
-    armMatchesClass = (u8)(isFielder == armSet);
-    while (TRUE) {
-        if (lbl_803CBBFC == 0) {
-            texture = lbl_803CBC00;
-            entry = lbl_803CBC20;
-            if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
-                if (isFielder && entry->arm != 0) {
-                    itemSlot = 3;
-                } else if (armMatchesClass) {
-                    itemSlot = 5;
-                } else {
-                    itemSlot = 1;
-                }
-                startSubItemLoad(entry, &entry->obj1, itemSlot);
-            }
-            if (!finishChallengeSubItemLoad(texture)) {
-                break;
-            }
-            lbl_803CBBFC = 1;
-            continue;
+    if (lbl_803CBBFB != 0) {
+        if (slotKind < 9) {
+            armByte = anim->rosterUnk26;
+        } else {
+            armByte = anim->rosterUnk27;
         }
-        if (lbl_803CBBFD == 0) {
-            /* FAKEMATCH: recompute the predicate at the second model-load site. */
-            armMatchesClass = (u8)(isFielder == armSet);
-            texture = lbl_803CBC00;
-            entry = lbl_803CBC20;
-            if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
-                if (isFielder && entry->arm != 1) {
-                    itemSlot = 2;
-                } else if (armMatchesClass) {
-                    itemSlot = 4;
-                } else {
-                    itemSlot = 0;
+        armSet = armByte != 0;
+        isFielder = slotKind < 9;
+        /* FAKEMATCH: narrow the predicate to retain the retail extrwi result. */
+        armMatchesClass = (u8)(isFielder == armSet);
+        while (TRUE) {
+            if (lbl_803CBBFC == 0) {
+                texture = lbl_803CBC00;
+                entry = lbl_803CBC20;
+                if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
+                    if (isFielder && entry->arm != 0) {
+                        itemSlot = 3;
+                    } else if (armMatchesClass) {
+                        itemSlot = 5;
+                    } else {
+                        itemSlot = 1;
+                    }
+                    startSubItemLoad(entry, &entry->obj1, itemSlot);
                 }
-                startSubItemLoad(entry, &entry->obj0, itemSlot);
+                if (!finishChallengeSubItemLoad(texture)) {
+                    break;
+                }
+                lbl_803CBBFC = 1;
+                continue;
             }
-            if (finishChallengeSubItemLoad(texture)) {
-                lbl_803CBBFD = 1;
+            if (lbl_803CBBFD == 0) {
+                /* FAKEMATCH: recompute the predicate at the second model-load site. */
+                armMatchesClass = (u8)(isFielder == (u8)armSet);
+                texture = lbl_803CBC00;
+                entry = lbl_803CBC20;
+                if (g_subItemLoadBusy == 0 && lbl_803C6CF8.allowLoad == 1) {
+                    if (isFielder && entry->arm != 1) {
+                        itemSlot = 2;
+                    } else if (armMatchesClass) {
+                        itemSlot = 4;
+                    } else {
+                        itemSlot = 0;
+                    }
+                    startSubItemLoad(entry, &entry->obj0, itemSlot);
+                }
+                if (finishChallengeSubItemLoad(texture)) {
+                    lbl_803CBBFD = 1;
+                }
             }
+            break;
         }
-        break;
-    }
-    if (lbl_803CBBFC != 0 && lbl_803CBBFD != 0) {
-        anim->subItems = lbl_803CBC20;
-        attachSubItemBone(anim, 0);
-        attachSubItemBone(anim, 1);
-        anim->subItems->valid = 1;
-        lbl_803CBC20 = NULL;
-        lbl_803CBBFB = 0;
-        lbl_803CBBFD = 0;
-        lbl_803CBBFC = 0;
-        lbl_803CBC00 = NULL;
-        return 1;
+        if (lbl_803CBBFC != 0 && lbl_803CBBFD != 0) {
+            anim->subItems = lbl_803CBC20;
+            attachSubItemBone(anim, 0);
+            attachSubItemBone(anim, 1);
+            anim->subItems->valid = 1;
+            lbl_803CBC20 = NULL;
+            lbl_803CBBFB = 0;
+            lbl_803CBBFD = 0;
+            lbl_803CBBFC = 0;
+            lbl_803CBC00 = NULL;
+            return 1;
+        }
     }
     return 0;
 }
