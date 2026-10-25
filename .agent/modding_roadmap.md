@@ -45,7 +45,7 @@ alongside for the byte-exact rebuild goal, but a later phase never waits on a ma
    where it is re-applied), `character_modding_report.md` §4c, `character_select.md`.
 4. **Chemistry for clones** (#6). Give clone↔source and clone↔clone good chemistry instead of the
    source's self-chemistry (a few lines in the patcher).
-5. **Animations** (#7).
+5. **Animations** (#7). R5 findings and remaining work: `animations.md`.
    1. Map which subfile track (2..14, 16..18 per character in `lbl_800F1D78`) holds which moves.
    2. Parse/document the anim bank (SDK charPipeline `ANIMGet` format; track 15 is one more bank)
       and the bone hierarchy (the body `.gpc`'s actor layout), eventually exporting to Blender.
@@ -85,8 +85,13 @@ the "enables" line says what each unlocks. Status: ⏳ not started, 🟡 in prog
 - **R4. Voices and sounds** ⏳ (#12). Per-character voice banks (`lbl_800EF508`, Musyx group files,
   `lbl_3_data_8148`), announcer SFX ids (`lbl_80108DF4`), the sample format, and `snd/` music
   streams. *Enables:* custom voices, voice swaps independent of the character, custom music.
-- **R5. Animation banks** ⏳ (#13, groundwork for phase 5). Which subfile track holds which moves;
-  the SDK ANIM bank format and the actor-layout bone hierarchy. *Enables:* animation swaps (data-only), later authoring.
+- **R5. Animation banks** 🟡 partial (#13, groundwork for phase 5). Documented in
+  `animations.md`: code-backed track/action selection (7/8 unresolved), ANIM records and setting
+  quantization, body hierarchy and bone-ID binding, sharing audit, playback and timing links.
+  Tools: `tools/datamap/animations.py`, `audit_animations.py`, synthetic unittest. All 544 distinct
+  disc banks / 3,829,384 keys / 108 bodies parse; all 54 master/disc track-15 pairs agree.
+  Open: track7/8 callers, extra-pose names, visual identity of 0x2E, auxiliary curves and Blender
+  conventions; data-only swap recipe documented but no Dolphin validation or authoring round trip.
 - **R6. Model format (`.gpc`)** ⏳ (#14). Geometry, display lists, skinning; `f_InitActorWithLayout`
   (111 feedback lines from matching) is the key function. *Enables:* editing or importing models, not just
   textures; a step toward phase 6.

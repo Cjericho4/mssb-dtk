@@ -229,7 +229,7 @@ strings at DOL `0x800E33A0`. It doesn't point into ZZZZ.dat, so it's not a file 
 
 | Format id | Files | Structure | Parser |
 |---|---:|---|---|
-| `anim` | 576 | charPipeline `ANIMBank` (`include/C3/anim.h`): version `0x007B7960`, sequences (0xC each), tracks, keyframes; pointers are file offsets | `formats.describe` lists sequences |
+| `anim` | 576 | charPipeline `ANIMBank` (`include/C3/anim.h`): version `0x007B7960`, sequences (0xC each), tracks, keyframes; pointers are file offsets | `formats.describe` lists sequences; `animations.py` lists tracks/keys (R5: `animations.md`) |
 | `sectioned` | 389 | u32 offset header; includes attachment models with an embedded ANIM bank, field-object sets (24..88 sections), Challenge board pieces | section list |
 | `model` | 151 | `.gpc`: root `{texture 0x20, layout, geo, skin, extra}`; TextureArchiveHeader at 0x20 (CMPR for characters) | texture list, bones, skinFileID |
 | `stadium` | 124 | 16-word root (`fn_3_5EC0`: word0 actor layout, word2 relocation list, word3 geometry, word5 texture archive); also the menu 3D scenes and per-character menu models | section list + texture archive |

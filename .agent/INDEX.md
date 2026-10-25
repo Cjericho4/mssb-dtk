@@ -15,6 +15,7 @@ instead of searching prose. Each fact has one home (the "owns" column); other do
 | Edit stats, chemistry, abilities; per-character gameplay tables | `stats.md` §0, then the section for the table; tool: `tools/datamap/README.md` (stats-export / stats-import) |
 | Skin picker (phase 3) | `roster_flow.md` §6 (design), §1–§5 (data flow); `modding_roadmap.md` phase 3 |
 | Character load chain (models, textures, anim banks, gloves) | `character_modding_report.md` §1–§3 |
+| Animation bank swaps, sequences, bone binding, playback (R5) | `animations.md` (owns R5); parser: `tools/datamap/animations.py`; full audit: `audit_animations.py` |
 | Menu portraits, names, colour word | `character_select.md` §8.1–8.3 |
 | What's planned / status | `modding_roadmap.md`; live status on the GitHub board (users/Cjericho4/projects/3, issues on Cjericho4/mssb-dtk) |
 | Pick up an interrupted function | `handoff_<fn>.md` if present |
@@ -28,6 +29,7 @@ instead of searching prose. Each fact has one home (the "owns" column); other do
 | `character_select.md` | select/roster screen code, UI and announcer lookups, menu art files, index math and descriptor copies | ~10k |
 | `data_map.md` | every descriptor table and file in ZZZZ.dat / aaaa.dat, formats, coverage, UI slots, unknowns | ~7k |
 | `roster_flow.md` | roster → match data flow (R2): copy sites, skin-byte audit, actor drivers, re-load points, phase-3 skin design | ~8k |
+| `animations.md` | character ANIM track/action map, bank/key format, body bone hierarchy, sharing, playback, swap requirements and R5 unknowns | ~6k |
 | `stats.md` | stats.0 layout, every CharacterStats field, star skills, chemistry, captain teams, game.rel per-character tables, DOL animation windows (R3) | ~5k |
 | `decomp_knowledge.md` | compiler idioms and matching tricks by date; §1 and §13 are the most reused | ~14k |
 | `code_quality.md` | code-quality rules (adopted; summary in CLAUDE.md), cleanup checklist, tooling, cleanup log | ~4k |

@@ -292,9 +292,9 @@ for these animations; a universal "never" interpretation outside their frame len
 
 ## 8. Still unknown (R3)
 
-* Physical identity of runner animation 0x2E and why those four grid families enter it at
-  table+4 minus ten. Tried both exported animation enums and both timing readers; only the
-  numeric frame formula is established (section 6.1).
+* Visual identity of runner animation 0x2E remains unknown. R5 traced runner sequence1 and
+  the flying families, and found moving versus placeholder clips: `animations.md` §4. The entry
+  frame formula remains table+4 minus ten (section 6.1); no physical C name is justified.
 * The 0x17000 foot-height table's exact dust/footstep effect selection (outside this pass).
 * Original authoring meaning / active retail use of the captain extra 0x0A bytes beyond their
   debug batting-order/link destination. Tried all four menu captain-table readers and the

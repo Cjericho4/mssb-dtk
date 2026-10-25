@@ -54,9 +54,10 @@ fn_80017098  request a load / reuse a loaded slot (entry point; callers: roster_
 Disc reads: ARAMTransfer → DVDReadAsyncPrio → DecompressDiskData (Namco LZSS; size bit 30)
 ```
 
-**There is no skeleton file.** The bone hierarchy is the actor layout inside the body `.gpc` (37
-bones in both bodies). Subfile track 15 and master `432+charID` are a 12-sequence ANIM bank like the
-other tracks. `fn_80021BBC` and fields such as `skeletonAramAddrs` / `unk1EA` bit 1 keep their old
+**There is no skeleton file.** The bone hierarchy is the actor layout inside the body `.gpc` (Mario has 37
+bones in both bodies; other characters differ, and record order can differ between hi/lo).
+Subfile track 15 and master `432+charID` are a 12-sequence ANIM bank like the other tracks.
+R5 owns the bank format, track/action map and hierarchy audit: [animations.md](animations.md). `fn_80021BBC` and fields such as `skeletonAramAddrs` / `unk1EA` bit 1 keep their old
 "skeleton" names in src.
 
 ### 1.1 Step details
@@ -144,7 +145,7 @@ and per-index file meanings: `data_map.md` §4 (`stadium`, `master`, `subfile`, 
 |---|---|---|---|
 | `lbl_800EFBE8` † | 0x800EFBE8 | 21 × 16 B | stadium descriptors (`data_map.md` `stadium`); anchor of the unit's `.data` |
 | `lbl_800EFD38` + `lbl_800F1D68` † | 0x800EFD38 (0xECD38) | 515 + 1 × 16 B | ARAM master descriptors, blob-relative; [515] = the blob. Tiers (`lbl_803CB7E0` = {54, 378, 54, 29}): 0..32 bodies, 33..53 texture overlays (**not** charID-indexed; via `lbl_800F73B8`), `54+charID*7+k` sub-items, `432+charID` track-15 ANIM bank, `486+id` keyed event scripts |
-| `lbl_800F1D78` † | 0x800F1D78 (0xEED78) | 54 × 19 × 16 B | disc subfiles `charID*19 + track`: 0 hi-detail body (== ARAM master body, 256×256 textures), 1 low-detail body (same 37 bones, `skinFileID` 1), 2..18 ANIM banks |
+| `lbl_800F1D78` † | 0x800F1D78 (0xEED78) | 54 × 19 × 16 B | disc subfiles `charID*19 + track`: 0 hi-detail body (== ARAM master body, 256×256 textures), 1 low-detail body (Mario: 37 bones in a different record order, `skinFileID` 1), 2..18 ANIM banks |
 | `lbl_800F5D98` † | 0x800F5D98 | 54 × 6 × 16 B | disc sub-item files `charID*6 + itemSlot` |
 | `lbl_800F71D8` † | 0x800F71D8 | 30 × 16 B (0x1E0) | `model_script`, disc fallback of master 486+id |
 | `lbl_800F73B8` † | 0x800F73B8 (0xF43B8) | 54 × 2 s8 | `{bodyEntry, overlayEntry or −1}` (values below) |

@@ -1,6 +1,6 @@
 # Address lookup (GYQE01 modding): grep an address or symbol name; each row points at the doc section that owns the fact. Rows and docs must agree: fix both together.
 
-DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 0xE5300. REL symbols (`fn_2_`/`lbl_2_` menus, `fn_3_`/`lbl_3_` game, `fn_1_`/`lbl_1_` challenge) are section offsets: the RELs are relocated at load, so they have no fixed RAM address. Docs: CMR `character_modding_report.md`, CS `character_select.md`, DM `data_map.md`, RF `roster_flow.md`, RM `modding_roadmap.md`, DK `decomp_knowledge.md`, ST `stats.md`. Status = `tools/feedback_diff.py` lines (DK §2), 2026-10-24.
+DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 0xE5300. REL symbols (`fn_2_`/`lbl_2_` menus, `fn_3_`/`lbl_3_` game, `fn_1_`/`lbl_1_` challenge) are section offsets: the RELs are relocated at load, so they have no fixed RAM address. Docs: CMR `character_modding_report.md`, CS `character_select.md`, DM `data_map.md`, RF `roster_flow.md`, RM `modding_roadmap.md`, DK `decomp_knowledge.md`, ST `stats.md`, AN `animations.md`. Status = `tools/feedback_diff.py` lines (DK §2), 2026-10-24.
 
 ## 1. DOL tables and globals
 
@@ -33,8 +33,8 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800EFD38 +[486+id] | master event scripts | 29 keyed event scripts, id = lbl_800EEB18[charID] | DM §4 |
 | 0x800F1D68 | `blob` / master[515] | {0,0x4D6600,ZZZZ+0x1A15E800,0x4D6600}, the 4.9 MB ARAM blob | CMR §8; DM §2 |
 | 0x800F1D78 (0xEED78) | `lbl_800F1D78` / `subfile` | 54x19x16 B per-character disc subfiles, index charID*19+track | CMR §3 |
-| 0x800F1D78 track 0 / 1 | body subfiles | hi-detail body (== master body) / low-detail body (same 37 bones, skinFileID 1); both recoloured | CMR §3 |
-| 0x800F1D78 tracks 2..18 | ANIM banks | SDK ANIMBank; shared within colour families; track 15 = the 12-sequence bank (fn_80021BBC) | DM §4, §5 |
+| 0x800F1D78 track 0 / 1 | body subfiles | hi-detail body (== master body) / low-detail body (Mario: 37 bones, different record order, skinFileID 1); both recoloured | CMR §3 |
+| 0x800F1D78 tracks 2..18 | ANIM banks | track/action map, 544 distinct descriptors / 487 decoded byte patterns; 15 also master[432+c]; 7/8 usage unresolved | AN §1, §4 |
 | 0x800F5D98 | `subitem` / `lbl_800F5D98` | 54x6x16 B sub-item disc files, index charID*6+itemSlot | CMR §3 |
 | 0x800F71D8 | `model_script` | 30 per-model event scripts; disc fallback of master 486+id (fn_80021ADC); 0x1E0 | DM §4; CMR §3 |
 | 0x800F73B8 (0xF43B8) | `lbl_800F73B8` | 54x2 s8 {bodyEntry, overlayEntry or -1} per charID; retail values in CMR §3 | CMR §3 |
@@ -101,7 +101,21 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_8002399C | actor slot init | calls f_InitActorWithLayout; MATCH | CMR §1.1 |
 | f_InitActorWithLayout (0x800232E0) | actor builder | carve actor/skin/bones; crash 0x800233A0 if skinFileID>=numDescriptors; 111 lines | CMR §1.1, §2 |
 | fn_80016344 / fn_80016710 | slot state machines | anim banks, per-model script, bat/glove; 32 / 28 lines | CMR §1.1, §2; DK §14 |
-| fn_80016B60 / fn_80016F7C | anim bank streaming | tracks 4/12/5/2/16, slots 0..3; MATCH | CMR §2 |
+| fn_80016B60 / fn_80016F7C | anim bank streaming | mode-dependent 4/13,12/11/14,5/18,16; skips steps7/8 (2/9/10), shares block0 bank; slots0..3 | AN §1; CMR §2 |
+| fn_80014D4C / fn_8001C67C_animation (0x8001C67C) | batting bank cache/install | tracks2/10 (practice),9 (mode7/+0x11); current batter loader | AN §1 |
+| fn_80017340 | runner bank loader | +0x14 <- track3, practice11; called by fn_8001500C | AN §1 |
+| fn_8001C588 / fn_8001C920 | pitcher idle / action banks | track6 -> +0x20; track5/18 -> +0x1C | AN §1 |
+| AnimateCharacter (0x8001B990) / QueueCharacterAnimation (0x8001B918) | animation requests | pending ID+0x64 / queued follow-on | AN §5 |
+| fn_8001BA44 / fn_8001BE50 | animation ID partition | ID -> group0..5 and sequence; slot bank+0x10+group*4 | AN §1, §5 |
+| fn_8001C234 / fn_800BD8C4 | apply pending animation / instance update | set bank/sequence/time/speed, bind, tick; effect callback dispatch | AN §5 |
+| f_InitBone (0x80022DAC) / LoadActorLayout (0x800B4910) | actor hierarchy | layout-relative pointer relocation, recursive bone constructor; IDs differ from indices | AN §3 |
+| ACTSetAnimation (0x800B4D64) / ANIMGetTrackFromSequence (0x800B4F9C) | bone binding | runtime boneID -> sequence trackID, linear ID search | AN §3 |
+| ANIMGet (0x800B508C) / ANIMGetSequence (0x800B4FEC) | bank relocation / sequence lookup | retail ANIMGet(buffer), contiguous sequence/track/key tables; SDK prototypes conflict | AN §2 |
+| ANIMGetKeyFrameFromTrack (0x800B4E9C) | key interval lookup | cached index, backward restart, last->first wrap | AN §2 |
+| GetData (0x800B560C) / DoTranslationAnimation (0x800B5DA8) / DoScaleAnimation (0x800B63DC) / DoEulerAnimation (0x800B6E0C) / DoQuatAnimation (0x800B71C0) | channel decoders | quantization, packed interpolation modes, fixed-point quaternion exception | AN §2 |
+| ANIMTick (0x800B7718) / ANIMBind (0x800B79A0) / ACTSetBoneTrack (0x800B79D0) / AnimateActorBones (0x800B4B38) | bone playback | channel evaluation, direction/speed/loop/clamp, interpolation overrides | AN §2, §5 |
+| 0x803CBB48 / 0x803CBB4C / 0x803CBB50 / 0x803CBB51 | quaternion quantization | two f32=1/16384 and two u8=3 (s16 encoding) | AN §2 |
+| game fn_3_631AC (0x631AC), 0x63258..63300 | runner0x2E request | runner sequence1, flying-family direction-change transition; exact visual name unknown | AN §4; ST §6.1 |
 | fn_80017814 | root relocation | texture bind, actor build, bone map, jumptable switch; 48 lines | CMR §1.1 |
 | fn_800BD190 | bind textures to geo | (geo, tex) | CMR §1 |
 | convertTextureHeader (0x800C0770) / LoadGeoPalette (0x800BCB44) | texture / palette fixups | MATCH | CMR §2 |
