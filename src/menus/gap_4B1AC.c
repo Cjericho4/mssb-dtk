@@ -10,6 +10,12 @@
 #include "game/rep_1C0.h"
 #include "game/rep_3448.h"
 
+#include "menus/gap_8E6A4.h"
+extern CompressedDiskRead lbl_2_data_1FF94;
+extern CompressedDiskRead lbl_2_data_1FF84;
+extern void fn_800111B4(struct MenusSceneArchive* archive);
+extern s32 fn_800627C4(void);
+extern void fn_800216F8(s32 mode, s32 (*callback)(void));
 extern CompressedDiskRead lbl_2_data_132DC[];
 extern CompressedDiskRead lbl_2_data_1326C[];
 extern CompressedDiskRead lbl_2_data_1325C[];
@@ -890,8 +896,52 @@ void fn_2_54890(void) {
 }
 
 // .text:0x000549B4 size:0x184
+/* Load the menu archive, prepare its resources, and wait for the queued scene. */
 void fn_2_549B4(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        lbl_80366B18.archives[2] = ARAMTransfer(&lbl_2_data_1FF94, NULL, 1, NULL);
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        if (lbl_803C6CF8.allowLoad == 1) {
+            fn_800111B4(lbl_80366B18.archives[2]);
+            scene->field15_0x28 = 2;
+        }
+        break;
+    case 2:
+        if (fn_80035838(&lbl_2_data_1FF84, 10) != 0) scene->field15_0x28 = 3;
+        break;
+    case 3:
+        scene->loadingState = 0;
+        fn_800216F8(4, fn_800627C4);
+        scene->field15_0x28 = 4;
+        break;
+    case 4:
+        if (scene->loadingState != 0) {
+            scene->loadingState = 0;
+            scene->field15_0x28 = 5;
+        }
+        break;
+    case 5: {
+        DrawingSceneStruct* child;
+        lbl_2_bss_1A824C->objectCount = 1;
+        child = (DrawingSceneStruct*)fn_800B0A5C_insertQueue(fn_2_8E8A4, 2);
+        child->field15_0x28 = 0;
+        child->unkIndex2 = 12;
+        scene->loadingState = 0;
+        scene->field15_0x28 = 6;
+        break;
+    }
+    case 6:
+        if (scene->loadingState == 1) {
+            scene->currentDrawingItem->loadingState = 1;
+            fn_800B0A14_removeQueue();
+            scene->field15_0x28 = 0;
+        }
+        break;
+    }
 }
 
 // .text:0x00054B38 size:0x74
