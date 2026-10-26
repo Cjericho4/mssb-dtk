@@ -161,8 +161,37 @@ void fn_2_3DC60(void) {
 }
 
 // .text:0x0003DDC4 size:0x164
+/* Show the confirmation panel, wait 16 frames, and close it on A or B. */
 void fn_2_3DDC4(void) {
-    return;
+    DrawingSceneStruct* scene=lbl_803CC1B8;
+    switch((s8)scene->field15_0x28) {
+    case 0:
+        lbl_2_bss_1A8234->flags[1][2]=1;
+        scene->unkIndex=16;
+        fn_80062890(56);
+        scene->field15_0x28=1;
+        break;
+    case 1:
+        if((*(s16*)&scene->unkIndex)--==0) scene->field15_0x28=2;
+        break;
+    case 2:
+        if(lbl_803C77B8.controllers[lbl_2_bss_1A824C->inputIndex].pressed & (PAD_BUTTON_A | PAD_BUTTON_B)) {
+            lbl_2_bss_1A8234->flags[8][2]=1;
+            scene->unkIndex=16;
+            scene->field15_0x28=3;
+        }
+        break;
+    case 3:
+        scene->currentDrawingItem->loadingState=1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28=0;
+        break;
+    }
+    if(lbl_2_bss_1A824C->unk19783F==1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState=1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28=0;
+    }
 }
 
 // .text:0x0003DF28 size:0x130
