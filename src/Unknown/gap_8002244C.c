@@ -157,7 +157,7 @@ ActMemBlock* f_InitBone(ActBone* parent, ActBoneLayout* layout, GameActor* actor
             pal = actor->pal;
             next = cursor;
             if (geoFileID >= pal->numDescriptors) {
-                OSReport(lbl_800E6698, geoFileID, pal->numDescriptors);
+                OSReport("Display object id %d is greater than number of objects %d", geoFileID, pal->numDescriptors);
                 bone->dispObj = NULL;
                 result = cursor;
             } else {
@@ -243,13 +243,12 @@ ActMemBlock* fn_80023078(ActDisplayObj* obj, ActDOLayout* layout, ActMemBlock* m
  * Chain position: fn_80017814 -> fn_8002399C -> here; the actor is what the per-character
  * animation/bone code manipulates afterwards.
  * Variant hook: none (purely structural); a texture-only skin never reaches this function.
- * Match status: NOT matched -- 93 of 207 lines: the retail build keeps the running cursor and the
- * skin object in stack memory (0xC/0x54, 0x110 frame; a 0xE4-byte local struct reproduces the
- * layout but then MWCC reloads instead of forwarding) and allocates r31 for the string base;
+ * Match status: NOT matched -- 12 lines in the actor-header block: retail computes `act + 1` from
+ * the act register (r30) while storing through mem (r24) and sums the sizes left to right; every
+ * cast/copy form tried propagates act to mem. Frame (0x110), the skin block and the rest match;
  * semantics identical. */
 // .text:0x800232E0 size:0x32C
 GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
-    char* str = lbl_800E6698;
     GameActor* act;
     u32 boneArraySize;
     u32 mtxArraySize;
@@ -257,13 +256,17 @@ GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
     u32 skinInvSize;
     u32 orientInvSize;
     u16 numBones;
-    ActMemBlock* cursor;
+    ActMemBlock* volatile next; /* FAKEMATCH: cursor copy written to the stack, never read back */
     Mtx identity;
-    ActDisplayObj* skinObj;
+    GameActor volatile stackActor; /* FAKEMATCH: only its skinObject slot is used; it reproduces the retail frame */
+    ActMemBlock* result;
+    ActBone* bones;
+    u32 boneDataSize;
     u32 i;
     u32 tmp;
     ActGeoDescriptor* desc;
     ActPositionData* pos;
+    u32 base;
     u32 normalDelta;
     ActGeoPalette* pal;
 
@@ -273,32 +276,35 @@ GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
     orientInvSize = 0;
     boneArraySize = (layout->totalBones * 4 + 0x1F) & ~0x1F;
     mtxArraySize = (layout->totalBones * 0x30 + 0x1F) & ~0x1F;
-    cursor = mem;
     if (layout->skinFileID != 0xFFFF) {
         pal = layout->geoPalettePtr;
+        next = mem;
         if (layout->skinFileID >= pal->numDescriptors) {
-            OSReport(str, layout->skinFileID, pal->numDescriptors);
-            skinObj = NULL;
+            OSReport("Display object id %d is greater than number of objects %d", layout->skinFileID, pal->numDescriptors);
+            stackActor.skinObject = NULL;
+            result = mem;
         } else {
-            skinObj = (ActDisplayObj*)mem;
-            cursor = mem + 4;
-            cursor = fn_80023078(skinObj, pal->descriptorArray[layout->skinFileID].layout, cursor);
+            stackActor.skinObject = (ActDisplayObj*)mem;
+            next = mem + 4;
+            result = fn_80023078((ActDisplayObj*)mem, pal->descriptorArray[layout->skinFileID].layout, mem + 4);
+            next = result;
         }
-        mem = cursor;
+        mem = result;
         tmp = (layout->totalBones * 0x30 + 0x1F) & ~0x1F;
         skinMtxSize = tmp;
         skinInvSize = tmp;
-        if (skinObj->lightingData != NULL) {
+        if (stackActor.skinObject->lightingData != NULL) {
             orientInvSize = tmp;
         }
     }
     act = (GameActor*)mem;
+    boneDataSize = (layout->totalBones * 0x140 + 0x1F) & ~0x1F;
     act->boneArray = (ActBone**)(act + 1);
     act->forwardMtxArray = (Mtx*)((u32)act->boneArray + boneArraySize);
-    act->skinObject = skinObj;
+    act->skinObject = stackActor.skinObject;
     act->skHeader = 0;
     mem = (ActMemBlock*)((u32)mem + ((boneArraySize + mtxArraySize + skinMtxSize + skinInvSize + orientInvSize +
-                             ((layout->totalBones * 0x140 + 0x1F) & ~0x1F) + 0xBF) & ~0x1F));
+                             boneDataSize + 0xBF) & ~0x1F));
     PSMTXIdentity(identity);
     act->actorID = layout->actorID;
     act->layout = layout;
@@ -319,8 +325,9 @@ GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
         for (i = 0; i < pal->numDescriptors; i++) {
             pos = desc[i].layout->positionData;
             if (pos->compCount == 6) {
-                act->skinObject->positionData->positionArray = pos->positionArray;
-                act->skinObject->lightingData->normalArray = pos->positionArray + normalDelta;
+                base = pos->positionArray;
+                act->skinObject->positionData->positionArray = base;
+                act->skinObject->lightingData->normalArray = base + normalDelta;
                 break;
             }
         }
@@ -335,13 +342,13 @@ GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
         act->orientationInvMtxArray = NULL;
         act->skinInvTransposeMtxArray = NULL;
     }
+    bones = (ActBone*)((u32)act->forwardMtxArray + mtxArraySize + skinMtxSize + skinInvSize + orientInvSize);
     act->worldControl.control.type = 0;
     if (layout->hierarchyRoot != NULL) {
-        f_InitBone(NULL, layout->hierarchyRoot, act, &numBones,
-                   (ActBone*)((u32)act->forwardMtxArray + mtxArraySize + skinMtxSize + skinInvSize + orientInvSize), mem);
+        f_InitBone(NULL, layout->hierarchyRoot, act, &numBones, bones, mem);
     }
     if (numBones != act->totalBones) {
-        OSPanic(str + 0x3C, 0x209, str + 0x48);
+        OSPanic("objinit.c", 0x209, "Incorrect number of bones in actor");
     }
     if (act->skinObject != NULL) {
         BuildBoneSkinOrientationMatrix((ActBone*)act->hierarchy.Root, identity);

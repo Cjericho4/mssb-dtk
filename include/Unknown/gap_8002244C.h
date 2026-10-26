@@ -8,7 +8,6 @@
 #include "C3/actor.h"
 
 
-extern char lbl_800E6698[];                 /* "Display object id %d is greater than number of objects %d" etc. */
 
 typedef struct Gap8002244CLoad { u8 _pad0[0x715]; u8 complete; } Gap8002244CLoad;
 extern Gap8002244CLoad lbl_803C6CF8;
