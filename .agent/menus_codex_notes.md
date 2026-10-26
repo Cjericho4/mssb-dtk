@@ -110,7 +110,7 @@ Gave up fn_2_74E14 after 5 attempts: constant-first index sums fixed base foldin
 Gave up fn_2_477C0 during asm review: dynamically aligned per-animation aux chunks require byte slicing, like documented 8DC00; no field-only typed layout identified. Stub retained.
 Gave up fn_2_95FE0 after 5 attempts: all instructions agree except li total=1 scheduled before argument constants instead of after; post-call init, comma expression and inline out-parameter helper failed. Stub restored.
 New MenusRenderAnimation (90 bytes) embeds ActRelatedSub, with visibility byte6C; MenusRenderList has count0 and these entries at34.
-Gave up fn_2_348C after 4 attempts: nested loops and byte stores reproduce target unrolling, but team/boolean temps and five induction/base registers allocate differently. Stub restored and unused flag array removed.
+Gave up fn_2_348C after 4 attempts (matched later, decomp_knowledge.md §13): nested loops and byte stores reproduce target unrolling, but team/boolean temps and five induction/base registers allocate differently. Stub restored and unused flag array removed.
 Gave up fn_2_190DC after 5 attempts: all operations agree but input-list and animation-entry saved registers r28/r29 are swapped; declaration ordering and explicit global pointer unchanged. Stub restored and unused fields/prototypes removed.
 Gave up fn_2_1C0D4 after 2 attempts: save-global pointer is sunk until after memset instead of anchored in r31 before call; direct and inline initializer forms differ in scheduling. Stub restored and unused fields removed.
 New MenusChoiceConfig (1C bytes), group0/level1; replaced Gap3C03CObj initial padding with its config pointer.

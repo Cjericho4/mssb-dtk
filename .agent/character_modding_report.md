@@ -129,9 +129,9 @@ except the last row. Diff counts are `tools/feedback_diff.py` lines (`decomp_kno
 | `convertTextureHeader`, `LoadGeoPalette` | gap_800BD3A0.c / gap_800B993C.c | texture / geo palette fixups | **MATCH** |
 | `fn_80016344` / `fn_80016710` | gap_8001196C.c | slot state machines | 32 / 28 lines: two CSE temps vs params (`decomp_knowledge.md` §14) |
 | `fn_80017814` | gap_8001196C.c | relocation, textures, actor, switch | 48 lines: prologue, bone-loop init, call-arg scheduling |
-| `f_InitActorWithLayout` | gap_8002244C.c | carve actor/skin/bones | 111 lines: original keeps cursor/skin object in stack memory |
+| `f_InitActorWithLayout` | gap_8002244C.c | carve actor/skin/bones | 93 lines: original keeps cursor/skin object in stack memory; a 0xE4-byte local struct reproduces the frame (see the function's comment) |
 | `DecompressDiskData` | File_0x800a64e0.c | LZSS | 36 lines: saved-register set, ctr loop (`decomp_knowledge.md` §12) |
-| `fn_80012B90` / `fn_80013680` | gap_8001196C.c | bat/glove loaders | first decompile, registers untuned (hundreds of lines) |
+| `fn_80012B90` / `fn_80013680` | gap_8001196C.c | bat/glove loaders | 78 / 77 lines, register allocation (`handoff_fn_80012B90.md`, `handoff_fn_80013680.md`) |
 | `fn_8002254C`, `fn_800227E4`, `fn_80021ADC` | gap_8002244C.c / gap_8001E460.c | overlay / blob / script loaders | asm only (behaviour read from asm) |
 
 ## 3. Character tables
@@ -260,8 +260,9 @@ original source *defined* the tables in the same file. Defining them as initiali
 ## 7. Open items
 
 1. Remaining matches (§2): fn_80016344/fn_80016710 (one register-allocation issue shared by both),
-   fn_80017814, f_InitActorWithLayout (find the non-escaping aggregate shape), DecompressDiskData,
-   then tune fn_80012B90/fn_80013680.
+   fn_80017814, f_InitActorWithLayout (the 0xE4-byte local struct gives the frame, but as an escaping
+   aggregate it kills store-forwarding of the cursor; find a non-escaping shape), DecompressDiskData,
+   fn_80012B90/fn_80013680 (handoffs).
 2. Phase 3 skin build (`roster_flow.md` §6.5).
 
 ## 8. Patcher findings (`clone_character.py`)
