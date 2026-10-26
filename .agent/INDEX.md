@@ -9,7 +9,7 @@ instead of searching prose. Each fact has one home (the "owns" column); other do
 |---|---|
 | Match a function (any module) | CLAUDE.md "Tasks"; `decomp_knowledge.md` §1 "Quick Fixes" + "Known Unfixable Patterns", §2 (diff counts), §13 (loops/inlines/store order) |
 | Match a menus.rel character-select function | the above + `character_select.md` §1 (tables), §5 (function list and status) |
-| Extend the clone patcher / GUI | `tools/clonemaker/API.md`, `tools/clonemaker/core/README.md`, `tools/clonemaker/app/README.md` (Rust core and Tauri window); `tools/modding/README_WINDOWS.md` (Python reference), `character_modding_report.md` TL;DR, §3, §4a, §8; `character_select.md` §6 (UI lookups), §8.2–8.3 (menu art) |
+| Extend the clone patcher / GUI | `tools/clonemaker/API.md`, `tools/clonemaker/core/README.md`, `tools/clonemaker/app/README.md` (Rust core and Tauri window); `tools/modding/clone_character.py` (patcher) and `tools/modding/clone_gui.py` (Python logic reference), `character_modding_report.md` TL;DR, §3, §4a, §8; `character_select.md` §6 (UI lookups), §8.2–8.3 (menu art) |
 | Find, extract or replace a game file | `data_map.md` §1 TL;DR, §4 (tables), §5 (formats); tool: `tools/datamap/README.md` |
 | Edit in-game text | `data_map.md` §1, §6; `tools/datamap/README.md` (text-export / text-import) |
 | Edit stats, chemistry, abilities; per-character gameplay tables | `stats.md` §0, then the section for the table; tool: `tools/datamap/README.md` (stats-export / stats-import) |

@@ -185,7 +185,7 @@ Verified: `track0(BlueToad) == master[13]` with `master[34]` written at `+0x20`;
 
 ## 4. How to add recoloured duplicate characters
 
-### 4a. Data-only slot clone (implemented: `clone_character.py`, `tools/modding/README_WINDOWS.md`)
+### 4a. Data-only slot clone (implemented: `clone_character.py`, `tools/modding/README_GUI.md`)
 For each clone slot S of source character C:
 1. **Subfile rows** `lbl_800F1D78[S*19 + t]`: alias C's rows for tracks 2..18. Point tracks 0 and 1
    (both bodies) at recoloured `.gpc` files appended to `files/ZZZZ.dat`.
