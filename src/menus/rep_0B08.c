@@ -1,11 +1,14 @@
 #include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
 #include "menus/rep_0F60.h"
+#include "menus/gap_0.h"
 #include "UnknownHeaders.h"
 #include "string.h"
 
 extern Rep0B08AnimationConfig lbl_2_data_3C84[];
 extern Vec lbl_2_data_2EA4[];
+extern Vec lbl_2_data_2A340;
+extern f32 lbl_2_bss_A170;
 extern s16 lbl_2_data_3D30[][4];
 extern Vec lbl_2_data_3150[];
 extern f32 lbl_2_data_3EF4[];
@@ -499,8 +502,23 @@ void fn_2_6A628(void) {
 }
 
 // .text:0x0006A708 size:0x174
+/* Move the menu actor with the controller stick and face its previous movement. */
 void fn_2_6A708(void) {
-    return;
+    Rep0B08Obj* object = &lbl_2_bss_1A8248->rep0B08Objects[0];
+    Vec position;
+    Vec delta;
+    memcpy(&position, &object->position, sizeof(Vec));
+    PSVECSubtract(&position, &lbl_2_data_2A340, &delta);
+    delta.x *= -1.0f;
+    delta.z *= -1.0f;
+    position.x += (f32)lbl_803C77B8.controllers[lbl_2_bss_1A824C->inputIndex].stickX / 768.0f;
+    position.z += (f32)lbl_803C77B8.controllers[lbl_2_bss_1A824C->inputIndex].stickY / 768.0f;
+    if (0.0f != delta.x || 0.0f != delta.z) lbl_2_bss_A170 = fn_2_4A1E8(delta.z, delta.x);
+    memcpy(&lbl_2_data_2A340, &object->position, sizeof(Vec));
+    object->position.x = position.x;
+    object->position.y = position.y;
+    object->position.z = position.z;
+    object->angle = lbl_2_bss_A170;
 }
 
 // .text:0x0006A87C size:0x23C
