@@ -1147,8 +1147,30 @@ void fn_2_2E298(void) {
 }
 
 // .text:0x0002E44C size:0x17C
-void fn_2_2E44C(void) {
-    return;
+/* Position a scripted pane at screen center and control its playback visibility. */
+void fn_2_2E44C(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->pos.x = 320.0f;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->pos.y = 0.0f;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x68 = 1;
+        slot->state = 0x25;
+        break;
+    case 5:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        break;
+    case 3: break;
+    case 4: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x0002E5C8 size:0x208
