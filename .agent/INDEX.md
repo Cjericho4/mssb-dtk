@@ -32,7 +32,7 @@ instead of searching prose. Each fact has one home (the "owns" column); other do
 | `roster_flow.md` | roster → match data flow (R2): copy sites, skin-byte audit, actor drivers, re-load points, phase-3 skin design | ~8k |
 | `animations.md` | character ANIM track/action map, bank/key format, body bone hierarchy, sharing, playback, swap requirements and R5 unknowns | ~6k |
 | `stats.md` | stats.0 layout, every CharacterStats field, star skills, chemistry, captain teams, game.rel per-character tables, DOL animation windows (R3) | ~5k |
-| `sounds.md` | MusyX sound groups (every row), voice banks and voice-line table, announcer, DSP-ADPCM format, `.adp` streams and MusyX songs, voice swaps and clone voices (R4, #29), ARAM budget | ~5k |
+| `sounds.md` | MusyX sound groups (every row), voice banks and voice-line table, announcer, DSP-ADPCM format, `.adp` streams and MusyX songs, voice swaps and clone voices (R4, #29), ARAM budget | ~6k |
 | `decomp_knowledge.md` | compiler idioms and matching tricks by date; §1 and §13 are the most reused | ~14k |
 | `code_quality.md` | code-quality rules (adopted; summary in CLAUDE.md), cleanup checklist, tooling, cleanup log | ~4k |
 | `handoff_fn_*.md` | state of an interrupted match: `fn_2_3624` (the one unmatched phase-1 function), `fn_80012B90`, `fn_80013680` (bat/glove loaders) | ~2k each |

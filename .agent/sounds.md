@@ -194,7 +194,7 @@ clone S of source C on donor D's slot gets, from the patcher in main
 | flags | unique idx of S | `8168[S]` | bank loaded | SFX asked | result |
 |---|---|---|---|---|---|
 | `--ui source` (default) | u_C (`fn_800698F8` rewritten, `character_select.md` §6) | 8168[C] | source's | source's | source voice |
-| `--ui source --no-gameplay` | u_C | donor's | source's | donor's | **silent** unless a u_D character is in the match |
+| `--ui source --no-gameplay` | u_C | donor's | source's | donor's | **silent** unless a u_D character is in the match (from code) |
 | `--ui donor` | u_D | 8168[C] | donor's | source's | **silent** unless a u_C character is in the match (confirmed in Rio: Mario on a Toad slot) |
 | `--ui donor --no-gameplay` | u_D | donor's | donor's | donor's | donor voice |
 
