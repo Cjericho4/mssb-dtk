@@ -1265,8 +1265,44 @@ void fn_2_85160(void) {
 }
 
 // .text:0x000851A8 size:0x168
+/* Advance the first menu input sequence and queue its delayed transition. */
 void fn_2_851A8(void) {
-    return;
+    MenusInputFlags* input;
+    switch (lbl_803CC1B8->loadingState) {
+    case 0:
+        fn_800625A4(0, 0);
+        lbl_803CC1B8->loadingState++;
+    case 1:
+        input = &lbl_803C66B0;
+        if (input->resetData[0] == 0) {
+            input->resetData[0] = 1;
+            fn_800626EC(0);
+            switch ((s32)lbl_803C66B0.flags5D[0]) {
+            case 0: case 1: case 2: case 3: break;
+            case 4: fn_80062674(0); break;
+            }
+        }
+        if (input->resetData[0] == 1) {
+            switch ((s32)lbl_803C66B0.flags5D[0]) {
+            case 0: case 1: case 2:
+                input->resetData[0] = 2;
+                fn_80062674(0);
+                break;
+            case 3:
+                if ((s32)lbl_2_bss_F410.unk0 == 0) {
+                    input->resetData[0] = 2;
+                    fn_800B0A5C_insertQueue(fn_2_85160, lbl_803CC1B8->priority)->unk10 = 180;
+                } else fn_800625A4(0, 4);
+                break;
+            case 4:
+                input->resetData[0] = 2;
+                fn_80062674(0);
+                fn_800B0A14_removeQueue();
+                break;
+            }
+        }
+        break;
+    }
 }
 
 // .text:0x00085310 size:0x1A0
