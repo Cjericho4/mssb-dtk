@@ -180,7 +180,7 @@ void fn_2_C698(u8 index, u8 side);
 void fn_2_C7DC(void);
 void fn_2_CA60(void);
 void fn_2_CCBC(void);
-void fn_2_CCE0(void);
+void fn_2_CCE0(u8 side);
 void fn_2_CE44(void);
 void fn_2_DFAC(s32 side);
 void fn_2_EAE0(void);

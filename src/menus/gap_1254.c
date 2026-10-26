@@ -1614,8 +1614,27 @@ void fn_2_CCBC(void) {
 }
 
 // .text:0x0000CCE0 size:0x164
-void fn_2_CCE0(void) {
-    return;
+/* Move the roster cursor to the first empty slot, or mark a full team ready. */
+void fn_2_CCE0(u8 side) {
+    s32 slot;
+    if (lbl_2_bss_F468.flags37[side] == 0) {
+        for (slot = 0; slot < 9; slot++) {
+            if (lbl_803C6724.teams[side][slot] == CHAR_ID_NONE ||
+                lbl_803C6724.teams[side][slot] == MENUS_ROSTER_SLOT_EMPTY) break;
+        }
+        if (slot == 9) {
+            lbl_2_bss_F468.flags37[side] = 1;
+            lbl_2_bss_F468.prevCursor[side] = lbl_2_bss_F468.cursor[side];
+            lbl_2_bss_F468.cursor[side] = 9;
+            lbl_2_bss_F468.flags41[side] = 0;
+            fn_800625A4(side, 20);
+            fn_80050138(1, -1, -1, -1, -1, 0);
+        } else {
+            lbl_2_bss_F468.prevCursor[side] = lbl_2_bss_F468.cursor[side];
+            lbl_2_bss_F468.cursor[side] = lbl_803C6724.order[side][slot];
+            fn_800625A4(side, 14);
+        }
+    }
 }
 
 // .text:0x0000CE44 size:0x1168
