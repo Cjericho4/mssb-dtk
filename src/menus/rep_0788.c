@@ -1235,8 +1235,37 @@ void fn_2_30C4C(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
 }
 
 // .text:0x00030D80 size:0x178
-void fn_2_30D80(void) {
-    return;
+/* Select a pane label from the active menu row and hide it after fourteen frames. */
+void fn_2_30D80(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+    case 0x11: {
+        s32 row = lbl_2_bss_1A824C->unk_0x197726;
+        s32 label = 20;
+        if (lbl_2_bss_1A824C->flags19789F[slot->unkA + row] != 2) label = row;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x5C = label << 16;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        slot->state = 0x25;
+        break;
+    }
+    case 5:
+        slot->timer = 14;
+        slot->state = 6;
+        break;
+    case 6:
+        if (slot->timer-- <= 0) lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        break;
+    case 8: break;
+    case 0x24: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x00030EF8 size:0x1A4

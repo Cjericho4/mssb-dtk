@@ -78,7 +78,9 @@ typedef struct Rep10C0State {
     s16 unk1976FE;
     u8 _pad197700[6];
     s16 unk197706;
-    u8 _pad197708[0x3E];
+    u8 _pad197708[0x1E];
+    s16 unk_0x197726;
+    u8 _pad197728[0x1E];
     s16 objectCount; /* 0x197746 */
     u8 _pad197748[2];
     s16 unk19774A;
@@ -116,7 +118,8 @@ typedef struct Rep10C0State {
     u8 _pad197857[0xC];
     s8 inputIndex; /* 0x197863 */
     u8 unk197864;
-    u8 _pad197865[0x62];
+    u8 _pad197865[0x3A];
+    s8 flags19789F[0x28];
     u8 copiedFlags[20]; /* 0x1978C7 */
     u8 _pad1978DB[0x18];
     u8 unk1978F3;
