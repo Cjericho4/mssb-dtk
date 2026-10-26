@@ -313,8 +313,8 @@ not print `ALL CHECKS PASSED`, the folder was altered after patching.
 | Menus or announcer still use the donor's name | unique-index remap did not take | `test_clone.py` `ui (source)` checks |
 | Wrong name/face or crash on roster/records screens | a menu lookup not keyed by the unique index, or re-packed menu art | `--ui donor`; note the screen |
 | Odd colour label on the roster screen | menus.rel colour-word edit | `--colour-word donor` |
-| Clone silent | voice bank vs SFX ids (#29, `sounds.md` §6) | fixed on `voice-merge`; before that, `--ui donor --no-gameplay` |
-| Clone too big or small | `charSizeMultipliers` row (#38, `stats.md` §6) | fixed on `voice-merge` |
+| Clone silent | voice bank vs SFX ids (#29, `sounds.md` §6) | fixed in the Rust core (Rio-tested) |
+| Clone too big or small | `charSizeMultipliers` row (#38, `stats.md` §6) | fixed in the Rust core (Rio-tested) |
 
 Known limit of `--ui source`: a main-character donor (e.g. Luigi, `isBase == 1`) also inherits the
 source's row on the records and star screens (keyed by unique index, shown only for base

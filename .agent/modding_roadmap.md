@@ -28,8 +28,8 @@ alongside for the byte-exact rebuild goal, but a later phase never waits on a ma
 - `fn_2_3624` match, five lines left (#4, `handoff_fn_2_3624.md`).
 - Docs consolidation (#19).
 - Clone Maker on Tauri: PyInstaller build retired and README_GUI points at the new app (#34);
-  a quick Windows check of the exe is still open. Clone voices in donor mode (#29) on branch `voice-merge`
-  (`sounds.md` §6).
+  a quick Windows check of the exe is still open. Clone voices (#29), model size (#38) and painted
+  body textures (#37) are merged and Rio-tested (`sounds.md` §6).
 
 ## Phases
 1. **Character-select code: understood and documented, matched where practical.**
@@ -96,10 +96,8 @@ the "enables" line says what each unlocks. Status: ⏳ not started, 🟡 in prog
   `sound.37`, DSP-ADPCM sample format, `.adp` music (stereo 48 kHz stream ADPCM, opened by path:
   data-only swap) and MusyX songs (`game_set.0`). Tools: `mssb_files.py sound-list / sound-export /
   sound-import / voice-swap / music-export` (identity round trip of all 48 groups, tested).
-  Open: lines 1, 2, 6, 8, 12; an `.adp` encoder. Clone voices (#29): `--ui donor` and
-  `--ui source --no-gameplay` clones are silent in main; the fix (copy `8168` always, merge the
-  source into the donor bank, ARAM budget check) is on branch `voice-merge`, waiting for a Rio
-  test (sounds.md §6-§7).
+  Open: lines 1, 2, 6, 8, 12; an `.adp` encoder. Clone voices (#29): fixed in the Rust core (copy `8168` always, merge the
+  source into the donor bank, ARAM budget check), Rio-tested (sounds.md §6-§7).
 - **R5. Animation banks** 🟡 partial (#13, groundwork for phase 5). Documented in
   `animations.md`: code-backed track/action selection (7/8 unresolved), ANIM records and setting
   quantization, body hierarchy and bone-ID binding, sharing audit, playback and timing links.

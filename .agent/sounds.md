@@ -184,7 +184,7 @@ Anim names are the Ghidra enum `EnumCharacterAnimation_short` (in_game.h).
 |---|---|---|
 | Replace a voice line, a name call, any SFX | re-encode that sample in its group | `sound-export` + `sound-import` (lossy DSP-ADPCM, ~40 dB SNR) |
 | Character family X sounds like Y | `sound.(5+u_X)` := `sound.(5+u_Y)` retargeted to X's group id and SFX ids, sample/macro ids moved to 0x400 + u_X*0x20 (no clash with Y's own bank or another swap) | `voice-swap <disc> X Y`; lossless; affects every charID with X's unique index (all colours, and `--ui source` clones of X) |
-| One charID (e.g. a clone on Blue Toad's slot) speaks with Y's voice, the rest of X's family unchanged | add Y's 13 FX (and their macros, samples, curves) to X's bank **under Y's retail ids** (voice-bank ids are disjoint, §2) and set `lbl_3_data_8168[charID]` = `8168[Y]` | merged bank below; Rust core on branch `voice-merge` only (#29), no Python tool |
+| One charID (e.g. a clone on Blue Toad's slot) speaks with Y's voice, the rest of X's family unchanged | add Y's 13 FX (and their macros, samples, curves) to X's bank **under Y's retail ids** (voice-bank ids are disjoint, §2) and set `lbl_3_data_8168[charID]` = `8168[Y]` | merged bank below; Rust core only (#29), no Python tool |
 
 **Which keys pick a voice.** The bank is chosen by unique index (`fn_3_90F48`: `u =
 fn_800698F8(charID)`, `sound.(5+u)`), the SFX ids by charID (`lbl_3_data_8168[charID] + line`). A
@@ -201,7 +201,7 @@ clone S of source C on donor D's slot gets, from the patcher in main
 `8168` (REL_VOICE) is copied only with the gameplay tables; the unique index only with `--ui source`.
 (high)
 
-**Fix (#29, Rust core on branch `voice-merge`, not merged):** copy `8168[C]` to S in every mode
+**Fix (#29, Rust core, Rio-tested):** copy `8168[C]` to S in every mode
 (`--no-gameplay` then still re-packs game.rel for that one table), and with `--ui donor` rebuild the
 donor family's bank `sound.(5+u_D)` with the source's sounds added (nothing to do when u_C ==
 u_D). The merged bank keeps the retail layout (§2): one GROUP_DATA with the donor's gid; id lists =
@@ -237,7 +237,7 @@ happen before the merge.
 * Exhibition match stack: row 0 (174,144 B of samples) + row 1, gids 28/29 (4,254,368 B) + 18 voice
   banks + the stadium row (largest Mario Stadium, 294,112 B). Retail worst case (the 18 largest
   banks): 7,962,080 B, **425,248 B free**. With one merged bank (source samples counted once, worst
-  over all 32 sources): 8,097,664 B, 289,664 B free. The `voice-merge` core computes this worst case
+  over all 32 sources): 8,097,664 B, 289,664 B free. The Rust core computes this worst case
   from the disc on every donor-mode run and refuses ("...use --ui source") if it would not fit.
   Practice and minigames have more than 1.2 MB free. (high, computed from the disc)
 * Caveats: demo/attract mode pushes row 47 last and is already near the limit in retail; the main-RAM
@@ -249,4 +249,4 @@ happen before the merge.
 * Rows 0, 4, 46, 47 SFX meanings; umpire calls; `sound.38` FX-by-FX use; menu voices of a
   donor-mode clone.
 * ADP encoder; MusyX sequence (song) format; main-RAM headroom for a merged bank.
-* Merged voice banks: Rio test of the `voice-merge` build (silent case, heavy 18-character match).
+* Merged voice banks: the silent case passed in Rio; a heavy 18-character match is still untested.
