@@ -53,5 +53,3 @@ decomp_debug.log
 tools/decomp-permuter
 /.scratch/
 
-# clone maker: C build of tools/modding/lzss.c
-tools/modding/_lzss.*

@@ -4,6 +4,13 @@ Docs here total about 70k tokens; don't read them whole. Find your task below, r
 sections (`grep -n '^#' <file>` gives line numbers), and look up addresses in `addresses.md`
 instead of searching prose. Each fact has one home (the "owns" column); other docs link to it.
 
+**Modding tools live in [mssb-modding](https://github.com/Cjericho4/mssb-modding)** (checkout at
+`../mssb-modding`): every `tools/clonemaker`, `tools/modding`, `tools/datamap` and
+`tools/inspect_banner_archive.py` path in these docs is in that repo. Game knowledge stays here.
+Modding issues moved there too; old `mssb-dtk` issue links redirect. Numbers in these docs are the
+old ones: #2→1, #3→2, #5→3, #6→4, #7→5, #8→6, #18→7, #25→8, #26→9, #27→10, #28→11, #30→12,
+#33→13, #34→14, #35→15, #36→16, #37→17 (closed ones such as #29 and #38 stayed here).
+
 ## Start here by task
 | Task | Read |
 |---|---|
