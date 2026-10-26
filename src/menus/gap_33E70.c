@@ -2,6 +2,8 @@
 #include "menus/rep_1028.h"
 #include "menus/gap_92394.h"
 extern void fn_80062890(s32 id);
+/* gap_80067AC8.h has conflicting shared-global views in this unit. */
+extern u8 fn_8006862C(s32 id, s32 mode);
 #include "menus/gap_3C03C.h"
 #include "menus/gap_1B1BC.h"
 #include "game/rep_3448.h"
@@ -331,8 +333,41 @@ void fn_2_37D94(void) {
 }
 
 // .text:0x00037D98 size:0x16C
+/* Run the timed scene transition and wait for the resource system to become ready. */
 void fn_2_37D98(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        changeScene(1, 6);
+        scene->unkIndex = 0x26AE;
+        scene->unkIndex2 = 0;
+        lbl_2_bss_1A8234->flags[1][1] = 1;
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        if ((*(s16*)&scene->unkIndex)-- == 0) scene->field15_0x28 = 2;
+        (*(s16*)&scene->unkIndex2)++;
+        break;
+    case 2:
+        if (fn_8006862C(0x1A4, 0) == 0) scene->field15_0x28 = 3;
+        break;
+    case 3:
+        changeScene(3, 6);
+        scene->field15_0x28 = 4;
+        break;
+    case 4:
+        if (lbl_8037169C._13 != 0) {
+            scene->currentDrawingItem->loadingState = 1;
+            fn_800B0A14_removeQueue();
+            scene->field15_0x28 = 0;
+        }
+        break;
+    }
+    if (lbl_2_bss_1A824C->unk19783F == 1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+    }
 }
 
 // .text:0x00037F04 size:0x1AC
