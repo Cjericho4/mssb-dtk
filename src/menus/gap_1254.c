@@ -32,6 +32,10 @@ extern void fn_80066EAC(s32 side);                               /* gap_80064754
 extern void fn_800AD038(s32 start);                               /* gap_800A97D0.h */
 
 extern u8 lbl_2_bss_100B4;
+extern u8 lbl_2_bss_3A0;
+extern s32 fn_8004CA6C(s32 buttons);
+extern void fn_8004CC2C(void);
+extern void fn_8004D0F0(void);
 extern u8 lbl_2_bss_3A8[NUM_CHOOSABLE_CHARACTERS]; /* per-charID handedness byte (challenge save): bit 0 stance, bits 1.. arm */
 extern u32 lbl_803CB750;
 extern s16 lbl_2_data_E88[2][9];
@@ -398,8 +402,40 @@ void fn_2_3204(void) {
 }
 
 // .text:0x0000323C size:0x180
+/* Handle the roster dialog and rebuild or cancel the selected teams. */
 void fn_2_323C(void) {
-    return;
+    switch ((s32)lbl_2_bss_3A0) {
+    case 0:
+        fn_800B0A5C_insertQueue(fn_8004D0F0, 0x3000);
+        lbl_2_bss_3A0++;
+        break;
+    case 1: {
+        s32 result = fn_8004CA6C(lbl_8034E9A0.input[lbl_803CBD24.controller].unk2);
+        switch (result) {
+        case 0: break;
+        case 1: fn_8004CC2C(); break;
+        case 3:
+            fn_2_2FC0(10, 1, 1);
+            lbl_803CBD24.controller = 0;
+            fn_800625A4(0, 0x13);
+            fn_800625A4(1, 0x13);
+            changeScene(15, 6);
+            lbl_2_bss_3A0 = 0;
+            lbl_2_bss_F468.unk2E = 0;
+            lbl_2_bss_100B4 = 1;
+            lbl_803CBBCC->state = 8;
+            break;
+        case 2: fn_8004CC2C(); break;
+        case 4:
+            lbl_2_bss_3A0 = 0;
+            lbl_803CBD24.controller = 0;
+            lbl_803297E0.mode = 0;
+            lbl_803CBBCC->state = 2;
+            break;
+        }
+        break;
+    }
+    }
 }
 
 /* Report whether the first challenge lineup order differs from all remaining entries. */

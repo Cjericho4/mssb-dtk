@@ -25,6 +25,7 @@ typedef struct MenusAutoFillStrategy {
     u8 _pad0[2];
     u8 current; /* 0x2 random 0..2 */
     u8 previous; /* 0x3 avoid repeating the last strategy */
+    u8 controller; /* 0x4 */
 } MenusAutoFillStrategy;
 extern MenusAutoFillStrategy lbl_803CBD24;
 
