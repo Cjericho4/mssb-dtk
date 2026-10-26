@@ -355,8 +355,31 @@ void fn_2_650A4(void) {
 }
 
 // .text:0x00065258 size:0x17C
-void fn_2_65258(void) {
-    return;
+/* Control a scripted pane and its playback flag during show and hide commands. */
+void fn_2_65258(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x68 = 1;
+        slot->state = 0x25;
+        break;
+    case 5:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x68 = 0;
+        slot->state = 6;
+        break;
+    case 6:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 7;
+        break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x000653D4 size:0x274
