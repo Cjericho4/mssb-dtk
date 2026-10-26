@@ -58,7 +58,9 @@ typedef struct Rep10C0State {
     u8 flag1972BC;
     u8 _pad1972BD[3];
     u8 flag1972C0;
-    u8 _pad1972C1[0x3A7];
+    u8 _pad1972C1[0x35F];
+    f32 values197620[12];
+    u8 _pad197650[0x18];
     MenusCameraConfig camera; /* 0x197668 */
     u8 _pad197680[4];
     MenusMenuBuffer* buffer; /* 0x197684 */
@@ -139,6 +141,6 @@ void fn_2_93C64(void);
 void fn_2_94604(u8 value);
 void fn_2_9461C(s16 value);
 void fn_2_94634(s32 index);
-void fn_2_946DC(void);
+void fn_2_946DC(s32 index);
 
 #endif // !__MENUS_rep_10C0_H_
