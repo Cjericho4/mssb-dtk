@@ -5,16 +5,17 @@
 #include "Dolphin/mtx.h"
 
 typedef struct MenusProjectionState {
-    u8 _pad0[0x30];
+    union { u8 _pad0[0x30]; Mtx matrix; };
     s16 state;
     s16 step;
     u8 _pad34[4];
     f32 value;
     Vec target;
     Vec position;
-    s32 flags;
+    union { s32 flags; f32 unk_0x54; };
 } MenusProjectionState;
 extern MenusProjectionState lbl_2_bss_1010C;
+extern MenusProjectionState lbl_2_bss_1A81D4;
 
 typedef struct MenusLightMatrixState {
     u8 _pad0[0x14];

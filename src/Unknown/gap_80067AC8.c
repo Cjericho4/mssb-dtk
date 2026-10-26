@@ -71,8 +71,8 @@ void fn_80068514(void) {
 }
 
 // .text:0x8006862C size:0xF4
-void fn_8006862C(void) {
-    return;
+u8 fn_8006862C(s32 id, s32 mode) {
+    return 0;
 }
 
 // .text:0x80068720 size:0x5C

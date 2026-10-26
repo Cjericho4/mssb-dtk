@@ -110,7 +110,7 @@ Gave up fn_2_74E14 after 5 attempts: constant-first index sums fixed base foldin
 Gave up fn_2_477C0 during asm review: dynamically aligned per-animation aux chunks require byte slicing, like documented 8DC00; no field-only typed layout identified. Stub retained.
 Gave up fn_2_95FE0 after 5 attempts: all instructions agree except li total=1 scheduled before argument constants instead of after; post-call init, comma expression and inline out-parameter helper failed. Stub restored.
 New MenusRenderAnimation (90 bytes) embeds ActRelatedSub, with visibility byte6C; MenusRenderList has count0 and these entries at34.
-Gave up fn_2_348C after 4 attempts: nested loops and byte stores reproduce target unrolling, but team/boolean temps and five induction/base registers allocate differently. Stub restored and unused flag array removed.
+Gave up fn_2_348C after 4 attempts (matched later, decomp_knowledge.md §13): nested loops and byte stores reproduce target unrolling, but team/boolean temps and five induction/base registers allocate differently. Stub restored and unused flag array removed.
 Gave up fn_2_190DC after 5 attempts: all operations agree but input-list and animation-entry saved registers r28/r29 are swapped; declaration ordering and explicit global pointer unchanged. Stub restored and unused fields/prototypes removed.
 Gave up fn_2_1C0D4 after 2 attempts: save-global pointer is sunk until after memset instead of anchored in r31 before call; direct and inline initializer forms differ in scheduling. Stub restored and unused fields removed.
 New MenusChoiceConfig (1C bytes), group0/level1; replaced Gap3C03CObj initial padding with its config pointer.
@@ -123,3 +123,12 @@ Gave up fn_2_80E0C after 5 attempts: total+=4 fixes saved registers, leaving onl
 - fn_2_8B2C0: ASM review deferred twelve relative resource pointer fixups; shared HugeAnimStruct slots require a typed relocation view, stub retained.
 - New structs MenusSavedRoster / MenusSavedRosters in gap_4B1AC.h: persisted roster records, stride 0x4508, enabled byte 0x1606 and alternate flag 0x441B.
 - fn_2_EAE0: two candidates retain selection-offset induction register and three saved registers versus target five; infinite controller loop register allocation differs substantially, stub restored and unused fields removed.
+
+## Codex run 2026-10-25 (branch codex-menus-2, 35 matches)
+- Gave up fn_2_895F8 after 5 attempts: switch bodies match, but first global lis and default-result li scheduling differ (7 lines); restored stub and unused transition field/prototype.
+- Matched fn_2_509A4: explicit empty outer case 2 preserves the dead second default branch; a one-case inner switch preserves duplicate queue-removal calls. Inferred s32 fn_2_4EB9C(void) from result checks; its body remains a return-zero stub.
+- Deferred fn_2_8782C after assembly review: relocates packed actor-archive byte offsets into fifteen typed resource pointers and two textures; no field-only layout under current pointer-offset restriction.
+- Gave up fn_2_44014 after 5 attempts: direct ten-slot loop reproduces operations but team/table/object-offset pointer registers permute (9 lines); inline loop changes allocation extensively. Stub restored.
+- Gave up fn_2_86DCC after 5 attempts: camera/frustum initialization has global-base and float temporary allocation/scheduling differences (44+ lines); inline setter and extern constants did not fix. Stub and original Mtx declaration restored; unused projection/camera view edits removed.
+- Gave up fn_2_26AF4 after 5 attempts: body instructions agree, but explicit empty switch-case sets give cmp3/cmp6 roots or two extra upper-subtree tests instead of target cmp4 and dead branch. Stub/prototype restored.
+- Gave up fn_2_69554 after 5 attempts: separate squared temps and swapped dx/dz declarations match sqrt body, but final zero-speed fallback coalesces into f1 and omits target branch/fmr f0,f1 (6 lines); double ternary adds lfd/frsp. Stub/prototype restored.

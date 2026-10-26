@@ -91,7 +91,7 @@ void fn_800BD8C4(void);
 void fn_800BDA24(Gap800BD3A0Instance* inst);
 void fn_800BDA94(void);
 void fn_800BDC88(void);
-void ActorObjectInitTable(void);
+struct HugeAnimEntry68* ActorObjectInitTable(u16 count);
 void fn_800BDE8C(u8 value);
 void fn_800BDEA0(void);
 void fn_800BDF70(Gap800BD3A0Model* model);

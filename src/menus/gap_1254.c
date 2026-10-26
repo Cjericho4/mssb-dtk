@@ -32,8 +32,16 @@ extern void fn_80066EAC(s32 side);                               /* gap_80064754
 extern void fn_800AD038(s32 start);                               /* gap_800A97D0.h */
 
 extern u8 lbl_2_bss_100B4;
+extern u8 lbl_2_bss_3A0;
+extern s32 fn_8004CA6C(s32 buttons);
+extern void fn_8004CC2C(void);
+extern void fn_8004D0F0(void);
 extern u8 lbl_2_bss_3A8[NUM_CHOOSABLE_CHARACTERS]; /* per-charID handedness byte (challenge save): bit 0 stance, bits 1.. arm */
 extern u32 lbl_803CB750;
+extern s16 lbl_2_data_E88[2][9];
+extern LineUpEntry lbl_80353B98[2][9];
+/* gap_80064754.h cannot be included here because its shared-global views conflict. */
+extern void fn_800670A0(u8 side);
 
 // .text:0x00001254 size:0x4
 void fn_2_1254(void) {
@@ -232,8 +240,39 @@ void fn_2_1DC4(void) {
 }
 
 // .text:0x00001DC8 size:0x168
+/* Apply the chosen main-menu game mode and request the next scene. */
 void fn_2_1DC8(void) {
-    return;
+    switch (lbl_2_bss_F410.unk0) {
+    case 0:
+        lbl_8034E9A0.unk4708 = 0;
+        g_d_GameSettings.GameModeSelected = GAME_TYPE_EXHIBITION_GAME;
+        break;
+    case 1:
+        lbl_8034E9A0.unk4708 = 1;
+        g_d_GameSettings.GameModeSelected = GAME_TYPE_CHALLENGE;
+        break;
+    case 3:
+        lbl_8034E9A0.unk4708 = 3;
+        g_d_GameSettings.GameModeSelected = GAME_TYPE_MINIGAMES;
+        changeScene(4, 6);
+        break;
+    case 2:
+        lbl_8034E9A0.unk4708 = 2;
+        g_d_GameSettings.GameModeSelected = GAME_TYPE_TOY_FIELD;
+        changeScene(4, 6);
+        break;
+    case 4:
+        lbl_8034E9A0.unk4708 = 4;
+        g_d_GameSettings.GameModeSelected = GAME_TYPE_PRACTICE;
+        g_d_GameSettings.StadiumID = STADIUM_ID_MARIO_STADIUM;
+        g_d_GameSettings.miniGameStadiumIndicator = 2;
+        changeScene(4, 6);
+        break;
+    case 6: lbl_8034E9A0.unk4708 = 6; break;
+    case 5: lbl_8034E9A0.unk4708 = 5; break;
+    }
+    lbl_803CBBCC->state = 5;
+    fn_800625A4(0, 0x58);
 }
 
 // .text:0x00001F30 size:0x8B0
@@ -247,8 +286,30 @@ void fn_2_27E0(void) {
 }
 
 // .text:0x00002BB8 size:0x164
+/* Populate both default rosters and their captain chemistry, then refresh each side. */
 void fn_2_2BB8(void) {
-    return;
+    s32 side;
+    s32 slot;
+    s32 character;
+    s32 captain;
+    for (side = 0; side < 2; side++) {
+        for (slot = 0; slot < 9; slot++) {
+            captain = lbl_8034E9A0.players[side];
+            if (captain == CHAR_ID_MARIO) {
+                character = lbl_2_data_E88[0][slot];
+                lbl_803C6724.teams[side][slot] = character;
+                lbl_803C6724.selectionFlags[side][slot] = lbl_8034E9A0.stats[character / 9][character % 9].chemistry[captain];
+            } else {
+                character = lbl_2_data_E88[1][slot];
+                lbl_803C6724.teams[side][slot] = character;
+                lbl_803C6724.selectionFlags[side][slot] = lbl_8034E9A0.stats[character / 9][character % 9].chemistry[captain];
+            }
+            lbl_80354720[side][slot].unk2 = slot;
+            lbl_80354720[side][slot].unk1 = slot;
+            lbl_80354720[side][slot].unk0 = slot;
+        }
+        fn_800670A0(side);
+    }
 }
 
 // .text:0x00002D1C size:0x2A4
@@ -341,8 +402,40 @@ void fn_2_3204(void) {
 }
 
 // .text:0x0000323C size:0x180
+/* Handle the roster dialog and rebuild or cancel the selected teams. */
 void fn_2_323C(void) {
-    return;
+    switch ((s32)lbl_2_bss_3A0) {
+    case 0:
+        fn_800B0A5C_insertQueue(fn_8004D0F0, 0x3000);
+        lbl_2_bss_3A0++;
+        break;
+    case 1: {
+        s32 result = fn_8004CA6C(lbl_8034E9A0.input[lbl_803CBD24.controller].unk2);
+        switch (result) {
+        case 0: break;
+        case 1: fn_8004CC2C(); break;
+        case 3:
+            fn_2_2FC0(10, 1, 1);
+            lbl_803CBD24.controller = 0;
+            fn_800625A4(0, 0x13);
+            fn_800625A4(1, 0x13);
+            changeScene(15, 6);
+            lbl_2_bss_3A0 = 0;
+            lbl_2_bss_F468.unk2E = 0;
+            lbl_2_bss_100B4 = 1;
+            lbl_803CBBCC->state = 8;
+            break;
+        case 2: fn_8004CC2C(); break;
+        case 4:
+            lbl_2_bss_3A0 = 0;
+            lbl_803CBD24.controller = 0;
+            lbl_803297E0.mode = 0;
+            lbl_803CBBCC->state = 2;
+            break;
+        }
+        break;
+    }
+    }
 }
 
 /* Report whether the first challenge lineup order differs from all remaining entries. */
@@ -964,8 +1057,27 @@ void fn_2_5184(void) {
 }
 
 // .text:0x000052CC size:0x178
+/* Hand the first controller to team two and move its cursor onto a free character. */
 void fn_2_52CC(void) {
-    return;
+    s32 cell;
+    lbl_2_bss_100B8.selectionFlags[0] = 1;
+    lbl_803C66B0.padSide[0] = 1;
+    lbl_2_bss_F468.cursor[lbl_803C66B0.padSide[0]] = 10;
+    lbl_803C5EA4.unkE = 1;
+    if (lbl_8034E9A0.charTaken[lbl_2_bss_F410.gridPick[1]] != 0) {
+        for (cell = 0; cell < 32; cell++) {
+            if (lbl_8034E9A0.charTaken[lbl_800FDE84[cell]] == 0) {
+                lbl_2_bss_F410.gridPick[1] = lbl_800FDE84[cell];
+                break;
+            }
+        }
+    }
+    switch (lbl_8034E9A0.controllerIndices[1]) {
+    case 0: fn_80050138(1, lbl_2_bss_F410.gridPick[1], -1, -1, -1, 0); break;
+    case 1: fn_80050138(1, -1, lbl_2_bss_F410.gridPick[1], -1, -1, 0); break;
+    case 2: fn_80050138(1, -1, -1, lbl_2_bss_F410.gridPick[1], -1, 0); break;
+    case 3: fn_80050138(1, -1, -1, -1, lbl_2_bss_F410.gridPick[1], 0); break;
+    }
 }
 
 // .text:0x00005444 size:0x3A4
@@ -1094,8 +1206,34 @@ void fn_2_6484(void) {
 }
 
 // .text:0x00006608 size:0x17C
+/* Route roster input to each active side and finish both sides when requested. */
 void fn_2_6608(void) {
-    return;
+    s32 side;
+    GameInitVariables* settings;
+    if (lbl_2_bss_F468.flags59[0] != 0) fn_2_3624(0);
+    else if (lbl_2_bss_F468.flags59[1] != 0 && lbl_2_bss_100B8.selectionFlags[0] != 0 && g_d_GameSettings._10 == 0) fn_2_3624(0);
+    else fn_2_104FC(0);
+    settings = &g_d_GameSettings;
+    if (settings->_10 == 1) {
+        if (lbl_2_bss_F468.flags59[1] != 0) fn_2_3624(1);
+        else fn_2_104FC(1);
+    }
+    if (lbl_2_bss_F468.unk56 != 0) {
+        lbl_803C5EA4.flags8[1] = 0;
+        lbl_803C5EA4.flags8[0] = 0;
+        lbl_2_bss_100B8.flags30[1] = 0;
+        lbl_2_bss_100B8.flags30[0] = 0;
+        if (settings->_10 == 0) {
+            lbl_2_bss_F468.cursor[0] = 9;
+            lbl_803C66B0.padSide[0] = 0;
+        }
+        for (side = 0; side < 2; side++) {
+            if (lbl_2_bss_F468.flags59[side] != 0) {
+                fn_800625A4(side, 0x1B);
+                lbl_2_bss_F468.flags59[side] = 0;
+            } else fn_800625A4(side, 0xB);
+        }
+    }
 }
 
 // .text:0x00006784 size:0x100
@@ -1502,8 +1640,25 @@ void fn_2_B324(void) {
 }
 
 // .text:0x0000B508 size:0x164
+/* Release the second team's non-captain characters and reset its lineup slots. */
 void fn_2_B508(void) {
-    return;
+    s32 character;
+    s32 slot;
+    for (character = 0; character < NUM_CHOOSABLE_CHARACTERS; character++) {
+        for (slot = 1; slot < 9; slot++) {
+            if (lbl_803C6724.teams[1][slot] == character) {
+                lbl_8034E9A0.charTaken[character] = 0;
+                fn_800506E8(lbl_8034E9A0.controllerIndices[1], character, 0);
+                fn_80067B40(1, character, 0);
+            }
+        }
+    }
+    for (slot = 1; slot < 9; slot++) {
+        lbl_80354720[1][slot].unk2 = slot;
+        lbl_80353B98[1][slot].unk2 = slot;
+        lbl_803C6724.teams[1][slot] = MENUS_ROSTER_SLOT_EMPTY;
+        lbl_803C6724.unk4A[1][slot] = 0;
+    }
 }
 
 // .text:0x0000B66C size:0x2B4
@@ -1571,8 +1726,27 @@ void fn_2_CCBC(void) {
 }
 
 // .text:0x0000CCE0 size:0x164
-void fn_2_CCE0(void) {
-    return;
+/* Move the roster cursor to the first empty slot, or mark a full team ready. */
+void fn_2_CCE0(u8 side) {
+    s32 slot;
+    if (lbl_2_bss_F468.flags37[side] == 0) {
+        for (slot = 0; slot < 9; slot++) {
+            if (lbl_803C6724.teams[side][slot] == CHAR_ID_NONE ||
+                lbl_803C6724.teams[side][slot] == MENUS_ROSTER_SLOT_EMPTY) break;
+        }
+        if (slot == 9) {
+            lbl_2_bss_F468.flags37[side] = 1;
+            lbl_2_bss_F468.prevCursor[side] = lbl_2_bss_F468.cursor[side];
+            lbl_2_bss_F468.cursor[side] = 9;
+            lbl_2_bss_F468.flags41[side] = 0;
+            fn_800625A4(side, 20);
+            fn_80050138(1, -1, -1, -1, -1, 0);
+        } else {
+            lbl_2_bss_F468.prevCursor[side] = lbl_2_bss_F468.cursor[side];
+            lbl_2_bss_F468.cursor[side] = lbl_803C6724.order[side][slot];
+            fn_800625A4(side, 14);
+        }
+    }
 }
 
 // .text:0x0000CE44 size:0x1168
@@ -1897,7 +2071,7 @@ void fn_2_102C8(u8 side) {
 }
 
 // .text:0x000104FC size:0xBB4
-void fn_2_104FC(void) {
+void fn_2_104FC(u16 pad) {
     return;
 }
 

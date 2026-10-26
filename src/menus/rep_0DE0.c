@@ -6,7 +6,7 @@
 extern void fn_800BDA94(AnimLevel1** anim, Mtx matrix);
 #include "menus/rep_0568.h"
 #include "Dolphin/GX/GXTransform.h"
-extern Mtx lbl_2_bss_1A81D4;
+#include "menus/rep_04B0.h"
 extern MenusDisplayConfig lbl_2_data_2E9B4[];
 extern void C_MTXFrustum(Mtx44 matrix, f32 top, f32 bottom, f32 left, f32 right, f32 near, f32 far);
 
@@ -120,8 +120,8 @@ void fn_2_86FEC(void) {
     GXSetProjection(projection, GX_PERSPECTIVE);
     fn_2_48D54();
     fn_2_86470();
-    fn_2_85D6C(lbl_2_bss_1A81D4);
-    PSMTXCopy(lbl_2_bss_1A81D4, fn_80052768(0)->mtx);
+    fn_2_85D6C(lbl_2_bss_1A81D4.matrix);
+    PSMTXCopy(lbl_2_bss_1A81D4.matrix, fn_80052768(0)->mtx);
     fn_800A7D4C(0, (BdcArrayElement*)&lbl_2_data_2E9B4[lbl_803CBBC0]);
     fn_2_190DC(lbl_2_bss_340140->entries_68, fn_80052768(0)->mtx);
 }

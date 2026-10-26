@@ -1,6 +1,7 @@
 #include "menus/gap_8782C.h"
 #include "menus/gap_71EC4.h"
 #include "menus/rep_0438.h"
+#include "game/rep_3448.h"
 
 extern MenusSceneScript lbl_2_data_2ECE4;
 
@@ -20,8 +21,26 @@ void fn_2_87FB0(void) {
 }
 
 // .text:0x00088250 size:0x178
-void fn_2_88250(void) {
-    return;
+/* Animate the pending roster choice and reset its transition flags. */
+/* Animate the pending roster choice and reset its transition flags. */
+void fn_2_88250(DrawingSceneStruct* scene) {
+    if ((u32)__cntlzw(lbl_2_bss_33FBCC.unk18) >> 5) {
+        lbl_80371C30[(scene->unkIndex + 7) + lbl_2_bss_33FBCC.unkF].obj->unk64 = 20;
+        lbl_80371C30[(scene->unkIndex + 7) + lbl_2_bss_33FBCC.unkF].obj->flags |= 2;
+        lbl_80371C30[(scene->unkIndex + 7) + lbl_2_bss_33FBCC.unkF].obj->field_0x5C = 0;
+        lbl_80371C30[(scene->unkIndex + 7) + lbl_2_bss_33FBCC.unkF].obj->field_0x68 = 1;
+        lbl_80371C30[(scene->unkIndex + 7) + lbl_2_bss_F410.selection].obj->unk64 = 19;
+        lbl_80371C30[(scene->unkIndex + 7) + lbl_2_bss_F410.selection].obj->field_0x68 = 1;
+        lbl_80371C30[(scene->unkIndex + 0x42) + lbl_2_bss_33FBCC.unkF].obj->flags |= 2;
+        lbl_80371C30[(scene->unkIndex + 0x42) + lbl_2_bss_33FBCC.unkF].obj->field_0x68 = 1;
+        lbl_2_bss_33FBCC.unk18 = 1;
+        lbl_2_bss_33FBCC.unk19 = 1;
+    }
+    if ((u32)__cntlzw(1 - lbl_2_bss_33FBCC.unk19) >> 5) {
+        lbl_2_bss_33FBCC.unk17 = 0;
+        lbl_2_bss_33FBCC.unk18 = 0;
+        lbl_2_bss_33FBCC.unk19 = 0;
+    }
 }
 
 // .text:0x000883C8 size:0x430

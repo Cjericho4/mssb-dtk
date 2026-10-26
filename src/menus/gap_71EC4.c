@@ -9,6 +9,7 @@ extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "menus/rep_10C0.h"
 #include "menus/rep_0438.h"
 
+extern MenusSceneScript lbl_2_data_2AF4C;
 extern MenusSceneScript lbl_2_data_2DC8C;
 extern u8 lbl_2_data_2DC84[];
 extern MenusSceneScript lbl_2_data_2B4DC;
@@ -269,8 +270,16 @@ void fn_2_7308C(void) {
 }
 
 // .text:0x00073758 size:0x170
+/* Open the first team's roster display and assign the eight non-captain portraits. */
 void fn_2_73758(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 slot;
+    fn_80034E20(scene, &lbl_2_data_2AF4C);
+    for (slot = 1; slot < 9; slot++) {
+        lbl_80371C30[slot + (scene->unkIndex + 3)].obj->field_0x5C = lbl_803C6724.teams[0][slot] << 16;
+    }
+    lbl_803CBCD8.unk5 = 0;
+    lbl_803CC1B8->unk_00 = fn_2_7308C;
 }
 
 // .text:0x000738C8 size:0xCC
@@ -1265,8 +1274,44 @@ void fn_2_85160(void) {
 }
 
 // .text:0x000851A8 size:0x168
+/* Advance the first menu input sequence and queue its delayed transition. */
 void fn_2_851A8(void) {
-    return;
+    MenusInputFlags* input;
+    switch (lbl_803CC1B8->loadingState) {
+    case 0:
+        fn_800625A4(0, 0);
+        lbl_803CC1B8->loadingState++;
+    case 1:
+        input = &lbl_803C66B0;
+        if (input->resetData[0] == 0) {
+            input->resetData[0] = 1;
+            fn_800626EC(0);
+            switch ((s32)lbl_803C66B0.flags5D[0]) {
+            case 0: case 1: case 2: case 3: break;
+            case 4: fn_80062674(0); break;
+            }
+        }
+        if (input->resetData[0] == 1) {
+            switch ((s32)lbl_803C66B0.flags5D[0]) {
+            case 0: case 1: case 2:
+                input->resetData[0] = 2;
+                fn_80062674(0);
+                break;
+            case 3:
+                if ((s32)lbl_2_bss_F410.unk0 == 0) {
+                    input->resetData[0] = 2;
+                    fn_800B0A5C_insertQueue(fn_2_85160, lbl_803CC1B8->priority)->unk10 = 180;
+                } else fn_800625A4(0, 4);
+                break;
+            case 4:
+                input->resetData[0] = 2;
+                fn_80062674(0);
+                fn_800B0A14_removeQueue();
+                break;
+            }
+        }
+        break;
+    }
 }
 
 // .text:0x00085310 size:0x1A0

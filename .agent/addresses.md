@@ -17,6 +17,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800E869C | `lbl_800E869C` | 32 B grid index -> base charID (twin of mainCharArray) | CS §1 |
 | 0x800E86F0 | `lbl_800E86F0` (Ghidra `stonNiceContactIncrement`) | 12 star-player bonus bytes {50 x7, 20, 20, 50 x3} | ST §3; RF §2.4 |
 | 0x800E63A0 | music path strings | 15 `snd/my_snd_h/*.adp` paths, named by `lbl_800E87B4` | SN §5.1 |
+| 0x800E8300 (0xE5300) | `charSizeMultipliers` | 54 × {f32 in game, f32 menu scene} model scale per charID; CTRLSetScale in fn_8001D2D4; also bat height and fielder tables (Mario 1.18, Toads 1.40) | ST §6 |
 | 0x800E87B4 | `lbl_800E87B4` | 15 music tracks {path, size, 0, size}; only the path is used (fn_8006877C, game fn_3_8B094) | SN §5.1 |
 | 0x800EE910 | `game_common` | 5 field/game common files (4 = 23 minigame strings) | DM §4 |
 | 0x800EEAAC (0xEBAAC) | `lbl_800EEAAC` | 54 u16 glove/attachment bone-list base (= charID*6 retail) | CMR §1.1, §3 |
@@ -26,7 +27,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800EEFE0 / 0x800EF0C0 / 0x800EF1A0 | `res_dol2[1]` / `[15]` / `[29]` | copies of the HUD card / common / grid descriptors | CS §6, §8.3 |
 | 0x800EF508 | `sound` / `lbl_800EF508` | 48 MusyX group descriptors (stored); voice bank = [5+u]; every row | SN §2 |
 | 0x800EF808 | `lbl_800EF808` | sound state: resources[48] (+4), pushed gids (+0x340), roster slot being loaded unk39A | SN §3 |
-| 0x800EFBB4 | `lbl_800EFBB4` | sndInit config {64 voices, 48, 16, 1 studio, flags 1, ARAM 0x800000} | SN §2 |
+| 0x800EFBB4 | `lbl_800EFBB4` | sndInit config {64 voices, 48, 16, 1 studio, flags 1, ARAM 0x800000}; sample heap ARAM 0x4500..0x804000 | SN §2, §7 |
 | 0x800EFBE8 | `stadium` / `lbl_800EFBE8` | 21 stadium model descriptors, index stadium*3+variant (13 distinct); anchor of gap_8001E460.c `.data` | DM §4; CMR §6 |
 | 0x800EFD38 (0xECD38) | `master` / `lbl_800EFD38` | 515 ARAM master descriptors {flags,0x40000000\|size,blob offset,comp}; blob-relative | DM §4; CMR §3 |
 | 0x800EFD38 +[0..32] | master bodies | 33 base body models (not charID-indexed) | CMR §3 |

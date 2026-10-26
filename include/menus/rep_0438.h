@@ -37,7 +37,9 @@ typedef struct MenusSaveState {
     s8 unk46FF;
     u8 _pad4700;
     u8 unk4701;
-    u8 _pad4702[0xB];
+    u8 _pad4702[6];
+    u8 unk4708;
+    u8 _pad4709[4];
     u8 captainBanner[2]; /* 0x470D */
     s8 chemistryStars[2]; /* 0x470F average nonzero chemistry excluding captain, quantized 0..5 */
     u8 unk4711;

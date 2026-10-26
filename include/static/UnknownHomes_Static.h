@@ -7,6 +7,8 @@ extern int fn_8001C67C_animation(int, int);
 
 extern f32 LinearInterpolateToNewRange(f32 value, f32 prevMin, f32 prevMax, f32 nextMin, f32 nextMax);
 
+enum { CHALLENGE_PURCHASE_COUNT = 20 };
+
 typedef struct _GameInitVariables {
     /*0x00*/ int _00;
     /*0x04*/ u16 FrameCountWhileNotAtMainMenu;
@@ -43,9 +45,14 @@ typedef struct _GameInitVariables {
     /*0x39*/ u8 bJMatchInd;
     /*0x3A*/ u8 _3A;
     /*0x3B*/ u8 someChallengeModeFlag;
-    /*0x3C*/ u8 challengeCaptainStarBought[18];
-    /*0x4E*/ u8 _4E;
-    /*0x4F*/ u8 _4F;
+    union {
+        struct {
+            /*0x3C*/ u8 challengeCaptainStarBought[18];
+            /*0x4E*/ u8 _4E;
+            /*0x4F*/ u8 _4F;
+        };
+        /*0x3C*/ u8 challengePurchaseFlags[CHALLENGE_PURCHASE_COUNT];
+    };
     /*0x50*/ u8 PlayerPorts[2];
     /*0x52*/ u8 _52;
     /*0x53*/ u8 _53;

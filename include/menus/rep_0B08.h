@@ -121,7 +121,9 @@ typedef struct MenusSceneState {
     u8 readyFlags[9]; /* 0x4431; extent unknown */
     u8 _pad443A[0xE];
     u8 unk4448;
-    u8 _pad4449[4];
+    u8 _pad4449[2];
+    s8 unk_0x444B;
+    u8 _pad444C;
     u8 resetFlags[3][54]; /* 0x444D */
     u8 _pad44EF[3];
     u8 unk44F2;
@@ -135,7 +137,7 @@ extern MenusSceneState* lbl_2_bss_1A8248;
 
 void fn_2_6832C(void);
 void fn_2_683EC(void);
-void fn_2_684D0(void);
+s32 fn_2_684D0(s32 index);
 void fn_2_68638(s32 index, u8 value);
 void fn_2_68654(s32 index, u8 value);
 s32 fn_2_68670(s32 index);

@@ -189,7 +189,7 @@ void fn_80066EAC(s32 side) {
 }
 
 // .text:0x800670A0 size:0x15C
-void fn_800670A0(void) {
+void fn_800670A0(u8 side) {
     return;
 }
 

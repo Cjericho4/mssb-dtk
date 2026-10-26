@@ -10,8 +10,8 @@ void fn_8004CA48(s16 a, s16 b, s16 c, s16 d) {
 }
 
 // .text:0x8004CA6C size:0x1AC
-void fn_8004CA6C(void) {
-    return;
+s32 fn_8004CA6C(s32 buttons) {
+    return 0;
 }
 
 // .text:0x8004CC18 size:0x14

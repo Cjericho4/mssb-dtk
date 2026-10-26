@@ -63,7 +63,8 @@ void fn_80034E20(struct DrawingSceneStruct* scene, MenusSceneScript* script);
 typedef struct MenusSceneFlags {
     u8 _pad0[5];
     u8 unk5;
-    u8 _pad6[4];
+    u8 _pad6[2];
+    u8 flags8[2];
     u8 unkA[2];   /* 0xA per side: set by fn_2_DFAC when a pick lands in a roster slot (slot in unkC) */
     u8 unkC[2];   /* 0xC per side: roster slot of the last confirmed pick */
     u8 unkE;      /* 0xE set when pad 0 moves on to side 1 in one-pad mode (fn_2_3624) */

@@ -13,7 +13,12 @@ typedef struct MenusRosterTransition {
     u8 flags[6]; /* 0x07 */
     u8 _padD;
     u8 pending;
-    u8 _padF[0x13];
+    s8 unkF;
+    u8 _pad10[7];
+    u8 unk17;
+    u8 unk18;
+    u8 unk19;
+    u8 _pad1A[8];
     u8 command;
 } MenusRosterTransition;
 extern MenusRosterTransition lbl_2_bss_33FBCC;
@@ -63,7 +68,7 @@ extern MenusVisibilityState* lbl_2_bss_3401BC;
 void fn_2_8782C(void);
 void fn_2_87998(void);
 void fn_2_87FB0(void);
-void fn_2_88250(void);
+void fn_2_88250(DrawingSceneStruct* scene);
 void fn_2_883C8(void);
 void fn_2_887F8(void);
 void fn_2_88D90(void);

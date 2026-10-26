@@ -28,7 +28,7 @@ void fn_80067C48(void);
 void fn_80067F70(s32 player);
 void fn_800684A4(void);
 void fn_80068514(void);
-void fn_8006862C(void);
+u8 fn_8006862C(s32 id, s32 mode);
 typedef struct Gap80067AC8Voice {
     u8 _pad0[0x50];
 } Gap80067AC8Voice;

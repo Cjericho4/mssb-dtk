@@ -1,11 +1,14 @@
 #include "menus/rep_0B08.h"
 #include "menus/rep_10C0.h"
 #include "menus/rep_0F60.h"
+#include "menus/gap_0.h"
 #include "UnknownHeaders.h"
 #include "string.h"
 
 extern Rep0B08AnimationConfig lbl_2_data_3C84[];
 extern Vec lbl_2_data_2EA4[];
+extern Vec lbl_2_data_2A340;
+extern f32 lbl_2_bss_A170;
 extern s16 lbl_2_data_3D30[][4];
 extern Vec lbl_2_data_3150[];
 extern f32 lbl_2_data_3EF4[];
@@ -155,8 +158,37 @@ void fn_2_683EC(void) {
 }
 
 // .text:0x000684D0 size:0x168
-void fn_2_684D0(void) {
-    return;
+/* FAKEMATCH: preserve the collision test as an inline with a byte result. */
+static inline u8 menuObjectsOverlap(s32 firstIndex, s32 secondIndex) {
+    Rep0B08Obj* first = &lbl_2_bss_1A8248->rep0B08Objects[firstIndex];
+    Rep0B08Obj* second = &lbl_2_bss_1A8248->rep0B08Objects[secondIndex];
+    f32 distance = PSVECDistance(&first->position, &second->position);
+    f32 a;
+    f32 b;
+    if (firstIndex == 0) {
+        a = lbl_2_data_3EF4[lbl_2_bss_1A8248->unk441C] + lbl_2_data_3F2C[lbl_2_bss_1A8248->unk441C];
+        b = lbl_2_data_3F0C[secondIndex];
+    } else {
+        a = lbl_2_data_3F0C[firstIndex];
+        b = lbl_2_data_3EF4[lbl_2_bss_1A8248->unk441C] + lbl_2_data_3F2C[lbl_2_bss_1A8248->unk441C];
+    }
+    if (distance < a + b && first->unkC0 != 0 && second->unkC0 != 0) return TRUE;
+    return FALSE;
+}
+
+/* Find the first active menu object in slots 2..6 that overlaps this object. */
+s32 fn_2_684D0(s32 index) {
+    Rep0B08Obj* object = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    s32 other;
+    object->unkCC = -1;
+    for (other = 1; other < 7; other++) {
+        if (menuObjectsOverlap(index, other) && other >= 2 && other <= 6) {
+            object->unkCC = other;
+            break;
+        }
+        object->unkCC = -1;
+    }
+    return object->unkCC;
 }
 
 // .text:0x00068638 size:0x1C
@@ -470,8 +502,23 @@ void fn_2_6A628(void) {
 }
 
 // .text:0x0006A708 size:0x174
+/* Move the menu actor with the controller stick and face its previous movement. */
 void fn_2_6A708(void) {
-    return;
+    Rep0B08Obj* object = &lbl_2_bss_1A8248->rep0B08Objects[0];
+    Vec position;
+    Vec delta;
+    memcpy(&position, &object->position, sizeof(Vec));
+    PSVECSubtract(&position, &lbl_2_data_2A340, &delta);
+    delta.x *= -1.0f;
+    delta.z *= -1.0f;
+    position.x += (f32)lbl_803C77B8.controllers[lbl_2_bss_1A824C->inputIndex].stickX / 768.0f;
+    position.z += (f32)lbl_803C77B8.controllers[lbl_2_bss_1A824C->inputIndex].stickY / 768.0f;
+    if (0.0f != delta.x || 0.0f != delta.z) lbl_2_bss_A170 = fn_2_4A1E8(delta.z, delta.x);
+    memcpy(&lbl_2_data_2A340, &object->position, sizeof(Vec));
+    object->position.x = position.x;
+    object->position.y = position.y;
+    object->position.z = position.z;
+    object->angle = lbl_2_bss_A170;
 }
 
 // .text:0x0006A87C size:0x23C
@@ -583,8 +630,39 @@ void fn_2_6ACF4(void) {
 }
 
 // .text:0x0006AE08 size:0x178
+/* Clear the eight menu actors and restore their movement and animation defaults. */
 void fn_2_6AE08(void) {
-    return;
+    Rep0B08Obj* obj;
+    s32 i;
+    for (i = 0; i < 8; i++) {
+        obj = &lbl_2_bss_1A8248->rep0B08Objects[i];
+        memset(obj, 0, sizeof(Rep0B08Obj));
+        obj->index = i;
+        obj->animationIndex = i;
+        obj->unk8C = 0.0f;
+        obj->unkB6 = 10;
+        obj->unk40 = 0.0003f * obj->unkB6 + 0.1f;
+        obj->unkB8 = 10;
+        obj->unkB7 = 15;
+        obj->unk44 = obj->unk40 / obj->unkB7;
+        obj->unkBB = 0;
+        obj->unkC0 = 0;
+        obj->unk96 = i;
+        obj->unk98 = -1;
+        obj->unkBC = 1;
+        obj->variant = 0;
+        obj->state = 0;
+        obj->unkC6 = -1;
+        obj->unkC4 = 0;
+        obj->unkC5 = 0;
+        obj->unk88 = 0.0f;
+        obj->unkC1 = 0;
+        obj->unkBA = 12;
+        obj->unkAC = 0;
+        obj->unkCA = 255;
+        obj->unkCB = -1;
+        obj->unkCC = -1;
+    }
 }
 
 // .text:0x0006AF80 size:0x1C

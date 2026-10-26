@@ -1,3 +1,4 @@
+#include "menus/gap_0.h"
 #include "menus/gap_194BC.h"
 #include "Dolphin/GX/GXFrameBuffer.h"
 #include "musyx/musyx.h"
@@ -106,8 +107,38 @@ void fn_2_1A1B4(void) {
 }
 
 // .text:0x0001A2AC size:0x174
+/* Open the scene, wait for A, then close it after the resource transition. */
 void fn_2_1A2AC(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        lbl_2_bss_1A824C->unk19783E = 0;
+        changeScene(1, 6);
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        if (lbl_8037169C._12 != 0) scene->field15_0x28 = 2;
+        break;
+    case 2:
+        if (lbl_803C77B8.controllers[lbl_2_bss_1A824C->inputIndex].pressed & PAD_BUTTON_A) {
+            changeScene(3, 6);
+            scene->field15_0x28 = 3;
+        }
+        break;
+    case 3:
+        if (lbl_8037169C._13 != 0) scene->field15_0x28 = 4;
+        break;
+    case 4:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
+    if (lbl_2_bss_1A824C->unk19783F == 1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+    }
 }
 
 // .text:0x0001A420 size:0xA8

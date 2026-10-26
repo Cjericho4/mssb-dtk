@@ -114,31 +114,18 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | Function | Issue |
 |---|---|
 | fn_3_55CC4 | Codex attempt; 15 lines off, mostly r4/r5 swaps around g_FieldingLogic.unkF4 stores |
-| fn_3_1323CC | loop over inlined fn_3_12F9D4 body; only the lbl_3_data_21770[1] vs currentPos.y load order differs (2 lines) |
 | fn_3_70768 | final interpolation: target computes z-prevZ into f4 first and uses non-fused fmuls+fadds; only FP register assignment differs (6 lines) |
 | fn_3_7D2E0 | CW hoists g_Stats.unk40 load above replay-frame stores (target reloads after); inline-helper and indexing variants didn't block it |
-| fn_3_105C28 | register allocation / scheduling (see git log) |
-| fn_3_E6798 | register allocation / scheduling (see git log) |
 | fn_3_11881C | register allocation / scheduling (see git log) |
-| fn_3_129370 | register allocation / scheduling (see git log) |
-| fn_3_135E38 | register allocation / scheduling (see git log) |
 | fn_3_1354BC | CW register allocation: uses f4 for diff1 and f1 for diff2, generating different fsubs destinations (f4/f1 vs f1/f2); li r3,0 placement also differs — unfixable |
-| fn_3_90AB0 | r0/r4 register swap in index base+offset computation, and lwz vs lwzu update form — both unfixable from C |
-| fn_3_10FB74 | beq+b double-branch vs bne/fallthrough — CW branch direction codegen, unfixable from C |
-| fn_3_112070 | CW sign-bit register allocation: target reuses srwi r5 from % 30 division as 3rd fn_3_155288 arg; add result goes to r0 in target but r5 in compile, causing ext |
-| fn_3_125850 | fn_80034E20 called with 2 args in target (no r5 setup), but global 3-arg declaration forces NULL→li r5,0 before call; local redecl rejected by -requireprotos |
 | fn_3_117588 | register allocation / scheduling (see git log) |
-| fn_3_90C14 | fn_800216F8 called with 3 args here, 2 elsewhere in file; one prototype can't satisfy both |
 | fn_3_A32B8 | nested-struct field load folded to single lwz |
-| fn_3_B7CDC, fn_3_B7C2C | adjacent-constant compares merged into range check |
-| fn_3_B7E44 | int-to-double/0.06 constant load form shifts scheduling |
 | fn_3_141A30 | regalloc only; jump table lives in rep_36D8 .data (split fix needed) |
 | fn_3_ED058 | scene pointer loaded into temp then mr r3 |
 | fn_3_FF98 | regalloc only (0 diffs ignoring registers) |
 | fn_3_119EE0, fn_3_119E30 | 0x34 offset folded into lwzx index |
 | fn_3_8B094 | offset-indexed vs pointer form for table entry |
-| fn_3_9EE24 | regalloc (max/abs in r10/r3) |
-| fn_3_14E894 | zero init `li r30,0; mr r31,r30` vs separate `li r31,0` (2 lines) |
+| fn_3_14E894 | 9 lines: zero init `li r30,0; mr r31,r30` vs separate `li r31,0`, plus a node/want register swap (attempt: .agent/attempts/fn_3_14E894.c) |
 | fn_3_A31E8 | nested-struct field load folded (same as fn_3_A32B8) |
 | fn_3_C0D10 | `base+1` kept in r31 across memcpy with `stbx`; no layout reproduces it |
 | fn_3_142C18 | r27-r29 order; loop shared with fn_3_146928 (matched via inline do-while) |
@@ -149,7 +136,6 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_E7424 | lbl_3_bss_AE80 addressed off AE50 base (second base reg); attempt: .agent/attempts/fn_3_E7424.* |
 | fn_3_6A9B0 | compare scheduled before 100*chargeDown product; attempt: .agent/attempts/fn_3_6A9B0.c |
 | fn_3_8C4F0 | three saved regs in reverse order; needs Bss1760 overlay; attempt: .agent/attempts/fn_3_8C4F0.c |
-| fn_3_EA340 | `((unkIndex+i)+3)<<3; lwzx` add order (33 lines); attempt: .agent/attempts/fn_3_EA340.c |
 | fn_3_15F574 | `add`+`stw 0(rX)` vs our `stwx`; attempt: .agent/attempts/fn_3_15F574.* |
 | fn_3_10030 | add-chain reassociation (4 lines); attempt: .agent/attempts/fn_3_10030.c |
 | fn_3_219CC | split base+`idx*4+0xF4` lwzx and dead counter (45 lines); needs `s8 unk257` in AnimationStruct; attempt: .agent/attempts/fn_3_219CC.c |
@@ -198,6 +184,8 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_15F648 | same base-reg pattern as fn_3_1573AC (addi r3,r30,0x148; lwz 4(r3)) plus colour build clrlslwi/rlwimi diffs (.agent/attempts/fn_3_15F648.c + .headers.diff) |
 | fn_3_CD968 | corner-setup float block: freg numbering and w*0.5 fmuls operand order (.agent/attempts/fn_3_CD968.c) |
 | fn_3_E3044 | 2 small diffs: lbz before `mr r31`, deg->rad load order (.agent/attempts/fn_3_E3044.c + .headers.diff) |
+| fn_3_7AFE4 | 4 lines: lis/addi pairing of g_Scores vs g_GameLogic; needs the fn_3_7AEEC loop as an inline copy (attempt: .agent/attempts/fn_3_7AFE4.c) |
+| fn_3_6FA28 | 24 lines: second g_Ball base and stadium-table index registers, constant load order (attempt: .agent/attempts/fn_3_6FA28.c) |
 | fn_3_142088 | ~58 lines: inlined fn_3_142030 texel index associated differently; all term orders brute-forced (.agent/attempts/fn_3_142088.c) |
 | fn_3_144ADC | ~38 lines lerp load scheduling (.agent/attempts/fn_3_144ADC.c + .headers.diff) |
 | fn_3_215AC | ~32 lines float reg numbering only (.agent/attempts/fn_3_215AC.c) |
@@ -212,70 +200,31 @@ To find the next function: look for the first plain entry (not prefixed with COM
 | fn_3_103C30 | ~75/150 lines: stack layout of 36-byte by-value inline param + param addr caching (target recomputes addi) + camPos/camTarget load order (.agent/attempts/fn_3_103C30.c + .headers.diff) |
 | fn_3_EF55C | ~38/150 lines: r27/r28 swap edge-table ptr vs sign counter + 6 component load/sub/store scheduling; 720 stmt perms tried. Real proto is u8 fn_3_EF55C(Vec*, u8) (EF55C_Arg is wrong) (.agent/attempts/fn_3_EF55C.c + .headers.diff) |
 
-**Retry candidates** (new tips may fix): fn_3_B7CDC, fn_3_B7C2C (unsigned-compare workaround), fn_3_14DC80 (`bge`+`b` early exit), fn_3_90AB0 (index-in-local tip), fn_3_90B14 (regressed 7→13 lines after fn_800216F8 lost its prototype).
-| fn_3_24EA0 | register allocation / scheduling (see git log) |
-| fn_3_6BD6C | Register numbering of the 1/0 constants in the init block; loop matches. |
-| fn_3_DF6D4 | Scheduling of the player-index/zero setup before the AI-strength loop. |
-| fn_3_DFA20 | Model per-player arrays at 0x19D2/0x1A0F/0x1A13; register numbering differs. |
-| fn_3_D9868 | Fix MiniGameStruct layout at 0x192B (odd-offset s16) and add fieldOrder[4]; remaining differences are register allocation. |
-| fn_3_76A9C | Add BatterStatEntry runs/steals fields and a team[2] view of g_Scores; second loop's counter/pointer registers are swapped. |
-| fn_3_6B870 | Inlined empty-base runner loop; i/pointer register swap remains. |
-| fn_3_104B20 | Register swap only: x,y,z correctly map to pos.x/y/z but CW allocates them in f0,f2,f1 instead of f2,f1,f0; cannot be fixed from C |
-| fn_3_5A6D4 | Register swap only: CW uses r5 as struct base pointer (addi r5,r4,@l) and r4 as temp for old gameStatus; current generates addi r4,r4,@l instead |
+**Retry candidates** (new tips may fix): none left from the 2026-10-16 list (fn_3_B7CDC, fn_3_B7C2C, fn_3_14DC80, fn_3_90AB0 and fn_3_90B14 all match now).
+| fn_3_6BD6C | 16 lines with `s32 i; s32 team; hugeAnimStruct* has;` and the `has` local after the unk9B store; left: constants 1/0 in r5/r7 swapped (all 4 store orders tried) and the epilogue `lwz r31` interleaved with the `!= 0` tail |
+| fn_3_DF6D4 | 21 lines: target shares one `li r0,0` between the unrolled `player != 0` compare and `_19DA[player] = 0`, ours emits two; post-loop constant-1 stores allocate differently (attempt: .agent/attempts/fn_3_DF6D4.c) |
+| fn_3_D9868 | 37 lines: two g_Minigame anchors and loop-counter registers swapped; declaration brute force and for-loop forms no help (attempt: .agent/attempts/fn_3_D9868.c; the MiniGameStruct 0x192B s16 and fieldOrder[4] layout fixes are in) |
+| fn_3_6B870 | inlined unloadEmptyBaseRunners loop: i in r30 and the &runnerOnBase walker in r31, target reversed; an explicit s16* walker gets r30 but folds the offset as 0x8 instead of 0x2+0x6; do-while, s16 i, `<= 3`, base local, struct-pointer param tried |
 | fn_3_11897C | Register allocation mismatch: target uses lwzx+r8 for entries_68 array access, compiler generates add+lwz; register number differences (r8/r7 vs r0/r6) |
 | fn_3_135600 | register allocation / scheduling (see git log) |
-| fn_3_FF4C | Register swap only: Int1/Int2 loaded into r0/r3 instead of r3/r9; all arithmetic operations correct |
 | fn_3_20AE0 | first rodata float address materialized via addi, load deferred. gap_20A60 merged into rep_8C8.c (2026-10-16) so constants are now same-TU literals; still mismatches in every literal/decl-order/helper form |
-| fn_3_10F564 | Correct logic: (s8)_1A2C == -1 guard, lbl_3_data_228[0x10] != 0 check, store lbl_3_data_18910[GameMode_MiniGame] to _1A2C. 20/22 instructions match; only `li r3 |
 | fn_3_142030 | CW processes r3 before r4 regardless of expression order; instruction count and formula are correct but register scheduling differs. Co-Authored-By: Claude Sonn |
-| fn_3_909B0 | CW generates (stadiumID+0x27)*4 offset but struct field layout produces 0x9C+stadiumID*4 separately; matching requires treating lbl_800EF808 as flat void*[] fro |
-| fn_3_CB344 | Epilogue restore order swapped (lwz r0/r31 order): CW scheduling artifact Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com> |
 | fn_3_FCEB0 | register allocation / scheduling (see git log) |
-| fn_3_11741C | register allocation / scheduling (see git log) |
-| fn_3_6530 | register allocation / scheduling (see git log) |
-| fn_3_90B14 | One extra li: target reuses the zero register for loadingState and the third fn_800216F8 argument. |
-| fn_3_B27A4 | One scheduling swap (addi g_GameLogic vs li -1) in the prologue. |
-| fn_3_112450 | Add flat players overlay for MiniGameStruct 0x18CC; both functions differ only in register numbering. |
-| fn_3_58E50 | Add flat players overlay for MiniGameStruct 0x18CC; both functions differ only in register numbering. |
-| fn_3_9056C | register allocation / scheduling (see git log) |
-| fn_3_C0854 | Register numbering for the sound-id/-1 temporaries. |
-| fn_3_D2684 | r29/r30 swap between the id-list pointer and the g_hugeAnimStruct base. |
+| fn_3_11741C | target computes state as `nor; srawi; andc r6,r0(=2),r3`; every `2 & ~(~(a|b) >> 31)` spelling (s16/s32/u32 state, separate mask locals) gives or+nor or nor+rlwinm; a ternary gives another idiom |
+| fn_3_B27A4 | 3 lines after adding the g_GameLogic._140[1]/[0] stores and dropping two dead stores: only `addi r3,g_GameLogic@l` is scheduled before `li r0,-1` and the first sth (attempt: .agent/attempts/fn_3_B27A4.c) |
+| fn_3_9056C | 2 lines: `addi r4,r30,0x1c4` scheduled before `slwi r0,r28,1`; pointer `+=` forms give the unfolded bases, dropping the seq local fixed the stores (attempt: .agent/attempts/fn_3_9056C.c) |
+| fn_3_C0854 | sound-id local in r5; target keeps it in r0 with store temps in r4/r5 (`slwi r4; li r5,-1; li r0,0x18; sthx; beq; li r0,0x17; clrlwi r3,r0`). Tried every int width, block scope, declaration and store order, ternary and if/else (both go branchless); u8 drops the clrlwi |
 | fn_3_E4658 | Register allocation of the 0.24f/0.0f constant loads before CTRLSetRotation. |
 | fn_3_105ACC | Quaternion-to-matrix; float register allocation and frame size differ. |
-| fn_3_14C3BC | Register numbering around the int-to-float conversion constants. |
-| fn_3_1CAC0 | One commutative fmul operand swap in the FOV expression. |
-| fn_3_88B18 | r7/r8 swap for the force-state variable. |
-| fn_3_A1F3C | matched (stub fn_3_A46A0 given s32 idx param) |
-| fn_3_B97DC | matched (ACTSetAnimation prototype gained the hidden f32 before time) |
-| fn_3_16E1EC | Register allocation of the reset-condition terms and bss base pointer. |
-| fn_3_D8A10 | scheduling of score-table loads; unrolled _1918 loop uses const offsets vs running pointer |
-| fn_3_BD6AC | bge+b+bl branch direction — CW codegen, unfixable |
-| fn_3_BD80C | bss/transRot base register split (r5+r30 vs r30 only) |
-| fn_3_BF070 | stmw r27 vs 4 individual stw's |
-| fn_3_BDE14 | register allocation: r25-r28+stmw vs r29-r31 individual stw |
-| fn_3_BDCA4 | register allocation: CW assigns r6/r5 instead of r5/r4 → stfsx vs stfs |
-| fn_3_107B9C | nonmatching |
-| fn_3_107BD0 | nonmatching |
-| fn_3_5A6A0 | nonmatching |
-| fn_3_107C04 | nonmatching |
-| fn_3_107D34 | nonmatching |
-| fn_3_107988 | nonmatching |
-| fn_3_EBFD4 | nonmatching |
-| fn_3_107C40 | nonmatching |
-| fn_3_107C88 | nonmatching |
-| fn_3_8A5A4 | persistent register swap: `g_Runners` base in `r5` and `-1` in `r6`, target wants `r6`/`r5` |
-| fn_3_7AEEC | CW running-pointer on bss struct (addi r6,r6,2 then +1) not reproducible from C struct field access |
-| fn_3_7AF68 | same pattern as fn_3_7AEEC |
-| fn_3_90220 | register allocation of the 8530/8168 table bases (now struct-typed, 7 diffs) |
-| fn_3_99C88 | single remaining `rlwimi` form mismatch: current code emits equivalent `rlwimi r4, r0, 0, 0, 23` / `stw r4` instead of target `rlwimi r0, r4, 0, 24, 31` / `stw r0` |
-| fn_3_FCE38 | branch-layout artifact in `rep_3090`: MWCC shortcuts the non-`bgt` path directly into the backward check instead of branching to the bottom `slwi` reset block first |
-| fn_3_10C7A4 | register-allocation artifact in `gap_106DFC`: target wants `r29 = &g_Minigame` and `r28 = loop index`, current code keeps swapping base/index through an extra temp |
-| fn_3_11741 | boolean materialization and register-allocation mismatch in `rep_3310`: current code stays on `or/not/rlwinm/extsh` with swapped base regs instead of target `subi/subfic/nor/srawi/andc` flow |
+| fn_3_16E1EC | snapshot stores need a separate `addi r7,r31,0x10` sub-base (same-file static lbl_3_bss_D6F0 addressed off the D6E0 overlay) and an extra `neg` before `cntlzw` on the NULL test; local bss/snapshot pointers all fold into r31 displacements (same class as fn_3_BD80C) |
+| fn_3_D8A10 | 6 lines: the j loop over mg->_1918/_1914 lacks the target's walker (`lbz 0x1919(r3); addi r3,r3,1`); i reuse, do/while, u8..s16 j, direct g_Minigame (walker but off r3, not r31), inline helpers, u8* walkers tried. Head fixed by an `s16 c = unk4C` local (attempt: .agent/attempts/fn_3_D8A10.c) |
+| fn_3_BD80C | target keeps &lbl_3_common_bss_35154 in r5 plus a separate `addi r30,r5,0x3e4` sub-object pointer; MWCC folds 0x3e4 into every displacement whatever local/global form (same-file static off one base, decomp_knowledge.md §1 Known Unfixable) |
+| fn_3_BF070 | 53 lines: target keeps &lbl_3_data_111A8 (r30) and &g_d_GameSettings (r31) in saved registers across the two calls (stmw r27); pointer locals change nothing. Inlined by fn_3_BF6C0 |
+| fn_3_90220 | 14 lines: argument evaluation order (lhzx, lbzx to r0, add, lbz pan, mr r4) not reproduced by any local or pointer order (attempt: .agent/attempts/fn_3_90220.c) |
+| fn_3_FCE38 | 13 lines: two index-based while loops; the target has one IV-reset block at the end reached from both forward-loop exits (an MWCC preheader, as in fn_3_FCEB0, .agent/easy_wins_notes.md), plus a p/IV swap (attempt: .agent/attempts/fn_3_FCE38.c) |
 | fn_3_117494 | `rep_3310` setup/order mismatch: MWCC keeps `g_Minigame` live in `r3` too long, delays `r30 = &g_Minigame`, and lowers the `_CCC` guard through the wrong even/odd test shape |
-| fn_3_E0758 | CW assigns rand-mod temp to r4 instead of r0, causing slwi/srwi register swap and preventing in-place rotlwi — unfixable from C |
-| fn_3_E1964 | target copies i into a separate byte-offset induction var (mr r27,r29); array indexing can't produce it, and even the byte-offset form fails every decl order |
-| fn_3_6B5D8 | CW uses lbz r0 instead of destructive lbz r3 for lbl_80353A90 field load — volatile register swap |
-| fn_3_DF608 | r4/r5 swap for g_d_GameSettings vs g_Minigame@ha init — cascades through whole function |
+| fn_3_E1964 | target induction init `li r29,0; mr r27,r29` (byte-offset IV copied from i); every loop form, dual counter, u8..u32 i and byte-offset cast emits two `li` with i/IV swapped (decomp_knowledge.md §11 negative results). `rand() % 4096` matches the tail (attempt: .agent/attempts/fn_3_E1964.c) |
+| fn_3_DF608 | 10 lines: r4/r5 swap for g_d_GameSettings vs g_Minigame@ha in the prologue, same zero/lis-order family as fn_3_DF6D4 (attempt: .agent/attempts/fn_3_DF608.c) |
 
 ## Skipped
 - minigamesSetSomePointers, minigamesSetSomePointers2: DOL code below 0x8006D024 has no splits yet; needs DOL split setup first.

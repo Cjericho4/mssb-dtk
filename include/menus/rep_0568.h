@@ -56,7 +56,8 @@ typedef struct Rep0568State {
     s8 selections[6];
     u8 count;
     u8 selectionFlags[2];
-    u8 _pad30[0x10];
+    u8 flags30[2];
+    u8 _pad32[0xE];
     union {
         u8 flags[13];
         struct {

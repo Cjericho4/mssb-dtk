@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a matching decompilation project for Mario Superstar Baseball (GameCube, GYQE01). The goal is to create C code that, when compiled with Metrowerks CodeWarrior GC/1.3.2, produces the exact same binary as the original game.
+This is a matching decompilation project for Mario Superstar Baseball (GameCube, GYQE01). The goal is to create C code that, when compiled with the original Metrowerks CodeWarrior versions (GC/2.6 for the game code), produces the exact same binary as the original game.
 
 Progress is tracked at: https://decomp.dev/roeming/mssb-dtk
 
@@ -49,7 +49,7 @@ ninja report
 ```
 
 The toolchain consists of:
-- **Metrowerks CodeWarrior** (GC/1.3.2) via **WiBo** wrapper on Linux
+- **Metrowerks CodeWarrior** via **WiBo** wrapper on Linux: GC/2.6 for the game code (the `unk` main.dol units and the game, menus and challenge RELs), Runtime/MSL and TRK; GC/1.2.5n for the Dolphin SDK; GC/1.3.2 for C3, MusyX and the linker (versions are set per library in `configure.py`)
 - **decomp-toolkit (dtk)** for binary manipulation and linking
 - **objdiff-cli** for binary diffing and match verification
 - **PowerPC binutils** for assembly
