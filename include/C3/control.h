@@ -1,6 +1,7 @@
 #ifndef _DOLPHIN_CP_CONTROL_H_
 #define _DOLPHIN_CP_CONTROL_H_
 
+#include "mssbTypes.h"
 #include "Dolphin/mtx.h"
 
 // bitflags
@@ -20,7 +21,7 @@ typedef struct Srt {
 typedef union ControlParams {
     struct{
     /* 0x00 */ Srt srt;
-        Quaternion q;
+    /* 0x28 */ Quaternion q; /* scale-axis quaternion (CTRL_SCALE_QUAT) */
     };
     /* 0x00 */ struct {
         /* 0x00 */ Mtx m;
@@ -33,6 +34,16 @@ typedef struct Control {
     /* 0x02 */ u16 pad16;
     /* 0x04 */ ControlParams controlParams;
 } Control;
+STATIC_ASSERT(sizeof(Control) == 0x3C);
+
+/* A control as the actor code stores and copies it: 0x44 bytes (f_InitBone, ACTSetBoneTrack and
+ * fn_800B84AC each move 17 words). Nothing reads the 8 bytes after the scale quaternion; game
+ * structs that embed a bare Control at 0x3C granularity keep `Control`. */
+typedef struct ControlExt {
+    /* 0x00 */ Control control;
+    /* 0x3C */ u8 _pad3C[8];
+} ControlExt;
+STATIC_ASSERT(sizeof(ControlExt) == 0x44);
 
 // control.c
 void CTRLSetScale(Control *control, f32 x, f32 y, f32 z);

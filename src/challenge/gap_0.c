@@ -1,8 +1,8 @@
 #include "challenge/gap_0.h"
 
 // .text:0x00000000 size:0x20
-void fn_1_0(ANIMBank** animBank, char* name) {
-    ANIMGet(animBank, name);
+void fn_1_0(ANIMBank* animBank) {
+    ANIMGet(animBank);
 }
 
 // .text:0x00000020 size:0xC8

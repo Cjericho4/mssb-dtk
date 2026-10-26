@@ -2,16 +2,9 @@
 #define __UNKNOWN_gap_800B117C_H_
 
 #include "mssbTypes.h"
-typedef struct Gap800B117CTrack {
-    u8 _pad0[0xA];
-    u16 id;
-    u8 _padC[4];
-} Gap800B117CTrack;
-typedef struct Gap800B117CSequence {
-    u32 unk0;
-    Gap800B117CTrack* tracks;
-    u16 count;
-} Gap800B117CSequence;
+#include "C3/anim.h"
+#include "C3/unktypes.h"
+#include "C3/actor.h"
 typedef struct Gap800B117CRequest {
     u32 unk0;
     u16 type;
@@ -28,22 +21,6 @@ typedef struct Gap800B117CMasks {
 } Gap800B117CMasks;
 extern Gap800B117CMasks lbl_801115A0;
 extern s32 lbl_803CC1C8;
-typedef struct Gap800B117CVec { f32 x, y, z; } Gap800B117CVec;
-typedef struct Gap800B117CList {
-    u32 size;
-    struct Gap800B117CObj* head;
-    struct Gap800B117CObj* tail;
-} Gap800B117CList;
-typedef struct Gap800B117CDuration { f32 length; } Gap800B117CDuration;
-typedef struct Gap800B117CAnimation {
-    f32 time;
-    u32 unk4;
-    f32 speed;
-    struct Gap800B117CDuration* duration; /* 0xC */
-    u8 _pad10[7];
-    u8 flags17;
-    u8 flags18;
-} Gap800B117CAnimation;
 typedef struct Gap800B117CSkinData Gap800B117CSkinData;
 typedef struct Gap800B117CSkinOutput Gap800B117CSkinOutput;
 typedef struct Gap800B117CSkinHeader {
@@ -51,6 +28,8 @@ typedef struct Gap800B117CSkinHeader {
     u8 _pad4[2];
     u8 format;
 } Gap800B117CSkinHeader;
+/* Skinning/sort view of the actor and its bones (one struct for both; the animation functions use
+ * GameActor / ActBone from gap_8002244C.h instead -- the two views still need reconciling). */
 typedef struct Gap800B117CObj {
     u8 _pad0[3];
     /* 0x3 */ u8 priority;
@@ -63,7 +42,7 @@ typedef struct Gap800B117CObj {
     u8 _pad1C[0x44];
     f32 (*matrices)[3][4]; /* 0x60 */
     u8 _pad64[0xC];
-    Gap800B117CList list; /* 0x70 */
+    DSList list; /* 0x70 */
     /* 0x7C */ union { s32 unk7C; Gap800B117CSkinOutput* skinOutput; };
     /* 0x80 */ s16 unk80;
     /* 0x82 */ s16 unk82;
@@ -74,9 +53,7 @@ typedef struct Gap800B117CObj {
     /* 0x90 */ f32 unk90;
     u8 _pad94[5];
     u8 tickMode; /* 0x99 */
-    u8 _pad9A[0x4E];
-    Gap800B117CAnimation* animation; /* 0xE8 */
-    u8 _padEC[0x14];
+    u8 _pad9A[0x66];
     /* 0x100 */ struct Gap800B117CObj* next;
     u8 _pad104[0x30];
     /* 0x134 */ u16 unk134;
@@ -146,10 +123,9 @@ s32 fn_800B2BA8(Gap800B117CObj* obj, u16 index, Gap800B117CObj* other, u16 other
 void fn_800B2BE4(Gap800B117CObj* obj, u16 index);
 void fn_800B2BFC(Gap800B117CObj* obj, s16 a, s16 b);
 void fn_800B2C08(Gap800B117CObj* obj, s16 value);
-void fn_800B2C10(Gap800B117CObj* obj, u16 index, Gap800B117CVec* vec);
-void fn_800B2C44(Gap800B117CObj* obj, u16 index, Gap800B117CVec* vec);
+void fn_800B2C10(Gap800B117CObj* obj, u16 index, Vec* vec);
+void fn_800B2C44(Gap800B117CObj* obj, u16 index, Vec* vec);
 void fn_800B2C88(Gap800B117CObj* obj, u16 index, f32 matrix[3][4]);
-void ACTSort(Gap800B117CObj* obj);
 void GQRSetup5(u32 a, u32 b, u32 c, u32 d);
 void SKNIt(Gap800B117CObj** entries, Gap800B117CSkinOutput* output, Gap800B117CSkinData* data);
 void fn_800BF2A8(Gap800B117CObj** entries, Gap800B117CSkinOutput* output, Gap800B117CSkinData* data);
@@ -170,35 +146,17 @@ void fn_800B472C(void);
 void haveActLayoutPointToGeoHeader(Gap800B117CObj* obj, s32 value);
 void LoadActorLayout(void);
 void fn_800B49E4(void);
-f32 fn_800B4A44(Gap800B117CObj* obj, u16 index);
-f32 fn_800B4A94(Gap800B117CObj* obj);
-void fn_800B4AFC(Gap800B117CObj* obj, u8 value);
-void ANIMTick(Gap800B117CAnimation* animation, u8 mode);
-void AnimateActorBones(Gap800B117CObj* obj);
-void fn_800B4BC8(Gap800B117CObj* obj, u8 value);
-void fn_800B4C04(Gap800B117CObj* obj, f32 value);
-f32 fn_800B4C40(Gap800B117CObj* obj);
-void fn_800B4CA0(Gap800B117CObj* obj, f32 value);
-void fn_800B4CDC(Gap800B117CObj* obj);
-void fn_800ACFB0(Gap800B117CAnimation* anim);
-void ACTSetAnimation(void);
-void ANIMGetKeyFrameFromTrack(void);
-Gap800B117CTrack* ANIMGetTrackFromSequence(Gap800B117CSequence* sequence, u16 id);
-typedef struct Gap800B117CAnimSequence {
-    /* 0x0 */ char* name;
-    u8 _pad4[0x8];
-} Gap800B117CAnimSequence;
-typedef struct Gap800B117CAnimBank {
-    u32 unk0;
-    /* 0x4 */ Gap800B117CAnimSequence* sequences;
-    u16 unk8;
-    /* 0xA */ u16 numSequences;
-} Gap800B117CAnimBank;
+f32 fn_800B4A44(GameActor* actor, u16 index);
+f32 fn_800B4A94(GameActor* actor);
+void fn_800B4AFC(GameActor* actor, u8 loop);
+void AnimateActorBones(GameActor* actor);
+void fn_800B4BC8(GameActor* actor, u8 forward);
+void fn_800B4C04(GameActor* actor, f32 speed);
+f32 fn_800B4C40(GameActor* actor);
+void fn_800B4CA0(GameActor* actor, f32 time);
+void fn_800B4CDC(GameActor* actor);
+void fn_800ACFB0(ANIMPipe* pipe);
 s8 Strcmp(char* a, char* b);
-Gap800B117CAnimSequence* ANIMGetSequence(Gap800B117CAnimBank* bank, char* name, u16 index);
 
-void DSInsertListObject(Gap800B117CList* list, Gap800B117CObj* tail, Gap800B117CObj* entry);
-void PSMTXMultVec(f32 matrix[3][4], Gap800B117CVec* src, Gap800B117CVec* dst);
-void PSMTXCopy(f32 src[3][4], f32 dst[3][4]);
 
 #endif // !__UNKNOWN_gap_800B117C_H_

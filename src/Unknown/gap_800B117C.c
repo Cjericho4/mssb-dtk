@@ -154,7 +154,7 @@ void Set_FUN_800b2b6c(Gap800B117CObj* obj, s32 value) {
 
 // .text:0x800B2B74 size:0x34
 void fn_800B2B74(Gap800B117CObj* obj, u16 index) {
-    DSInsertListObject(&obj->list, obj->list.tail, obj->entries[index]);
+    DSInsertListObject(&obj->list, obj->list.Tail, (Ptr)obj->entries[index]);
 }
 
 // .text:0x800B2BA8 size:0x3C
@@ -183,12 +183,12 @@ void fn_800B2C08(Gap800B117CObj* obj, s16 value) {
 }
 
 // .text:0x800B2C10 size:0x34
-void fn_800B2C10(Gap800B117CObj* obj, u16 index, Gap800B117CVec* vec) {
+void fn_800B2C10(Gap800B117CObj* obj, u16 index, Vec* vec) {
     PSMTXMultVec(obj->matrices[index], vec, vec);
 }
 
 // .text:0x800B2C44 size:0x44
-void fn_800B2C44(Gap800B117CObj* obj, u16 index, Gap800B117CVec* vec) {
+void fn_800B2C44(Gap800B117CObj* obj, u16 index, Vec* vec) {
     vec->x = 0.0f;
     vec->y = 0.0f;
     vec->z = 0.0f;
@@ -201,21 +201,22 @@ void fn_800B2C88(Gap800B117CObj* obj, u16 index, f32 matrix[3][4]) {
 }
 
 // .text:0x800B2CBC size:0xA0
-void ACTSort(Gap800B117CObj* obj) {
+// Rebuilds the actor's draw list: bones with geometry, ordered by ascending drawing priority.
+void ACTSort(GameActor* actor) {
     u16 i;
-    Gap800B117CObj* cursor;
-    obj->list.head = NULL;
-    obj->list.tail = NULL;
-    for (i = 0; i < obj->count; i++) {
-        if ((u32)obj->entries[i]->unk14 != 0) {
-            cursor = obj->list.head;
+    ActBone* cursor;
+    actor->drawPriorityList.Head = NULL;
+    actor->drawPriorityList.Tail = NULL;
+    for (i = 0; i < actor->totalBones; i++) {
+        if (actor->boneArray[i]->dispObj != NULL) {
+            cursor = (ActBone*)actor->drawPriorityList.Head;
             while (cursor != NULL) {
-                if (cursor->priority > obj->entries[i]->priority) {
+                if (cursor->drawingPriority > actor->boneArray[i]->drawingPriority) {
                     break;
                 }
-                cursor = cursor->next;
+                cursor = (ActBone*)cursor->drawPriorityLink.Next;
             }
-            DSInsertListObject(&obj->list, cursor, obj->entries[i]);
+            DSInsertListObject(&actor->drawPriorityList, (Ptr)cursor, (Ptr)actor->boneArray[i]);
         }
     }
 }
@@ -316,33 +317,33 @@ void fn_800B49E4(void) {
     return;
 }
 
-static inline f32 getAnimationTime(Gap800B117CAnimation* animation) {
-    if (animation != NULL) {
-        if (animation->flags17 == 0) return animation->time;
-        if (animation->duration != NULL) return animation->duration->length - animation->time;
+static inline f32 getAnimationTime(ANIMPipe* pipe) {
+    if (pipe != NULL) {
+        if (pipe->forward == 0) return pipe->time;
+        if (pipe->currentTrack != NULL) return pipe->currentTrack->animTime - pipe->time;
     }
     return 0.0f;
 }
 
 // .text:0x800B4A44 size:0x50
-f32 fn_800B4A44(Gap800B117CObj* obj, u16 index) {
-    return getAnimationTime(obj->entries[index]->animation);
+f32 fn_800B4A44(GameActor* actor, u16 index) {
+    return getAnimationTime(actor->boneArray[index]->animPipe);
 }
 
 // .text:0x800B4A94 size:0x68
-f32 fn_800B4A94(Gap800B117CObj* obj) {
+f32 fn_800B4A94(GameActor* actor) {
     u32 i;
-    Gap800B117CAnimation* anim;
-    Gap800B117CDuration* duration;
-    for (i = 0; i < obj->count; i++) {
-        anim = obj->entries[i]->animation;
-        if (anim != NULL) {
-            if (anim->flags17 == 0) {
-                return anim->time;
+    ANIMPipe* pipe;
+    struct ANIMAnimTrack* track;
+    for (i = 0; i < actor->totalBones; i++) {
+        pipe = actor->boneArray[i]->animPipe;
+        if (pipe != NULL) {
+            if (pipe->forward == 0) {
+                return pipe->time;
             }
-            duration = anim->duration;
-            if (duration != NULL) {
-                return duration->length - anim->time;
+            track = pipe->currentTrack;
+            if (track != NULL) {
+                return track->animTime - pipe->time;
             }
         }
     }
@@ -350,103 +351,160 @@ f32 fn_800B4A94(Gap800B117CObj* obj) {
 }
 
 // .text:0x800B4AFC size:0x3C
-void fn_800B4AFC(Gap800B117CObj* obj, u8 value) {
+void fn_800B4AFC(GameActor* actor, u8 loop) {
     u32 i;
-    for (i = 0; i < obj->count; i++) {
-        Gap800B117CAnimation* animation = obj->entries[i]->animation;
-        if (animation != NULL) animation->flags18 = value;
+    for (i = 0; i < actor->totalBones; i++) {
+        ANIMPipe* pipe = actor->boneArray[i]->animPipe;
+        if (pipe != NULL) pipe->loop = loop;
     }
 }
 
 // .text:0x800B4B38 size:0x90
-void AnimateActorBones(Gap800B117CObj* obj) {
+// Advances the actor's blend weight by its step (clamped to 1) and ticks every bone's pipe.
+void AnimateActorBones(GameActor* actor) {
     u32 i;
-    obj->blend += obj->unk90;
-    if (obj->blend > 1.0f) obj->blend = 1.0f;
-    for (i = 0; i < obj->count; i++) {
-        ANIMTick(obj->entries[i]->animation, obj->tickMode);
+    actor->unk8C += actor->unk90;
+    if (actor->unk8C > 1.0f) actor->unk8C = 1.0f;
+    for (i = 0; i < actor->totalBones; i++) {
+        ANIMTick(actor->boneArray[i]->animPipe, actor->unk99);
     }
 }
 
 // .text:0x800B4BC8 size:0x3C
-void fn_800B4BC8(Gap800B117CObj* obj, u8 value) {
+void fn_800B4BC8(GameActor* actor, u8 forward) {
     u32 i;
-    for (i = 0; i < obj->count; i++) {
-        Gap800B117CAnimation* animation = obj->entries[i]->animation;
-        if (animation != NULL) animation->flags17 = value;
+    for (i = 0; i < actor->totalBones; i++) {
+        ANIMPipe* pipe = actor->boneArray[i]->animPipe;
+        if (pipe != NULL) pipe->forward = forward;
     }
 }
 
 // .text:0x800B4C04 size:0x3C
-void fn_800B4C04(Gap800B117CObj* obj, f32 value) {
+void fn_800B4C04(GameActor* actor, f32 speed) {
     u32 i;
-    for (i = 0; i < obj->count; i++) {
-        Gap800B117CAnimation* animation = obj->entries[i]->animation;
-        if (animation != NULL) animation->speed = value;
+    for (i = 0; i < actor->totalBones; i++) {
+        ANIMPipe* pipe = actor->boneArray[i]->animPipe;
+        if (pipe != NULL) pipe->speed = speed;
     }
 }
 
 // .text:0x800B4C40 size:0x60
-f32 fn_800B4C40(Gap800B117CObj* obj) {
+f32 fn_800B4C40(GameActor* actor) {
     u32 i;
-    for (i = 0; i < obj->count; i++) {
-        if (obj->entries[i]->animation != NULL && obj->entries[i]->animation->duration != NULL) {
-            return obj->entries[i]->animation->time;
+    for (i = 0; i < actor->totalBones; i++) {
+        if (actor->boneArray[i]->animPipe != NULL && actor->boneArray[i]->animPipe->currentTrack != NULL) {
+            return actor->boneArray[i]->animPipe->time;
         }
     }
     return 0.0f;
 }
 
 // .text:0x800B4CA0 size:0x3C
-void fn_800B4CA0(Gap800B117CObj* obj, f32 value) {
+void fn_800B4CA0(GameActor* actor, f32 time) {
     u32 i;
-    for (i = 0; i < obj->count; i++) {
-        Gap800B117CAnimation* animation = obj->entries[i]->animation;
-        if (animation != NULL) animation->time = value;
+    for (i = 0; i < actor->totalBones; i++) {
+        ANIMPipe* pipe = actor->boneArray[i]->animPipe;
+        if (pipe != NULL) pipe->time = time;
     }
 }
 
 // .text:0x800B4CDC size:0x88
-void fn_800B4CDC(Gap800B117CObj* obj) {
+void fn_800B4CDC(GameActor* actor) {
     s32 i;
-    for (i = obj->count - 1; i >= 0; i--) {
-        if (obj->entries[i]->animation != NULL) {
-            fn_800ACFB0(obj->entries[i]->animation);
-            obj->entries[i]->animation = NULL;
+    for (i = actor->totalBones - 1; i >= 0; i--) {
+        if (actor->boneArray[i]->animPipe != NULL) {
+            fn_800ACFB0(actor->boneArray[i]->animPipe);
+            actor->boneArray[i]->animPipe = NULL;
         }
     }
 }
 
 // .text:0x800B4D64 size:0x138
-void ACTSetAnimation(void) {
-    return;
+// Binds sequence `seqNum` (or `sequenceName`) of `bank` to every bone of the actor at `time`,
+// blending from the current pose when blendStep != 0 (blend weight grows by blendStep per tick).
+void ACTSetAnimation(GameActor* actor, ANIMBank* bank, char* sequenceName, u16 seqNum, f32 time, f32 blendStep) {
+    ANIMSequences* sequence = ANIMGetSequence(bank, sequenceName, seqNum);
+    struct ANIMAnimTrack* track = NULL;
+    u16 i;
+    ActBone* bone;
+    s32 blend;
+
+    for (i = 0; i < actor->totalBones; i++) {
+        if (sequence != NULL) {
+            track = ANIMGetTrackFromSequence(sequence, actor->boneArray[i]->boneID);
+        }
+        blend = 0;
+        if (actor->unk8C < 1.0f && actor->boneArray[i]->animFlags != 0) {
+            blend = 1;
+        }
+        ACTSetBoneTrack(actor->boneArray[i], track, blend, time);
+        bone = actor->boneArray[i];
+        if (bone->animFlags & 0x1C) {
+            bone->animFlags |= 0x20;
+        } else {
+            bone->animFlags &= ~0x20;
+        }
+    }
+    actor->unk8C = (blendStep == 0.0f) ? 1.0f : 0.0f;
+    actor->unk90 = blendStep;
 }
 
 // .text:0x800B4E9C size:0x100
-void ANIMGetKeyFrameFromTrack(void) {
-    return;
+// Finds the key pair surrounding `time`, starting from the cached *keyIndex (restarting at 0 when
+// time moved before that key); after the last key the next key wraps to key 0.
+void ANIMGetKeyFrameFromTrack(struct ANIMAnimTrack* track, f32 time, KeyFrame** currentFrame, KeyFrame** nextFrame,
+                              u16* keyIndex) {
+    u16 i;
+    u16 remaining;
+    s32 start = *keyIndex;
+
+    if (track->keyFrames[start].time <= time) {
+        start = *keyIndex; /* FAKEMATCH: redundant reload keeps the empty-then branch shape */
+    } else {
+        start = 0;
+    }
+    i = start;
+    remaining = track->totalFrames;
+    while (remaining-- != 0) {
+        if (track->keyFrames[i].time <= time) {
+            if (i < track->totalFrames - 1) {
+                if (track->keyFrames[i + 1].time > time) {
+                    if (currentFrame != NULL) *currentFrame = &track->keyFrames[i];
+                    if (nextFrame != NULL) *nextFrame = &track->keyFrames[i + 1];
+                    *keyIndex = i;
+                    return;
+                }
+            } else {
+                if (currentFrame != NULL) *currentFrame = &track->keyFrames[i];
+                if (nextFrame != NULL) *nextFrame = track->keyFrames;
+                *keyIndex = i;
+                return;
+            }
+        }
+        i = (i + 1) % track->totalFrames;
+    }
 }
 
 // .text:0x800B4F9C size:0x50
-Gap800B117CTrack* ANIMGetTrackFromSequence(Gap800B117CSequence* sequence, u16 id) {
+struct ANIMAnimTrack* ANIMGetTrackFromSequence(ANIMSequences* sequence, u16 id) {
     u32 i;
-    for (i = 0; i < sequence->count; i++) {
-        if (id == sequence->tracks[i].id) return &sequence->tracks[i];
+    for (i = 0; i < sequence->totalTracks; i++) {
+        if (id == sequence->trackArray[i].trackID) return &sequence->trackArray[i];
     }
     return NULL;
 }
 
 // .text:0x800B4FEC size:0xA0
-Gap800B117CAnimSequence* ANIMGetSequence(Gap800B117CAnimBank* bank, char* name, u16 index) {
+ANIMSequences* ANIMGetSequence(ANIMBank* bank, char* name, u16 index) {
     u32 i;
     if (name != NULL) {
         for (i = 0; i < bank->numSequences; i++) {
-            if (Strcmp(bank->sequences[i].name, name) == 0) {
-                return &bank->sequences[i];
+            if (Strcmp(bank->animSequences[i].sequenceName, name) == 0) {
+                return &bank->animSequences[i];
             }
         }
     } else if (bank == NULL) {
         return NULL;
     }
-    return &bank->sequences[index];
+    return &bank->animSequences[index];
 }

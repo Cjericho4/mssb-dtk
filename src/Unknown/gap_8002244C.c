@@ -127,8 +127,87 @@ void fn_80022D58(void) {
 
 #pragma dont_inline on
 // .text:0x80022DAC size:0x2CC
-void f_InitBone(ActBone* parent, ActBoneLayout* layout, GameActor* actor, u16* numBones, ActMemBlock* mtxMem, ActMemBlock* boneMem) {
-    return;
+// Builds runtime bones for `layout` and its siblings (recursing into children) in traversal order:
+// each takes bones[*numBones], copies the rest-pose control / IDs, gets a display object and an
+// ANIMPipe carved from `cursor` (speed 1, forward, looping) and identity matrices. Returns the cursor.
+ActMemBlock* f_InitBone(ActBone* parent, ActBoneLayout* layout, GameActor* actor, u16* numBones, ActBone* bones,
+                        ActMemBlock* cursor) {
+    ActBone* bone;
+    ANIMPipe* pipe;
+    ActGeoPalette* pal;
+    ActMemBlock* next;
+
+    while (layout != NULL) {
+        bone = &bones[*numBones];
+        bone->branch.Children = NULL;
+        DSInsertBranchBelow(&actor->hierarchy, (Ptr)parent, (Ptr)bone);
+        actor->boneArray[*numBones] = bone;
+        bone->boneID = layout->boneID;
+        bone->inheritanceFlag = layout->inheritanceFlag;
+        bone->drawingPriority = layout->drawingPriority;
+        bone->orientationCtrl.control.type = 0;
+        if (layout->orientationCtrl != NULL) {
+            bone->orientationCtrl = *layout->orientationCtrl;
+        }
+        bone->dispObj = NULL;
+        if (layout->geoFileID != 0xFFFF) {
+            pal = actor->pal;
+            next = cursor;
+            if (layout->geoFileID >= pal->numDescriptors) {
+                OSReport(lbl_800E6698, layout->geoFileID, pal->numDescriptors);
+                bone->dispObj = NULL;
+                cursor = next;
+            } else {
+                bone->dispObj = (ActDisplayObj*)cursor;
+                next = cursor + 4;
+                next = fn_80023078(bone->dispObj, pal->descriptorArray[layout->geoFileID].layout, next);
+                cursor = next;
+            }
+        }
+        bone->unk18 = bone->dispObj;
+        bone->animPipe = NULL;
+        bone->animationCtrl.control.type = 0;
+        bone->blendFromCtrl.control.type = 0;
+        bone->animPipe = (ANIMPipe*)cursor;
+        cursor += 1;
+        pipe = bone->animPipe;
+        pipe->time = 0.0f;
+        pipe->previousTime = 0.0f;
+        pipe->speed = 1.0f;
+        pipe->currentTrack = NULL;
+        pipe->control = NULL;
+        pipe->replaceHierarchyCtrl = 0;
+        pipe->forward = 1;
+        pipe->loop = 1;
+        pipe->keyIndex = 0;
+        bone->animFlags = 1;
+        bone->holdTranslation = 0;
+        bone->unk137 = 0;
+        bone->forwardMtx = actor->forwardMtxArray + *numBones;
+        PSMTXIdentity(bone->forwardMtx);
+        if (actor->skinObject != NULL) {
+            bone->skinMtx = actor->skinMtxArray + *numBones;
+            PSMTXIdentity(bone->skinMtx);
+            bone->skinInvTransposeMtx = actor->skinInvTransposeMtxArray + *numBones;
+            PSMTXIdentity(bone->skinInvTransposeMtx);
+            if (actor->skinObject->lightingData != NULL) {
+                bone->orientationInvMtx = actor->orientationInvMtxArray + *numBones;
+                PSMTXIdentity(bone->orientationInvMtx);
+            } else {
+                bone->orientationInvMtx = NULL;
+            }
+        } else {
+            bone->skinMtx = NULL;
+            bone->skinInvTransposeMtx = NULL;
+            bone->orientationInvMtx = NULL;
+        }
+        (*numBones)++;
+        if (layout->children != NULL) {
+            cursor = f_InitBone(bone, layout->children, actor, numBones, bones, cursor);
+        }
+        layout = layout->next;
+    }
+    return cursor;
 }
 #pragma dont_inline off
 
@@ -252,10 +331,10 @@ GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
         act->skinInvTransposeMtxArray = NULL;
         act->orientationInvMtxArray = NULL;
     }
-    act->worldControl.type = 0;
+    act->worldControl.control.type = 0;
     if (layout->hierarchyRoot != NULL) {
         f_InitBone(NULL, layout->hierarchyRoot, act, &numBones,
-                   (ActMemBlock*)((u32)act->forwardMtxArray + mtxArraySize + skinMtxSize + skinInvSize + orientInvSize), mem);
+                   (ActBone*)((u32)act->forwardMtxArray + mtxArraySize + skinMtxSize + skinInvSize + orientInvSize), mem);
     }
     if (numBones != act->totalBones) {
         OSPanic(str + 0x3C, 0x209, str + 0x48);

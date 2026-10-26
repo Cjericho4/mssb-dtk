@@ -2,29 +2,19 @@
 #define __UNKNOWN_gap_800B508C_H_
 
 #include "mssbTypes.h"
-typedef struct Gap800B508CTrack {
-    u8 _pad0[0xF];
-    u8 flags;
-} Gap800B508CTrack;
-typedef struct Gap800B508CAnimation {
-    f32 time;
-    f32 previousTime;
-    u32 unk8;
-    Gap800B508CTrack* track;
-    u8* data;
-    u16 frame;
-    u8 flags;
-} Gap800B508CAnimation;
+#include "C3/anim.h"
+#include "C3/unktypes.h"
+#include "C3/actor.h"
 
-void ANIMGet(void);
 void Squad(void);
 void GetData(void);
-void DoTranslationAnimation(void);
-void DoScaleAnimation(void);
-void DoEulerAnimation(void);
-void DoQuatAnimation(void);
-void ANIMTick(void);
-void ANIMBind(Gap800B508CAnimation* anim, u8* data, Gap800B508CTrack* track, f32 time);
-void ACTSetBoneTrack(void);
+void DoTranslationAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next);
+void DoScaleAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next, u8 mode);
+void DoEulerAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next);
+void DoQuatAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next);
+void ACTSetBoneTrack(ActBone* bone, struct ANIMAnimTrack* track, s32 blend, f32 time);
+void* _OSAllocFromHeap(s32 alignment, u32 size);
+void CTRL_SetQuatUnk(Control* control, f32 x, f32 y, f32 z, f32 w);
+void CTRL_GetQuatUnk(const Control* control, f32* x, f32* y, f32* z, f32* w);
 
 #endif // !__UNKNOWN_gap_800B508C_H_

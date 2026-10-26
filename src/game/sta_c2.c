@@ -1274,7 +1274,7 @@ void fn_3_D55EC(void) {
 
 // .text:0x000D5B6C size:0x120 mapped:0x80714C00
 void fn_3_D5B6C(s32* count) {
-    StaC2ControlExt control;
+    ControlExt control;
     Mtx m;
     StadiumObjectElem* obj;
     u16 start;
@@ -1284,7 +1284,7 @@ void fn_3_D5B6C(s32* count) {
     lbl_3_common_bss_350E4[0].unk44[start] = lbl_3_bss_A020;
     lbl_3_common_bss_350E4[0].unk3C[*count]++;
     obj = &lbl_3_common_bss_350E4[0].src[lbl_3_bss_A020];
-    control = *(StaC2ControlExt*)&obj->control;
+    control = *(ControlExt*)&obj->control;
     CTRLBuildMatrix(&control.control, m);
     fn_3_B8464(m, obj->unk_78);
     fn_3_B8414(&lbl_3_common_bss_350E4[0].unk48[*count * 2].x, &lbl_3_common_bss_350E4[0].unk48[*count * 2 + 1].x);
@@ -1308,7 +1308,7 @@ void fn_3_D60C0(void) {
 
 // .text:0x000D62F0 size:0x224 mapped:0x80715384
 void fn_3_D62F0(s32* count) {
-    StaC2ControlExt control;
+    ControlExt control;
     Mtx m;
     StadiumObjectElem* obj;
     u16 start;
@@ -1322,7 +1322,7 @@ void fn_3_D62F0(s32* count) {
         lbl_3_common_bss_350E4[0].unk44[start] = idx;
         lbl_3_common_bss_350E4[0].unk3C[*count]++;
         obj = &lbl_3_common_bss_350E4[0].src[idx];
-        control = *(StaC2ControlExt*)&obj->control;
+        control = *(ControlExt*)&obj->control;
         CTRLBuildMatrix(&control.control, m);
         fn_3_B8464(m, obj->unk_78);
         CTRLSetTranslation(&control.control, 14.250000447034836 + lbl_3_data_182C8[obj->unk9C].pos.x,
