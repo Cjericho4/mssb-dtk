@@ -233,9 +233,19 @@ Indexed by charID; retail values for Mario / DK / Peach.
 | 0x8148 | `unkCharacterArray` | u8[32] voice group id per unique index | fn_3_90F48 | see sounds.md §3 | | (SN) |
 | 0x8168 | `characterSoundArray` | 54 × u16 | fn_3_90220 | voice SFX base id (lines +0..12) | 324 / 298 / 272 | high (SN §3) |
 | 0x17000 | – | 54 × s32 | fn_3_BC274, fn_3_BC2DC | foot height threshold ×1e-5 (bones 0x1E / 0x22 vs the actor's y) -> anim-slot flag bits 2/3 at +0x276 (foot down: dust / footsteps) | 55000 / 50000 / 50000 (babies 24000) | medium |
+| 0x79B4 | `FielderHitboxConsts` | 54 × 16 B (8 s16) | setFielderValues | fielder collision geometry, scaled by `charSizeMultipliers[charID][0]` | | high (#38) |
+| 0x7F10 | `barrelCollisionHitboxes` | 54 × s16 | fn_3_60A98, fn_3_128C18, fn_3_142DB4, fn_3_1430D0 | character height, scaled by `charSizeMultipliers` | 200 / 240 / 240 (Toads 150) | high (#38) |
 
 Neighbours that are per *something else*: 0x76FC `hitByPitchHitboxes`, 0x7760 `runnerConstants?`,
-0x79B4 `FielderHitboxConsts`, 0x7F10 `barrelCollisionHitboxes`, 0x4744 (contact lerp table).
+0x4744 (contact lerp table). (0x79B4 and 0x7F10 were listed here before #38; both are indexed by
+`CharacterStats.charID` in `setFielderValues`.)
+
+**Model scale (main.dol, not game.rel):** `charSizeMultipliers` at 0x800E8300 (file 0xE5300), 54 ×
+{f32 in game, f32 menu scene}, indexed by charID. `fn_8001D2D4` passes it to `CTRLSetScale` for every
+actor (column 1 only when `g_hugeAnimStruct.field269_0x307a == 5`, set by menus.rel). It also scales
+the batter's bat height (`setBatterContactConstants`: `PitchingHeight * charSize[id][0]`) and the two
+fielder tables above. Mario 1.18 / 1.10, DK 1.11 / 1.00, Peach 1.18 / 1.08, Toads 1.40 / 1.32. A clone
+must take its source's row together with 0x79B4 and 0x7F10 (#38).
 A clone with a new charID needs a row in every table above (character_modding_report.md §8).
 
 ### 6.1 Timing evidence (2026-10-24)

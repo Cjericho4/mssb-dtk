@@ -17,6 +17,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800E869C | `lbl_800E869C` | 32 B grid index -> base charID (twin of mainCharArray) | CS §1 |
 | 0x800E86F0 | `lbl_800E86F0` (Ghidra `stonNiceContactIncrement`) | 12 star-player bonus bytes {50 x7, 20, 20, 50 x3} | ST §3; RF §2.4 |
 | 0x800E63A0 | music path strings | 15 `snd/my_snd_h/*.adp` paths, named by `lbl_800E87B4` | SN §5.1 |
+| 0x800E8300 (0xE5300) | `charSizeMultipliers` | 54 × {f32 in game, f32 menu scene} model scale per charID; CTRLSetScale in fn_8001D2D4; also bat height and fielder tables (Mario 1.18, Toads 1.40) | ST §6 |
 | 0x800E87B4 | `lbl_800E87B4` | 15 music tracks {path, size, 0, size}; only the path is used (fn_8006877C, game fn_3_8B094) | SN §5.1 |
 | 0x800EE910 | `game_common` | 5 field/game common files (4 = 23 minigame strings) | DM §4 |
 | 0x800EEAAC (0xEBAAC) | `lbl_800EEAAC` | 54 u16 glove/attachment bone-list base (= charID*6 retail) | CMR §1.1, §3 |
