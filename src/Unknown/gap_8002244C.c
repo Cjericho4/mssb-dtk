@@ -133,7 +133,6 @@ void fn_80022D58(void) {
 ActMemBlock* f_InitBone(ActBone* parent, ActBoneLayout* layout, GameActor* actor, u16* numBones, ActBone* bones,
                         ActMemBlock* cursor) {
     ActBone* bone;
-    ANIMPipe* pipe;
     ActGeoPalette* pal;
     ActMemBlock* volatile next; /* FAKEMATCH: cursor copy written to the stack, never read back */
     ActMemBlock* result;
@@ -176,28 +175,27 @@ ActMemBlock* f_InitBone(ActBone* parent, ActBoneLayout* layout, GameActor* actor
         bone->blendFromCtrl.control.type = 0;
         bone->animPipe = (ANIMPipe*)cursor;
         cursor += 1;
-        pipe = bone->animPipe;
-        pipe->time = 0.0f;
-        pipe->previousTime = 0.0f;
-        pipe->speed = 1.0f;
-        pipe->currentTrack = NULL;
-        pipe->control = NULL;
-        pipe->replaceHierarchyCtrl = 0;
-        pipe->forward = 1;
-        pipe->loop = 1;
-        pipe->keyIndex = 0;
+        bone->animPipe->time = 0.0f;
+        bone->animPipe->previousTime = 0.0f;
+        bone->animPipe->speed = 1.0f;
+        bone->animPipe->currentTrack = NULL;
+        bone->animPipe->control = NULL;
+        bone->animPipe->replaceHierarchyCtrl = 0;
+        bone->animPipe->forward = 1;
+        bone->animPipe->loop = 1;
+        bone->animPipe->keyIndex = 0;
         bone->animFlags = 1;
         bone->holdTranslation = 0;
         bone->unk137 = 0;
-        bone->forwardMtx = actor->forwardMtxArray + *numBones;
+        bone->forwardMtx = actor->forwardMtxArray[*numBones];
         PSMTXIdentity(bone->forwardMtx);
         if (actor->skinObject != NULL) {
-            bone->skinMtx = actor->skinMtxArray + *numBones;
+            bone->skinMtx = actor->skinMtxArray[*numBones];
             PSMTXIdentity(bone->skinMtx);
-            bone->orientationInvMtx = actor->orientationInvMtxArray + *numBones;
+            bone->orientationInvMtx = actor->orientationInvMtxArray[*numBones];
             PSMTXIdentity(bone->orientationInvMtx);
             if (actor->skinObject->lightingData != NULL) {
-                bone->skinInvTransposeMtx = actor->skinInvTransposeMtxArray + *numBones;
+                bone->skinInvTransposeMtx = actor->skinInvTransposeMtxArray[*numBones];
                 PSMTXIdentity(bone->skinInvTransposeMtx);
             } else {
                 bone->skinInvTransposeMtx = NULL;
@@ -296,7 +294,7 @@ GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
     }
     act = (GameActor*)mem;
     act->boneArray = (ActBone**)(act + 1);
-    act->forwardMtxArray = (MtxPtr)((u32)act->boneArray + boneArraySize);
+    act->forwardMtxArray = (Mtx*)((u32)act->boneArray + boneArraySize);
     act->skinObject = skinObj;
     act->skHeader = 0;
     mem = (ActMemBlock*)((u32)mem + ((boneArraySize + mtxArraySize + skinMtxSize + skinInvSize + orientInvSize +
@@ -313,8 +311,8 @@ GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
     }
     if (layout->skinFileID != 0xFFFF) {
         DOSetWorldMatrix(act->skinObject, identity);
-        act->skinMtxArray = (MtxPtr)((u32)act->forwardMtxArray + mtxArraySize);
-        act->orientationInvMtxArray = (MtxPtr)((u32)act->skinMtxArray + skinMtxSize);
+        act->skinMtxArray = (Mtx*)((u32)act->forwardMtxArray + mtxArraySize);
+        act->orientationInvMtxArray = (Mtx*)((u32)act->skinMtxArray + skinMtxSize);
         normalDelta = act->skinObject->lightingData->normalArray - act->skinObject->positionData->positionArray;
         pal = layout->geoPalettePtr;
         desc = pal->descriptorArray;
@@ -327,7 +325,7 @@ GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
             }
         }
         if (act->skinObject->lightingData != NULL) {
-            act->skinInvTransposeMtxArray = (MtxPtr)((u32)act->orientationInvMtxArray + skinInvSize);
+            act->skinInvTransposeMtxArray = (Mtx*)((u32)act->orientationInvMtxArray + skinInvSize);
         } else {
             act->skinInvTransposeMtxArray = NULL;
         }

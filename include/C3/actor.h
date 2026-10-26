@@ -128,10 +128,10 @@ typedef struct GameActor {                  /* ACTActor + game fields */
     /* 0x14 */ ActDisplayObj* skinObject;
     /* 0x18 */ ActBone** boneArray;
     /* 0x1C */ ControlExt worldControl;
-    /* 0x60 */ MtxPtr forwardMtxArray;
-    /* 0x64 */ MtxPtr skinMtxArray;
-    /* 0x68 */ MtxPtr skinInvTransposeMtxArray; /* NULL without lighting data */
-    /* 0x6C */ MtxPtr orientationInvMtxArray;
+    /* 0x60 */ Mtx* forwardMtxArray;            /* one Mtx per bone, in boneArray order */
+    /* 0x64 */ Mtx* skinMtxArray;
+    /* 0x68 */ Mtx* skinInvTransposeMtxArray;   /* NULL without lighting data */
+    /* 0x6C */ Mtx* orientationInvMtxArray;
     /* 0x70 */ DSList drawPriorityList;
     /* 0x7C */ u32 skHeader;
     /* 0x80 */ u16 unk80;
