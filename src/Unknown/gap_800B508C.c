@@ -4,28 +4,30 @@
 // Relocates a freshly loaded bank in place: every file offset (user data, sequence table, names,
 // track arrays, key arrays, key settings and interpolation payloads) becomes a pointer.
 void ANIMGet(ANIMBank* bank) {
+    u32 i;
     ANIMSequences* sequence;
     struct ANIMAnimTrack* track;
+    KeyFrame* keys;
     KeyFrame* key;
-    u32 i;
 
     if (bank->userDataSize != 0 && bank->userData != NULL) {
-        bank->userData = (u8*)bank + (u32)bank->userData;
+        bank->userData = (void*)((u32)bank->userData + (u32)bank);
     }
     sequence = (ANIMSequences*)(bank + 1);
     track = (struct ANIMAnimTrack*)(sequence + bank->numSequences);
-    key = (KeyFrame*)(track + bank->numTracks);
-    bank->animSequences = (ANIMSequences*)((u8*)bank + (u32)bank->animSequences);
+    keys = (KeyFrame*)(track + bank->numTracks);
+    bank->animSequences = (ANIMSequences*)((u32)bank->animSequences + (u32)bank);
     for (i = 0; i < bank->numSequences; i++, sequence++) {
-        sequence->sequenceName = (char*)bank + (u32)sequence->sequenceName;
-        sequence->trackArray = (struct ANIMAnimTrack*)((u8*)bank + (u32)sequence->trackArray);
+        sequence->sequenceName = (char*)((u32)bank + (u32)sequence->sequenceName);
+        sequence->trackArray = (struct ANIMAnimTrack*)((u32)bank + (u32)sequence->trackArray);
     }
     for (i = 0; i < bank->numTracks; i++, track++) {
-        track->keyFrames = (KeyFrame*)((u8*)bank + (u32)track->keyFrames);
+        track->keyFrames = (KeyFrame*)((u32)bank + (u32)track->keyFrames);
     }
+    key = keys;
     for (i = 0; i < bank->numKeyFrames; i++, key++) {
-        key->setting = (char*)bank + (u32)key->setting;
-        key->interpolation = (char*)bank + (u32)key->interpolation;
+        key->setting = (char*)((u32)bank + (u32)key->setting);
+        key->interpolation = (char*)((u32)bank + (u32)key->interpolation);
     }
 }
 
@@ -140,7 +142,7 @@ void ANIMBind(ANIMPipe* pipe, Control* control, struct ANIMAnimTrack* track, f32
 // .text:0x800B79D0 size:0x36C
 // Binds `track` to a bone (NULL unbinds). With `blend` the current pose is saved as the blend
 // source; channels the track does not animate are copied from the bone's rest-pose control.
-void ACTSetBoneTrack(ActBone* bone, struct ANIMAnimTrack* track, s32 blend, f32 time) {
+void ACTSetBoneTrack(ActBone* bone, struct ANIMAnimTrack* track, f32 time, s32 blend) {
     ANIMPipe* pipe;
     u8 restType;
     f32 x;

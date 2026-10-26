@@ -423,29 +423,25 @@ void fn_800B4CDC(GameActor* actor) {
 // Binds sequence `seqNum` (or `sequenceName`) of `bank` to every bone of the actor at `time`,
 // blending from the current pose when blendStep != 0 (blend weight grows by blendStep per tick).
 void ACTSetAnimation(GameActor* actor, ANIMBank* bank, char* sequenceName, u16 seqNum, f32 time, f32 blendStep) {
+    u16 i;
     ANIMSequences* sequence = ANIMGetSequence(bank, sequenceName, seqNum);
     struct ANIMAnimTrack* track = NULL;
-    u16 i;
     ActBone* bone;
-    s32 blend;
 
     for (i = 0; i < actor->totalBones; i++) {
         if (sequence != NULL) {
             track = ANIMGetTrackFromSequence(sequence, actor->boneArray[i]->boneID);
         }
-        blend = 0;
-        if (actor->unk8C < 1.0f && actor->boneArray[i]->animFlags != 0) {
-            blend = 1;
-        }
-        ACTSetBoneTrack(actor->boneArray[i], track, blend, time);
+        bone = actor->boneArray[i];
+        ACTSetBoneTrack(bone, track, time, actor->unk8C < 1.0f && bone->animFlags != 0);
         bone = actor->boneArray[i];
         if (bone->animFlags & 0x1C) {
             bone->animFlags |= 0x20;
         } else {
-            bone->animFlags &= ~0x20;
+            bone->animFlags &= 0xFFDF;
         }
     }
-    actor->unk8C = (blendStep == 0.0f) ? 1.0f : 0.0f;
+    actor->unk8C = blendStep ? 0.0f : 1.0f;
     actor->unk90 = blendStep;
 }
 
