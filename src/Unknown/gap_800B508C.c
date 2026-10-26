@@ -33,12 +33,14 @@ void ANIMGet(ANIMBank* bank) {
 
 #pragma dont_inline on
 // .text:0x800B516C size:0x4A0
-void Squad(void) {
+// Spherical cubic blend: slerp(q0,q1,t) and slerp(a,b,t) are slerped again by 2t(1-t) into out.
+void Squad(Quaternion* q0, Quaternion* a, Quaternion* b, Quaternion* q1, Quaternion* out, f32 t) {
     return;
 }
 
 // .text:0x800B560C size:0x79C
-void GetData(void) {
+// Decodes `count` quantized values (type: 0 u8, 1 s8, 2 u16, 3 s16, 4 f32) into floats, times `scale`.
+void GetData(u8 type, void* src, f32* dst, u8 count, f32 scale) {
     return;
 }
 
@@ -127,6 +129,7 @@ void ANIMTick(ANIMPipe* pipe, u8 mode) {
     }
 }
 
+#pragma dont_inline on
 // .text:0x800B79A0 size:0x30
 // Attaches a track to a pipe: clears the target control, rewinds to `time` and resets the key cache.
 void ANIMBind(ANIMPipe* pipe, Control* control, struct ANIMAnimTrack* track, f32 time) {
@@ -139,16 +142,14 @@ void ANIMBind(ANIMPipe* pipe, Control* control, struct ANIMAnimTrack* track, f32
     pipe->replaceHierarchyCtrl = track->replaceHierarchyCtrl;
     pipe->keyIndex = 0;
 }
+#pragma dont_inline off
 
 // .text:0x800B79D0 size:0x36C
 // Binds `track` to a bone (NULL unbinds). With `blend` the current pose is saved as the blend
 // source; channels the track does not animate are copied from the bone's rest-pose control.
 void ACTSetBoneTrack(ActBone* bone, struct ANIMAnimTrack* track, f32 time, s32 blend) {
     u8 restType;
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 w;
+    f32 rest[4]; /* x, y, z, w of the rest-pose channel being copied */
 
     if (track == NULL) {
         if (bone->animPipe != NULL && bone->animPipe->control != NULL) {
@@ -186,28 +187,28 @@ void ACTSetBoneTrack(ActBone* bone, struct ANIMAnimTrack* track, f32 time, s32 b
     }
     restType = bone->orientationCtrl.control.type;
     if ((restType & CTRL_TRANS) && !(track->animType & ANIM_TYPE_TRANS)) {
-        CTRLGetTranslation(&bone->orientationCtrl.control, &x, &y, &z);
-        CTRLSetTranslation(&bone->animationCtrl.control, x, y, z);
+        CTRLGetTranslation(&bone->orientationCtrl.control, &rest[0], &rest[1], &rest[2]);
+        CTRLSetTranslation(&bone->animationCtrl.control, rest[0], rest[1], rest[2]);
     }
     if ((restType & CTRL_SCALE) && !(track->animType & ANIM_TYPE_SCALE)) {
-        CTRLGetScale(&bone->orientationCtrl.control, &x, &y, &z);
-        CTRLSetScale(&bone->animationCtrl.control, x, y, z);
+        CTRLGetScale(&bone->orientationCtrl.control, &rest[0], &rest[1], &rest[2]);
+        CTRLSetScale(&bone->animationCtrl.control, rest[0], rest[1], rest[2]);
         if ((restType & CTRL_SCALE_QUAT) && !(track->animType & ANIM_TYPE_SCALE_QUAT)) {
-            CTRL_GetQuatUnk(&bone->orientationCtrl.control, &x, &y, &z, &w);
+            CTRL_GetQuatUnk(&bone->orientationCtrl.control, &rest[0], &rest[1], &rest[2], &rest[3]);
         } else {
-            x = 0.0f;
-            y = 0.0f;
-            z = 0.0f;
-            w = 1.0f;
+            rest[0] = 0.0f;
+            rest[1] = 0.0f;
+            rest[2] = 0.0f;
+            rest[3] = 1.0f;
         }
-        CTRL_SetQuatUnk(&bone->animationCtrl.control, x, y, z, w);
+        CTRL_SetQuatUnk(&bone->animationCtrl.control, rest[0], rest[1], rest[2], rest[3]);
     }
     if ((restType & CTRL_ROT_EULER) && !(track->animType & ANIM_TYPE_ROT_EULER)) {
-        CTRLGetRotation(&bone->orientationCtrl.control, &x, &y, &z);
-        CTRLSetRotation(&bone->animationCtrl.control, x, y, z);
+        CTRLGetRotation(&bone->orientationCtrl.control, &rest[0], &rest[1], &rest[2]);
+        CTRLSetRotation(&bone->animationCtrl.control, rest[0], rest[1], rest[2]);
     } else if ((restType & CTRL_ROT_QUAT) && !(track->animType & ANIM_TYPE_ROT_QUAT)) {
-        CTRLGetQuat(&bone->orientationCtrl.control, &x, &y, &z, &w);
-        CTRLSetQuat(&bone->animationCtrl.control, x, y, z, w);
+        CTRLGetQuat(&bone->orientationCtrl.control, &rest[0], &rest[1], &rest[2], &rest[3]);
+        CTRLSetQuat(&bone->animationCtrl.control, rest[0], rest[1], rest[2], rest[3]);
     }
     if (blend == 0) {
         bone->blendFromCtrl = bone->animationCtrl;

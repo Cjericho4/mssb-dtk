@@ -6,8 +6,8 @@
 #include "C3/unktypes.h"
 #include "C3/actor.h"
 
-void Squad(void);
-void GetData(void);
+void Squad(Quaternion* q0, Quaternion* a, Quaternion* b, Quaternion* q1, Quaternion* out, f32 t);
+void GetData(u8 type, void* src, f32* dst, u8 count, f32 scale);
 void DoTranslationAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next);
 void DoScaleAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next, u8 mode);
 void DoEulerAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next);

@@ -135,7 +135,10 @@ ActMemBlock* f_InitBone(ActBone* parent, ActBoneLayout* layout, GameActor* actor
     ActBone* bone;
     ANIMPipe* pipe;
     ActGeoPalette* pal;
-    ActMemBlock* volatile next; /* FAKEMATCH: written to the stack but never read back */
+    ActMemBlock* volatile next; /* FAKEMATCH: cursor copy written to the stack, never read back */
+    ActMemBlock* result;
+    ActDOLayout* geo;
+    u16 geoFileID;
 
     while (layout != NULL) {
         bone = &bones[*numBones];
@@ -150,17 +153,22 @@ ActMemBlock* f_InitBone(ActBone* parent, ActBoneLayout* layout, GameActor* actor
             bone->orientationCtrl = *layout->orientationCtrl;
         }
         bone->dispObj = NULL;
-        if (layout->geoFileID != 0xFFFF) {
+        geoFileID = layout->geoFileID;
+        if (geoFileID != 0xFFFF) {
             pal = actor->pal;
             next = cursor;
-            if (layout->geoFileID >= pal->numDescriptors) {
-                OSReport(lbl_800E6698, layout->geoFileID, pal->numDescriptors);
+            if (geoFileID >= pal->numDescriptors) {
+                OSReport(lbl_800E6698, geoFileID, pal->numDescriptors);
                 bone->dispObj = NULL;
+                result = cursor;
             } else {
-                bone->dispObj = (ActDisplayObj*)cursor;
+                geo = pal->descriptorArray[geoFileID].layout;
                 next = cursor + 4;
-                next = cursor = fn_80023078(bone->dispObj, pal->descriptorArray[layout->geoFileID].layout, cursor + 4);
+                bone->dispObj = (ActDisplayObj*)cursor;
+                result = fn_80023078(bone->dispObj, geo, cursor + 4);
+                next = result;
             }
+            cursor = result;
         }
         bone->unk18 = bone->dispObj;
         bone->animPipe = NULL;
