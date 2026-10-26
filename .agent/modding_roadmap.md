@@ -15,6 +15,10 @@ alongside for the byte-exact rebuild goal, but a later phase never waits on a ma
   white/black/grey characters, Petey). Tested in Rio: model, recolour and Mario's voice/announcer.
 - **GUI** (`tools/modding/clone_gui.py`): PRSH-style theme, colour-region checkboxes, full preview,
   narrow-window layout (#17); Windows exe built by `.github/workflows/build-gui.yml`.
+- **Clone Maker on Tauri** (#30): Rust core, byte-identical to the Python patcher on every
+  source/preset (#31, #32; `tools/clonemaker/core/README.md`), and the window on it with a portable
+  Windows exe from CI (#33; `tools/clonemaker/app/README.md`). The Python patcher stays the reference
+  (`tools/clonemaker/difftest.py`).
 - **Phase 2** (#1): menu art traced and patched (`character_select.md` §8).
 - **R1 data map** (#9) and **R2 roster flow** (#10), below.
 
@@ -22,8 +26,9 @@ alongside for the byte-exact rebuild goal, but a later phase never waits on a ma
 - Rio tests by the user: menu art (#2), restyled GUI + non-Mario clones (#3).
 - `fn_2_3624` match, five lines left (#4, `handoff_fn_2_3624.md`).
 - Docs consolidation (#19).
-- Clone Maker port to Tauri (Rust core + web UI), Windows first (#30; stages #31–#34, Mac #35). The
-  Python patcher stays the reference: the Rust output must be byte-identical (`tools/clonemaker/difftest.py`).
+- Clone Maker on Tauri: the user's Rio walk-through, then retire the PyInstaller GUI and point the
+  READMEs at the new app (#34); Mac (#35). Clone voices in donor mode (#29) on branch `voice-merge`
+  (`sounds.md` §6).
 
 ## Phases
 1. **Character-select code: understood and documented, matched where practical.**
