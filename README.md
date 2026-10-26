@@ -5,6 +5,10 @@ Mario Superstar Baseball
 -->
 =============
 
+> **Modding tools** (MSSB Clone Maker, disc file tools) are in
+> [Cjericho4/mssb-modding](https://github.com/Cjericho4/mssb-modding). This repository is the
+> decompilation and the game knowledge (`.agent/`) those tools are built on.
+
 [Build Status]: https://github.com/roeming/mssb-dtk/actions/workflows/build.yml/badge.svg
 [actions]: https://github.com/roeming/mssb-dtk/actions/workflows/build.yml
 <!--
