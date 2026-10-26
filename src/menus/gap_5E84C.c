@@ -127,8 +127,32 @@ void fn_2_60AF0(void) {
 }
 
 // .text:0x00060C78 size:0x17C
-void fn_2_60C78(void) {
-    return;
+/* Set a scripted pane label and hide it after a ten-frame countdown. */
+void fn_2_60C78(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x5C = lbl_2_bss_1A824C->unk_0x197418 << 16;
+        slot->state = 0x25;
+        break;
+    case 5:
+        slot->timer = 10;
+        slot->state = 6;
+        break;
+    case 6:
+        if (slot->timer-- <= 0) {
+            lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        }
+        break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x00060DF4 size:0x188

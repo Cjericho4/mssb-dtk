@@ -58,7 +58,9 @@ typedef struct Rep10C0State {
     u8 flag1972BC;
     u8 _pad1972BD[3];
     u8 flag1972C0;
-    u8 _pad1972C1[0x35F];
+    u8 _pad1972C1[0x157];
+    u8 unk_0x197418;
+    u8 _pad197419[0x207];
     f32 values197620[12];
     u8 _pad197650[0x18];
     MenusCameraConfig camera; /* 0x197668 */
