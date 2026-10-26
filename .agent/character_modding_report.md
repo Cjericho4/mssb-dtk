@@ -290,3 +290,32 @@ original source *defined* the tables in the same file. Defining them as initiali
   retail already has `master[charID].size` smaller than the body it loads (BlueToad 29: 0x18028 vs
   body 13's 0x195B0; BlueShyGuy 44: 0x5BE0 vs 0x16320), and `fn_8002204C` only uses it when
   `buf == NULL`. Do not "fix" it by resizing the entry.
+
+## 9. Debugging a broken clone in Dolphin / Rio
+
+From the retired `tools/modding/README_WINDOWS.md`. The flags are the patcher's (`mssb-clone` and
+`clone_character.py` take the same ones). Run `test_clone.py --patched <folder>` first: if it does
+not print `ALL CHECKS PASSED`, the folder was altered after patching.
+
+* Reading a crash: Options -> Configuration -> Interface -> Show Debugging UI, then View -> Code /
+  Registers; the PC in `Invalid read from ..., PC = 0x...` is what matters. View -> Show Log with the
+  OSReport channel shows the game's own messages.
+
+| Symptom | Meaning | Next step |
+|---|---|---|
+| Panic `PC = 0x800233A0` | `f_InitActorWithLayout`: the body file is not a valid model (wrong disc offset/size or bad LZSS) | make sure the patched `sys/main.dol` booted; try the ISO |
+| Hang on the logos / first loading screen | ARAM blob move or its size patch (`fn_800227E4`) | `--no-aram-overlay`; if that boots, it's the blob |
+| Hang when a match starts loading | LZSS stream error on an appended file, or the blob | `--no-aram-overlay`, then `--no-gameplay` |
+| Clone looks like plain source in matches, coloured in menus | ARAM overlay not applied (pair / master entry) | check the pair and master rows |
+| Black / garbled textures on the clone only | overlay archive | `--no-aram-overlay` to confirm |
+| Crash when the clone swings or catches | sub-item (bat/glove) alias | `--no-gameplay` (timing tables) |
+| Roster screen refuses the slot or odd stats | stats row | `--no-stats` |
+| Menus or announcer still use the donor's name | unique-index remap did not take | `test_clone.py` `ui (source)` checks |
+| Wrong name/face or crash on roster/records screens | a menu lookup not keyed by the unique index, or re-packed menu art | `--ui donor`; note the screen |
+| Odd colour label on the roster screen | menus.rel colour-word edit | `--colour-word donor` |
+| Clone silent | voice bank vs SFX ids (#29, `sounds.md` §6) | fixed on `voice-merge`; before that, `--ui donor --no-gameplay` |
+| Clone too big or small | `charSizeMultipliers` row (#38, `stats.md` §6) | fixed on `voice-merge` |
+
+Known limit of `--ui source`: a main-character donor (e.g. Luigi, `isBase == 1`) also inherits the
+source's row on the records and star screens (keyed by unique index, shown only for base
+characters). Colour-variant donors (Toads, Shy Guys) avoid this.
