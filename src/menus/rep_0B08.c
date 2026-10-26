@@ -155,8 +155,37 @@ void fn_2_683EC(void) {
 }
 
 // .text:0x000684D0 size:0x168
-void fn_2_684D0(void) {
-    return;
+/* FAKEMATCH: preserve the collision test as an inline with a byte result. */
+static inline u8 menuObjectsOverlap(s32 firstIndex, s32 secondIndex) {
+    Rep0B08Obj* first = &lbl_2_bss_1A8248->rep0B08Objects[firstIndex];
+    Rep0B08Obj* second = &lbl_2_bss_1A8248->rep0B08Objects[secondIndex];
+    f32 distance = PSVECDistance(&first->position, &second->position);
+    f32 a;
+    f32 b;
+    if (firstIndex == 0) {
+        a = lbl_2_data_3EF4[lbl_2_bss_1A8248->unk441C] + lbl_2_data_3F2C[lbl_2_bss_1A8248->unk441C];
+        b = lbl_2_data_3F0C[secondIndex];
+    } else {
+        a = lbl_2_data_3F0C[firstIndex];
+        b = lbl_2_data_3EF4[lbl_2_bss_1A8248->unk441C] + lbl_2_data_3F2C[lbl_2_bss_1A8248->unk441C];
+    }
+    if (distance < a + b && first->unkC0 != 0 && second->unkC0 != 0) return TRUE;
+    return FALSE;
+}
+
+/* Find the first active menu object in slots 2..6 that overlaps this object. */
+s32 fn_2_684D0(s32 index) {
+    Rep0B08Obj* object = &lbl_2_bss_1A8248->rep0B08Objects[index];
+    s32 other;
+    object->unkCC = -1;
+    for (other = 1; other < 7; other++) {
+        if (menuObjectsOverlap(index, other) && other >= 2 && other <= 6) {
+            object->unkCC = other;
+            break;
+        }
+        object->unkCC = -1;
+    }
+    return object->unkCC;
 }
 
 // .text:0x00068638 size:0x1C
