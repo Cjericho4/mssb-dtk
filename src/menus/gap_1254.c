@@ -236,8 +236,39 @@ void fn_2_1DC4(void) {
 }
 
 // .text:0x00001DC8 size:0x168
+/* Apply the chosen main-menu game mode and request the next scene. */
 void fn_2_1DC8(void) {
-    return;
+    switch (lbl_2_bss_F410.unk0) {
+    case 0:
+        lbl_8034E9A0.unk4708 = 0;
+        g_d_GameSettings.GameModeSelected = GAME_TYPE_EXHIBITION_GAME;
+        break;
+    case 1:
+        lbl_8034E9A0.unk4708 = 1;
+        g_d_GameSettings.GameModeSelected = GAME_TYPE_CHALLENGE;
+        break;
+    case 3:
+        lbl_8034E9A0.unk4708 = 3;
+        g_d_GameSettings.GameModeSelected = GAME_TYPE_MINIGAMES;
+        changeScene(4, 6);
+        break;
+    case 2:
+        lbl_8034E9A0.unk4708 = 2;
+        g_d_GameSettings.GameModeSelected = GAME_TYPE_TOY_FIELD;
+        changeScene(4, 6);
+        break;
+    case 4:
+        lbl_8034E9A0.unk4708 = 4;
+        g_d_GameSettings.GameModeSelected = GAME_TYPE_PRACTICE;
+        g_d_GameSettings.StadiumID = STADIUM_ID_MARIO_STADIUM;
+        g_d_GameSettings.miniGameStadiumIndicator = 2;
+        changeScene(4, 6);
+        break;
+    case 6: lbl_8034E9A0.unk4708 = 6; break;
+    case 5: lbl_8034E9A0.unk4708 = 5; break;
+    }
+    lbl_803CBBCC->state = 5;
+    fn_800625A4(0, 0x58);
 }
 
 // .text:0x00001F30 size:0x8B0
