@@ -34,6 +34,9 @@ extern void fn_800AD038(s32 start);                               /* gap_800A97D
 extern u8 lbl_2_bss_100B4;
 extern u8 lbl_2_bss_3A8[NUM_CHOOSABLE_CHARACTERS]; /* per-charID handedness byte (challenge save): bit 0 stance, bits 1.. arm */
 extern u32 lbl_803CB750;
+extern s16 lbl_2_data_E88[2][9];
+/* gap_80064754.h cannot be included here because its shared-global views conflict. */
+extern void fn_800670A0(u8 side);
 
 // .text:0x00001254 size:0x4
 void fn_2_1254(void) {
@@ -247,8 +250,30 @@ void fn_2_27E0(void) {
 }
 
 // .text:0x00002BB8 size:0x164
+/* Populate both default rosters and their captain chemistry, then refresh each side. */
 void fn_2_2BB8(void) {
-    return;
+    s32 side;
+    s32 slot;
+    s32 character;
+    s32 captain;
+    for (side = 0; side < 2; side++) {
+        for (slot = 0; slot < 9; slot++) {
+            captain = lbl_8034E9A0.players[side];
+            if (captain == CHAR_ID_MARIO) {
+                character = lbl_2_data_E88[0][slot];
+                lbl_803C6724.teams[side][slot] = character;
+                lbl_803C6724.selectionFlags[side][slot] = lbl_8034E9A0.stats[character / 9][character % 9].chemistry[captain];
+            } else {
+                character = lbl_2_data_E88[1][slot];
+                lbl_803C6724.teams[side][slot] = character;
+                lbl_803C6724.selectionFlags[side][slot] = lbl_8034E9A0.stats[character / 9][character % 9].chemistry[captain];
+            }
+            lbl_80354720[side][slot].unk2 = slot;
+            lbl_80354720[side][slot].unk1 = slot;
+            lbl_80354720[side][slot].unk0 = slot;
+        }
+        fn_800670A0(side);
+    }
 }
 
 // .text:0x00002D1C size:0x2A4
