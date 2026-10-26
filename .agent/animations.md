@@ -12,9 +12,13 @@ bone's position in an array. The often quoted 37 bones applies to Mario, not the
 family descriptor sharing, bone binding, playback and event-window association. All 918 disc
 bank references resolve to 544 distinct files; the parser decoded their **3,829,384 key records**,
 all 108 body layouts, and verified all 54 master/disc track-15 pairs byte-for-byte.
-**Incomplete:** tracks 7/8 have no identified request path; individual extra-bank poses, the
-visual identity of 0x2E, auxiliary interpolation payload semantics and Blender conventions need
-more work. No Dolphin swap or authoring round trip was performed. R5 remains partial.
+**2026-10-26 (anim-playback branch):** the playback chain is now matched C
+(`ANIMGet`, `ANIMGetKeyFrameFromTrack`, `ACTSetAnimation`, `ACTSetBoneTrack`, `ANIMTick`,
+`f_InitBone`; `f_InitActorWithLayout` 12 lines off) and the channel decoders were read from asm:
+§2.1 gives every interpolation formula and the auxiliary payload layout, §5.1 the local-matrix
+composition. **Incomplete:** tracks 7/8 have no identified request path; individual extra-bank
+poses, the visual identity of 0x2E, the parent/flip path of fn_800B2DD0 (m2c only) and a Blender
+round trip need more work. No Dolphin swap or authoring round trip was performed.
 
 Tools: `tools/datamap/animations.py` (bank/keys/body hierarchy), `audit_animations.py` (whole-roster
 checks and per-character event-window export), `test_animations.py` (synthetic unittest).
@@ -100,45 +104,103 @@ it also relocates the header sequence pointer. Shared payloads and non-monotonic
 are legal. Do not infer key size from differences between setting pointers. Relocate only once;
 export the unrelocated extracted file, never runtime RAM pointers.
 
-`GetData` (0x800B560C) uses quantizeInfo's **high nibble**: 0=u8, 1=s8, 2=u16, 3=s16,
-4=f32. Integer values are multiplied by **2^−lowNibble**; floats are copied directly.
-**Quaternion settings are a separate fixed s16 / 16384 encoding** (four components, 8 B), read
-using globals 0x803CBB48/4C=1/16384 and 0x803CBB50/51=3. These override the track quantization
-for quaternion components; quantizeInfo=0x30 with animType=8 does not mean integer quaternions.
+`GetData(type, src, dst, count, scale)` (0x800B560C; prototype from asm, high) decodes `count`
+values of `type` = quantizeInfo **high nibble**: 0=u8, 1=s8, 2=u16, 3=s16, 4=f32, each multiplied
+by `scale`; the callers pass `scale = 2^−lowNibble` (floats too, so a float track with a nonzero
+low nibble is scaled). Element width `elem` = 1/1/2/2/4 bytes.
+**Rotation quaternions are a separate fixed s16 / 16384 encoding** (four s16, 8 B), read with
+globals 0x803CBB48/4C=1/16384 and 0x803CBB50/51=3; quantizeInfo=0x30 with animType=8 does not mean
+integer quaternions. **The scale quaternion is not**: it is four track-quantized values
+(4×`elem`, `DoScaleAnimation` 0x800B6530, `DoTranslationAnimation` 0x800B5E9C..5EE8), so the
+parser's fixed-s16 decode of `scale_quaternion` is wrong (no retail character bank uses 0x20).
 
 ANIM type bits (not CTRL type bits): **1=translation, 2=scale, 4=Euler, 8=quaternion,
-0x10=matrix, 0x20=scale quaternion**. Settings order: scale if present (3 quantized values),
-optional scale quaternion (8 B), rotation (quaternion8 B or Euler3 values), translation3 values.
-The matrix branch reads twelve f32s and multiplies by 2^−lowNibble. Evidence:
-`ANIMTick` 0x800B775C..78E8; `DoTranslationAnimation` 0x800B5DA8; `DoScaleAnimation`
-0x800B63DC; `DoEulerAnimation` 0x800B6E0C; `DoQuatAnimation` 0x800B71C0.
+0x10=matrix, 0x20=scale quaternion**. Setting record order: scale (3×elem) if bit 2, then scale
+quaternion (4×elem) if bit 0x20, then rotation (quaternion 8 B fixed, or Euler 3×elem), then
+translation (3×elem). Matrix tracks (0x10) are handled in `ANIMTick` alone: the twelve f32 of the
+**current** key are multiplied **in place** by 2^−lowNibble every tick (compounding unless the low
+nibble is 0) and passed to `CTRLSetMatrix`; no interpolation.
 
-Interpolation is **packed per channel**:
+### 2.1 Interpolation (from `DoTranslationAnimation`/`DoScaleAnimation`/`DoEulerAnimation`/`DoQuatAnimation`/`Squad` asm, 2026-10-26)
 
-| Bits of +E | Channel | Decoder / confidence |
+Confidence high for every formula below (read instruction by instruction; the functions are not
+matched but the arithmetic is unambiguous). `cur`/`next` are the keys from
+`ANIMGetKeyFrameFromTrack` (matched): starting at the cached `pipe->keyIndex` (reset to 0 when
+`keys[cached].time > time`), it walks forward with wrap until `keys[i].time <= time < keys[i+1].time`
+and returns (`keys[i]`, `keys[i+1]`); on the last key it returns (`keys[last]`, `keys[0]`).
+
+**Normalized time** `u` (identical in all four decoders): `d = pipe->time − cur.time`;
+`u = 0` if `d == 0`; else if `next.time > cur.time`: `u = d / (next.time − cur.time)`; else (wrapped
+pair): `u = 1` when `duration >= cur.time` (always, for sane data), otherwise
+`d / (duration − cur.time)`. So a track whose last key time is below its duration **snaps to key 0**
+for the remainder; retail tracks end on the duration (`ANIMTick` clamps there), which avoids it.
+
+| Channel (bits of +E) | Mode | Formula |
 |---|---|---|
-| 1..0 | Translation | 0 holds start value; 1 linear; 2 cubic using auxiliary vectors; 3 cubic with additional fixed-point parameters (high dispatch; full auxiliary authoring semantics unresolved) |
-| 3..2 | Scale | 0/1/2/3 analogous dispatch, with optional scale-quaternion path (high dispatch) |
-| 6..4 | Rotation | Euler 0 hold,1 linear,2 cubic,3 hold-start path; quaternion 0 hold,4 `Squad`,5 additional-parameter spherical path,6 spherical interpolation (high dispatch; medium mathematical naming) |
+| translation 1..0, scale 3..2, Euler 6..4 | 0 | hold `cur` |
+| same | 1 | lerp: `(1−u)·cur + u·next`; Euler first wraps each axis: if `cur−next > 180` then `cur −= 360`, if `< −180` then `next −= 360` (degrees) |
+| same | 2 | cubic Bezier `(1−u)³·cur + 3u(1−u)²·(cur + cur.out) + 3u²(1−u)·(next + next.in) + u³·next` (control points are **offsets** from the key values) |
+| translation, scale | 3 | eased Hermite: `h00·cur + h01·next + h10·cur.out + h11·next.in` with `h00 = 2u³−3u²+1`, `h01 = 3u²−2u³`, `h10 = u³−2u²+u`, `h11 = u³−u²`; tangents are used as-is (not multiplied by the segment length); `u` is first remapped by the ease rule below |
+| Euler | 3 | `OSPanic` (unsupported) |
+| quaternion 6..4 | 0 | hold `cur` |
+| quaternion | 4 | `Squad(cur, cur.out, next.in, next, u)` = slerp(slerp(cur,next,u), slerp(cur.out,next.in,u), 2u(1−u)) |
+| quaternion | 5 | ease-remap `u`, then as mode 4 |
+| quaternion | 6 | slerp(cur, next, u) |
+| anything else | | `OSPanic` |
 
-Examples from the full audit: `(quant,type,interp)=(0x30,8,0x60)` is quaternion-only with
-rotation mode 6; `(0x3E,9,0x43)` is quaternion+translation with rotation mode 4, translation mode 3.
-The +8 key pointer addresses auxiliary data, **not another key or a generic f32 tangent array**.
-The parser returns that pointer and packed channel modes, and decodes **setting values**. It does
-not evaluate curves or decode the auxiliary payloads. It is an inspection/export foundation,
-not a lossless animation writer or Blender converter. Curve-preserving authoring still needs
-those payloads and the runtime's per-bone interpolation overrides understood.
+slerp (shared by 6, `Squad`, the scale-quaternion path and the control blend): `c = dot(a,b)`;
+if `1 + c > 1e−6`: if `1 − c > 1e−6` then `w0 = sin((1−u)θ)/sinθ, w1 = sin(uθ)/sinθ` with
+`θ = acos(c)`, else `w0 = 1−u, w1 = u`; result `w0·a + w1·b`. If `1 + c <= 1e−6` (antipodal)
+it blends `a` with the perpendicular `(−a.y, a.x, −a.w, a.z)` by `sin((1−u)π/2)`, `sin(uπ/2)`.
+**No sign flip for `c < 0`**: consecutive keys must already be in the same hemisphere; an exporter
+has to neighbourhood its quaternions. The identity-check epsilon is `lbl_803CCF88 = 1e−6`.
 
-`ANIMGetKeyFrameFromTrack` (0x800B4E9C) keeps a cached key index (extra r6 argument), restarts the
-search if time moved backwards, and returns the surrounding keys; after the final key, the next
-key is the first key. `Do*Animation` uses track duration for the wrap interval. `totalFrames` in
-SDK naming is the **number of key records**, not duration; a 40-frame hold can have only two keys.
+**Ease remap** (translation/scale mode 3, quaternion mode 5), from two s16/16384 values `a`
+(ease-in, read from `cur`) and `b` (ease-out, read from `next`), skipped when `u == 0`, `u == 1`
+or `a + b == 0`: if `a + b > 1` then `a /= (a+b)`, `b /= (a+b)`, `k = 0.5 − 1/(a+b)` (pre-normalization
+sum) else `k = 0.5 − 1/(a+b)`; then `u < a`: `u = u²·k/a`; `a <= u < 1−b`: `u = k·(2u − a)`;
+else `u = 1 − (1−u)²·k/b`. **As written this curve is not continuous and `k` is negative for
+0 < a+b < 2** (retail constant 0x803CCF94 = 0.5 checked in the DOL); every retail character bank
+inspected stores `a = b = 0` (Mario batting bank: 1070 of 1070 mode-3 keys), so the remap never
+runs in practice. An exporter should write zeros.
+
+**Auxiliary payload** (key +8 pointer, per key, laid out per channel in the order scale,
+rotation, translation; a channel contributes only in the modes listed):
+
+| Channel / mode | Bytes | Contents |
+|---|---|---|
+| scale mode 2 | 6·elem | `in[3]`, `out[3]` (track quantization, same `scale`) |
+| scale mode 3 | 6·elem + 4 | `in[3]`, `out[3]`, `s16 ease[2]` (/16384) |
+| Euler mode 2 | 6·elem | `in[3]`, `out[3]` (degrees) |
+| Euler mode 3 | 6·elem + 4 | reserved by the offset maths, never read (`OSPanic`) |
+| quaternion mode 4 | 0x10 | `in[4]`, `out[4]` as s16/16384 (x, y, z, w) |
+| quaternion mode 5 | 0x14 | `in[4]`, `out[4]`, `s16 ease[2]` |
+| translation mode 2 | 6·elem | `in[3]`, `out[3]` |
+| translation mode 3 | 6·elem + 4 | `in[3]`, `out[3]`, `s16 ease[2]` |
+
+Which half is used: `cur` always contributes its **second** vector/quaternion (`out`) and `next`
+its **first** (`in`). The ease pair is read asymmetrically: translation and scale take
+`cur.ease[1]` as ease-in and `next.ease[0]` as ease-out; quaternions take `cur.ease[0]` as ease-in
+and `next.ease[1]` as ease-out (asm 0x800B61C4..623C and 0x800B73E0..7414). Mario's batting bank
+stores identical `in` and `out` tangents on every translation key (C1-continuous spline).
+Retail character tracks use only `(quant,type,interp)` = (0x30,8,0x60), (0x30,8,0x40),
+(0x3E/0x3D,9,0x43) and one (0x3E,9,0x63); i.e. quaternion hold/Squad/slerp and translation
+Hermite with s16/16384 (or /8192) positions.
+
+`ANIMGetKeyFrameFromTrack` (0x800B4E9C, MATCH) keeps a cached key index (`pipe->keyIndex`, the
+fifth argument), restarts from 0 if time moved before the cached key, and returns the surrounding
+keys; after the final key the next key is key 0. `totalFrames` in SDK naming is the **number of
+key records**, not duration; a 40-frame hold can have only two keys. The parser
+(`tools/datamap/animations.py` in mssb-modding) still returns only the aux pointer and packed
+modes; decoding the payload above is the next parser step.
 
 ## 3. Body bones and binding
 
 **High confidence:** `LoadActorLayout` 0x800B4910 relocates the hierarchy root, palette name,
 user data when present, and each bone's five pointer words relative to **layout start**.
-`fn_80017814` separately relocates the `.gpc` root to obtain that layout. File hierarchy:
+`fn_80017814` separately relocates the `.gpc` root to obtain that layout. The C types are
+`ActLayout` / `ActBoneLayout` (file) and `GameActor` / `ActBone` (runtime) in `include/C3/actor.h`
+(2026-10-26). File hierarchy:
 
 | Record | Fields |
 |---|---|
@@ -148,17 +210,55 @@ user data when present, and each bone's five pointer words relative to **layout 
 
 Null branch links mean no relation; nonzero links name ActorBone starts, relative to layout.
 The parser outputs array indices **and parent bone IDs**. It preserves the stored tree-offset
-word; the retail constructor traverses +0x10 children/+8 siblings directly. `f_InitActorWithLayout`
-(0x800232E0) allocates by totalBones, resolves skinFileID through the geometry palette, and calls
-**f_InitBone (0x80022DAC)** recursively. `f_InitBone` copies orientation control (0x44 B), boneID,
-inheritance and drawing priority; it constructs runtime bone arrays in traversal order.
+word; the retail constructor traverses +0x10 children/+8 siblings directly.
+
+### 3.1 Rest pose and runtime bones (`f_InitBone` MATCH, `f_InitActorWithLayout` 12 lines off, 2026-10-26)
+
+`f_InitActorWithLayout(layout, mem)` (0x800232E0) carves everything from one 32-byte-granular
+block: [skin `ActDisplayObj`, 4 blocks + its data via fn_80023078] `GameActor` (0xA0) | `boneArray`
+(totalBones×4) | `forwardMtxArray` (totalBones×0x30) | `skinMtxArray` | `orientationInvMtxArray` |
+`skinInvTransposeMtxArray` (the last three only with a skin; the last only when the skin has
+lighting data) | bone records (totalBones×0x140) | per-bone display objects and `ANIMPipe`s. It
+then sets `worldControl.type = 0`, runs `f_InitBone`, panics ("objinit.c", 0x209) if the bone count
+differs from `totalBones`, builds the inverse bind matrices (`BuildBoneSkinOrientationMatrix`,
+skin only), sorts the draw list (`ACTSort`) and resets the game fields (+0x8C blend weight = 1).
+
+`f_InitBone(parent, layout, actor, &count, bones, cursor)` walks the sibling chain (`+8 next`) and
+recurses into `+0x10 children` **before** the next sibling, so `boneArray[i]` / matrix slot `i` is
+the **pre-order depth-first index** of the file hierarchy (parents precede children). Each bone:
+`DSInsertBranchBelow` under its parent; `boneID`, `inheritanceFlag`, `drawingPriority` copied from
+the layout; `orientationCtrl.type = 0` then, if the layout's +0 pointer is set, the **whole 0x44-byte
+control copied** (`ControlExt`): this is the rest pose, `type` bits CTRL_SCALE 1 / ROT_EULER 2 /
+ROT_QUAT 4 / TRANS 8 / MTX 0x10 / SCALE_QUAT 0x20 with the SRT payload at +4 (scale xyz, rotation
+quaternion xyzw or Euler degrees xyz0, translation xyz, scale quaternion xyzw; a 0x10 matrix
+control holds a 3×4 Mtx instead). A bone without a control is identity. `geoFileID != 0xFFFF`
+attaches `pal->descriptorArray[geoFileID]` as the bone's display object (OSReport + no object when
+out of range). The bone's `ANIMPipe` is carved from the cursor (0x20 stride) with time 0, speed 1,
+no track, forward, loop; `animFlags` (+0x134) = 1, +0x136/+0x137 = 0; forward/skin/inverse-bind/
+inverse-transpose matrices are set to identity. Runtime `ActBone` offsets (0x140 bytes): +0 boneID,
++2 inheritanceFlag, +3 drawingPriority, +4 DSBranch, +0x14 dispObj (+0x18 copy), +0x1C
+orientationCtrl, +0x60 animationCtrl, +0xA4 blendFromCtrl, +0xE8 animPipe, +0xEC forwardMtx,
++0xF0 skinMtx, +0xF4 skinInvTransposeMtx, +0xF8 orientationInvMtx, +0xFC drawPriorityLink,
++0x134 u16 animFlags, +0x136 u8 holdTranslation. For Blender: the bind pose is the
+`orientationCtrl` of every bone composed down the hierarchy exactly as in §5.1 with no animation.
 Missing geometry/skin descriptors are a separate layout/palette error, not an ANIM bank error.
 
-`ACTSetAnimation` 0x800B4D64 gets the sequence then loops actor bones: runtime bone +0 supplies
-boneID to `ANIMGetTrackFromSequence` (0x800B4F9C), which linearly compares track +0xA IDs.
-It passes the result (possibly NULL) to `ACTSetBoneTrack` 0x800B79D0. **Matching array indices or
-bone counts alone is neither necessary nor sufficient.** Unmatched bones do not receive the
-intended track; no automatic retargeting maps a Mario limb to another skeleton's limb.
+`ACTSetAnimation(actor, bank, name, seqNum, time, blendStep)` 0x800B4D64 (MATCH) gets the sequence
+then loops actor bones: runtime bone +0 supplies boneID to `ANIMGetTrackFromSequence` (0x800B4F9C),
+which linearly compares track +0xA IDs. It passes the result (possibly NULL) to
+`ACTSetBoneTrack(bone, track, time, blend)` 0x800B79D0 (MATCH) with `blend = actor.blendWeight(+0x8C)
+< 1 && bone.animFlags != 0`, then sets bone flag 0x20 iff `animFlags & 0x1C`; finally
+`blendWeight = blendStep ? 0 : 1` and `+0x90 = blendStep` (AnimateActorBones adds it per tick,
+clamped to 1). `ACTSetBoneTrack`: a NULL track unbinds (control type 0, no track); otherwise it
+snapshots the blend source into `blendFromCtrl` (the current `animationCtrl` if it has a type, else
+the rest pose), `ANIMBind`s (control type 0, time = previousTime = `time`, keyIndex 0,
+replaceHierarchyCtrl from track +0xF), clears the translation mode bits when `holdTranslation`
+(+0x136) is set, and **copies every rest-pose channel the track does not animate** (translation,
+scale with scale-quaternion or identity, Euler or quaternion rotation) from `orientationCtrl` into
+`animationCtrl`; without blending the snapshot is overwritten with the result. So a track that
+animates only rotation keeps the bone's rest translation/scale. **Matching array indices or bone
+counts alone is neither necessary nor sufficient.** Unmatched bones do not receive the intended
+track; no automatic retargeting maps a Mario limb to another skeleton's limb.
 
 Retail body checks, hi/lo counts (metadata only, all characters audited):
 
@@ -275,11 +375,45 @@ The frame readback divides by that slot factor; raw ANIM time is not automatical
 frame. Do not assume a universal seconds/60 conversion for export.
 
 `fn_800BD8C4` applies pending sequence/time/speed/loop state and invokes `AnimateActorBones`.
-The latter updates actor blend and ticks every bone. `ANIMTick` samples surrounding keys, decodes
-channels, writes CTRL, then advances time by speed (or subtracts on reverse), clamping or wrapping
-at track duration. Matrix tracks take a separate early-return path. Bone+0x136 can clear the
-translation interpolation bits when binding (0x800B7B64..80); file modes are not the whole runtime
-behaviour. Matrix construction/skinning follows the updated controls.
+The latter adds the blend step to the actor blend weight (clamped to 1) and ticks every bone.
+`ANIMTick(pipe, mode)` (0x800B7718, MATCH): with a bound track it fetches the surrounding keys at
+`pipe->time`, evaluates the channels present in `animType` (scale incl. scale quaternion, then
+quaternion **or** Euler, then translation; `mode` is passed to DoScaleAnimation but unused) into the
+bone's `animationCtrl`, stores `previousTime = time`, then steps: forward (+0x17 == 1)
+`time += speed; if (time > duration) time = loop ? time − duration : duration`; backward
+`time −= speed; if (time < 0) time = loop ? time + duration : 0`. **Units:** key times and
+`duration` are the bank's own frame numbers; `speed` (default 1, set by fn_800B4C04) is the
+advance per `AnimateActorBones` call, i.e. one key-time unit per game tick at speed 1. The
+game-side frame = `pipe->time / slot+0x4C` (§5 above). Matrix tracks take the early-return path.
+Bone+0x136 clears the translation interpolation bits when binding (0x800B7B64..80); file modes are
+not the whole runtime behaviour. Matrix construction/skinning follows the updated controls (§5.1).
+
+### 5.1 Local and world matrices (`CTRLBuildMatrix` MATCH; `fn_800B2DD0`, `fn_800B84AC` asm/m2c, medium)
+
+`CTRLBuildMatrix(control, m)` (src/C3/control/control.c, matched): a 0x10 matrix control is copied.
+Otherwise `R` = `PSMTXQuat(r)` for CTRL_ROT_QUAT (xyzw, Dolphin convention), or for CTRL_ROT_EULER
+the product **Rz·Ry·Rx** of the three axis rotations with angles in **degrees** (applied X first,
+then Y, then Z to a column vector); `T` enters as the translation column of that same matrix;
+`S` = diag(scale); with CTRL_SCALE_QUAT `Qs` = `PSMTXQuat(q)`. The result is
+`M = (T·R) · Qs · S · Qs⁻¹` (`PSMTXConcat` chain d,b,c,a), i.e. `M = T·R·S` for every retail
+character bone (no scale quaternions in the banks; rest poses can carry them). The matched Euler
+block has a retail quirk: when all three angles are nonzero, the `a[0][2]` term of the Z step uses
+`m[1][2]` (still identity = 0) instead of `a[1][2]`, so XYZ triples are not exactly Rz·Ry·Rx;
+retail character banks use quaternions, where this does not apply.
+
+Per bone (fn_800B2DD0, recursive over the tree): if `animationCtrl.type != 0` the animation control
+is blended from `blendFromCtrl` by the actor blend weight (fn_800B84AC: weight >= 1 or differing
+types copies the target; quaternions slerp after a dot-product sign fix, Euler lerps with ±360
+wrapping, scale/translation lerp), built with `CTRLBuildMatrix` (or `_FlipY`/`_FlipX` plus a
+`PSMTXRotRad` on the actor's per-bone callback path, which is how mirrored/handed actors are
+drawn), and when `pipe->replaceHierarchyCtrl == 0` the rest control is built too and
+`local = Rest · Anim` (rest pose on the left). With `replaceHierarchyCtrl` set the track replaces
+the rest pose outright. Then `forwardMtx = parent.forwardMtx · local` when `inheritanceFlag == 1`
+and a parent exists, else `actorWorld · local`; `skinMtx = forwardMtx · orientationInvMtx`
+(inverse bind pose, +0xF8) and, with lighting, `skinInvTransposeMtx = (skinMtx⁻¹)ᵀ`. So for an
+exporter: pose = world(parent) · Rest(bone) · Anim(bone), with `Anim` built from the track channels
+(translation/scale/rotation as above, untouched channels copied from the rest pose by
+`ACTSetBoneTrack`).
 
 DOL windows remain owned by [stats.md §7](stats.md).
 They are **15 signed 16 arrays of 54 characters**, stride 0x6C, at 0x800FB798..0x800FBD80.
@@ -337,7 +471,13 @@ Open experiments, with confidence limits:
   counts/extra target IDs. This is not proof that no indirect/table-selected path can request them.
 * **Extra pose names:** numeric 105..116 slots established; variants 15/16/17 have sparse/static
   replacements. Do not apply a single pose list to every bank without viewing it.
-* **Blender:** next implement auxiliary curves or reproduce game evaluation by baking, decode the
-  body's complete orientation controls, verify local/rest transforms, quaternion convention,
-  handedness, coordinate axes, scale and time factor, then round-trip one same-skeleton clip.
-  No axis conversion, Euler unit or FPS is asserted from file shape alone.
+* **Blender:** the evaluation is now fully specified (§2.1 curves and payload, §3.1 rest pose,
+  §5 time stepping, §5.1 composition `world(parent) · Rest · Anim` with `T·R·S` locals, quaternion
+  xyzw, Euler degrees XYZ). Still open: the per-actor callback / flip path of fn_800B2DD0 (which
+  bones get `CTRLBuildMatrix_FlipX/Y` and the `PSMTXRotRad` angle 0x803CCF60) is m2c-level only;
+  the game's up axis / handedness relative to Blender and the gameplay frame factor (slot +0x4C)
+  must be confirmed by exporting one retail clip; `fn_800BD8C4`'s speed/time writes are not yet
+  read. Export recommendation: translation mode 3 with equal in/out tangents and zero ease (what
+  retail does) or mode 1, quaternion mode 6 with neighbourhooded keys, last key at the duration.
+* **Parser fix needed** (`tools/datamap/animations.py`, mssb-modding): `scale_quaternion` uses the
+  track quantization, not fixed s16 (§2); decode the auxiliary payload per §2.1.

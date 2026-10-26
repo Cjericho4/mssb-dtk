@@ -103,7 +103,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_800227E4 | ARAM blob streamer | allocs hard-coded 0x4D6600 (0x800227EC/F4), streams master[515] | CMR §8; DM §2 |
 | fn_80021ADC | event script loader | master 486+modelID (id<0x1D), disc fallback model_script | CMR §1.1; DM §4 |
 | fn_8002399C | actor slot init | calls f_InitActorWithLayout; MATCH | CMR §1.1 |
-| f_InitActorWithLayout (0x800232E0) | actor builder | carve actor/skin/bones; crash 0x800233A0 if skinFileID>=numDescriptors; 111 lines | CMR §1.1, §2 |
+| f_InitActorWithLayout (0x800232E0) | actor builder | carve actor/skin/bones/pipes from one block; crash 0x800233A0 if skinFileID>=numDescriptors; 12 lines (actor-header block) | CMR §1.1, §2; AN §3.1 |
 | fn_80016344 / fn_80016710 | slot state machines | anim banks, per-model script, bat/glove; 32 / 28 lines | CMR §1.1, §2; DK §14 |
 | fn_80016B60 / fn_80016F7C | anim bank streaming | mode-dependent 4/13,12/11/14,5/18,16; skips steps7/8 (2/9/10), shares block0 bank; slots0..3 | AN §1; CMR §2 |
 | fn_80014D4C / fn_8001C67C_animation (0x8001C67C) | batting bank cache/install | tracks2/10 (practice),9 (mode7/+0x11); current batter loader | AN §1 |
@@ -112,12 +112,14 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | AnimateCharacter (0x8001B990) / QueueCharacterAnimation (0x8001B918) | animation requests | pending ID+0x64 / queued follow-on | AN §5 |
 | fn_8001BA44 / fn_8001BE50 | animation ID partition | ID -> group0..5 and sequence; slot bank+0x10+group*4 | AN §1, §5 |
 | fn_8001C234 / fn_800BD8C4 | apply pending animation / instance update | set bank/sequence/time/speed, bind, tick; effect callback dispatch | AN §5 |
-| f_InitBone (0x80022DAC) / LoadActorLayout (0x800B4910) | actor hierarchy | layout-relative pointer relocation, recursive bone constructor; IDs differ from indices | AN §3 |
-| ACTSetAnimation (0x800B4D64) / ANIMGetTrackFromSequence (0x800B4F9C) | bone binding | runtime boneID -> sequence trackID, linear ID search | AN §3 |
-| ANIMGet (0x800B508C) / ANIMGetSequence (0x800B4FEC) | bank relocation / sequence lookup | retail ANIMGet(buffer), contiguous sequence/track/key tables; SDK prototypes conflict | AN §2 |
-| ANIMGetKeyFrameFromTrack (0x800B4E9C) | key interval lookup | cached index, backward restart, last->first wrap | AN §2 |
-| GetData (0x800B560C) / DoTranslationAnimation (0x800B5DA8) / DoScaleAnimation (0x800B63DC) / DoEulerAnimation (0x800B6E0C) / DoQuatAnimation (0x800B71C0) | channel decoders | quantization, packed interpolation modes, fixed-point quaternion exception | AN §2 |
-| ANIMTick (0x800B7718) / ANIMBind (0x800B79A0) / ACTSetBoneTrack (0x800B79D0) / AnimateActorBones (0x800B4B38) | bone playback | channel evaluation, direction/speed/loop/clamp, interpolation overrides | AN §2, §5 |
+| f_InitBone (0x80022DAC) / LoadActorLayout (0x800B4910) | actor hierarchy | layout-relative pointer relocation; recursive pre-order bone constructor copies the 0x44-byte rest control; MATCH / asm | AN §3, §3.1 |
+| ACTSetAnimation (0x800B4D64) / ANIMGetTrackFromSequence (0x800B4F9C) | bone binding | runtime boneID -> sequence trackID, linear ID search; blend step -> actor +0x8C/+0x90; MATCH | AN §3 |
+| ANIMGet (0x800B508C) / ANIMGetSequence (0x800B4FEC) | bank relocation / sequence lookup | `ANIMGet(ANIMBank*)` relocates in place, contiguous sequence/track/key tables; MATCH | AN §2 |
+| ANIMGetKeyFrameFromTrack (0x800B4E9C) | key interval lookup | cached `pipe->keyIndex`, backward restart, last->first wrap; MATCH | AN §2.1 |
+| GetData (0x800B560C) / DoTranslationAnimation (0x800B5DA8) / DoScaleAnimation (0x800B63DC) / DoEulerAnimation (0x800B6E0C) / DoQuatAnimation (0x800B71C0) / Squad (0x800B516C) | channel decoders | `GetData(type,src,dst,count,scale)`; hold/lerp/Bezier/eased-Hermite, Squad/slerp; aux payload in/out tangents + s16 ease; asm read, not matched | AN §2.1 |
+| ANIMTick (0x800B7718) / ANIMBind (0x800B79A0) / ACTSetBoneTrack (0x800B79D0) / AnimateActorBones (0x800B4B38) | bone playback | channel evaluation, time += speed, loop/clamp at duration; rest-pose channel copy, blend snapshot; all MATCH | AN §2, §5 |
+| fn_800B2DD0 / fn_800B84AC (0x800B84AC) / CTRLBuildMatrix (0x800B8B08) | bone matrices | local = Rest·Anim (unless replaceHierarchyCtrl), world = parent·local; control blend by actor weight; T·R·(Qs·S·Qs⁻¹), Euler degrees Rz·Ry·Rx; m2c / asm / MATCH | AN §5.1 |
+| 0x803CCF88 / 0x803CCF94 / 0x803CCFB0 | anim constants | slerp epsilon 1e-6; ease constant 0.5 (makes the ease remap unusable); 2^52 int->float magic | AN §2.1 |
 | 0x803CBB48 / 0x803CBB4C / 0x803CBB50 / 0x803CBB51 | quaternion quantization | two f32=1/16384 and two u8=3 (s16 encoding) | AN §2 |
 | game fn_3_631AC (0x631AC), 0x63258..63300 | runner0x2E request | runner sequence1, flying-family direction-change transition; exact visual name unknown | AN §4; ST §6.1 |
 | fn_80017814 | root relocation | texture bind, actor build, bone map, jumptable switch; 48 lines | CMR §1.1 |
@@ -407,6 +409,12 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | TextureArchiveHeader | {u16 count,u16 0,TextureHeader[count]} | offsets relative to archive start | CMR §1.1 |
 | TextureHeader (0x20 B) | texture header | +0 pixel off, +4 clut off, +8 h, +0xA w, +0x17 GX fmt, +0x18 pal count, +0x1A TLUT fmt | CS §8.2 |
 | ActLayout.skinFileID | skin lookup | >= numDescriptors -> NULL deref at 0x800233A0 | CMR §1.1 |
+| ActBoneLayout (0x1C, `C3/actor.h`) | file bone | +0 ControlExt* rest pose (0x44 B), +4/+8/+C/+10 prev/next/parent/children, +0x14 geoFileID, +0x16 boneID, +0x18 inheritance, +0x19 drawing priority | AN §3, §3.1 |
+| ActBone (0x140, `C3/actor.h`) | runtime bone | +0 boneID, +2 inheritance, +3 priority, +4 DSBranch, +0x14 dispObj, +0x1C orientationCtrl, +0x60 animationCtrl, +0xA4 blendFromCtrl (ControlExt each), +0xE8 ANIMPipe*, +0xEC forwardMtx, +0xF0 skinMtx, +0xF4 skinInvTransposeMtx, +0xF8 orientationInvMtx, +0xFC DSLink, +0x134 u16 animFlags, +0x136 holdTranslation | AN §3.1 |
+| ANIMPipe (0x1C, `C3/anim.h`) | bone playback state | +0 time, +4 previousTime, +8 speed, +C track, +10 Control*, +14 u16 keyIndex, +16 replaceHierarchyCtrl, +17 forward, +18 loop | AN §5 |
+| GameActor (0xA0, `C3/actor.h`) | runtime actor | +6 totalBones, +8 DSTree, +0x10 pal, +0x14 skinObject, +0x18 boneArray, +0x1C worldControl (0x44), +0x60/64/68/6C Mtx* forward/skin/skinInvTranspose/orientationInv arrays, +0x70 draw list, +0x8C blend weight, +0x90 blend step, +0x99 tick mode (unused by DoScaleAnimation) | AN §3.1, §5 |
+| Control (0x3C) / ControlExt (0x44, `C3/control.h`) | SRT control | +0 type bits (1 scale, 2 Euler, 4 quat, 8 trans, 0x10 mtx, 0x20 scale quat), +4 scale xyz, +0x10 rotation quat xyzw / Euler deg xyz, +0x20 translation xyz, +0x2C scale quat; actors copy 0x44 | AN §3.1, §5.1 |
+| key aux payload (key +8) | interpolation data | per channel in[ ]/out[ ] (+ s16 ease[2] for modes 3/5): scale 6·elem(+4), quat 0x10(+4), translation 6·elem(+4) | AN §2.1 |
 | lbl_8034E9A0.useAltBirdoGrid @ 0x48AE | Birdo alt flag | | CS §5 |
 | lbl_8034E9A0 +0x46E0 / +0x4708 | selected[2] / indices[2] | captain charIDs / captain roster index | RF §1 |
 | lbl_8034E9A0 +0x478D + idx*54 | chemistry-ranked ids | per player | CS §2 |
