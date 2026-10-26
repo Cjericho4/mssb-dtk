@@ -135,7 +135,7 @@ ActMemBlock* f_InitBone(ActBone* parent, ActBoneLayout* layout, GameActor* actor
     ActBone* bone;
     ANIMPipe* pipe;
     ActGeoPalette* pal;
-    ActMemBlock* next;
+    ActMemBlock* volatile next; /* FAKEMATCH: written to the stack but never read back */
 
     while (layout != NULL) {
         bone = &bones[*numBones];
@@ -156,12 +156,10 @@ ActMemBlock* f_InitBone(ActBone* parent, ActBoneLayout* layout, GameActor* actor
             if (layout->geoFileID >= pal->numDescriptors) {
                 OSReport(lbl_800E6698, layout->geoFileID, pal->numDescriptors);
                 bone->dispObj = NULL;
-                cursor = next;
             } else {
                 bone->dispObj = (ActDisplayObj*)cursor;
                 next = cursor + 4;
-                next = fn_80023078(bone->dispObj, pal->descriptorArray[layout->geoFileID].layout, next);
-                cursor = next;
+                next = cursor = fn_80023078(bone->dispObj, pal->descriptorArray[layout->geoFileID].layout, cursor + 4);
             }
         }
         bone->unk18 = bone->dispObj;

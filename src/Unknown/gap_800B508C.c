@@ -31,6 +31,7 @@ void ANIMGet(ANIMBank* bank) {
     }
 }
 
+#pragma dont_inline on
 // .text:0x800B516C size:0x4A0
 void Squad(void) {
     return;
@@ -60,6 +61,7 @@ void DoEulerAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
 void DoQuatAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
     return;
 }
+#pragma dont_inline off
 
 // .text:0x800B7718 size:0x288
 // Samples the bound track at pipe->time into the bone control, then steps time by speed
@@ -67,33 +69,32 @@ void DoQuatAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
 void ANIMTick(ANIMPipe* pipe, u8 mode) {
     KeyFrame* current;
     KeyFrame* next;
-    struct ANIMAnimTrack* track;
-    f32* m;
+    KeyFrame* key;
+    u8 type;
     f32 scale;
 
-    if (pipe == NULL) return;
-    if (pipe->currentTrack == NULL) return;
+    if (pipe == NULL || pipe->currentTrack == NULL) return;
     ANIMGetKeyFrameFromTrack(pipe->currentTrack, pipe->time, &current, &next, &pipe->keyIndex);
-    track = pipe->currentTrack;
-    if (track->animType & ANIM_TYPE_MTX) {
-        scale = 1.0f / (f32)(1 << (track->quantizeInfo & 0xF));
-        m = (f32*)current->setting;
-        m[0] *= scale;
-        m[1] *= scale;
-        m[2] *= scale;
-        m[3] *= scale;
-        m[4] *= scale;
-        m[5] *= scale;
-        m[6] *= scale;
-        m[7] *= scale;
-        m[8] *= scale;
-        m[9] *= scale;
-        m[10] *= scale;
-        m[11] *= scale;
-        CTRLSetMatrix(pipe->control, (MtxPtr)current->setting);
+    type = pipe->currentTrack->animType;
+    if (type & ANIM_TYPE_MTX) {
+        scale = 1.0f / (f32)(1 << (pipe->currentTrack->quantizeInfo & 0xF));
+        key = current;
+        ((f32*)key->setting)[0] *= scale;
+        ((f32*)key->setting)[1] *= scale;
+        ((f32*)key->setting)[2] *= scale;
+        ((f32*)key->setting)[3] *= scale;
+        ((f32*)key->setting)[4] *= scale;
+        ((f32*)key->setting)[5] *= scale;
+        ((f32*)key->setting)[6] *= scale;
+        ((f32*)key->setting)[7] *= scale;
+        ((f32*)key->setting)[8] *= scale;
+        ((f32*)key->setting)[9] *= scale;
+        ((f32*)key->setting)[10] *= scale;
+        ((f32*)key->setting)[11] *= scale;
+        CTRLSetMatrix(pipe->control, (MtxPtr)key->setting);
         return;
     }
-    if (track->animType & ANIM_TYPE_SCALE) {
+    if (type & ANIM_TYPE_SCALE) {
         DoScaleAnimation(pipe, current, next, mode);
     }
     if (pipe->currentTrack->animType & ANIM_TYPE_ROT_QUAT) {
@@ -143,7 +144,6 @@ void ANIMBind(ANIMPipe* pipe, Control* control, struct ANIMAnimTrack* track, f32
 // Binds `track` to a bone (NULL unbinds). With `blend` the current pose is saved as the blend
 // source; channels the track does not animate are copied from the bone's rest-pose control.
 void ACTSetBoneTrack(ActBone* bone, struct ANIMAnimTrack* track, f32 time, s32 blend) {
-    ANIMPipe* pipe;
     u8 restType;
     f32 x;
     f32 y;
@@ -159,15 +159,14 @@ void ACTSetBoneTrack(ActBone* bone, struct ANIMAnimTrack* track, f32 time, s32 b
     }
     if (bone->animPipe == NULL) {
         bone->animPipe = _OSAllocFromHeap(0x20, sizeof(ANIMPipe));
-        pipe = bone->animPipe;
-        pipe->time = 0.0f;
-        pipe->previousTime = 0.0f;
-        pipe->speed = 1.0f;
-        pipe->currentTrack = NULL;
-        pipe->control = NULL;
-        pipe->replaceHierarchyCtrl = 0;
-        pipe->forward = 1;
-        pipe->loop = 1;
+        bone->animPipe->time = 0.0f;
+        bone->animPipe->previousTime = 0.0f;
+        bone->animPipe->speed = 1.0f;
+        bone->animPipe->currentTrack = NULL;
+        bone->animPipe->control = NULL;
+        bone->animPipe->replaceHierarchyCtrl = 0;
+        bone->animPipe->forward = 1;
+        bone->animPipe->loop = 1;
     }
     bone->animPipe->keyIndex = 0;
     if (blend != 0) {
