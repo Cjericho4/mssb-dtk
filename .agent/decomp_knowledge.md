@@ -2,7 +2,12 @@
 
 This document summarizes the core patterns, compiler behaviors, and tooling insights gathered during the decompilation of the GameCube title *Mario Superstar Baseball* (GYQE01).
 
-## 1. GCC 2.6 / PowerPC PPC Behavior Patterns
+## 1. MWCC (CodeWarrior) PowerPC Behavior Patterns
+
+Compiler versions come from `configure.py`: the game code (the three RELs and the DOL `unk` units in
+`src/Unknown/`) and the runtime/TRK libs build with **GC/2.6**; MusyX and C3 with GC/1.3.2; the
+Dolphin SDK with GC/1.2.5n; the linker is GC/1.3.2. The RELs use `-inline noauto`, the DOL `unk`
+units `-inline auto` (§14).
 
 ### Global Address Re-loading
 The compiler often re-loads the base address of a global variable (using `lis` and `addi`) even if that address is already in a nearby register. 
@@ -58,6 +63,11 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **`try_function.py` on MATCH prints an empty second-to-last line** — don't grep only its tail.
 *   **Stop MWCC unrolling a constant-count loop**: `i = 0; do { ... a->entries[i] ...; i++; } while (i < N);` — `for`/`while` get fully unrolled (fn_3_1078F8, fn_3_109CE8).
 *   **Saved register reused across a call**: reuse the parameter variable (loop counter = `idx` param in fn_3_C0C4C; `list` param reassigned with the result in fn_3_BA1A0).
+*   **Global base in a fresh register although r3 is dead**: the function returns `void`; with a void return MWCC reuses the dead r3 parameter for the global base (processStadiumObjectFunction, whose caller ignores the result).
+*   **`srawi 16` / `clrlwi 16` split of one argument**: it is a packed u16 pair, `s32 hi = packed >> 16; u16 lo = packed;` (fn_8002244C).
+*   **Constant + index folded into a displacement where the target keeps `addi idx,BASE; slwi`**: keep the sum in a local, or pass `&tbl[BASE + id]` straight into an inline helper so it is sunk to the use (fn_8002244C).
+*   **Global pointer table re-read (`lis`/`addi`, index recomputed) after a call instead of kept in a saved register**: declare the table `volatile` (`ActMemBlock* volatile lbl_8017EBB0[20]`, fn_8002399C). Mark it FAKEMATCH if it is only there for codegen.
+*   **Unrolled `lbz; extsb.; blt` chain with `addi` pointer steps over a few slots**: `for (slot = 9; slot < 13; slot++) if (owner[slot] < 0) break;` (fn_80017098).
 *   **Float reg order after `fneg`+`fmuls` or `sin`/`cos`**: split into successive assignments to one local; store `sin`/`cos` into f32 locals and negate after (fn_3_F4C4C).
 *   **`bnelr` leaving r3 untouched**: the original had no return on that path (fn_3_109CE8).
 *   **Load scheduled from the global rather than a temp**: `global.field = table[x]; if (global.field ...)` (fn_3_10F5BC).
@@ -79,7 +89,7 @@ Compiler-generated constants must be written as literals (`100.0f`, `0.0f`, or `
 *   **Float args loaded before pointer args**: the callee prototype has the floats first (fn_3_C3E94).
 *   **Shared tail block placed before `return FALSE`**: `if (c) { switch {... case 3: goto done;} } else { done: ...; return TRUE; } return FALSE;` (fn_3_B254C).
 *   **`slwi` without `clrlslwi` indexing by a u16**: `(&arr[idx])[1]` rather than `arr[idx + 1]` (fn_3_91B9C).
-*   **`try_function.py` candidates**: omit the `// .text:` comment line (it duplicates); don't `git checkout` a file mid-iteration (wipes added includes).
+*   **`try_function.py` candidates**: omit the `// .text:` comment line (it duplicates); don't `git checkout` a file mid-iteration (wipes added includes). `--keep` replaces only the named function: helper definitions a candidate inserted before it stay in the file and must be removed by hand between experiments.
 *   **Block order from branch shape**: nest as `if (a >= 0) { if (!b) {...; return;} } else {...; return;}` instead of an if/else chain (fn_3_B6C9C); moving a local's declaration into the else block delays its initialiser (fn_3_E3668).
 *   **Load of `next` before a trailing call**: `bone = bone->next; GXSetTevDirect(..)` in the body, not in the `for` increment (fn_3_EEE3C).
 *   **Swapped `fcmpo` with `cror eq,gt,eq`**: `2.5 >= PSVECMag(&v)` instead of `PSVECMag(&v) <= 2.5` (fn_3_E28DC).
@@ -373,8 +383,8 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
     pointer-compare loop isn't ctr-converted; `volatile` reads/`volatile u8*` don't stop the unroller;
     `#pragma opt_unroll_loops off` had no effect; `-O3` on the unit gives the same diff (and the
     other 4 functions still match, so flags aren't the answer).  Still open: what source shape yields
-    a non-unrolled ctr loop here, and what occupied r28..r30.  Candidates tried are in
-    `.scratch/dd/` form: a..q.
+    a non-unrolled ctr loop here, and what occupied r28..r30.  The 17 candidate files (a..q)
+    were not kept; the forms are the ones listed above.
 
 ## 13. Nested loop in a static inline: web order and promoted-load write-back (Fable, 2026-10-23)
 
@@ -457,4 +467,7 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
     `lbz` in a register and re-extends (`extsb`) at each compare; `(s8)(flag = p->index1) != -2` in
     the loop condition plus `(s8)flag == -1` in the body gives that shape (one load, two `extsb`).
 *   `-inline auto` (DOL) does not inline a 70-line `static inline` helper (it became a `bl`); keep DOL
-    helpers small or write the body flat.
+    helpers small or write the body flat. It does inline an empty `return;` stub in the same unit,
+    so a candidate that calls an unwritten same-unit stub loses that call and its diff misleads.
+    Don't fix that with `#pragma dont_inline`: once the helpers had bodies, deleting the pragmas took
+    fn_80012B90 from 26% to 88% (`code_quality.md` §4a).

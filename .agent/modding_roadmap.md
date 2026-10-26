@@ -15,6 +15,10 @@ alongside for the byte-exact rebuild goal, but a later phase never waits on a ma
   white/black/grey characters, Petey). Tested in Rio: model, recolour and Mario's voice/announcer.
 - **GUI** (`tools/modding/clone_gui.py`): PRSH-style theme, colour-region checkboxes, full preview,
   narrow-window layout (#17); Windows exe built by `.github/workflows/build-gui.yml`.
+- **Clone Maker on Tauri** (#30): Rust core, byte-identical to the Python patcher on every
+  source/preset (#31, #32; `tools/clonemaker/core/README.md`), and the window on it with a portable
+  Windows exe from CI (#33; `tools/clonemaker/app/README.md`). The Python patcher stays the reference
+  (`tools/clonemaker/difftest.py`).
 - **Phase 2** (#1): menu art traced and patched (`character_select.md` §8).
 - **R1 data map** (#9) and **R2 roster flow** (#10), below.
 
@@ -22,8 +26,9 @@ alongside for the byte-exact rebuild goal, but a later phase never waits on a ma
 - Rio tests by the user: menu art (#2), restyled GUI + non-Mario clones (#3).
 - `fn_2_3624` match, five lines left (#4, `handoff_fn_2_3624.md`).
 - Docs consolidation (#19).
-- Clone Maker port to Tauri (Rust core + web UI), Windows first (#30; stages #31–#34, Mac #35). The
-  Python patcher stays the reference: the Rust output must be byte-identical (`tools/clonemaker/difftest.py`).
+- Clone Maker on Tauri: the user's Rio walk-through, then retire the PyInstaller GUI and point the
+  READMEs at the new app (#34); Mac (#35). Clone voices in donor mode (#29) on branch `voice-merge`
+  (`sounds.md` §6).
 
 ## Phases
 1. **Character-select code: understood and documented, matched where practical.**
@@ -90,8 +95,10 @@ the "enables" line says what each unlocks. Status: ⏳ not started, 🟡 in prog
   `sound.37`, DSP-ADPCM sample format, `.adp` music (stereo 48 kHz stream ADPCM, opened by path:
   data-only swap) and MusyX songs (`game_set.0`). Tools: `mssb_files.py sound-list / sound-export /
   sound-import / voice-swap / music-export` (identity round trip of all 48 groups, tested).
-  Open: lines 1, 2, 6, 8, 12; an `.adp` encoder; per-charID voice (needs a game.rel table edit);
-  the patcher's `--ui donor` voice gap (sounds.md §6).
+  Open: lines 1, 2, 6, 8, 12; an `.adp` encoder. Clone voices (#29): `--ui donor` and
+  `--ui source --no-gameplay` clones are silent in main; the fix (copy `8168` always, merge the
+  source into the donor bank, ARAM budget check) is on branch `voice-merge`, waiting for a Rio
+  test (sounds.md §6-§7).
 - **R5. Animation banks** 🟡 partial (#13, groundwork for phase 5). Documented in
   `animations.md`: code-backed track/action selection (7/8 unresolved), ANIM records and setting
   quantization, body hierarchy and bone-ID binding, sharing audit, playback and timing links.
