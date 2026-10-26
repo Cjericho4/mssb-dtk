@@ -257,7 +257,7 @@ void fn_8002399C(Gap8002244CActorSlot* slot, u16 slotIdx, u16 actorID, ActLayout
 typedef struct Gap8002244CActor { u8 _pad0[0x1BC0]; } Gap8002244CActor;
 extern Gap8002244CActor* lbl_8017EB40[28];
 Gap8002244CActor* _OSAllocFromHeap(s32 alignment, u32 size);
-void ActorObjectInitTable(s32 count);
+struct HugeAnimEntry68* ActorObjectInitTable(u16 count);
 void fn_80023AA4(void);
 void fn_80023B04(void);
 void fn_80023B90(void);

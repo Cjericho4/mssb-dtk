@@ -58,7 +58,11 @@ typedef struct Rep10C0State {
     u8 flag1972BC;
     u8 _pad1972BD[3];
     u8 flag1972C0;
-    u8 _pad1972C1[0x3A7];
+    u8 _pad1972C1[0x157];
+    u8 unk_0x197418;
+    u8 _pad197419[0x207];
+    f32 values197620[12];
+    u8 _pad197650[0x18];
     MenusCameraConfig camera; /* 0x197668 */
     u8 _pad197680[4];
     MenusMenuBuffer* buffer; /* 0x197684 */
@@ -78,7 +82,11 @@ typedef struct Rep10C0State {
     s16 unk1976FE;
     u8 _pad197700[6];
     s16 unk197706;
-    u8 _pad197708[0x3E];
+    u8 _pad197708[0xC];
+    s16 unk_0x197714;
+    u8 _pad197716[0x10];
+    s16 unk_0x197726;
+    u8 _pad197728[0x1E];
     s16 objectCount; /* 0x197746 */
     u8 _pad197748[2];
     s16 unk19774A;
@@ -116,7 +124,8 @@ typedef struct Rep10C0State {
     u8 _pad197857[0xC];
     s8 inputIndex; /* 0x197863 */
     u8 unk197864;
-    u8 _pad197865[0x62];
+    u8 _pad197865[0x3A];
+    s8 flags19789F[0x28];
     u8 copiedFlags[20]; /* 0x1978C7 */
     u8 _pad1978DB[0x18];
     u8 unk1978F3;
@@ -136,6 +145,6 @@ void fn_2_93C64(void);
 void fn_2_94604(u8 value);
 void fn_2_9461C(s16 value);
 void fn_2_94634(s32 index);
-void fn_2_946DC(void);
+void fn_2_946DC(s32 index);
 
 #endif // !__MENUS_rep_10C0_H_

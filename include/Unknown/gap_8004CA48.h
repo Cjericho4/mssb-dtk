@@ -43,7 +43,7 @@ typedef struct Gap8004CA48State {
 extern Gap8004CA48State lbl_803C5F74;
 
 void fn_8004CA48(s16 a, s16 b, s16 c, s16 d);
-void fn_8004CA6C(void);
+s32 fn_8004CA6C(s32 buttons);
 void fn_8004CC18(void);
 void fn_8004CC2C(void);
 void fn_8004CC4C(u8 a, u8 b, u8 c, s32 d, s16 e);

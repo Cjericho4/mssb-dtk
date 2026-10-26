@@ -10,6 +10,12 @@
 #include "game/rep_1C0.h"
 #include "game/rep_3448.h"
 
+#include "menus/gap_8E6A4.h"
+extern CompressedDiskRead lbl_2_data_1FF94;
+extern CompressedDiskRead lbl_2_data_1FF84;
+extern void fn_800111B4(struct MenusSceneArchive* archive);
+extern s32 fn_800627C4(void);
+extern void fn_800216F8(s32 mode, s32 (*callback)(void));
 extern CompressedDiskRead lbl_2_data_132DC[];
 extern CompressedDiskRead lbl_2_data_1326C[];
 extern CompressedDiskRead lbl_2_data_1325C[];
@@ -25,6 +31,7 @@ extern void starMissionRelated2(void);
 extern void fn_80053FE8(void);
 extern void fn_8003BF54(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void fn_800AD054(u32 high, u32 low);
+extern s16 lbl_2_data_373C[CHALLENGE_PURCHASE_COUNT];
 extern s16 lbl_2_data_3ED4[];
 extern s16 lbl_2_data_3EC8[];
 
@@ -114,8 +121,19 @@ void fn_2_4C3EC(void) {
 }
 
 // .text:0x0004C6A8 size:0x174
+/* Rebuild challenge purchase flags from the menu's saved and current selections. */
 void fn_2_4C6A8(void) {
-    return;
+    GameInitVariables* settings = &g_d_GameSettings;
+    s32 i;
+    for (i = 0; i < CHALLENGE_PURCHASE_COUNT; i++) settings->challengePurchaseFlags[i] = 0;
+    for (i = 0; i < CHALLENGE_PURCHASE_COUNT; i++) {
+        if (lbl_2_data_373C[i] == 0 && (s8)lbl_2_bss_1A8248->copiedFlags[i] != 0) {
+            settings->challengePurchaseFlags[i] = 1;
+        }
+    }
+    if (lbl_2_bss_1A8248->unk_0x444B != -1) {
+        settings->challengePurchaseFlags[lbl_2_bss_1A8248->unk_0x444B] = 1;
+    }
 }
 
 // .text:0x0004C81C size:0x1A8
@@ -287,8 +305,8 @@ BOOL fn_2_4EB64(void) {
 }
 
 // .text:0x0004EB9C size:0x1CFC
-void fn_2_4EB9C(void) {
-    return;
+s32 fn_2_4EB9C(void) {
+    return 0;
 }
 
 // .text:0x00050898 size:0x10C
@@ -304,8 +322,40 @@ void fn_2_50898(s32 value) {
 }
 
 // .text:0x000509A4 size:0x168
+/* Copy the selected menu text page and run its queued panel interaction. */
 void fn_2_509A4(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 result;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        lbl_2_bss_1A824C->panel.unk1BA8 = 0;
+        lbl_2_bss_1A824C->panel.unk1BA6 = 0;
+        memcpy(&lbl_2_bss_5600, lbl_2_data_1E99C[lbl_2_bss_1A824C->panel.unk1BAA], sizeof(MenusMenuBuffer));
+        lbl_2_bss_1A824C->panel.textBuffer = &lbl_2_bss_5600;
+        scene->field15_0x28++;
+    case 1:
+        result = fn_2_4EB9C();
+        if ((s16)result != 0) {
+            switch ((s16)result) {
+            case 1:
+                lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+                fn_800B0A14_removeQueue();
+                break;
+            default:
+                lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+                fn_800B0A14_removeQueue();
+                break;
+            }
+            scene->field15_0x28 = 0;
+        }
+        break;
+    case 2: break;
+    }
+    if (lbl_2_bss_1A824C->unk19783F == 1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+    }
 }
 
 // .text:0x00050B0C size:0xE8
@@ -846,8 +896,52 @@ void fn_2_54890(void) {
 }
 
 // .text:0x000549B4 size:0x184
+/* Load the menu archive, prepare its resources, and wait for the queued scene. */
 void fn_2_549B4(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        lbl_80366B18.archives[2] = ARAMTransfer(&lbl_2_data_1FF94, NULL, 1, NULL);
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        if (lbl_803C6CF8.allowLoad == 1) {
+            fn_800111B4(lbl_80366B18.archives[2]);
+            scene->field15_0x28 = 2;
+        }
+        break;
+    case 2:
+        if (fn_80035838(&lbl_2_data_1FF84, 10) != 0) scene->field15_0x28 = 3;
+        break;
+    case 3:
+        scene->loadingState = 0;
+        fn_800216F8(4, fn_800627C4);
+        scene->field15_0x28 = 4;
+        break;
+    case 4:
+        if (scene->loadingState != 0) {
+            scene->loadingState = 0;
+            scene->field15_0x28 = 5;
+        }
+        break;
+    case 5: {
+        DrawingSceneStruct* child;
+        lbl_2_bss_1A824C->objectCount = 1;
+        child = (DrawingSceneStruct*)fn_800B0A5C_insertQueue(fn_2_8E8A4, 2);
+        child->field15_0x28 = 0;
+        child->unkIndex2 = 12;
+        scene->loadingState = 0;
+        scene->field15_0x28 = 6;
+        break;
+    }
+    case 6:
+        if (scene->loadingState == 1) {
+            scene->currentDrawingItem->loadingState = 1;
+            fn_800B0A14_removeQueue();
+            scene->field15_0x28 = 0;
+        }
+        break;
+    }
 }
 
 // .text:0x00054B38 size:0x74

@@ -6,6 +6,8 @@
 #include "menus/gap_3C03C.h"
 
 
+enum { MENUS_ROSTER_SLOT_EMPTY = NUM_CHOOSABLE_CHARACTERS };
+
 typedef struct MenusTeamSelections {
     u8 _pad0[2];
     union {
@@ -23,6 +25,7 @@ typedef struct MenusAutoFillStrategy {
     u8 _pad0[2];
     u8 current; /* 0x2 random 0..2 */
     u8 previous; /* 0x3 avoid repeating the last strategy */
+    u8 controller; /* 0x4 */
 } MenusAutoFillStrategy;
 extern MenusAutoFillStrategy lbl_803CBD24;
 
@@ -178,7 +181,7 @@ void fn_2_C698(u8 index, u8 side);
 void fn_2_C7DC(void);
 void fn_2_CA60(void);
 void fn_2_CCBC(void);
-void fn_2_CCE0(void);
+void fn_2_CCE0(u8 side);
 void fn_2_CE44(void);
 void fn_2_DFAC(s32 side);
 void fn_2_EAE0(void);
@@ -189,7 +192,7 @@ void fn_2_F200(u8 side);
 void fn_2_FAA0(u8 side);
 void fn_2_FCB4(u8 side);
 void fn_2_102C8(u8 side);
-void fn_2_104FC(void);
+void fn_2_104FC(u16 pad);
 void fn_2_110B0(void);
 BOOL fn_2_112F4(DrawingSceneStruct* scene, s32 offset, s32 index, u16* ids, u16 value);
 void fn_2_11340(void);

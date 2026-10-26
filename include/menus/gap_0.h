@@ -9,7 +9,10 @@ typedef struct MenusControllerInput {
     u16 held;
     u8 _pad6[2];
     s8 status; /* 0x08 */
-    u8 _pad9[0x17];
+    u8 _pad9[7];
+    s8 stickX; /* 0x10 */
+    s8 stickY; /* 0x11 */
+    u8 _pad12[0xE];
 } MenusControllerInput;
 
 typedef struct MenusInputState {

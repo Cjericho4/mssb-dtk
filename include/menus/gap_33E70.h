@@ -9,7 +9,7 @@ void fn_2_34060(void);
 void fn_2_34214(void);
 void fn_2_3439C(void);
 void fn_2_34524(void);
-void fn_2_346D8(void);
+void fn_2_346D8(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_34844(void);
 void fn_2_349F8(void);
 void fn_2_34BCC(void);

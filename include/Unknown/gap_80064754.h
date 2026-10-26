@@ -22,7 +22,7 @@ void unsure_FillRosterPositions(s32 player);
 void characterSelectScreen(s32 player);
 s32 randRange(s32 low, s32 high); /* gap_80041348.c; that header clashes here (lbl_80361B20 view) */
 void fn_80066EAC(s32 side);
-void fn_800670A0(void);
+void fn_800670A0(u8 side);
 void fn_800671FC(void);
 void fn_80067264(void);
 void fn_800675C4(void);

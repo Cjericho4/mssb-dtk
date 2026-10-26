@@ -349,8 +349,30 @@ void fn_2_25200(void) {
 }
 
 // .text:0x000253B0 size:0x174
-void fn_2_253B0(void) {
-    return;
+/* Control a scripted pane and its playback flag during show and hide commands. */
+void fn_2_253B0(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x68 = 1;
+        slot->state = 0x25;
+        break;
+    case 5:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x68 = 0;
+        slot->state = 6;
+        break;
+    case 6:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x00025524 size:0x258
@@ -740,8 +762,33 @@ void fn_2_28948(void) {
 }
 
 // .text:0x00028D24 size:0x17C
-void fn_2_28D24(void) {
-    return;
+/* Show a scripted pane, or hide it after a 40-frame countdown. */
+void fn_2_28D24(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        slot->state = 0x25;
+        break;
+    case 0x25:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        break;
+    case 5:
+        slot->timer = 40;
+        slot->state = 6;
+        break;
+    case 6:
+        if (slot->timer-- <= 0) {
+            lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        }
+        break;
+    }
 }
 
 // .text:0x00028EA0 size:0x3CC
@@ -865,8 +912,32 @@ void fn_2_2BB34(void) {
 }
 
 // .text:0x0002BDA4 size:0x17C
-void fn_2_2BDA4(void) {
-    return;
+/* Set a scripted pane label and hide it after a nine-frame countdown. */
+void fn_2_2BDA4(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x5C = lbl_2_bss_1A824C->unk_0x197714 << 16;
+        slot->state = 0x25;
+        break;
+    case 5:
+        slot->timer = 9;
+        slot->state = 6;
+        break;
+    case 6:
+        if (slot->timer-- <= 0) {
+            lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        }
+        break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x0002BF20 size:0x288
@@ -880,8 +951,32 @@ void fn_2_2C1A8(void) {
 }
 
 // .text:0x0002C378 size:0x16C
-void fn_2_2C378(void) {
-    return;
+/* Show a scripted pane, or hide it after a nine-frame countdown. */
+void fn_2_2C378(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x68 = 1;
+        slot->state = 0x25;
+        break;
+    case 5:
+        slot->timer = 9;
+        slot->state = 6;
+        break;
+    case 6:
+        if (slot->timer-- <= 0) {
+            lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        }
+        break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x0002C4E4 size:0x1B4
@@ -915,8 +1010,38 @@ void fn_2_2CDA4(void) {
 }
 
 // .text:0x0002CF58 size:0x17C
-void fn_2_2CF58(void) {
-    return;
+/* Show a scripted pane and support delayed show commands with a one-frame timer. */
+void fn_2_2CF58(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x68 = 1;
+        slot->state = 0x25;
+        break;
+    case 8: case 0x1E: case 0x21:
+        slot->timer = 1;
+        slot->state++;
+        break;
+    case 9: case 0x1F: case 0x22:
+        if (slot->timer-- <= 0) {
+            lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+            slot->state = 0x25;
+        }
+        break;
+    case 5:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        break;
+    case 6: break;
+    case 0x24: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x0002D0D4 size:0x434
@@ -1022,8 +1147,30 @@ void fn_2_2E298(void) {
 }
 
 // .text:0x0002E44C size:0x17C
-void fn_2_2E44C(void) {
-    return;
+/* Position a scripted pane at screen center and control its playback visibility. */
+void fn_2_2E44C(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->pos.x = 320.0f;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->pos.y = 0.0f;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x68 = 1;
+        slot->state = 0x25;
+        break;
+    case 5:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        break;
+    case 3: break;
+    case 4: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x0002E5C8 size:0x208
@@ -1189,8 +1336,37 @@ void fn_2_30C4C(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
 }
 
 // .text:0x00030D80 size:0x178
-void fn_2_30D80(void) {
-    return;
+/* Select a pane label from the active menu row and hide it after fourteen frames. */
+void fn_2_30D80(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+    case 0x11: {
+        s32 row = lbl_2_bss_1A824C->unk_0x197726;
+        s32 label = 20;
+        if (lbl_2_bss_1A824C->flags19789F[slot->unkA + row] != 2) label = row;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x5C = label << 16;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        slot->state = 0x25;
+        break;
+    }
+    case 5:
+        slot->timer = 14;
+        slot->state = 6;
+        break;
+    case 6:
+        if (slot->timer-- <= 0) lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        break;
+    case 8: break;
+    case 0x24: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x00030EF8 size:0x1A4

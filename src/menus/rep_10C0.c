@@ -1,4 +1,5 @@
 #include "menus/rep_10C0.h"
+#include "menus/rep_04B0.h"
 
 extern MenusCameraConfig lbl_2_data_3BB0[];
 extern void fn_80011640(DrawingSceneStruct* src, DrawingSceneStruct* dst);
@@ -69,6 +70,24 @@ void fn_2_94634(s32 index) {
 }
 
 // .text:0x000946DC size:0x178
-void fn_2_946DC(void) {
-    return;
+/* Set a menu camera preset and seed the cached interpolation values. */
+void fn_2_946DC(s32 index) {
+    lbl_2_bss_1A824C->camera.position.x = lbl_2_data_3BB0[index].position.x;
+    lbl_2_bss_1A824C->camera.position.y = lbl_2_data_3BB0[index].position.y;
+    lbl_2_bss_1A824C->camera.position.z = lbl_2_data_3BB0[index].position.z;
+    lbl_2_bss_1A824C->camera.target.x = lbl_2_data_3BB0[index].target.x;
+    lbl_2_bss_1A824C->camera.target.y = lbl_2_data_3BB0[index].target.y;
+    lbl_2_bss_1A824C->camera.target.z = lbl_2_data_3BB0[index].target.z;
+    lbl_2_bss_1A824C->values197620[0] = lbl_2_bss_1A81D4.position.y;
+    lbl_2_bss_1A824C->values197620[1] = lbl_2_bss_1A81D4.position.z;
+    lbl_2_bss_1A824C->values197620[2] = lbl_2_bss_1A81D4.unk_0x54;
+    lbl_2_bss_1A824C->values197620[3] = 0.00001f + lbl_2_bss_1A81D4.position.y;
+    lbl_2_bss_1A824C->values197620[4] = 0.00001f + lbl_2_bss_1A81D4.position.z;
+    lbl_2_bss_1A824C->values197620[5] = 0.00001f + lbl_2_bss_1A81D4.unk_0x54;
+    lbl_2_bss_1A824C->values197620[6] = 0.00001f + lbl_2_bss_1A81D4.target.y;
+    lbl_2_bss_1A824C->values197620[7] = 0.00001f + lbl_2_bss_1A81D4.target.z;
+    lbl_2_bss_1A824C->values197620[8] = 0.00001f + lbl_2_bss_1A81D4.position.x;
+    lbl_2_bss_1A824C->values197620[9] = 0.00002f + lbl_2_bss_1A81D4.target.y;
+    lbl_2_bss_1A824C->values197620[10] = 0.00002f + lbl_2_bss_1A81D4.target.z;
+    lbl_2_bss_1A824C->values197620[11] = 0.00002f + lbl_2_bss_1A81D4.position.x;
 }

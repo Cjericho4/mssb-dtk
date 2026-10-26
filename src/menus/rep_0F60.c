@@ -9,6 +9,8 @@ extern u8 lbl_2_data_3CD0[];
 extern u8 lbl_800E869C[];
 extern hugeAnimStruct* lbl_2_bss_340140;
 extern f32 lbl_2_rodata_FB4;
+/* The owning DOL headers have conflicting shared-global views in this unit. */
+extern HugeAnimEntry68* ActorObjectInitTable(u16 count);
 
 // .text:0x0008ACE0 size:0x200
 void fn_2_8ACE0(void) {
@@ -27,8 +29,27 @@ void fn_2_8B118(f32 value) {
 }
 
 // .text:0x0008B158 size:0x168
+/* FAKEMATCH: preserve the nested initialization loop as a shared inline. */
+static inline void initMenuActors(s32 resource, s32 start, s32 count, s32 mode, s32 flags) {
+    s32 i;
+    for (i = start; i < start + count; i++) {
+        fn_800BDC88(lbl_2_bss_340140->entries_68, i, i, lbl_2_bss_340140->slots_2DA0[resource].unk0, mode, flags);
+        lbl_2_bss_340140->entries_68[i].unk34->unk99 = 1;
+        fn_800BD548((HugeAnimSubObj34*)&lbl_2_bss_340140->entries_68[i].unk34, 4, lbl_2_bss_340140->menuLights[0], lbl_2_bss_340140->menuLights[1], lbl_2_bss_340140->menuLights[2], lbl_2_bss_340140->menuLights[3]);
+        CTRLSetTranslation(&((HugeAnimCtrlEntry*)lbl_2_bss_340140->entries_68)[i].ctrl, lbl_2_rodata_FB4, lbl_2_rodata_FB4, lbl_2_rodata_FB4);
+        CTRLSetRotation(&((HugeAnimCtrlEntry*)lbl_2_bss_340140->entries_68)[i].ctrl, lbl_2_rodata_FB4, lbl_2_rodata_FB4, lbl_2_rodata_FB4);
+    }
+}
+
+/* Allocate four menu actor records and initialize each actor and its lights. */
 void fn_2_8B158(void) {
-    return;
+    s32 i;
+    lbl_2_bss_340140->field268_0x3078 = 4;
+    lbl_2_bss_340140->entries_2D94 = _OSAllocFromHeap(0x20, lbl_2_bss_340140->field268_0x3078 * sizeof(HugeAnimEntry2D94));
+    lbl_2_bss_340140->entries_68 = ActorObjectInitTable(lbl_2_bss_340140->field268_0x3078);
+    for (i = 0; i < lbl_2_bss_340140->field268_0x3078; i++) {
+        initMenuActors(i, i, 1, 0, 0);
+    }
 }
 
 // .text:0x0008B2C0 size:0x158

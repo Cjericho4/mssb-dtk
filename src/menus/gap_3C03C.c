@@ -161,8 +161,37 @@ void fn_2_3DC60(void) {
 }
 
 // .text:0x0003DDC4 size:0x164
+/* Show the confirmation panel, wait 16 frames, and close it on A or B. */
 void fn_2_3DDC4(void) {
-    return;
+    DrawingSceneStruct* scene=lbl_803CC1B8;
+    switch((s8)scene->field15_0x28) {
+    case 0:
+        lbl_2_bss_1A8234->flags[1][2]=1;
+        scene->unkIndex=16;
+        fn_80062890(56);
+        scene->field15_0x28=1;
+        break;
+    case 1:
+        if((*(s16*)&scene->unkIndex)--==0) scene->field15_0x28=2;
+        break;
+    case 2:
+        if(lbl_803C77B8.controllers[lbl_2_bss_1A824C->inputIndex].pressed & (PAD_BUTTON_A | PAD_BUTTON_B)) {
+            lbl_2_bss_1A8234->flags[8][2]=1;
+            scene->unkIndex=16;
+            scene->field15_0x28=3;
+        }
+        break;
+    case 3:
+        scene->currentDrawingItem->loadingState=1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28=0;
+        break;
+    }
+    if(lbl_2_bss_1A824C->unk19783F==1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState=1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28=0;
+    }
 }
 
 // .text:0x0003DF28 size:0x130
@@ -272,8 +301,39 @@ void fn_2_3E918(void) {
 }
 
 // .text:0x0003EA44 size:0x164
+/* Start the selection animation and finish the queued scene when it completes. */
 void fn_2_3EA44(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        scene->unkIndex = 1;
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        if ((*(s16*)&scene->unkIndex)-- == 0) {
+            scene->unkIndex = 360;
+            fn_2_72054(0, 9);
+            fn_2_72054(lbl_2_bss_1A8248->unk441E, 10);
+            scene->field15_0x28 = 2;
+        }
+        break;
+    case 2:
+        if (fn_2_8CC88(0) != 0) scene->field15_0x28 = 3;
+        break;
+    case 3:
+        if (lbl_2_bss_1A8248->unk441C == 5) {
+            lbl_2_bss_1A8248->choices[lbl_2_bss_1A8248->rep0B08Objects[0].unkB2].state = 3;
+        }
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
+    if (lbl_2_bss_1A824C->unk19783F == 1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+    }
 }
 
 // .text:0x0003EBA8 size:0x118
@@ -401,8 +461,40 @@ void fn_2_3EEF0(void) {
 }
 
 // .text:0x0003F004 size:0x184
+/* Wait for the selection animation, using an 80-frame fallback for two special entries. */
 void fn_2_3F004(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        scene->unkIndex = 1;
+        scene->field15_0x28 = 1;
+        break;
+    case 1:
+        if ((*(s16*)&scene->unkIndex)-- == 0) {
+            scene->unkIndex = 80;
+            fn_2_72054(0, 10);
+            scene->field15_0x28 = 2;
+        }
+        break;
+    case 2: {
+        u8 mode = lbl_2_bss_1A8248->unk441C;
+        if ((mode == 3 && lbl_2_bss_1A8248->unk441E == 1 && lbl_2_bss_1A8248->rep0B08Objects[0].unkB2 == 11) ||
+            (mode == 3 && lbl_2_bss_1A8248->unk441E == 5 && lbl_2_bss_1A8248->rep0B08Objects[0].unkB2 == 42)) {
+            if ((*(s16*)&scene->unkIndex)-- == 0) scene->field15_0x28 = 3;
+        } else if (fn_2_8CC88(0) != 0) scene->field15_0x28 = 3;
+        break;
+    }
+    case 3:
+        scene->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+        break;
+    }
+    if (lbl_2_bss_1A824C->unk19783F == 1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+    }
 }
 
 // .text:0x0003F188 size:0x114
@@ -886,8 +978,12 @@ BOOL fn_2_44F34(s32 index) {
 }
 
 // .text:0x00044F64 size:0x180
+/* Merge the current roster completion flags into the saved menu progress. */
 void fn_2_44F64(void) {
-    return;
+    s32 character;
+    for (character = 0; character < NUM_CHOOSABLE_CHARACTERS; character++) {
+        lbl_2_bss_1A8244->rosterFlags[character] |= lbl_2_bss_1A8248->rosterFlags[character];
+    }
 }
 
 // .text:0x000450E4 size:0x120
