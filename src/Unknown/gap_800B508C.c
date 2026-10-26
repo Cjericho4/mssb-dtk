@@ -4,11 +4,10 @@
 // Relocates a freshly loaded bank in place: every file offset (user data, sequence table, names,
 // track arrays, key arrays, key settings and interpolation payloads) becomes a pointer.
 void ANIMGet(ANIMBank* bank) {
-    u32 i;
     ANIMSequences* sequence;
     struct ANIMAnimTrack* track;
+    u32 i;
     KeyFrame* keys;
-    KeyFrame* key;
 
     if (bank->userDataSize != 0 && bank->userData != NULL) {
         bank->userData = (void*)((u32)bank->userData + (u32)bank);
@@ -17,17 +16,16 @@ void ANIMGet(ANIMBank* bank) {
     track = (struct ANIMAnimTrack*)(sequence + bank->numSequences);
     keys = (KeyFrame*)(track + bank->numTracks);
     bank->animSequences = (ANIMSequences*)((u32)bank->animSequences + (u32)bank);
-    for (i = 0; i < bank->numSequences; i++, sequence++) {
-        sequence->sequenceName = (char*)((u32)bank + (u32)sequence->sequenceName);
-        sequence->trackArray = (struct ANIMAnimTrack*)((u32)bank + (u32)sequence->trackArray);
+    for (i = 0; i < bank->numSequences; i++) {
+        sequence[i].sequenceName = (char*)((u32)bank + (u32)sequence[i].sequenceName);
+        sequence[i].trackArray = (struct ANIMAnimTrack*)((u32)bank + (u32)sequence[i].trackArray);
     }
-    for (i = 0; i < bank->numTracks; i++, track++) {
-        track->keyFrames = (KeyFrame*)((u32)bank + (u32)track->keyFrames);
+    for (i = 0; i < bank->numTracks; i++) {
+        track[i].keyFrames = (KeyFrame*)((u32)bank + (u32)track[i].keyFrames);
     }
-    key = keys;
-    for (i = 0; i < bank->numKeyFrames; i++, key++) {
-        key->setting = (char*)((u32)bank + (u32)key->setting);
-        key->interpolation = (char*)((u32)bank + (u32)key->interpolation);
+    for (i = 0; i < bank->numKeyFrames; i++) {
+        keys[i].setting = (char*)((u32)bank + (u32)keys[i].setting);
+        keys[i].interpolation = (char*)((u32)bank + (u32)keys[i].interpolation);
     }
 }
 
