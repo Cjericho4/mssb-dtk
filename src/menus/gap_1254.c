@@ -1021,8 +1021,27 @@ void fn_2_5184(void) {
 }
 
 // .text:0x000052CC size:0x178
+/* Hand the first controller to team two and move its cursor onto a free character. */
 void fn_2_52CC(void) {
-    return;
+    s32 cell;
+    lbl_2_bss_100B8.selectionFlags[0] = 1;
+    lbl_803C66B0.padSide[0] = 1;
+    lbl_2_bss_F468.cursor[lbl_803C66B0.padSide[0]] = 10;
+    lbl_803C5EA4.unkE = 1;
+    if (lbl_8034E9A0.charTaken[lbl_2_bss_F410.gridPick[1]] != 0) {
+        for (cell = 0; cell < 32; cell++) {
+            if (lbl_8034E9A0.charTaken[lbl_800FDE84[cell]] == 0) {
+                lbl_2_bss_F410.gridPick[1] = lbl_800FDE84[cell];
+                break;
+            }
+        }
+    }
+    switch (lbl_8034E9A0.controllerIndices[1]) {
+    case 0: fn_80050138(1, lbl_2_bss_F410.gridPick[1], -1, -1, -1, 0); break;
+    case 1: fn_80050138(1, -1, lbl_2_bss_F410.gridPick[1], -1, -1, 0); break;
+    case 2: fn_80050138(1, -1, -1, lbl_2_bss_F410.gridPick[1], -1, 0); break;
+    case 3: fn_80050138(1, -1, -1, -1, lbl_2_bss_F410.gridPick[1], 0); break;
+    }
 }
 
 // .text:0x00005444 size:0x3A4
