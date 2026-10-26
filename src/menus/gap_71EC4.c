@@ -9,6 +9,7 @@ extern void (*lbl_2_data_2A1E8[])(Rep0B08Obj*);
 #include "menus/rep_10C0.h"
 #include "menus/rep_0438.h"
 
+extern MenusSceneScript lbl_2_data_2AF4C;
 extern MenusSceneScript lbl_2_data_2DC8C;
 extern u8 lbl_2_data_2DC84[];
 extern MenusSceneScript lbl_2_data_2B4DC;
@@ -269,8 +270,16 @@ void fn_2_7308C(void) {
 }
 
 // .text:0x00073758 size:0x170
+/* Open the first team's roster display and assign the eight non-captain portraits. */
 void fn_2_73758(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 slot;
+    fn_80034E20(scene, &lbl_2_data_2AF4C);
+    for (slot = 1; slot < 9; slot++) {
+        lbl_80371C30[slot + (scene->unkIndex + 3)].obj->field_0x5C = lbl_803C6724.teams[0][slot] << 16;
+    }
+    lbl_803CBCD8.unk5 = 0;
+    lbl_803CC1B8->unk_00 = fn_2_7308C;
 }
 
 // .text:0x000738C8 size:0xCC
