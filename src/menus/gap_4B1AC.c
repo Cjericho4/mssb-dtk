@@ -287,8 +287,8 @@ BOOL fn_2_4EB64(void) {
 }
 
 // .text:0x0004EB9C size:0x1CFC
-void fn_2_4EB9C(void) {
-    return;
+s32 fn_2_4EB9C(void) {
+    return 0;
 }
 
 // .text:0x00050898 size:0x10C
@@ -304,8 +304,40 @@ void fn_2_50898(s32 value) {
 }
 
 // .text:0x000509A4 size:0x168
+/* Copy the selected menu text page and run its queued panel interaction. */
 void fn_2_509A4(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    s32 result;
+    switch ((s8)scene->field15_0x28) {
+    case 0:
+        lbl_2_bss_1A824C->panel.unk1BA8 = 0;
+        lbl_2_bss_1A824C->panel.unk1BA6 = 0;
+        memcpy(&lbl_2_bss_5600, lbl_2_data_1E99C[lbl_2_bss_1A824C->panel.unk1BAA], sizeof(MenusMenuBuffer));
+        lbl_2_bss_1A824C->panel.textBuffer = &lbl_2_bss_5600;
+        scene->field15_0x28++;
+    case 1:
+        result = fn_2_4EB9C();
+        if ((s16)result != 0) {
+            switch ((s16)result) {
+            case 1:
+                lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+                fn_800B0A14_removeQueue();
+                break;
+            default:
+                lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+                fn_800B0A14_removeQueue();
+                break;
+            }
+            scene->field15_0x28 = 0;
+        }
+        break;
+    case 2: break;
+    }
+    if (lbl_2_bss_1A824C->unk19783F == 1) {
+        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
+        fn_800B0A14_removeQueue();
+        scene->field15_0x28 = 0;
+    }
 }
 
 // .text:0x00050B0C size:0xE8
