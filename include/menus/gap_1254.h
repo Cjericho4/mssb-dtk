@@ -6,6 +6,8 @@
 #include "menus/gap_3C03C.h"
 
 
+enum { MENUS_ROSTER_SLOT_EMPTY = NUM_CHOOSABLE_CHARACTERS };
+
 typedef struct MenusTeamSelections {
     u8 _pad0[2];
     union {

@@ -35,6 +35,7 @@ extern u8 lbl_2_bss_100B4;
 extern u8 lbl_2_bss_3A8[NUM_CHOOSABLE_CHARACTERS]; /* per-charID handedness byte (challenge save): bit 0 stance, bits 1.. arm */
 extern u32 lbl_803CB750;
 extern s16 lbl_2_data_E88[2][9];
+extern LineUpEntry lbl_80353B98[2][9];
 /* gap_80064754.h cannot be included here because its shared-global views conflict. */
 extern void fn_800670A0(u8 side);
 
@@ -1527,8 +1528,25 @@ void fn_2_B324(void) {
 }
 
 // .text:0x0000B508 size:0x164
+/* Release the second team's non-captain characters and reset its lineup slots. */
 void fn_2_B508(void) {
-    return;
+    s32 character;
+    s32 slot;
+    for (character = 0; character < NUM_CHOOSABLE_CHARACTERS; character++) {
+        for (slot = 1; slot < 9; slot++) {
+            if (lbl_803C6724.teams[1][slot] == character) {
+                lbl_8034E9A0.charTaken[character] = 0;
+                fn_800506E8(lbl_8034E9A0.controllerIndices[1], character, 0);
+                fn_80067B40(1, character, 0);
+            }
+        }
+    }
+    for (slot = 1; slot < 9; slot++) {
+        lbl_80354720[1][slot].unk2 = slot;
+        lbl_80353B98[1][slot].unk2 = slot;
+        lbl_803C6724.teams[1][slot] = MENUS_ROSTER_SLOT_EMPTY;
+        lbl_803C6724.unk4A[1][slot] = 0;
+    }
 }
 
 // .text:0x0000B66C size:0x2B4
