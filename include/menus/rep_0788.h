@@ -40,7 +40,7 @@ void fn_2_24EB0(s16 state);
 void fn_2_24EC4(void);
 void fn_2_25050(void);
 void fn_2_25200(void);
-void fn_2_253B0(void);
+void fn_2_253B0(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_25524(void);
 void fn_2_2577C(DrawingSceneStruct* scene, Rep0788Item* item);
 void fn_2_25850(DrawingSceneStruct* scene, Rep0788Item* item);
