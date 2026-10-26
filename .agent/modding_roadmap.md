@@ -90,8 +90,10 @@ the "enables" line says what each unlocks. Status: ⏳ not started, 🟡 in prog
   `sound.37`, DSP-ADPCM sample format, `.adp` music (stereo 48 kHz stream ADPCM, opened by path:
   data-only swap) and MusyX songs (`game_set.0`). Tools: `mssb_files.py sound-list / sound-export /
   sound-import / voice-swap / music-export` (identity round trip of all 48 groups, tested).
-  Open: lines 1, 2, 6, 8, 12; an `.adp` encoder; per-charID voice (needs a game.rel table edit);
-  the patcher's `--ui donor` voice gap (sounds.md §6).
+  Open: lines 1, 2, 6, 8, 12; an `.adp` encoder. Clone voices (#29): `--ui donor` and
+  `--ui source --no-gameplay` clones are silent in main; the fix (copy `8168` always, merge the
+  source into the donor bank, ARAM budget check) is on branch `voice-merge`, waiting for a Rio
+  test (sounds.md §6-§7).
 - **R5. Animation banks** 🟡 partial (#13, groundwork for phase 5). Documented in
   `animations.md`: code-backed track/action selection (7/8 unresolved), ANIM records and setting
   quantization, body hierarchy and bone-ID binding, sharing audit, playback and timing links.

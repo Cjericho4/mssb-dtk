@@ -13,7 +13,7 @@ instead of searching prose. Each fact has one home (the "owns" column); other do
 | Find, extract or replace a game file | `data_map.md` §1 TL;DR, §4 (tables), §5 (formats); tool: `tools/datamap/README.md` |
 | Edit in-game text | `data_map.md` §1, §6; `tools/datamap/README.md` (text-export / text-import) |
 | Edit stats, chemistry, abilities; per-character gameplay tables | `stats.md` §0, then the section for the table; tool: `tools/datamap/README.md` (stats-export / stats-import) |
-| Voices, announcer, SFX, music; voice swaps | `sounds.md` §1, then §2 (files), §3 (voice lines), §4 (announcer), §5 (music), §6 (swaps); tool: `tools/datamap/README.md` (sound-* / voice-swap / music-export) |
+| Voices, announcer, SFX, music; voice swaps | `sounds.md` §1, then §2 (files), §3 (voice lines), §4 (announcer), §5 (music), §6 (swaps, clone voices), §7 (ARAM budget); tool: `tools/datamap/README.md` (sound-* / voice-swap / music-export) |
 | Skin picker (phase 3) | `roster_flow.md` §6 (design), §1–§5 (data flow); `modding_roadmap.md` phase 3 |
 | Character load chain (models, textures, anim banks, gloves) | `character_modding_report.md` §1–§3 |
 | Animation bank swaps, sequences, bone binding, playback (R5) | `animations.md` (owns R5); parser: `tools/datamap/animations.py`; full audit: `audit_animations.py` |
@@ -32,7 +32,7 @@ instead of searching prose. Each fact has one home (the "owns" column); other do
 | `roster_flow.md` | roster → match data flow (R2): copy sites, skin-byte audit, actor drivers, re-load points, phase-3 skin design | ~8k |
 | `animations.md` | character ANIM track/action map, bank/key format, body bone hierarchy, sharing, playback, swap requirements and R5 unknowns | ~6k |
 | `stats.md` | stats.0 layout, every CharacterStats field, star skills, chemistry, captain teams, game.rel per-character tables, DOL animation windows (R3) | ~5k |
-| `sounds.md` | MusyX sound groups (every row), voice banks and voice-line table, announcer, DSP-ADPCM format, `.adp` streams and MusyX songs, voice swaps (R4) | ~5k |
+| `sounds.md` | MusyX sound groups (every row), voice banks and voice-line table, announcer, DSP-ADPCM format, `.adp` streams and MusyX songs, voice swaps and clone voices (R4, #29), ARAM budget | ~5k |
 | `decomp_knowledge.md` | compiler idioms and matching tricks by date; §1 and §13 are the most reused | ~14k |
 | `code_quality.md` | code-quality rules (adopted; summary in CLAUDE.md), cleanup checklist, tooling, cleanup log | ~4k |
 | `handoff_fn_2_3624.md` | state of the one unmatched phase-1 function | ~2k |

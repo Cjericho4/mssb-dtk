@@ -26,7 +26,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800EEFE0 / 0x800EF0C0 / 0x800EF1A0 | `res_dol2[1]` / `[15]` / `[29]` | copies of the HUD card / common / grid descriptors | CS §6, §8.3 |
 | 0x800EF508 | `sound` / `lbl_800EF508` | 48 MusyX group descriptors (stored); voice bank = [5+u]; every row | SN §2 |
 | 0x800EF808 | `lbl_800EF808` | sound state: resources[48] (+4), pushed gids (+0x340), roster slot being loaded unk39A | SN §3 |
-| 0x800EFBB4 | `lbl_800EFBB4` | sndInit config {64 voices, 48, 16, 1 studio, flags 1, ARAM 0x800000} | SN §2 |
+| 0x800EFBB4 | `lbl_800EFBB4` | sndInit config {64 voices, 48, 16, 1 studio, flags 1, ARAM 0x800000}; sample heap ARAM 0x4500..0x804000 | SN §2, §7 |
 | 0x800EFBE8 | `stadium` / `lbl_800EFBE8` | 21 stadium model descriptors, index stadium*3+variant (13 distinct); anchor of gap_8001E460.c `.data` | DM §4; CMR §6 |
 | 0x800EFD38 (0xECD38) | `master` / `lbl_800EFD38` | 515 ARAM master descriptors {flags,0x40000000\|size,blob offset,comp}; blob-relative | DM §4; CMR §3 |
 | 0x800EFD38 +[0..32] | master bodies | 33 base body models (not charID-indexed) | CMR §3 |
