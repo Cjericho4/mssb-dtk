@@ -108,8 +108,8 @@ typedef struct ActBone {
     /* 0x0E8 */ ANIMPipe* animPipe;
     /* 0x0EC */ MtxPtr forwardMtx;
     /* 0x0F0 */ MtxPtr skinMtx;
-    /* 0x0F4 */ MtxPtr orientationInvMtx;
-    /* 0x0F8 */ MtxPtr skinInvTransposeMtx;
+    /* 0x0F4 */ MtxPtr skinInvTransposeMtx;     /* inverse-transpose of skinMtx for normals; only with lighting data */
+    /* 0x0F8 */ MtxPtr orientationInvMtx;       /* inverse bind pose (BuildBoneSkinOrientationMatrix) */
     /* 0x0FC */ DSLink drawPriorityLink;
     u8 _pad104[0x134 - 0x104];
     /* 0x134 */ u16 animFlags;                  /* 1 after init; ACTSetAnimation sets 0x20 when bits 0x1C are set */
@@ -130,8 +130,8 @@ typedef struct GameActor {                  /* ACTActor + game fields */
     /* 0x1C */ ControlExt worldControl;
     /* 0x60 */ MtxPtr forwardMtxArray;
     /* 0x64 */ MtxPtr skinMtxArray;
-    /* 0x68 */ MtxPtr orientationInvMtxArray;
-    /* 0x6C */ MtxPtr skinInvTransposeMtxArray;
+    /* 0x68 */ MtxPtr skinInvTransposeMtxArray; /* NULL without lighting data */
+    /* 0x6C */ MtxPtr orientationInvMtxArray;
     /* 0x70 */ DSList drawPriorityList;
     /* 0x7C */ u32 skHeader;
     /* 0x80 */ u16 unk80;
