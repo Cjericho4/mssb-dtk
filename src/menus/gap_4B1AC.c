@@ -25,6 +25,7 @@ extern void starMissionRelated2(void);
 extern void fn_80053FE8(void);
 extern void fn_8003BF54(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void fn_800AD054(u32 high, u32 low);
+extern s16 lbl_2_data_373C[CHALLENGE_PURCHASE_COUNT];
 extern s16 lbl_2_data_3ED4[];
 extern s16 lbl_2_data_3EC8[];
 
@@ -114,8 +115,19 @@ void fn_2_4C3EC(void) {
 }
 
 // .text:0x0004C6A8 size:0x174
+/* Rebuild challenge purchase flags from the menu's saved and current selections. */
 void fn_2_4C6A8(void) {
-    return;
+    GameInitVariables* settings = &g_d_GameSettings;
+    s32 i;
+    for (i = 0; i < CHALLENGE_PURCHASE_COUNT; i++) settings->challengePurchaseFlags[i] = 0;
+    for (i = 0; i < CHALLENGE_PURCHASE_COUNT; i++) {
+        if (lbl_2_data_373C[i] == 0 && (s8)lbl_2_bss_1A8248->copiedFlags[i] != 0) {
+            settings->challengePurchaseFlags[i] = 1;
+        }
+    }
+    if (lbl_2_bss_1A8248->unk_0x444B != -1) {
+        settings->challengePurchaseFlags[lbl_2_bss_1A8248->unk_0x444B] = 1;
+    }
 }
 
 // .text:0x0004C81C size:0x1A8
