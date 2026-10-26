@@ -1170,8 +1170,34 @@ void fn_2_6484(void) {
 }
 
 // .text:0x00006608 size:0x17C
+/* Route roster input to each active side and finish both sides when requested. */
 void fn_2_6608(void) {
-    return;
+    s32 side;
+    GameInitVariables* settings;
+    if (lbl_2_bss_F468.flags59[0] != 0) fn_2_3624(0);
+    else if (lbl_2_bss_F468.flags59[1] != 0 && lbl_2_bss_100B8.selectionFlags[0] != 0 && g_d_GameSettings._10 == 0) fn_2_3624(0);
+    else fn_2_104FC(0);
+    settings = &g_d_GameSettings;
+    if (settings->_10 == 1) {
+        if (lbl_2_bss_F468.flags59[1] != 0) fn_2_3624(1);
+        else fn_2_104FC(1);
+    }
+    if (lbl_2_bss_F468.unk56 != 0) {
+        lbl_803C5EA4.flags8[1] = 0;
+        lbl_803C5EA4.flags8[0] = 0;
+        lbl_2_bss_100B8.flags30[1] = 0;
+        lbl_2_bss_100B8.flags30[0] = 0;
+        if (settings->_10 == 0) {
+            lbl_2_bss_F468.cursor[0] = 9;
+            lbl_803C66B0.padSide[0] = 0;
+        }
+        for (side = 0; side < 2; side++) {
+            if (lbl_2_bss_F468.flags59[side] != 0) {
+                fn_800625A4(side, 0x1B);
+                lbl_2_bss_F468.flags59[side] = 0;
+            } else fn_800625A4(side, 0xB);
+        }
+    }
 }
 
 // .text:0x00006784 size:0x100
@@ -2009,7 +2035,7 @@ void fn_2_102C8(u8 side) {
 }
 
 // .text:0x000104FC size:0xBB4
-void fn_2_104FC(void) {
+void fn_2_104FC(u16 pad) {
     return;
 }
 

@@ -191,7 +191,7 @@ void fn_2_F200(u8 side);
 void fn_2_FAA0(u8 side);
 void fn_2_FCB4(u8 side);
 void fn_2_102C8(u8 side);
-void fn_2_104FC(void);
+void fn_2_104FC(u16 pad);
 void fn_2_110B0(void);
 BOOL fn_2_112F4(DrawingSceneStruct* scene, s32 offset, s32 index, u16* ids, u16 value);
 void fn_2_11340(void);
