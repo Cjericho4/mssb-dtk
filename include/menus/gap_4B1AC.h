@@ -58,7 +58,8 @@ typedef struct MenusResourceTables {
 extern MenusResourceTables lbl_80366B18;
 
 typedef struct MenusCompletionState {
-    u8 _pad0[0xC6];
+    u8 rosterFlags[NUM_CHOOSABLE_CHARACTERS];
+    u8 _pad36[0x90];
     u8 completed[5][4];
     u8 _padDA[4];
     u8 counts[6];

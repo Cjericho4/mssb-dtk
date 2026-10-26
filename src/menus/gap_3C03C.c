@@ -946,8 +946,12 @@ BOOL fn_2_44F34(s32 index) {
 }
 
 // .text:0x00044F64 size:0x180
+/* Merge the current roster completion flags into the saved menu progress. */
 void fn_2_44F64(void) {
-    return;
+    s32 character;
+    for (character = 0; character < NUM_CHOOSABLE_CHARACTERS; character++) {
+        lbl_2_bss_1A8244->rosterFlags[character] |= lbl_2_bss_1A8248->rosterFlags[character];
+    }
 }
 
 // .text:0x000450E4 size:0x120
