@@ -79,8 +79,8 @@ void fn_800BDC88(void) {
 }
 
 // .text:0x800BDD74 size:0x118
-void ActorObjectInitTable(void) {
-    return;
+struct HugeAnimEntry68* ActorObjectInitTable(u16 count) {
+    return 0;
 }
 
 // .text:0x800BDE8C size:0x14
