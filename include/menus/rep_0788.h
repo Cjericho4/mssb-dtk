@@ -75,7 +75,7 @@ void fn_2_2835C(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_284B0(void);
 void fn_2_28794(void);
 void fn_2_28948(void);
-void fn_2_28D24(void);
+void fn_2_28D24(DrawingSceneStruct* scene, MenusResourceSlot* slot);
 void fn_2_28EA0(void);
 void fn_2_2926C(void);
 void fn_2_29884(void);

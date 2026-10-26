@@ -762,8 +762,33 @@ void fn_2_28948(void) {
 }
 
 // .text:0x00028D24 size:0x17C
-void fn_2_28D24(void) {
-    return;
+/* Show a scripted pane, or hide it after a 40-frame countdown. */
+void fn_2_28D24(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        slot->state = 0x25;
+        break;
+    case 0x25:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        break;
+    case 5:
+        slot->timer = 40;
+        slot->state = 6;
+        break;
+    case 6:
+        if (slot->timer-- <= 0) {
+            lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        }
+        break;
+    }
 }
 
 // .text:0x00028EA0 size:0x3CC
