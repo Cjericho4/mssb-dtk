@@ -1010,8 +1010,38 @@ void fn_2_2CDA4(void) {
 }
 
 // .text:0x0002CF58 size:0x17C
-void fn_2_2CF58(void) {
-    return;
+/* Show a scripted pane and support delayed show commands with a one-frame timer. */
+void fn_2_2CF58(DrawingSceneStruct* scene, MenusResourceSlot* slot) {
+    s32 result = fn_2_53BC8(slot);
+    if ((s16)result != -1) slot->state = result;
+    switch (slot->state) {
+    case 0:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        slot->state = 0x26;
+        break;
+    case 1: break;
+    case 2:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + slot->index].obj->field_0x68 = 1;
+        slot->state = 0x25;
+        break;
+    case 8: case 0x1E: case 0x21:
+        slot->timer = 1;
+        slot->state++;
+        break;
+    case 9: case 0x1F: case 0x22:
+        if (slot->timer-- <= 0) {
+            lbl_80371C30[scene->unkIndex + slot->index].obj->flags |= 2;
+            slot->state = 0x25;
+        }
+        break;
+    case 5:
+        lbl_80371C30[scene->unkIndex + slot->index].obj->flags &= ~2;
+        break;
+    case 6: break;
+    case 0x24: break;
+    case 0x25: break;
+    }
 }
 
 // .text:0x0002D0D4 size:0x434
