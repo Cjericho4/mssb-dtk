@@ -309,6 +309,18 @@ sets `unk1E9 = 1` and queues `master[515]` (the blob) as one mode-2 transfer to 
 `fn_8002254C` loads a body's texture overlay right after the body (`bodyBuffer + *(u32*)bodyBuffer`,
 mode 3 from `bodyAramAddrs`); `fn_80022634` runs the 18-entry load queue.
 
+**`fn_800698F8` (charID -> menu grid index) vs the Clone Maker's `FINDCHAR_PATCH`** (Codex reading
+2026-10-27; retail 27 lines from a match). Retail scans the 32 base charIDs, then the 22 colour
+variants, mapping each variant to its family's base grid index 0..31; when `useAltBirdoGrid` is set
+it returns Birdo's alternate 0x20 once and clears the flag; any other charID ends in `OSPanic`. The
+16-instruction patch reads `lbl_800E8558[charID].uniqueIdx` directly, keeps the Birdo alternate and
+the flag clear, and gives the same result for every valid charID 0..53 while `uniqueIdx` is
+consistent. Difference: **no bounds check and no panic**, so a negative or >= 54 charID reads past the
+table instead of stopping. Every gameplay and voice caller found passes a roster charID or guards
+negatives, but a mod that feeds other IDs through it would misbehave silently.
+`fn_80067B40` (99.2%, 8 register lines) marks or queries all five members of a colour family; the
+name-box label path (#19) depends on that.
+
 ## 9. Debugging a broken clone in Dolphin / Rio
 
 From the retired `tools/modding/README_WINDOWS.md`. The flags are the patcher's (`mssb-clone` and

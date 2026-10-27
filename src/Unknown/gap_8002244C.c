@@ -1,4 +1,10 @@
 #include "Unknown/gap_8002244C.h"
+/* Partial view of hugeAnimStruct (other views: UnknownHeaders.h, gap_8001196C.h); reconcile with them. */
+typedef struct Gap8002244CHugeAnim {
+    u8 _pad0[0x60];
+    struct HugeAnimEntry68* actorEntries;
+} Gap8002244CHugeAnim;
+extern Gap8002244CHugeAnim g_hugeAnimStruct;
 
 /* inline copy of fn_80022CB4 (defined later in this unit, so -inline auto cannot pick it up) */
 static inline BOOL queueLoadInline(Gap8002244CDiskDesc* desc, void* dest, s32 mode, void* aramAddr,
@@ -466,8 +472,16 @@ void fn_80023AA4(void) {
 }
 
 // .text:0x80023B04 size:0x8C
-void fn_80023B04(void) {
-    return;
+/* Carve `count` actor memory blocks from one allocation and create the 13-entry animation table. */
+void fn_80023B04(s32 count) {
+    s32 i;
+    lbl_8017EBB0[0] = _OSAllocFromHeap(32, count * ACTOR_MEM_BLOCK_SIZE);
+    i = 1;
+    do {
+        lbl_8017EBB0[i] = (ActMemBlock*)((u8*)lbl_8017EBB0[i - 1] + ACTOR_MEM_BLOCK_SIZE); /* do-while: assumes count >= 2 */
+    } while (++i < count);
+    lbl_803CBC5C = ACTOR_MEM_BLOCK_SIZE;
+    g_hugeAnimStruct.actorEntries = ActorObjectInitTable(13);
 }
 
 // .text:0x80023B90 size:0x164

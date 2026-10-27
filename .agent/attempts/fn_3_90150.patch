@@ -1,0 +1,56 @@
+fn_3_90150 Codex candidate (2026-10-27, builds, not matched). Apply from repo root with git apply.
+
+diff --git a/include/game/m_sound.h b/include/game/m_sound.h
+index 9bc3022e..64844adc 100644
+--- a/include/game/m_sound.h
++++ b/include/game/m_sound.h
+@@ -64,7 +64,7 @@ void fn_3_8FC80(void);
+ void fn_3_8FF18(void);
+ u32 fn_3_8FF5C(s32 soundID, f32 x, f32 y, f32 z);
+ void fn_3_90064(s32 soundID);
+-void fn_3_90150(void);
++u32 fn_3_90150(s32 charID, s32 line);
+ void sndRemoveListener(void* listener);
+ 
+ 
+diff --git a/src/game/m_sound.c b/src/game/m_sound.c
+index 05747d42..a1a5f553 100644
+--- a/src/game/m_sound.c
++++ b/src/game/m_sound.c
+@@ -25,9 +25,15 @@ typedef struct {
+ 
+ /* Sound tables starting at .data 0x8148. */
+ typedef struct {
+-    u8 _pad0[0x1C4];
++    u8 _pad0[0x20];
++    u16 voiceBase[54];
++    u8 _pad8C[0x1C4 - 0x8C];
+     SongSettings songSettings[0x10];  /* 0x1C4 */
+-    u8 _pad1E4[0x798 - 0x1E4];
++    u8 _pad1E4[0x3E8 - 0x1E4];
++    u8 voiceVolume[0x180];
++    u8 voicePan[0x180];
++    f32 voiceScale;
++    u8 _pad6EC[0x798 - 0x6EC];
+     SongEntry songs[19];              /* 0x798 */
+     u8 _pad80A[0x2];
+     SongEntry practiceSongs[1];       /* 0x80C */
+@@ -536,8 +542,16 @@ void fn_3_90064(s32 soundID) {
+ }
+ 
+ // .text:0x00090150 size:0xD0 mapped:0x806CF1E4
+-void fn_3_90150(void) {
+-    return;
++u32 fn_3_90150(s32 charID, s32 line) {
++    u8* mix = lbl_3_data_8148.voiceVolume;
++    s32 volume = mix[line];
++    s32 pan = mix[line + 0x180];
++    f32 scale = lbl_3_data_8148.voiceScale;
++    u8 scaledVolume = (s32)((f32)volume * scale);
++    u8 scaledPan = (s32)((f32)pan * scale);
++    SND_VOICEID vid = sndFXStartEx((u16)(lbl_3_data_8148.voiceBase[charID] + line), scaledVolume, 0x3F, 0);
++    sndFXCtrl(vid, 0x5B, scaledPan);
++    return vid;
+ }
+ 
+ // .text:0x00090220 size:0x74 mapped:0x806CF2B4

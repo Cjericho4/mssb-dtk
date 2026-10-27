@@ -1,0 +1,22 @@
+fn_3_90220 Codex candidate (2026-10-27, builds, not matched). Apply from repo root with git apply.
+
+diff --git a/src/game/m_sound.c b/src/game/m_sound.c
+index 05747d42..c73bae32 100644
+--- a/src/game/m_sound.c
++++ b/src/game/m_sound.c
+@@ -541,9 +541,12 @@ void fn_3_90150(void) {
+ }
+ 
+ // .text:0x00090220 size:0x74 mapped:0x806CF2B4
+-u32 fn_3_90220(s32 arg0, s32 arg1) {
+-    u8 pan = lbl_3_data_8530.pan[arg1];
+-    SND_VOICEID vid = sndFXStartEx(arg1 + lbl_3_data_8168[arg0], lbl_3_data_8530.volume[arg1], 0x3F, 0);
++u32 fn_3_90220(s32 charID, s32 line) {
++    u8* mix = &lbl_3_data_8530.volume[line];
++    u16 sound = lbl_3_data_8168[charID];
++    u8 volume = *mix;
++    u8 pan = mix[0x180];
++    SND_VOICEID vid = sndFXStartEx((u16)(sound + line), volume, 0x3F, 0);
+ 
+     sndFXCtrl(vid, 0x5B, pan);
+     return vid;

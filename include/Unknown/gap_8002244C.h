@@ -1,5 +1,6 @@
 #ifndef __UNKNOWN_gap_8002244C_H_
 #define __UNKNOWN_gap_8002244C_H_
+#define ACTOR_MEM_BLOCK_SIZE 0x86A0 /* one actor's memory block (fn_80023B04) */
 #define LOAD_QUEUE_SIZE 18 /* ring of pending ARAM/disc loads (recs, flag1C8 write / flag1C9 read) */
 
 #include "mssbTypes.h"
@@ -162,7 +163,7 @@ extern Gap8002244CActor* lbl_8017EB40[28];
 void* _OSAllocFromHeap(s32 alignment, u32 size);
 struct HugeAnimEntry68* ActorObjectInitTable(u16 count);
 void fn_80023AA4(void);
-void fn_80023B04(void);
+void fn_80023B04(s32 count);
 void fn_80023B90(void);
 void fn_80023CF4(BOOL enabled);
 s32 fn_80023D3C(void);
