@@ -296,6 +296,19 @@ original source *defined* the tables in the same file. Defining them as initiali
   body 13's 0x195B0; BlueShyGuy 44: 0x5BE0 vs 0x16320), and `fn_8002204C` only uses it when
   `buf == NULL`. Do not "fix" it by resizing the entry.
 
+**ARAM blob setup (`fn_800227E4`, Codex reading 2026-10-27, not matched; `fn_8002254C` / `fn_80022634`
+matched).** It allocates the blob in ARAM with `fn_800A6418(0x4D6600)`; that literal (the `lis`/`addi`
+pair the Clone Maker rewrites) is used **only** for the allocation, with no second copy and no bounds
+check against descriptor offsets. It then sets every master descriptor's ARAM address to
+`aramBase + discOffset` for all 515 entries (54 bodies, 378 sub-items, 54 skeletons, 29 stadium
+models), fills `bodyAramAddrs` / `subItemAramAddrs` / `aramAddrs` / `stadiumAramAddrs` (+0x1D8..1E4),
+sets `unk1E9 = 1` and queues `master[515]` (the blob) as one mode-2 transfer to `aramBase` with callback
+`fn_800227A0`, which ORs `0xF` into `+0x1EA` (bit 0 bodies, 1 skeletons, 2 probably sub-items,
+3 stadium models resident). So growing the blob is safe as long as the new size is written to that
+`lis`/`addi` pair and the whole blob still fits in ARAM; nothing else in the game rereads it.
+`fn_8002254C` loads a body's texture overlay right after the body (`bodyBuffer + *(u32*)bodyBuffer`,
+mode 3 from `bodyAramAddrs`); `fn_80022634` runs the 18-entry load queue.
+
 ## 9. Debugging a broken clone in Dolphin / Rio
 
 From the retired `tools/modding/README_WINDOWS.md`. The flags are the patcher's (`mssb-clone` and

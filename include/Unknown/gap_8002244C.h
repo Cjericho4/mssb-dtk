@@ -1,5 +1,6 @@
 #ifndef __UNKNOWN_gap_8002244C_H_
 #define __UNKNOWN_gap_8002244C_H_
+#define LOAD_QUEUE_SIZE 18 /* ring of pending ARAM/disc loads (recs, flag1C8 write / flag1C9 read) */
 
 #include "mssbTypes.h"
 
@@ -9,7 +10,7 @@
 
 
 
-typedef struct Gap8002244CLoad { u8 _pad0[0x715]; u8 complete; } Gap8002244CLoad;
+typedef struct Gap8002244CLoad { u8 _pad0[0x715]; s8 complete; } Gap8002244CLoad;
 extern Gap8002244CLoad lbl_803C6CF8;
 void fn_800B0A14_removeQueue(void);
 u8* memset(u8* memory, s32 value, u32 size);
@@ -63,17 +64,21 @@ typedef struct Gap8002244CRecord {
     /* 0x14 */ s32 param;
 } Gap8002244CRecord;
 typedef struct Gap8002244CFlags {
-    u8 header[0x18];
+    union {
+        u8 header[0x18];
+        Gap8002244CRecord active;
+    };
     union {
         u8 records[0x1B0];
-        Gap8002244CRecord recs[18];
+        Gap8002244CRecord recs[LOAD_QUEUE_SIZE];
     };
     s8 flag1C8, flag1C9;
-    /* 0x1CA */ u8 pending1CA;
+    /* 0x1CA */ s8 pending1CA;
     u8 _pad1CB;
     u32 current; /* 0x1CC */
     u32 pending; /* 0x1D0 */
-    u8 _pad1D4[8];
+    u8 _pad1D4[4];
+    /* 0x1D8 */ void** bodyAramAddrs;
     /* 0x1DC */ void** subItemAramAddrs;
     /* 0x1E0 */ void** skeletonAramAddrs;
     u8 _pad1E4[4];
@@ -96,7 +101,7 @@ typedef struct Gap8002244CObj {
 extern s32 lbl_803CBC60;
 
 void fn_8002244C(s32 arg0, Gap8002244CLoadBlock* block, s32 packedID);
-void fn_8002254C(void);
+void fn_8002254C(s32 desc, void* bodyBuffer, s32 masterIndex);
 void fn_80022620(s32 arg0, Gap8002244CLoadBlock* block, s32 packedID);
 void fn_80022634(void);
 void fn_800227A0(void);

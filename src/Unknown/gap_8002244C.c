@@ -4,7 +4,7 @@
 static inline BOOL queueLoadInline(Gap8002244CDiskDesc* desc, void* dest, s32 mode, void* aramAddr,
                                    Gap8002244CLoadCallback callback, s32 param) {
     Gap8002244CRecord* rec;
-    s8 next = (lbl_803716B8.flag1C8 + 1) % 18;
+    s8 next = (lbl_803716B8.flag1C8 + 1) % LOAD_QUEUE_SIZE;
     if (next == lbl_803716B8.flag1C9 || (dest == NULL && callback == NULL)) {
         return FALSE;
     }
@@ -35,8 +35,12 @@ void fn_8002244C(s32 arg0, Gap8002244CLoadBlock* block, s32 packedID) {
 }
 
 // .text:0x8002254C size:0xD4
-void fn_8002254C(void) {
-    return;
+/* A loaded body begins with its aligned byte size; queue the paired texture overlay after it. */
+void fn_8002254C(s32 desc, void* bodyBuffer, s32 masterIndex) {
+    u32 bodySize = *(u32*)bodyBuffer;
+    u8* overlayDest = (u8*)bodyBuffer + bodySize;
+    queueLoadInline(&lbl_800EFD38[masterIndex], overlayDest, 3,
+                    lbl_803716B8.bodyAramAddrs[masterIndex], fn_80022620, 0);
 }
 
 // .text:0x80022620 size:0x14
@@ -44,9 +48,44 @@ void fn_80022620(s32 arg0, Gap8002244CLoadBlock* block, s32 packedID) {
     lbl_803716B8.unk1E8 = 0;
 }
 
+/* Conflicting views: gap_8001196C.h / gap_8001E460.h declare ARAMTransfer with their own descriptor types. */
+extern void* ARAMTransfer(Gap8002244CDiskDesc* desc, void* dest, s32 mode, void* aramAddr);
+
 // .text:0x80022634 size:0x16C
+/* Advance the load queue: finish the active transfer (its callback), start the next queued one, or go idle. */
 void fn_80022634(void) {
-    return;
+    s32 done;
+    Gap8002244CRecord* rec;
+
+    if (!lbl_803716B8.pending1CA) {
+        done = TRUE;
+    } else if (lbl_803C6CF8.complete != 1) {
+        done = FALSE;
+    } else {
+        if (lbl_803716B8.active.callback != NULL) {
+            lbl_803716B8.active.callback((s32)lbl_803716B8.active.desc,
+                                            (Gap8002244CLoadBlock*)lbl_803716B8.active.dest,
+                                            lbl_803716B8.active.param);
+        }
+        if (lbl_803716B8.flag1C9 != lbl_803716B8.flag1C8) {
+            rec = &lbl_803716B8.recs[lbl_803716B8.flag1C9];
+            rec->dest = ARAMTransfer(rec->desc, rec->dest, rec->mode, rec->aramAddr);
+            lbl_803716B8.active = *rec;
+            lbl_803716B8.flag1C9 = (lbl_803716B8.flag1C9 + 1) % LOAD_QUEUE_SIZE;
+            goto queued;
+        } else {
+            lbl_803716B8.active.callback = NULL;
+            lbl_803716B8.pending1CA = 0;
+            done = TRUE;
+            goto finished;
+        }
+queued:
+        done = FALSE;
+    }
+finished:
+    if (done && lbl_803716B8.unk1E8 == 0) {
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x800227A0 size:0x44
@@ -102,7 +141,7 @@ void fn_80022B68(void) {
 BOOL fn_80022CB4(Gap8002244CDiskDesc* desc, void* dest, s32 mode, void* aramAddr, Gap8002244CLoadCallback callback,
                  s32 param) {
     Gap8002244CRecord* rec;
-    s8 next = (lbl_803716B8.flag1C8 + 1) % 18;
+    s8 next = (lbl_803716B8.flag1C8 + 1) % LOAD_QUEUE_SIZE;
     if (next == lbl_803716B8.flag1C9 || (dest == NULL && callback == NULL)) {
         return FALSE;
     }

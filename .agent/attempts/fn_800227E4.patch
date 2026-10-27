@@ -1,0 +1,88 @@
+fn_800227E4 (ARAM blob setup) Codex best: builds, 103 lines off. Apply from repo root with git apply.
+
+diff --git a/include/Unknown/gap_8002244C.h b/include/Unknown/gap_8002244C.h
+index 2f151ec1..746ae685 100644
+--- a/include/Unknown/gap_8002244C.h
++++ b/include/Unknown/gap_8002244C.h
+@@ -73,10 +73,16 @@ typedef struct Gap8002244CFlags {
+     u8 _pad1CB;
+     u32 current; /* 0x1CC */
+     u32 pending; /* 0x1D0 */
+-    u8 _pad1D4[8];
+-    /* 0x1DC */ void** subItemAramAddrs;
+-    /* 0x1E0 */ void** skeletonAramAddrs;
+-    u8 _pad1E4[4];
++    /* 0x1D4 */ u8* aramBase;
++    union {
++        struct {
++            /* 0x1D8 */ void** bodyAramAddrs;
++            /* 0x1DC */ void** subItemAramAddrs;
++            /* 0x1E0 */ void** skeletonAramAddrs;
++            /* 0x1E4 */ void** stadiumAramAddrs;
++        };
++        /* 0x1D8 */ void** tierAramAddrs[4];
++    };
+     /* 0x1E8 */ u8 unk1E8;
+     u8 unk1E9;
+     u8 flags;
+diff --git a/src/Unknown/gap_8002244C.c b/src/Unknown/gap_8002244C.c
+index 04ca7220..586d2478 100644
+--- a/src/Unknown/gap_8002244C.c
++++ b/src/Unknown/gap_8002244C.c
+@@ -60,8 +60,55 @@ void fn_800227A0(void) {
+ }
+ 
+ // .text:0x800227E4 size:0x1E8
++/* Place the 515 master descriptors into one ARAM blob and queue its disc transfer. */
++extern u32 fn_800A6418(u32 size);
++extern void* lbl_8017E320[520];
++extern u16 lbl_803CB7E0[4];
++extern Gap8002244CDiskDesc lbl_800F1D68[1];
+ void fn_800227E4(void) {
+-    return;
++    Gap8002244CDiskDesc* desc;
++    Gap8002244CDiskDesc* scan;
++    void** addrs;
++    void*** tierField;
++    u16* tierCount;
++    s32 pair;
++    s32 i;
++    s32 count;
++    u8* base = (u8*)fn_800A6418(0x4D6600);
++
++    lbl_803716B8.aramBase = base;
++    lbl_803716B8.unk1E9 = 1;
++    desc = lbl_800EFD38;
++    addrs = lbl_8017E320;
++    tierField = &lbl_803716B8.tierAramAddrs[0];
++    tierCount = lbl_803CB7E0;
++    for (pair = 0; pair < 2; pair++) {
++        count = *tierCount++;
++        *tierField++ = addrs;
++        i = 0;
++        scan = desc;
++first_tier:
++        if (i < count) {
++            addrs[i] = base + scan->discOffset;
++            i++;
++            scan++;
++            goto first_tier;
++        }
++        addrs += count;
++        desc = scan;
++        count = *tierCount++;
++        *tierField++ = addrs;
++        i = 0;
++second_tier:
++        if (i < count) {
++            addrs[i] = base + desc->discOffset;
++            i++;
++            desc++;
++            goto second_tier;
++        }
++        addrs += count;
++    }
++    queueLoadInline(lbl_800F1D68, base, 2, NULL, (Gap8002244CLoadCallback)fn_800227A0, 0);
+ }
+ 
+ // .text:0x800229CC size:0x58
