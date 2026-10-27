@@ -40,8 +40,29 @@ void LITAlloc(Gap800BD3A0Light** out) {
 }
 
 // .text:0x800BD478 size:0xD0
-void fn_800BD478(void) {
-    return;
+/* Applies the active render state to visible display objects referenced by the table. */
+void fn_800BD478(GapBD478Source* source, GapBD478Table* table) {
+    GapBD478Record* record;
+    s32 j;
+    s32 i;
+    struct Gap800B993CObj* display;
+    for (i = 0; i < table->count; i++) {
+        record = &table->records[i];
+        if (record->flags & GAPBD478_FLAGS_UNK_0x18) {
+            for (j = 0; j < source->list->count; j++) {
+                if (source->list->objects[j]->id == record->objectId) {
+                    if (record->index == GAPBD478_INDEX_NONE) {
+                        break;
+                    }
+                    display = source->list->objects[j]->display;
+                    if (display != NULL) {
+                        fn_800BC824(display, fn_800BF068()->unk_0x08);
+                    }
+                    break;
+                }
+            }
+        }
+    }
 }
 
 // .text:0x800BD548 size:0x128
@@ -55,8 +76,6 @@ void fn_800BD670(void) {
 }
 
 // .text:0x800BD8C4 size:0x160
-/* Applies pending animation changes to each active stadium actor, then updates visibility. */
-/* Applies pending animation changes to each active stadium actor, then updates visibility. */
 /* Applies pending animation changes to each active stadium actor, then updates visibility. */
 void fn_800BD8C4(struct HugeAnimCtrlObj* rawTable, Mtx viewMtx) {
     /* FAKEMATCH: declaration order steers registers; rows are addressed from the table base so

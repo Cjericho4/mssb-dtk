@@ -64,7 +64,8 @@ typedef struct Gap800BD3A0Entry {
 } Gap800BD3A0Entry;
 typedef struct Gap800BD3A0State {
     /* 0x0 */ u8 drawShadows;
-    u8 _pad1[0xB];
+    u8 _pad1[7];
+    s32 unk_0x08;
     struct Gap800BD3A0Tlut* tlut; /* 0xC */
     u8 _pad10[0x4];
     /* 0x14 */ Gap800BD3A0Entry* entries;
@@ -85,7 +86,39 @@ void LITInitDir(Gap800BD3A0Light* light, f32 x, f32 y, f32 z);
 void LITInitPos(Gap800BD3A0Light* light, f32 x, f32 y, f32 z);
 void LITInitAttn(Gap800BD3A0Light* light, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
 void LITAlloc(Gap800BD3A0Light** out);
-void fn_800BD478(void);
+struct Gap800B993CObj;
+void fn_800BC824(struct Gap800B993CObj* display, s32 value);
+typedef struct GapBD478Object {
+    u16 id; /* 0x00 */
+    u8 _pad02[0x12];
+    struct Gap800B993CObj* display; /* 0x14 */
+} GapBD478Object;
+typedef struct GapBD478List {
+    u8 _pad00[6];
+    u16 count; /* 0x06 */
+    u8 _pad08[0x10];
+    GapBD478Object** objects; /* 0x18 */
+} GapBD478List;
+typedef struct GapBD478Source {
+    GapBD478List* list; /* 0x00 */
+} GapBD478Source;
+#define GAPBD478_INDEX_NONE 0xFFFF
+#define GAPBD478_FLAGS_UNK_0x18 0x18 /* bits 3|4: record is processed; meaning unknown */
+typedef struct GapBD478Record {
+    u16 index; /* 0x00 */
+    u16 objectId; /* 0x02 */
+    u16 unk_0x04;
+    u16 flags; /* 0x06 */
+    u8 _pad08[0x14];
+} GapBD478Record;
+STATIC_ASSERT(sizeof(GapBD478Record) == 0x1C);
+typedef struct GapBD478Table {
+    u8 _pad00[6];
+    u16 count; /* 0x06 */
+    u8 _pad08[0x2C];
+    GapBD478Record records[1]; /* 0x34 */
+} GapBD478Table;
+void fn_800BD478(GapBD478Source* source, GapBD478Table* table);
 void fn_800BD548(void);
 void fn_800BD670(void);
 struct HugeAnimCtrlObj;
