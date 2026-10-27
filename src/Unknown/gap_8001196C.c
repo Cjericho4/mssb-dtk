@@ -1419,8 +1419,28 @@ void fn_800189B8(void) {
 }
 
 // .text:0x800189E4 size:0x154
+/* Allocate the four slots' track-15 (extra pose) bank buffers, each as big as the largest character's. */
 void fn_800189E4(void) {
-    return;
+    u32 maxSize = 0;
+    u32 size;
+    u32 aligned;
+    s32 charID;
+    s32 j;
+    u8* bank;
+    Gap8001196CDiskDesc* desc = lbl_803CB790;
+    for (charID = 0; charID < NUM_CHOOSABLE_CHARACTERS; charID++) {
+        size = desc[charID * SUBFILE_TRACKS + 15].sizeFlags & 0x0FFFFFFF; /* track 15, uncompressed size */
+        if (maxSize < size) maxSize = size;
+    }
+    aligned = (maxSize + 31) & ~31;
+    g_hugeAnimStruct.maxTrack15Size = aligned;
+    bank = _OSAllocFromHeap(32, aligned * 4);
+    g_hugeAnimStruct.allocatedAnimBanks = bank;
+    for (j = 0; j < 4; j++) {
+        g_hugeAnimStruct.animBanks[j].bankE = bank;
+        g_hugeAnimStruct.slots[j].slotTables[5] = NULL;
+        bank += aligned;
+    }
 }
 
 // .text:0x80018B38 size:0x3C

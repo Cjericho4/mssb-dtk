@@ -234,7 +234,11 @@ typedef struct Gap8001196CAnimTable {
     u8 _padB30[0xC04 - 0xB30];
     /* 0x0C04 */ Gap8001196CAnim slots[13];
     /* 0x2C50 */ Gap8001196CAnim* slotPtrs[13];
-    u8 _pad2C84[0x2CAC - 0x2C84];
+    u8 _pad2C84[4];
+    /* 0x2C88 */ u8* allocatedAnimBanks;
+    u8 _pad2C8C[0x2CA4 - 0x2C8C];
+    /* 0x2CA4 */ u32 maxTrack15Size;
+    u8 _pad2CA8[4];
     /* 0x2CAC */ u8* sharedAnimBank;
     union {
         /* 0x2CB0 */ u8* runningBankBuffers[4];
@@ -290,6 +294,7 @@ struct Gap8001E460Object;
 void fn_8001FDD4(struct Gap8001E460Object* obj);
 u8* fn_8002204C(s32 charID, u8* buf);
 void* ARAMTransfer(Gap8001196CDiskDesc* desc, void* dest, u8 loadInfo, void* aramAddress);
+void* _OSAllocFromHeap(s32 heap, u32 size);
 void* memcpy(void* dest, const void* src, u32 n);
 BOOL fn_80016B60(Gap8001196CAnim* anim);
 BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 unk258, u8 slotKind, u8 variant);
