@@ -1,0 +1,168 @@
+fn_80014204 / fn_800145F8 (bat/glove sub-item file buffer allocators) Codex candidate: builds, 255 / 173 lines off. Apply from repo root with git apply.
+
+diff --git a/include/Unknown/gap_8001196C.h b/include/Unknown/gap_8001196C.h
+index 037cfc51..1e3dea5f 100644
+--- a/include/Unknown/gap_8001196C.h
++++ b/include/Unknown/gap_8001196C.h
+@@ -14,8 +14,8 @@ void fn_800126EC(void);
+ void LoadModel(void);
+ u8 fn_80013680(struct Gap8001196CAnim* anim);
+ u8 fn_80012B90(struct Gap8001196CAnim* anim);
+-void fn_80014204(void);
+-void fn_800145F8(void);
++void fn_80014204(s32 pairGroups);
++void fn_800145F8(s32 scanAllCharacters);
+ void fn_80014990(void);
+ void fn_80014A18(void);
+ void fn_80014D4C(void);
+@@ -67,7 +67,10 @@ extern u8 lbl_803CBBFC;                      /* fn_80013680: obj1 loaded */
+ extern u8 lbl_803CBBFD;                      /* fn_80013680: obj0 loaded */
+ extern u8* lbl_803CBC00;                     /* fn_80013680: body texture archive */
+ extern Gap8001196CSubItemEntry* lbl_803CBC20; /* fn_80013680: entry being filled */
+-extern s16 lbl_800EEAAC[54];                 /* glove/attachment bone-list base per character */
++extern s16 lbl_800EEAAC[54];                 /* base index of six sub-item file descriptors per character */
++typedef struct Gap8001196CItemDesc { u32 flags; u32 sizeFlags; u32 discOffset; u32 packedSize; } Gap8001196CItemDesc;
++extern Gap8001196CItemDesc* lbl_803CB7A8;
++extern u8* lbl_803CBC24;
+ extern u8 lbl_803CBBFA;
+ extern s16 lbl_800EEB18[54];                 /* charID -> model id (-1 = none) */
+ struct Gap8001196CLoadArg;
+@@ -230,8 +233,7 @@ typedef struct Gap8001196CAnimTable {
+     /* 0x00B8 */ void* unkB8;
+     u8 _padBC[0x13C - 0xBC];
+     /* 0x013C */ Gap8001196CActorEntry* subItemActorEntries; /* actor entries for bats/gloves */
+-    /* 0x0140 */ Gap8001196CSubItemEntry subItemEntries[12]; /* [slotKind*3 + k], three bat/glove pairs per slot kind (0x140..0xB30) */
+-    u8 _padB30[0xC04 - 0xB30];
++    /* 0x0140 */ Gap8001196CSubItemEntry subItemEntries[13]; /* [slotKind*3 + k], three bat/glove pairs per slot kind (0x140..0xB30) */
+     /* 0x0C04 */ Gap8001196CAnim slots[13];
+     /* 0x2C50 */ Gap8001196CAnim* slotPtrs[13];
+     u8 _pad2C84[4];
+diff --git a/src/Unknown/gap_8001196C.c b/src/Unknown/gap_8001196C.c
+index 96189e48..3f0cddb0 100644
+--- a/src/Unknown/gap_8001196C.c
++++ b/src/Unknown/gap_8001196C.c
+@@ -460,13 +460,120 @@ u8 fn_80013680(struct Gap8001196CAnim* anim) {
+ }
+ 
+ // .text:0x80014204 size:0x3F4
+-void fn_80014204(void) {
+-    return;
++void fn_80014204(s32 pairGroups) {
++    s32 charID;
++    s32 descIndex = 0;
++    s32 i;
++    s32 entryCount;
++    s32 maxSize = 0;
++    s32 size;
++    u32 alignedSize;
++    Gap8001196CSubItemEntry* entry;
++
++    for (charID = 0; charID < 54; charID++) {
++        if (lbl_800EEAAC[charID] >= 0) {
++            size = lbl_803CB7A8[descIndex + 0].sizeFlags & 0x0FFFFFFF;
++            if (maxSize < size) maxSize = size;
++            size = lbl_803CB7A8[descIndex + 1].sizeFlags & 0x0FFFFFFF;
++            if (maxSize < size) maxSize = size;
++            size = lbl_803CB7A8[descIndex + 2].sizeFlags & 0x0FFFFFFF;
++            if (maxSize < size) maxSize = size;
++            size = lbl_803CB7A8[descIndex + 3].sizeFlags & 0x0FFFFFFF;
++            if (maxSize < size) maxSize = size;
++            size = lbl_803CB7A8[descIndex + 4].sizeFlags & 0x0FFFFFFF;
++            if (maxSize < size) maxSize = size;
++            size = lbl_803CB7A8[descIndex + 5].sizeFlags & 0x0FFFFFFF;
++            if (maxSize < size) maxSize = size;
++            descIndex += 6;
++        }
++    }
++    alignedSize = (maxSize + 31) & ~31;
++    entryCount = pairGroups * 3;
++    lbl_803CBC24 = _OSAllocFromHeap(32, entryCount * 2 * alignedSize);
++    for (i = 0; i < entryCount; i++) {
++        entry = &g_hugeAnimStruct.subItemEntries[i];
++        entry->obj0.buf = lbl_803CBC24 + (2 * i) * alignedSize;
++        entry->obj1.buf = lbl_803CBC24 + (2 * i + 1) * alignedSize;
++        entry->obj0.index0 = 2 * i;
++        entry->obj1.index0 = 2 * i + 1;
++        entry->textureArchive = NULL;
++        entry->valid = 0;
++        entry->arm = 0xFF;
++        entry->stance = 0xFF;
++        entry->charID = -1;
++        entry->slotKind = -1;
++        entry->prevSlotKind = -1;
++    }
+ }
+ 
+ // .text:0x800145F8 size:0x398
+-void fn_800145F8(void) {
+-    return;
++void fn_800145F8(s32 scanAllCharacters) {
++    s32 team;
++    s32 slot;
++    s32 charID;
++    s32 descIndex;
++    s32 i;
++    u32 maxSize = 0;
++    u32 size;
++    u32 alignedSize;
++    Gap8001196CSubItemEntry* entry;
++
++    if (scanAllCharacters == 0) {
++        for (team = 0; team < 2; team++) {
++            for (slot = 0; slot < 9; slot++) {
++                charID = inMemRoster[team][slot].charID;
++                descIndex = lbl_800EEAAC[charID];
++                if (descIndex >= 0) {
++                            size = lbl_803CB7A8[descIndex + 0].sizeFlags & 0x0FFFFFFF;
++                    if (maxSize < size) maxSize = size;
++                    size = lbl_803CB7A8[descIndex + 1].sizeFlags & 0x0FFFFFFF;
++                    if (maxSize < size) maxSize = size;
++                    size = lbl_803CB7A8[descIndex + 2].sizeFlags & 0x0FFFFFFF;
++                    if (maxSize < size) maxSize = size;
++                    size = lbl_803CB7A8[descIndex + 3].sizeFlags & 0x0FFFFFFF;
++                    if (maxSize < size) maxSize = size;
++                    size = lbl_803CB7A8[descIndex + 4].sizeFlags & 0x0FFFFFFF;
++                    if (maxSize < size) maxSize = size;
++                    size = lbl_803CB7A8[descIndex + 5].sizeFlags & 0x0FFFFFFF;
++                    if (maxSize < size) maxSize = size;
++                }
++            }
++        }
++    } else {
++        for (charID = 0; charID < 54; charID++) {
++            descIndex = lbl_800EEAAC[charID];
++            if (descIndex >= 0) {
++                    size = lbl_803CB7A8[descIndex + 0].sizeFlags & 0x0FFFFFFF;
++                if (maxSize < size) maxSize = size;
++                size = lbl_803CB7A8[descIndex + 1].sizeFlags & 0x0FFFFFFF;
++                if (maxSize < size) maxSize = size;
++                size = lbl_803CB7A8[descIndex + 2].sizeFlags & 0x0FFFFFFF;
++                if (maxSize < size) maxSize = size;
++                size = lbl_803CB7A8[descIndex + 3].sizeFlags & 0x0FFFFFFF;
++                if (maxSize < size) maxSize = size;
++                size = lbl_803CB7A8[descIndex + 4].sizeFlags & 0x0FFFFFFF;
++                if (maxSize < size) maxSize = size;
++                size = lbl_803CB7A8[descIndex + 5].sizeFlags & 0x0FFFFFFF;
++                if (maxSize < size) maxSize = size;
++            }
++        }
++    }
++    alignedSize = (maxSize + 31) & ~31;
++    lbl_803CBC24 = _OSAllocFromHeap(32, 26 * alignedSize);
++    for (i = 0; i < 13; i++) {
++        entry = &g_hugeAnimStruct.subItemEntries[i];
++        entry->obj0.buf = lbl_803CBC24 + (2 * i) * alignedSize;
++        entry->obj1.buf = lbl_803CBC24 + (2 * i + 1) * alignedSize;
++        entry->obj0.index0 = 2 * i;
++        entry->obj1.index0 = 2 * i + 1;
++        entry->textureArchive = NULL;
++        entry->valid = 0;
++        entry->arm = 0xFF;
++        entry->stance = 0xFF;
++        entry->charID = -1;
++        entry->slotKind = -1;
++        entry->prevSlotKind = -1;
++    }
+ }
+ 
+ // .text:0x80014990 size:0x88

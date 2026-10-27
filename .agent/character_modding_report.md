@@ -113,6 +113,16 @@ R5 owns the bank format, track/action map and hierarchy audit: [animations.md](a
 * **Gloves:** `lbl_800EEAAC[charID]` (= charID*6) is the start of the actor's 6-entry
   attachment-bone list, read as `lhax(tbl, charID*2)` by `fn_80011CA8`, `LoadModel`,
   `fn_80013680`, `fn_80014204`, `fn_800145F8`, `fn_8001D180`.
+  Correction (Codex reading 2026-10-27, not matched): `fn_80014204` and `fn_800145F8` do **not** pick
+  bones. They size the bat/glove **file buffers**: `lbl_800EEAAC[charID]` is a signed base index into
+  six 16-byte sub-item descriptors (via `lbl_803CB7A8`; negative = no items), and each allocator takes
+  the largest `sizeFlags & 0x0FFFFFFF`, rounded up to 32 B. `fn_80014204` scans all 54 rows;
+  `fn_800145F8` scans either the 18 active roster charIDs (arg 0) or all 54 rows, and allocates
+  13 x 2 slices. **The roster-scoped pass means a character loaded later with a bigger sub-item file
+  than the roster maximum would overrun its slice**: a modded bat/glove must not exceed the largest
+  one already on the field unless allocation is redone. Clones are safe (their row is the source's,
+  and they are on the roster). The parent bone comes from `attachSubItemBone`:
+  `owner.boneIndices[lbl_803CB7B4[k]]`; arm/stance and slotKind choose the pair in `fn_80012B90`.
 * **Model buffer sizes** (`fn_80018024`, Codex reading 2026-10-27, not matched): the body buffers are
   allocated once from the **largest track 0/1 descriptor size across all 54 characters**, rounded up to
   32 B (four buffers, plus alternates in mode 6). A bigger custom body therefore fits when its disc
