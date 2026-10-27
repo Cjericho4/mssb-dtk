@@ -51,7 +51,7 @@ void fn_3_E1DB8(void) {
 // .text:0x000E1FA8 size:0x8C mapped:0x8072103C
 void fn_3_E1FA8(UnknownStruct_EF3D4* obj) {
     ActorAnimState* state = obj->unk74;
-    Actor* actor = state->actor;
+    GameActor* actor = state->actor;
     if (state->time + state->speed > 900.0f) {
         state->time = 180.0f;
         state->setTime = 1;

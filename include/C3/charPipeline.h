@@ -1,7 +1,9 @@
 #ifndef _DOLPHIN_CP_H_
 #define _DOLPHIN_CP_H_
 
-#include "C3/actor.h"
+#include "C3/control.h"
+#include "charPipeline/structures/Tree.h"
+#include "charPipeline/structures/List.h"
 #include "C3/anim.h"
 #include "C3/control.h"
 #include "C3/geoPalette.h"

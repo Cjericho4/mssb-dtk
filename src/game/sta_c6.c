@@ -311,7 +311,7 @@ static inline void setAnimTime(ActorAnimState* state, f32 time) {
 void fn_3_E67F4(void) {
     f32 time = 20.0f;
     u32 i;
-    Actor* actor;
+    GameActor* actor;
 
     for (i = 0; i < 7; i++) {
         lbl_3_data_196B4[i] = 0;

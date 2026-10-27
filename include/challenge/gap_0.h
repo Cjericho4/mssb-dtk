@@ -6,7 +6,7 @@
 #include "UnknownHeaders.h"
 #include "challenge/gap_1538.h"
 
-void fn_1_0(ANIMBank** animBank, char* name);
+void fn_1_0(ANIMBank* animBank);
 void fn_1_20(void);
 void fn_1_E8(void);
 void fn_1_1B0(u32* table, s32 count);

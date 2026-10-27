@@ -473,11 +473,7 @@ s32 fn_3_D5444(unknown_tri_compare* a, unknown_tri_compare* b);
 s32 fn_3_D5470(f32* a, f32* b);
 void fn_3_D5494(Mtx m);
 void fn_3_D55EC(void);
-/* Control plus the 8 bytes that follow it in StadiumObjectElem; copied as a unit. */
-typedef struct StaC2ControlExt {
-    Control control;
-    u8 _pad3C[0x8];
-} StaC2ControlExt; /* size: 0x44 */
+/* The 0x44-byte control copies use ControlExt (C3/control.h). */
 
 void fn_3_D5B6C(s32* count);
 void fn_3_D5C8C(void);
