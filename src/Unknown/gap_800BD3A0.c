@@ -2,6 +2,7 @@
 #include "game/rep_1D58.h"
 #include "Dolphin/GX/GXPixel.h"
 #include "Dolphin/GX/GXGeometry.h"
+#include "Dolphin/OS/OSError.h"
 
 // .text:0x800BD3A0 size:0xC
 void LITInitColor(Gap800BD3A0Light* light, Gap800BD3A0Color* color) {
@@ -198,8 +199,50 @@ void fn_800BDC88(void) {
 }
 
 // .text:0x800BDD74 size:0x118
-struct HugeAnimEntry68* ActorObjectInitTable(u16 count) {
-    return 0;
+/* Allocates and initializes a table of stadium actor animation entries. */
+StadiumAnimTable* ActorObjectInitTable(u16 count) {
+    StadiumAnimTable* table;
+    u16 i;
+
+    if (count == 0) {
+        OSReport(lbl_800E7FC8);
+        return NULL;
+    }
+
+    table = (StadiumAnimTable*)_OSAllocFromHeap(0x20, count * sizeof(StadiumAnimEntry) + sizeof(StadiumAnimTable) - sizeof(StadiumAnimEntry));
+    table->count = count;
+    PSMTXIdentity(table->identity);
+
+    for (i = 0; i < table->count; i++) {
+        table->entries[i].anim.actor = NULL;
+        table->entries[i].anim.bank = NULL;
+        table->entries[i].anim.onDraw = NULL;
+        table->entries[i].anim.seqNum = 0;
+        table->entries[i].anim.speed = 1.0f;
+        table->entries[i].anim.time = 0.0f;
+        table->entries[i].anim.startTime = 0.0f;
+        table->entries[i].anim.unk64 = 0;
+        table->entries[i].anim.unk66 = 0;
+        table->entries[i].anim.unk68 = 0;
+        table->entries[i].lightCount = 0;
+        table->entries[i].lights[0] = NULL;
+        table->entries[i].lights[1] = NULL;
+        table->entries[i].lights[2] = NULL;
+        table->entries[i].lights[3] = NULL;
+        table->entries[i].lights[4] = NULL;
+        table->entries[i].lights[5] = NULL;
+        table->entries[i].lights[6] = NULL;
+        table->entries[i].lights[7] = NULL;
+        table->entries[i].anim.index = 0;
+        table->entries[i].enabled = 0;
+        table->entries[i].anim.playAnim = 0;
+        table->entries[i].anim.setSpeed = 0;
+        table->entries[i].anim.setTime = 0;
+        table->entries[i].anim.loopFlags = 1;
+        table->entries[i].anim.worldControl.control.type = 0;
+        table->entries[i].anim.index = i;
+    }
+    return table;
 }
 
 // .text:0x800BDE8C size:0x14

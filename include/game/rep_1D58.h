@@ -113,7 +113,7 @@ typedef struct ActorAnimState {
     GameActor* actor;    /* 0x00 */
     ANIMBank* bank;      /* 0x04 */
     void (*onDraw)(struct ActorAnimState*); /* 0x08 */
-    u8 _pad0C[2];
+    u16 index; /* 0x0C */
     u16 seqNum;          /* 0x0E */
     ControlExt worldControl; /* 0x10 */
     f32 speed;           /* 0x54 */
@@ -137,7 +137,8 @@ typedef struct StadiumAnimEntry {
 STATIC_ASSERT(sizeof(StadiumAnimEntry) == 0x90);
 typedef struct StadiumAnimTable {
     u16 count; /* 0x00 */
-    u8 _pad02[0x34 - 0x02];
+    u8 _pad02[2];
+    Mtx identity; /* 0x04 */
     StadiumAnimEntry entries[1]; /* 0x34 */
 } StadiumAnimTable;
 void fn_3_B97DC(ActorAnimState* state, ANIMBank* bank);

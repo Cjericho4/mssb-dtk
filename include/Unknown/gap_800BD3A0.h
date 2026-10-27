@@ -133,7 +133,9 @@ u8 fn_800B3C04(s32 mode, struct GameActor* actor, Mtx viewMtx);
 void fn_800BDA24(Gap800BD3A0Instance* inst);
 void fn_800BDA94(void);
 void fn_800BDC88(void);
-struct HugeAnimEntry68* ActorObjectInitTable(u16 count);
+/* src/menus/rep_0F60.c still declares this as returning HugeAnimEntry68*; same object, reconcile with the type merge. */
+struct StadiumAnimTable* ActorObjectInitTable(u16 count);
+extern char lbl_800E7FC8[];
 void fn_800BDE8C(u8 value);
 void fn_800BDEA0(void);
 void fn_800BDF70(Gap800BD3A0Model* model);
