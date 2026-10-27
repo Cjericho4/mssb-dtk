@@ -53,7 +53,7 @@ extern Gap8001E460Flags lbl_803716B8;
 extern DiskFileDesc lbl_800EFBE8[21];
 extern DiskFileDesc lbl_800F1D68[1];
 extern DiskFileDesc lbl_800F5D98[54 * 6];
-extern u8 lbl_800F71D8[0x1E0];
+
 extern s8 lbl_800F73B8[54][2];
 extern s8 lbl_800F7424[2][6][2];
 extern s8 lbl_800F743C[54];
@@ -66,6 +66,8 @@ void fn_80022634(void);
 #define MASTER_DESC_SUBITEM_BASE 54
 #define MASTER_DESC_SKELETON_BASE 432
 #define MASTER_DESC_STADIUM_BASE 486
+#define STADIUM_MODELS 29               /* stadium/extra models by model ID (fn_80021ADC) */
+extern DiskFileDesc lbl_800F71D8[STADIUM_MODELS + 1];
 #define SUBITEMS_PER_CHAR 7
 extern DiskFileDesc lbl_800EFD38[515];
 /* per-character subfile table, flat: 19 tracks per character, track 15 is the skeleton */
