@@ -315,9 +315,17 @@ source C (e.g. donor 29 from Mario 0: common **name57 ‚Üê name0**, **sprite182 ‚
   the case (`li r0, N` at `.text+0x7556C + 8*(N-1)`, label 0 at `0x7559C`). `--colour-word none`
   (default) rewrites each donor's addend to 0x7559C (what Mario and every single-colour character
   shows) after checking every retail addend; menus.rel is re-packed in place in aaaa.dat
-  (355584 B, room 372736 B). `--colour-word donor` keeps the retail entries. **Open for Rio:** the
-  retail name textures already read "Blue Toad" / "Purple Toad", so what label 1..6 draws for
-  variants has not been seen.
+  (355584 B, room 372736 B). `--colour-word donor` keeps the retail entries.
+  **Labels 1..6 are the coloured name box behind the hovered name, not words** (mssb-modding #19,
+  2026-10-27): the charID groups of the switch give 1 red (13 16 20 22 25 34 42 50 52), 2 blue,
+  3 yellow (23 30 36 45), 4 green, 5 purple (32), 6 black (47), 0 plain (inferred from the groups,
+  textures not decoded; confirm in Rio). So `none` gave clones a grey box; the Clone Maker's new
+  default `--colour-word clone` picks the label nearest the clone's hue and writes only changed
+  entries. The big faded character behind the team field is the menu 3D scene `menu_char_a`
+  (`fn_2_18148`, charID from `fn_2_18398`: captain screen `lbl_800FE5D4[selections[side]]`, roster
+  screen `inMemRoster[side][F410+0x30[side] - (11*side+2)].CharID` for actors 0/1 and
+  `lbl_2_bss_F410+0x18[side]` for 2/3); it follows the roster, not the cursor, and clones do not
+  redirect it yet.
 - Nothing changes in roster charIDs, `lbl_800FDE84`, `lbl_80108EDC`, chemistry or model keys.
 
 Descriptor copies (full-tuple search, `mssb_files.py info res.15 / res.29`; ids from `data_map.md`
