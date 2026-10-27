@@ -2,6 +2,8 @@
 #include "game/rep_1D58.h"
 #include "Dolphin/GX/GXPixel.h"
 #include "Dolphin/GX/GXGeometry.h"
+#include "Dolphin/GX/GXFrameBuffer.h"
+#include "Dolphin/GX/GXMisc.h"
 #include "Dolphin/OS/OSError.h"
 
 // .text:0x800BD3A0 size:0xC
@@ -189,13 +191,28 @@ void fn_800BDA24(Gap800BD3A0Instance* inst) {
 }
 
 // .text:0x800BDA94 size:0x1F4
-void fn_800BDA94(void) {
-    return;
+/* Draws one stadium actor with its configured lights. */
+void fn_800BDA94(StadiumAnimEntry* entry, Mtx viewMtx) {
+    GameActor* actor = entry->anim.actor;
+    if (entry->anim.onDraw != NULL) {
+        entry->anim.onDraw(&entry->anim);
+    }
+    switch (entry->lightCount) {
+    case 0: fn_800B3A78(actor, viewMtx, 0); break;
+    case 1: fn_800B3A78(actor, viewMtx, 1, entry->lights[0]); break;
+    case 2: fn_800B3A78(actor, viewMtx, 2, entry->lights[0], entry->lights[1]); break;
+    case 3: fn_800B3A78(actor, viewMtx, 3, entry->lights[0], entry->lights[1], entry->lights[2]); break;
+    case 4: fn_800B3A78(actor, viewMtx, 4, entry->lights[0], entry->lights[1], entry->lights[2], entry->lights[3]); break;
+    case 5: fn_800B3A78(actor, viewMtx, 5, entry->lights[0], entry->lights[1], entry->lights[2], entry->lights[3], entry->lights[4]); break;
+    case 6: fn_800B3A78(actor, viewMtx, 6, entry->lights[0], entry->lights[1], entry->lights[2], entry->lights[3], entry->lights[4], entry->lights[5]); break;
+    case 7: fn_800B3A78(actor, viewMtx, 7, entry->lights[0], entry->lights[1], entry->lights[2], entry->lights[3], entry->lights[4], entry->lights[5], entry->lights[6]); break;
+    case 8: fn_800B3A78(actor, viewMtx, 8, entry->lights[0], entry->lights[1], entry->lights[2], entry->lights[3], entry->lights[4], entry->lights[5], entry->lights[6], entry->lights[7]); break;
+    }
 }
 
 // .text:0x800BDC88 size:0xEC
-void fn_800BDC88(void) {
-    return;
+/* Not matched: best attempt and the remaining copy issue are in .agent/attempts/fn_800BDC88.c. */
+void fn_800BDC88(StadiumAnimTable* table, s32 slot, u16 index, struct Gap800B117CRequest* request, ANIMBank* bank, s32 actorValue) {
 }
 
 // .text:0x800BDD74 size:0x118
@@ -251,8 +268,21 @@ void fn_800BDE8C(u8 value) {
 }
 
 // .text:0x800BDEA0 size:0xD0
+/* Copies the current frame into the shadow texture and resets its bounds. */
 void fn_800BDEA0(void) {
-    return;
+    if (lbl_803009F8.drawShadows) {
+        if (lbl_803009F8.preCopy != NULL) {
+            lbl_803009F8.preCopy(&lbl_803009F8.entries->data, 0);
+        }
+        GXSetTexCopySrc(0, 0, 640, 448);
+        GXSetTexCopyDst(640, 480, GX_CTF_R4, GX_FALSE);
+        GXCopyTex(*lbl_803009F8.texBuffer, GX_TRUE);
+        GXPixModeSync();
+        lbl_803009F8.boundCount = 0;
+        lbl_803009F8.minX = lbl_803009F8.minY = lbl_803009F8.minZ = 100000000.0f;
+        lbl_803009F8.maxX = lbl_803009F8.maxY = lbl_803009F8.maxZ = -100000000.0f;
+        lbl_803009F8.x = lbl_803009F8.y = lbl_803009F8.z = 0.0f;
+    }
 }
 
 // .text:0x800BDF70 size:0x70
@@ -340,8 +370,8 @@ void fn_800BF008(void) {
 }
 
 // .text:0x800BF038 size:0x10
-void fn_800BF038(s32 value) {
-    lbl_803009F8.unk20 = value;
+void fn_800BF038(void (*preCopy)(Gap800BD3A0EntryData* data, s32 arg)) {
+    lbl_803009F8.preCopy = preCopy;
 }
 
 // .text:0x800BF048 size:0x10
