@@ -389,6 +389,11 @@ A data-only swap recipe (high for requirements; **not emulator-validated**):
    one runs. With new/growing content, use the tool's container/blob size and compression handling.
    Reader buffers are sized in loader allocation routines, including maxima across characters
    (`fn_80018B74`); changing descriptor sizes after that allocation is unsafe.
+   `fn_80018B74` (Codex reading, 2026-10-27, not matched): it scans all 54 characters' descriptors for
+   tracks 4/13, 12/14, 18, 2/9 and 16, takes each group's largest uncompressed size (`sizeFlags & 0x0FFFFFFF`),
+   rounds it up to 32 B and allocates one buffer holding four bank slots. So a **bigger custom bank is safe
+   when its disc descriptor carries the new size before this runs** (a patched disc does); the limit is
+   heap room for the larger maximum, not a fixed constant.
 4. Keep character-specific gameplay/event timing consistent. Animation swaps do not transfer
    `stats.0`, runner/pitch/bat timings, DOL event windows, attachment-bone maps or model scripts.
    Audit those alongside the new clip. Whole-character cloning already copies more than banks;

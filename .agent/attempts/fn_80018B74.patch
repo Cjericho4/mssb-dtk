@@ -1,0 +1,139 @@
+fn_80018B74 (animation buffer sizing) best Codex candidate: builds, 51 lines off (mostly registers) after 6 refinements. Scans the 54 characters' descriptors for tracks 4/13, 12/14, 18, 2/9, 16, masks sizeFlags to 28 bits, rounds the maxima to 32 B, allocates one buffer, lays out four bank slots (bankD shared), clears their pointers, sets animationCharID = -1. Apply from repo root with git apply.
+
+diff --git a/include/Unknown/gap_8001196C.h b/include/Unknown/gap_8001196C.h
+index f3d83310..9d429b7c 100644
+--- a/include/Unknown/gap_8001196C.h
++++ b/include/Unknown/gap_8001196C.h
+@@ -234,7 +234,16 @@ typedef struct Gap8001196CAnimTable {
+     u8 _padB30[0xC04 - 0xB30];
+     /* 0x0C04 */ Gap8001196CAnim slots[13];
+     /* 0x2C50 */ Gap8001196CAnim* slotPtrs[13];
+-    u8 _pad2C84[0x2CAC - 0x2C84];
++    u8 _pad2C84[4];
++    /* 0x2C88 */ u8* allocatedAnimBanks;
++    u8 _pad2C8C[4];
++    /* 0x2C90 */ u32 maxTrack2Or9Size;
++    /* 0x2C94 */ u32 maxTrack12Or14Size;
++    /* 0x2C98 */ u32 maxTrack4Or13Size;
++    /* 0x2C9C */ u32 maxTrack18Size;
++    u8 _pad2CA0[4];
++    /* 0x2CA4 */ u32 maxTrack16Size;
++    u8 _pad2CA8[4];
+     /* 0x2CAC */ u8* sharedAnimBank;
+     union {
+         /* 0x2CB0 */ u8* runningBankBuffers[4];
+@@ -257,7 +266,10 @@ typedef struct Gap8001196CAnimTable {
+             /* 0x2D54 */ void* cachedBatterData;
+             /* 0x2D58 */ u32 cachedBatterSize;
+             /* 0x2D5C */ s16 cachedBatterCharID;
+-            u8 _pad2D5E[0x2D6A - 0x2D5E];
++            u8 _pad2D5E[2];
++            /* 0x2D60 */ u32 totalAnimBankSize;
++            u8 _pad2D64[4];
++            /* 0x2D68 */ s16 animationCharID;
+             /* 0x2D6A */ s8 slotOwner[13];   /* slotKind using slots[i], -1 = free (fn_80017098) */
+             /* 0x2D77 */ u8 loadState;       /* fn_80016344/fn_80016710 state: 1 queued, 2..5 loading, 6 done */
+             /* 0x2D78 */ u8 reused;          /* fn_80017098 result: the slot was already loaded (fn_8001500C) */
+@@ -290,6 +302,7 @@ struct Gap8001E460Object;
+ void fn_8001FDD4(struct Gap8001E460Object* obj);
+ u8* fn_8002204C(s32 charID, u8* buf);
+ void* ARAMTransfer(Gap8001196CDiskDesc* desc, void* dest, u8 loadInfo, void* aramAddress);
++void* _OSAllocFromHeap(s32 heap, u32 size);
+ void* memcpy(void* dest, const void* src, u32 n);
+ BOOL fn_80016B60(Gap8001196CAnim* anim);
+ BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 unk258, u8 slotKind, u8 variant);
+diff --git a/src/Unknown/gap_8001196C.c b/src/Unknown/gap_8001196C.c
+index c7bddacf..24812af6 100644
+--- a/src/Unknown/gap_8001196C.c
++++ b/src/Unknown/gap_8001196C.c
+@@ -1428,9 +1428,89 @@ void fn_80018B38(void) {
+     return;
+ }
+ 
++/* Size the runtime animation banks from the largest disc descriptor for each track. */
+ // .text:0x80018B74 size:0x278
+ void fn_80018B74(void) {
+-    return;
++    u32 maxTrack4 = 0;
++    u32 maxTrack12 = 0;
++    u32 maxTrack18 = 0;
++    u32 maxTrack2 = 0;
++    u32 maxTrack16 = 0;
++    u32 size;
++    u32 aligned4;
++    u32 aligned12;
++    u32 aligned18;
++    u32 aligned2;
++    u32 aligned16;
++    s32 ch;
++    s32 slot;
++    u8* bank;
++    u8 mode = g_d_GameSettings.mode;
++    Gap8001196CDiskDesc* desc = lbl_803CB790;
++    for (ch = 0; ch < 54; ch++) {
++        if (mode == 7) {
++            size = desc[13].sizeFlags & 0x0FFFFFFF;
++            if (maxTrack4 < size) maxTrack4 = size;
++        } else {
++            size = desc[4].sizeFlags & 0x0FFFFFFF;
++            if (maxTrack4 < size) maxTrack4 = size;
++        }
++        if (mode == 6) {
++            size = desc[14].sizeFlags & 0x0FFFFFFF;
++            if (maxTrack12 < size) maxTrack12 = size;
++        } else {
++            size = desc[12].sizeFlags & 0x0FFFFFFF;
++            if (maxTrack12 < size) maxTrack12 = size;
++        }
++        size = desc[18].sizeFlags & 0x0FFFFFFF;
++        if (maxTrack18 < size) maxTrack18 = size;
++        if (mode == 7) {
++            size = desc[9].sizeFlags & 0x0FFFFFFF;
++            if (maxTrack2 < size) maxTrack2 = size;
++        } else {
++            size = desc[2].sizeFlags & 0x0FFFFFFF;
++            if (maxTrack2 < size) maxTrack2 = size;
++        }
++        size = desc[16].sizeFlags & 0x0FFFFFFF;
++        if (maxTrack16 < size) maxTrack16 = size;
++        desc += SUBFILE_TRACKS;
++    }
++    aligned4 = (maxTrack4 + 31) & ~31;
++    aligned12 = (maxTrack12 + 31) & ~31;
++    aligned18 = (maxTrack18 + 31) & ~31;
++    aligned2 = (maxTrack2 + 31) & ~31;
++    aligned16 = (maxTrack16 + 31) & ~31;
++    g_hugeAnimStruct.maxTrack4Or13Size = aligned4;
++    g_hugeAnimStruct.maxTrack12Or14Size = aligned12;
++    g_hugeAnimStruct.maxTrack18Size = aligned18;
++    g_hugeAnimStruct.maxTrack2Or9Size = aligned2;
++    g_hugeAnimStruct.maxTrack16Size = aligned16;
++    g_hugeAnimStruct.totalAnimBankSize = aligned2 + (aligned4 + aligned12 + aligned18 + aligned16) * 4;
++    bank = _OSAllocFromHeap(32, g_hugeAnimStruct.totalAnimBankSize);
++    g_hugeAnimStruct.allocatedAnimBanks = bank;
++    for (slot = 0; slot < 4; slot++) {
++        g_hugeAnimStruct.animBanks[slot].bankA = bank;
++        bank += aligned4;
++        g_hugeAnimStruct.animBanks[slot].bankB = bank;
++        bank += aligned12;
++        g_hugeAnimStruct.animBanks[slot].bankC = bank;
++        bank += aligned18;
++        if (slot == 0) {
++            g_hugeAnimStruct.animBanks[slot].bankD = bank;
++            bank += aligned2;
++        } else {
++            g_hugeAnimStruct.animBanks[slot].bankD = g_hugeAnimStruct.animBanks[0].bankD;
++        }
++        g_hugeAnimStruct.animBanks[slot].bankE = bank;
++        bank += aligned16;
++        g_hugeAnimStruct.slots[slot].slotTables[0] = NULL;
++        g_hugeAnimStruct.slots[slot].slotTables[3] = NULL;
++        g_hugeAnimStruct.slots[slot].slotTables[4] = NULL;
++        g_hugeAnimStruct.slots[slot].slotTables[1] = NULL;
++        g_hugeAnimStruct.slots[slot].slotTables[2] = NULL;
++        g_hugeAnimStruct.slots[slot].slotTables[5] = NULL;
++    }
++    g_hugeAnimStruct.animationCharID = -1;
+ }
+ 
+ // .text:0x80018DEC size:0x8EC
