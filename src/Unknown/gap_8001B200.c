@@ -1,4 +1,11 @@
 #include "Unknown/gap_8001B200.h"
+#include "Unknown/gap_8001196C.h"
+
+typedef struct PitchBankLoadState {
+    u8 reset;
+    u8 pitching;
+} PitchBankLoadState;
+extern PitchBankLoadState lbl_803CBC3C;
 
 // .text:0x8001B200 size:0x14
 void fn_8001B200(void) {
@@ -91,8 +98,33 @@ void fn_8001C67C_animation(void) {
 }
 
 // .text:0x8001C920 size:0x120
-void fn_8001C920(void) {
-    return;
+/* Loads the pitching animation bank, selecting track 5 or 18 by game mode. */
+s32 fn_8001C920(s32 charID) {
+    s32 track;
+    if (lbl_803CBC3C.pitching == 0) {
+        if (lbl_803C6CF8.allowLoad != 1) goto notReady;
+        lbl_803CBC3C.pitching = 1;
+    }
+    if (lbl_803CBC3C.pitching == 1) {
+        if (g_d_GameSettings.unk11 || g_d_GameSettings.mode == GAME_TYPE_PRACTICE) {
+            track = charID * SUBFILE_TRACKS + 18; /* practice / alternate pitching bank */
+        } else {
+            track = charID * SUBFILE_TRACKS + 5; /* normal pitching bank */
+        }
+        ARAMTransfer(&lbl_803CB790[track], g_hugeAnimStruct.pitchingAnimBank, 0, NULL);
+        lbl_803CBC3C.pitching = 2;
+    } else if (lbl_803CBC3C.pitching == 2) {
+        if (lbl_803C6CF8.allowLoad == 1) {
+            ANIMGet(g_hugeAnimStruct.pitchingAnimBank);
+            if (g_hugeAnimStruct.slotPtrs[0]->animBankC == NULL) {
+                g_hugeAnimStruct.slotPtrs[0]->animBankC = g_hugeAnimStruct.pitchingAnimBank;
+            }
+            return 1;
+        }
+    }
+notReady:
+    lbl_803CBC3C.reset = 0;
+    return 0;
 }
 
 // .text:0x8001CA40 size:0xD0

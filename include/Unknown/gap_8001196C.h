@@ -238,7 +238,9 @@ typedef struct Gap8001196CAnimTable {
     /* 0x2CAC */ u8* sharedAnimBank;
     u8 _pad2CB0[0x2CBC - 0x2CB0];
     /* 0x2CBC */ u8* batterAnimBank;
-    u8 _pad2CC0[0x2CEC - 0x2CC0];
+    u8 _pad2CC0[0x2CE4 - 0x2CC0];
+    /* 0x2CE4 */ u8* pitchingAnimBank;
+    u8 _pad2CE8[0x2CEC - 0x2CE8];
     union {
         /* 0x2CEC */ Gap8001196CSlotBanks animBanks[9]; /* indexed by blockIndex; overlaps the fields below in the binary */
         struct {

@@ -21,7 +21,7 @@ void fn_8001C234(void);
 void fn_8001C528(void);
 void fn_8001C588(void);
 void fn_8001C67C_animation(void);
-void fn_8001C920(void);
+s32 fn_8001C920(s32 charID);
 void fn_8001CA40(void);
 void fn_8001CB10(void);
 void fn_8001CBD4(void);
