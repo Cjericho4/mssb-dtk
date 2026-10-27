@@ -64,14 +64,15 @@ typedef struct Gap800BD3A0Entry {
 } Gap800BD3A0Entry;
 typedef struct Gap800BD3A0State {
     /* 0x0 */ u8 drawShadows;
-    u8 _pad1[7];
+    u8 _pad1[3];
+    void** texBuffer; /* 0x04 */
     s32 unk_0x08;
     struct Gap800BD3A0Tlut* tlut; /* 0xC */
     u8 _pad10[0x4];
     /* 0x14 */ Gap800BD3A0Entry* entries;
     /* 0x18 */ s32 unk18;
     /* 0x1C */ Gap800BD3A0Callback callback;
-    /* 0x20 */ s32 unk20;
+    /* 0x20 */ void (*preCopy)(Gap800BD3A0EntryData* data, s32 arg); /* called before the shadow texture copy */
     u16 boundCount; /* 0x24 */
     u8 _pad26[2];
     f32 minX, maxX, minY, maxY, minZ, maxZ; /* 0x28 */
@@ -131,8 +132,13 @@ void fn_800BD8C4(struct HugeAnimCtrlObj* table, Mtx viewMtx);
 void Set_FUN_800b2b6c(struct GameActor* actor, s32 value);
 u8 fn_800B3C04(s32 mode, struct GameActor* actor, Mtx viewMtx);
 void fn_800BDA24(Gap800BD3A0Instance* inst);
-void fn_800BDA94(void);
-void fn_800BDC88(void);
+struct StadiumAnimEntry;
+/* rep_2308.c and rep_1F58.c declare this with AnimLevel1**; same object, reconcile with the type merge. */
+void fn_800BDA94(struct StadiumAnimEntry* entry, Mtx viewMtx);
+struct Gap800B117CRequest;
+BOOL fn_800B4048(struct GameActor** out, struct Gap800B117CRequest* request, u16 type);
+void fn_800B4724(struct GameActor* actor, s32 value);
+void fn_800BDC88(struct StadiumAnimTable* table, s32 slot, u16 index, struct Gap800B117CRequest* request, struct ANIMBank* bank, s32 actorValue);
 /* src/menus/rep_0F60.c still declares this as returning HugeAnimEntry68*; same object, reconcile with the type merge. */
 struct StadiumAnimTable* ActorObjectInitTable(u16 count);
 extern char lbl_800E7FC8[];
@@ -153,7 +159,7 @@ void fn_800BEBCC(void);
 void fn_800BEC00(BOOL enable);
 void fn_800BEC30(void);
 void fn_800BF008(void);
-void fn_800BF038(s32 value);
+void fn_800BF038(void (*preCopy)(Gap800BD3A0EntryData* data, s32 arg));
 void fn_800BF048(s32 value);
 void fn_800BF058(Gap800BD3A0Callback value);
 Gap800BD3A0State* fn_800BF068(void);

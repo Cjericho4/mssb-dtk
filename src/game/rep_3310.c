@@ -1063,7 +1063,7 @@ void fn_3_11D1B0(void) {
     }
 }
 
-f32 fn_800BDC88(HugeAnimEntry68* entries, u16 a, u16 b, s32 c, s32 d, s32 e);
+void fn_800BDC88(HugeAnimEntry68* entries, u16 a, u16 b, s32 c, s32 d, s32 e);
 
 // .text:0x0011D2C8 size:0xE4 mapped:0x8075C35C
 void fn_3_11D2C8(s32 slot, s32 start, s32 count, s32 arg3, s32 arg4) {
