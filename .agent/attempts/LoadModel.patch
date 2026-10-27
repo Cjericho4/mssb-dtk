@@ -1,0 +1,143 @@
+LoadModel (0x800127F8) first Codex candidate: builds, 137 lines off. Despite its name it is the bat/glove sub-item loader and attachment copier (anim->subItems, fn_80021CA4, lbl_803CB7B4 / lbl_800EEAAC); the body model loads through fn_8001758C. Apply from repo root with git apply.
+
+diff --git a/include/Unknown/gap_8001196C.h b/include/Unknown/gap_8001196C.h
+index 037cfc51..3a43e109 100644
+--- a/include/Unknown/gap_8001196C.h
++++ b/include/Unknown/gap_8001196C.h
+@@ -11,7 +11,7 @@ void fn_80011B64(void);
+ void fn_80011BE4(void);
+ void fn_80011CA8(void);
+ void fn_800126EC(void);
+-void LoadModel(void);
++s32 LoadModel(struct Gap8001196CAnim* anim);
+ u8 fn_80013680(struct Gap8001196CAnim* anim);
+ u8 fn_80012B90(struct Gap8001196CAnim* anim);
+ void fn_80014204(void);
+diff --git a/src/Unknown/gap_8001196C.c b/src/Unknown/gap_8001196C.c
+index 96189e48..a6ef060b 100644
+--- a/src/Unknown/gap_8001196C.c
++++ b/src/Unknown/gap_8001196C.c
+@@ -30,9 +30,121 @@ void fn_800126EC(void) {
+     return;
+ }
+ 
++#include "Dolphin/os.h"
++extern const char lbl_803CC4C8[];
++extern const char lbl_800E6660[];
++extern const char lbl_800E6678[];
++extern u8 lbl_803CBC14;
++extern u8 lbl_803CBC15;
++extern Gap8001196CStadiumObj* lbl_803CBC10;
++
+ // .text:0x800127F8 size:0x398
+-void LoadModel(void) {
+-    return;
++/* Finishes loading one of the character's bat/glove sub-item models, builds its actor,
++ * and attaches a display object from it to the character's bone. */
++s32 LoadModel(Gap8001196CAnim* anim) {
++    Gap8001196CSubItemEntry* entry;
++    Gap8001196CStadiumObj* obj;
++    Gap8001196CActorSlot* actorSlot;
++    struct Gap8001196CActLayout* layout;
++    struct Gap8001196CGeoFile* geo;
++    Gap8001196CAnim* owner;
++    Gap8001196CActor* attachmentActor;
++    Gap8001196CBone* dstBone;
++    Gap8001196CBone* srcBone;
++    u8* texture;
++    u8* buf;
++    s32 i;
++    s32 actorIndex;
++    u16 boneIndex;
++    s16 gloveBase;
++    u8 hand;
++
++    if (anim == NULL) {
++        OSPanic(lbl_803CC4C8, 0x22E6, lbl_800E6660);
++        return 0;
++    }
++    entry = anim->subItems;
++    if (entry == NULL) {
++        OSPanic(lbl_803CC4C8, 0x22EA, lbl_800E6678);
++        return 0;
++    }
++
++    if (lbl_803CBC14 == 0 && lbl_803C6CF8.allowLoad == 1) {
++        if (entry->arm) {
++            obj = &entry->obj1;
++            lbl_803CBC10 = obj;
++            fn_80021CA4(entry->charID, 5, obj->buf);
++            lbl_803CBC15 = 1;
++        } else {
++            obj = &entry->obj0;
++            lbl_803CBC10 = obj;
++            fn_80021CA4(entry->charID, 0, obj->buf);
++            lbl_803CBC15 = 0;
++        }
++        lbl_803CBC14 = 1;
++    }
++    if (lbl_803716B8.loadBusy != 0) return 0;
++
++    obj = lbl_803CBC10;
++    texture = entry->textureArchive;
++    buf = obj->buf;
++    if (((Gap8001196CRootHeader*)buf)->texture)
++        ((Gap8001196CRootHeader*)buf)->texture += (u32)buf;
++    if (((Gap8001196CRootHeader*)buf)->layout)
++        ((Gap8001196CRootHeader*)buf)->layout += (u32)buf;
++    if (((Gap8001196CRootHeader*)buf)->geo)
++        ((Gap8001196CRootHeader*)buf)->geo += (u32)buf;
++    if (((Gap8001196CRootHeader*)buf)->skn)
++        ((Gap8001196CRootHeader*)buf)->skn += (u32)buf;
++
++    actorIndex = obj->index0;
++    actorSlot = &g_hugeAnimStruct.subItemActorEntries[actorIndex].slot;
++    layout = (struct Gap8001196CActLayout*)((u32*)obj->buf)[lbl_803CB7C4[0]];
++    geo = (struct Gap8001196CGeoFile*)((u32*)obj->buf)[lbl_803CB7C4[1]];
++    LoadActorLayout(layout);
++    convertGeometryAndSknHeader(geo, NULL);
++    haveActLayoutPointToGeoHeader(layout, geo);
++    fn_800BD190(geo, (struct Gap8001196CTexArchive*)texture);
++    fn_800238E0(g_hugeAnimStruct.subItemActorEntries, actorIndex, actorIndex, layout);
++    if (((Gap8001196CRootHeader*)obj->buf)->geo != 0) {
++        fn_80025DDC((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]]);
++        fn_80025C58((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]], actorSlot);
++    }
++    obj->unk4 = (u8*)((u32*)obj->buf)[lbl_803CB7C4[3]];
++    fn_80025FFC((u8*)((u32*)obj->buf)[lbl_803CB7C4[2]], &obj->unk4);
++
++    hand = lbl_803CBC15;
++    owner = g_hugeAnimStruct.slotPtrs[(s8)anim->slotKind];
++    if (owner != NULL) {
++        boneIndex = owner->boneIndices[lbl_803CB7B4[hand]];
++    } else {
++        boneIndex = 0xFFFF;
++    }
++    if (boneIndex != 0xFFFF) {
++        gloveBase = lbl_800EEAAC[owner->charID];
++        if (gloveBase >= 0 && owner->subItems != NULL) {
++            dstBone = owner->actor->boneArray[boneIndex];
++            if (hand & 1) {
++                actorIndex = owner->subItems->obj1.index0;
++            } else {
++                actorIndex = owner->subItems->obj0.index0;
++            }
++            attachmentActor = g_hugeAnimStruct.subItemActorEntries[actorIndex].slot.actor;
++            if (attachmentActor != NULL) {
++                for (i = attachmentActor->totalBones - 1; i >= 0; i--) {
++                    srcBone = attachmentActor->boneArray[i];
++                    if (srcBone->attachment != 0) {
++                        dstBone->attachment = srcBone->attachment;
++                        break;
++                    }
++                }
++            }
++        }
++    }
++
++    lbl_803CBC14 = 0;
++    lbl_803CBC10 = NULL;
++    return 1;
+ }
+ 
+ /* ---- fn_80012B90 helpers ---------------------------------------------------------------------- */

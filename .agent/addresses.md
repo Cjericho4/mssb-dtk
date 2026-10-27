@@ -130,7 +130,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_800638B4, fn_80063010, fn_8004B7B4, fn_800637BC, fn_800637D4, fn_8004BD6C, fn_80052634, fn_80062ED4 | per-charID setup | cases 2 / 33..36 / 19 / 20,43 / 41 / 38,41 / 14,37 / 16,44..47 of jumptable_800EEC40 | CMR §1.1 |
 | fn_800B2B74 / fn_800B2B54 / fn_800B2BA8 / fn_800B2C08 / fn_800BD548 / fn_8001FC4C | fn_80017814 bone setup calls | ids 19/25/36, 3/2/1/46 | CMR §1.1 |
 | fn_8001500C, fn_8001594C, fn_80016344, fn_80016710, fn_80019C00, fn_8001A3FC | model-map readers | read lbl_800EEB18[charID] | CMR §3 |
-| fn_80011CA8, LoadModel, fn_80013680, fn_80014204, fn_800145F8, fn_8001D180 | glove-table readers | lhax(lbl_800EEAAC, charID*2) | CMR §1.1 |
+| fn_80011CA8, LoadModel, fn_80013680, fn_80014204, fn_800145F8, fn_8001D180 | glove-table readers | (`LoadModel` 0x800127F8 is the bat/glove sub-item loader + attachment copier, not the body loader: Codex 2026-10-27) lhax(lbl_800EEAAC, charID*2) | CMR §1.1 |
 | fn_8001500C | batter + runners driver | fn_80017098(team, player, 1, slotKind, variant = slotKind==9); 48 lines | RF §5.3 |
 | fn_8001594C | fielder driver | nine fielders, variant 0; stub | RF §5.2 |
 | fn_80015468 | fielder anim banks | prunes loadedCharID, streams track 4/17; stub | RF §5.2 |
