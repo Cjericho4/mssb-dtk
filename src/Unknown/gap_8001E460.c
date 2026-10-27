@@ -2283,9 +2283,25 @@ void fn_80021AC8(void) {
     lbl_803716B8.unk55C = 0;
 }
 
+/* Load a stadium/extra model by model ID, using its ARAM copy when resident. */
 // .text:0x80021ADC size:0xE0
-void fn_80021ADC(void) {
-    return;
+u8* fn_80021ADC(s32 modelID, u8* buf) {
+    DiskFileDesc* desc;
+
+    if (modelID < 0 || modelID >= 29) {
+        return NULL;
+    }
+    if (buf == NULL) {
+        desc = &lbl_800EFD38[MASTER_DESC_STADIUM_BASE + modelID];
+        buf = _OSAllocFromHeap(0x20, desc->sizeFlags & 0x0FFFFFFF);
+    }
+    if (lbl_803716B8.unk1EA & 8) {
+        desc = &lbl_800EFD38[MASTER_DESC_STADIUM_BASE + modelID];
+        ARAMTransfer(desc, buf, 3, lbl_803716B8.stadiumAramAddrs[modelID]);
+    } else {
+        ARAMTransfer(&((DiskFileDesc*)lbl_800F71D8)[modelID], buf, 0, NULL);
+    }
+    return buf;
 }
 
 // .text:0x80021BBC size:0xE8

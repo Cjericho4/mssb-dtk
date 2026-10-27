@@ -41,10 +41,10 @@ typedef struct Gap8001E460Flags {
     /* 0x1D8 */ void** bodyAramAddrs;        /* per-character ARAM copy of the body model */
     /* 0x1DC */ void** subItemAramAddrs;
     /* 0x1E0 */ void** aramAddrs;            /* per-character ARAM copy of the skeleton file */
-    u8 _pad1E4[4];
+    /* 0x1E4 */ void** stadiumAramAddrs;
     /* 0x1E8 */ u8 unk1E8;
     u8 _pad1E9[1];
-    /* 0x1EA */ u8 unk1EA;                   /* bit 0: body models resident in ARAM, bit 1: skeletons */
+    /* 0x1EA */ u8 unk1EA;                   /* bit 0: body models, bit 1: skeletons, bit 3: stadium/extra models resident in ARAM */
     u8 _pad1EB[0x371];
     /* 0x55C */ s32 unk55C;
 } Gap8001E460Flags;
@@ -65,6 +65,7 @@ void fn_8002254C(DiskFileDesc* desc, void* dest, s32 param);
 void fn_80022634(void);
 #define MASTER_DESC_SUBITEM_BASE 54
 #define MASTER_DESC_SKELETON_BASE 432
+#define MASTER_DESC_STADIUM_BASE 486
 #define SUBITEMS_PER_CHAR 7
 extern DiskFileDesc lbl_800EFD38[515];
 /* per-character subfile table, flat: 19 tracks per character, track 15 is the skeleton */
@@ -182,7 +183,7 @@ void fn_80021AA0(void);
 void fn_80021AC0(void);
 void fn_80021AC4(void);
 void fn_80021AC8(void);
-void fn_80021ADC(void);
+u8* fn_80021ADC(s32 modelID, u8* buf);
 void* fn_80021BBC(s32 charID, void* buf);
 u8* fn_8002204C(s32 charID, u8* buf);
 u8* fn_80021CA4(s32 charID, s32 itemSlot, u8* buf);
