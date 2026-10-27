@@ -111,8 +111,11 @@ low nibble is scaled). Element width `elem` = 1/1/2/2/4 bytes.
 **Rotation quaternions are a separate fixed s16 / 16384 encoding** (four s16, 8 B), read with
 globals 0x803CBB48/4C=1/16384 and 0x803CBB50/51=3; quantizeInfo=0x30 with animType=8 does not mean
 integer quaternions. **The scale quaternion is not**: it is four track-quantized values
-(4×`elem`, `DoScaleAnimation` 0x800B6530, `DoTranslationAnimation` 0x800B5E9C..5EE8), so the
-parser's fixed-s16 decode of `scale_quaternion` is wrong (no retail character bank uses 0x20).
+(4×`elem`, `DoScaleAnimation` 0x800B6530, `DoTranslationAnimation` 0x800B5E9C..5EE8). 2,763 tracks
+in 88 of the 544 character banks use it (types 0x2A/0x2B/0x23 = scale + scale quaternion with
+quaternion or translation, always scale mode 1 and quaternion mode 6); most are quantized 0x3E,
+where the parser's fixed s16/16384 decode coincides, but 0x38, 0x35, 0x3D, 0x3C and 0x3B tracks
+exist, where that decode is wrong.
 
 ANIM type bits (not CTRL type bits): **1=translation, 2=scale, 4=Euler, 8=quaternion,
 0x10=matrix, 0x20=scale quaternion**. Setting record order: scale (3×elem) if bit 2, then scale
@@ -133,7 +136,8 @@ and returns (`keys[i]`, `keys[i+1]`); on the last key it returns (`keys[last]`, 
 `u = 0` if `d == 0`; else if `next.time > cur.time`: `u = d / (next.time − cur.time)`; else (wrapped
 pair): `u = 1` when `duration >= cur.time` (always, for sane data), otherwise
 `d / (duration − cur.time)`. So a track whose last key time is below its duration **snaps to key 0**
-for the remainder; retail tracks end on the duration (`ANIMTick` clamps there), which avoids it.
+for the remainder; all 268,320 retail character tracks end exactly on their duration (`ANIMTick`
+clamps there), so this never fires.
 
 | Channel (bits of +E) | Mode | Formula |
 |---|---|---|
@@ -160,9 +164,13 @@ has to neighbourhood its quaternions. The identity-check epsilon is `lbl_803CCF8
 or `a + b == 0`: if `a + b > 1` then `a /= (a+b)`, `b /= (a+b)`, `k = 0.5 − 1/(a+b)` (pre-normalization
 sum) else `k = 0.5 − 1/(a+b)`; then `u < a`: `u = u²·k/a`; `a <= u < 1−b`: `u = k·(2u − a)`;
 else `u = 1 − (1−u)²·k/b`. **As written this curve is not continuous and `k` is negative for
-0 < a+b < 2** (retail constant 0x803CCF94 = 0.5 checked in the DOL); every retail character bank
-inspected stores `a = b = 0` (Mario batting bank: 1070 of 1070 mode-3 keys), so the remap never
-runs in practice. An exporter should write zeros.
+0 < a+b < 2** (retail constant 0x803CCF94 = 0.5 and the operand order re-checked in the DOL; not
+run in Dolphin). Across all 544 character banks, 296,174 of the 296,522 mode-3 translation keys
+store `(0, 0)`; the 348 others (`(0, 35)`, `(0, 34)`, `(0, 224)` /16384, i.e. a tiny ease-in on
+342 mid-track keys) are all in the track-7 and track-17 banks of Goomba, Paragoomba and Dry
+Bones. With the retail arithmetic those segments evaluate far outside [0, 1]; whether that is
+visible is untested. No quaternion mode 5 or scale mode 3 track exists. An exporter should write
+zeros.
 
 **Auxiliary payload** (key +8 pointer, per key, laid out per channel in the order scale,
 rotation, translation; a channel contributes only in the modes listed):
@@ -181,11 +189,16 @@ rotation, translation; a channel contributes only in the modes listed):
 Which half is used: `cur` always contributes its **second** vector/quaternion (`out`) and `next`
 its **first** (`in`). The ease pair is read asymmetrically: translation and scale take
 `cur.ease[1]` as ease-in and `next.ease[0]` as ease-out; quaternions take `cur.ease[0]` as ease-in
-and `next.ease[1]` as ease-out (asm 0x800B61C4..623C and 0x800B73E0..7414). Mario's batting bank
-stores identical `in` and `out` tangents on every translation key (C1-continuous spline).
-Retail character tracks use only `(quant,type,interp)` = (0x30,8,0x60), (0x30,8,0x40),
-(0x3E/0x3D,9,0x43) and one (0x3E,9,0x63); i.e. quaternion hold/Squad/slerp and translation
-Hermite with s16/16384 (or /8192) positions.
+and `next.ease[1]` as ease-out (asm 0x800B61C4..623C and 0x800B73E0..7414). Roster-wide
+(544 banks, 268,320 tracks, 3,829,384 keys, `.scratch` survey 2026-10-26): translation mode-3 keys
+store equal `in`/`out` tangents in 282,734 cases and different ones in 13,788; Squad keys equal
+control quaternions in 504,798 cases, different in 3,674. The `(quant,type,interp)` set is:
+(0x30,8,0x60) 239,958 tracks (quaternion slerp), (0x3E,9,0x63) 11,748 and (0x3D/0x3C/0x3B,9,0x63)
+622 (slerp + translation Hermite), (0x30,8,0x40) 11,305 (Squad), (0x3E,42,0x64) 2,519 plus 184 at
+other quantizations (scale lerp + scale-quaternion slerp + rotation slerp), (0x3E,1,0x3) 899
+(translation Hermite only), (0x3E/0x3D/0x3C/0x3B,9,0x43) 1,022 (Squad + Hermite), (0x3E,35,0x7)
+10, (0x3E/0x3D,43,0x67) 8, (0x30,8,0x0) 2 (hold), (0x3E,2,0x8) 1. No Euler, Bezier or matrix
+track exists in the character banks.
 
 `ANIMGetKeyFrameFromTrack` (0x800B4E9C, MATCH) keeps a cached key index (`pipe->keyIndex`, the
 fifth argument), restarts from 0 if time moved before the cached key, and returns the surrounding
@@ -397,9 +410,9 @@ then Y, then Z to a column vector); `T` enters as the translation column of that
 `S` = diag(scale); with CTRL_SCALE_QUAT `Qs` = `PSMTXQuat(q)`. The result is
 `M = (T·R) · Qs · S · Qs⁻¹` (`PSMTXConcat` chain d,b,c,a), i.e. `M = T·R·S` for every retail
 character bone (no scale quaternions in the banks; rest poses can carry them). The matched Euler
-block has a retail quirk: when all three angles are nonzero, the `a[0][2]` term of the Z step uses
-`m[1][2]` (still identity = 0) instead of `a[1][2]`, so XYZ triples are not exactly Rz·Ry·Rx;
-retail character banks use quaternions, where this does not apply.
+block has a retail quirk: when X and Z are both nonzero, the `a[0][2]` term of the Z step uses
+`m[1][2]` (still identity = 0) instead of `a[1][2]` (= −sin X), so such triples are not exactly
+Rz·Ry·Rx; retail character banks use quaternions, where this does not apply.
 
 Per bone (fn_800B2DD0, recursive over the tree): if `animationCtrl.type != 0` the animation control
 is blended from `blendFromCtrl` by the actor blend weight (fn_800B84AC: weight >= 1 or differing
@@ -457,7 +470,7 @@ python3 tools/find_matches.py build/GYQE01/report.json | wc -l
 Extraction resolves aliases to canonical filenames: a requested `subfile.N` may be saved with
 another subfile ID, or a master ID for blob members. Use the printed output/manifest locally.
 Audit results: **544 distinct disc files, 487 decoded byte patterns, 3,829,384 key records,
-108 body layouts and 54 equal master/disc pairs; build succeeds with 3967 matches.**
+108 body layouts and 54 equal master/disc pairs; build succeeds with 4020 matches (anim-playback).**
 Checks cover Mario, Luigi, DK, Peach, Boo, Shy Guy, Dry Bones and every other character,
 both body variants; pointer bounds, record spans, finite numbers and key-time monotonicity pass.
 Synthetic tests cover all five numeric encodings, fixed quaternion versus track quantization,
