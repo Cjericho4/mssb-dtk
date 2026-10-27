@@ -108,10 +108,12 @@ struct _GXTexObj;
 u8* fn_3_B9534(s32 width, s32 height, struct _GXTexObj* texObj);
 void fn_3_B95EC(void);
 void fn_3_B97C8(struct StadiumObject*);
+struct Gap800BD3A0Light;
 typedef struct ActorAnimState {
     GameActor* actor;    /* 0x00 */
     ANIMBank* bank;      /* 0x04 */
-    u8 _pad08[0x6];
+    void (*onDraw)(struct ActorAnimState*); /* 0x08 */
+    u8 _pad0C[2];
     u16 seqNum;          /* 0x0E */
     ControlExt worldControl; /* 0x10 */
     f32 speed;           /* 0x54 */
@@ -128,7 +130,9 @@ typedef struct ActorAnimState {
 typedef struct StadiumAnimEntry {
     ActorAnimState anim; /* 0x00 */
     u8 enabled; /* 0x6C */
-    u8 _pad6D[0x90 - 0x6D];
+    u8 lightCount; /* 0x6D */
+    u8 _pad6E[2];
+    struct Gap800BD3A0Light* lights[8]; /* 0x70 */
 } StadiumAnimEntry; /* size: 0x90 */
 STATIC_ASSERT(sizeof(StadiumAnimEntry) == 0x90);
 typedef struct StadiumAnimTable {

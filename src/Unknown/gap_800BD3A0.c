@@ -1,5 +1,7 @@
 #include "Unknown/gap_800BD3A0.h"
 #include "game/rep_1D58.h"
+#include "Dolphin/GX/GXPixel.h"
+#include "Dolphin/GX/GXGeometry.h"
 
 // .text:0x800BD3A0 size:0xC
 void LITInitColor(Gap800BD3A0Light* light, Gap800BD3A0Color* color) {
@@ -67,12 +69,12 @@ void fn_800BD478(GapBD478Source* source, GapBD478Table* table) {
 
 // .text:0x800BD548 size:0x128
 /* Stores up to eight light pointers in the actor animation slot. */
-void fn_800BD548(GapBD548LightSlots* slots, u8 count, ...) {
+void fn_800BD548(StadiumAnimEntry* slots, u8 count, ...) {
     va_list args;
     s32 i;
     Gap800BD3A0Light* light;
 
-    slots->count = count;
+    slots->lightCount = count;
     va_start(args, count);
     for (i = 1; i <= count; i++) {
         light = va_arg(args, Gap800BD3A0Light*);
@@ -91,8 +93,39 @@ void fn_800BD548(GapBD548LightSlots* slots, u8 count, ...) {
 }
 
 // .text:0x800BD670 size:0x254
-void fn_800BD670(void) {
-    return;
+/* Draws active stadium actors with their configured lights. */
+void fn_800BD670(StadiumAnimTable* table, Mtx viewMtx) {
+    u16 i;
+    StadiumAnimTable* row;
+
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+    GXSetCullMode(GX_CULL_BACK);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+
+    for (i = 0; i < table->count; i++) {
+        GameActor* actor;
+        StadiumAnimEntry* entry;
+        /* FAKEMATCH: retain the table base while forming the slot pointer. */
+        row = (StadiumAnimTable*)((StadiumAnimEntry*)table + i);
+        entry = &row->entries[0];
+        actor = entry->anim.actor;
+        if (actor != NULL && row->entries[0].enabled) {
+            if (entry->anim.onDraw != NULL) {
+                entry->anim.onDraw(&entry->anim);
+            }
+            switch (entry->lightCount) {
+            case 0: fn_800B3A78(actor, viewMtx, 0); break;
+            case 1: fn_800B3A78(actor, viewMtx, 1, entry->lights[0]); break;
+            case 2: fn_800B3A78(actor, viewMtx, 2, entry->lights[0], entry->lights[1]); break;
+            case 3: fn_800B3A78(actor, viewMtx, 3, entry->lights[0], entry->lights[1], entry->lights[2]); break;
+            case 4: fn_800B3A78(actor, viewMtx, 4, entry->lights[0], entry->lights[1], entry->lights[2], entry->lights[3]); break;
+            case 5: fn_800B3A78(actor, viewMtx, 5, entry->lights[0], entry->lights[1], entry->lights[2], entry->lights[3], entry->lights[4]); break;
+            case 6: fn_800B3A78(actor, viewMtx, 6, entry->lights[0], entry->lights[1], entry->lights[2], entry->lights[3], entry->lights[4], entry->lights[5]); break;
+            case 7: fn_800B3A78(actor, viewMtx, 7, entry->lights[0], entry->lights[1], entry->lights[2], entry->lights[3], entry->lights[4], entry->lights[5], entry->lights[6]); break;
+            case 8: fn_800B3A78(actor, viewMtx, 8, entry->lights[0], entry->lights[1], entry->lights[2], entry->lights[3], entry->lights[4], entry->lights[5], entry->lights[6], entry->lights[7]); break;
+            }
+        }
+    }
 }
 
 // .text:0x800BD8C4 size:0x160
