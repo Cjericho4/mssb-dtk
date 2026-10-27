@@ -113,7 +113,7 @@ typedef struct ActorAnimState {
     ANIMBank* bank;      /* 0x04 */
     u8 _pad08[0x6];
     u16 seqNum;          /* 0x0E */
-    u8 _pad10[0x44];
+    ControlExt worldControl; /* 0x10 */
     f32 speed;           /* 0x54 */
     u8 playAnim;         /* 0x58 */
     u8 setTime;          /* 0x59 */
@@ -121,15 +121,19 @@ typedef struct ActorAnimState {
     u8 loopFlags;        /* 0x5B */
     f32 time;            /* 0x5C */
     f32 startTime;       /* 0x60 */
-    u8 _pad64[0x4];
+    u16 unk64;
+    u16 unk66;
     s32 unk68;           /* 0x68 */
 } ActorAnimState;
 typedef struct StadiumAnimEntry {
     ActorAnimState anim; /* 0x00 */
-    u8 _pad6C[0x90 - 0x6C];
+    u8 enabled; /* 0x6C */
+    u8 _pad6D[0x90 - 0x6D];
 } StadiumAnimEntry; /* size: 0x90 */
+STATIC_ASSERT(sizeof(StadiumAnimEntry) == 0x90);
 typedef struct StadiumAnimTable {
-    u8 _pad0[0x34];
+    u16 count; /* 0x00 */
+    u8 _pad02[0x34 - 0x02];
     StadiumAnimEntry entries[1]; /* 0x34 */
 } StadiumAnimTable;
 void fn_3_B97DC(ActorAnimState* state, ANIMBank* bank);

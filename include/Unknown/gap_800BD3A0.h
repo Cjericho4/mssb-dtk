@@ -2,6 +2,7 @@
 #define __UNKNOWN_gap_800BD3A0_H_
 
 #include "mssbTypes.h"
+#include "Dolphin/mtx.h"
 typedef struct Gap800BD3A0Color {
     u8 r, g, b, a;
 } Gap800BD3A0Color;
@@ -87,7 +88,11 @@ void LITAlloc(Gap800BD3A0Light** out);
 void fn_800BD478(void);
 void fn_800BD548(void);
 void fn_800BD670(void);
-void fn_800BD8C4(void);
+struct HugeAnimCtrlObj;
+void fn_800BD8C4(struct HugeAnimCtrlObj* table, Mtx viewMtx);
+/* Conflicting views: gap_800B117C.h declares these with Gap800B117CObj / (void) and sta_c6.c with StaC6Model; reconcile when the actor types merge. */
+void Set_FUN_800b2b6c(struct GameActor* actor, s32 value);
+u8 fn_800B3C04(s32 mode, struct GameActor* actor, Mtx viewMtx);
 void fn_800BDA24(Gap800BD3A0Instance* inst);
 void fn_800BDA94(void);
 void fn_800BDC88(void);

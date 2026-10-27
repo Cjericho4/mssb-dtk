@@ -1,4 +1,5 @@
 #include "Unknown/gap_800BD3A0.h"
+#include "game/rep_1D58.h"
 
 // .text:0x800BD3A0 size:0xC
 void LITInitColor(Gap800BD3A0Light* light, Gap800BD3A0Color* color) {
@@ -54,8 +55,54 @@ void fn_800BD670(void) {
 }
 
 // .text:0x800BD8C4 size:0x160
-void fn_800BD8C4(void) {
-    return;
+/* Applies pending animation changes to each active stadium actor, then updates visibility. */
+/* Applies pending animation changes to each active stadium actor, then updates visibility. */
+/* Applies pending animation changes to each active stadium actor, then updates visibility. */
+void fn_800BD8C4(struct HugeAnimCtrlObj* rawTable, Mtx viewMtx) {
+    /* FAKEMATCH: declaration order steers registers; rows are addressed from the table base so
+       the 0x34 header offset stays in each field displacement */
+    GameActor* actor;
+    StadiumAnimTable* row;
+    StadiumAnimTable* table = (StadiumAnimTable*)rawTable;
+    u16 i;
+
+    for (i = 0; i < table->count; i++) {
+        row = (StadiumAnimTable*)((StadiumAnimEntry*)table + i);
+        if (row->entries[0].anim.actor != NULL) {
+            u8 loopFlags;
+            if (row->entries[0].anim.playAnim) {
+                ACTSetAnimation(row->entries[0].anim.actor, row->entries[0].anim.bank, NULL, row->entries[0].anim.seqNum, 0.0f, row->entries[0].anim.startTime);
+            }
+            if (row->entries[0].anim.setTime) {
+                fn_800B4CA0(row->entries[0].anim.actor, row->entries[0].anim.time);
+            }
+            if (row->entries[0].anim.setSpeed) {
+                fn_800B4C04(row->entries[0].anim.actor, row->entries[0].anim.speed);
+            }
+            loopFlags = row->entries[0].anim.loopFlags;
+            if (loopFlags & 2) {
+                u8 loop = loopFlags & 1; /* FAKEMATCH: temp computes the loop bit before the actor load */
+                fn_800B4AFC(row->entries[0].anim.actor, loop);
+            }
+            Set_FUN_800b2b6c(row->entries[0].anim.actor, row->entries[0].anim.unk68);
+
+            if (row->entries[0].enabled) {
+                actor = row->entries[0].anim.actor;
+                memcpy(&((Gap800BD3A0ActorObj*)actor)->transform, &row->entries[0].anim.worldControl, sizeof(ControlExt));
+                fn_800B2BFC((Gap800BD3A0ActorObj*)row->entries[0].anim.actor, row->entries[0].anim.unk64, row->entries[0].anim.unk66);
+                AnimateActorBones((Gap800BD3A0ActorObj*)actor);
+                fn_800B3F20((Gap800BD3A0ActorObj*)actor);
+                fn_800B313C((Gap800BD3A0ActorObj*)actor);
+            }
+
+            actor = row->entries[0].anim.actor;
+            actor->unk98 = (actor->unk98 & 0xFC) /* keep all but the two visibility bits */ | fn_800B3C04(0, actor, viewMtx);
+            row->entries[0].anim.playAnim = 0;
+            row->entries[0].anim.setTime = 0;
+            row->entries[0].anim.setSpeed = 0;
+            row->entries[0].anim.loopFlags &= 1;
+        }
+    }
 }
 
 // .text:0x800BDA24 size:0x70
