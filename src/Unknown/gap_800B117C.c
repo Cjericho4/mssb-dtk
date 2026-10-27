@@ -266,11 +266,11 @@ void fn_800B3A78(GameActor* actor, Mtx viewMtx, u8 lightCount, ...) {
     ActBone* bone;
     Gap800B117CObj* skinView = (Gap800B117CObj*)actor;
     Gap800B117CSkinHeader* skin;
-    if ((actor->unk98 & 9) != 0) {
+    if ((actor->unk98 & 9) != 0) { /* draw flags bits 0 and 3 (meaning not yet named) */
         if (actor->skinObject != NULL) {
             GQRSetup5(8, 4, 8, 4);
             skin = skinView->skinHeaders[0];
-            if (skin->format == 0x40) {
+            if (skin->format == 0x40) { /* SKNIt layout; others take fn_800BF2A8 */
                 SKNIt(skinView->entries, skinView->skinOutput, skin->data);
             } else {
                 fn_800BF2A8(skinView->entries, skinView->skinOutput, skin->data);

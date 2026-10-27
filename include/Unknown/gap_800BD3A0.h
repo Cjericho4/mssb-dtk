@@ -125,7 +125,6 @@ struct StadiumAnimEntry;
 void fn_800BD548(struct StadiumAnimEntry* slots, u8 count, ...);
 struct StadiumAnimTable;
 void fn_800BD670(struct StadiumAnimTable* table, Mtx viewMtx);
-/* gap_800B117C.h still declares this undecompiled callee as void(void). */
 void fn_800B3A78(struct GameActor* actor, Mtx viewMtx, u8 lightCount, ...);
 struct HugeAnimCtrlObj;
 void fn_800BD8C4(struct HugeAnimCtrlObj* table, Mtx viewMtx);
