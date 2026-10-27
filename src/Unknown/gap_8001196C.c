@@ -1075,8 +1075,58 @@ BOOL fn_80017098(s32 team, s32 player, s32 arg1B, s32 slotKind, s32 variant, s32
 }
 
 // .text:0x80017340 size:0x24C
+/* Load the running animation bank (track 3, 11 in practice) for a slot, or reuse one cached for another runner. */
 s32 fn_80017340(s32 slot) {
-    return;
+    Gap8001196CAnim* anim = &g_hugeAnimStruct.slots[slot];
+    s32 inUse[RUNNING_BANKS];
+    /* FAKEMATCH: declaration order steers i into r9 and other into r7 */
+    s32 track;
+    Gap8001196CAnim* other;
+    s32 j;
+    s32 i;
+
+    if (g_hugeAnimStruct.bankLoadStep == 0) {
+        for (i = 0; i < RUNNING_BANKS; i++) {
+            inUse[i] = 0;
+        }
+        for (i = 0; i < RUNNING_BANKS; i++) {
+            s32 slotIndex = i + RUNNER_SLOT0;
+            for (j = 0; j < RUNNING_BANKS; j++) {
+                other = g_hugeAnimStruct.slotPtrs[slotIndex];
+                if (other != NULL) {
+                    if (anim->charID == g_hugeAnimStruct.runningCharID[j]) {
+                        anim->animBankB = g_hugeAnimStruct.runningBankBuffers[j];
+                        return 1;
+                    }
+                    if (other->charID == g_hugeAnimStruct.runningCharID[j]) {
+                        inUse[j] = 1;
+                        break;
+                    }
+                }
+            }
+        }
+        for (i = 0; i < RUNNING_BANKS; i++) {
+            if (inUse[i] == 0) {
+                g_hugeAnimStruct.runningCharID[i] = -1;
+            }
+        }
+        for (i = 0; i < RUNNING_BANKS; i++) {
+            if (g_hugeAnimStruct.runningCharID[i] < 0) break;
+        }
+        g_hugeAnimStruct.runningCharID[i] = anim->charID;
+        anim->animBankB = g_hugeAnimStruct.runningBankBuffers[i];
+        if (g_d_GameSettings.mode == GAME_TYPE_PRACTICE) {
+            track = anim->charID * SUBFILE_TRACKS + 11; /* practice running bank */
+        } else {
+            track = anim->charID * SUBFILE_TRACKS + 3; /* running bank */
+        }
+        ARAMTransfer(&lbl_803CB790[track], anim->animBankB, 0, NULL);
+        g_hugeAnimStruct.bankLoadStep = 1;
+    } else if (lbl_803C6CF8.allowLoad == 1) {
+        ANIMGet(anim->animBankB);
+        return 1;
+    }
+    return 0;
 }
 
 /* Stream the character body and populate the slot record, advancing the caller's load state. */

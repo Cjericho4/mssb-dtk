@@ -236,8 +236,13 @@ typedef struct Gap8001196CAnimTable {
     /* 0x2C50 */ Gap8001196CAnim* slotPtrs[13];
     u8 _pad2C84[0x2CAC - 0x2C84];
     /* 0x2CAC */ u8* sharedAnimBank;
-    u8 _pad2CB0[0x2CBC - 0x2CB0];
-    /* 0x2CBC */ u8* batterAnimBank;
+    union {
+        /* 0x2CB0 */ u8* runningBankBuffers[4];
+        struct {
+            u8* _runningBankBuffers[3];
+            /* 0x2CBC */ u8* batterAnimBank;
+        };
+    };
     u8 _pad2CC0[0x2CE4 - 0x2CC0];
     /* 0x2CE4 */ u8* pitchingAnimBank;
     u8 _pad2CE8[0x2CEC - 0x2CE8];
@@ -260,7 +265,7 @@ typedef struct Gap8001196CAnimTable {
             u8 _pad2D7A[5];
             /* 0x2D7F */ u8 loadedCharID[9];
             /* 0x2D88 */ s8 loadSlot;        /* fn_80016F7C loop index */
-            u8 _pad2D89[4];
+            /* 0x2D89 */ s8 runningCharID[4];
             /* 0x2D8D */ u8 bankLoadStep;    /* fn_80016B60 step 0..10 (also reused by fn_80016344 state 3) */
             /* 0x2D8E */ u8 loadStarted;
         };
@@ -278,6 +283,8 @@ extern Gap8001196CFlags lbl_803716B8;
 /* disc file descriptor, 16 bytes (DiskFileDesc in gap_8001E460.h) */
 typedef struct Gap8001196CDiskDesc { u32 flags; u32 sizeFlags; u32 discOffset; u32 compressedSize; } Gap8001196CDiskDesc;
 #define SUBFILE_TRACKS 19
+#define RUNNING_BANKS 4       /* running banks cached for the runner slots (fn_80017340) */
+#define RUNNER_SLOT0 9        /* first of the RUNNING_BANKS anim slots that share them */
 extern Gap8001196CDiskDesc* lbl_803CB790;  /* runtime copy of the per-character subfile table */
 struct Gap8001E460Object;
 void fn_8001FDD4(struct Gap8001E460Object* obj);
