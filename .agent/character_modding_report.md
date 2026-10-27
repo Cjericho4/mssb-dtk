@@ -113,6 +113,11 @@ R5 owns the bank format, track/action map and hierarchy audit: [animations.md](a
 * **Gloves:** `lbl_800EEAAC[charID]` (= charID*6) is the start of the actor's 6-entry
   attachment-bone list, read as `lhax(tbl, charID*2)` by `fn_80011CA8`, `LoadModel`,
   `fn_80013680`, `fn_80014204`, `fn_800145F8`, `fn_8001D180`.
+* **Model buffer sizes** (`fn_80018024`, Codex reading 2026-10-27, not matched): the body buffers are
+  allocated once from the **largest track 0/1 descriptor size across all 54 characters**, rounded up to
+  32 B (four buffers, plus alternates in mode 6). A bigger custom body therefore fits when its disc
+  descriptor carries the new size; the limit is heap room, not a constant. Same scheme as the
+  animation banks (`animations.md`, `fn_80018B74`, `fn_800189E4`).
 
 ## 2. Function status
 
