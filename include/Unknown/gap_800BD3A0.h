@@ -57,7 +57,8 @@ void fn_800B3F20(Gap800BD3A0ActorObj* obj);
 void fn_800B313C(Gap800BD3A0ActorObj* obj);
 typedef void (*Gap800BD3A0Callback)(Gap800BD3A0Model* model, Gap800BD3A0EntryData* data);
 typedef struct Gap800BD3A0Entry {
-    u8 _pad0[0x40];
+    u8 _pad0[0x34];
+    /* 0x34 */ Vec direction;
     /* 0x40 */ Gap800BD3A0EntryData data;
     /* 0xB0 */ u8 unkB0;
     u8 _padB1[0x2F];
@@ -155,7 +156,7 @@ u8* fn_800BEB80(u8 index);
 u8 fn_800BEBA0(void);
 u8 GetDrawShadows(void);
 void DrawShadows(u8 enable);
-void fn_800BEBCC(void);
+void fn_800BEBCC(u8 index, Vec direction);
 void fn_800BEC00(BOOL enable);
 void fn_800BEC30(void);
 void fn_800BF008(void);

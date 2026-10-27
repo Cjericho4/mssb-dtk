@@ -349,8 +349,9 @@ void DrawShadows(u8 enable) {
 }
 
 // .text:0x800BEBCC size:0x34
-void fn_800BEBCC(void) {
-    return;
+/* Sets the shadow direction vector of shadow entry index (rep_1FD8 passes the light direction). */
+void fn_800BEBCC(u8 index, Vec direction) {
+    lbl_803009F8.entries[index].direction = direction;
 }
 
 // .text:0x800BEC00 size:0x30
