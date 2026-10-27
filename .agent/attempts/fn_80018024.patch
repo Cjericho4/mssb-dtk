@@ -1,0 +1,95 @@
+fn_80018024 (model buffer sizing) best Codex candidate: builds, 109 lines off after 6 refinements. Scans 54 characters' track 0/1 descriptors, rounds the maxima to 32 B, allocates four model buffers (plus alternate buffers in mode 6, slot offset 0x0C), installs pointers, clears stadium/sub-item pointers (slots 0-7 in mode 6). Apply from repo root with git apply.
+
+diff --git a/include/Unknown/gap_8001196C.h b/include/Unknown/gap_8001196C.h
+index 037cfc51..7b536e8a 100644
+--- a/include/Unknown/gap_8001196C.h
++++ b/include/Unknown/gap_8001196C.h
+@@ -106,7 +106,7 @@ typedef struct Gap8001196CAnim {
+     };
+     u8 _pad4[4];
+     /* 0x008 */ u8* fileBuffer;              /* body .gpc / anim bank buffer */
+-    u8 _padC[4];
++    /* 0x00C */ u8* alternateFileBuffer;
+     union {
+         /* 0x010 */ struct Gap8001196CSlotTable* slotTables[9];
+         struct {
+@@ -236,7 +236,8 @@ typedef struct Gap8001196CAnimTable {
+     /* 0x2C50 */ Gap8001196CAnim* slotPtrs[13];
+     u8 _pad2C84[4];
+     /* 0x2C88 */ u8* allocatedAnimBanks;
+-    u8 _pad2C8C[0x2CA4 - 0x2C8C];
++    /* 0x2C8C */ u8* allocatedModelBuffers;
++    u8 _pad2C90[0x2CA4 - 0x2C90];
+     /* 0x2CA4 */ u32 maxTrack15Size;
+     u8 _pad2CA8[4];
+     /* 0x2CAC */ u8* sharedAnimBank;
+@@ -261,7 +262,9 @@ typedef struct Gap8001196CAnimTable {
+             /* 0x2D54 */ void* cachedBatterData;
+             /* 0x2D58 */ u32 cachedBatterSize;
+             /* 0x2D5C */ s16 cachedBatterCharID;
+-            u8 _pad2D5E[0x2D6A - 0x2D5E];
++            u8 _pad2D5E[6];
++            /* 0x2D64 */ u32 maxModelFileSize;
++            u8 _pad2D68[2];
+             /* 0x2D6A */ s8 slotOwner[13];   /* slotKind using slots[i], -1 = free (fn_80017098) */
+             /* 0x2D77 */ u8 loadState;       /* fn_80016344/fn_80016710 state: 1 queued, 2..5 loading, 6 done */
+             /* 0x2D78 */ u8 reused;          /* fn_80017098 result: the slot was already loaded (fn_8001500C) */
+diff --git a/src/Unknown/gap_8001196C.c b/src/Unknown/gap_8001196C.c
+index 96189e48..5e100402 100644
+--- a/src/Unknown/gap_8001196C.c
++++ b/src/Unknown/gap_8001196C.c
+@@ -1398,9 +1398,53 @@ void fn_80017DBC(void) {
+     return;
+ }
+ 
++/* Allocate the largest body file buffers, with alternate files in game mode 6. */
+ // .text:0x80018024 size:0x24C
+ void fn_80018024(void) {
+-    return;
++    enum { CHARACTER_COUNT = 54, ALT_MODEL_MODE = 6 };
++    u32 maxModel = 0;
++    u32 maxAlternate = 0;
++    u32 size;
++    u32 alignedModel;
++    u32 alignedAlternate;
++    s32 ch;
++    s32 slot;
++    s32 descriptorIndex;
++    u8* buffer;
++    for (ch = 0, descriptorIndex = 0; ch < CHARACTER_COUNT; ch++, descriptorIndex += SUBFILE_TRACKS) {
++        size = lbl_803CB790[descriptorIndex].sizeFlags & 0x0FFFFFFF;
++        if (maxModel < size) maxModel = size;
++        size = lbl_803CB790[descriptorIndex + 1].sizeFlags & 0x0FFFFFFF;
++        if (maxAlternate < size) maxAlternate = size;
++    }
++    alignedModel = (maxModel + 31) & ~31;
++    alignedAlternate = (maxAlternate + 31) & ~31;
++    g_hugeAnimStruct.maxModelFileSize = alignedModel;
++    if (g_d_GameSettings.mode == ALT_MODEL_MODE) {
++        g_hugeAnimStruct.allocatedModelBuffers = _OSAllocFromHeap(32, (alignedModel + alignedAlternate) * 4);
++    } else {
++        g_hugeAnimStruct.allocatedModelBuffers = _OSAllocFromHeap(32, alignedModel * 4);
++    }
++    buffer = g_hugeAnimStruct.allocatedModelBuffers;
++    if (g_d_GameSettings.mode == ALT_MODEL_MODE) {
++        for (slot = 0; slot < 4; slot++) {
++            g_hugeAnimStruct.slots[slot].fileBuffer = buffer;
++            buffer += alignedModel;
++            g_hugeAnimStruct.slots[slot].stadiumObj = NULL;
++            g_hugeAnimStruct.slots[slot].subItems = NULL;
++            g_hugeAnimStruct.slots[slot].alternateFileBuffer = buffer;
++            buffer += alignedAlternate;
++            g_hugeAnimStruct.slots[slot + 4].stadiumObj = NULL;
++            g_hugeAnimStruct.slots[slot + 4].subItems = NULL;
++        }
++    } else {
++        for (slot = 0; slot < 4; slot++) {
++            g_hugeAnimStruct.slots[slot].fileBuffer = buffer;
++            buffer += alignedModel;
++            g_hugeAnimStruct.slots[slot].stadiumObj = NULL;
++            g_hugeAnimStruct.slots[slot].subItems = NULL;
++        }
++    }
+ }
+ 
+ // .text:0x80018270 size:0x650
