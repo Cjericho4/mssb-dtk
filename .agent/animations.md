@@ -506,7 +506,7 @@ block has a retail quirk: when X and Z are both nonzero, the `a[0][2]` term of t
 `m[1][2]` (still identity = 0) instead of `a[1][2]` (= −sin X), so such triples are not exactly
 Rz·Ry·Rx; retail character banks use quaternions, where this does not apply.
 
-**Ordinary pose path:** `fn_800B313C` builds actorWorld at **0x800B3164..74**, then walks
+**Ordinary pose path:** `fn_800B313C` (**matched C**, 2026-10-27; `GameActor.boneRemap` / `remapCallback` at +0x88 / +0x94) builds actorWorld at **0x800B3164..74**, then walks
 boneArray. On remapped actors it postmultiplies actorWorld by
 `diag(−1,+1,−1)` (**0x80111640**, used at **0x800B3184..94**, a 180° Y rotation, determinant +1).
 If animationCtrl.type is nonzero, blend it from blendFromCtrl by the actor weight
