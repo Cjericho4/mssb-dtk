@@ -1,0 +1,131 @@
+fn_2_18148 (menu_char_a loader) Codex candidate: builds, 86 lines off. Apply from repo root with git apply.
+
+diff --git a/include/menus/rep_0568.h b/include/menus/rep_0568.h
+index a9af6804..e6263a15 100644
+--- a/include/menus/rep_0568.h
++++ b/include/menus/rep_0568.h
+@@ -57,7 +57,8 @@ typedef struct Rep0568State {
+     u8 count;
+     u8 selectionFlags[2];
+     u8 flags30[2];
+-    u8 _pad32[0xE];
++    u8 flags32[2];
++    u8 _pad34[0xC];
+     union {
+         u8 flags[13];
+         struct {
+@@ -84,12 +85,12 @@ void fn_2_16CE0(void);
+ void fn_2_16D38(void);
+ void fn_2_16DA8(void);
+ void fn_2_16F0C(void);
+-void fn_2_16F78(void);
++void fn_2_16F78(s32 index);
+ void fn_2_17648(void);
+ void fn_2_17AB8(void);
+ void fn_2_17C88(void);
+ void fn_2_17ED8(void);
+-void fn_2_18148(void);
++void fn_2_18148(DrawingSceneStruct* scene);
+ void fn_2_18398(void);
+ s32 fn_2_18650(s32 index);
+ void fn_2_18748(void);
+diff --git a/src/menus/rep_0568.c b/src/menus/rep_0568.c
+index b829d887..fdb2f25a 100644
+--- a/src/menus/rep_0568.c
++++ b/src/menus/rep_0568.c
+@@ -7,6 +7,8 @@
+ #include "Dolphin/GX/GXPixel.h"
+ #include "Dolphin/GX/GXGeometry.h"
+ #include "Dolphin/GX/GXTransform.h"
++#include "menus/gap_71EC4.h"
++#include "static/UnknownHomes_Static.h"
+ extern void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+ extern void fn_800BDA94(AnimLevel1** anim, Mtx matrix);
+ 
+@@ -65,7 +67,7 @@ void fn_2_16F0C(void) {
+ }
+ 
+ // .text:0x00016F78 size:0x6D0
+-void fn_2_16F78(void) {
++void fn_2_16F78(s32 index) {
+     return;
+ }
+ 
+@@ -89,9 +91,75 @@ void fn_2_17ED8(void) {
+     return;
+ }
+ 
++typedef struct MenusPreviewLoader {
++    u8 _pad0[0x14];
++    AnimationStruct* anim;
++    u8 modelCharID[4];
++    u8 _pad1C[2];
++    u8 command;
++    u8 _pad1F;
++    u8 enabled;
++    u8 stage;
++} MenusPreviewLoader;
++typedef struct MenuModelDesc {
++    u32 flags;
++    u32 sizeFlags;
++    u32 discOffset;
++    u32 compressedSize;
++} MenuModelDesc;
++extern MenuModelDesc lbl_2_data_241C[54];
++extern u8 lbl_2_bss_100B4[2];
++extern void* ARAMTransfer(MenuModelDesc* desc, void* dest, u8 loadInfo, void* aramAddress);
++extern void fn_2_14BB8(s32 index, s32 flag);
++
+ // .text:0x00018148 size:0x250
+-void fn_2_18148(void) {
+-    return;
++/* Loads menu_char_a[charID] for the large character preview. */
++void fn_2_18148(DrawingSceneStruct* scene) {
++    MenusPreviewLoader* preview = (MenusPreviewLoader*)scene;
++    s32 index;
++    u8 charID;
++    u8 mode;
++
++    switch (preview->stage) {
++    case 0:
++        index = preview->command;
++        preview->anim = &g_hugeAnimStruct.fielderStructs[index];
++        charID = preview->modelCharID[index];
++        preview->anim->unk252 = charID;
++        preview->enabled = lbl_2_bss_100B8.values[index];
++        preview->anim->unk_25D = 0;
++        preview->anim->unk68 = -1;
++        lbl_2_bss_100B4[1] = 1;
++        preview->stage++;
++        break;
++    case 1:
++        index = preview->command;
++        charID = preview->modelCharID[index];
++        ARAMTransfer(&lbl_2_data_241C[(s8)charID], preview->anim->aux, 0, NULL);
++        preview->stage++;
++        break;
++    case 2:
++        if (lbl_803C6CF8.allowLoad != 1) break;
++        index = preview->command;
++        fn_2_16F78(index);
++        mode = g_d_GameSettings._10;
++        if (mode == 0 && lbl_803C66B0.padSide[0] == 0 && index == 1) {
++            g_hugeAnimStruct.fielderStructs[index].unk_25D = 0;
++        } else {
++            g_hugeAnimStruct.fielderStructs[index].unk_25D = preview->enabled != 0;
++        }
++        if (g_d_GameSettings.GameModeSelected == 5 || mode != 0 || lbl_803CBBCC->state == 5) {
++            fn_2_14BB8(index, 1);
++        } else if (lbl_2_bss_100B8.actionFlags[0] != 0) {
++            fn_2_14BB8(index, index != 0);
++        }
++        preview->stage = 0;
++        lbl_2_bss_100B4[1] = 0;
++        lbl_2_bss_100B8.flags32[0] = 1;
++        lbl_2_bss_100B8.active[4] = 1;
++        lbl_2_bss_100B8.flags[index + 2] = 0;
++        break;
++    }
+ }
+ 
+ // .text:0x00018398 size:0x2B8

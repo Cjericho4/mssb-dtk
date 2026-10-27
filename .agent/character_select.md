@@ -330,6 +330,10 @@ source C (e.g. donor 29 from Mario 0: common **name57 â† name0**, **sprite182 â
   actors 2/3 **`F410.gridPick[actor - 2]`** (+0x20/+0x24, the grid pick). So the picture shows
   `menu_char_a[slot charID]`: for a clone, the replaced slot's own model until its row is pointed
   at the cloned character's file.
+  Confirmed in `fn_2_18148` (menus 0x1820C..0x1823C, Codex 2026-10-27): stage 0 copies the preview
+  charID into `fielderStructs[command].unk252`; stage 1 reads `previewScene->modelCharID[command]`
+  (+0x18+command, s8), indexes `lbl_2_data_241C` (`menu_char_a`, 54 x 16-byte descriptors) and calls
+  `ARAMTransfer(desc, fielderStructs[command] anim+0x08, 0, 0)`; stage 2 finalizes.
 - Nothing changes in roster charIDs, `lbl_800FDE84`, `lbl_80108EDC`, chemistry or model keys.
 
 Descriptor copies (full-tuple search, `mssb_files.py info res.15 / res.29`; ids from `data_map.md`
