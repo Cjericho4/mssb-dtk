@@ -66,8 +66,28 @@ void fn_800BD478(GapBD478Source* source, GapBD478Table* table) {
 }
 
 // .text:0x800BD548 size:0x128
-void fn_800BD548(void) {
-    return;
+/* Stores up to eight light pointers in the actor animation slot. */
+void fn_800BD548(GapBD548LightSlots* slots, u8 count, ...) {
+    va_list args;
+    s32 i;
+    Gap800BD3A0Light* light;
+
+    slots->count = count;
+    va_start(args, count);
+    for (i = 1; i <= count; i++) {
+        light = va_arg(args, Gap800BD3A0Light*);
+        switch (i) {
+        case 1: slots->lights[0] = light; break;
+        case 2: slots->lights[1] = light; break;
+        case 3: slots->lights[2] = light; break;
+        case 4: slots->lights[3] = light; break;
+        case 5: slots->lights[4] = light; break;
+        case 6: slots->lights[5] = light; break;
+        case 7: slots->lights[6] = light; break;
+        case 8: slots->lights[7] = light; break;
+        }
+    }
+    va_end(args);
 }
 
 // .text:0x800BD670 size:0x254

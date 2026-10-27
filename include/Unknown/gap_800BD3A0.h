@@ -119,7 +119,14 @@ typedef struct GapBD478Table {
     GapBD478Record records[1]; /* 0x34 */
 } GapBD478Table;
 void fn_800BD478(GapBD478Source* source, GapBD478Table* table);
-void fn_800BD548(void);
+typedef struct GapBD548LightSlots {
+    u8 _pad00[0x6D];
+    u8 count; /* 0x6D */
+    u8 _pad6E[2];
+    Gap800BD3A0Light* lights[8]; /* 0x70 */
+} GapBD548LightSlots;
+STATIC_ASSERT(sizeof(GapBD548LightSlots) == 0x90);
+void fn_800BD548(GapBD548LightSlots* slots, u8 count, ...);
 void fn_800BD670(void);
 struct HugeAnimCtrlObj;
 void fn_800BD8C4(struct HugeAnimCtrlObj* table, Mtx viewMtx);
