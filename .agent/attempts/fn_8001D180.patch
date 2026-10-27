@@ -1,0 +1,85 @@
+fn_8001D180 (attachment-bone reader) Codex best2: builds, 51 lines off (register/branch layout). Resolves the selected hand bone; connect=0 clears its attachment; connecting picks the bat/glove sub-actor, scans its bones backward and copies the first nonzero attachment. Apply from repo root with git apply.
+
+diff --git a/include/Unknown/gap_8001B200.h b/include/Unknown/gap_8001B200.h
+index dde2235a..3bc94a3c 100644
+--- a/include/Unknown/gap_8001B200.h
++++ b/include/Unknown/gap_8001B200.h
+@@ -31,7 +31,7 @@ void fn_8001D074(void);
+ void fn_8001D0D0(void);
+ void fn_8001D110(void);
+ void fn_8001D148(void);
+-void fn_8001D180(void);
++void fn_8001D180(s32 slotIndex, s32 hand, s32 connect);
+ void fn_8001D2D4(void);
+ void fn_8001DB74(void);
+ void fn_8001DD58(void);
+diff --git a/src/Unknown/gap_8001B200.c b/src/Unknown/gap_8001B200.c
+index 777923ec..d972a380 100644
+--- a/src/Unknown/gap_8001B200.c
++++ b/src/Unknown/gap_8001B200.c
+@@ -173,8 +173,63 @@ void fn_8001D148(void) {
+ }
+ 
+ // .text:0x8001D180 size:0x154
+-void fn_8001D180(void) {
+-    return;
++/* Clears or reconnects the bat/glove display object attached to a character bone. */
++void fn_8001D180(s32 slotIndex, s32 hand, s32 connect) {
++    Gap8001196CAnim* anim = g_hugeAnimStruct.slotPtrs[slotIndex];
++    Gap8001196CActor* actor;
++    Gap8001196CActor* subActor;
++    Gap8001196CSubItemEntry* items;
++    Gap8001196CBone* dst;
++    Gap8001196CBone* src;
++    u16 boneIndex;
++    s32 actorIndex;
++    Gap8001196CBone** scan;
++    s32 count;
++    s32 remaining = 0;
++    Gap8001196CActor** actorCursor;
++
++    if (anim != NULL) {
++        boneIndex = anim->boneIndices[lbl_803CB7B4[hand]];
++    } else {
++        boneIndex = 0xFFFF;
++    }
++    if (boneIndex == 0xFFFF) return;
++
++    actorCursor = &anim->actor;
++    do {
++        actor = *actorCursor;
++        if (connect == 0) {
++            if (actor != NULL) {
++                dst = actor->boneArray[boneIndex];
++                if (dst != NULL) dst->attachment = 0;
++            }
++            goto next;
++        }
++        if (lbl_800EEAAC[anim->charID] < 0) goto next;
++        items = anim->subItems;
++        if (items == NULL) goto next;
++        dst = actor->boneArray[boneIndex];
++        if (hand & 1) {
++            actorIndex = items->obj1.index0;
++        } else {
++            actorIndex = items->obj0.index0;
++        }
++        subActor = g_hugeAnimStruct.subItemActorEntries[actorIndex].slot.actor;
++        if (subActor == NULL) return;
++        count = subActor->totalBones;
++        scan = subActor->boneArray + count;
++        do {
++            src = *--scan;
++            count--;
++            if (src->attachment != 0) {
++                dst->attachment = src->attachment;
++                return;
++            }
++        } while (count != 0);
++        return;
++next:
++        actorCursor--;
++    } while (remaining-- != 0);
+ }
+ 
+ // .text:0x8001D2D4 size:0x8A0
