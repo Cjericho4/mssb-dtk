@@ -322,10 +322,14 @@ source C (e.g. donor 29 from Mario 0: common **name57 ‚Üê name0**, **sprite182 ‚
   textures not decoded; confirm in Rio). So `none` gave clones a grey box; the Clone Maker's new
   default `--colour-word clone` picks the label nearest the clone's hue and writes only changed
   entries. The big faded character behind the team field is the menu 3D scene `menu_char_a`
-  (`fn_2_18148`, charID from `fn_2_18398`: captain screen `lbl_800FE5D4[selections[side]]`, roster
-  screen `inMemRoster[side][F410+0x30[side] - (11*side+2)].CharID` for actors 0/1 and
-  `lbl_2_bss_F410+0x18[side]` for 2/3); it follows the roster, not the cursor, and clones do not
-  redirect it yet.
+  (`fn_2_18148`), drawn by the preview task `lbl_803CC1B8` (a DrawingSceneStruct overlay;
+  `lbl_2_bss_1224` only owns its queue). `fn_2_18398` picks each preview actor's charID (Codex
+  reading 2026-10-27, not matched): captain screen `lbl_800FE5D4[F410.selections[side]]` (game mode 5:
+  `lbl_800FE930[challengeCaptainPage][selections[side]]`); roster screen actors 0/1
+  `inMemRoster[side][F410.rosterPosition[side] - (11*side + 2)].stats.CharID` (+0x30/+0x34) and
+  actors 2/3 **`F410.gridPick[actor - 2]`** (+0x20/+0x24, the grid pick). So the picture shows
+  `menu_char_a[slot charID]`: for a clone, the replaced slot's own model until its row is pointed
+  at the cloned character's file.
 - Nothing changes in roster charIDs, `lbl_800FDE84`, `lbl_80108EDC`, chemistry or model keys.
 
 Descriptor copies (full-tuple search, `mssb_files.py info res.15 / res.29`; ids from `data_map.md`

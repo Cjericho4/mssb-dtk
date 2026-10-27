@@ -1,0 +1,167 @@
+fn_2_18398 (select-screen preview charID) Codex candidate: builds, 98 lines off (registers/scheduling). Apply from repo root with git apply.
+
+diff --git a/include/menus/gap_8782C.h b/include/menus/gap_8782C.h
+index 92f186f3..f13f22f8 100644
+--- a/include/menus/gap_8782C.h
++++ b/include/menus/gap_8782C.h
+@@ -47,7 +47,9 @@ typedef struct MenusGameChoiceState {
+     s32 selections[2];
+     u8 _pad18[8];
+     s32 gridPick[2]; /* 0x20 per side: charID the select-grid cursor starts on (fn_2_7DDC) */
+-    u8 _pad28[0x1C];
++    u8 _pad28[8];
++    s32 rosterPosition[2]; /* +0x30: selected roster position by side */
++    u8 _pad38[0xC];
+     s32 option; /* 0x44 */
+     u8 _pad48[8];
+     u32 selection;
+diff --git a/include/menus/rep_0568.h b/include/menus/rep_0568.h
+index a9af6804..5c901d60 100644
+--- a/include/menus/rep_0568.h
++++ b/include/menus/rep_0568.h
+@@ -24,9 +24,13 @@ typedef struct MenusRenderList {
+ typedef union MenusAnimationTask {
+     QueueEntry queue;
+     struct {
+-        u8 _pad0[0x1C];
+-        u8 current;
+-        u8 state;
++        u8 _pad0[0x10];
++        u16 timer;
++        u8 _pad12[6];
++        u8 modelCharID[4]; /* +0x18: character chosen for each of four 3D previews */
++        u8 current; /* +0x1C */
++        u8 state; /* +0x1D */
++        u8 command; /* +0x1E */
+     };
+ } MenusAnimationTask;
+ extern MenusAnimationTask* lbl_2_bss_1224;
+@@ -57,7 +61,8 @@ typedef struct Rep0568State {
+     u8 count;
+     u8 selectionFlags[2];
+     u8 flags30[2];
+-    u8 _pad32[0xE];
++    u8 flags32[2];
++    u8 _pad34[0xC];
+     union {
+         u8 flags[13];
+         struct {
+@@ -89,7 +94,7 @@ void fn_2_17648(void);
+ void fn_2_17AB8(void);
+ void fn_2_17C88(void);
+ void fn_2_17ED8(void);
+-void fn_2_18148(void);
++void fn_2_18148(DrawingSceneStruct* task);
+ void fn_2_18398(void);
+ s32 fn_2_18650(s32 index);
+ void fn_2_18748(void);
+diff --git a/src/menus/rep_0568.c b/src/menus/rep_0568.c
+index b829d887..ce870636 100644
+--- a/src/menus/rep_0568.c
++++ b/src/menus/rep_0568.c
+@@ -7,6 +7,9 @@
+ #include "Dolphin/GX/GXPixel.h"
+ #include "Dolphin/GX/GXGeometry.h"
+ #include "Dolphin/GX/GXTransform.h"
++#include "menus/gap_8782C.h"
++#include "Unknown/gap_8004CA48.h"
++#include "static/UnknownHomes_Static.h"
+ extern void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+ extern void fn_800BDA94(AnimLevel1** anim, Mtx matrix);
+ 
+@@ -90,13 +93,93 @@ void fn_2_17ED8(void) {
+ }
+ 
+ // .text:0x00018148 size:0x250
+-void fn_2_18148(void) {
++void fn_2_18148(DrawingSceneStruct* task) {
+     return;
+ }
+ 
++extern u8 lbl_2_bss_100B4[2];
++typedef struct MenusPreviewScene {
++    u8 _pad0[0x10];
++    u16 timer;
++    u8 _pad12[6];
++    u8 modelCharID[4];
++    u8 current;
++    u8 state;
++    u8 command;
++} MenusPreviewScene;
++
+ // .text:0x00018398 size:0x2B8
++/* Select the charID shown by the large character preview on the team select screen. */
+ void fn_2_18398(void) {
+-    return;
++    MenusPreviewScene* task = (MenusPreviewScene*)lbl_803CC1B8;
++    s32 index;
++    s32 side;
++    s32 rosterIndex;
++    u8 command;
++    u8 charID;
++
++    switch (task->state) {
++    case 0:
++        command = lbl_2_bss_100B8.commands[lbl_2_bss_100B8.readIndex];
++        if ((s8)command == -1) {
++            lbl_2_bss_100B8.active[4] = 0;
++            lbl_2_bss_100B8.active[7] = 1;
++            lbl_2_bss_100B8.active[6] = 0;
++            lbl_2_bss_100B8.flags32[0] = 0;
++            lbl_2_bss_1224 = NULL;
++            fn_800B0A14_removeQueue();
++            break;
++        }
++        task->command = command;
++        lbl_2_bss_100B8.commands[lbl_2_bss_100B8.readIndex] = -1;
++        lbl_2_bss_100B8.active[6] = 1;
++        lbl_2_bss_100B8.active[7] = 0;
++        index = (s8)lbl_2_bss_100B8.readIndex + 1;
++        lbl_2_bss_100B8.readIndex = index % 10;
++        lbl_2_bss_100B8.selections[command] = command;
++        task->state = 1;
++        task->timer = 0;
++        if (lbl_8034E9A0.unk4755 == 0) {
++            side = task->command;
++            if (g_d_GameSettings.GameModeSelected == 5) {
++                charID = lbl_800FE930[lbl_80361B20.challengeCaptainPage][lbl_2_bss_F410.selections[side]];
++            } else {
++                charID = lbl_800FE5D4[lbl_2_bss_F410.selections[side]];
++            }
++            task->modelCharID[side] = charID;
++            if (task->command == 2) task->command = 0;
++        } else if (lbl_8034E9A0.unk4755 == 1) {
++            side = task->command;
++            switch (side) {
++            case 0:
++            case 1:
++                rosterIndex = lbl_2_bss_F410.rosterPosition[side] - (11 * side + 2);
++                task->modelCharID[side] = inMemRoster[side][rosterIndex].stats.CharID;
++                break;
++            case 2:
++            case 3:
++                task->modelCharID[side] = lbl_2_bss_F410.gridPick[side - 2];
++                break;
++            }
++        }
++        break;
++    case 1:
++        fn_2_18148((DrawingSceneStruct*)task);
++        if (lbl_2_bss_100B4[0] != 0 && lbl_2_bss_100B4[1] == 0) {
++            lbl_2_bss_1224 = NULL;
++            lbl_2_bss_100B8.active[4] = 0;
++            lbl_2_bss_100B8.active[7] = 1;
++            lbl_2_bss_100B8.active[6] = 0;
++            lbl_2_bss_100B8.flags32[0] = 0;
++            task->state = 0;
++            fn_800B0A14_removeQueue();
++        } else if (lbl_2_bss_100B8.active[4] != 0) {
++            lbl_2_bss_100B8.active[4] = 0;
++            lbl_2_bss_100B8.active[6] = 0;
++            task->state = 0;
++        }
++        break;
++    }
+ }
+ 
+ // .text:0x00018650 size:0xF8
