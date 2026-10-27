@@ -334,6 +334,12 @@ source C (e.g. donor 29 from Mario 0: common **name57 â† name0**, **sprite182 â
   charID into `fielderStructs[command].unk252`; stage 1 reads `previewScene->modelCharID[command]`
   (+0x18+command, s8), indexes `lbl_2_data_241C` (`menu_char_a`, 54 x 16-byte descriptors) and calls
   `ARAMTransfer(desc, fielderStructs[command] anim+0x08, 0, 0)`; stage 2 finalizes.
+  **Buffer size** (`fn_2_17C88` / `fn_2_17ED8`, Codex 2026-10-27, not matched): the preview buffers are
+  one stride per actor, stride = the largest `menu_char_a[row.charID].sizeFlags & 0x0FFFFFFF` over
+  **stat rows 0..52 only** (row +0x24 charID, signed), 32-byte aligned. Row 53 is never scanned, so a
+  redirected `menu_char_a` entry is only safe if its size is within that maximum (a clone on slot 53
+  with a larger source model would overflow). `fn_2_17ED8` also calls `fn_80014204(count)`, stores
+  `fn_80023AA4()` at `g_hugeAnimStruct+0x13C`, then `fn_80023B04(4)`.
 - Nothing changes in roster charIDs, `lbl_800FDE84`, `lbl_80108EDC`, chemistry or model keys.
 
 Descriptor copies (full-tuple search, `mssb_files.py info res.15 / res.29`; ids from `data_map.md`

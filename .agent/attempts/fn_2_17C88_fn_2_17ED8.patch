@@ -1,0 +1,91 @@
+fn_2_17C88 / fn_2_17ED8 (menu preview model buffer allocators) Codex candidate: builds, 115 / 116 lines off. Apply from repo root with git apply.
+
+diff --git a/include/menus/rep_0438.h b/include/menus/rep_0438.h
+index 12175953..7cd0144a 100644
+--- a/include/menus/rep_0438.h
++++ b/include/menus/rep_0438.h
+@@ -12,7 +12,9 @@ typedef struct MenusPlayerInput {
+ /* Menus view of one Static_Stats_Tables row (0xA0 bytes, = game/UnknownHomes_Game.h's CharacterStats with the
+    chemistry row as an array). */
+ typedef struct MenusCharacterStats {
+-    u8 _pad0[0x37];
++    u8 _pad0[0x24];
++    s16 charID; /* +0x24: key into menu_char_a */
++    u8 _pad26[0x37 - 0x26];
+     u8 battingDisplay; /* 0x37 menu ratings, 1..10 */
+     u8 pitchingDisplay; /* 0x38 */
+     u8 runningDisplay; /* 0x39 */
+diff --git a/src/menus/rep_0568.c b/src/menus/rep_0568.c
+index b829d887..c3816328 100644
+--- a/src/menus/rep_0568.c
++++ b/src/menus/rep_0568.c
+@@ -7,6 +7,12 @@
+ #include "Dolphin/GX/GXPixel.h"
+ #include "Dolphin/GX/GXGeometry.h"
+ #include "Dolphin/GX/GXTransform.h"
++extern void fn_80014204(s32 count);
++extern void* fn_80023AA4(void);
++extern void fn_80023B04(s32 mode);
++extern void* _OSAllocFromHeap(s32 alignment, u32 size);
++typedef struct MenuModelDesc { u32 flags; u32 sizeFlags; u32 discOffset; u32 compressedSize; } MenuModelDesc;
++extern MenuModelDesc lbl_2_data_241C[54];
+ extern void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+ extern void fn_800BDA94(AnimLevel1** anim, Mtx matrix);
+ 
+@@ -80,13 +86,54 @@ void fn_2_17AB8(void) {
+ }
+ 
+ // .text:0x00017C88 size:0x250
++/* Reserve one aligned menu_char_a model buffer for each active preview actor.
++ * Size is the largest model descriptor among the first 53 roster slots. */
+ void fn_2_17C88(void) {
+-    return;
++    u32 maxSize = 0;
++    u32 stride;
++    s32 i;
++    s32 charID;
++    MenusCharacterStats* stats = &lbl_8034E9A0.stats[0][0];
++    s32 count = lbl_2_bss_100B8.count;
++    u8* buffer;
++    for (i = 0; i < 53; i++) {
++        charID = stats[i].charID;
++        if (maxSize < (lbl_2_data_241C[charID].sizeFlags & 0x0FFFFFFF)) {
++            maxSize = lbl_2_data_241C[charID].sizeFlags & 0x0FFFFFFF;
++        }
++    }
++    stride = (maxSize + 31) & ~31;
++    buffer = _OSAllocFromHeap(32, stride * count);
++    g_hugeAnimStruct.modelDataPtr = buffer;
++    for (i = 0; i < count; i++) {
++        g_hugeAnimStruct.fielderStructs[i].aux = (MenusAnimationAux*)(buffer + stride * i);
++    }
+ }
+ 
+ // .text:0x00017ED8 size:0x270
+ void fn_2_17ED8(void) {
+-    return;
++    u32 maxSize = 0;
++    u32 stride;
++    s32 i;
++    s32 charID;
++    MenusCharacterStats* stats = &lbl_8034E9A0.stats[0][0];
++    s32 count = lbl_2_bss_100B8.count;
++    u8* buffer;
++    for (i = 0; i < 53; i++) {
++        charID = stats[i].charID;
++        if (maxSize < (lbl_2_data_241C[charID].sizeFlags & 0x0FFFFFFF)) {
++            maxSize = lbl_2_data_241C[charID].sizeFlags & 0x0FFFFFFF;
++        }
++    }
++    stride = (maxSize + 31) & ~31;
++    buffer = _OSAllocFromHeap(32, stride * count);
++    g_hugeAnimStruct.modelDataPtr = buffer;
++    for (i = 0; i < count; i++) {
++        g_hugeAnimStruct.fielderStructs[i].aux = (MenusAnimationAux*)(buffer + stride * i);
++    }
++    fn_80014204(count);
++    g_hugeAnimStruct.field35_0x13c = fn_80023AA4();
++    fn_80023B04(4);
+ }
+ 
+ // .text:0x00018148 size:0x250
