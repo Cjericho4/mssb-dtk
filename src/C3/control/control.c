@@ -249,6 +249,7 @@ void CTRLBuildMatrix_FlipY(Control *control, Mtx m) {
     PSMTXCopy(e, m);
 }
 
+// Builds the local transform mirrored across X on both sides (F_x * M * F_x).
 void CTRLBuildMatrix_FlipX(Control *control, Mtx m) {
     f32 nRad;
     f32 nSin;
@@ -333,8 +334,8 @@ void CTRLBuildMatrix_FlipX(Control *control, Mtx m) {
     PSMTXConcat(c,e,e);
     PSMTXConcat(a,e,e);
 
-    PSMTXConcat(e, flipY, e);
-    PSMTXConcat(flipY, e, e);
+    PSMTXConcat(e, flipX, e);
+    PSMTXConcat(flipX, e, e);
 
     PSMTXCopy(e, m);
 }
