@@ -593,6 +593,14 @@ No global winding reversal is required by this conversion. Choose the desired ho
 facing separately; keep the bank's unit scale until a reference measurement establishes units.
 This is derived from the matrices; a rendered Blender/Dolphin round trip remains untested.
 
+**Correction (2026-10-27, Blender round trip):** character actor space is **head toward −Y**,
+not +Y up. In all 54 bodies the skin vertices and the rest skeleton have feet at Y=0, head at −Y,
+face toward −Z; the root bone's +90° X rest rotation maps the Z-up authoring frame there, and
+sta_c2.c places objects with `CTRLSetTranslation(.., x, −y, z)`. The mssb-modding glTF exporter
+turns every root bone 180° about X (a rotation, not a mirror) so models stand along +Y. GX front
+faces wind clockwise: write glTF triangles reversed. Which setup (player worldControl / camera)
+flips Y at runtime is not traced.
+
 DOL windows remain owned by [stats.md §7](stats.md).
 They are **15 signed 16 arrays of 54 characters**, stride 0x6C, at 0x800FB798..0x800FBD80.
 `audit_animations.py` exports `event_windows[c].values` in ascending table order:
