@@ -463,3 +463,19 @@ remain different after three attempts. No match was lost.
 The dispatcher/initial-population routines (`fn_2_81628`, `fn_2_8279C`, `fn_2_7AE3C`) are stubs,
 read in assembly. Sprite rendering (`fn_8000D838` / `fn_8000D164`) is assembly-inspected only. The
 patched game has not been run in Rio yet (issue #2).
+
+## Skin-picker hook (Phase 3, mssb-modding #3; Codex reading 2026-10-27)
+
+The **L "Change Color"** choice is made in `fn_2_3624` (`src/menus/gap_1254.c`, 99.7%, 5 lines from a
+match) through `fn_2_A040` (matched) or its inline twin: it resolves the visible cursor to the
+physical slot via `lbl_803C6724.order[side][slot]`, finds the slot's charID in `lbl_80108EDC[9][5]`
+(colour families), takes the **next** family member (wrapping to index 0), **refuses it if it is on
+either team's nine slots** (no further search), stores it in `lbl_803C6724.teams[side][slot]`, and sets
+`lbl_2_bss_F468.unk50[side]` to request a refresh. Challenge mode and empty / charID-54 slots cannot
+cycle. `fn_2_776A0` consumes `unk50`: it sets the team-slot mini picture (pane `0x58 + side*9 +
+cursor`, `field_0x5C = teams[side][slot] << 16`, frame of common sequence 0x83), calls `fn_2_74F40` for
+name / stats / name-box colour, and clears `unk50`. `fn_2_7F8BC` does the same picture write for a
+confirmed pick plus the roster card and chemistry. Neither writes `teams[]`.
+So a skin picker hooks the L choice in `fn_2_3624` / `fn_2_A040`, keeps a per-slot skin next to
+`teams[side][slot]`, and then feeds the charID-keyed UI paths above (and the model loader) from it.
+

@@ -1,0 +1,15 @@
+fn_2_7F8BC Codex attempt: __cntlzw zero test, 109 -> 90 lines, not matched. Apply from repo root with git apply.
+
+diff --git a/src/menus/gap_71EC4.c b/src/menus/gap_71EC4.c
+index dbe50878..90ebfded 100644
+--- a/src/menus/gap_71EC4.c
++++ b/src/menus/gap_71EC4.c
+@@ -1020,7 +1020,7 @@ void fn_2_7F8BC(DrawingSceneStruct* scene, s32 side) {
+     s8 slot;
+     s32 i;
+     s8 cursor;
+-    if (lbl_803C66B0.flags[side] == 0) {
++    if ((u32)__cntlzw(lbl_803C66B0.flags[side]) >> 5) {
+         cursor = lbl_2_bss_F468.cursor[side];
+         for (i = 0; i < 9; i++) {
+             if (lbl_803C6724.order[side][i] == cursor) {
