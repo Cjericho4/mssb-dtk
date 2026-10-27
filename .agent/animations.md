@@ -14,11 +14,12 @@ bank references resolve to 544 distinct files; the parser decoded their **3,829,
 all 108 body layouts, and verified all 54 master/disc track-15 pairs byte-for-byte.
 **2026-10-26 (anim-playback branch):** the playback chain is now matched C
 (`ANIMGet`, `ANIMGetKeyFrameFromTrack`, `ACTSetAnimation`, `ACTSetBoneTrack`, `ANIMTick`,
-`f_InitBone`; `f_InitActorWithLayout` 12 lines off) and the channel decoders were read from asm:
+`f_InitBone`; `f_InitActorWithLayout` 25 feedback lines off on this checkout) and the channel decoders were read from asm:
 §2.1 gives every interpolation formula and the auxiliary payload layout, §5.1 the local-matrix
 composition. **Incomplete:** tracks 7/8 have no identified request path; individual extra-bank
-poses, the visual identity of 0x2E, the parent/flip path of fn_800B2DD0 (m2c only) and a Blender
-round trip need more work. No Dolphin swap or authoring round trip was performed.
+poses, the visual identity of 0x2E, a Blender round trip and live validation of the ease edge cases need more work.
+The 2026-10-26 codex-anim audit below resolves the flip rules and default time factor from asm;
+it does not claim new matches for the channel decoders. No Dolphin swap or authoring round trip was performed.
 
 Tools: `tools/datamap/animations.py` (bank/keys/body hierarchy), `audit_animations.py` (whole-roster
 checks and per-character event-window export), `test_animations.py` (synthetic unittest).
@@ -81,6 +82,35 @@ Menu/non-match actors: menus `fn_2_481F4` calls `fn_80016710` at menus 0x486EC; 
 uses the **15/16 extra-bank rules**, not an independently proven track 8 rule. Menus also load
 `menu_char_a/b` scene files (`data_map.md` §4); this pass does not equate their embedded animations
 with the character subfile banks. No complete celebration/menu pose catalogue is claimed.
+
+### 1.1 Tracks 7/8 request audit (2026-10-26, codex-anim)
+
+**High confidence: no request found in the statically traced character-bank loaders.** This is
+strong negative evidence, not proof of unreachability under every runtime pointer value.
+The only direct DOL code reference to `lbl_800F1D78` is `fn_80021BBC` at
+**0x80021C60..84**, hardcoded to `charID*19+15`. Its other address reference initializes
+`lbl_803CB790` at **0x803CB790**. Searching DOL and all three REL asm trees finds **30 code
+references** to that pointer, all in DOL `gap_8001196C` / `gap_8001B200`, and no store replacing it.
+These references were followed through the descriptor arithmetic, rather than searching for
+immediate 7/8 (which also occur as loader step numbers and game-mode tests).
+
+Actual transfer consumers are `fn_80014A18`, `14D4C`, `14E50`, `14F40`, `15468`, `16344`,
+`16710`, `16B60`, `17340`, `1758C`, `1C588`, `1C67C_animation`, `1C920`, plus `21BBC`.
+Their selections are the constants/branches in §1: bodies 0/1 and banks
+2/3/4/5/6/9/10/11/12/13/14/15/16/17/18. For example the four-slot loader's mode and state
+branches choose 4/13 at **0x80016BD8..C10**, 11/12/14 at **0x80016C90..CE4**, 5/18 at
+**0x80016D6C..DA8**, 2/9/10 at **0x80016E30..E8C**, and 16 at **0x80016F00..30**.
+State **7/8** at **0x80016E04..EB4** is a loading state for batting banks, not disc track 7/8.
+
+The remaining pointer consumers (`fn_80018024`, `18270`, `189E4`, `18B74`, `18DEC`) compute
+allocation maxima and do not request files. In particular `18B74` reads descriptor size words
+at +0x24/+0x44/+0x94/+0xC4/+0xD4/+0xE4/+0x104/+0x124 with character stride 0x130
+(**0x80018BB0..C78**); `18DEC`'s practice/non-practice branches similarly scan specific bank
+columns. None is a hidden table-driven request for 7/8. No caller chain to those banks was
+found. The menu path `fn_2_481F4 -> fn_80016710 -> fn_80021BBC` or track 16 remains an
+extra-bank path, not evidence for 8. Absolute-address arithmetic bypassing the symbol table,
+externally supplied descriptors and dynamically modified pointers were not exhaustively proven
+absent; instrumentation at `ARAMTransfer` would close that remaining gap. Purpose/names remain unknown.
 
 ## 2. Bank format and decoder
 
@@ -155,7 +185,7 @@ clamps there), so this never fires.
 slerp (shared by 6, `Squad`, the scale-quaternion path and the control blend): `c = dot(a,b)`;
 if `1 + c > 1e−6`: if `1 − c > 1e−6` then `w0 = sin((1−u)θ)/sinθ, w1 = sin(uθ)/sinθ` with
 `θ = acos(c)`, else `w0 = 1−u, w1 = u`; result `w0·a + w1·b`. If `1 + c <= 1e−6` (antipodal)
-it blends `a` with the perpendicular `(−a.y, a.x, −a.w, a.z)` by `sin((1−u)π/2)`, `sin(uπ/2)`.
+it blends `a` with the perpendicular to **b**, `(−b.y, b.x, −b.w, b.z)` by `sin((1−u)π/2)`, `sin(uπ/2)`.
 **No sign flip for `c < 0`**: consecutive keys must already be in the same hemisphere; an exporter
 has to neighbourhood its quaternions. The identity-check epsilon is `lbl_803CCF88 = 1e−6`.
 
@@ -171,6 +201,17 @@ store `(0, 0)`; the 348 others (`(0, 35)`, `(0, 34)`, `(0, 224)` /16384, i.e. a 
 Bones. With the retail arithmetic those segments evaluate far outside [0, 1]; whether that is
 visible is untested. No quaternion mode 5 or scale mode 3 track exists. An exporter should write
 zeros.
+
+**Recheck, high confidence (2026-10-26): this is a retail arithmetic quirk, not a missing
+reciprocal in the prose.** At **0x800B6278..88** the instructions compute `f1=1/(a+b)`,
+normalize both ease values, then `f2=0.5-f1`; **0x800B6290..98** computes the same coefficient
+without normalization. The constant is explicitly `.float 0.5` at **0x803CCF94**.
+The comparison uses `a` at **0x800B629C**, `1-b` at **0x800B62B4..BC**, and the last branch
+uses `1-(1-u)^2*k/b` at **0x800B62D4..E0**. Scale repeats this at **0x800B6B10..78**,
+quaternion at **0x800B7450..B8**. For an illustrative synthetic pair `a=b=0.25`, `k=-1.5`:
+the middle branch approaches −1.875 as u approaches 0.75 from below, while the last branch
+returns 1.375 at u=0.75. Do not silently substitute the conventional continuous ease curve.
+The example is arithmetic evidence, not a claim that this ease pair occurs in retail assets.
 
 **Auxiliary payload** (key +8 pointer, per key, laid out per channel in the order scale,
 rotation, translation; a channel contributes only in the modes listed):
@@ -225,7 +266,7 @@ Null branch links mean no relation; nonzero links name ActorBone starts, relativ
 The parser outputs array indices **and parent bone IDs**. It preserves the stored tree-offset
 word; the retail constructor traverses +0x10 children/+8 siblings directly.
 
-### 3.1 Rest pose and runtime bones (`f_InitBone` MATCH, `f_InitActorWithLayout` 12 lines off, 2026-10-26)
+### 3.1 Rest pose and runtime bones (`f_InitBone` MATCH, `f_InitActorWithLayout` 25 feedback lines off on this checkout, 2026-10-26)
 
 `f_InitActorWithLayout(layout, mem)` (0x800232E0) carves everything from one 32-byte-granular
 block: [skin `ActDisplayObj`, 4 blocks + its data via fn_80023078] `GameActor` (0xA0) | `boneArray`
@@ -376,7 +417,7 @@ Need: view those flying-family clips or instrument the turn in Dolphin; no specu
 **High confidence**, source/retail assembly chain:
 
 `game state -> AnimateCharacter (0x8001B990) -> slot pending ID +0x64 -> fn_8001C234 ->
-fn_8001BA44 / fn_8001BE50 -> actor instance bank+sequence -> fn_800BD8C4 ->
+fn_8001BA44 / fn_8001BE50 -> actor instance bank+sequence -> fn_8001DB74 (characters) / fn_800BD8C4 (extra tables) ->
 ACTSetAnimation -> ACTSetBoneTrack / ANIMBind -> AnimateActorBones -> ANIMTick -> CTRL setters`
 
 `AnimateCharacter` records loop/transition parameters and starting frame, avoiding some redundant
@@ -385,48 +426,165 @@ requests. `QueueCharacterAnimation` (0x8001B918) supplies a queued follow-on req
 current, then clears pending to −1. The two dispatchers implement the partition in §1 and set
 instance bank/sequence, flags, blend increment and initial time = requested frame × slot+0x4C.
 The frame readback divides by that slot factor; raw ANIM time is not automatically a gameplay
-frame. Do not assume a universal seconds/60 conversion for export.
+frame. **Default slot factor is 0.5**, so default key-time units are nominally 30 Hz while
+gameplay frame numbers count the nominal 60 Hz updates (details below).
 
-`fn_800BD8C4` applies pending sequence/time/speed/loop state and invokes `AnimateActorBones`.
-The latter adds the blend step to the actor blend weight (clamped to 1) and ticks every bone.
-`ANIMTick(pipe, mode)` (0x800B7718, MATCH): with a bound track it fetches the surrounding keys at
-`pipe->time`, evaluates the channels present in `animType` (scale incl. scale quaternion, then
-quaternion **or** Euler, then translation; `mode` is passed to DoScaleAnimation but unused) into the
-bone's `animationCtrl`, stores `previousTime = time`, then steps: forward (+0x17 == 1)
-`time += speed; if (time > duration) time = loop ? time − duration : duration`; backward
-`time −= speed; if (time < 0) time = loop ? time + duration : 0`. **Units:** key times and
-`duration` are the bank's own frame numbers; `speed` (default 1, set by fn_800B4C04) is the
-advance per `AnimateActorBones` call, i.e. one key-time unit per game tick at speed 1. The
-game-side frame = `pipe->time / slot+0x4C` (§5 above). Matrix tracks take the early-return path.
-Bone+0x136 clears the translation interpolation bits when binding (0x800B7B64..80); file modes are
-not the whole runtime behaviour. Matrix construction/skinning follows the updated controls (§5.1).
+`fn_800BD8C4(table, cullMatrix)` (0x800BD8C4, size 0x160) is a **table** updater, not a
+single-actor speed setter. Header +0 is a u16 count; entries begin at table+0x34 with stride
+0x90. In the asm r31 is `table + i*0x90`; below, offsets are relative to that r31 base
+(subtract 0x34 to get offsets within an entry):
 
-### 5.1 Local and world matrices (`CTRLBuildMatrix` MATCH; `fn_800B2DD0`, `fn_800B84AC` asm/m2c, medium)
+| Predicate / address | Effect |
+|---|---|
+| +0x34 actor pointer non-NULL, 0x800BD8F0..F8 | process this entry |
+| +0x8C nonzero, 0x800BD8FC..91C | `ACTSetAnimation(actor, +0x38 bank, NULL, +0x42 sequence, 0.0f, +0x94 blendStep)` |
+| +0x8D nonzero, 0x800BD920..934 | `fn_800B4CA0(actor, +0x90 time)` writes every existing pipe's **time +0**, at 0x800B4CC0; does not write previousTime |
+| +0x8E nonzero, 0x800BD938..94C | `fn_800B4C04(actor, +0x88 speed)` writes every existing pipe's **speed +8**, at 0x800B4C24 |
+| +0x8F bit1 set, 0x800BD950..964 | `fn_800B4AFC(actor, flags&1)` writes pipe loop byte +0x18 |
+| always, 0x800BD968..970 | install +0x9C remap pointer into actor+0x88 (`Set_FUN_800b2b6c`) |
+| +0xA0 nonzero, 0x800BD974..9B8 | copy +0x44 ControlExt to actor+0x1C, set +0x98/+0x9A bone indices, then `AnimateActorBones -> fn_800B3F20 -> fn_800B313C` |
+| 0x800BD9BC..9F8 | cull via fn_800B3C04, update actor+0x98 low flags; clear +0x8C/8D/8E and bit1 of +0x8F |
+
+The bank is initially bound at time zero, then a pending time is applied, then speed, then the
+first tick. The second argument is passed to culling at **0x800BD9CC**, not used as delta time.
+**Correction to the earlier chain:** the ordinary characters use **fn_8001D2D4 -> fn_8001DB74
+at 0x8001D6CC**, not fn_800BD8C4. That specialized updater repeats the pending-state sequence
+at **0x8001DBDC..DC50**, using entry-relative +0x58/59/5A/5B flags, +0x5C time, +0x54 speed,
++0x60 blend step and +0x68 remap. It invokes fn_800BDA24 at **0x8001DC64** when entry+0x6C
+is enabled; that wrapper ticks and builds matrices. The extra object tables at
+g_hugeAnimStruct+0x64/+0x68 use fn_800BD8C4 at **0x8001DA64 / 0x8001DB28**. Their timing
+operations agree, but their culling/dispatch differs.
+
+**Time conversion, high confidence for update units:** `challengeMapMaybe` initializes each
+of the 13 slot records' +0x4C to **0.5** at **0x8001F4CC / 0x8001F4F0** (base+0xC04,
+store+0xC50; constant **0x803CC4D0 = 0.5**, stride 0x27C). `fn_8001D2D4` copies slot+0x4C to
+entry speed +0x54 and sets speed-dirty +0x5A at **0x8001D5CC..DC**; adding the table header
+0x34 gives the updater's +0x88/+0x8E above. Its freeze branch writes zero speed at
+**0x8001D56C..580**. The initial requested frame is multiplied by slot+0x4C at
+**0x8001BCF8..D0C** (twin **0x8001C0DC..F0**); readback divides raw time by it at
+**0x8001C314..328**. Consequently **one gameplay frame = one enabled game update; one raw ANIM
+frame = two updates at the default 0.5 speed**. The renderer samples first and advances after,
+so the first displayed sample is the requested starting time.
+
+**Nominal wall-clock rate: high confidence for the normal USA video path, no live timing
+measurement.** The queued callback is registered as fn_800090B4 at **0x8000914C..5C**, calls
+fn_8001D2D4 at **0x80009130**, and is dispatched by RunDrawScripts at **0x800093FC**.
+The main loop sleeps for video pacing at **0x8000944C -> fn_800A7DB0 -> OSSleepThread
+(0x800A7DC8)**. VI pre-retrace callback fn_800A84C4 wakes that queue at **0x800A8504**;
+its retrace divider +0x394 and counter +0x395 start at zero at **0x800A813C..40**, so it
+permits one loop per retrace, not one per pair of fields. Thus normal NTSC operation is
+nominally **60 updates/s and 30 raw key-time units/s** (approximately 59.94/29.97 with NTSC
+video timing). Pauses, disabled +0xA0 entries, slow frames and explicit speed changes break a
+universal wall-clock mapping. For a normal-speed Blender clip, use 30 fps for raw bank times,
+or multiply key times by 2 on a 60 fps scene. Preserve gameplay event windows in 60 Hz update
+units; do not apply raw bank times to them without the factor.
+
+`ANIMTick(pipe, mode)` (0x800B7718, MATCH): with a bound track it samples the channels
+(scale incl. scale quaternion, quaternion **or** Euler, then translation), stores
+`previousTime = time`, then steps. Forward (+0x17 == 1): `time += speed`; past duration,
+wrap once if looping, else clamp to duration. Backward: `time -= speed`; below zero,
+wrap once if looping, else clamp to zero. Matrix tracks take an early-return path.
+Bone+0x136 clears translation interpolation bits when binding (**0x800B7B64..80**).
+Matrix construction/skinning follows the updated controls (§5.1).
+
+### 5.1 Local and world matrices (matrix builders MATCH; pose traversal read from asm)
 
 `CTRLBuildMatrix(control, m)` (src/C3/control/control.c, matched): a 0x10 matrix control is copied.
 Otherwise `R` = `PSMTXQuat(r)` for CTRL_ROT_QUAT (xyzw, Dolphin convention), or for CTRL_ROT_EULER
 the product **Rz·Ry·Rx** of the three axis rotations with angles in **degrees** (applied X first,
 then Y, then Z to a column vector); `T` enters as the translation column of that same matrix;
 `S` = diag(scale); with CTRL_SCALE_QUAT `Qs` = `PSMTXQuat(q)`. The result is
-`M = (T·R) · Qs · S · Qs⁻¹` (`PSMTXConcat` chain d,b,c,a), i.e. `M = T·R·S` for every retail
-character bone (no scale quaternions in the banks; rest poses can carry them). The matched Euler
+`M = (T·R) · Qs · S · Qs⁻¹` (`PSMTXConcat` chain d,b,c,a). It reduces to `T·R·S`
+only without a scale-axis quaternion. **Correction:** retail tracks do have scale
+quaternions (§2; its old survey count 2,763 differs from the listed 2,703 subtotal, not rerun here); do not discard Qs when exporting those tracks. The matched Euler
 block has a retail quirk: when X and Z are both nonzero, the `a[0][2]` term of the Z step uses
 `m[1][2]` (still identity = 0) instead of `a[1][2]` (= −sin X), so such triples are not exactly
 Rz·Ry·Rx; retail character banks use quaternions, where this does not apply.
 
-Per bone (fn_800B2DD0, recursive over the tree): if `animationCtrl.type != 0` the animation control
-is blended from `blendFromCtrl` by the actor blend weight (fn_800B84AC: weight >= 1 or differing
-types copies the target; quaternions slerp after a dot-product sign fix, Euler lerps with ±360
-wrapping, scale/translation lerp), built with `CTRLBuildMatrix` (or `_FlipY`/`_FlipX` plus a
-`PSMTXRotRad` on the actor's per-bone callback path, which is how mirrored/handed actors are
-drawn), and when `pipe->replaceHierarchyCtrl == 0` the rest control is built too and
-`local = Rest · Anim` (rest pose on the left). With `replaceHierarchyCtrl` set the track replaces
-the rest pose outright. Then `forwardMtx = parent.forwardMtx · local` when `inheritanceFlag == 1`
-and a parent exists, else `actorWorld · local`; `skinMtx = forwardMtx · orientationInvMtx`
-(inverse bind pose, +0xF8) and, with lighting, `skinInvTransposeMtx = (skinMtx⁻¹)ᵀ`. So for an
-exporter: pose = world(parent) · Rest(bone) · Anim(bone), with `Anim` built from the track channels
-(translation/scale/rotation as above, untouched channels copied from the rest pose by
-`ACTSetBoneTrack`).
+**Ordinary pose path:** `fn_800B313C` builds actorWorld at **0x800B3164..74**, then walks
+boneArray. On remapped actors it postmultiplies actorWorld by
+`diag(−1,+1,−1)` (**0x80111640**, used at **0x800B3184..94**, a 180° Y rotation, determinant +1).
+If animationCtrl.type is nonzero, blend it from blendFromCtrl by the actor weight
+(fn_800B84AC); otherwise blend the rest control from blendFromCtrl. Bone animFlags&3 selects
+weight 1 (0/default), actor weight (1), or squared actor weight (2), as in
+**0x800B31C0..1F4** / **0x800B2E00..3C**. Flag 0x20, with channel bits 4/8/0x10, first restores
+selected rest-translation components into blendFromCtrl (**0x800B2E40..7C**).
+
+**Remap/flip rules, high confidence:** for an animated bone and actor+0x88 == NULL,
+blend its own control and call plain CTRLBuildMatrix (**0x800B2E8C..EB8**). With a remap table,
+actor+0x94 is an optional callback: `(destinationBone, actor->boneArray[remap[0]], outMatrix,
+weight)`; a nonzero return means it supplied the matrix and skips the default remap/flip
+(**0x800B2EBC..EF0**). Otherwise find the destination's boneID in boneArray, use that array
+index to read a **u16 source index** from remap, and blend the source bone's control
+(**0x800B2EF4..F58**). The destination's parent pointer selects **FlipY if non-NULL**
+(**0x800B2F5C..74**), **FlipX if NULL** (**0x800B2F78..80**). These rules apply to every
+animated bone in that path; they are not a hardcoded limb-ID list. A bone without animationCtrl
+bypasses remapping/flips and builds its blended rest pose (**0x800B3044..60**).
+The regular walker duplicates the same rules at **0x800B3244..3300**.
+
+FlipX/FlipY are conjugations **F·M·F**, with F respectively diag(−1,1,1) at **0x801116D0**
+and diag(1,−1,1) at **0x801116A0**. A matrix-type control returns a copy before these flips.
+`CTRLBuildMatrix_Flip(control,m,mask)` uses bits 1/2/4 for X/Y/Z reflections and the same
+conjugation; **fn_800B2DD0 does not call this mask variant**. Other consumers are
+fn_80062F38 at **0x80062F98 / FC0 / FE8** and fn_800637DC at **0x8006383C / 88C**.
+`CTRLBuildMatrix_FlipX` C previously used flipY for both concats despite standardized
+feedback saying MATCH; corrected to flipX in codex-anim. Relocation/data identity matters.
+
+On the fallback remap path only, **destination byte +0x137** selects an additional local
+rotation: 1 → X, 2 → Y, 3 → Z, otherwise none. Every branch passes **π radians**
+(**0x803CCF60 = 3.1415927**, `.float`), with axis character 'X'/'Y'/'Z' at
+**0x800B2FAC..3000**; concat order **local = flippedLocal · Raxis(π)** at
+**0x800B2FBC..3010**. The regular walker repeats it at **0x800B3304..3390**.
+Thus there is no single fixed axis for this constant.
+
+If pipe->replaceHierarchyCtrl == 0, build the destination rest control too and
+`local = Rest · Anim` (**0x800B3014..303C**, regular path **0x800B3394..33BC**).
+When inheritanceFlag == 1 and parent exists, `forward = parent.forward · local`; otherwise
+the regular walker uses actorWorld (**0x800B33E4..3420**). Then
+`skin = forward · inverseBind`, and lighting uses `(skin⁻¹)ᵀ`
+(**0x800B30B4..F4**, duplicated by the regular walker). Actor blending and the per-bone
+callback can modify a pose independently of the bank.
+
+**fn_800B2DD0 is a subtree rebuild, not the ordinary frame updater.** Its only external direct
+DOL call found is **fn_80026134 at 0x800263C8**, after that function writes a procedurally
+adjusted quaternion into bone animationCtrl (**0x800263A8..BC**). It selects the bone through
+slot+0x174 (**0x800261D8..1FC**, bone-ID lookup index 9 in the +0x162 table), then recursively
+rebuilds children/siblings (**0x800B30F8..3114**). Challenge callers are **fn_1_1073C at REL
+0x10788**, and **fn_1_12F8C at REL 0x130B8** after fn_800BDA24 at 0x13060 and when byte
++0x11 is nonzero: both form a direction toward the challenge target. No ordinary per-tick
+call to this recursive routine was found. Its no-parent/non-inheriting fallback at
+**0x800B3090..9C** reads a stack matrix at +0x98 with no initialization visible in this
+function; it must not be cited as proof of actorWorld construction. The normal walker and
+fn_800B34B4 provide that evidence. Export the normal pose path and apply procedural aiming
+separately if that challenge behavior is wanted.
+
+**CTRLBuildInverseMatrix (already MATCH):** do not assume it is a general inverse of every
+CTRLBuildMatrix output. Matrix controls call PSMTXInverse; decomposed controls ignore the
+scale-axis quaternion and divide rows by scale. The quaternion path negates all four
+components before PSMTXQuat (same rotation for q and −q), **0x800B8848..8888**; the initial
+Euler Z test uses the X component for its angle. These are source/asm quirks, not a recommended
+exporter inverse. Compute inverse bind matrices from the actual built rest matrices.
+
+### 5.2 Axes and Blender conversion (2026-10-26)
+
+**High confidence: +Y up, right-handed world/transform convention, column-vector affine
+matrices.** Camera initialization sets up=(0,1,0): stores at
+**0x800BEF50 / 58 / 60** to camera+0xC/+0x10/+0x14, using constants 0/1/0
+(**0x803CD070 / 0x803CD07C**). `fn_800BE158` passes that vector to C_MTXLookAt at
+**0x800BE438 / 0x800BE454**, and restores its Y component to +1 normally or −1 for
+fn_800BEC00's inverted-view mode. `C_MTXLookAt` **0x8007565C** forms
+`back=normalize(eye-target)`, `right=normalize(up×back)`, `up=back×right`; its rows are
+right/up/back, so camera forward is −Z. The positive-angle X rotation in CTRLBuildMatrix
+(**0x800B95B0..9610**) has `[1][2]=−sin`, `[2][1]=sin`, consistent with right-handed
+rotation, not a world-space left-handed mirror. Flip conjugations are actor-specific;
+they do not change the global coordinate convention.
+
+One proper-rotation conversion to Blender (+Z up) is **(x,y,z)game → (x,−z,y)Blender**
+(+90° about X), determinant +1. For full transforms use `M_B = C M_G C⁻¹` (including
+translation/rest/inverse bind), quaternion `q_B = q_C q_G q_C⁻¹`, i.e. `(x,−z,y,w)` in xyzw.
+No global winding reversal is required by this conversion. Choose the desired horizontal
+facing separately; keep the bank's unit scale until a reference measurement establishes units.
+This is derived from the matrices; a rendered Blender/Dolphin round trip remains untested.
 
 DOL windows remain owned by [stats.md §7](stats.md).
 They are **15 signed 16 arrays of 54 characters**, stride 0x6C, at 0x800FB798..0x800FBD80.
@@ -479,18 +637,23 @@ was changed; build/match result is recorded with the commits/final handoff.
 
 Open experiments, with confidence limits:
 
-* **Track 7/8 callers and names:** searched every DOL runtime-subfile-table reference, the load
-  routines and their callers. None of the request sites found selects 7/8. Also inspected sequence
-  counts/extra target IDs. This is not proof that no indirect/table-selected path can request them.
+* **Track 7/8 names / dynamic closure:** §1.1 audits direct and pointer-based DOL/REL
+  references and finds no request; high confidence for the traced loaders, not a whole-program
+  reachability proof. Instrument ARAMTransfer during menus/challenge/minigames before declaring
+  these banks unused. Their visual names remain unknown.
 * **Extra pose names:** numeric 105..116 slots established; variants 15/16/17 have sparse/static
   replacements. Do not apply a single pose list to every bank without viewing it.
-* **Blender:** the evaluation is now fully specified (§2.1 curves and payload, §3.1 rest pose,
-  §5 time stepping, §5.1 composition `world(parent) · Rest · Anim` with `T·R·S` locals, quaternion
-  xyzw, Euler degrees XYZ). Still open: the per-actor callback / flip path of fn_800B2DD0 (which
-  bones get `CTRLBuildMatrix_FlipX/Y` and the `PSMTXRotRad` angle 0x803CCF60) is m2c-level only;
-  the game's up axis / handedness relative to Blender and the gameplay frame factor (slot +0x4C)
-  must be confirmed by exporting one retail clip; `fn_800BD8C4`'s speed/time writes are not yet
-  read. Export recommendation: translation mode 3 with equal in/out tangents and zero ease (what
-  retail does) or mode 1, quaternion mode 6 with neighbourhooded keys, last key at the duration.
+* **Blender round trip:** the default 0.5 raw-frame/update factor (§5), callback/remap/flip
+  conditions (§5.1), +Y up and right-handed conversion (§5.2) are now established from asm.
+  Remaining: live timing under pause/slowdown, procedural challenge aiming, and a rendered
+  retail-clip round trip. Export recommendations: raw keys at nominal 30 fps; translation
+  mode 3 with zero ease or mode 1; neighbourhooded quaternion mode 6; last key at duration.
+  Nonzero ease really uses the discontinuous coefficient in §2.1; do not silently repair it.
+* **Matching:** constructor remains unchanged after five bounded variants (25 feedback lines
+  on this checkout, not the prior note's 12). DoTranslationAnimation/DoScaleAnimation/
+  DoEulerAnimation/DoQuatAnimation/Squad remain stubs after scratch candidate experiments;
+  no new decoder match is claimed. All five matrix builders already report MATCH; FlipX's
+  wrong source matrix reference was corrected separately. See `.scratch/codex_report.md` for
+  final source diffs and attempt results. Build remains at 4020 matches.
 * **Parser fix needed** (`tools/datamap/animations.py`, mssb-modding): `scale_quaternion` uses the
   track quantization, not fixed s16 (§2); decode the auxiliary payload per §2.1.
