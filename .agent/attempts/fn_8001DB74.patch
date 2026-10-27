@@ -1,0 +1,124 @@
+fn_8001DB74 integrated (Codex) + expression swap (Claude): 9 register lines. Builds on main's typed headers (keeps fn_8001C920). Writing (visibility << shift) | (unk98 & clearMask) took it 12 -> 9; left: viewIndex/shift in r24/r25 swapped (target reuses the loop test's (u16)viewIndex in r25 as shift's start) and the or operand order. Tried: shift before the call, swapped decls, shift = viewIndex*3, s32 counter with (u16) casts (no gain). Apply from repo root with git apply.
+
+diff --git a/include/Unknown/gap_8001196C.h b/include/Unknown/gap_8001196C.h
+index 037cfc51..29d6741b 100644
+--- a/include/Unknown/gap_8001196C.h
++++ b/include/Unknown/gap_8001196C.h
+@@ -121,7 +121,8 @@ typedef struct Gap8001196CAnim {
+             /* 0x030 */ struct Gap8001196CSubItemEntry* subItems; /* &g_hugeAnimStruct.subItemEntries[slotKind*3] once fn_80012B90 is done */
+         };
+     };
+-    u8 _pad34[0x60 - 0x34];
++    /* 0x034 */ struct { f32 x, y, z; } unk34; /* actor world-space translation */
++    u8 _pad40[0x60 - 0x40];
+     /* 0x060 */ s16 unk60;
+     /* 0x062 */ s16 animID;
+     /* 0x064 */ s16 nextAnim;
+@@ -274,6 +275,8 @@ typedef struct Gap8001196CAnimTable {
+             /* 0x2D8E */ u8 loadStarted;
+         };
+     };
++    u8 _pad2DA0[0x307A - 0x2DA0];
++    /* 0x307A */ u8 field269_0x307a;
+ } Gap8001196CAnimTable;
+ typedef struct Gap8001196CGameSettings { u8 _pad0[7]; u8 mode; u8 _pad8[9]; u8 unk11; u8 _pad12[0x46]; } Gap8001196CGameSettings; /* 0x58, g_d_GameSettings @0x800E86FC */
+ extern Gap8001196CGameSettings g_d_GameSettings;
+diff --git a/include/Unknown/gap_8001B200.h b/include/Unknown/gap_8001B200.h
+index dde2235a..10530cee 100644
+--- a/include/Unknown/gap_8001B200.h
++++ b/include/Unknown/gap_8001B200.h
+@@ -33,7 +33,8 @@ void fn_8001D110(void);
+ void fn_8001D148(void);
+ void fn_8001D180(void);
+ void fn_8001D2D4(void);
+-void fn_8001DB74(void);
++struct StadiumAnimTable;
++void fn_8001DB74(struct StadiumAnimTable* slots);
+ void fn_8001DD58(void);
+ void fn_8001DEA4(void);
+ void fn_8001E0D8(void);
+diff --git a/src/Unknown/gap_8001B200.c b/src/Unknown/gap_8001B200.c
+index 777923ec..7e7262c6 100644
+--- a/src/Unknown/gap_8001B200.c
++++ b/src/Unknown/gap_8001B200.c
+@@ -1,5 +1,18 @@
+ #include "Unknown/gap_8001B200.h"
+ #include "Unknown/gap_8001196C.h"
++#define ANIMGet ANIMGetTypedDeclaration
++#define memset memsetGameHeaderDeclaration
++#include "game/rep_1D58.h"
++#undef ANIMGet
++#undef memset
++#include "C3/actor.h"
++
++typedef struct CameraView { Mtx44 projMtx; Mtx viewMtx; Vec pos; Vec target; } CameraView;
++extern CameraView* fn_80052734(s32 index);
++extern s32 fn_800527BC(void);
++extern void Set_FUN_800b2b6c(GameActor* actor, s32 remap);
++extern void fn_800BDA24(ActorAnimState* state);
++extern u8 fn_800B3C04(s32 viewIndex, GameActor* actor, Mtx viewMtx);
+ 
+ typedef struct PitchBankLoadState {
+     u8 reset;
+@@ -183,8 +196,59 @@ void fn_8001D2D4(void) {
+ }
+ 
+ // .text:0x8001DB74 size:0x1E4
+-void fn_8001DB74(void) {
+-    return;
++void fn_8001DB74(StadiumAnimTable* slots) {
++    ActorAnimState* entry;
++    u16 i;
++    s32 shift;
++    u16 viewIndex;
++    Gap8001196CAnim* anim;
++    GameActor* actor;
++    CameraView* view;
++    Mtx transform;
++    u8 visibility;
++    f32 (*viewMtx)[4];
++    u8 clearMask;
++    u8 loopFlags;
++
++    for (i = 0; i < slots->count; i++) {
++        anim = g_hugeAnimStruct.slotPtrs[i];
++        if (anim == NULL || anim->unk25D == 0) continue;
++        entry = &((StadiumAnimTable*)g_hugeAnimStruct.actorEntries)->entries[anim->blockIndex].anim;
++        actor = entry->actor;
++        if (actor == NULL) continue;
++        if (entry->playAnim) {
++            ACTSetAnimation(actor, entry->bank, NULL, entry->seqNum, 0.0f, entry->startTime);
++        }
++        if (entry->setTime) fn_800B4CA0(entry->actor, entry->time);
++        if (entry->setSpeed) fn_800B4C04(entry->actor, entry->speed);
++        loopFlags = entry->loopFlags;
++        if (loopFlags & 2) {
++            u8 loop = loopFlags & 1;
++            fn_800B4AFC(entry->actor, loop);
++        }
++        Set_FUN_800b2b6c(entry->actor, entry->unk68);
++        if (((StadiumAnimEntry*)entry)->enabled) fn_800BDA24(entry);
++        for (viewIndex = 0; viewIndex < fn_800527BC(); viewIndex++) {
++            shift = viewIndex;
++            view = fn_80052734(viewIndex);
++            shift *= 3;
++            clearMask = ~(3 << shift);
++            viewMtx = view->viewMtx;
++            if (g_hugeAnimStruct.field269_0x307a == 5) {
++                entry->actor->unk98 = 1;
++            } else {
++                PSMTXTrans(transform, anim->unk34.x, anim->unk34.y, anim->unk34.z);
++                PSMTXConcat(viewMtx, transform, transform);
++                actor = entry->actor;
++                visibility = fn_800B3C04(viewIndex, actor, transform);
++                actor->unk98 = (visibility << shift) | (actor->unk98 & clearMask);
++            }
++        }
++        entry->playAnim = 0;
++        entry->setTime = 0;
++        entry->setSpeed = 0;
++        entry->loopFlags &= 1;
++    }
+ }
+ 
+ // .text:0x8001DD58 size:0x14C
