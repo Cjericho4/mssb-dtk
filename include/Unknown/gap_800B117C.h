@@ -134,7 +134,7 @@ void fn_800B2DD0(void);
 void fn_800B313C(void);
 void fn_800B34B4(void);
 void f_BuildBoneSkinOrientationMatrix(void);
-void fn_800B3A78(void);
+void fn_800B3A78(GameActor* actor, Mtx viewMtx, u8 lightCount, ...);
 void fn_800B3C04(void);
 void fn_800B3F20(void);
 BOOL fn_800B4048(u32* result, Gap800B117CRequest* request, u16 type);

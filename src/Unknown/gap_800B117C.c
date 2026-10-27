@@ -1,4 +1,10 @@
 #include "Unknown/gap_800B117C.h"
+#include "stdarg.h"
+#include "Dolphin/GX/GXGeometry.h"
+
+void DOVARender(void* obj, Mtx viewMtx, u8 lightCount, va_list* args);
+void DOVARenderSkin(void* obj, Mtx viewMtx, Mtx* skinMatrices, Mtx* inverseMatrices, u8 lightCount, va_list* args);
+void DOSetWorldMatrix(void* obj, MtxPtr matrix);
 
 // .text:0x800B117C size:0xC
 void fn_800B117C(u8 value) {
@@ -253,9 +259,43 @@ void f_BuildBoneSkinOrientationMatrix(void) {
     return;
 }
 
+/* Draw an actor's skin and visible bone objects using the supplied lights. */
 // .text:0x800B3A78 size:0x18C
-void fn_800B3A78(void) {
-    return;
+void fn_800B3A78(GameActor* actor, Mtx viewMtx, u8 lightCount, ...) {
+    va_list args;
+    ActBone* bone;
+    Gap800B117CObj* skinView = (Gap800B117CObj*)actor;
+    Gap800B117CSkinHeader* skin;
+    if ((actor->unk98 & 9) != 0) {
+        if (actor->skinObject != NULL) {
+            GQRSetup5(8, 4, 8, 4);
+            skin = skinView->skinHeaders[0];
+            if (skin->format == 0x40) {
+                SKNIt(skinView->entries, skinView->skinOutput, skin->data);
+            } else {
+                fn_800BF2A8(skinView->entries, skinView->skinOutput, skin->data);
+            }
+            GXInvalidateVtxCache();
+            va_start(args, lightCount);
+            if (actor->skHeader != 0) {
+                DOVARender((struct DODisplayObj*)actor->skinObject, viewMtx, lightCount, &args);
+            } else {
+                DOVARenderSkin((struct DODisplayObj*)actor->skinObject, viewMtx,
+                               actor->skinMtxArray, actor->skinInvTransposeMtxArray,
+                               lightCount, &args);
+            }
+        }
+        bone = (ActBone*)actor->drawPriorityList.Head;
+        while (bone != NULL) {
+            if (bone->dispObj != NULL) {
+                DOSetWorldMatrix((struct DODisplayObj*)bone->dispObj, bone->forwardMtx);
+            }
+            va_start(args, lightCount);
+            DOVARender((struct DODisplayObj*)bone->dispObj, viewMtx, lightCount, &args);
+            bone = (ActBone*)bone->drawPriorityLink.Next;
+        }
+    }
+    va_end(args);
 }
 
 // .text:0x800B3C04 size:0x31C
