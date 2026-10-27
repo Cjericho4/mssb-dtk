@@ -244,9 +244,117 @@ void fn_800B2DD0(void) {
     return;
 }
 
+extern Mtx lbl_80111640;
+extern f32 lbl_803CCF5C;
+extern f32 lbl_803CCF60;
+extern u32 lbl_803CC1E8;
+void fn_800B84AC(Control* dst, Control* from, Control* to, f32 weight);
+void CTRLBuildMatrix_FlipX(Control* control, Mtx m);
+void CTRLBuildMatrix_FlipY(Control* control, Mtx m);
+
+
 // .text:0x800B313C size:0x378
-void fn_800B313C(void) {
-    return;
+void fn_800B313C(GameActor* actor) {
+    ControlExt blended;
+    Mtx world;
+    Mtx local;
+    Mtx rest;
+    Mtx rotation;
+    ActBone* bone;
+    ActBone* source;
+    ActBone* parent;
+    f32 weight;
+    u16 i;
+    u16 sourceIndex;
+
+    lbl_803CC1E8 = actor->unk99;
+    CTRLBuildMatrix(&actor->worldControl.control, world);
+    if (actor->boneRemap != NULL) {
+        PSMTXConcat(world, lbl_80111640, world);
+    }
+    for (i = 0; i < actor->totalBones; i++) {
+        bone = actor->boneArray[i];
+        weight = actor->unk8C;
+        switch (bone->animFlags & 3) {
+        case 0:
+            weight = lbl_803CCF5C;
+            break;
+        case 1:
+            weight = weight; /* FAKEMATCH: keeps the original's separate (dead) branch for case 1 */
+            break;
+        case 2:
+            weight *= weight;
+            break;
+        default:
+            weight = lbl_803CCF5C;
+            break;
+        }
+        if (bone->animFlags & 0x20) {
+            if (bone->animFlags & 4) {
+                bone->blendFromCtrl.control.controlParams.srt.t.x = bone->animationCtrl.control.controlParams.srt.t.x;
+            }
+            if (bone->animFlags & 8) {
+                bone->blendFromCtrl.control.controlParams.srt.t.y = bone->animationCtrl.control.controlParams.srt.t.y;
+            }
+            if (bone->animFlags & 0x10) {
+                bone->blendFromCtrl.control.controlParams.srt.t.z = bone->animationCtrl.control.controlParams.srt.t.z;
+            }
+        }
+        if (bone->animationCtrl.control.type != 0) {
+            if (actor->boneRemap == NULL) {
+                fn_800B84AC(&bone->animationCtrl.control, &bone->blendFromCtrl.control, &bone->animationCtrl.control, weight);
+                CTRLBuildMatrix(&bone->animationCtrl.control, local);
+            } else {
+                if (actor->remapCallback == NULL || !actor->remapCallback(bone, actor->boneArray[actor->boneRemap[i]], local, weight)) {
+                    sourceIndex = actor->boneRemap[i];
+                    source = actor->boneArray[sourceIndex];
+                    fn_800B84AC(&source->animationCtrl.control, &source->blendFromCtrl.control, &source->animationCtrl.control, weight);
+                    if (bone->branch.Parent != 0) {
+                        CTRLBuildMatrix_FlipY(&source->animationCtrl.control, local);
+                    } else {
+                        CTRLBuildMatrix_FlipX(&source->animationCtrl.control, local);
+                    }
+                    switch (bone->unk137) {
+                    case 1:
+                        PSMTXRotRad(rotation, 'X', lbl_803CCF60);
+                        PSMTXConcat(local, rotation, local);
+                        break;
+                    case 2:
+                        PSMTXRotRad(rotation, 'Y', lbl_803CCF60);
+                        PSMTXConcat(local, rotation, local);
+                        break;
+                    case 3:
+                        PSMTXRotRad(rotation, 'Z', lbl_803CCF60);
+                        PSMTXConcat(local, rotation, local);
+                        break;
+                    }
+                }
+            }
+            if (bone->animPipe->replaceHierarchyCtrl == 0) {
+                CTRLBuildMatrix(&bone->orientationCtrl.control, rest);
+                PSMTXConcat(rest, local, local);
+            }
+        } else {
+            fn_800B84AC(&blended.control, &bone->blendFromCtrl.control, &bone->orientationCtrl.control, weight);
+            CTRLBuildMatrix(&blended.control, local);
+        }
+        parent = (ActBone*)bone->branch.Parent;
+        if (bone->inheritanceFlag == 1 && parent != 0) {
+            PSMTXConcat(parent->forwardMtx, local, bone->forwardMtx);
+        } else {
+            PSMTXConcat(world, local, bone->forwardMtx);
+        }
+        if (bone->dispObj != 0) {
+            DOSetWorldMatrix(bone->dispObj, bone->forwardMtx);
+        }
+        if (actor->skinObject != 0) {
+            PSMTXConcat(bone->forwardMtx, bone->orientationInvMtx, bone->skinMtx);
+            if (actor->skinObject->lightingData != 0) {
+                PSMTXInverse(bone->skinMtx, local);
+                PSMTXTranspose(local, bone->skinInvTransposeMtx);
+            }
+        }
+    }
 }
 
 // .text:0x800B34B4 size:0x2F0

@@ -131,7 +131,7 @@ void SKNIt(Gap800B117CObj** entries, Gap800B117CSkinOutput* output, Gap800B117CS
 void fn_800BF2A8(Gap800B117CObj** entries, Gap800B117CSkinOutput* output, Gap800B117CSkinData* data);
 void fn_800B2D5C(Gap800B117CObj* obj);
 void fn_800B2DD0(void);
-void fn_800B313C(void);
+void fn_800B313C(GameActor* actor);
 void fn_800B34B4(void);
 void f_BuildBoneSkinOrientationMatrix(void);
 void fn_800B3A78(GameActor* actor, Mtx viewMtx, u8 lightCount, ...);

@@ -119,6 +119,9 @@ typedef struct ActBone {
 } ActBone;
 STATIC_ASSERT(sizeof(ActBone) == 0x140);
 
+/* A remapped bone's local matrix: (destination bone, source bone, out matrix, blend weight) -> nonzero if built. */
+typedef s32 (*ActorRemapCallback)(ActBone* bone, ActBone* source, Mtx local, f32 weight);
+
 typedef struct GameActor {                  /* ACTActor + game fields */
     /* 0x00 */ ActLayout* layout;
     /* 0x04 */ u16 actorID;
@@ -138,10 +141,10 @@ typedef struct GameActor {                  /* ACTActor + game fields */
     /* 0x82 */ u16 unk82;
     /* 0x84 */ u16 unk84;
     /* 0x86 */ u16 pad86;
-    /* 0x88 */ u32 unk88;
+    /* 0x88 */ u16* boneRemap;               /* per bone: index of the bone whose animation it plays (animations.md §5.1), or NULL */
     /* 0x8C */ f32 unk8C;
     /* 0x90 */ f32 unk90;
-    /* 0x94 */ u32 unk94;
+    /* 0x94 */ ActorRemapCallback remapCallback; /* optional: builds a remapped bone's local matrix itself */
     /* 0x98 */ u8 unk98;
     /* 0x99 */ u8 unk99;
     u8 _pad9A[0xA0 - 0x9A];

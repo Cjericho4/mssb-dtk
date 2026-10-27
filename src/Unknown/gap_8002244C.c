@@ -357,12 +357,12 @@ GameActor* f_InitActorWithLayout(ActLayout* layout, ActMemBlock* mem) {
     act->unk80 = 0;
     act->unk82 = 0;
     act->unk84 = 0;
-    act->unk88 = 0;
+    act->boneRemap = NULL;
     act->unk8C = 1.0f;
     act->unk90 = 0.0f;
     act->unk99 = 0;
     act->unk98 = 0;
-    act->unk94 = 0;
+    act->remapCallback = NULL;
     return act;
 }
 #pragma dont_inline off
