@@ -229,8 +229,10 @@ rotation, translation; a channel contributes only in the modes listed):
 
 Which half is used: `cur` always contributes its **second** vector/quaternion (`out`) and `next`
 its **first** (`in`). The ease pair is read asymmetrically: translation and scale take
-`cur.ease[1]` as ease-in and `next.ease[0]` as ease-out; quaternions take `cur.ease[0]` as ease-in
-and `next.ease[1]` as ease-out (asm 0x800B61C4..623C and 0x800B73E0..7414). Roster-wide
+`cur.ease[1]` as ease-in and `next.ease[0]` as ease-out, and quaternion mode 5 reads them the same
+way (corrected 2026-10-27, Codex: 0x800B73D8 reads `next`+aux+0x10 = `next.ease[0]` via r30 = arg 3,
+0x800B73F8 reads `cur`+aux+0x12 = `cur.ease[1]` via r29 = arg 2; earlier text had them swapped)
+(asm 0x800B61C4..623C and 0x800B73D8..7414). Roster-wide
 (544 banks, 268,320 tracks, 3,829,384 keys, `.scratch` survey 2026-10-26): translation mode-3 keys
 store equal `in`/`out` tangents in 282,734 cases and different ones in 13,788; Squad keys equal
 control quaternions in 504,798 cases, different in 3,674. The `(quant,type,interp)` set is:

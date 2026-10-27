@@ -1,0 +1,130 @@
+DoQuatAnimation Codex candidate (2026-10-27, builds; see .agent/animations.md §2.1 for the maths). Apply from repo root with git apply.
+
+diff --git a/src/Unknown/gap_800B508C.c b/src/Unknown/gap_800B508C.c
+index 872b26db..259c86fd 100644
+--- a/src/Unknown/gap_800B508C.c
++++ b/src/Unknown/gap_800B508C.c
+@@ -1,4 +1,5 @@
+ #include "Unknown/gap_800B508C.h"
++#include "stl/math.h"
+ 
+ // .text:0x800B508C size:0xE0
+ // Relocates a freshly loaded bank in place: every file offset (user data, sequence table, names,
+@@ -58,8 +59,116 @@ void DoEulerAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
+ }
+ 
+ // .text:0x800B71C0 size:0x558
++extern void OSPanic(const char* file, int line, const char* message, ...);
++extern char lbl_800E7D88[];
++extern char lbl_800E7E50[];
++extern f32 lbl_803CBB48;
++extern f32 lbl_803CBB4C;
++extern u8 lbl_803CBB50;
++extern u8 lbl_803CBB51;
++
+ void DoQuatAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
+-    return;
++    struct ANIMAnimTrack* track = pipe->currentTrack;
++    u8 quantType = track->quantizeInfo >> 4;
++    u32 elemSize;
++    u32 settingOffset = 0;
++    u32 auxOffset = 0;
++    u32 scaleMode;
++    u32 mode;
++    Quaternion cur;
++    Quaternion following;
++    Quaternion result;
++    Quaternion inCtrl;
++    Quaternion outCtrl;
++    f32 delta = pipe->time - current->time;
++    f32 u = 0.0f;
++    f32 weightCur, weightNext, dot;
++
++    if (quantType < 2) elemSize = 1;
++    else if (quantType < 4) elemSize = 2;
++    else if (quantType == 4) elemSize = 4;
++    else elemSize = 0;
++    if (track->animType & ANIM_TYPE_SCALE) {
++        settingOffset += elemSize * 3;
++        if (track->animType & ANIM_TYPE_SCALE_QUAT) settingOffset += elemSize * 4;
++    }
++    GetData(lbl_803CBB50, current->setting + settingOffset, (f32*)&cur, 4, lbl_803CBB48);
++    GetData(lbl_803CBB50, next->setting + settingOffset, (f32*)&following, 4, lbl_803CBB48);
++    if (delta != 0.0f) {
++        if (next->time > current->time) u = delta / (next->time - current->time);
++        else if (track->animTime >= current->time) u = 1.0f;
++        else u = delta / (track->animTime - current->time);
++    }
++    scaleMode = (track->interpolationType >> 2) & 3;
++    if (track->animType & ANIM_TYPE_SCALE) {
++        if (scaleMode == 2) auxOffset = elemSize * 6;
++        else if (scaleMode == 3) auxOffset = elemSize * 6 + 4;
++    }
++    mode = (track->interpolationType >> 4) & 7;
++    switch (mode) {
++    case 5: {
++        f32 easeIn;
++        f32 easeOut;
++        f32 sum;
++        f32 k;
++        GetData(lbl_803CBB51, next->interpolation + auxOffset + 0x10, &easeOut, 1, lbl_803CBB4C);
++        GetData(lbl_803CBB51, current->interpolation + auxOffset + 0x12, &easeIn, 1, lbl_803CBB4C);
++        sum = easeIn + easeOut;
++        if (u != 0.0f && u != 1.0f && sum != 0.0f) {
++            if (sum > 1.0f) {
++                f32 reciprocal = 1.0f / sum;
++                easeIn *= reciprocal;
++                easeOut *= reciprocal;
++                k = 0.5f - reciprocal;
++            } else {
++                k = 0.5f - 1.0f / sum;
++            }
++            if (u < easeIn) u = u * u * (k / easeIn);
++            else if (u < 1.0f - easeOut) u = k * (2.0f * u - easeIn);
++            else {
++                f32 v = 1.0f - u;
++                u = 1.0f - v * v * (k / easeOut);
++            }
++        }
++    }
++    case 4:
++        GetData(lbl_803CBB50, current->interpolation + auxOffset + 8, (f32*)&outCtrl, 4, lbl_803CBB48);
++        GetData(lbl_803CBB50, next->interpolation + auxOffset, (f32*)&inCtrl, 4, lbl_803CBB48);
++        Squad(&cur, &outCtrl, &inCtrl, &following, &result, u);
++        break;
++    case 6:
++        dot = cur.x * following.x + cur.y * following.y + cur.z * following.z + cur.w * following.w;
++        if (1.0f + dot > 0.000001f) {
++            if (1.0f - dot > 0.000001f) {
++                f32 theta = (f32)acos(dot);
++                f32 invSin = 1.0f / (f32)sin(theta);
++                weightCur = invSin * (f32)sin((1.0f - u) * theta);
++                weightNext = invSin * (f32)sin(u * theta);
++            } else {
++                weightCur = 1.0f - u;
++                weightNext = u;
++            }
++            result.x = weightCur * cur.x + weightNext * following.x;
++            result.y = weightCur * cur.y + weightNext * following.y;
++            result.z = weightCur * cur.z + weightNext * following.z;
++            result.w = weightCur * cur.w + weightNext * following.w;
++        } else {
++            weightCur = (f32)sin(1.57079632679f * (1.0f - u));
++            weightNext = (f32)sin(1.57079632679f * u);
++            result.x = weightCur * cur.x - weightNext * following.y;
++            result.y = weightCur * cur.y + weightNext * following.x;
++            result.z = weightCur * cur.z - weightNext * following.w;
++            result.w = weightCur * cur.w + weightNext * following.z;
++        }
++        break;
++    case 0:
++        result = cur;
++        break;
++    default:
++        OSPanic(lbl_800E7D88, 0xE1, lbl_800E7E50);
++        break;
++    }
++    CTRLSetQuat(pipe->control, result.x, result.y, result.z, result.w);
+ }
+ #pragma dont_inline off
+ 

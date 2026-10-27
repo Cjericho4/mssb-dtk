@@ -1,0 +1,64 @@
+Squad Codex candidate (2026-10-27, builds; see .agent/animations.md §2.1 for the maths). Apply from repo root with git apply.
+
+diff --git a/src/Unknown/gap_800B508C.c b/src/Unknown/gap_800B508C.c
+index 872b26db..20f56ac2 100644
+--- a/src/Unknown/gap_800B508C.c
++++ b/src/Unknown/gap_800B508C.c
+@@ -1,4 +1,5 @@
+ #include "Unknown/gap_800B508C.h"
++#include "stl/math.h"
+ 
+ // .text:0x800B508C size:0xE0
+ // Relocates a freshly loaded bank in place: every file offset (user data, sequence table, names,
+@@ -32,10 +33,50 @@ void ANIMGet(ANIMBank* bank) {
+ #pragma dont_inline on
+ // .text:0x800B516C size:0x4A0
+ // Spherical cubic blend: slerp(q0,q1,t) and slerp(a,b,t) are slerped again by 2t(1-t) into out.
++#pragma dont_inline off
++extern f32 lbl_803CCF80;
++extern f32 lbl_803CCF84;
++extern f32 lbl_803CCF88;
++extern f32 lbl_803CCF8C;
++
++static inline void SquadSlerp(const Quaternion* left, const Quaternion* right, Quaternion* out, f32 t) {
++    f32 dot = left->x * right->x + left->y * right->y + left->z * right->z + left->w * right->w;
++    f32 weightLeft;
++    f32 weightRight;
++    if (lbl_803CCF84 + dot > lbl_803CCF88) {
++        if (lbl_803CCF84 - dot > lbl_803CCF88) {
++            f32 theta = (f32)acos(dot);
++            f32 invSin = lbl_803CCF84 / (f32)sin(theta);
++            weightLeft = invSin * (f32)sin((lbl_803CCF84 - t) * theta);
++            weightRight = invSin * (f32)sin(t * theta);
++        } else {
++            weightLeft = lbl_803CCF84 - t;
++            weightRight = t;
++        }
++        out->x = weightLeft * left->x + weightRight * right->x;
++        out->y = weightLeft * left->y + weightRight * right->y;
++        out->z = weightLeft * left->z + weightRight * right->z;
++        out->w = weightLeft * left->w + weightRight * right->w;
++    } else {
++        weightLeft = (f32)sin(lbl_803CCF8C * (lbl_803CCF84 - t));
++        weightRight = (f32)sin(lbl_803CCF8C * t);
++        out->x = weightLeft * left->x - weightRight * right->y;
++        out->y = weightLeft * left->y + weightRight * right->x;
++        out->z = weightLeft * left->z - weightRight * right->w;
++        out->w = weightLeft * left->w + weightRight * right->z;
++    }
++}
++
+ void Squad(Quaternion* q0, Quaternion* a, Quaternion* b, Quaternion* q1, Quaternion* out, f32 t) {
+-    return;
++    Quaternion first;
++    Quaternion second;
++    f32 blend = lbl_803CCF80 * (lbl_803CCF84 - t) * t;
++    SquadSlerp(q0, q1, &first, t);
++    SquadSlerp(a, b, &second, t);
++    SquadSlerp(&first, &second, out, blend);
+ }
+ 
++#pragma dont_inline on
+ // .text:0x800B560C size:0x79C
+ // Decodes `count` quantized values (type: 0 u8, 1 s8, 2 u16, 3 s16, 4 f32) into floats, times `scale`.
+ void GetData(u8 type, void* src, f32* dst, u8 count, f32 scale) {
