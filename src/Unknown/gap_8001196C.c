@@ -1418,9 +1418,30 @@ void fn_800189B8(void) {
     return;
 }
 
+/* Allocate four shared animation buffers from the largest track-15 descriptor. */
 // .text:0x800189E4 size:0x154
 void fn_800189E4(void) {
-    return;
+    enum { TRACK_15 = 15, CHARACTER_COUNT = 54 };
+    u32 maxSize = 0;
+    u32 size;
+    u32 aligned;
+    s32 group;
+    s32 j;
+    u8* bank;
+    Gap8001196CDiskDesc* desc = lbl_803CB790;
+    for (group = 0; group < CHARACTER_COUNT; group++) {
+        size = desc[group * SUBFILE_TRACKS + TRACK_15].sizeFlags & 0x0FFFFFFF;
+        if (maxSize < size) maxSize = size;
+    }
+    aligned = (maxSize + 31) & ~31;
+    g_hugeAnimStruct.maxTrack15Size = aligned;
+    bank = _OSAllocFromHeap(32, aligned * 4);
+    g_hugeAnimStruct.allocatedAnimBanks = bank;
+    for (j = 0; j < 4; j++) {
+        g_hugeAnimStruct.animBanks[j].bankE = bank;
+        g_hugeAnimStruct.slots[j].slotTables[5] = NULL;
+        bank += aligned;
+    }
 }
 
 // .text:0x80018B38 size:0x3C
