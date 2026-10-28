@@ -198,6 +198,70 @@ paratroopas, {21–23} piantas, {24–26} nokis, {27,52,53} bros, {33–36} magi
 Verified: `track0(BlueToad) == master[13]` with `master[34]` written at `+0x20`; overlay length ==
 `layoutOff − 0x20`; variant track files differ from the base only inside the texture region.
 
+### 3.1 Sub-items: hands and gloves (read from asm 2026-10-28; nothing here is matched)
+
+There is no bat among them: the 4 sub-item models per character are two bare hands and two gloves.
+**Files.** Disc `lbl_800F5D98[charID*6 + slot]` (`subitem.N`) = model + event script concatenated;
+ARAM `master[54 + charID*7 + k]`, k 0..3 models, 4..6 scripts. `fn_80021CA4` maps slot -> {model k,
+script k} through `lbl_800F7424[lbl_800F743C[charID]][slot]`:
+
+| slot | row 0 (most) | row 1 (18 Monty, 33..36 Magikoopas, 38 Petey) | meaning (row 0) |
+|---|---|---|---|
+| 0 | {0, 4} | {0, 4} | hand for bone 19, batting script A |
+| 1 | {1, 5} | {1, 5} | hand for bone 25, script B (fielding hand) |
+| 2 | {2, 6} | {0, 4} | glove for bone 19 |
+| 3 | {3, 6} | {1, 4} | glove for bone 25 |
+| 4 | {0, 5} | {0, 5} | hand for bone 19, script B |
+| 5 | {1, 4} | {1, 4} | hand for bone 25, script A |
+
+k0/k1 (and k2/k3) are mirror images; row-1 characters have no glove (Monty's hand holds a ball,
+Petey's are 1.5-unit polka-dot sticks along the leaves, Magikoopas' include the wand).
+**Model file** (root words, relocated by `finishSubItemLoad`/`LoadModel`; `lbl_803CB7C4` = {0,1,2,3}):
+word 0 actor layout (0x20; one bone in 304 of 324 files, 3/6/9 bones in the rest, always exactly
+one geometry descriptor), word 1 geo palette, word 2 morph block, word 3 event script (disc only;
+0 in the ARAM model). The old "1-sequence ANIM at +0x20" is the actor layout. There is no texture
+archive: `fn_800BD190(geo, entry->textureArchive)` binds **the body's** archive, so sub-item
+texture ids index the body's textures and a body recolour/paint shows on the hands and glove too.
+Wario's and Waluigi's hands use vertex descriptors with TEX2/TEX3 (0x2AC3C, 0xACBC).
+**Attachment** (`attachSubItemBone`, `LoadModel` tail, `fn_80011CA8` tail): owner bone =
+`owner.boneIndices[lbl_803CB7B4[k]]` with `lbl_803CB7B4` = {0x13, 0x19, 0x14, 0x1A, 0x4A, 0x4B,
+0x3C, 0x3D} (only [0] = 19 for obj0 and [1] = 25 for obj1 are read here); skipped if that bone is
+absent (0xFFFF) or `lbl_800EEAAC[charID] < 0` (never in retail). It walks the sub-item actor's
+bones from the last and copies the first non-zero `ACTBone.dispObj` (+0x14) into the owner bone's
+dispObj: the piece draws with the body bone's matrix, the sub-item's own bones and control (Mario
+glove slot 3 has scale 0.852) are ignored. Bone 19 is the character's left wrist (+X in the
+T-pose, all 54 bodies), 25 the right; no body has geometry on either.
+**Which pair** (`fn_80011CA8(anim, category, index)`, normal matches): `fn_80012B90` loads all six
+slots into three pairs ({2,3}, {0,1}, {4,5}; stack index = `index0 % 6`); fn_80011CA8 moves two of
+them into the slot's active pair, attaches obj0 to 19 and obj1 to 25, then calls `fn_80025EEC` on
+both. Category 2..4 (fielding, pitching, pitcher idle): FieldingArm (roster 0x26) 0 -> {slot 2
+glove, slot 1 hand}, 1 -> {slot 4 hand, slot 3 glove}, i.e. the glove on the non-throwing hand.
+Other categories: BattingStance (0x27) 0 -> {4, 5}, 1 -> {0, 1}. `fn_80013680` (mode 2) loads
+exactly these pairs directly; `LoadModel` reloads one hand (slot 5 into obj1 or slot 0 into obj0).
+**Category/index** (`fn_8001BE50`, also `fn_8001BA44`, `fn_8001F8A4`): gameplay animation id <45 ->
+(2, id) fielding; <61 -> (1, id-45) running; <63 -> (4, id-61); <75 -> (3, id-63) pitching; <105
+-> (0, id-75) batting; else (5, id-105). The body's per-model script (`anim+0x2C`) gets the same call.
+**Morph block** (word 2, offsets block-relative; `fn_80025DDC` relocates, `fn_80025C58` binds):
+`{u16 4?, u16 groups, u16 arrays, u16 0, u32 groupTable, u32 arrayTable, u32 actorSlot}`.
+Array 0x10 B: `{u16 descriptor, u8 kind|0x80 work-buffer flag, u8 comps<<4|fmt, ptr dst, ptr
+orig, u32 work buffer}`, kind 0 skin list, 1 positions, 2 normals, 3 colours, 4..7 TEX0..3 (retail:
+one array, positions of descriptor 0). Group 0xC B: `{u16 shapes (3 glove, 12 hand), u16 targets
+(1), u32 targetStride, u32 firstTarget}`. Target: `{u32 count, u8 descriptor, u8 kind, u8 comps,
+u8 compBytes, u32 runs, u32 shape[shapes]}`; runs `{u16 start, u16 count}` until count 0; each
+shape is `count` **absolute** s16 positions (same shift as the array), copied (or blended) over
+those vertices (`fn_80024FA4`, memcpy for a pure key). 14 files (Monty, Petey) have no array.
+**Event script** (word 3; `fn_80025FFC(word2, &obj->unk4)` stores the morph block at +0x2C):
+`{u32 entries, u32 entryTable, u32 rowTable, u32 rows (6), u32 rowLength[6] = {30,16,45,12,2,12}}`;
+row r is s8 entry ids by index (category r). Entry `{u16 duration, u16 keys, key[keys]}`, key
+`{u16 flags<<12 | frame, u8 weight%, u8 shape}`. `fn_80025EEC` starts an entry when the id changes
+(no entry: default keys `lbl_803CB7E8` = shape 0); `fn_80024DB0` advances 0.5 per tick (30
+frames/s) and loops; `fn_80024FA4` blends key shape A -> B linearly, flag 0x4000 on the next key =
+hold A, 0x8000 = partial weights (A at 1 - w/100, B at w/100), 0x2000 = take the shape from the caller's argument (r6) when it is not -1 (not traced).
+Fielder stand-still (row 2, index 0) is e.g. Mario hand 0 -> 7 -> 0 over 100 frames (a squeeze),
+glove shape 0; Peach hand shape 9 throughout.
+**Clone Maker** (mssb-modding `tools/datamap/export_gltf.py` `attachments`, Rust `gltf.rs`) shows
+the pair for the first clip with each piece's first-key shape.
+
 ## 4. How to add recoloured duplicate characters
 
 ### 4a. Data-only slot clone (implemented: `clone_character.py`, `tools/modding/README_GUI.md`)

@@ -24,6 +24,7 @@ old ones: #2→1, #3→2, #5→3, #6→4, #7→5, #8→6, #18→7, #25→8, #26�
 | Voices, announcer, SFX, music; voice swaps | `sounds.md` §1, then §2 (files), §3 (voice lines), §4 (announcer), §5 (music), §6 (swaps, clone voices), §7 (ARAM budget); tool: `tools/datamap/README.md` (sound-* / voice-swap / music-export) |
 | Skin picker (phase 3) | `roster_flow.md` §6 (design), §1–§5 (data flow); `modding_roadmap.md` phase 3 |
 | Character load chain (models, textures, anim banks, gloves) | `character_modding_report.md` §1–§3 |
+| Hands and gloves (sub-items: files, attachment, morph shapes, event scripts) | `character_modding_report.md` §3.1 |
 | Animation bank swaps, sequences, bone binding, playback (R5) | `animations.md` (owns R5); parser: `tools/datamap/animations.py`; full audit: `audit_animations.py` |
 | Menu portraits, names, colour word | `character_select.md` §8.1–8.3 |
 | What's planned / status | `modding_roadmap.md`; live status on the GitHub board (users/Cjericho4/projects/3, issues on Cjericho4/mssb-dtk) |

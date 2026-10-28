@@ -190,8 +190,8 @@ strings at DOL `0x800E33A0`. It doesn't point into ZZZZ.dat, so it's not a file 
   16..18 = ANIM banks (Mario: 30, 16, 45, 12, 2, 12, 3, 30, 30, 16, 16, 45, 16, 12, 12, 12, 12
   sequences). Track 15 = a 12-sequence ANIM bank (`fn_80021BBC`; there is no separate skeleton
   file, the bones are in the body's actor layout). `master` tiers: 0..32 bodies, 33..53 texture
-  overlays (`lbl_800F73B8[charID] = {body, overlay}`), 54+charID*7+k attachments (k 0..3 =
-  hand/glove/bat models with a 1-sequence ANIM bank at +0x20, k 4..6 = keyed event scripts),
+  overlays (`lbl_800F73B8[charID] = {body, overlay}`), 54+charID*7+k attachments (k 0/1 =
+  hands, 2/3 = gloves, k 4..6 = keyed event scripts; formats in `character_modding_report.md` §3.1),
   432+charID = the track-15 bank, 486+id = 29 keyed event scripts. The model-id map
   `lbl_800EEB18[charID]` picks id, and colour variants share their base's id (values:
   `character_modding_report.md` §3). `model_script` (DOL `0x800F71D8`, 30 rows) is its disc fallback

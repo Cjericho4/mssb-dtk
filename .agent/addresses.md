@@ -32,7 +32,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800EFD38 (0xECD38) | `master` / `lbl_800EFD38` | 515 ARAM master descriptors {flags,0x40000000\|size,blob offset,comp}; blob-relative | DM §4; CMR §3 |
 | 0x800EFD38 +[0..32] | master bodies | 33 base body models (not charID-indexed) | CMR §3 |
 | 0x800EFD38 +[33..53] | master overlays | 21 texture overlays (texarc), via lbl_800F73B8 | CMR §3 |
-| 0x800EFD38 +[54+charID*7+k] | master sub-items | k0..3 models (hand/glove/bat, 1-seq ANIM at +0x20), k4..6 event scripts | DM §4 |
+| 0x800EFD38 +[54+charID*7+k] | master sub-items | k0/k1 hands (bones 19/25), k2/k3 gloves (no bat; +0x20 is the actor layout), k4..6 event scripts | CMR §3.1 |
 | 0x800EFD38 +[432+charID] | master track-15 bank | 12-sequence ANIM bank (there is no skeleton file) | CMR §1; DM §4 |
 | 0x800EFD38 +[486+id] | master event scripts | 29 keyed event scripts, id = lbl_800EEB18[charID] | DM §4 |
 | 0x800F1D68 | `blob` / master[515] | {0,0x4D6600,ZZZZ+0x1A15E800,0x4D6600}, the 4.9 MB ARAM blob | CMR §8; DM §2 |
@@ -40,6 +40,9 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800F1D78 track 0 / 1 | body subfiles | hi-detail body (== master body) / low-detail body (Mario: 37 bones, different record order, skinFileID 1); both recoloured | CMR §3 |
 | 0x800F1D78 tracks 2..18 | ANIM banks | track/action map, 544 distinct descriptors / 487 decoded byte patterns; 15 also master[432+c]; 7/8 usage unresolved | AN §1, §4 |
 | 0x800F5D98 | `subitem` / `lbl_800F5D98` | 54x6x16 B sub-item disc files, index charID*6+itemSlot | CMR §3 |
+| 0x803CB7B4 (sdata) | `lbl_803CB7B4` | 8 u8 bone ids {19,25,20,26,74,75,60,61}; [0]/[1] = wrists for sub-item obj0/obj1 | CMR §3.1 |
+| 0x803CB7C4 (sdata) | `lbl_803CB7C4` | 4 u8 {0,1,2,3}: sub-item root word for layout/geo/morph/script | CMR §3.1 |
+| 0x803CB7E8 / 0x803CB7F0 (sdata) | default event keys | {dur 100, 2 keys, shape 0} used when a script has no entry | CMR §3.1 |
 | 0x800F71D8 | `model_script` | 30 per-model event scripts; disc fallback of master 486+id (fn_80021ADC); 0x1E0 | DM §4; CMR §3 |
 | 0x800F73B8 (0xF43B8) | `lbl_800F73B8` | 54x2 s8 {bodyEntry, overlayEntry or -1} per charID; retail values in CMR §3 | CMR §3 |
 | 0x800F7424 / 0x800F743C | `lbl_800F7424` / `lbl_800F743C` | 2x6x2 sub-item pair rows {k1,k2} / 54 per-character row index | CMR §3 |
@@ -95,6 +98,11 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_8001758C | slot record + track pick | fills slot, track = charID*19+(variant==0), body load; MATCH | CMR §1; RF §5.4 |
 | fn_8002204C | body model loader | {body, overlay} pair -> master, else disc track 0; MATCH | CMR §1.1 |
 | fn_80021CA4 | sub-item pair loader | bat/glove pair loader using lbl_800F743C/7424/5D98; MATCH | CMR §3 |
+| fn_80011CA8 | sub-item pair chooser | (anim, category, index): glove+hand by FieldingArm for categories 2..4, else hands by BattingStance; attaches dispObj to bones 19/25; stub | CMR §3.1 |
+| fn_8001BE50 | play gameplay animation | gameplay id -> (category, index) for fn_80025EEC on body script and both sub-items | CMR §3.1 |
+| fn_80024DB0, fn_80024FA4 | event-script tick / morph apply | advance 0.5/tick and loop; copy or blend key shapes into the morphed array | CMR §3.1 |
+| fn_80025C58, fn_80025DDC | morph block bind / relocate | | CMR §3.1 |
+| fn_80025EEC, fn_80025FFC | event script start / bind | rows[category][index] -> entry; stores morph block at obj+0x2C | CMR §3.1 |
 | fn_80021BBC | track-15 bank loader | master 432+charID else subfile track 15; charID<0x36; MATCH | CMR §1.1 |
 | fn_8002244C | sub-item queue callback | packedID=charID<<16\|itemID, chains 2nd sub-item; MATCH | CMR §1.1 |
 | fn_8002254C | overlay loader | decompresses master[overlay] over the body texture archive; asm only | CMR §1.1 |
