@@ -114,9 +114,42 @@ f32 fn_3_13DA50(s8 index, f32 targetPos, s8 *result) {
     return dist1;
 }
 
+// Measure distance in bases around the four-base loop.
+/* FAKEMATCH: Both direction checks inline the shared base-path calculation. */
+static inline f32 basePathDistance(u8 dir, f32 a, f32 b) {
+    if (a < 0.0f) {
+        a += 4.0f;
+    } else if (a >= 4.0f) {
+        a -= 4.0f;
+    }
+    if (b < 0.0f) {
+        b += 4.0f;
+    } else if (b >= 4.0f) {
+        b -= 4.0f;
+    }
+    if (dir == 1) {
+        if (a > b) {
+            return 4.0f + b - a;
+        }
+        return b - a;
+    }
+    if (a < b) {
+        return 4.0f + a - b;
+    }
+    return a - b;
+}
+
 // .text:0x0013DC48 size:0x198 mapped:0x8077CCDC
-void fn_3_13DC48(void) {
-    return;
+// Measure both paths to a base, adding a turn-around penalty in bases when needed.
+void fn_3_13DC48(s8 runnerIndex, f32* forward, f32* backward, f32 target) {
+    *forward = basePathDistance(1, g_Runners[runnerIndex].fractionalBasesRan, target);
+    if (g_Runners[runnerIndex].runningDirectionCode == 3) {
+        *forward += 0.15f;
+    }
+    *backward = basePathDistance(0, g_Runners[runnerIndex].fractionalBasesRan, target);
+    if (g_Runners[runnerIndex].runningDirectionCode == 1) {
+        *backward += 0.15f;
+    }
 }
 
 // .text:0x0013DDE0 size:0xC4 mapped:0x8077CE74
