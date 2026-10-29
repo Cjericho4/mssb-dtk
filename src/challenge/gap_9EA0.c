@@ -1,4 +1,12 @@
 #include "challenge/gap_9EA0.h"
+#include "game/rep_1C0.h"
+/* The resource owning header conflicts with UnknownHeaders scene and sound
+   views. Retain its opaque resource type and pointer API here; fn_80021980
+   takes the resource in r3 despite its owning header still declaring a stub. */
+struct Gap8001E460Resource;
+void fn_80021954(struct Gap8001E460Resource** resource);
+void fn_80021980(struct Gap8001E460Resource* resource);
+extern CompressedDiskRead lbl_1_data_196C[];
 
 // .text:0x00009EA0 size:0x64
 void fn_1_9EA0(u8 value, s32 arg) {
@@ -11,8 +19,28 @@ void fn_1_9EA0(u8 value, s32 arg) {
 }
 
 // .text:0x00009F04 size:0x120
+/* Load a resource, run its scene callback, then release it when the callback finishes. */
 void fn_1_9F04(void) {
-    return;
+    ChallengeScene* scene = (ChallengeScene*)lbl_803CC1B8;
+    switch (scene->byte18) {
+    case 0:
+        lbl_800EF808.files[scene->byte19] = ARAMTransfer(&lbl_1_data_196C[scene->byte19], NULL, 1, NULL);
+        scene->byte18 = 1;
+        break;
+    case 1:
+        if (lbl_803C6CF8.allowLoad != 1) break;
+        fn_80021980(lbl_800EF808.files[scene->byte19]);
+        scene->byte18 = 2;
+        scene->bytes[6] = 0;
+        /* fall through */
+    case 2:
+        if (scene->resourceCallback(&scene->bytes[6]) == 0) {
+            fn_80021954((struct Gap8001E460Resource**)&lbl_800EF808.files[scene->byte19]);
+            scene->parent->loadingState = 1;
+            fn_800B0A14_removeQueue();
+        }
+        break;
+    }
 }
 
 // .text:0x0000A024 size:0x160

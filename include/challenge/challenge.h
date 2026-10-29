@@ -55,6 +55,7 @@ typedef struct ChallengeScene {
         struct {
         /* 0x14 */ union {
             s32 arg14;
+            s32 (*resourceCallback)(u8* state);
             struct {
                 s16 state14;
                 s16 state16;
