@@ -1,6 +1,8 @@
 
 #include "musyx/musyx_priv.h"
 
+extern u32 lbl_803CC35C;
+
 extern void DCStoreRange(void* addr, u32 nBytes);
 
 static volatile const u16 itdOffTab[128] = {
@@ -563,8 +565,8 @@ void hwEnableHRTF()
 }
 void hwDisableHRTF() { dspHRTFOn = FALSE; }
 
-void hwEnableCompressor(void)
-{
+void hwEnableCompressor(void) {
+    lbl_803CC35C = TRUE;
 }
 
 u32 hwGetVirtualSampleID(u32 v)
