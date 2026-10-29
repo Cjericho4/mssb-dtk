@@ -48,9 +48,17 @@ void fn_2_1254(void) {
     return;
 }
 
+// Read a 1-, 2-, or 4-byte value at a byte offset in a packed menu buffer.
 // .text:0x00001258 size:0x48
-void fn_2_1258(void) {
-    return;
+u32 fn_2_1258(s32 offset, const u8* buffer, s32 width) {
+    u32 value = 0;
+    switch (width) {
+    case 1: value = buffer[offset]; break;
+    /* FAKEMATCH: integer address sums retain the original indexed-load operand order. */
+    case 2: value = *(const u16*)(offset + (u32)buffer); break;
+    case 4: value = *(const u32*)(offset + (u32)buffer); break;
+    }
+    return value;
 }
 
 /* Add to a signed counter, capping at 0x7FFF (no lower-bound clamp). */

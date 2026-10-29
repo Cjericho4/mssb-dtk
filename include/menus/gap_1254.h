@@ -102,7 +102,7 @@ void fn_800671FC(void);
 void fn_800649BC(void);
 
 void fn_2_1254(void);
-void fn_2_1258(void);
+u32 fn_2_1258(s32 offset, const u8* buffer, s32 width);
 void satAddS16(s16* value, s16 amount);
 void satAddU8(u8* value, u16 amount);
 void satAddU16(u16* value, u16 amount);
