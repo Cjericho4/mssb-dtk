@@ -1,0 +1,74 @@
+diff --git a/src/challenge/rep_7730.c b/src/challenge/rep_7730.c
+index eefb0fb3..ba4a4591 100644
+--- a/src/challenge/rep_7730.c
++++ b/src/challenge/rep_7730.c
+@@ -309,8 +309,68 @@ void fn_1_1FD78(void) {
+ }
+ 
+ // .text:0x0002004C size:0x258
++typedef struct ChallengeTextureLoadScene {
++    void (*callback)(void);
++    u8 _pad4[0x10];
++    ChallengeTextureArchive* texture;
++    ChallengeTextureFile* file;
++    u8 _pad1C[5];
++    u8 phase;
++} ChallengeTextureLoadScene;
++typedef struct ChallengeTexturePool {
++    u8 _pad0[0x24C];
++    u32 names[8];
++    GXTlutObj palettes[8];
++    GXTexObj textures[8];
++} ChallengeTexturePool;
++extern ChallengeTexturePool lbl_1_bss_6BD8;
++extern CompressedDiskRead lbl_1_data_10518;
++static inline u8 initializePreviewTexture(StaC4TexDesc* desc, GXTexObj* texture, GXTlutObj* palette, u32 paletteName) {
++    GXBool mipmap = desc->minLOD != desc->maxLOD;
++    if (desc->tlut != NULL) {
++        GXInitTexObjCI(texture, desc->image, desc->width, desc->height, desc->format,
++                      desc->wrapS, desc->wrapT, mipmap, paletteName);
++        GXInitTlutObj(palette, desc->tlut, desc->tlutFormat, desc->tlutEntries);
++    } else {
++        GXInitTexObj(texture, desc->image, desc->width, desc->height, desc->format,
++                     desc->wrapS, desc->wrapT, mipmap);
++    }
++    GXInitTexObjLOD(texture, desc->minFilter, desc->magFilter, desc->minLOD, desc->maxLOD,
++                    desc->lodBias, GX_FALSE, GX_FALSE, GX_ANISO_1);
++    return desc->tlut != NULL;
++}
++
++/* Initialize the eight preview texture layers and their palettes. */
+ void fn_1_2004C(void) {
+-    return;
++    ChallengeTexturePool* pool = &lbl_1_bss_6BD8;
++    u32 indices[9] = {5, 6, 7, 8, 9, 13, 96, 97, 85};
++    u32* names;
++    u32* index;
++    GXTexObj* textures;
++    GXTlutObj* palettes;
++    u32 i;
++    ChallengeTextureLoadScene* scene = (ChallengeTextureLoadScene*)lbl_803CC1B8;
++    switch (scene->phase) {
++    case 0:
++        scene->file = ARAMTransfer(&lbl_1_data_10518, 0, 0, 0);
++        scene->phase++;
++        break;
++    case 1:
++        if (lbl_803C6CF8.allowLoad != 1) break;
++        scene->texture = (ChallengeTextureArchive*)((u8*)scene->file + scene->file->textureOffset);
++        convertTextureHeader((Gap8000B9C8Texture*)scene->texture);
++        names = pool->names;
++        index = indices;
++        textures = pool->textures;
++        palettes = pool->palettes;
++        for (i = 0; i < 8; i++, index++, textures++, palettes++, names++) {
++            *names = i;
++            if (initializePreviewTexture(&scene->texture->entries[*index].desc, textures, palettes, i)) *names |= 0x80000000;
++        }
++        scene->phase = 0;
++        lbl_803CC1B8->aFunctionPointer = fn_1_202A4;
++        break;
++    }
+ }
+ 
+ // .text:0x000202A4 size:0x168

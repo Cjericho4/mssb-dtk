@@ -1,0 +1,176 @@
+diff --git a/include/challenge/rep_00B0.h b/include/challenge/rep_00B0.h
+index 859db326..16fe3be0 100644
+--- a/include/challenge/rep_00B0.h
++++ b/include/challenge/rep_00B0.h
+@@ -8,11 +8,13 @@ void fn_1_19AC(void);
+ typedef struct ChallengeBounds { f32 minX, minY, minZ, maxX, maxY, maxZ; } ChallengeBounds;
+ void fn_1_1BF8(ChallengeBounds* bounds, s32 index);
+ void fn_1_1DBC(s32 a, s32 b, s32 c, s32 d, s32 face);
+-void fn_1_25BC(void);
++typedef struct ChallengePreviewMesh ChallengePreviewMesh;
++void fn_1_25BC(ChallengePreviewMesh* mesh);
+ void fn_1_3E38(Vec* position, u32 index);
+ void fn_1_4074(Vec* position);
+-void fn_1_4290(void);
+-void fn_1_4728(void);
++typedef struct ChallengePreviewCamera { Vec position; Vec target; } ChallengePreviewCamera;
++void fn_1_4290(ChallengePreviewCamera* camera);
++u32 fn_1_4728(ChallengePreviewCamera* camera, ChallengePreviewCamera* result);
+ void fn_1_4A24(void);
+ 
+ #endif // !__CHALLENGE_rep_00B0_H_
+diff --git a/include/challenge/rep_0138.h b/include/challenge/rep_0138.h
+index 3b1e0d6d..f1d5976c 100644
+--- a/include/challenge/rep_0138.h
++++ b/include/challenge/rep_0138.h
+@@ -51,22 +51,34 @@ typedef struct ChallengeModelPose {
+     Mtx transform;
+     u8 _pad38[0x34];
+ } ChallengeModelPose;
++#include "Dolphin/gd.h"
++typedef struct ChallengePreviewMesh ChallengePreviewMesh;
++typedef struct ChallengePreviewGeometry {
++    struct ChallengeBounds* bounds;
++    ChallengePreviewMesh* meshes[1];
++} ChallengePreviewGeometry;
+ typedef struct ChallengePreviewState {
+-    u8 _pad0[0x30];
++    Mtx view;
+     u16 flags;
+     u8 _pad32[0x1A];
+     Vec position;
+     u8 _pad58[4];
+     ChallengeModelPose poses[4];
+-    u8 _pad20C[0x10];
++    GDCurrentDL displayList;
+     u16* pixels;
+-    u8 _pad220[0xE];
++    u32 displayListSize;
++    ChallengePreviewGeometry* geometry;
++    s16 count;
++    u8 _pad22A[4];
+     s16 selection;
+     s8 mode;
+     s8 option;
+     u8 _pad232[2];
+     u8 active;
+-    u8 _pad235[0xB];
++    u8 _pad235[3];
++    s8 toggle238;
++    s8 toggle239;
++    u8 _pad23A[6];
+ } ChallengePreviewState;
+ extern ChallengePreviewState lbl_1_common_bss_472B4;
+ void fn_800B472C(Rep0138Model* model);
+diff --git a/src/challenge/rep_00B0.c b/src/challenge/rep_00B0.c
+index 0a123e51..d593b254 100644
+--- a/src/challenge/rep_00B0.c
++++ b/src/challenge/rep_00B0.c
+@@ -4,13 +4,80 @@
+ #define GDOverflowed fn_800A1B80
+ #include "Dolphin/gd.h"
+ #include "Dolphin/mtx.h"
++#include "challenge/rep_0138.h"
++#include "Dolphin/os.h"
++#include "Dolphin/OS/OSCache.h"
+ extern Vec lbl_1_bss_60[8];
+ 
+ // .text:0x000019AC size:0x24C
++typedef struct ChallengePreviewRenderData {
++    ChallengePreviewCamera camera;
++    u8 _pad18[0x28];
++    GXColor colors[21];
++    GXColor clearColor;
++} ChallengePreviewRenderData;
++extern ChallengePreviewRenderData lbl_1_data_200;
++void fn_800A1A70(GDCurrentDL* list, u8* buffer, s32 size);
++void fn_800A1A88(void);
++/* Build and submit the selected preview meshes and their optional bounds. */
++static inline void drawChallengePreview(ChallengePreviewRenderData* data) {
++    ChallengePreviewCamera result;
++    ChallengePreviewState* state;
++    GDCurrentDL* list;
++    ChallengePreviewMesh** meshes;
++    u32 i, size;
++    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
++    GXSetCopyClear(data->clearColor, 0xFFFFFF);
++    GXSetCullMode(GX_CULL_FRONT);
++    GXClearVtxDesc();
++    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
++    GXSetVtxDesc(GX_VA_CLR0, GX_INDEX8);
++    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
++    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
++    GXSetArray(GX_VA_CLR0, data->colors, 4);
++    GXSetLineWidth(18, GX_TO_ONE);
++    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
++    GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
++    GXSetNumChans(1);
++    GXSetNumTexGens(0);
++    GXSetNumTevStages(1);
++    GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
++    GXLoadPosMtxImm(lbl_1_common_bss_472B4.view, 0);
++    state = &lbl_1_common_bss_472B4;
++    meshes = state->geometry->meshes;
++    list = &state->displayList;
++    fn_800A1A70(list, (u8*)state->pixels, 0x80000);
++    __GDCurrentDL = list;
++    if (lbl_1_common_bss_472B4.selection < 0) {
++        for (i = 0; i < lbl_1_common_bss_472B4.count; i++)
++            fn_1_25BC(*meshes++);
++        fn_1_4290(&data->camera);
++    } else {
++        fn_1_25BC(meshes[lbl_1_common_bss_472B4.selection]);
++        fn_1_4290(&data->camera);
++        if (lbl_1_common_bss_472B4.toggle239)
++            fn_1_1BF8(state->geometry->bounds, lbl_1_common_bss_472B4.selection);
++    }
++    if (fn_1_4728(&data->camera, &result)) {
++        PSVECAdd(&result.position, &result.target, &result.target);
++        fn_1_4290(&result);
++    }
++    fn_800A1A88();
++    size = lbl_1_common_bss_472B4.displayList.pDisplayListData - list->begin;
++    DCFlushRangeNoSync(state->pixels, size);
++    lbl_1_common_bss_472B4.displayListSize = size;
++    if (size > 0x80000) {
++        OSReport("Gd Buffer overflow:%d\n", size);
++        for (;;) {}
++    }
++    GXCallDisplayList(state->pixels, size);
++}
++/* Attempt to preserve the pooled data base; this variant does not match. */
+ void fn_1_19AC(void) {
+-    return;
++    drawChallengePreview(&lbl_1_data_200);
+ }
+ 
++
+ // .text:0x00001BF8 size:0x1C4
+ /* Expand a bounding box into eight vertices and emit its six quad faces. */
+ void fn_1_1BF8(ChallengeBounds* bounds, s32 index) {
+@@ -57,7 +124,7 @@ void fn_1_1DBC(s32 a, s32 b, s32 c, s32 d, s32 face) {
+ }
+ 
+ // .text:0x000025BC size:0x187C
+-void fn_1_25BC(void) {
++void fn_1_25BC(ChallengePreviewMesh* mesh) {
+     return;
+ }
+ 
+@@ -89,13 +156,13 @@ void fn_1_4074(Vec* position) {
+ }
+ 
+ // .text:0x00004290 size:0x498
+-void fn_1_4290(void) {
++void fn_1_4290(ChallengePreviewCamera* camera) {
+     return;
+ }
+ 
+ // .text:0x00004728 size:0x2FC
+-void fn_1_4728(void) {
+-    return;
++u32 fn_1_4728(ChallengePreviewCamera* camera, ChallengePreviewCamera* result) {
++    return 0;
+ }
+ 
+ // .text:0x00004A24 size:0x3B4

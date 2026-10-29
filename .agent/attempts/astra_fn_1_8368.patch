@@ -1,0 +1,71 @@
+diff --git a/include/challenge/rep_0138.h b/include/challenge/rep_0138.h
+index 3b1e0d6d..7f824d96 100644
+--- a/include/challenge/rep_0138.h
++++ b/include/challenge/rep_0138.h
+@@ -60,13 +60,18 @@ typedef struct ChallengePreviewState {
+     ChallengeModelPose poses[4];
+     u8 _pad20C[0x10];
+     u16* pixels;
+-    u8 _pad220[0xE];
++    u8 _pad220[8];
++    s16 count;
++    u8 _pad22A[4];
+     s16 selection;
+     s8 mode;
+     s8 option;
+     u8 _pad232[2];
+     u8 active;
+-    u8 _pad235[0xB];
++    u8 _pad235[3];
++    u8 toggle238;
++    u8 toggle239;
++    u8 _pad23A[6];
+ } ChallengePreviewState;
+ extern ChallengePreviewState lbl_1_common_bss_472B4;
+ void fn_800B472C(Rep0138Model* model);
+diff --git a/src/challenge/rep_0138.c b/src/challenge/rep_0138.c
+index 8d33f652..fb6be6f4 100644
+--- a/src/challenge/rep_0138.c
++++ b/src/challenge/rep_0138.c
+@@ -235,6 +235,40 @@ void fn_1_7FF8(void) {
+ }
+ 
+ // .text:0x00008368 size:0x240
++typedef struct ChallengePreviewCamera { Vec position; Vec target; } ChallengePreviewCamera;
++extern ChallengePreviewCamera lbl_1_data_200;
++/* Adjust preview selection, display toggles, and camera coordinates from controller input. */
+ void fn_1_8368(void) {
+-    return;
++    if (lbl_803C77B8.pressed & 1) {
++        if (--lbl_1_common_bss_472B4.selection < -1)
++            lbl_1_common_bss_472B4.selection = lbl_1_common_bss_472B4.count - 1;
++    } else if (lbl_803C77B8.pressed & 2) {
++        if (++lbl_1_common_bss_472B4.selection >= lbl_1_common_bss_472B4.count)
++            lbl_1_common_bss_472B4.selection = -1;
++    } else if (lbl_803C77B8.held & 0x400) {
++        lbl_1_common_bss_472B4.toggle239 ^= 1;
++    } else if (lbl_803C77B8.held & 0x100) {
++        lbl_1_common_bss_472B4.toggle238 ^= 1;
++    }
++    {
++        f32 x = (s8)lbl_803C77B8.axes.bytes[0];
++        f32 z = (s8)lbl_803C77B8.axes.bytes[1];
++        f32 targetX = (s8)lbl_803C77B8.axes.bytes[2];
++        f32 targetZ = (s8)lbl_803C77B8.axes.bytes[3];
++        f32 px = x * 0.0078125f + lbl_1_data_200.position.x;
++        f32 pz = z * 0.0078125f + lbl_1_data_200.position.z;
++        f32 tx = targetX * 0.0078125f + lbl_1_data_200.target.x;
++        f32 tz = targetZ * 0.0078125f + lbl_1_data_200.target.z;
++        lbl_1_data_200.position.x = px;
++        lbl_1_data_200.position.z = pz;
++        lbl_1_data_200.target.x = tx;
++        lbl_1_data_200.target.z = tz;
++    }
++    if (!(lbl_803C77B8.buttons & 0x100)) {
++        lbl_1_data_200.position.y -= (f32)(u32)lbl_803C77B8.axes.bytes[5] * 0.0009765625f;
++        lbl_1_data_200.position.y += (f32)(u32)lbl_803C77B8.axes.bytes[4] * 0.0009765625f;
++    } else {
++        lbl_1_data_200.target.y -= (f32)(u32)lbl_803C77B8.axes.bytes[5] * 0.0009765625f;
++        lbl_1_data_200.target.y += (f32)(u32)lbl_803C77B8.axes.bytes[4] * 0.0009765625f;
++    }
+ }
