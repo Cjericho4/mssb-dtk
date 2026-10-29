@@ -67,8 +67,22 @@ void fn_1_3E38(void) {
 }
 
 // .text:0x00004074 size:0x21C
-void fn_1_4074(void) {
-    return;
+static inline void writeChallengeFloat(f32 value) {
+    union { f32 value; u32 bits; } encoded;
+    encoded.value = value;
+    __GDCheckOverflowed(4);
+    __GDWriteU32(encoded.bits);
+}
+static inline void writeChallengePosition(f32 x, f32 y, f32 z) {
+    writeChallengeFloat(x);
+    writeChallengeFloat(y);
+    writeChallengeFloat(z);
+}
+/* Emit a floating-point position and its display-list attribute index. */
+void fn_1_4074(Vec* position) {
+    writeChallengePosition(position->x, position->y, position->z);
+    __GDCheckOverflowed(1);
+    __GDWriteU8(18);
 }
 
 // .text:0x00004290 size:0x498
