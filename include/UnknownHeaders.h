@@ -1164,7 +1164,7 @@ typedef struct CommonBss_32724 {
     /* 0xB5 */ u8 unk_B5;
     /* 0xB6 */ u8 unk_B6;
     /* 0xB7 */ u8 unk_B7;
-    /* 0xB8 */ u8 _padB8;
+    /* 0xB8 */ u8 unk_0xB8;
     /* 0xB9 */ u8 unk_B9;
     /* 0xBA */ u8 _padBA;
     /* 0xBB */ u8 unk_BB;

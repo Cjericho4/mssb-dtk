@@ -1,4 +1,5 @@
 #include "game/gap_106DFC.h"
+#include "game/substitution_state.h"
 #include "game/UnknownHomes_Game.h"
 #include "game/rep_1C0.h"
 #include "game/gap_5985C.h"
@@ -8,6 +9,8 @@
 #include "game/gap_9CD90.h"
 #include "game/gap_464.h"
 #include "game/gap_6D4A0.h"
+/* gap_6C854.h has a conflicting lbl_80366158 object view. */
+s32 fn_3_6C938(s32 arg0, s32 arg1);
 
 extern void fn_800246D4(s32 (*compareFn)(u8*, u8*), u8* out, u8* in, u32 elemSize, u8 count);
 extern void fn_8001CA40(s32 arg0);
@@ -55,9 +58,56 @@ void fn_3_107078(void) {
     }
 }
 
+extern s16 lbl_3_data_2137C[];
+enum { MINIGAME_TRANSITION_STATUS_24 = 0x24 };
+
 // .text:0x001070A4 size:0x188 mapped:0x80746138
+// Advance the minigame result transition through its timed and input-driven phases.
 void fn_3_1070A4(void) {
-    return;
+    GameControlsStruct* game = &g_GameLogic;
+    switch (game->_125) {
+    case TRANSITION_CALCULATION_TYPE_0:
+        g_Minigame._1A3D = g_Minigame._1907;
+        g_Minigame._1A3E = 1;
+        lbl_3_common_bss_32724.unk_0xB8 = 0;
+        if (g_Minigame._1907 == 1 && g_Minigame.players._18E8[g_Minigame._1908] == 1) {
+            g_Minigame._1A3F = 1;
+        }
+        g_GameLogic.FrameCountOfCurrentAtBat_Copy = 0;
+        game->_125 = TRANSITION_CALCULATION_TYPE_1;
+        break;
+    case TRANSITION_CALCULATION_TYPE_1:
+        changeScene(SCENE_ID_AT_BAT, 6);
+        if (g_GameLogic.FrameCountOfCurrentAtBat_Copy == lbl_3_data_2137C[1]) {
+            lbl_3_common_bss_32724.unk_0xB8 = 1;
+        }
+        if (g_GameLogic.FrameCountOfCurrentAtBat_Copy > 300) {
+            game->_125 = TRANSITION_CALCULATION_TYPE_2;
+        }
+        break;
+    case TRANSITION_CALCULATION_TYPE_2:
+        if (fn_3_6C938(1, PAD_BUTTON_A | PAD_BUTTON_START)) {
+            game->_125 = TRANSITION_CALCULATION_TYPE_6;
+        }
+        break;
+    case TRANSITION_CALCULATION_TYPE_6:
+        game->_125 = TRANSITION_CALCULATION_TYPE_7;
+        break;
+    case TRANSITION_CALCULATION_TYPE_7:
+        if (game->FrameCountOfCurrentAtBat_Copy > 60) {
+            game->_125 = TRANSITION_CALCULATION_TYPE_8;
+        }
+        break;
+    case TRANSITION_CALCULATION_TYPE_8:
+        lbl_3_common_bss_34C90.field_0x1D1 = 0;
+        lbl_3_common_bss_34C90.field_0x1D2 = 0;
+        if (g_Minigame._19E7 == 1) {
+            fn_3_5A6D4(MINIGAME_TRANSITION_STATUS_24);
+        } else {
+            fn_3_5A6D4(GAME_STATUS_MINIGAME_POST_MENU);
+        }
+        break;
+    }
 }
 
 // .text:0x0010722C size:0x320 mapped:0x807462C0
