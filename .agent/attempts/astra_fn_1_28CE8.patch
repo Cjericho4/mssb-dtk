@@ -1,0 +1,118 @@
+diff --git a/include/challenge/rep_7BF0.h b/include/challenge/rep_7BF0.h
+index 40a95ee4..49f47fb3 100644
+--- a/include/challenge/rep_7BF0.h
++++ b/include/challenge/rep_7BF0.h
+@@ -22,13 +22,18 @@ typedef struct Rep7BF0View471D8 {
+     union {
+         Rep7978Camera camera;
+         struct {
+-            u8 _pad0[0x50];
++            Vec origin, target;
++            u8 _pad18[0x10];
++            f32 vectorScale;
++            u8 _pad2C[0x24];
+             f32 frame;
+-            u8 _pad54[0x64];
++            u8 _pad54[4];
++            Mtx basis, inverse;
+             Mtx transform;
+             Vec direction;
+             Quaternion rotation;
+-            u8 _pad104[0x18];
++            Vec scaledDirection;
++            u8 _pad110[12];
+             Vec localPosition;
+             Vec worldPosition;
+             u8 _pad134[12];
+@@ -52,6 +57,10 @@ typedef struct ChallengeScriptGlobals {
+     s32 mode;
+     u8 selection;
+     u8 pending;
++    u8 _pad3A[0x26];
++    Vec vertices[8];
++    GXColor colors[8];
++    u8 displayList[0x40];
+ } ChallengeScriptGlobals;
+ extern ChallengeScriptGlobals lbl_1_data_11300;
+ void fn_1_28C34(void);
+diff --git a/src/challenge/rep_7BF0.c b/src/challenge/rep_7BF0.c
+index 5cf15725..b8300b9e 100644
+--- a/src/challenge/rep_7BF0.c
++++ b/src/challenge/rep_7BF0.c
+@@ -1,4 +1,8 @@
+ #include "challenge/rep_7BF0.h"
++#include "Dolphin/gx.h"
++#include "Dolphin/GX/GXHardware.h"
++extern Rep7BF0View471D8 lbl_1_bss_47068;
++void gOz_GXSetTexture(s32 mode, s32 texture, s32 flags);
+ 
+ // .text:0x0002858C size:0x434
+ void fn_1_2858C(void) {
+@@ -46,8 +50,66 @@ void fn_1_28C34(void) {
+ }
+ 
+ // .text:0x00028CE8 size:0x374
++/* Draw the scripted transform axes and indexed preview mesh. */
+ void fn_1_28CE8(DrawingSceneStruct* scene) {
+-    return;
++    Mtx matrix;
++    Vec temporary;
++    ChallengeScriptGlobals* globals = &lbl_1_data_11300;
++    PSMTXScale(matrix, globals->bounds[2] / 100000.0f, globals->bounds[2] / 100000.0f, globals->bounds[0] / 100000.0f);
++    PSMTXConcat(lbl_1_bss_47068.basis, matrix, matrix);
++    PSMTXConcat(lbl_1_bss_471D8.camera.view, matrix, matrix);
++    GXLoadPosMtxImm(matrix, 0);
++    GXSetCurrentMtx(0);
++    gOz_GXSetTexture(4, 0, 0);
++    GXBegin(GX_LINES, GX_VTXFMT0, 6);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.u32 = 0xFF0000FF;
++    GXWGFifo.f32 = 1.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.u32 = 0xFF0000FF;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.u32 = 0x00FF00FF;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 1.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.u32 = 0x00FF00FF;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.u32 = 0xFFFF;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 1.0f;
++    GXWGFifo.u32 = 0xFFFF;
++    GXClearVtxDesc();
++    GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
++    GXSetVtxDesc(GX_VA_CLR0, GX_INDEX8);
++    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
++    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
++    GXSetArray(GX_VA_POS, globals->vertices, 12);
++    GXSetArray(GX_VA_CLR0, globals->colors, 4);
++    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
++    GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
++    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3X4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
++    GXSetNumChans(1);
++    GXSetNumTexGens(0);
++    GXSetNumTevStages(1);
++    GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
++    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
++    GXSetCullMode(GX_CULL_BACK);
++    GXCallDisplayList(globals->displayList, 0x40);
++    PSMTXMultVec(lbl_1_bss_47068.basis, &lbl_1_bss_47068.origin, &temporary);
++    PSMTXMultVec(lbl_1_bss_47068.basis, &lbl_1_bss_47068.target, &temporary);
++    PSVECCrossProduct(&lbl_1_bss_47068.origin, &lbl_1_bss_47068.normal, &temporary);
++    PSMTXMultVec(lbl_1_bss_47068.inverse, &temporary, &temporary);
++    PSVECCrossProduct(&lbl_1_bss_47068.target, &lbl_1_bss_47068.normal, &temporary);
++    PSMTXMultVec(lbl_1_bss_47068.inverse, &temporary, &temporary);
++    PSVECScale(&lbl_1_bss_47068.scaledDirection, lbl_1_bss_47068.vectorScale, &temporary);
+ }
+ 
+ // .text:0x0002905C size:0x300
