@@ -1,0 +1,96 @@
+diff --git a/src/challenge/rep_00B0.c b/src/challenge/rep_00B0.c
+index 9ddb0180..ac7c4acd 100644
+--- a/src/challenge/rep_00B0.c
++++ b/src/challenge/rep_00B0.c
+@@ -166,6 +166,90 @@ u16 fn_1_4728(ChallengeSegment* segment, ChallengeHit* hit) {
+ }
+ 
+ // .text:0x00004A24 size:0x3B4
++typedef struct ChallengeCollisionVertex {
++    Vec position;
++    u16 id;
++    u8 _padE[2];
++} ChallengeCollisionVertex;
++struct ChallengeCollisionMesh {
++    u8 flags, strip;
++    u16 count;
++    ChallengeCollisionVertex vertices[1];
++};
++/* Intersect the query ray with triangle lists and alternating triangle strips. */
+ void fn_1_4A24(ChallengeCollisionQuery* query, struct ChallengeCollisionMesh* mesh) {
+-    return;
++    Vec points[3];
++    Vec vectors[3];
++    for (;;) {
++        u32 count = mesh->count;
++
++        u8 strip;
++        if (!count) break;
++        strip = mesh->strip;
++        mesh = (struct ChallengeCollisionMesh*)mesh->vertices;
++        if (!strip) {
++            do {
++                PSMTXMultVec(query->view, &((ChallengeCollisionVertex*)mesh)[0].position, &points[0]);
++                PSMTXMultVec(query->view, &((ChallengeCollisionVertex*)mesh)[1].position, &points[1]);
++                PSMTXMultVec(query->view, &((ChallengeCollisionVertex*)mesh)[2].position, &points[2]);
++                {
++                u32 inside;
++                inside = (points[0].x * points[1].y - points[1].x * points[0].y) >= 0;
++                inside &= (points[1].x * points[2].y - points[2].x * points[1].y) >= 0;
++                inside &= (points[2].x * points[0].y - points[0].x * points[2].y) >= 0;
++                if (inside) {
++                    f32 distance;
++
++                    PSVECSubtract(&points[1], &points[0], &vectors[0]);
++                    PSVECSubtract(&points[2], &points[1], &vectors[1]);
++                    PSVECCrossProduct(&vectors[0], &vectors[1], &vectors[2]);
++                    distance = -PSVECDotProduct(&vectors[2], &points[0]) / vectors[2].z;
++                    if (distance >= 0 && query->nearest > distance) {
++                        query->nearest = distance;
++                        query->hits = ((ChallengeCollisionVertex*)mesh)[2].id;
++                        query->normal = vectors[2];
++                    }
++                }
++                }
++                mesh = (struct ChallengeCollisionMesh*)((ChallengeCollisionVertex*)mesh + 3);
++            } while (--count);
++        } else {
++            u32 reverse = 0;
++            PSMTXMultVec(query->view, &((ChallengeCollisionVertex*)mesh)[0].position, &points[0]);
++            PSMTXMultVec(query->view, &((ChallengeCollisionVertex*)mesh)[1].position, &points[1]);
++            mesh = (struct ChallengeCollisionMesh*)((ChallengeCollisionVertex*)mesh + 2);
++            do {
++                u32 inside;
++                PSMTXMultVec(query->view, &((ChallengeCollisionVertex*)mesh)->position, &points[2]);
++                vectors[0].z = points[2].x * points[0].y - points[0].x * points[2].y;
++                vectors[0].y = points[1].x * points[2].y - points[2].x * points[1].y;
++                vectors[0].x = points[0].x * points[1].y - points[1].x * points[0].y;
++                if (reverse) inside = (vectors[0].z <= 0) & ((vectors[0].x <= 0) & (vectors[0].y <= 0));
++                else inside = (vectors[0].z >= 0) & ((vectors[0].x >= 0) & (vectors[0].y >= 0));
++                if (inside) {
++                    f32 distance;
++
++                    PSVECSubtract(&points[1], &points[0], &vectors[0]);
++                    PSVECSubtract(&points[2], &points[1], &vectors[1]);
++                    PSVECCrossProduct(&vectors[0], &vectors[1], &vectors[2]);
++                    distance = -PSVECDotProduct(&vectors[2], &points[0]) / vectors[2].z;
++                    if (distance >= 0 && query->nearest > distance) {
++                        query->nearest = distance;
++                        query->hits = ((ChallengeCollisionVertex*)mesh)->id;
++                        if (!reverse) query->normal = vectors[2];
++                        else {
++                            query->normal.x = -vectors[2].x;
++                            query->normal.y = -vectors[2].y;
++                            query->normal.z = -vectors[2].z;
++                        }
++                    }
++                }
++                points[0] = points[1];
++                points[1] = points[2];
++                reverse ^= 1;
++                mesh = (struct ChallengeCollisionMesh*)((ChallengeCollisionVertex*)mesh + 1);
++            } while (--count);
++        }
++
++    }
+ }
