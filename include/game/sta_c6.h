@@ -93,8 +93,16 @@ typedef struct {
     u8 unkC1;               // 0xC1
 } Arg0_E6578;
 
+typedef struct StaC6Color {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} StaC6Color;
+
 typedef struct {
-    u8 _pad0[0xA8];
+    u8 _pad0[0xA4];
+    StaC6Color color; /* 0xA4 */
     u32* unkA8;     // 0xA8
     u32* unkAC;     // 0xAC
 } Struct_E6410;
@@ -135,14 +143,9 @@ void fn_800B4CA0(void *boneData, f32 val);
 void fn_3_E59B4(ActorObject *arg0);
 void fn_3_E5A1C(ActorObject *arg0);
 void fn_3_E5A84(ActorObject* actor);
-void fn_3_E5CBC(void);
+void fn_3_E5CBC(Struct_E6410* object, f32 blend);
 int fn_3_E5E14(Arg0_E5E14* arg0);
-typedef struct StaC6Color {
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} StaC6Color;
+
 
 typedef union StaC6Texel {
     u16 h;

@@ -118,8 +118,21 @@ void fn_3_E5A84(ActorObject* actor) {
 }
 
 // .text:0x000E5CBC size:0x158 mapped:0x80724D50
-void fn_3_E5CBC(void) {
-    return;
+// Blend the stadium object's current color between its two palette entries.
+void fn_3_E5CBC(Struct_E6410* object, f32 blend) {
+    StaC6Color* from = (StaC6Color*)object->unkAC;
+    StaC6Color* to = (StaC6Color*)object->unkA8;
+    f32 inverse;
+    if (blend > 1.0f) {
+        blend = 1.0f;
+    } else if (blend < 0.0f) {
+        blend = 0.0f;
+    }
+    inverse = 1.0f - blend;
+    object->color.r = inverse * from->r + blend * to->r;
+    object->color.g = inverse * from->g + blend * to->g;
+    object->color.b = inverse * from->b + blend * to->b;
+    object->color.a = inverse * from->a + blend * to->a;
 }
 
 // .text:0x000E5E14 size:0x5C mapped:0x80724EA8
