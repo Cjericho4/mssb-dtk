@@ -1,4 +1,5 @@
 #include "challenge/rep_02A8.h"
+extern u8 lbl_1_bss_2FDF;
 
 // .text:0x0000A2E4 size:0x64
 void fn_1_A2E4(void) {
@@ -171,8 +172,60 @@ void fn_1_B5B8(void) {
 }
 
 // .text:0x0000BA64 size:0x19C
+/* Queue a resource callback that does not use the loader's state-byte argument. */
+static inline void queueChallengeResource(u8 resource, s32 (*callback)(void)) {
+    ChallengeScene* child = (ChallengeScene*)fn_800B0A5C_insertQueue(fn_1_9F04, 1);
+    child->byte18 = 0;
+    child->byte19 = resource;
+    child->resourceCallback = (s32 (*)(u8*))callback;
+    lbl_803CC1B8->loadingState = 0;
+}
+
+/* Load the challenge sound resources in stages, waiting for each queued callback. */
 void fn_1_BA64(void) {
-    return;
+    DrawingSceneStruct* scene = lbl_803CC1B8;
+    switch (lbl_1_bss_2FDF) {
+    case 0:
+        scene->loadingState = 0;
+        queueChallengeResource(1, fn_1_A880);
+        lbl_1_bss_2FDF++;
+        break;
+    case 1:
+        if (scene->loadingState != 0) {
+            scene->loadingState = 0;
+            lbl_1_bss_2FDF++;
+        }
+        break;
+    case 2:
+        scene->loadingState = 0;
+        lbl_1_bss_2FDF++;
+        break;
+    case 3:
+        scene->loadingState = 0;
+        lbl_1_bss_2FDF++;
+        break;
+    case 4:
+        lbl_1_bss_2FDF++;
+        break;
+    case 5:
+        lbl_1_bss_2FDF++;
+        break;
+    case 6:
+        scene->loadingState = 0;
+        queueChallengeResource(0x29, fn_1_A77C);
+        lbl_1_bss_2FDF++;
+        break;
+    case 7:
+        if (scene->loadingState != 0) {
+            scene->loadingState = 0;
+            lbl_1_bss_2FDF++;
+        }
+        break;
+    case 8:
+        scene->aFunctionPointer = fn_1_B5B8;
+        lbl_1_bss_2FDF = 0;
+        break;
+    }
 }
 
 // .text:0x0000BC00 size:0x1D8
