@@ -1,0 +1,47 @@
+diff --git a/src/challenge/rep_02A8.c b/src/challenge/rep_02A8.c
+index c661eb0f..a1581d66 100644
+--- a/src/challenge/rep_02A8.c
++++ b/src/challenge/rep_02A8.c
+@@ -1,5 +1,7 @@
+ #include "challenge/rep_02A8.h"
+ extern u8 lbl_1_bss_2FDF;
++extern s16 lbl_1_data_1CA4;
++extern SND_VOICEID lbl_1_data_1CA8;
+ 
+ // .text:0x0000A2E4 size:0x64
+ void fn_1_A2E4(void) {
+@@ -35,8 +37,33 @@ void fn_1_A348(void) {
+ }
+ 
+ // .text:0x0000A464 size:0x1D0
++/* Preview sound effects and navigate their IDs in the challenge sound test. */
+ void fn_1_A464(void) {
+-    return;
++    u16 held = lbl_803C77B8.held;
++    u16 pressed = lbl_803C77B8.pressed;
++    if (held & 0x100) {
++        s16 oldVoice = lbl_1_data_1CA8;
++        SND_VOICEID voice;
++        sndFXKeyOff(oldVoice);
++        sndFXCtrl(oldVoice, 7, 0);
++        voice = sndFXStartEx((u16)lbl_1_data_1CA4, 0x7F, 0x3F, 0);
++        OSReport("sndFXReverb was %s.\n", sndFXCtrl(voice, 0x5B, fn_800211F0()) ? "succeed" : "failed");
++        lbl_1_data_1CA8 = voice;
++    } else if (held & 0x1200) {
++        s8 i;
++        for (i = lbl_800EF808.unk390 - 1; i > 0; i--) {
++            if (!fn_800214D0()) break;
++        }
++        fn_800ACFB0((void*)lbl_800EF808.unk10);
++        lbl_803CC1B8->aFunctionPointer = fn_1_A348;
++    } else if (pressed & 1) {
++        if (pressed & 0x800) lbl_1_data_1CA4 -= 10;
++        else lbl_1_data_1CA4--;
++        if (lbl_1_data_1CA4 < 0x1AD) lbl_1_data_1CA4 = 0x1B6;
++    } else if (pressed & 2) {
++        lbl_1_data_1CA4 = (pressed & 0x800) ? (s16)(lbl_1_data_1CA4 + 10) : (s16)(lbl_1_data_1CA4 + 1);
++        if (lbl_1_data_1CA4 > 0x1B6) lbl_1_data_1CA4 = 0x151;
++    }
+ }
+ 
+ // .text:0x0000A634 size:0xE0
