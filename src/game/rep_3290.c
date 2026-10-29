@@ -2,6 +2,10 @@
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
 #include "game/rep_3880.h"
+#include "game/m_sound.h"
+/* gap_80048BEC.h conflicts with the owning g_d_GameSettings layout. */
+struct Gap80048BECEffectTarget;
+void fn_8004C108(struct Gap80048BECEffectTarget* target, u8 index);
 
 // .text:0x001133C4 size:0x338 mapped:0x80752458
 void fn_3_1133C4(void) {
@@ -75,9 +79,47 @@ void fn_3_113F14(void) {
     return;
 }
 
+extern VecXYZ lbl_3_data_215C8[2];
+enum { WALL_RISING = 1, WALL_FALLING = 2, WALL_STOPPED = 3, WALL_PANEL_STOP_SOUND = 0x2F4 };
+
 // .text:0x00114204 size:0x180 mapped:0x80753298
+// Move Wall Ball's wall panels, completing downward motion before raising others.
 void fn_3_114204(void) {
-    return;
+    s32 active = 0;
+    s32 i;
+    for (i = 0; i < 7; i++) {
+        WallBallMovingWall* wall = &g_Minigame.movingWalls[i];
+        if (wall->state == WALL_FALLING) {
+            wall->position.x += lbl_3_data_215C8[1].x;
+            wall->position.y += lbl_3_data_215C8[1].y;
+            wall->position.z += lbl_3_data_215C8[1].z;
+            if (wall->position.z >= wall->target.z) {
+                wall->position.z = wall->target.z;
+                wall->state = WALL_STOPPED;
+            }
+            active++;
+        }
+    }
+    if (active == 0) {
+        for (i = 0; i < 7; i++) {
+            WallBallMovingWall* wall = &g_Minigame.movingWalls[i];
+            if (wall->state == WALL_RISING) {
+                wall->position.x += lbl_3_data_215C8[0].x;
+                wall->position.y += lbl_3_data_215C8[0].y;
+                wall->position.z += lbl_3_data_215C8[0].z;
+                if (wall->position.y <= wall->target.y) {
+                    wall->position.y = wall->target.y;
+                    wall->state = WALL_STOPPED;
+                    fn_8004C108((struct Gap80048BECEffectTarget*)&wall->target, 1);
+                    fn_3_90064(WALL_PANEL_STOP_SOUND);
+                }
+                active++;
+            }
+        }
+        if (active == 0) {
+            g_Minigame.wallBallGameState = WALL_BALL_GAME_STATE_PITCH_OR_WAITING_FOR_PITCH;
+        }
+    }
 }
 
 // .text:0x00114384 size:0x634 mapped:0x80753418
