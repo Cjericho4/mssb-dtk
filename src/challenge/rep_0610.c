@@ -6,6 +6,21 @@ extern f32 lbl_1_data_F570;
 void fn_1_F2C(s32 mode, s32 arg1, s32 arg2);
 #include "game/rep_1C0.h"
 #include "Dolphin/OS/OSUtil.h"
+typedef struct ChallengeMovingEffect {
+    u8 _pad0[0x14];
+    VecXYZ position;
+    Vec velocity;
+    Vec acceleration;
+    s32 effect;
+    u16 lifetime;
+    u8 initialize;
+    u8 paired;
+} ChallengeMovingEffect;
+extern ChallengeCopyValues lbl_1_data_F10C;
+extern s32 lbl_1_data_F174;
+/* Effect owning header still exposes stub or incompatible vector signatures. */
+void fn_8002F258(VecXYZ* position, s32 effect, s32 mode);
+s32 fn_8002F1AC(VecXYZ* position, s32 effect);
 extern s32 lbl_1_bss_3084;
 /* Partial view of the animation auxiliary data referenced by AnimationStruct. */
 struct MenusAnimationAux { u8 _pad0[0x10]; u32 unk_0x10; };
@@ -378,8 +393,45 @@ void fn_1_F37C(void) {
 }
 
 // .text:0x0000F50C size:0x1D8
+/* Advance a moving effect, updating either its position or two projected bone anchors. */
 void fn_1_F50C(void) {
-    return;
+    VecXYZ position;
+    ChallengeMovingEffect* scene = (ChallengeMovingEffect*)lbl_803CC1B8;
+    AnimationStruct* actor = &g_hugeAnimStruct.fielderStructs[lbl_1_bss_5F73];
+    if (actor != NULL) {
+        actor->unk34.x = scene->position.x;
+        actor->unk34.y = scene->position.y;
+        actor->unk34.z = scene->position.z;
+    }
+    fn_80030D88(&scene->position, &scene->velocity, &lbl_1_data_F10C, 5);
+    if (scene->initialize) {
+        scene->initialize = 0;
+        if (scene->paired) {
+            getAnimRelatedCoordinates(0, 30, &position);
+            position.y = 0.0f;
+            fn_8002F258(&position, scene->effect, lbl_1_data_F174);
+            getAnimRelatedCoordinates(0, 34, &position);
+            position.y = 0.0f;
+            fn_8002F258(&position, scene->effect + 1, lbl_1_data_F174);
+        } else {
+            fn_8002F258(&scene->position, scene->effect, lbl_1_data_F174);
+        }
+    } else {
+        if (scene->paired) {
+            getAnimRelatedCoordinates(0, 30, &position);
+            position.y = 0.0f;
+            fn_8002F1AC(&position, scene->effect);
+            getAnimRelatedCoordinates(0, 34, &position);
+            position.y = 0.0f;
+            fn_8002F1AC(&position, scene->effect + 1);
+        } else {
+            fn_8002F1AC(&scene->position, scene->effect);
+        }
+    }
+    PSVECAdd(&scene->velocity, &scene->acceleration, &scene->velocity);
+    PSVECAdd(&scene->velocity, (Vec*)&scene->position, (Vec*)&scene->position);
+    scene->lifetime--;
+    if (scene->lifetime == 0) fn_800B0A14_removeQueue();
 }
 
 // .text:0x0000F6E4 size:0xB4
