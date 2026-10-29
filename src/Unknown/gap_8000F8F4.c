@@ -128,9 +128,15 @@ void fn_80011140(void) {
     lbl_80366B18.flag7FE = 0;
 }
 
+// Relocate each resource pointer in a packed menu archive.
 // .text:0x800111B4 size:0x24
-void fn_800111B4(void) {
-    return;
+void fn_800111B4(MenuPointerArchive* archive) {
+    s32 count = archive->count;
+    u8** entry = archive->entries;
+    do {
+        *entry = (u8*)((u32)*entry + (u32)archive);
+        entry++;
+    } while (--count != 0);
 }
 
 // .text:0x800111D8 size:0x24

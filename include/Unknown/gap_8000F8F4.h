@@ -59,7 +59,12 @@ void DrawTextOnCondition(s32 condition);
 void fn_80010FA0(void);
 void fn_80011000(void);
 void fn_80011140(void);
-void fn_800111B4(void);
+typedef struct MenuPointerArchive {
+    u16 count;
+    u16 unk_0x2;
+    u8* entries[1]; /* Variable-length table with count entries. */
+} MenuPointerArchive;
+void fn_800111B4(MenuPointerArchive* archive);
 void fn_800111D8(void);
 void fn_800111FC(void);
 void fn_80011358(void);
