@@ -77,9 +77,18 @@ void fn_2_1018(u16 index) {
     }
 }
 
+// Relocate the menu sequence resource pointers and clear all four sequence slots.
 // .text:0x000010AC size:0x50
-void fn_2_10AC(void) {
-    return;
+void fn_2_10AC(u8** resources) {
+    s32 i;
+    /* FAKEMATCH: integer sums preserve offset-first addition during file relocation. */
+    resources[0] = (u8*)((u32)resources[0] + (u32)resources);
+    resources[1] = (u8*)((u32)resources[1] + (u32)resources);
+    for (i = 0; i < 4; i++) {
+        lbl_2_bss_D974[i] = -1;
+        lbl_2_bss_D958[i] = -1;
+    }
+    lbl_2_bss_D984 = resources;
 }
 
 // .text:0x000010FC size:0x34

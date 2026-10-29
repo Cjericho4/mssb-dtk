@@ -30,7 +30,7 @@ void fn_2_D88(u16 index, s16 sound);
 void fn_2_E84(u16 index, s16 sound);
 void fn_2_F64(void);
 void fn_2_1018(u16 index);
-void fn_2_10AC(void);
+void fn_2_10AC(u8** resources);
 s32 fn_2_10FC(void);
 void fn_2_1130(s16 state);
 void fn_2_1164(void);
