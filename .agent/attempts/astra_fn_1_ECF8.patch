@@ -1,0 +1,143 @@
+diff --git a/include/challenge/rep_0610.h b/include/challenge/rep_0610.h
+index f7117755..e1af55d5 100644
+--- a/include/challenge/rep_0610.h
++++ b/include/challenge/rep_0610.h
+@@ -13,6 +13,7 @@ extern Rep0610Slot lbl_1_bss_6940[];
+ extern u8 lbl_1_bss_5F73;
+ extern u32 lbl_1_bss_5F6C;
+ #include "challenge/challenge.h"
++#include "UnknownHeaders.h"
+ 
+ typedef struct Rep0610Items {
+     /* 0x0 */ u8 _pad0[4];
+@@ -51,10 +52,19 @@ typedef struct ChallengeState {
+     /* 0x2F03 */ u8 modelIndex;
+     /* 0x2F04 */ f32 blend;
+     /* 0x2F08 */ u8 blendEnabled;
+-    u8 _pad2F09[0x16B];
++    u8 _pad2F09[3];
++    HugeAnimEntry68* attachmentActors;
++    u8 _pad2F10[0x124];
++    u8 attachmentEnabled[0x40];
+     /* 0x3074 */ Gap8000B9C8Texture* extraTexture;
+-    /* 0x3078 */ u8 _pad3078[0x6D0];
++    u8 _pad3078[4];
++    ActRelatedSub attachmentTemplates[5];
++    u8 _pad3248[0x500];
+     /* 0x3748 */ Rep0610Items items;
++    u8 _pad3754[0x138];
++    u8 _pad388C[0x40];
++    u8 attachmentGroup[4];
++    Rep0610Slot previewSlots[13];
+ } ChallengeState;
+ extern ChallengeState lbl_1_bss_3070;
+ 
+@@ -248,7 +258,7 @@ void fn_1_E098(void);
+ void fn_1_E8D4(void);
+ void fn_1_E9F8(Rep0610Ring* ring, s32 index, s32 steps);
+ void fn_1_EA20(void);
+-void fn_1_ECF8(void);
++void fn_1_ECF8(s32 model, s32 table, s32 mode);
+ void fn_1_F040(void);
+ typedef struct ChallengeCopyValues {
+     Rep0610Triple base;
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 82435d46..c2451d2b 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -319,8 +319,93 @@ void fn_1_EA20(void) {
+ }
+ 
+ // .text:0x0000ECF8 size:0x348
+-void fn_1_ECF8(void) {
+-    return;
++typedef struct ChallengeAttachments {
++    u32 header;
++    ActRelatedSub first;
++    u8 firstOwner;
++    u8 _pad61[7];
++    ActRelatedSub second;
++    u8 secondOwner;
++    u8 _padC5[8];
++    u8 flagCD, flagCE, ownerCF, ownerD0;
++    u8 _padD1[3];
++} ChallengeAttachments;
++typedef struct ChallengeAttachmentPool {
++    u8 _pad0[0x140];
++    ChallengeAttachments entries[13];
++} ChallengeAttachmentPool;
++typedef struct ChallengeActorView {
++    AnimLevel1* model;
++    u8 _pad4[0x2C];
++    ChallengeAttachments* attachments;
++} ChallengeActorView;
++typedef struct ChallengeAttachmentNode {
++    u8 _pad0[0x14];
++    void* geometry;
++} ChallengeAttachmentNode;
++typedef struct ChallengeAttachmentModel {
++    u8 _pad0[6];
++    u16 count;
++    u8 _pad8[0x10];
++    ChallengeAttachmentNode** nodes;
++} ChallengeAttachmentModel;
++typedef struct ChallengeAttachmentBones {
++    u8 _pad0[0x188];
++    u16 first;
++    u8 _pad18A[0xA];
++    u16 second;
++} ChallengeAttachmentBones;
++s32 fn_800B2BA8(AnimLevel1* actor, u16 bone, ChallengeAttachmentModel* other, u16 index);
++/* Attach the chosen hand/glove models and copy their preview settings. */
++void fn_1_ECF8(s32 model, s32 table, s32 mode) {
++    ChallengeState* state = &lbl_1_bss_3070;
++    s32 first, second;
++    u16 firstBone, secondBone;
++    s32 i;
++    AnimationStruct* actor;
++    if (!state->attachmentEnabled[state->attachmentGroup[model]]) return;
++    firstBone = ((ChallengeAttachmentBones*)&g_hugeAnimStruct.fielderStructs[model])->first;
++    secondBone = ((ChallengeAttachmentBones*)&g_hugeAnimStruct.fielderStructs[model])->second;
++    switch (table) {
++    case 0: case 1: case 5: case 6: first = 1; second = 2; break;
++    default:
++        if (mode) { first = 1; second = 4; }
++        else { first = 3; second = 2; }
++        break;
++    }
++    for (i = 0; i < ((ChallengeAttachmentModel*)state->attachmentActors[first - 1].unk34)->count; i++) {
++        if (((ChallengeAttachmentModel*)state->attachmentActors[first - 1].unk34)->nodes[i]->geometry) {
++            fn_800B2BA8(g_hugeAnimStruct.ctrlOrBonePtr[model].unk34, firstBone,
++                (ChallengeAttachmentModel*)state->attachmentActors[first - 1].unk34, i);
++            break;
++        }
++    }
++    for (i = 0; i < ((ChallengeAttachmentModel*)state->attachmentActors[second - 1].unk34)->count; i++) {
++        if (((ChallengeAttachmentModel*)state->attachmentActors[second - 1].unk34)->nodes[i]->geometry) {
++            fn_800B2BA8(g_hugeAnimStruct.ctrlOrBonePtr[model].unk34, secondBone,
++                (ChallengeAttachmentModel*)state->attachmentActors[second - 1].unk34, i);
++            break;
++        }
++    }
++    actor = &g_hugeAnimStruct.fielderStructs[state->modelIndex];
++    switch (state->previewSlots[state->modelIndex].table) {
++    case 0: case 1: first = 1; second = 2; break;
++    default:
++        if (state->unk2EF9) { first = 1; second = 4; }
++        else { first = 3; second = 2; }
++        break;
++    }
++    ((ChallengeActorView*)g_hugeAnimStruct.AnimationStructPtrs[state->modelIndex])->attachments = &((ChallengeAttachmentPool*)&g_hugeAnimStruct)->entries[state->modelIndex];
++    memcpy(&((ChallengeActorView*)g_hugeAnimStruct.AnimationStructPtrs[state->modelIndex])->attachments->first, &state->attachmentTemplates[first], 0x5C);
++    memcpy(&((ChallengeActorView*)g_hugeAnimStruct.AnimationStructPtrs[state->modelIndex])->attachments->second, &state->attachmentTemplates[second], 0x5C);
++    ((ChallengeActorView*)g_hugeAnimStruct.AnimationStructPtrs[state->modelIndex])->attachments->firstOwner = state->modelIndex;
++    ((ChallengeActorView*)g_hugeAnimStruct.AnimationStructPtrs[state->modelIndex])->attachments->secondOwner = state->modelIndex;
++    ((ChallengeActorView*)g_hugeAnimStruct.AnimationStructPtrs[state->modelIndex])->attachments->flagCD = actor->unk25A;
++    ((ChallengeActorView*)g_hugeAnimStruct.AnimationStructPtrs[state->modelIndex])->attachments->flagCE = actor->unk25B;
++    ((ChallengeActorView*)g_hugeAnimStruct.AnimationStructPtrs[state->modelIndex])->attachments->ownerCF = state->modelIndex;
++    ((ChallengeActorView*)g_hugeAnimStruct.AnimationStructPtrs[state->modelIndex])->attachments->ownerD0 = state->modelIndex;
++    ((ChallengeActorView*)g_hugeAnimStruct.AnimationStructPtrs[state->modelIndex])->model = g_hugeAnimStruct.ctrlOrBonePtr[state->modelIndex].unk34;
++
+ }
+ 
+ // .text:0x0000F040 size:0x90
