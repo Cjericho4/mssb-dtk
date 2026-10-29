@@ -19,7 +19,7 @@ void fn_8001BA44(void);
 void fn_8001BE50(void);
 void fn_8001C234(void);
 void fn_8001C528(void);
-void fn_8001C588(void);
+s32 fn_8001C588(s16 characterId);
 void fn_8001C67C_animation(void);
 s32 fn_8001C920(s32 charID);
 void fn_8001CA40(void);

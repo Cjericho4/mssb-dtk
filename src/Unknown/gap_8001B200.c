@@ -88,8 +88,8 @@ void fn_8001C528(void) {
 }
 
 // .text:0x8001C588 size:0xF4
-void fn_8001C588(void) {
-    return;
+s32 fn_8001C588(s16 characterId) {
+    return 0;
 }
 
 // .text:0x8001C67C size:0x2A4

@@ -6,7 +6,7 @@
 #include "game/rep_E08.h"
 #include "game/rep_1B70.h"
 #include "game/rep_1188.h"
-typedef struct { u8 value; u8 _pad1; u8 unk2; } MenuFlag_CBC3C;
+typedef struct { u8 value; u8 _pad1; u8 unk2; u8 unk3; } MenuFlag_CBC3C;
 extern MenuFlag_CBC3C lbl_803CBC3C;
 void fn_3_BF158(void);
 void fn_3_BF1AC(void);
@@ -343,9 +343,50 @@ void fn_3_AF10C(void) {
     return;
 }
 
+/* gap_8001B200.h has a conflicting getAnimRelatedCoordinates declaration. */
+s32 fn_8001C588(s16 characterId);
+
 // .text:0x000AF428 size:0x17C mapped:0x806EE4BC
+// Advance pending pitcher and batter substitutions once their resources are ready.
 void fn_3_AF428(void) {
-    return;
+    if (lbl_3_common_bss_34C90.unk254 >= 0) {
+        if (lbl_3_common_bss_34C90.unk25C == lbl_3_common_bss_34C90.unk254) {
+            lbl_3_common_bss_34C90.unk254 = -1;
+            return;
+        }
+        if (lbl_3_common_bss_34C90.unk258 < 0) {
+            lbl_3_common_bss_34C90.unk258 = lbl_3_common_bss_34C90.unk254;
+            lbl_3_common_bss_32724.unk9C = 0;
+            g_GameLogic.battingOrderAndPositionMapping[g_GameLogic.awayTeamBattingInd_battingTeam][0][0] =
+                lbl_80354720[lbl_3_common_bss_34C90.field_0x00][lbl_3_common_bss_34C90.unk254].unk0;
+            fn_3_750DC();
+            return;
+        }
+        if (fn_3_750DC()) {
+            s32 completed = lbl_3_common_bss_34C90.unk258;
+            lbl_3_common_bss_34C90.unk254 = -1;
+            lbl_3_common_bss_34C90.unk25C = completed;
+            lbl_3_common_bss_34C90.unk258 = -1;
+        }
+    } else if (lbl_3_common_bss_34C90.unk256 >= 0) {
+        if (lbl_3_common_bss_34C90.unk25E == lbl_3_common_bss_34C90.unk25A) {
+            lbl_3_common_bss_34C90.unk256 = -1;
+            lbl_3_common_bss_34C90.unk25A = -1;
+            return;
+        }
+        if (lbl_3_common_bss_34C90.unk25A < 0) {
+            lbl_3_common_bss_34C90.unk25A = lbl_3_common_bss_34C90.unk256;
+            lbl_803CBC3C.unk3 = 0;
+            return;
+        }
+        if (fn_8001C588(inMemRoster[lbl_3_common_bss_34C90.field_0x00]
+                [lbl_80354720[lbl_3_common_bss_34C90.field_0x00][lbl_3_common_bss_34C90.unk256].unk0].stats.CharID)) {
+            s32 completed = lbl_3_common_bss_34C90.unk25A;
+            lbl_3_common_bss_34C90.unk256 = -1;
+            lbl_3_common_bss_34C90.unk25E = completed;
+            lbl_3_common_bss_34C90.unk25A = -1;
+        }
+    }
 }
 
 // .text:0x000AF5A4 size:0x4C0 mapped:0x806EE638
