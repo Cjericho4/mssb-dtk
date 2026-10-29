@@ -5,7 +5,8 @@
 
 f32 fn_3_14A4(f32* xs, f32* ys, f32* ds, s32 n, f32 x);
 void fn_3_155C(void);
-void fn_3_19B0(void);
+struct _VecXZ;
+void fn_3_19B0(struct _VecXZ* out, f32* valuesX, f32* valuesZ, f32* times, f32* curvesX, f32* curvesZ, s32 count, f32 time);
 void fn_3_1B24(void);
 struct _VecXZ;
 void running_roundBasePosition(struct _VecXZ* out, struct _VecXZ* points, s32 count, f32 t);
