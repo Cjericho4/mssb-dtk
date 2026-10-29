@@ -20,16 +20,26 @@ void fn_800B9AA8(u32 context);
 void fn_1_182C0(void);
 void fn_1_1857C(void);
 typedef struct ChallengeOrbit {
-    u8 _pad0[0x10];
+    u32 header;
+    Vec origin;
     Vec position;
+    Vec rotation;
+    Vec angularVelocity;
+    u8 _pad34[12];
+    GXColor colors[2];
+    u16 _pad48;
+    s16 index;
 } ChallengeOrbit;
 typedef struct ChallengeOrbitConfig {
     s32 unk0;
     s32 radius;
+    s32 angularSpeed;
+    u8 _padC[8];
+    s32 colorMinimum;
 } ChallengeOrbitConfig;
 extern ChallengeOrbitConfig lbl_1_data_FB24;
 void fn_1_18E04(ChallengeOrbit* orbit, f32 angle);
-void fn_1_18EE4(void);
+void fn_1_18EE4(ChallengeOrbit* orbit);
 void fn_1_191DC(void);
 void fn_1_1957C(void);
 void fn_1_1994C(void);

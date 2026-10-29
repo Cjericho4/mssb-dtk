@@ -49,8 +49,32 @@ void fn_1_18E04(ChallengeOrbit* orbit, f32 angle) {
 }
 
 // .text:0x00018EE4 size:0x2F8
-void fn_1_18EE4(void) {
-    return;
+void fn_1_18EE4(ChallengeOrbit* orbit) {
+    s32 minimum = lbl_1_data_FB24.colorMinimum;
+    u32 base = (u8)minimum;
+    u8 range;
+    f32 sine, cosine, speed;
+    f32 angle = 0.0f;
+    orbit->origin.x = (f32)(orbit->index * 2) / lbl_1_data_FB24.unk0 - 1.0f;
+    orbit->origin.y = -1.0f;
+    orbit->origin.z = 50.0f * ((f32)rand() / 32767.0f) + 50.0f;
+    sine = sin(angle);
+    cosine = cos(angle);
+    orbit->position.x = (sine * lbl_1_data_FB24.radius) / 100000.0f;
+    orbit->position.y = (cosine * lbl_1_data_FB24.radius) / 100000.0f;
+    orbit->position.z = 0;
+    orbit->rotation.x = orbit->rotation.y = orbit->rotation.z = 0;
+    speed = lbl_1_data_FB24.angularSpeed / 100000.0f;
+    orbit->angularVelocity.x = speed * ((f32)rand() / 32767.0f);
+    orbit->angularVelocity.y = speed * ((f32)rand() / 32767.0f);
+    orbit->angularVelocity.z = speed * ((f32)rand() / 32767.0f);
+    orbit->colors[0].a = orbit->colors[1].a = 255;
+    range = 255 - minimum;
+    orbit->colors[0].g = base + rand() % range;
+    orbit->colors[0].b = base + rand() % range;
+    orbit->colors[1].r = base + rand() % range;
+    orbit->colors[1].g = base + rand() % range;
+    orbit->colors[1].b = base + rand() % range;
 }
 
 // .text:0x000191DC size:0x3A0
