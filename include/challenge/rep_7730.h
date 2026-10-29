@@ -92,7 +92,14 @@ void fn_1_20F8C(void);
 #include "Dolphin/GX/GXFifo.h"
 void fn_1_21040(void);
 void fn_1_21180(void);
-void fn_1_21298(void);
+typedef struct ChallengeLineScene {
+    u8 _pad0[0x21];
+    u8 count;
+    u8 showFlat;
+    u8 _pad23;
+    u8 showCurve;
+} ChallengeLineScene;
+void fn_1_21298(ChallengeLineScene* scene);
 void fn_1_21408(void);
 void fn_1_21CE8(void);
 void fn_1_225B8(void);

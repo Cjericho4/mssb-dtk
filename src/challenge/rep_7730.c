@@ -1,4 +1,12 @@
 #include "challenge/rep_7730.h"
+typedef struct ChallengeLinePoint {
+    u8 _pad0[0xC];
+    Vec position;
+    u8 _pad18[0x28];
+} ChallengeLinePoint;
+STATIC_ASSERT(sizeof(ChallengeLinePoint) == 0x40);
+extern ChallengeLinePoint lbl_1_bss_6FE0[];
+extern u32 lbl_1_data_104DC[6];
 
 // .text:0x0001D694 size:0x2B0
 void fn_1_1D694(void) {
@@ -347,8 +355,45 @@ void fn_1_21180(void) {
 }
 
 // .text:0x00021298 size:0x170
-void fn_1_21298(void) {
-    return;
+/* FAKEMATCH: inline curve emission keeps the loop counter live in its incoming register. */
+static inline void drawChallengeCurve(s32 count) {
+    ChallengeLinePoint* point = &lbl_1_bss_6FE0[count];
+        while (--count, --point, count != 0) {
+            u32 color;
+            GX_WRITE_F32(point->position.x);
+            GX_WRITE_F32(-point->position.y);
+            GX_WRITE_F32(point->position.z);
+            GXColor1u32(color = lbl_1_data_104DC[count % 6]);
+            GX_WRITE_F32(point[-1].position.x);
+            GX_WRITE_F32(-point[-1].position.y);
+            GX_WRITE_F32(point[-1].position.z);
+            GXColor1u32(color);
+        }
+}
+
+/* Draw the sampled curve and its ground-plane projection as colored line segments. */
+void fn_1_21298(ChallengeLineScene* scene) {
+    if (scene->showFlat != 0) {
+        ChallengeLinePoint* point;
+        s32 count;
+        GXBegin(GX_LINESTRIP, GX_VTXFMT0, (scene->count - 1) * 2);
+        count = scene->count;
+        point = &lbl_1_bss_6FE0[count];
+        while (--count, --point, count != 0) {
+            GX_WRITE_F32(point->position.x);
+            GX_WRITE_F32(0.0f);
+            GX_WRITE_F32(point->position.z);
+            GXColor1u32(0x00000080);
+            GX_WRITE_F32(point[-1].position.x);
+            GX_WRITE_F32(0.0f);
+            GX_WRITE_F32(point[-1].position.z);
+            GXColor1u32(0x00000080);
+        }
+    }
+    if (scene->showCurve != 0) {
+        GXBegin(GX_LINESTRIP, GX_VTXFMT0, (scene->count - 1) * 2);
+        drawChallengeCurve(scene->count);
+    }
 }
 
 // .text:0x00021408 size:0x8E0
