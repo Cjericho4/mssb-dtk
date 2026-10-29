@@ -1,4 +1,9 @@
 #include "challenge/rep_0610.h"
+#include "Dolphin/GX/GXPixel.h"
+#include "Dolphin/GX/GXGeometry.h"
+#include "Dolphin/GX/GXFifo.h"
+extern f32 lbl_1_data_F570;
+void fn_1_F2C(s32 mode, s32 arg1, s32 arg2);
 #include "game/rep_1C0.h"
 #include "Dolphin/OS/OSUtil.h"
 extern s32 lbl_1_bss_3084;
@@ -18,8 +23,43 @@ void fn_1_C5AC(void) {
 }
 
 // .text:0x0000C9E0 size:0x1BC
-void fn_1_C9E0(void) {
-    return;
+/* Render the challenge camera endpoints and its direction and normal vectors. */
+void fn_1_C9E0(ChallengeView* view) {
+    Mtx transform;
+    Vec endpoint;
+    fn_1_F2C(4, 0, 0);
+    PSMTXConcat(lbl_1_bss_68FC.view, view->matrix, transform);
+    GXLoadPosMtxImm(transform, 0);
+    GXSetCurrentMtx(0);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+    GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
+    GXBegin(GX_LINES, GX_VTXFMT0, 6);
+    GXWGFifo.f32 = lbl_1_bss_30C0.target.x;
+    GXWGFifo.f32 = lbl_1_bss_30C0.target.y;
+    GXWGFifo.f32 = lbl_1_bss_30C0.target.z;
+    GXWGFifo.u32 = 0xFF0000FF;
+    GXWGFifo.f32 = lbl_1_bss_30C0.origin.x;
+    GXWGFifo.f32 = lbl_1_bss_30C0.origin.y;
+    GXWGFifo.f32 = lbl_1_bss_30C0.origin.z;
+    GXWGFifo.u32 = 0x00FF00FF;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.u32 = 0xFF;
+    PSVECScale(&lbl_1_bss_30C0.direction, lbl_1_data_F570, &endpoint);
+    GXWGFifo.f32 = endpoint.x;
+    GXWGFifo.f32 = endpoint.y;
+    GXWGFifo.f32 = endpoint.z;
+    GXWGFifo.u32 = 0xFF;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.u32 = 0xFFFFFFFF;
+    PSVECScale(&lbl_1_bss_30C0.normal, lbl_1_data_F570, &endpoint);
+    GXWGFifo.f32 = endpoint.x;
+    GXWGFifo.f32 = endpoint.y;
+    GXWGFifo.f32 = endpoint.z;
+    GXWGFifo.u32 = 0xFFFFFFFF;
 }
 
 // .text:0x0000CB9C size:0x88

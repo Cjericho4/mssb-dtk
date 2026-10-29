@@ -166,16 +166,23 @@ extern s32 lbl_1_bss_3098;
 extern Rep0610Linked* lbl_1_bss_67B8;
 
 void fn_1_C5AC(void);
-void fn_1_C9E0(void);
+struct ChallengeView;
+void fn_1_C9E0(struct ChallengeView* view);
 typedef struct ChallengeView {
     u32 header[2];
     Mtx matrix;
 } ChallengeView;
 typedef struct ChallengeViewState {
-    u8 _pad0[0x50];
+    Vec origin;
+    Vec target;
+    u8 _pad18[0x38];
     f32 angle;
     u8 _pad54[4];
     Mtx matrix;
+    u8 _pad88[0xA0];
+    Vec direction;
+    u8 _pad134[0xC];
+    Vec normal;
 } ChallengeViewState;
 extern ChallengeView lbl_1_data_F4F8[];
 extern ChallengeViewState lbl_1_bss_30C0;
