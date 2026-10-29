@@ -1,0 +1,37 @@
+diff --git a/include/game/UnknownHomes_Game.h b/include/game/UnknownHomes_Game.h
+index 9d6f61fc..b0f1656d 100644
+--- a/include/game/UnknownHomes_Game.h
++++ b/include/game/UnknownHomes_Game.h
+@@ -2296,7 +2296,8 @@ extern MiniGameStruct g_Minigame;
+ 
+ typedef struct Fielder {
+     /* 0x000 */ f32 pos[3];
+-    /* 0x00C */ u8 _pad_mid[0x8]; 
++    /* 0x00C */ f32 unk_0x0C;
++    /* 0x010 */ u8 _pad10[4]; 
+     /* 0x014 */ f32 prevPos[3];
+     /* 0x020 */ f32 unk20;
+     /* 0x024 */ f32 unk24;
+@@ -2351,7 +2352,8 @@ typedef struct Fielder {
+     /* 0x160 */ f32 unk160;
+     /* 0x164 */ f32 unk164;
+     /* 0x168 */ f32 unk168;
+-    /* 0x16C */ u8 _pad16C[0x174 - 0x16C];
++    /* 0x16C */ f32 unk_0x16C;
++    /* 0x170 */ u8 _pad170[4];
+     /* 0x174 */ f32 unk174;
+     /* 0x178 */ s16 unk178;
+     /* 0x17A */ u8 _pad17A[0x17E - 0x17A];
+diff --git a/include/game/rep_3520.h b/include/game/rep_3520.h
+index 966565f8..d15f2053 100644
+--- a/include/game/rep_3520.h
++++ b/include/game/rep_3520.h
+@@ -90,7 +90,7 @@ void fn_3_1370A0(struct CameraView* camera);
+ void fn_3_1371E8(void);
+ void fn_3_137224(Vec* center);
+ void fn_3_1373E0(void);
+-void fn_3_1379A0(void);
++BOOL fn_3_1379A0(s32 fielderIndex);
+ u8 fn_3_137B10(Rep3520Ball* ball);
+ void fn_3_137CF8(Rep3520Ball* ball);
+ void fn_3_137DE4(Rep3520Ball* ball);
