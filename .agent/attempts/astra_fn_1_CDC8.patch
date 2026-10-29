@@ -1,0 +1,139 @@
+diff --git a/include/challenge/rep_0610.h b/include/challenge/rep_0610.h
+index f7117755..a089b335 100644
+--- a/include/challenge/rep_0610.h
++++ b/include/challenge/rep_0610.h
+@@ -13,6 +13,7 @@ extern Rep0610Slot lbl_1_bss_6940[];
+ extern u8 lbl_1_bss_5F73;
+ extern u32 lbl_1_bss_5F6C;
+ #include "challenge/challenge.h"
++#include "UnknownHeaders.h"
+ 
+ typedef struct Rep0610Items {
+     /* 0x0 */ u8 _pad0[4];
+@@ -33,7 +34,9 @@ typedef struct ChallengeState {
+     /* 0x0028 */ union { s32 selection; Gap8000B9C8Texture* texture; };
+     /* 0x002C */ u8 _pad2C[0xC];
+     /* 0x0038 */ s32 page;
+-    /* 0x003C */ u8 _pad3C[0x10];
++    /* 0x003C */ u8 _pad3C[0xC];
++    u8 closeAttachment;
++    u8 _pad49[3];
+     /* 0x004C */ s32 queued;
+     /* 0x0050 */ u8 _pad50[0x154];
+     /* 0x01A4 */ u8 phase;
+@@ -51,10 +54,15 @@ typedef struct ChallengeState {
+     /* 0x2F03 */ u8 modelIndex;
+     /* 0x2F04 */ f32 blend;
+     /* 0x2F08 */ u8 blendEnabled;
+-    u8 _pad2F09[0x16B];
++    u8 _pad2F09[3];
++    HugeAnimEntry68* attachmentActors;
++    u8 _pad2F10[0x164];
+     /* 0x3074 */ Gap8000B9C8Texture* extraTexture;
+     /* 0x3078 */ u8 _pad3078[0x6D0];
+     /* 0x3748 */ Rep0610Items items;
++    u8 _pad3754[0x178];
++    u8 attachmentGroup[4];
++    Rep0610Slot previewSlots[13];
+ } ChallengeState;
+ extern ChallengeState lbl_1_bss_3070;
+ 
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 82435d46..0d9c494e 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -133,8 +133,93 @@ void fn_1_CCC8(void) {
+ }
+ 
+ // .text:0x0000CDC8 size:0x374
++typedef struct ChallengeAttachmentNode {
++    u8 _pad0[0x14];
++    void* geometry;
++} ChallengeAttachmentNode;
++typedef struct ChallengeAttachmentModel {
++    u8 _pad0[6];
++    u16 count;
++    u8 _pad8[0x10];
++    ChallengeAttachmentNode** nodes;
++} ChallengeAttachmentModel;
++typedef struct ChallengeAttachmentBones {
++    u8 _pad0[0x188];
++    u16 first;
++    u8 _pad18A[0xA];
++    u16 second;
++} ChallengeAttachmentBones;
++s32 fn_800B2BA8(AnimLevel1* actor, u16 bone, ChallengeAttachmentModel* other, u16 index);
++extern u16 lbl_1_data_F4E8[4][2];
++u32 fn_80024D2C(DrawingSceneItem* item);
++/* Refresh attachment visibility from the preview animation and item state. */
+ void fn_1_CDC8(void) {
+-    return;
++    ChallengeState* state = &lbl_1_bss_3070;
++    AnimationStruct* actor;
++    s32 group, both, i;
++    u16 second;
++    u16 bones[2];
++    DrawingSceneItem* items[2];
++    AnimLevel1** models[2];
++    if (state->closeAttachment) {
++        state->closeAttachment = 0;
++        fn_800B0A14_removeQueue();
++        return;
++    }
++    actor = &g_hugeAnimStruct.fielderStructs[state->modelIndex];
++    second = ((ChallengeAttachmentBones*)actor)->second;
++    fn_800B2BA8(g_hugeAnimStruct.ctrlOrBonePtr[state->modelIndex].unk34,
++        ((ChallengeAttachmentBones*)actor)->first, NULL, 0);
++    fn_800B2BA8(g_hugeAnimStruct.ctrlOrBonePtr[state->modelIndex].unk34, second, NULL, 0);
++    switch (state->attachmentGroup[state->modelIndex]) {
++    case 38: group = 0; break;
++    case 18: group = 3; break;
++    case 40: group = 1; break;
++    case 41: group = 2; break;
++    }
++    actor->unk25A = (state->previewSlots[state->modelIndex].table < 2) == !state->unk2EF9;
++    bones[0] = g_hugeAnimStruct.fielderStructs[state->modelIndex].boneIndices[lbl_1_data_F4E8[group][1]];
++    bones[1] = g_hugeAnimStruct.fielderStructs[state->modelIndex].boneIndices[lbl_1_data_F4E8[group][0]];
++    items[state->unk2EF9] = state->items.item8;
++    items[!state->unk2EF9] = state->items.item4;
++    models[0] = &state->attachmentActors[1].unk34;
++    models[1] = &state->attachmentActors[0].unk34;
++    switch (state->previewSlots[state->modelIndex].table) {
++    case 0: case 1: case 5: case 6: both = 1; break;
++    case 2: case 3: case 4: both = 0; break;
++    }
++    i = 0;
++    do {
++        if (items[i]) {
++            if (fn_80024D2C(items[i]) & 0x20000000) {
++                ChallengeAttachmentModel* other = (ChallengeAttachmentModel*)*models[i];
++                s32 j;
++                for (j = 0; j < other->count; j++) {
++                    if (other->nodes[j]->geometry) {
++                        fn_800B2BA8(g_hugeAnimStruct.ctrlOrBonePtr[state->modelIndex].unk34, bones[i], other, j);
++                        break;
++                    }
++                }
++            } else {
++                fn_800B2BA8(g_hugeAnimStruct.ctrlOrBonePtr[state->modelIndex].unk34, bones[i], NULL, 0);
++            }
++        }
++        i++;
++        if (!both && state->attachmentGroup[state->modelIndex] != 38) break;
++    } while (i < 2);
++    if (i == 1) {
++        ChallengeAttachmentModel* other;
++        s32 j;
++        if (state->unk2EF9) models[0] = &state->attachmentActors[2].unk34;
++        else models[0] = &state->attachmentActors[2].unk34;
++        other = (ChallengeAttachmentModel*)*models[0];
++        for (j = 0; j < other->count; j++) {
++            if (((ChallengeAttachmentModel*)*models[0])->nodes[j]->geometry) {
++                fn_800B2BA8(g_hugeAnimStruct.ctrlOrBonePtr[state->modelIndex].unk34, bones[i], other, j);
++                break;
++            }
++        }
++    }
+ }
+ 
+ // .text:0x0000D13C size:0x1B4
