@@ -1,0 +1,136 @@
+diff --git a/src/challenge/rep_7BF0.c b/src/challenge/rep_7BF0.c
+index f1e3b021..b9587405 100644
+--- a/src/challenge/rep_7BF0.c
++++ b/src/challenge/rep_7BF0.c
+@@ -84,7 +84,14 @@ void fn_1_28CE8(DrawingSceneStruct* scene) {
+ }
+ 
+ // .text:0x0002905C size:0x300
+-extern Rep7BF0View471D8 lbl_1_bss_47068;
++typedef struct ChallengeTransformPreview {
++    Rep7BF0View471D8 view[1];
++    u8 _pad14C[8];
++    Rep7BF0Unk471BC editor;
++    Rep7978Camera camera;
++} ChallengeTransformPreview;
++extern ChallengeTransformPreview lbl_1_bss_47068;
++void fn_80048820(Rep7BF0Unk471BC* editor, u16 buttons, u16 held, u16 pressed, u8 axis);
+ struct ChallengeTransformScript;
+ extern struct ChallengeTransformScript lbl_1_data_1133C;
+ void fn_800383BC(Rep7BF0View471D8* view);
+@@ -93,29 +100,29 @@ void fn_1_2905C(void) {
+     Mtx rotation;
+     switch ((s8)lbl_1_data_11300.selection) {
+     case 0:
+-        fn_80037768(&lbl_1_bss_47068, 2, lbl_1_data_11300.mode,
++        fn_80037768(lbl_1_bss_47068.view, 2, lbl_1_data_11300.mode,
+             lbl_1_data_11300.bounds[0] / 100000.0f, lbl_1_data_11300.bounds[1] / 100000.0f,
+             lbl_1_data_11300.bounds[2] / 100000.0f, lbl_1_data_11300.bounds[3] / 100000.0f);
+-        lbl_1_bss_47068.direction.x = 0;
+-        lbl_1_bss_47068.direction.y = lbl_1_data_11300.height / 100000.0f;
+-        lbl_1_bss_47068.direction.z = 0;
+-        lbl_1_bss_47068.localPosition.x = lbl_1_data_11300.position[0] / 100000.0f;
+-        lbl_1_bss_47068.localPosition.y = lbl_1_data_11300.position[1] / 100000.0f;
+-        lbl_1_bss_47068.localPosition.z = lbl_1_data_11300.position[2] / 100000.0f;
+-        PSMTXMultVec(lbl_1_bss_47068.transform, &lbl_1_bss_47068.localPosition, &lbl_1_bss_47068.worldPosition);
+-        lbl_1_bss_47068.normal.x = lbl_1_data_11300.normal[0] / 100000.0f;
+-        lbl_1_bss_47068.normal.y = lbl_1_data_11300.normal[1] / 100000.0f;
+-        lbl_1_bss_47068.normal.z = lbl_1_data_11300.normal[2] / 100000.0f;
++        lbl_1_bss_47068.view[0].direction.x = 0;
++        lbl_1_bss_47068.view[0].direction.y = lbl_1_data_11300.height / 100000.0f;
++        lbl_1_bss_47068.view[0].direction.z = 0;
++        lbl_1_bss_47068.view[0].localPosition.x = lbl_1_data_11300.position[0] / 100000.0f;
++        lbl_1_bss_47068.view[0].localPosition.y = lbl_1_data_11300.position[1] / 100000.0f;
++        lbl_1_bss_47068.view[0].localPosition.z = lbl_1_data_11300.position[2] / 100000.0f;
++        PSMTXMultVec(lbl_1_bss_47068.view[0].transform, &lbl_1_bss_47068.view[0].localPosition, &lbl_1_bss_47068.view[0].worldPosition);
++        lbl_1_bss_47068.view[0].normal.x = lbl_1_data_11300.normal[0] / 100000.0f;
++        lbl_1_bss_47068.view[0].normal.y = lbl_1_data_11300.normal[1] / 100000.0f;
++        lbl_1_bss_47068.view[0].normal.z = lbl_1_data_11300.normal[2] / 100000.0f;
+         PSMTXRotRad(rotation, 'X', 0.017453292f * (lbl_1_data_11300.rotation / 100000.0f));
+-        C_QUATMtx(&lbl_1_bss_47068.rotation, rotation);
+-        fn_800383BC(&lbl_1_bss_47068);
++        C_QUATMtx(&lbl_1_bss_47068.view[0].rotation, rotation);
++        fn_800383BC(lbl_1_bss_47068.view);
+         break;
+     case 1:
+         if ((s8)lbl_1_data_11300.pending == 0) break;
+         lbl_1_data_11300.pending = 0;
+     case 2:
+-        lbl_1_bss_47068.frame = lbl_1_data_11300.frame / 100000.0f;
+-        fn_80037054(&lbl_1_bss_47068, &lbl_1_data_1133C);
++        lbl_1_bss_47068.view[0].frame = lbl_1_data_11300.frame / 100000.0f;
++        fn_80037054(lbl_1_bss_47068.view, &lbl_1_data_1133C);
+         break;
+     }
+ }
+@@ -141,8 +148,69 @@ void fn_1_2948C(void) {
+ }
+ 
+ // .text:0x000295E8 size:0x460
++/* Process transform editing, preview mode changes, and camera navigation. */
+ void fn_1_295E8(void) {
+-    return;
++    Mtx rotation;
++    ChallengeTransformPreview* preview;
++    u16 pressed;
++    u16 held;
++    u16 buttons;
++    DrawingSceneStruct* scene;
++    buttons = lbl_803C77B8.buttons;
++    held = lbl_803C77B8.held;
++    pressed = lbl_803C77B8.pressed;
++    scene = lbl_803CC1B8;
++    preview = &lbl_1_bss_47068;
++    if (held & 0x1000) {
++        scene->flag14 ^= 1;
++        if (scene->flag14) fn_800A97D0(0x20, 0);
++        else fn_800A97D0(0x10, 30);
++    } else if (scene->flag14) {
++        fn_80048820(&preview->editor, buttons, held, pressed,
++            buttons & 0x800 ? 0x91 : buttons & 0x400 ? 0x50 : 0);
++        buttons &= ~0xC00;
++        held &= ~0xC00;
++        pressed &= ~0xC00;
++    } else if (held & 0x200) {
++        fn_800AD038(lbl_80366158.unk8);
++        fn_800A97D0(0x10, 30);
++        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
++        fn_800B0A14_removeQueue();
++    }
++    fn_1_26D28(&preview->camera, buttons, held, pressed, &lbl_803C77B8.axes);
++    fn_1_27330(&preview->camera);
++
++    switch ((s8)lbl_1_data_11300.selection) {
++    case 0:
++        fn_80037768(preview->view, 2, lbl_1_data_11300.mode,
++            lbl_1_data_11300.bounds[0] / 100000.0f, lbl_1_data_11300.bounds[1] / 100000.0f,
++            lbl_1_data_11300.bounds[2] / 100000.0f, lbl_1_data_11300.bounds[3] / 100000.0f);
++        preview->view[0].direction.x = 0;
++        preview->view[0].direction.y = lbl_1_data_11300.height / 100000.0f;
++        preview->view[0].direction.z = 0;
++        preview->view[0].localPosition.x = lbl_1_data_11300.position[0] / 100000.0f;
++        preview->view[0].localPosition.y = lbl_1_data_11300.position[1] / 100000.0f;
++        preview->view[0].localPosition.z = lbl_1_data_11300.position[2] / 100000.0f;
++        PSMTXMultVec(preview->view[0].transform, &preview->view[0].localPosition, &preview->view[0].worldPosition);
++        preview->view[0].normal.x = lbl_1_data_11300.normal[0] / 100000.0f;
++        preview->view[0].normal.y = lbl_1_data_11300.normal[1] / 100000.0f;
++        preview->view[0].normal.z = lbl_1_data_11300.normal[2] / 100000.0f;
++        PSMTXRotRad(rotation, 'X', 0.017453292f * (lbl_1_data_11300.rotation / 100000.0f));
++        C_QUATMtx(&preview->view[0].rotation, rotation);
++        fn_800383BC(preview->view);
++        break;
++    case 1:
++        if ((s8)lbl_1_data_11300.pending == 0) break;
++        lbl_1_data_11300.pending = 0;
++    case 2:
++        preview->view[0].frame = lbl_1_data_11300.frame / 100000.0f;
++        fn_80037054(preview->view, &lbl_1_data_1133C);
++        break;
++    }
++    if (scene->flag14) fn_80048BEC(&preview->editor, 0, 0);
++    fn_1_272DC(&preview->camera, 0);
++    fn_1_AF4(10, 10, 1.0f);
++    fn_1_28CE8(scene);
+ }
+ 
+ // .text:0x00029A48 size:0x54
