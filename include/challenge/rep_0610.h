@@ -93,14 +93,14 @@ extern Rep0610Camera68FC lbl_1_bss_68FC;
 void LITXForm(struct MenusLight* light, Mtx view);
 #include "Dolphin/GX/GXTransform.h"
 typedef struct Rep0610Unk67E0 {
-    /* 0x000 */ u8 _pad0[0x30];
+    /* 0x000 */ Mtx view;
     union {
         /* 0x030 */ u32 context[0x36];
         struct {
             u8 _pad30[0xC0];
-            /* 0x0F0 */ s16 unk_0xF0;
-            /* 0x0F2 */ s16 unk_0xF2;
-            u8 _padF4[4];
+            /* 0x0F0 */ u16 unk_0xF0;
+            /* 0x0F2 */ u16 unk_0xF2;
+            f32 strafe;
             /* 0x0F8 */ f32 unk_0xF8;
             /* 0x0FC */ Vec target;
         };
@@ -285,7 +285,7 @@ void fn_1_116EC(struct TextureHeader* tex);
 void fn_1_11714(void);
 void fn_1_11C98(void);
 void fn_1_11D00(void);
-void fn_1_11F08(void);
+void fn_1_11F08(Rep0610Unk67E0* camera);
 void fn_1_121D4(void);
 void fn_1_126CC(void);
 void fn_1_12820(HugeAnimEntry68* entry, Mtx mtx);
