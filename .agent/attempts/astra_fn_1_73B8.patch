@@ -1,0 +1,192 @@
+diff --git a/include/challenge/rep_0138.h b/include/challenge/rep_0138.h
+index 3f193671..e028906c 100644
+--- a/include/challenge/rep_0138.h
++++ b/include/challenge/rep_0138.h
+@@ -2,12 +2,15 @@
+ #define __CHALLENGE_rep_0138_H_
+ 
+ #include "mssbTypes.h"
++#include "Dolphin/mtx.h"
+ void fn_80048C28(void);
+ void fn_80048C1C(void);
+ #include "Dolphin/GX/GXGeometry.h"
+ 
+ typedef struct Rep0138Model {
+-    /* 0x00 */ u8 _pad0[0x68];
++    /* 0x00 */ u8 _pad0[8];
++    Mtx world;
++    Mtx view;
+     /* 0x68 */ struct Rep0138ModelData* data;
+ } Rep0138Model;
+ extern GXCullMode lbl_1_data_8C4;
+@@ -26,7 +29,8 @@ extern Rep0138UnkC4 lbl_1_bss_C4;
+ extern GXColor lbl_1_data_858;
+ void SetFogNoneAgain(void);
+ 
+-void fn_1_4E98(void);
++typedef struct PreviewDisplayObject PreviewDisplayObject;
++void fn_1_4E98(PreviewDisplayObject* object, Mtx view);
+ void fn_1_54E0(Mtx view);
+ void fn_1_5540(void);
+ void fn_1_5544(void);
+@@ -60,7 +64,8 @@ typedef struct ChallengePreviewState {
+     ChallengeModelPose poses[4];
+     u8 _pad20C[0x10];
+     u16* pixels;
+-    u8 _pad220[0xE];
++    u8 _pad220[0xC];
++    s16 drawnParts;
+     s16 selection;
+     s8 mode;
+     s8 option;
+diff --git a/src/challenge/rep_0138.c b/src/challenge/rep_0138.c
+index cb7e7ac3..5bc23df3 100644
+--- a/src/challenge/rep_0138.c
++++ b/src/challenge/rep_0138.c
+@@ -3,7 +3,7 @@
+ #include "Dolphin/GX/GXHardware.h"
+ 
+ // .text:0x00004E98 size:0x648
+-void fn_1_4E98(void) {
++void fn_1_4E98(PreviewDisplayObject* object, Mtx view) {
+     return;
+ }
+ 
+@@ -159,8 +159,136 @@ void fn_1_7280(void) {
+ }
+ 
+ // .text:0x000073B8 size:0x434
++#include <stdarg.h>
++struct PreviewDisplayObject {
++    u8 _pad0[0x18];
++    Mtx transform;
++    u8 _pad48[0xC];
++    f32 left, right, bottom, top, nearZ, farZ;
++};
++typedef struct PreviewObjectEntry {
++    PreviewDisplayObject* object;
++    void* name;
++} PreviewObjectEntry;
++typedef struct PreviewResource {
++    u8 _pad0[0x10];
++    PreviewObjectEntry* objects;
++} PreviewResource;
++typedef struct PreviewPart {
++    Control* control;
++    u8 _pad4[0x10];
++    u16 objectIndex;
++    u8 _pad16[4];
++    u16 flags;
++} PreviewPart;
++typedef struct Rep0138ModelData {
++    u8 _pad0[6];
++    u16 partCount;
++    u8 _pad8[8];
++    PreviewResource* resource;
++    u8 _pad14[0xC];
++    PreviewPart parts[1];
++} Rep0138ModelData;
++extern u8 lbl_1_data_8C8, lbl_1_bss_C1;
++extern u8 lbl_1_bss_2E0[512];
++s32 fn_800B7D3C(s32 index, Vec* bounds, Mtx matrix);
++void DOVARender(PreviewDisplayObject* object, Mtx view, s32 count, va_list* args);
++static inline void previewBounds(PreviewDisplayObject* object, Vec* bounds) {
++    bounds[0].x = object->right;
++    bounds[0].y = object->top;
++    bounds[0].z = object->nearZ;
++    bounds[1].x = object->left;
++    bounds[1].y = object->top;
++    bounds[1].z = object->nearZ;
++    bounds[2].x = object->left;
++    bounds[2].y = object->top;
++    bounds[2].z = object->farZ;
++    bounds[3].x = object->right;
++    bounds[3].y = object->top;
++    bounds[3].z = object->farZ;
++    bounds[4].x = object->right;
++    bounds[4].y = object->bottom;
++    bounds[4].z = object->nearZ;
++    bounds[5].x = object->left;
++    bounds[5].y = object->bottom;
++    bounds[5].z = object->nearZ;
++    bounds[6].x = object->left;
++    bounds[6].y = object->bottom;
++    bounds[6].z = object->farZ;
++    bounds[7].x = object->right;
++    bounds[7].y = object->bottom;
++    bounds[7].z = object->farZ;
++}
+ void fn_1_73B8(Rep0138Model* model, s32 count, ...) {
+-    return;
++    Vec bounds[8];
++    Mtx matrix;
++    va_list args;
++    ChallengePreviewState* state;
++    Rep0138ModelData* data = model->data;
++    PreviewResource* resource = data->resource;
++
++    s32 lightCount = count;
++    MtxPtr world;
++    MtxPtr view;
++    s32 end, i;
++    if (lbl_1_data_8C8 == 1) {
++        memset(lbl_1_bss_2E0, 0, 512);
++        lbl_1_data_8C8 = 0;
++    } else if (lbl_1_data_8C8 == 2) {
++        memset(lbl_1_bss_2E0, 1, 512);
++        lbl_1_data_8C8 = 0;
++    }
++    state = &lbl_1_common_bss_472B4;
++    end = data->partCount;
++    state->drawnParts = 0;
++    if (state->selection < 0) i = 0;
++    else { i = state->selection; end = i + 1; }
++    world = model->world;
++    view = model->view;
++    for (; i < end; i++) {
++        u16 index;
++        PreviewDisplayObject* object;
++        if (lbl_1_bss_2E0[i]) continue;
++        index = data->parts[i].objectIndex;
++        if (index == 0xFFFF) continue;
++        if (data->parts[i].flags & 1) GXSetZMode(0, 7, 1);
++        else GXSetZMode(1, 3, 1);
++        switch (data->parts[i].flags & 6) {
++        case 2: GXSetBlendMode(1, 1, 1, 0); break;
++        case 4: GXSetBlendMode(1, 2, 0, 0); break;
++        default: GXSetBlendMode(1, 4, 5, 0); break;
++        }
++        object = resource->objects[index].object;
++        CTRLBuildMatrix(data->parts[i].control, object->transform);
++        PSMTXConcat(world, object->transform, object->transform);
++        PSMTXConcat(view, object->transform, matrix);
++        previewBounds(object, bounds);
++        if (fn_800B7D3C(0, bounds, matrix)) {
++            state->drawnParts++;
++            va_start(args, count);
++            DOVARender(object, view, lightCount, &args);
++            va_end(args);
++        }
++    }
++    if (lbl_1_bss_C1) {
++        s32 j = state->selection;
++        s32 limit = data->partCount;
++        if (j < 0) j = 0;
++        else limit = j + 1;
++        for (; j < limit; j++) {
++            PreviewDisplayObject* object;
++            u16 index;
++            if (lbl_1_bss_2E0[j]) continue;
++            index = data->parts[j].objectIndex;
++            if (index == 0xFFFF) continue;
++            object = resource->objects[index].object;
++            CTRLBuildMatrix(data->parts[j].control, object->transform);
++            PSMTXConcat(world, object->transform, object->transform);
++            PSMTXConcat(view, object->transform, matrix);
++            previewBounds(object, bounds);
++            if (fn_800B7D3C(0, bounds, matrix)) fn_1_4E98(object, view);
++        }
++    }
+ }
+ 
+ // .text:0x000077EC size:0x5C
