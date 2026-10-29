@@ -888,8 +888,79 @@ void fn_1_24A8C(void) {
 }
 
 // .text:0x00024C4C size:0x418
-void fn_1_24C4C(void) {
-    return;
+typedef struct ChallengeSpringScene {
+    u8 _pad0[0x1E];
+    u16 friction, drag;
+    u8 _pad22[6];
+    u16 floor;
+} ChallengeSpringScene;
+/* Accumulate gravity, drag, spring forces and floor friction for a particle chain. */
+void fn_1_24C4C(ChallengeSpringPoint* points, s32 count, Vec* impulse, f32 stiffness, f32 damping, f32 restLength, f32 timeScale) {
+    Vec delta, relative, force;
+    ChallengeSpringPoint* end = points + count;
+    ChallengeSpringScene* scene = (ChallengeSpringScene*)lbl_803CC1B8;
+    ChallengeSpringPoint* point;
+    s32 i;
+    f32 reverse = -1.0f * timeScale;
+    f32 first = 1.0f;
+    for (i = count, point = end; point--, i--;) {
+        f32 speed;
+        if (point->fixed) point->force.x = point->force.y = point->force.z = 0.0f;
+        else {
+            point->force.x = point->force.z = 0.0f;
+            point->force.y = -9.80665f * point->mass;
+        }
+        speed = PSVECMag(&point->velocity);
+        if (speed) {
+            PSVECScale(&point->velocity, reverse, &delta);
+            PSVECNormalize(&delta, &delta);
+            PSVECScale(&delta, (scene->drag / 10000.0f) * (speed * speed), &delta);
+            PSVECAdd(&point->force, &delta, &point->force);
+        }
+        if (first) {
+            PSVECAdd(&point->force, impulse, &point->force);
+            first = 0.0f;
+        }
+    }
+    {
+    ChallengeSpringPoint* current;
+    ChallengeSpringPoint* previous;
+    s32 j;
+    for (j = count, current = end; current--, --j;) {
+        f32 length, resistance, elastic;
+        previous = &points[j - 1];
+        PSVECSubtract(&current->position, &previous->position, &delta);
+        PSVECSubtract(&current->velocity, &previous->velocity, &relative);
+        PSVECScale(&relative, timeScale, &relative);
+        length = PSVECMag(&delta);
+        resistance = damping * (PSVECDotProduct(&relative, &delta) / length);
+        PSVECNormalize(&delta, &force);
+        elastic = stiffness * (length - restLength);
+        elastic += resistance;
+        PSVECScale(&force, -elastic, &force);
+        if (!current->fixed) PSVECAdd(&current->force, &force, &current->force);
+        PSVECScale(&force, -1.0f, &force);
+        if (!previous->fixed) PSVECAdd(&previous->force, &force, &previous->force);
+    }
+    }
+    for (i = count; end--, i--;) {
+        if (!end->fixed && end->position.y <= scene->floor / 1000.0f) {
+            if (0.0f != PSVECMag(&end->velocity)) {
+                f32 friction = (scene->friction / 64.0f) * end->force.y;
+                f32 magnitude;
+                if (friction < 0.0f) friction = -friction;
+                memcpy(&delta, &end->force, sizeof(Vec));
+                delta.y = 0.0f;
+                magnitude = PSVECMag(&delta);
+                if (magnitude) {
+                    PSVECNormalize(&delta, &delta);
+                    if (friction > magnitude) PSVECScale(&delta, -magnitude, &delta);
+                    else PSVECScale(&delta, -friction, &delta);
+                    PSVECAdd(&delta, &end->force, &end->force);
+                }
+            }
+        }
+    }
 }
 
 // .text:0x00025064 size:0xC04

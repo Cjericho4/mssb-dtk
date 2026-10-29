@@ -141,7 +141,12 @@ void fn_1_24778(void);
 void fn_1_247A0(void);
 void fn_1_248BC(void);
 void fn_1_24A8C(void);
-void fn_1_24C4C(void);
+typedef struct ChallengeSpringPoint {
+    f32 mass, reserved;
+    Vec position, previous, velocity, force;
+    u32 fixed;
+} ChallengeSpringPoint;
+void fn_1_24C4C(ChallengeSpringPoint* points, s32 count, Vec* impulse, f32 stiffness, f32 damping, f32 restLength, f32 timeScale);
 void fn_1_25064(void);
 void fn_1_25C68(void);
 void fn_1_25F98(void);
