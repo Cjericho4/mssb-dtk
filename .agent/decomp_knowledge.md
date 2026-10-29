@@ -4,6 +4,10 @@ This document summarizes the core patterns, compiler behaviors, and tooling insi
 
 ## 1. MWCC (CodeWarrior) PowerPC Behavior Patterns
 
+* **Four-byte color copied to a new stack slot before each light call**: use a static inline wrapper taking the color struct by value, forwarding its address to the pointer API; matched fn_1_1B038 and fn_1_1B0FC (setChallengeLightColor).
+* **One-iteration loop still present in the target**: a direct do-while (++i < 1) retains the loop where for (i=0; i<1; i++) folds it away; fn_1_1620C matched, including its nonvolatile register assignment, after removing an unnecessary inline wrapper.
+
+
 Compiler versions come from `configure.py`: the game code (the three RELs and the DOL `unk` units in
 `src/Unknown/`) and the runtime/TRK libs build with **GC/2.6**; MusyX and C3 with GC/1.3.2; the
 Dolphin SDK with GC/1.2.5n; the linker is GC/1.3.2. The RELs use `-inline noauto`, the DOL `unk`
