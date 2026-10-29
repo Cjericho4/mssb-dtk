@@ -1,0 +1,107 @@
+diff --git a/include/challenge/rep_74A0.h b/include/challenge/rep_74A0.h
+index f58aeb32..dabc5156 100644
+--- a/include/challenge/rep_74A0.h
++++ b/include/challenge/rep_74A0.h
+@@ -20,27 +20,29 @@ void fn_800B9AA8(u32 context);
+ void fn_1_182C0(void);
+ void fn_1_1857C(void);
+ typedef struct ChallengeOrbit {
+-    u32 header;
++    union { u32 header; struct ChallengeOrbit* next; };
+     Vec origin;
+     Vec position;
+     Vec rotation;
+     Vec angularVelocity;
+-    u8 _pad34[12];
++    u8 _pad34[4];
++    f32 size, decay;
+     GXColor colors[2];
+-    u16 _pad48;
++    u16 phase;
+     s16 index;
+ } ChallengeOrbit;
+ typedef struct ChallengeOrbitConfig {
+     s32 unk0;
+     s32 radius;
+     s32 angularSpeed;
+-    u8 _padC[8];
++    s32 size, decay;
+     s32 colorMinimum;
+ } ChallengeOrbitConfig;
+ extern ChallengeOrbitConfig lbl_1_data_FB24;
+ void fn_1_18E04(ChallengeOrbit* orbit, f32 angle);
+ void fn_1_18EE4(ChallengeOrbit* orbit);
+ void fn_1_191DC(void);
++typedef struct ChallengeOrbitEmitter { u8 _pad0[0xC]; ChallengeOrbit* first; } ChallengeOrbitEmitter;
+ void fn_1_1957C(void);
+ void fn_1_1994C(void);
+ s32 fn_1_19D1C(u32 flags);
+diff --git a/src/challenge/rep_74A0.c b/src/challenge/rep_74A0.c
+index c288c5f1..4b4ae7b3 100644
+--- a/src/challenge/rep_74A0.c
++++ b/src/challenge/rep_74A0.c
+@@ -88,10 +88,63 @@ void fn_1_1957C(void) {
+ }
+ 
+ // .text:0x0001994C size:0x3D0
++static inline void initializeChallengeOrbitPhase(ChallengeOrbit* orbit, u32 index) {
++    s32 band = lbl_1_data_FB24.unk0 / 5;
++    orbit->phase = ((index % 5) * band + rand() % band) * 2;
++}
++/* Create a particle emitter and initialize its linked particle records. */
+ void fn_1_1994C(void) {
+-    return;
++    s32 band;
++    u32 index;
++    ChallengeOrbit* orbit;
++    u32 base;
++    ChallengeOrbitEmitter* emitter = (ChallengeOrbitEmitter*)fn_80033A24(fn_1_1857C, 0, 0, lbl_1_data_FB24.unk0, 1, 128);
++    if (emitter) {
++    index = 0;
++    orbit = emitter->first;
++    do {
++        orbit->index = index;
++        orbit->size = lbl_1_data_FB24.size / 100000.0f;
++        orbit->decay = lbl_1_data_FB24.decay / 100000.0f;
++        {
++
++    s32 minimum = lbl_1_data_FB24.colorMinimum;
++    u8 range;
++    f32 sine, cosine, speed;
++    f32 angle = 0.0f;
++    base = (u8)minimum;
++    orbit->origin.x = (f32)(orbit->index * 2) / lbl_1_data_FB24.unk0 - 1.0f;
++    orbit->origin.y = -1.0f;
++    orbit->origin.z = 50.0f * ((f32)rand() / 32767.0f) + 50.0f;
++    sine = sin(angle);
++    cosine = cos(angle);
++    orbit->position.x = (sine * lbl_1_data_FB24.radius) / 100000.0f;
++    orbit->position.y = (cosine * lbl_1_data_FB24.radius) / 100000.0f;
++    orbit->position.z = 0;
++    orbit->rotation.x = orbit->rotation.y = orbit->rotation.z = 0;
++    speed = lbl_1_data_FB24.angularSpeed / 100000.0f;
++    orbit->angularVelocity.x = speed * ((f32)rand() / 32767.0f);
++    orbit->angularVelocity.y = speed * ((f32)rand() / 32767.0f);
++    orbit->angularVelocity.z = speed * ((f32)rand() / 32767.0f);
++    orbit->colors[0].a = orbit->colors[1].a = 255;
++    range = 255 - minimum;
++    orbit->colors[0].g = base + rand() % range;
++    orbit->colors[0].b = base + rand() % range;
++    orbit->colors[1].r = base + rand() % range;
++    orbit->colors[1].g = base + rand() % range;
++    orbit->colors[1].b = base + rand() % range;
++
++        }
++        band = lbl_1_data_FB24.unk0 / 5;
++        orbit->phase = ((index % 5) * band + rand() % band) * 2;
++        index++;
++        orbit = orbit->next;
++    } while (orbit);
++}
+ }
+ 
++
++
+ // .text:0x00019D1C size:0x44
+ s32 fn_1_19D1C(u32 flags) {
+     switch ((flags >> 4) & 0xF) {
