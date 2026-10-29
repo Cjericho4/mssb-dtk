@@ -1,0 +1,120 @@
+diff --git a/include/challenge/rep_0250.h b/include/challenge/rep_0250.h
+index cbd60ccc..854d0400 100644
+--- a/include/challenge/rep_0250.h
++++ b/include/challenge/rep_0250.h
+@@ -45,7 +45,9 @@ typedef struct ChallengeLayoutState {
+     u8 _padA[6];
+     u8 field10;
+     u8 previous;
+-    u8 _pad12[0x12];
++    u8 _pad12[10];
++    s32 loadIndex;
++    u8** archiveEntries;
+     DrawingSceneStruct* item;
+     u8 field28;
+ } ChallengeLayoutState;
+diff --git a/src/challenge/rep_0250.c b/src/challenge/rep_0250.c
+index 11821484..ed6e93c4 100644
+--- a/src/challenge/rep_0250.c
++++ b/src/challenge/rep_0250.c
+@@ -232,6 +232,99 @@ void fn_1_97E4(void) {
+ }
+ 
+ // .text:0x00009AB0 size:0x3F0
++#include "challenge/gap_85A8.h"
++typedef struct ChallengeLayoutArchive { u16 count, reserved; u8* entries[24]; } ChallengeLayoutArchive;
++typedef struct ChallengeLayoutResource { u8 descriptor[16]; } ChallengeLayoutResource;
++typedef struct ChallengeLayoutPool {
++    u8 _pad0[0xD4];
++    s32 value;
++    u8 _padD8[0x40];
++    ChallengeLayoutConfig numeric;
++    u8 _pad12D[0x3F8 - 0x118 - sizeof(ChallengeLayoutConfig)];
++    ChallengeLayoutArchive archive;
++    ChallengeLayoutResource resources[12];
++} ChallengeLayoutPool;
++extern ChallengeLayoutPool lbl_1_data_AB0;
++void fn_800111B4(ChallengeLayoutArchive* archive);
++s32 fn_80035838(ChallengeLayoutResource* descriptor, s32 mode);
++/* Load layout resources and dispatch preview modes, including the numeric countdown. */
+ void fn_1_9AB0(void) {
+-    return;
++    DrawingSceneStruct* scene;
++    ChallengeLayoutPool* pool = &lbl_1_data_AB0;
++    ChallengeLayoutState* state = &lbl_1_bss_2FA8;
++    scene = lbl_803CC1B8;
++    switch (scene->loadingState) {
++    case 0: {
++        s32 i;
++        fn_800111B4(&pool->archive);
++        state->archiveEntries = pool->archive.entries;
++        lbl_1_common_bss_47698.count = 0;
++        i = 10;
++        do { lbl_1_common_bss_47698.flags[i] = 0; } while (--i);
++        lbl_1_common_bss_47698.active = 0;
++        scene->unk1a_hi = 0;
++        state->loadIndex = 0;
++        state->selected = 0;
++        state->mode = 0;
++        state->field9 = 1;
++        state->field28 = 0;
++        lbl_803CC1B8->loadingState = 1;
++        break;
++    }
++    case 1:
++        if (state->loadIndex > 11) scene->loadingState = 2;
++        else if (fn_80035838(&pool->resources[state->loadIndex], (u8)state->loadIndex)) state->loadIndex++;
++        break;
++    case 2:
++        fn_1_97E4();
++        switch ((s8)state->selected) {
++        case 0:
++            if (!state->field28) state->field28 = 1;
++            else {
++                if (state->mode == 1) {
++                    s32 value;
++                    if (--pool->value < 0) pool->value = 3000;
++                    value = pool->value;
++                    if (value % 10 == 0) {
++                        ChallengeLayoutConfig* config;
++                        fn_80034CEC((u32)state->item);
++                        fn_80034E20(state->item, &pool->numeric);
++                        lbl_80371C30[state->item->unkIndex].obj->field_0x5C = 0x80000;
++                        config = &pool->numeric;
++                        fn_8003664C(config->id, 0, value / 1000 + 10, 4);
++                        lbl_80371C30[state->item->unkIndex + 1].obj->field_0x5C = 0xC0000;
++                        value %= 1000;
++                        fn_8003664C(config->id, 1, value / 100 + 10, 5);
++                        lbl_80371C30[state->item->unkIndex + 2].obj->field_0x5C = 0x100000;
++                        value %= 100;
++                        fn_8003664C(config->id, 2, value / 10 + 10, 6);
++                    }
++                }
++                state->field28 = 2;
++            }
++            break;
++        case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9:
++            if (!state->field28) state->field28 = 1;
++            else {
++                if (state->field28 == 1) fn_800B0A5C_insertQueue(fn_1_973C, 2);
++                state->field28 = 2;
++            }
++            break;
++        case 11:
++            if (!state->field28) state->field28 = 1;
++            else state->field28 = 2;
++            break;
++        case 10:
++            if (!state->field28) state->field28 = 1;
++            else {
++                if (state->field28 == 1) {
++                    if (state->mode == 1 || state->mode == 3) fn_800B0A5C_insertQueue(fn_1_8F34, 2);
++                    else fn_800B0A5C_insertQueue(fn_1_8F34, 2);
++                }
++                state->field28 = 2;
++            }
++            break;
++        }
++        break;
++    }
+ }
