@@ -275,7 +275,7 @@ void fn_1_106C4(void);
 void fn_1_1073C(Rep0610Obj1073C* obj);
 void fn_1_107B8(void);
 void fn_1_10AA4(Rep0610Obj* obj, f32 value);
-void fn_1_10ACC(void);
+void fn_1_10ACC(Mtx matrix, Vec* position, void* unused, f32 size, GXColor* color);
 extern u8 lbl_1_data_ABA8;
 void fn_800B2C88(ChallengeModel* model, u16 index, Mtx matrix);
 void fn_1_10CEC(Rep0610Obj12F18* object);

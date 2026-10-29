@@ -1,5 +1,7 @@
 #include "challenge/rep_0610.h"
 #include "Dolphin/GX/GXPixel.h"
+#include "Dolphin/GX/GXLight.h"
+#include "Dolphin/GX/GXTev.h"
 #include "Dolphin/GX/GXGeometry.h"
 #include "Dolphin/GX/GXFifo.h"
 extern f32 lbl_1_data_F570;
@@ -576,8 +578,36 @@ void fn_1_10AA4(Rep0610Obj* obj, f32 value) {
 }
 
 // .text:0x00010ACC size:0x220
-void fn_1_10ACC(void) {
-    return;
+/* Draw a colored debug line and restore culling and the normal depth test. */
+void fn_1_10ACC(Mtx matrix, Vec* position, void* unused, f32 size, GXColor* color) {
+    GXCullMode cullMode;
+    GXGetCullMode(&cullMode);
+    GXLoadPosMtxImm(matrix, 0);
+    GXSetCurrentMtx(0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetNumTevStages(1);
+    GXSetNumChans(1);
+    GXSetNumTexGens(0);
+    GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_COPY);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
+    GXSetLineWidth(10, GX_TO_ZERO);
+    GXBegin(GX_LINES, GX_VTXFMT0, 2);
+    GXPosition3f32(position->x, position->y, position->z);
+    GXColor4u8(color->r, color->g, color->b, color->a);
+    GXPosition3f32(position->x + size, position->y + size, position->z + size);
+    GXColor4u8(color->r, color->g, color->b, color->a);
+    GXSetLineWidth(6, GX_TO_ZERO);
+    GXSetCullMode(cullMode);
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 }
 
 // .text:0x00010CEC size:0x140
