@@ -1,6 +1,10 @@
 #include "challenge/rep_0010.h"
 #include "challenge/challenge.h"
 
+/* gap_800AD780.h has incompatible queue-node and OSGetTime declarations with
+   this unit; retain its exact callback prototype until those views are unified. */
+void fn_800B0C80(void (*callback)(void));
+
 // .text:0x000005EC size:0x508
 void fn_1_5EC(void) {
     return;
@@ -27,8 +31,10 @@ void _unresolved(void) {
 }
 
 // .text:0x0000110C size:0x3C
+// Register the challenge scene and initialize its display buffers.
 void _prolog(void) {
-    return;
+    fn_800B0C80(fn_1_1148);
+    fn_800AD054(lbl_80366158.unk8, lbl_80366158.unk4);
 }
 
 // .text:0x00001148 size:0x88
