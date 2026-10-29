@@ -1,0 +1,146 @@
+diff --git a/include/challenge/rep_0138.h b/include/challenge/rep_0138.h
+index 3b1e0d6d..6fd437a9 100644
+--- a/include/challenge/rep_0138.h
++++ b/include/challenge/rep_0138.h
+@@ -36,7 +36,14 @@ void fn_1_5AC0(void);
+ void fn_1_6050(u16* pixels, s32 width, s32 height, f32 scale);
+ #include "Dolphin/GX/GXTexture.h"
+ typedef struct ChallengeMipSettings {
+-    u8 _pad0[0x778];
++    u8 _pad0[0x5B8];
++    void (*actions[8])(void);
++    u8 _pad5D8[0xC];
++    u32 renderA[2][2];
++    u8 _pad5F4[8];
++    u32 renderB[2][2];
++    u32 renderC[2][2];
++    u8 _pad61C[0x15C];
+     u8 levels;
+     u8 _pad779[3];
+     f32 scales[4];
+@@ -49,24 +56,31 @@ typedef struct ChallengeModelPose {
+     u32 flags;
+     void (*draw)(Rep0138Model*);
+     Mtx transform;
+-    u8 _pad38[0x34];
++    Mtx view;
++    u8 _pad68[4];
+ } ChallengeModelPose;
+ typedef struct ChallengePreviewState {
+-    u8 _pad0[0x30];
++    Mtx view;
+     u16 flags;
+     u8 _pad32[0x1A];
+     Vec position;
+     u8 _pad58[4];
+-    ChallengeModelPose poses[4];
++    union { ChallengeModelPose poses[4]; struct { ChallengeModelPose primaryPoses[2], secondaryPoses[2]; }; };
+     u8 _pad20C[0x10];
+     u16* pixels;
+     u8 _pad220[0xE];
+     s16 selection;
+     s8 mode;
+     s8 option;
+-    u8 _pad232[2];
++    u8 menuOpen;
++    s8 menuIndex;
+     u8 active;
+-    u8 _pad235[0xB];
++    s8 runAction;
++    u8 _pad236[2];
++    s8 alternate;
++    u8 _pad239;
++    u16 angle;
++    u8 _pad23C[4];
+ } ChallengePreviewState;
+ extern ChallengePreviewState lbl_1_common_bss_472B4;
+ void fn_800B472C(Rep0138Model* model);
+diff --git a/src/challenge/rep_0138.c b/src/challenge/rep_0138.c
+index 8d33f652..c0c5ff89 100644
+--- a/src/challenge/rep_0138.c
++++ b/src/challenge/rep_0138.c
+@@ -144,8 +144,83 @@ void fn_1_6848(void) {
+ }
+ 
+ // .text:0x00006E14 size:0x368
++extern u8 lbl_1_bss_C0, lbl_1_bss_C1, lbl_803CBBC0;
++void fn_1_196C(void);
++void fn_800A7D4C(s32 queue, void* task);
++void fn_800B996C(void (*callback)(void));
++static inline void queueChallengePreview(u32 tasks[][2], u8* buffer) {
++    fn_800A7D4C(0, tasks[*buffer]);
++}
++static inline void dispatchChallengePreview(void (**actions)(void), s32 index) {
++    actions[index]();
++}
++/* Queue model-preview draws and dispatch the preview options menu. */
+ void fn_1_6E14(void) {
+-    return;
++    ChallengeMipSettings* settings = &lbl_1_data_2A8;
++    fn_1_7960();
++    if (lbl_1_common_bss_472B4.alternate == 0) {
++        ChallengeModelPose* pose = &lbl_1_common_bss_472B4.poses[lbl_803CBBC0];
++        PSMTXCopy(lbl_1_common_bss_472B4.view, pose->view);
++        queueChallengePreview(settings->renderC, &lbl_803CBBC0);
++        fn_800A7D4C(0, pose);
++        queueChallengePreview(settings->renderB, &lbl_803CBBC0);
++        pose = &lbl_1_common_bss_472B4.secondaryPoses[lbl_803CBBC0];
++        PSMTXRotRad(pose->transform, 'Y', 0.0000958738f * lbl_1_common_bss_472B4.angle);
++        PSMTXCopy(lbl_1_common_bss_472B4.view, pose->view);
++        fn_800A7D4C(0, pose);
++        queueChallengePreview(settings->renderA, &lbl_803CBBC0);
++    } else fn_1_196C();
++    if (lbl_803C77B8.held & 0x1000) {
++        SetFogNoneAgain();
++        lbl_803CC1B8->aFunctionPointer = fn_1_66C4;
++    } else if (lbl_803C77B8.held & 0x200) {
++        lbl_1_common_bss_472B4.runAction = 0;
++        lbl_1_common_bss_472B4.alternate = 0;
++        lbl_1_common_bss_472B4.menuOpen ^= 1;
++        lbl_1_common_bss_472B4.selection = -1;
++    }
++    if (lbl_1_common_bss_472B4.menuOpen) {
++        switch (lbl_803C77B8.pressed) {
++        case 8:
++            if (--lbl_1_common_bss_472B4.menuIndex < 0) lbl_1_common_bss_472B4.menuIndex = 7;
++            break;
++        case 4:
++            if (++lbl_1_common_bss_472B4.menuIndex >= 8) lbl_1_common_bss_472B4.menuIndex = 0;
++            break;
++        case 0x100:
++            switch (lbl_1_common_bss_472B4.menuIndex) {
++            case 0:
++                lbl_1_common_bss_472B4.runAction = 1;
++                lbl_1_common_bss_472B4.menuOpen = 0;
++                break;
++            case 1:
++                lbl_1_common_bss_472B4.selection = -1;
++                lbl_1_common_bss_472B4.runAction = 1;
++                lbl_1_common_bss_472B4.menuOpen = 0;
++                break;
++            case 2:
++                lbl_1_common_bss_472B4.runAction = 1;
++                lbl_1_common_bss_472B4.menuOpen = 0;
++                break;
++            case 3:
++                lbl_1_common_bss_472B4.runAction = 1;
++                lbl_1_common_bss_472B4.menuOpen = 0;
++                break;
++            case 4: lbl_1_common_bss_472B4.active ^= 1; break;
++            case 5:
++                lbl_1_common_bss_472B4.runAction = 1;
++                lbl_1_common_bss_472B4.menuOpen = 0;
++                break;
++            case 6: lbl_1_bss_C0 ^= 1; break;
++            case 7: lbl_1_bss_C1 ^= 1; break;
++            }
++            break;
++        }
++    }
++    if (lbl_1_common_bss_472B4.runAction)
++        dispatchChallengePreview(settings->actions, lbl_1_common_bss_472B4.menuIndex);
++    if (lbl_1_bss_C0) fn_800B996C(fn_1_5544);
++    else fn_800B996C(NULL);
+ }
+ 
+ // .text:0x0000717C size:0x104
