@@ -25,6 +25,15 @@ void _unresolved(void);
 void _prolog(void);
 void fn_1_1148(void);
 void fn_1_11D0(void);
-void fn_1_1240(void);
+#include "game/sta_c4.h"
+typedef struct ChallengeQuadTexture { StaC4TexDesc desc; u8 _pad1C[4]; } ChallengeQuadTexture;
+typedef struct ChallengeQuadArchive { u32 count; ChallengeQuadTexture entries[1]; } ChallengeQuadArchive;
+typedef struct ChallengeTextureQuad {
+    u8 _pad0[8];
+    ChallengeQuadArchive* archive;
+    u32 texture, mode;
+    GXColor color;
+} ChallengeTextureQuad;
+void fn_1_1240(ChallengeTextureQuad* quad);
 
 #endif // !__CHALLENGE_rep_0010_H_
