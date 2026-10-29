@@ -2,6 +2,14 @@
 
 #include "dolphin/dsp.h"
 #include "musyx/dsp_import.h"
+#include "Dolphin/OS/OSThread.h"
+
+extern OSThreadQueue lbl_803CC3D0;
+
+// Wake the audio thread when the DSP task finishes.
+void dspDoneCallback(void* task) {
+    OSWakeupThread(&lbl_803CC3D0);
+}
 
 static DSPTaskInfo dsp_task ATTRIBUTE_ALIGN(8);
 static u16 dram_image[4096] ATTRIBUTE_ALIGN(32);
