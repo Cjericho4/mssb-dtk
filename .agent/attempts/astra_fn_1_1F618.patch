@@ -1,0 +1,70 @@
+diff --git a/include/challenge/rep_7730.h b/include/challenge/rep_7730.h
+index 400d52c4..20c6a8ec 100644
+--- a/include/challenge/rep_7730.h
++++ b/include/challenge/rep_7730.h
+@@ -75,7 +75,7 @@ typedef struct ChallengeRenderSettings {
+ } ChallengeRenderSettings;
+ void fn_1_1F418(ChallengeRenderSettings* settings);
+ s32 fn_80048EA8(s32 index);
+-void fn_1_1F618(void);
++void fn_1_1F618(ChallengeRenderSettings* settings);
+ void fn_1_1F900(void);
+ void fn_1_1FD78(ChallengeRenderSettings* settings);
+ void fn_1_2004C(void);
+diff --git a/src/challenge/rep_7730.c b/src/challenge/rep_7730.c
+index cd4f4c10..a0769fbe 100644
+--- a/src/challenge/rep_7730.c
++++ b/src/challenge/rep_7730.c
+@@ -294,8 +294,50 @@ void fn_1_1F418(ChallengeRenderSettings* settings) {
+ }
+ 
+ // .text:0x0001F618 size:0x2E8
+-void fn_1_1F618(void) {
+-    return;
++static inline void configurePreviewLayers(ChallengeTextureStages* stages, u32* indices) {
++    GXTexObj* textures;
++    s32 stage;
++    GXSetNumTevStages(stages->count);
++    GXSetNumTexGens(stages->count);
++    textures = lbl_1_bss_6EA4;
++    for (stage = 0; stage < stages->count; stage++) {
++        u32 index;
++        u32 paletteIndex;
++        GXSetTexCoordGen2(stage, GX_TG_MTX3X4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
++        if (stage != 0) {
++            GXSetTevColorIn(stage, GX_CC_CPREV, GX_CC_TEXC, GX_CC_RASA, GX_CC_ZERO);
++            GXSetTevColorOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++            GXSetTevAlphaIn(stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
++            GXSetTevAlphaOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++        } else {
++            GXSetTevColorIn(stage, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
++            GXSetTevColorOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++            GXSetTevAlphaIn(stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_RASA);
++            GXSetTevAlphaOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++        }
++        index = indices[stage];
++        paletteIndex = index & 0x7FFFFFFF;
++        GXLoadTexObj(&textures[paletteIndex], stage);
++        if (indices[stage] & 0x80000000) GXLoadTlut(&lbl_1_bss_6E44[paletteIndex], stage);
++    }
++}
++
++static inline void drawPreviewLayer(s32 count) {
++    f32 depth;
++        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
++        GXPosition3f32(0, 0, depth = 0.5f - 0.0001f * count); GXColor1u32(0xFFFFFF80); GXTexCoord2u16(0, 0);
++        GXPosition3f32(0, 448, depth); GXColor1u32(0xFFFFFF80); GXTexCoord2u16(0, 256);
++        GXPosition3f32(640, 448, depth); GXColor1u32(0xFFFFFF80); GXTexCoord2u16(256, 256);
++        GXPosition3f32(640, 0, depth); GXColor1u32(0xFFFFFF80); GXTexCoord2u16(256, 0);
++}
++void fn_1_1F618(ChallengeRenderSettings* settings) {
++    s32 count = settings->value;
++    while (count--) {
++        u32 indices[1];
++        indices[0] = count % 4;
++        configurePreviewLayers((ChallengeTextureStages*)settings, indices);
++        drawPreviewLayer(count);
++    }
+ }
+ 
+ // .text:0x0001F900 size:0x478
