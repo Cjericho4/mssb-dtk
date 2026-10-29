@@ -1,5 +1,9 @@
 #include "challenge/rep_0610.h"
 #include "game/rep_1C0.h"
+#include "Dolphin/OS/OSUtil.h"
+extern s32 lbl_1_bss_3084;
+/* Partial view of the animation auxiliary data referenced by AnimationStruct. */
+struct MenusAnimationAux { u8 _pad0[0x10]; u32 unk_0x10; };
 /* rep_0138.h declares a conflicting light view; keep its projection API here. */
 void fn_800B806C(s32 index, f32 t, f32 b, f32 l, f32 r, f32 nearZ, f32 farZ, f32 scale);
 /* Texture owning header has conflicting actor views with this unit. */
@@ -742,8 +746,24 @@ void fn_1_165E0(void) {
 }
 
 // .text:0x000168C8 size:0xB0
+/* Time one challenge update, then advance the scene on the following tick. */
 void fn_1_168C8(void) {
-    return;
+    ChallengeScene* scene = (ChallengeScene*)lbl_803CC1B8;
+    if (lbl_1_bss_3084 == 0) {
+        lbl_1_bss_3084 = 1;
+        scene->words[2] = OSGetTick();
+        fn_1_135C0();
+        scene->words[2] = OSGetTick() - scene->words[2];
+    } else {
+        lbl_1_bss_3084 = 0;
+        scene->loadingState = 0;
+        /* FAKEMATCH: retain the original auxiliary-data branch despite identical callbacks. */
+        if (g_hugeAnimStruct.fielderStructs[0].aux->unk_0x10 != 0) {
+            lbl_803CC1B8->aFunctionPointer = fn_1_1770C;
+        } else {
+            lbl_803CC1B8->aFunctionPointer = fn_1_1770C;
+        }
+    }
 }
 
 // .text:0x00016978 size:0xD74
