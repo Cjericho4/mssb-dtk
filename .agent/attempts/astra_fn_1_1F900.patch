@@ -1,0 +1,96 @@
+diff --git a/include/challenge/rep_7730.h b/include/challenge/rep_7730.h
+index f716ac90..540d81a1 100644
+--- a/include/challenge/rep_7730.h
++++ b/include/challenge/rep_7730.h
+@@ -85,7 +85,7 @@ typedef struct ChallengeRenderSettings {
+ void fn_1_1F418(ChallengeRenderSettings* settings);
+ s32 fn_80048EA8(s32 index);
+ void fn_1_1F618(void);
+-void fn_1_1F900(void);
++void fn_1_1F900(ChallengeRenderSettings* settings);
+ void fn_1_1FD78(ChallengeRenderSettings* settings);
+ void fn_1_2004C(void);
+ void fn_80048C1C(void);
+diff --git a/src/challenge/rep_7730.c b/src/challenge/rep_7730.c
+index 97908c10..27207286 100644
+--- a/src/challenge/rep_7730.c
++++ b/src/challenge/rep_7730.c
+@@ -382,8 +382,76 @@ void fn_1_1F618(void) {
+ }
+ 
+ // .text:0x0001F900 size:0x478
+-void fn_1_1F900(void) {
+-    return;
++typedef struct ChallengeTexturePreviewPool {
++    u8 _pad0[0x24C];
++    u32 indices[8];
++    GXTlutObj palettes[8];
++    GXTexObj textures[8];
++} ChallengeTexturePreviewPool;
++extern ChallengeTexturePreviewPool lbl_1_bss_6BD8;
++/* Render repeated tiles with configurable texture layers and tile size. */
++void fn_1_1F900(ChallengeRenderSettings* settings) {
++    u32 indices[4];
++    s32 tile, column, row;
++    s32 fill;
++    ChallengeTexturePreviewPool* pool = &lbl_1_bss_6BD8;
++    for (tile = 0; tile < settings->value; tile++) {
++        column = ((tile % 480) % 48) % 8;
++        row = ((tile % 480) % 48) / 8;
++        for (fill = 0; fill < settings->stages; fill++) {
++            indices[fill] = pool->indices[(column + row) % 8];
++        }
++    {
++    s32 stage;
++    GXSetNumTevStages(settings->stages);
++    GXSetNumTexGens(settings->stages);
++    for (stage = 0; stage < settings->stages; stage++) {
++        u32 index;
++        u32 paletteIndex;
++        GXSetTexCoordGen2(stage, GX_TG_MTX3X4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
++        if (stage != 0) {
++            GXSetTevColorIn(stage, GX_CC_CPREV, GX_CC_TEXC, GX_CC_RASA, GX_CC_ZERO);
++            GXSetTevColorOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++            GXSetTevAlphaIn(stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
++            GXSetTevAlphaOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++        } else {
++            GXSetTevColorIn(stage, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
++            GXSetTevColorOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++            GXSetTevAlphaIn(stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_RASA);
++            GXSetTevAlphaOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++        }
++        index = indices[stage];
++        paletteIndex = index & 0x7FFFFFFF;
++        GXLoadTexObj(&pool->textures[index], stage);
++        if (indices[stage] & 0x80000000) GXLoadTlut(&pool->palettes[paletteIndex], stage);
++    }
++    }
++    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
++    GXWGFifo.f32 = column * settings->textureIndex;
++    GXWGFifo.f32 = row * settings->textureIndex;
++    GXWGFifo.f32 = 0;
++    GXWGFifo.u32 = 0xFFFFFF80;
++    GXWGFifo.u16 = 0;
++    GXWGFifo.u16 = 0;
++    GXWGFifo.f32 = column * settings->textureIndex;
++    GXWGFifo.f32 = row * settings->textureIndex + settings->textureIndex;
++    GXWGFifo.f32 = 0;
++    GXWGFifo.u32 = 0xFFFFFF80;
++    GXWGFifo.u16 = 0;
++    GXWGFifo.u16 = 256;
++    GXWGFifo.f32 = column * settings->textureIndex + settings->textureIndex;
++    GXWGFifo.f32 = row * settings->textureIndex + settings->textureIndex;
++    GXWGFifo.f32 = 0;
++    GXWGFifo.u32 = 0xFFFFFF80;
++    GXWGFifo.u16 = 256;
++    GXWGFifo.u16 = 256;
++    GXWGFifo.f32 = column * settings->textureIndex + settings->textureIndex;
++    GXWGFifo.f32 = row * settings->textureIndex;
++    GXWGFifo.f32 = 0;
++    GXWGFifo.u32 = 0xFFFFFF80;
++    GXWGFifo.u16 = 256;
++    GXWGFifo.u16 = 0;
++    }
+ }
+ 
+ // .text:0x0001FD78 size:0x2D4
