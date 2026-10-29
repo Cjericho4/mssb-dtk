@@ -1,0 +1,138 @@
+diff --git a/include/UnknownHeaders.h b/include/UnknownHeaders.h
+index 6ec2d267..2bac8c1f 100644
+--- a/include/UnknownHeaders.h
++++ b/include/UnknownHeaders.h
+@@ -103,9 +103,12 @@ typedef struct AnimRingInfo {
+     u16 count; /* 0x06 */
+ } AnimRingInfo;
+ 
++typedef struct AnimSlotKey { f32 frame; u8 _pad4[12]; } AnimSlotKey;
+ typedef struct AnimSlotEntry {
+     s32 value; /* 0x00 */
+-    u8 _pad4[8];
++    AnimSlotKey* keys;
++    u16 keyCount;
++    u8 _padA[2];
+ } AnimSlotEntry; /* size 0xC */
+ 
+ typedef struct AnimSlotTable {
+diff --git a/include/challenge/rep_0610.h b/include/challenge/rep_0610.h
+index 2d216592..c09659e7 100644
+--- a/include/challenge/rep_0610.h
++++ b/include/challenge/rep_0610.h
+@@ -33,15 +33,22 @@ typedef struct ChallengeState {
+     /* 0x0028 */ union { s32 selection; Gap8000B9C8Texture* texture; };
+     /* 0x002C */ u8 _pad2C[0xC];
+     /* 0x0038 */ s32 page;
+-    /* 0x003C */ u8 _pad3C[0x10];
++    u8 _pad3C[4];
++    s32 playbackPhase;
++    s16 selectedFrame;
++    u8 _pad46[6];
+     /* 0x004C */ s32 queued;
+     /* 0x0050 */ u8 _pad50[0x154];
+     /* 0x01A4 */ u8 phase;
+     /* 0x01A5 */ u8 enabled;
+     /* 0x01A6 */ u8 mode;
+-    /* 0x01A7 */ u8 _pad1A7[0x2D4B];
++    u8 _pad1A7[0x2D41];
++    s32 frameCount;
++    u8 _pad2EEC[6];
+     /* 0x2EF2 */ u8 channel;
+-    /* 0x2EF3 */ u8 _pad2EF3[6];
++    u8 _pad2EF3;
++    f32 frame;
++    u8 paused;
+     /* 0x2EF9 */ u8 unk2EF9;
+     /* 0x2EFA */ u8 _pad2EFA[2];
+     /* 0x2EFC */ u32 selectedBone;
+@@ -55,6 +62,8 @@ typedef struct ChallengeState {
+     /* 0x3074 */ Gap8000B9C8Texture* extraTexture;
+     /* 0x3078 */ u8 _pad3078[0x6D0];
+     /* 0x3748 */ Rep0610Items items;
++    u8 _pad3754[0x17C];
++    Rep0610Slot slots[13];
+ } ChallengeState;
+ extern ChallengeState lbl_1_bss_3070;
+ 
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index b23c8437..1987b2f5 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -314,8 +314,75 @@ void fn_1_E9F8(Rep0610Ring* ring, s32 index, s32 steps) {
+ }
+ 
+ // .text:0x0000EA20 size:0x2D8
++void fn_80039A4C(void);
+ void fn_1_EA20(void) {
+-    return;
++    ChallengeState* state = &lbl_1_bss_3070;
++    s32 phase = state->playbackPhase;
++    switch (phase) {
++    case 0: {
++        s32 i;
++        ActRelatedSub* playback = &((ActRelatedEntry*)g_hugeAnimStruct.ctrlOrBonePtr)[state->modelIndex].sub;
++        Rep0610Slot* slot;
++        AnimSlotTable** table;
++        AnimSlotTable* data;
++        u32 entry;
++        state->paused = 1;
++        state->frame = 0;
++        (playback + 1)->prevFloat = 0;
++        playback->flag59 = 1;
++        state->playbackPhase = 1;
++        state->frameCount = 0;
++        slot = state->slots;
++        slot += state->modelIndex;
++        table = &g_hugeAnimStruct.fielderStructs[state->modelIndex].slots[slot->table];
++        data = *table;
++        entry = slot->entry;
++        for (i = 0; i < data->entries[entry].keyCount; i++) {
++            if (state->frameCount < (*table)->entries[entry].keys[i].frame)
++                state->frameCount = (*table)->entries[entry].keys[i].frame;
++        }
++        break;
++    }
++    case 1:
++        if (lbl_803C77B8.held & 0x200) {
++            state->playbackPhase = 0;
++            state->unk2F01 = 1;
++        } else if (lbl_803C77B8.pressed & 1) {
++            if (--state->selectedFrame < 0) state->selectedFrame = state->frameCount - 2;
++        } else if (lbl_803C77B8.pressed & 2) {
++            if (++state->selectedFrame > state->frameCount - 2) state->selectedFrame = 0;
++        } else if (lbl_803C77B8.pressed & 0x100) {
++            state->paused = 0;
++            fn_80039A4C();
++            {
++                u32 index = state->modelIndex;
++                g_hugeAnimStruct.field277_0x3083[1] = index;
++                state->playbackPhase = 2;
++                g_hugeAnimStruct.AnimationStructPtrs[(u8)index] = &g_hugeAnimStruct.fielderStructs[index];
++            }
++        }
++        break;
++    default:
++        if ((u32)(phase - 2) == (u32)(state->selectedFrame * 2))
++            g_hugeAnimStruct.field277_0x3083[0] = 1;
++        state->playbackPhase++;
++        if (lbl_803C77B8.held & 0x200) {
++            state->playbackPhase = 0;
++            g_hugeAnimStruct.field277_0x3083[0] = 0;
++        } else if (lbl_803C77B8.held & 0x100) {
++            ActRelatedSub* playback = &((ActRelatedEntry*)g_hugeAnimStruct.ctrlOrBonePtr)[state->modelIndex].sub;
++            (playback + 1)->prevFloat = 0;
++            playback->flag59 = 1;
++            fn_80039A4C();
++            {
++                u32 index = state->modelIndex;
++                g_hugeAnimStruct.field277_0x3083[1] = index;
++                state->playbackPhase = 2;
++                g_hugeAnimStruct.AnimationStructPtrs[(u8)index] = &g_hugeAnimStruct.fielderStructs[index];
++            }
++        }
++        break;
++    }
+ }
+ 
+ // .text:0x0000ECF8 size:0x348
