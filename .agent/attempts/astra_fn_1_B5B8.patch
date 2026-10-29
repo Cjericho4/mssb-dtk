@@ -1,0 +1,121 @@
+diff --git a/include/challenge/rep_02A8.h b/include/challenge/rep_02A8.h
+index 4e28d01c..b7e1f277 100644
+--- a/include/challenge/rep_02A8.h
++++ b/include/challenge/rep_02A8.h
+@@ -44,6 +44,23 @@ typedef struct ChallengeSoundState {
+ extern ChallengeSoundState lbl_1_common_bss_49994;
+ extern u8 lbl_1_bss_2FE8;
+ void fn_1_B4A4(void);
++typedef struct ChallengeSoundPreview {
++    u8 pad0[8];
++    u8 mode, category;
++    s16 effectIndex, voiceIndex, musicIndex;
++    u8 pad10[0x6C - 0x10];
++    u32 musicHandle, voiceHandle, effectHandle, rawHandle;
++} ChallengeSoundPreview;
++typedef struct ChallengeSoundTables {
++    u8 pad0[0x8CC];
++    u16 effects[48];
++    u16 voices[24];
++    u8 pad95C[0xCE2 - 0x95C];
++    s16 rawEffect;
++} ChallengeSoundTables;
++extern ChallengeSoundPreview lbl_1_bss_2FD8;
++extern ChallengeSoundTables lbl_1_data_FC0;
++u32 fn_80062890(s32 index);
+ void fn_1_B5B8(void);
+ void fn_1_BA64(void);
+ void fn_1_BC00(void);
+diff --git a/src/challenge/rep_02A8.c b/src/challenge/rep_02A8.c
+index c661eb0f..c98f49c4 100644
+--- a/src/challenge/rep_02A8.c
++++ b/src/challenge/rep_02A8.c
+@@ -167,8 +167,87 @@ void fn_1_B4A4(void) {
+ }
+ 
+ // .text:0x0000B5B8 size:0x4AC
++static inline void stopPreviewVoice(s16 voice) {
++    sndFXKeyOff(voice);
++    sndFXCtrl(voice, 7, 0);
++}
++static inline SND_VOICEID startPreviewVoice(u32 effect) {
++    SND_VOICEID voice = sndFXStartEx(effect, 127, 63, 0);
++    OSReport("sndFXReverb was %s.\n", sndFXCtrl(voice, 0x5B, fn_800211F0()) ? "succeed" : "failed");
++    return voice;
++}
++static inline u16 previewSoundAt(u16* sounds, s16 index) {
++    return sounds[index];
++}
++static inline void unloadPreviewSounds(s8 count) {
++    s8 i = count;
++    for (i--; i > 0; i--) {
++        if (!fn_800214D0()) break;
++    }
++    fn_800ACFB0(lbl_800EF808.ptrArray[3]);
++    fn_800ACFB0(lbl_800EF808.unk8);
++}
++/* Handle sound-preview selection, playback and resource cleanup. */
+ void fn_1_B5B8(void) {
+-    return;
++    u32 pressed = lbl_803C77B8.pressed;
++    u32 held = lbl_803C77B8.held;
++    ChallengeSoundPreview* state = &lbl_1_bss_2FD8;
++    ChallengeSoundTables* tables = &lbl_1_data_FC0;
++    s32 modifier = pressed & 0x800;
++    if (modifier) {
++        state->mode = 0;
++    } else if (pressed & 0x400) {
++        state->mode = 1;
++    } else if (state->mode == 0) {
++        if (held & 0x100) {
++            if (state->category == 0) {
++                stopPreviewVoice(state->rawHandle);
++                state->rawHandle = startPreviewVoice((u16)tables->rawEffect);
++            } else if (state->category == 1) {
++                s16 effect = previewSoundAt(tables->effects, state->effectIndex);
++                stopPreviewVoice(state->effectHandle);
++                state->effectHandle = startPreviewVoice(effect);
++            } else if (state->category == 2) {
++                s16 effect = previewSoundAt(tables->voices, state->voiceIndex);
++                stopPreviewVoice(state->voiceHandle);
++                state->voiceHandle = startPreviewVoice(effect);
++            } else if (state->category == 3) {
++                state->musicHandle = fn_80062890(state->musicIndex);
++            }
++        } else if (held & 0x1200) {
++            unloadPreviewSounds(lbl_800EF808.unk390);
++            lbl_803CC1B8->aFunctionPointer = fn_1_A348;
++        } else if (pressed & 1) {
++            if (state->category == 0) {
++                if (modifier) tables->rawEffect -= 10;
++                else tables->rawEffect--;
++                if (tables->rawEffect < 0x151) tables->rawEffect = 0x1B6;
++            } else if (state->category == 1) {
++                if (--state->effectIndex < 0) state->effectIndex = 47;
++            } else if (state->category == 2) {
++                if (--state->voiceIndex < 0) state->voiceIndex = 23;
++            } else if (state->category == 3) {
++                if (--state->musicIndex < 0) state->musicIndex = 68;
++            }
++        } else if (pressed & 2) {
++            if (state->category == 0) {
++                s16 next = tables->rawEffect + 1;
++                if (modifier) next = tables->rawEffect + 10;
++                tables->rawEffect = next;
++                if (tables->rawEffect > 0x1B6) tables->rawEffect = 0x151;
++            } else if (state->category == 1) {
++                if (++state->effectIndex > 47) state->effectIndex = 0;
++            } else if (state->category == 2) {
++                if (++state->voiceIndex > 23) state->voiceIndex = 0;
++            } else if (state->category == 3) {
++                if (++state->musicIndex > 68) state->musicIndex = 0;
++            }
++        } else if (pressed & 8) {
++            state->category--;
++        } else if (pressed & 4) {
++            if (++state->category > 3) state->category = 0;
++        }
++    }
+ }
+ 
+ // .text:0x0000BA64 size:0x19C
