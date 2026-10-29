@@ -119,8 +119,51 @@ void fn_1_27E50(void) {
 }
 
 // .text:0x00027E98 size:0x280
+/* Update the debug camera controls and render its sphere, direction, and overlay. */
 void fn_1_27E98(void) {
-    return;
+    Mtx transform;
+    Vec endpoint;
+    ChallengeDebugShape* scene = (ChallengeDebugShape*)lbl_803CC1B8;
+if (scene->flags & 1) {
+        lbl_1_data_108E8[scene->choice]();
+    } else {
+        ChallengeAxes axes;
+        memcpy(&axes, &lbl_803C77B8.axes, sizeof(axes));
+        axes.bytes[0] = -axes.bytes[0];
+        axes.bytes[4] = lbl_803C77B8.axes.bytes[5];
+        axes.bytes[5] = lbl_803C77B8.axes.bytes[4];
+        fn_1_26D28((Rep7978Camera*)((ChallengeScene*)lbl_803CC1B8)->arg14, lbl_803C77B8.buttons, lbl_803C77B8.held, lbl_803C77B8.pressed, &axes);
+    }
+    if (lbl_803C77B8.held & 0x1000) ((ChallengeScene*)lbl_803CC1B8)->flags34 ^= 1;
+
+    fn_1_27330(scene->camera);
+    scene = (ChallengeDebugShape*)lbl_803CC1B8;
+    fn_8003414C(scene->camera);
+    fn_1_272DC(scene->camera, 0);
+    fn_1_AF4(20, 20, 1.0f);
+    PSMTXScale(transform, scene->scale, scene->scale, scene->scale);
+    PSMTXTransApply(transform, transform, scene->position.x, scene->position.y, scene->position.z);
+    PSMTXConcat(scene->camera->view, transform, scene->camera->view);
+    fn_1_272DC(scene->camera, 0);
+    fn_1_F2C(4, 0, 0);
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+    GXDrawSphere1(2);
+    PSMTXTrans(transform, scene->position.x, scene->position.y, scene->position.z);
+    PSMTXConcat(scene->camera->view, transform, scene->camera->view);
+    fn_1_272DC(scene->camera, 0);
+    fn_1_F2C(4, 0, 0);
+    GXBegin(GX_LINES, GX_VTXFMT0, 2);
+    GXPosition3f32(scene->position.x, scene->position.y, scene->position.z);
+    GXColor1u32(0xFF0000FF);
+    endpoint.x = 0.0f;
+    endpoint.y = 0.0f;
+    endpoint.z = scene->length;
+    PSVECAdd(&scene->position, &endpoint, &endpoint);
+    GXPosition3f32(endpoint.x, endpoint.y, endpoint.z);
+    GXColor1u32(0xFF0000FF);
+    lbl_1_data_108F0[scene->choice]();
+    minigamesGXStuff();
+
 }
 
 // .text:0x00028118 size:0xE8
