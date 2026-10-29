@@ -7,6 +7,8 @@ typedef struct ChallengeLinePoint {
 STATIC_ASSERT(sizeof(ChallengeLinePoint) == 0x40);
 extern ChallengeLinePoint lbl_1_bss_6FE0[];
 extern u32 lbl_1_data_104DC[6];
+extern GXTexObj lbl_1_bss_6EA4[];
+extern GXTlutObj lbl_1_bss_6E44[];
 
 // .text:0x0001D694 size:0x2B0
 void fn_1_1D694(void) {
@@ -256,8 +258,33 @@ u8 fn_1_2051C(StaC4TexDesc* desc, GXTexObj* texture, GXTlutObj* palette, u32 pal
 }
 
 // .text:0x00020640 size:0x194
-void fn_1_20640(void) {
-    return;
+/* Configure layered texture stages and load the referenced textures and optional palettes. */
+void fn_1_20640(ChallengeTextureStages* stages, u32* indices) {
+    GXTexObj* textures;
+    s32 stage;
+    GXSetNumTevStages(stages->count);
+    GXSetNumTexGens(stages->count);
+    textures = lbl_1_bss_6EA4;
+    for (stage = 0; stage < stages->count; stage++) {
+        u32 index;
+        u32 paletteIndex;
+        GXSetTexCoordGen2(stage, GX_TG_MTX3X4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+        if (stage != 0) {
+            GXSetTevColorIn(stage, GX_CC_CPREV, GX_CC_TEXC, GX_CC_RASA, GX_CC_ZERO);
+            GXSetTevColorOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+            GXSetTevAlphaIn(stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+            GXSetTevAlphaOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        } else {
+            GXSetTevColorIn(stage, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
+            GXSetTevColorOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+            GXSetTevAlphaIn(stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_RASA);
+            GXSetTevAlphaOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        }
+        index = indices[stage];
+        paletteIndex = index & 0x7FFFFFFF;
+        GXLoadTexObj(&textures[paletteIndex], stage);
+        if (index & 0x80000000) GXLoadTlut(&lbl_1_bss_6E44[paletteIndex], stage);
+    }
 }
 
 // .text:0x000207D4 size:0xBC

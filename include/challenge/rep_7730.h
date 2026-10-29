@@ -81,7 +81,11 @@ void fn_1_2040C(void);
 #include "Dolphin/GX/GXTexture.h"
 #include "game/sta_c4.h"
 u8 fn_1_2051C(StaC4TexDesc* desc, GXTexObj* texture, GXTlutObj* palette, u32 paletteName);
-void fn_1_20640(void);
+typedef struct ChallengeTextureStages {
+    u8 _pad0[0x22];
+    u8 count;
+} ChallengeTextureStages;
+void fn_1_20640(ChallengeTextureStages* stages, u32* indices);
 void fn_1_207D4(void);
 void fn_1_20890(void);
 void fn_1_20950(void);
