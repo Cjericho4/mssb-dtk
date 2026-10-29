@@ -1,0 +1,70 @@
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 34137f67..d7f59612 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -548,8 +548,64 @@ void fn_1_FB98(void) {
+ }
+ 
+ // .text:0x00010044 size:0x414
++typedef struct ChallengeEmitterPreviewPool {
++    u8 _pad0[0x9030];
++    s32 kind, count;
++    f32 scale;
++    s32 flags;
++    f32 speed;
++    Vec origin;
++    s16 pitch, yaw;
++    Vec direction;
++} ChallengeEmitterPreviewPool;
++extern ChallengeEmitterPreviewPool lbl_1_data_1DC0;
++void fn_800330CC(s32 count, s32 kind, Vec* origin, Vec* direction, s32 flags, s32 mode, f32 scale, f32 speed);
++/* Adjust emitter count, scale and direction, then spawn the preview effect. */
+ void fn_1_10044(void) {
+-    return;
++    ChallengeEmitterPreviewPool* pool = &lbl_1_data_1DC0;
++    if (lbl_803C77B8.pressed & 8) {
++        if (lbl_1_bss_307C) lbl_1_bss_307C--;
++        else lbl_1_bss_307C = 4;
++    } else if (lbl_803C77B8.pressed & 4) {
++        if (++lbl_1_bss_307C == 5) lbl_1_bss_307C = 0;
++    } else if (lbl_803C77B8.pressed & 1) {
++        s32 step;
++        if (lbl_803C77B8.buttons & 0x400) step = 10;
++        else if (lbl_803C77B8.buttons & 0x800) step = 100;
++        else step = 1;
++        switch (lbl_1_bss_307C) {
++        case 0: if ((pool->count -= step) < 0) pool->count = 0; break;
++        case 2: if ((pool->scale -= 0.001f * step) < 0.001f) pool->scale = 0.001f; break;
++        case 3: if ((pool->pitch -= step) < 1) pool->pitch = 1; break;
++        case 4: pool->yaw = (pool->yaw - step) & 4095; break;
++        }
++    } else if (lbl_803C77B8.pressed & 2) {
++        s32 step;
++        if (lbl_803C77B8.buttons & 0x400) step = 10;
++        else if (lbl_803C77B8.buttons & 0x800) step = 100;
++        else step = 1;
++        switch (lbl_1_bss_307C) {
++        case 0: if ((pool->count += step) >= 5120) pool->count = 5120; break;
++        case 2: if ((pool->scale += 0.001f * step) > 10.0f) pool->scale = 10.0f; break;
++        case 3: if ((pool->pitch += step) > 512) pool->pitch = 512; break;
++        case 4: pool->yaw = (pool->yaw + step) & 4095; break;
++        }
++    } else if (lbl_803C77B8.buttons & 0x100) {
++        if (lbl_803C77B8.held & 0x100) {
++            Mtx pitch, yaw;
++            pool->direction.x = 0.0f;
++            pool->direction.y = -1.0f;
++            pool->direction.z = 0.0f;
++            PSMTXRotRad(pitch, 'x', 0.01745329238474369 * ((360.0 * pool->pitch) / 4096.0));
++            PSMTXRotRad(yaw, 'y', 0.01745329238474369 * ((360.0 * pool->yaw) / 4096.0));
++            PSMTXConcat(yaw, pitch, pitch);
++            PSMTXMultVec(pitch, &pool->direction, &pool->direction);
++            fn_800330CC(pool->count, pool->kind, &pool->origin, &pool->direction, pool->flags, 0, pool->scale, pool->speed);
++        }
++    } else if (lbl_803C77B8.pressed & 0x200) {
++        lbl_1_bss_307C = 0;
++        lbl_1_bss_5F71 = 10;
++    }
+ }
+ 
+ // .text:0x00010458 size:0x108
