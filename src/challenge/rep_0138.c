@@ -1,4 +1,6 @@
 #include "challenge/rep_0138.h"
+#include "Dolphin/gx.h"
+#include "Dolphin/GX/GXHardware.h"
 
 // .text:0x00004E98 size:0x648
 void fn_1_4E98(void) {
@@ -24,8 +26,46 @@ void fn_1_5544(void) {
 }
 
 // .text:0x00005698 size:0x28C
+extern GXTexObj lbl_1_bss_4E4;
+void C_MTXOrtho(Mtx44 matrix, f32 top, f32 bottom, f32 left, f32 right, f32 nearZ, f32 farZ);
+/* Draw the texture preview as a 256-pixel quad in an orthographic viewport. */
 void fn_1_5698(void) {
-    return;
+    Mtx44 projection;
+    Mtx view;
+    C_MTXOrtho(projection, 0.0f, 448.0f, 0.0f, 640.0f, -0.0f, -0.5f);
+    GXSetProjection(projection, GX_ORTHOGRAPHIC);
+    PSMTXIdentity(view);
+    GXLoadPosMtxImm(view, 0);
+    GXSetCurrentMtx(0);
+    GXSetZMode(GX_TRUE, GX_ALWAYS, GX_FALSE);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+    GXSetCullMode(GX_CULL_NONE);
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_U16, 2);
+    GXSetNumChans(0);
+    GXSetNumTevStages(1);
+    GXSetNumTexGens(1);
+    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3X4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
+    GXLoadTexObj(&lbl_1_bss_4E4, GX_TEXMAP0);
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+    GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = 100.0f; GXWGFifo.f32 = 0.0f;
+    GXWGFifo.u16 = 0; GXWGFifo.u16 = 0;
+    GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = 356.0f; GXWGFifo.f32 = 0.0f;
+    GXWGFifo.u16 = 0; GXWGFifo.u16 = 4;
+    GXWGFifo.f32 = 256.0f; GXWGFifo.f32 = 356.0f; GXWGFifo.f32 = 0.0f;
+    GXWGFifo.u16 = 4; GXWGFifo.u16 = 4;
+    GXWGFifo.f32 = 256.0f; GXWGFifo.f32 = 100.0f; GXWGFifo.f32 = 0.0f;
+    GXWGFifo.u16 = 4; GXWGFifo.u16 = 0;
+    GXSetNumIndStages(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
 }
 
 // .text:0x00005924 size:0x19C
