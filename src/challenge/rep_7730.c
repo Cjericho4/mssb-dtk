@@ -231,8 +231,20 @@ void fn_1_2040C(void) {
 }
 
 // .text:0x0002051C size:0x124
-void fn_1_2051C(void) {
-    return;
+/* Initialize a texture and optional palette with the archive's filtering and mipmap settings. */
+u8 fn_1_2051C(StaC4TexDesc* desc, GXTexObj* texture, GXTlutObj* palette, u32 paletteName) {
+    GXBool mipmap = desc->minLOD != desc->maxLOD;
+    if (desc->tlut != NULL) {
+        GXInitTexObjCI(texture, desc->image, desc->width, desc->height, desc->format,
+                      desc->wrapS, desc->wrapT, mipmap, paletteName);
+        GXInitTlutObj(palette, desc->tlut, desc->tlutFormat, desc->tlutEntries);
+    } else {
+        GXInitTexObj(texture, desc->image, desc->width, desc->height, desc->format,
+                     desc->wrapS, desc->wrapT, mipmap);
+    }
+    GXInitTexObjLOD(texture, desc->minFilter, desc->magFilter, desc->minLOD, desc->maxLOD,
+                    desc->lodBias, GX_FALSE, GX_FALSE, GX_ANISO_1);
+    return desc->tlut != NULL;
 }
 
 // .text:0x00020640 size:0x194

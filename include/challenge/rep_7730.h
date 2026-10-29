@@ -78,7 +78,9 @@ extern void (*lbl_1_data_10508[])(ChallengeScene*);
 extern void (*lbl_1_data_10510[])(ChallengeScene*);
 void fn_1_202A4(void);
 void fn_1_2040C(void);
-void fn_1_2051C(void);
+#include "Dolphin/GX/GXTexture.h"
+#include "game/sta_c4.h"
+u8 fn_1_2051C(StaC4TexDesc* desc, GXTexObj* texture, GXTlutObj* palette, u32 paletteName);
 void fn_1_20640(void);
 void fn_1_207D4(void);
 void fn_1_20890(void);
