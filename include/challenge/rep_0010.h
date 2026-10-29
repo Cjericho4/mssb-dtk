@@ -19,7 +19,7 @@ void fn_1_16A0(void);
 
 void fn_1_5EC(void);
 void fn_1_AF4(s32 arg0, s32 arg1, f32 arg2);
-void fn_1_F2C(void);
+void fn_1_F2C(s32 mode, s32 texFraction, s32 normals);
 void _epilog(void);
 void _unresolved(void);
 void _prolog(void);
