@@ -15,6 +15,8 @@ typedef struct Gap800BD3A0Light Gap800BD3A0Light;
 typedef struct Gap800BD3A0Color { u8 r, g, b, a; } Gap800BD3A0Color;
 void LITInitAttn(Gap800BD3A0Light*, f32, f32, f32, f32, f32, f32);
 void LITInitPos(Gap800BD3A0Light*, f32, f32, f32);
+void LITInitDir(Gap800BD3A0Light*, f32, f32, f32);
+void LITAlloc(Gap800BD3A0Light**);
 void LITInitColor(Gap800BD3A0Light*, Gap800BD3A0Color*);
 void LITXForm(Gap800BD3A0Light*, Mtx);
 typedef struct ChallengeLightPosition { Vec position; f32 unk_0x0C; } ChallengeLightPosition;
@@ -192,8 +194,28 @@ void fn_1_1B038(void) {
 }
 
 // .text:0x0001B0FC size:0x1CC
+/* Allocate and initialize the three challenge lights and their default colors. */
 void fn_1_1B0FC(void) {
-    return;
+    Gap800BD3A0Color white = {255, 255, 255, 255};
+    Gap800BD3A0Color blue = {0, 0, 255, 255};
+    Gap800BD3A0Light** first = (Gap800BD3A0Light**)&g_hugeAnimStruct.menuLights[0];
+    Gap800BD3A0Light** second;
+    Gap800BD3A0Light** third;
+    LITAlloc(first);
+    second = (Gap800BD3A0Light**)&g_hugeAnimStruct.menuLights[1];
+    LITAlloc(second);
+    third = (Gap800BD3A0Light**)&g_hugeAnimStruct.menuLights[2];
+    LITAlloc(third);
+    LITInitAttn(*first, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+    LITInitPos(*first, -100.0f, -100.0f, 100.0f);
+    setChallengeLightColor(*first, white);
+    LITInitAttn(*second, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+    LITInitPos(*second, 500.0f, -500.0f, 250.0f);
+    setChallengeLightColor(*second, blue);
+    LITInitAttn(*third, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+    LITInitPos(*third, 0.0f, -500.0f, 250.0f);
+    setChallengeLightColor(*third, blue);
+    LITInitDir(*first, 100.0f, 100.0f, -100.0f);
 }
 
 // .text:0x0001B2C8 size:0x15C
