@@ -1,0 +1,85 @@
+diff --git a/include/challenge/rep_7730.h b/include/challenge/rep_7730.h
+index 73a8d74c..e54e6788 100644
+--- a/include/challenge/rep_7730.h
++++ b/include/challenge/rep_7730.h
+@@ -39,7 +39,15 @@ typedef struct Rep7730Unk6BF4 {
+ extern Rep7730Unk6BF4 lbl_1_bss_6BF4;
+ void fn_80037B18(Rep7730Unk6BF4* arg0, Vec* arg1, f32 arg2);
+ 
+-void fn_1_1D694(void);
++typedef struct ChallengeTextureMosaic {
++    u8 _pad0[8];
++    struct StaC4TexDesc* destination;
++    struct StaC4TexDesc* source;
++    u8* tiles;
++    u8 _pad14[4];
++    u8 refresh;
++} ChallengeTextureMosaic;
++void fn_1_1D694(ChallengeTextureMosaic* mosaic);
+ void fn_1_1D944(void);
+ void fn_1_1DA54(void);
+ void fn_1_1DCE4(void);
+diff --git a/src/challenge/rep_7730.c b/src/challenge/rep_7730.c
+index 7564749c..fafe794e 100644
+--- a/src/challenge/rep_7730.c
++++ b/src/challenge/rep_7730.c
+@@ -1,4 +1,5 @@
+ #include "challenge/rep_7730.h"
++#include "Dolphin/gx.h"
+ #include "Dolphin/OS/OSCache.h"
+ #include "Dolphin/ppcarch.h"
+ #include "stl/string.h"
+@@ -14,8 +15,51 @@ extern GXTexObj lbl_1_bss_6EA4[];
+ extern GXTlutObj lbl_1_bss_6E44[];
+ 
+ // .text:0x0001D694 size:0x2B0
+-void fn_1_1D694(void) {
+-    return;
++void fn_80023F0C(StaC4TexDesc* source, StaC4TexDesc* dest, s32 sx, s32 sy, s32 width, s32 height, s32 dx, s32 dy);
++void gOz_GXSetTexture(s32 mode, s32 arg1, s32 arg2);
++void SetDisplayStateTexture(StaC4TexDesc* desc, s32 arg1, s32 arg2);
++static inline void rebuildTextureTiles(StaC4TexDesc* source, StaC4TexDesc* dest, u8* tiles) {
++        s32 columns, rows, col, row;
++        memset(dest->image, 0, dest->width * dest->height);
++        rows = dest->height / 64;
++        columns = dest->width / 32;
++        for (row = 0; row < rows; row++) {
++            u8* tilePtr = &tiles[row * columns];
++            for (col = 0; col < columns; col++, tilePtr++) {
++                if (col & lbl_803CBBC0) {
++                    s32 tile = *tilePtr;
++                    fn_80023F0C(source, dest, (tile % columns) * 32, (tile / columns) * 64, 32, 64, col * 32, row * 64);
++                }
++            }
++        }
++        DCStoreRange(dest->image, dest->width * dest->height);
++}
++/* Rebuild selected texture tiles, flush them, and draw the preview image. */
++void fn_1_1D694(ChallengeTextureMosaic* mosaic) {
++    /* FAKEMATCH: retail reserves a 3x4 local for this transient projection. */
++    Mtx projection;
++    Mtx transform;
++    if (mosaic->refresh) rebuildTextureTiles(mosaic->source, mosaic->destination, mosaic->tiles);
++    C_MTXOrtho(projection, 0, 448, 0, 640, 0, 1);
++    PSMTXIdentity(transform);
++    GXSetProjection(projection, GX_ORTHOGRAPHIC);
++    GXLoadPosMtxImm(transform, 0);
++    GXSetCurrentMtx(0);
++    gOz_GXSetTexture(0, 0, 0);
++    SetDisplayStateTexture(mosaic->destination, 0, 0);
++    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
++    GXPosition3f32(0, 0, -0.5f);
++    GXColor1u32(0xFFFFFFFF);
++    GXTexCoord2u16(0, 0);
++    GXPosition3f32(0, mosaic->destination->height, -0.5f);
++    GXColor1u32(0xFFFFFFFF);
++    GXTexCoord2u16(0, 1);
++    GXPosition3f32(mosaic->destination->width, mosaic->destination->height, -0.5f);
++    GXColor1u32(0xFFFFFFFF);
++    GXTexCoord2u16(1, 1);
++    GXPosition3f32(mosaic->destination->width, 0, -0.5f);
++    GXColor1u32(0xFFFFFFFF);
++    GXTexCoord2u16(1, 0);
+ }
+ 
+ // .text:0x0001D944 size:0x110

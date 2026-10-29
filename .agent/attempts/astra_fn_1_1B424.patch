@@ -1,0 +1,58 @@
+diff --git a/src/challenge/rep_74A0.c b/src/challenge/rep_74A0.c
+index bcbd86dd..dc59d73a 100644
+--- a/src/challenge/rep_74A0.c
++++ b/src/challenge/rep_74A0.c
+@@ -7,7 +7,10 @@ void fn_800B806C(s32 index, f32 t, f32 b, f32 l, f32 r, f32 nearZ, f32 farZ, f32
+ #include "Dolphin/GX/GXTransform.h"
+ typedef struct ChallengeProjectionState {
+     Mtx view;
+-    u8 _pad30[0xC];
++    u16 pitch;
++    u16 yaw;
++    f32 strafe;
++    f32 forward;
+     Vec position;
+     Vec direction;
+ } ChallengeProjectionState;
+@@ -259,8 +262,40 @@ void fn_1_1B2C8(void) {
+ }
+ 
+ // .text:0x0001B424 size:0x298
++extern Vec lbl_1_data_FB0C;
++void makeLookAtMatrix(Mtx matrix, Vec* eye, Vec* up, Vec* target);
++/* Update the free preview camera from sticks and triggers, then construct its view matrix. */
+ void fn_1_1B424(void) {
+-    return;
++    Mtx pitch, yaw, rotation;
++    Vec angles;
++    Vec offset = {0, 0, 100};
++    f32 cosine, sine;
++    if (!(lbl_803C77B8.buttons & 0x10)) {
++        f32 strafe = (s8)lbl_803C77B8.axes.bytes[0] / -256.0f;
++        f32 forward = (s8)lbl_803C77B8.axes.bytes[1] * 0.00390625f;
++        lbl_1_bss_6B7C.direction.y += lbl_803C77B8.axes.bytes[5] * 0.0009765625f;
++        lbl_1_bss_6B7C.pitch -= (s8)lbl_803C77B8.axes.bytes[3];
++        lbl_1_bss_6B7C.yaw += (s8)lbl_803C77B8.axes.bytes[2];
++        lbl_1_bss_6B7C.strafe = strafe;
++        lbl_1_bss_6B7C.forward = forward;
++        lbl_1_bss_6B7C.direction.y -= lbl_803C77B8.axes.bytes[4] * 0.0009765625f;
++    }
++    angles.x = lbl_1_bss_6B7C.pitch;
++    angles.y = lbl_1_bss_6B7C.yaw;
++    angles.z = 0;
++    PSVECScale(&angles, 0.0000958738f, &angles);
++    PSMTXRotRad(pitch, 'X', angles.x);
++    PSMTXRotRad(yaw, 'Y', angles.y);
++    sine = yaw[0][2];
++    cosine = yaw[0][0];
++    PSMTXConcat(yaw, pitch, rotation);
++    PSMTXMultVec(rotation, &offset, &lbl_1_bss_6B7C.position);
++    lbl_1_bss_6B7C.direction.x += lbl_1_bss_6B7C.forward * sine - lbl_1_bss_6B7C.strafe * cosine;
++    lbl_1_bss_6B7C.direction.z += lbl_1_bss_6B7C.forward * cosine + lbl_1_bss_6B7C.strafe * sine;
++    lbl_1_bss_6B7C.position.y += lbl_1_bss_6B7C.direction.y;
++    lbl_1_bss_6B7C.position.x += lbl_1_bss_6B7C.direction.x;
++    lbl_1_bss_6B7C.position.z += lbl_1_bss_6B7C.direction.z;
++    makeLookAtMatrix(lbl_1_bss_6B7C.view, &lbl_1_bss_6B7C.direction, &lbl_1_data_FB0C, &lbl_1_bss_6B7C.position);
+ }
+ 
+ // .text:0x0001B6BC size:0x120

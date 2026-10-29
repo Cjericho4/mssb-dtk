@@ -1,0 +1,75 @@
+diff --git a/include/challenge/rep_74A0.h b/include/challenge/rep_74A0.h
+index 1ece8ab9..ddfecaa3 100644
+--- a/include/challenge/rep_74A0.h
++++ b/include/challenge/rep_74A0.h
+@@ -17,7 +17,16 @@ typedef struct Rep74A0Obj {
+ } Rep74A0Obj;
+ void fn_800B9AA8(u32 context);
+ 
+-void fn_1_182C0(void);
++typedef struct ChallengeQuadPreview {
++    u8 _pad0[4];
++    f32 x, y, scale;
++    u8 _pad10[0xC];
++    Vec rotation;
++    u8 _pad28[0x10];
++    f32 width, height;
++    u32 frontColor, backColor;
++} ChallengeQuadPreview;
++void fn_1_182C0(ChallengeQuadPreview* preview);
+ void fn_1_1857C(void);
+ typedef struct ChallengeOrbit {
+     u8 _pad0[0x10];
+diff --git a/src/challenge/rep_74A0.c b/src/challenge/rep_74A0.c
+index bcbd86dd..4e82201a 100644
+--- a/src/challenge/rep_74A0.c
++++ b/src/challenge/rep_74A0.c
+@@ -27,8 +27,46 @@ extern ChallengeLightPosition lbl_80367318[3];
+ 
+ 
+ // .text:0x000182C0 size:0x2BC
+-void fn_1_182C0(void) {
+-    return;
++static inline void emitPreviewQuad(Vec* vertices, u32* color) {
++    s32 i;
++    for (i = 0; i < 4; i++) {
++        GXPosition3f32(vertices[i].x, vertices[i].y, vertices[i].z);
++        GXColor1u32(*color);
++    }
++}
++/* Draw the rotated preview rectangle with independent front and back colors. */
++void fn_1_182C0(ChallengeQuadPreview* preview) {
++    ControlExt control;
++    Vec vertices[4];
++    Mtx transform;
++    Mtx44 projection;
++    f32 halfWidth = preview->width * 0.5f;
++    f32 halfHeight = preview->height * 0.5f;
++    control.control.type = 0;
++    vertices[0].x = -halfWidth;
++    vertices[0].y = -halfHeight;
++    vertices[1].x = halfWidth;
++    vertices[1].y = -halfHeight;
++    vertices[2].x = halfWidth;
++    vertices[2].y = halfHeight;
++    vertices[3].x = -halfWidth;
++    vertices[3].y = halfHeight;
++    vertices[0].z = vertices[1].z = vertices[2].z = vertices[3].z = 0;
++    CTRLSetRotation(&control.control, preview->rotation.x, preview->rotation.y, preview->rotation.z);
++    CTRLSetTranslation(&control.control, (0.5f * preview->x) * 0.5f * preview->scale,
++                       (0.35f * preview->y) * 0.5f * preview->scale, -1.5f);
++    CTRLBuildMatrix(&control.control, transform);
++    GXLoadPosMtxImm(transform, 0);
++    GXSetCurrentMtx(0);
++    C_MTXOrtho(projection, -0.175f * preview->scale, 0.175f * preview->scale,
++               0.25f * preview->scale, -0.25f * preview->scale, 1.0f, 512.0f);
++    GXSetProjection(projection, GX_ORTHOGRAPHIC);
++    GXSetCullMode(GX_CULL_BACK);
++    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
++    emitPreviewQuad(vertices, &preview->frontColor);
++    GXSetCullMode(GX_CULL_FRONT);
++    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
++    emitPreviewQuad(vertices, &preview->backColor);
+ }
+ 
+ // .text:0x0001857C size:0x888
