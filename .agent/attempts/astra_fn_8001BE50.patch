@@ -1,0 +1,166 @@
+diff --git a/include/Unknown/gap_8001196C.h b/include/Unknown/gap_8001196C.h
+index 037cfc51..2fd363e1 100644
+--- a/include/Unknown/gap_8001196C.h
++++ b/include/Unknown/gap_8001196C.h
+@@ -121,7 +121,9 @@ typedef struct Gap8001196CAnim {
+             /* 0x030 */ struct Gap8001196CSubItemEntry* subItems; /* &g_hugeAnimStruct.subItemEntries[slotKind*3] once fn_80012B90 is done */
+         };
+     };
+-    u8 _pad34[0x60 - 0x34];
++    u8 _pad34[0x18];
++    f32 playbackScale; /* 0x4C */
++    u8 _pad50[0x10];
+     /* 0x060 */ s16 unk60;
+     /* 0x062 */ s16 animID;
+     /* 0x064 */ s16 nextAnim;
+@@ -130,7 +132,8 @@ typedef struct Gap8001196CAnim {
+     /* 0x06A */ s16 unk6A;
+     /* 0x06C */ s16 unk6C;
+     /* 0x06E */ s16 unk6E;
+-    u8 _pad70[0x162 - 0x70];
++    u8 _pad70[2];
++    u8 animationMask[0xF0]; /* 0x72 */
+     /* 0x162 */ u16 boneIndices[120];        /* bone id -> actor bone index, 0xFFFF = none */
+     /* 0x252 */ s8 charID;
+     u8 _pad253;
+@@ -193,7 +196,11 @@ typedef struct Gap8001196CActor {
+     /* 0x06 */ u16 totalBones;
+     u8 _pad8[0x10];
+     /* 0x18 */ Gap8001196CBone** boneArray;
+-    u8 _pad1C[0x99 - 0x1C];
++    u8 _pad1C[0x64];
++    u16 rootBone; /* 0x80 */
++    u8 _pad82[0xA];
++    f32 playbackValue; /* 0x8C */
++    u8 _pad90[9];
+     /* 0x99 */ u8 unk99;
+ } Gap8001196CActor;
+ /* per-slot actor record at +0x34 of each 0x90-byte entry (Gap8002244CActorSlot in gap_8002244C.h) */
+diff --git a/include/Unknown/gap_8001B200.h b/include/Unknown/gap_8001B200.h
+index a3f9c256..08efe5b4 100644
+--- a/include/Unknown/gap_8001B200.h
++++ b/include/Unknown/gap_8001B200.h
+@@ -16,7 +16,7 @@ void getAnimRelatedCoordinates(void);
+ void QueueCharacterAnimation(void);
+ void AnimateCharacter(void);
+ void fn_8001BA44(void);
+-void fn_8001BE50(void);
++void fn_8001BE50(s32 slot, s32 animationID, u8 looping, u8 rootMode, s16 frame, u8 useMask, u8 blendFrames);
+ void fn_8001C234(void);
+ void fn_8001C528(void);
+ s32 fn_8001C588(s16 characterId);
+diff --git a/src/Unknown/gap_8001B200.c b/src/Unknown/gap_8001B200.c
+index 72999fd6..bca3ca1f 100644
+--- a/src/Unknown/gap_8001B200.c
++++ b/src/Unknown/gap_8001B200.c
+@@ -73,8 +73,108 @@ void fn_8001BA44(void) {
+ }
+ 
+ // .text:0x8001BE50 size:0x3E4
+-void fn_8001BE50(void) {
+-    return;
++/* Partial view of the actor playback record, which overlaps the next 0x90-byte entry. */
++typedef struct CharacterPlaybackState {
++    Gap8001196CActor* actor;
++    struct Gap8001196CSlotTable* bank;
++    u8 _pad8[6];
++    u16 animation;
++    u8 _pad10[0x48];
++    u8 setAnimation;
++    u8 setFrame;
++    u8 setRate;
++    u8 loopFlags;
++    f32 frame;
++    f32 blendRate;
++    u16 rootBone;
++    u16 referenceBone;
++    u8* mask;
++} CharacterPlaybackState;
++typedef struct CharacterPlaybackEntry { u8 _pad0[0x34]; CharacterPlaybackState playback; } CharacterPlaybackEntry;
++struct Gap8001196CSlotTable { u8 _pad0[0xA]; u16 count; };
++/* Legacy owning headers use a different actor view; keep the observed ABI here. */
++void fn_800B2B4C(Gap8001196CActor* actor, f32 value);
++void fn_800B2C44(Gap8001196CActor* actor, u16 bone, Vec* position);
++void fn_80025EEC(u8** script, s32 category, s32 animation);
++
++static inline u16 playbackBone(Gap8001196CAnim* anim, s32 index) {
++    return anim ? anim->boneIndices[index] : 0xFFFF;
++}
++static inline void setPlaybackRoot(s32 block, u16 root, u16 reference) {
++    Vec position;
++    Gap8001196CActorEntry* entries = g_hugeAnimStruct.actorEntries;
++    u16 index = block;
++    Gap8001196CActor* actor = entries[index].slot.actor;
++    fn_800B2C44(actor, actor->rootBone, &position);
++    ((CharacterPlaybackEntry*)&entries[index])->playback.rootBone = root;
++    ((CharacterPlaybackEntry*)&entries[index])->playback.referenceBone = reference;
++}
++/* Select an animation bank/category and synchronize body and attached-item playback. */
++void fn_8001BE50(s32 slot, s32 animationID, u8 looping, u8 rootMode, s16 frame, u8 useMask, u8 blendFrames) {
++    Gap8001196CAnim* anim = g_hugeAnimStruct.slotPtrs[slot];
++    CharacterPlaybackState* playback;
++    s32 category, animation;
++    struct Gap8001196CSlotTable* bank;
++    f32 blendRate = 0.0f;
++    if (anim == NULL) return;
++    playback = (CharacterPlaybackState*)&g_hugeAnimStruct.actorEntries[anim->blockIndex].slot;
++    if (blendFrames) blendRate = 1.0f / blendFrames;
++    if (!anim->unk26C) {
++        fn_800B2B54(anim->actor, playbackBone(anim, 4), 13);
++    } else {
++        fn_800B2B54(anim->actor, playbackBone(anim, 4), 1);
++        {
++            u16 bone = playbackBone(g_hugeAnimStruct.slotPtrs[slot], 4);
++            fn_800B2B54(playback->actor, bone, 1);
++        }
++        fn_800B2B4C(playback->actor, 0.125f);
++        playback->actor->playbackValue = 0.0f;
++    }
++    if (animationID >= 0) {
++        if (animationID < 45) { animation = animationID; category = 2; }
++        else if (animationID < 61) { animation = animationID - 45; category = 1; }
++        else if (animationID < 63) { animation = animationID - 61; category = 4; }
++        else if (animationID < 75) { animation = animationID - 63; category = 3; }
++        else if (animationID < 105) { animation = animationID - 75; category = 0; }
++        else { category = 5; animation = animationID - 105; }
++    }
++    bank = anim->slotTables[category];
++    if (bank != NULL) {
++        if (animation >= bank->count || animation < 0) return;
++        playback->bank = bank;
++        playback->animation = animation;
++        playback->frame = 0.0f;
++        playback->setAnimation = 1;
++        playback->setFrame = bank != NULL;
++        playback->setRate = bank != NULL;
++        playback->blendRate = blendRate;
++    }
++    if (anim->stadiumObj) fn_80025EEC(&anim->stadiumObj->unk4, category, animation);
++    if (anim->subItems && anim->subItems->valid) {
++        fn_80025EEC(&anim->subItems->obj1.unk4, category, animation);
++        fn_80025EEC(&anim->subItems->obj0.unk4, category, animation);
++    }
++    if (looping) playback->loopFlags = 3;
++    else playback->loopFlags = 2;
++    playback->frame = frame * anim->playbackScale;
++    playback->setFrame = 1;
++    {
++        Gap8001196CAnim* current = g_hugeAnimStruct.slotPtrs[slot];
++        if (current) {
++            s32 block = current->blockIndex;
++            if (!rootMode) setPlaybackRoot(block, playbackBone(current, 0), playbackBone(current, 4));
++            else setPlaybackRoot(block, playbackBone(current, 0), playbackBone(current, 0));
++        }
++    }
++    {
++        Gap8001196CAnim* current = g_hugeAnimStruct.slotPtrs[slot];
++        if (current) {
++            CharacterPlaybackState* state = (CharacterPlaybackState*)&g_hugeAnimStruct.actorEntries[current->blockIndex].slot;
++            if (!useMask) state->mask = NULL;
++            else state->mask = current->animationMask;
++        }
++    }
++    anim->unk268 = rootMode;
+ }
+ 
+ // .text:0x8001C234 size:0x2F4
