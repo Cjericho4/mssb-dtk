@@ -1,0 +1,45 @@
+diff --git a/include/Unknown/gap_8002244C.h b/include/Unknown/gap_8002244C.h
+index 59352805..b5e6b10f 100644
+--- a/include/Unknown/gap_8002244C.h
++++ b/include/Unknown/gap_8002244C.h
+@@ -173,7 +173,13 @@ BOOL fn_80023D98(Gap8002244CObj* obj, Gap8002244CVector* out);
+ BOOL fn_80023DFC(Gap8002244CObj* obj, Gap8002244CVector* out);
+ void fn_80023E48(Gap8002244CObj* obj, Gap8002244CVector* v);
+ void fn_80023EEC(Gap8002244CObj* obj, s32 a, s32 b);
+-void fn_80023F0C(void);
++typedef struct ChallengeTileImage {
++    u8* pixels;
++    u32 unk_0x04;
++    u16 height;
++    u16 width;
++} ChallengeTileImage;
++void fn_80023F0C(ChallengeTileImage* source, ChallengeTileImage* destination, s32 sourceX, s32 sourceY, s32 width, s32 height, s32 destX, s32 destY);
+ void gOz_GXSetTexture(void);
+ void fn_80024390(f32 m[3][4], Gap8002244CProjParams* out, s32 type);
+ void SetDisplayStateTexture(void);
+diff --git a/include/challenge/gap_1D590.h b/include/challenge/gap_1D590.h
+index bac46e0a..6a3dbe44 100644
+--- a/include/challenge/gap_1D590.h
++++ b/include/challenge/gap_1D590.h
+@@ -3,6 +3,7 @@
+ 
+ #include "mssbTypes.h"
+ 
+-void fn_1_1D590(void);
++#include "Unknown/gap_8002244C.h"
++void fn_1_1D590(ChallengeTileImage* source, ChallengeTileImage* destination, u8* tiles, s32 tileWidth, s32 tileHeight);
+ 
+ #endif // !__CHALLENGE_gap_1D590_H_
+diff --git a/src/Unknown/gap_8002244C.c b/src/Unknown/gap_8002244C.c
+index 67743808..71c7f4a3 100644
+--- a/src/Unknown/gap_8002244C.c
++++ b/src/Unknown/gap_8002244C.c
+@@ -562,7 +562,7 @@ void fn_80023EEC(Gap8002244CObj* obj, s32 a, s32 b) {
+ }
+ 
+ // .text:0x80023F0C size:0x278
+-void fn_80023F0C(void) {
++void fn_80023F0C(ChallengeTileImage* source, ChallengeTileImage* destination, s32 sourceX, s32 sourceY, s32 width, s32 height, s32 destX, s32 destY) {
+     return;
+ }
+ 
