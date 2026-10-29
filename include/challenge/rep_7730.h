@@ -30,11 +30,20 @@ typedef struct Rep7730Values {
 extern Rep7730Values lbl_1_bss_6BE4;
 
 typedef struct Rep7730Unk6BF4 {
-    /* 0x00 */ u8 _pad0[0x50];
-    /* 0x50 */ f32 angle;
-    /* 0x54 */ u8 _pad54[0x98];
-    /* 0xEC */ f32 time;
-    /* 0xF0 */ u8 _padF0[0x64];
+    Vec origin, target;
+    u8 _pad18[0x38];
+    f32 angle;
+    u8 _pad54[4];
+    Mtx matrix;
+    u8 _pad88[0x60];
+    union {
+        Vec direction;
+        struct { f32 _padE8; f32 time; f32 _padF0; };
+    };
+    Vec offset;
+    u8 _pad100[0x40];
+    Vec normal;
+    u8 _pad14C[8];
 } Rep7730Unk6BF4;
 extern Rep7730Unk6BF4 lbl_1_bss_6BF4;
 void fn_80037B18(Rep7730Unk6BF4* arg0, Vec* arg1, f32 arg2);

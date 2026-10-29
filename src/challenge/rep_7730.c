@@ -1,3 +1,4 @@
+#include "Dolphin/GX/GXPixel.h"
 #include "challenge/rep_7730.h"
 #include "Dolphin/OS/OSCache.h"
 #include "Dolphin/ppcarch.h"
@@ -196,8 +197,38 @@ void fn_1_1E290(void) {
 }
 
 // .text:0x0001E5D0 size:0x2F0
-void fn_1_1E5D0(Rep7730Unk6BF4* arg0) {
-    return;
+void fn_1_1E5D0(Rep7730Unk6BF4* camera) {
+    Vec end, start;
+    Vec* endpoint;
+    fn_1_F2C(4, 0, 0);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_COPY);
+    PSMTXMultVec(camera->matrix, &camera->target, &start);
+    PSMTXMultVec(camera->matrix, &camera->origin, endpoint = &end);
+    GXBegin(GX_LINES, GX_VTXFMT0, 2);
+    GXPosition3f32(start.x, start.y, start.z); GXColor4u8(255, 64, 64, 255);
+    GXPosition3f32(end.x, end.y, end.z); GXColor4u8(64, 255, 64, 255);
+    GXBegin(GX_LINES, GX_VTXFMT0, 4);
+    PSVECScale(&camera->direction, 1.0f, &start);
+    PSVECAdd(&start, &camera->offset, endpoint);
+    GXPosition3f32(start.x, start.y, start.z); GXColor4u8(255, 0, 0, 255);
+    GXPosition3f32(end.x, end.y, end.z); GXColor4u8(255, 0, 0, 255);
+    PSVECScale(&camera->normal, 1.0f, endpoint);
+    PSVECAdd(&start, endpoint, endpoint);
+    GXPosition3f32(start.x, start.y, start.z); GXColor4u8(0, 0, 255, 255);
+    GXPosition3f32(end.x, end.y, end.z); GXColor4u8(0, 0, 255, 255);
+    if (((ChallengeScene*)lbl_803CC1B8)->mode28 == 0) {
+        PSVECSubtract(&camera->origin, &camera->target, &start);
+        PSVECScale(&start, lbl_1_bss_6BE4.value0, &start);
+        PSVECAdd(&camera->target, &start, &start);
+        PSMTXMultVec(camera->matrix, &start, &start);
+        end.x = lbl_1_bss_6BE4.value4;
+        end.y = lbl_1_bss_6BE4.value8;
+        end.z = lbl_1_bss_6BE4.valueC;
+        PSVECAdd(&start, endpoint, endpoint);
+        GXBegin(GX_LINES, GX_VTXFMT0, 2);
+        GXPosition3f32(start.x, start.y, start.z); GXColor4u8(255, 0, 255, 255);
+        GXPosition3f32(end.x, end.y, end.z); GXColor4u8(255, 0, 255, 255);
+    }
 }
 
 // .text:0x0001E8C0 size:0x4C
