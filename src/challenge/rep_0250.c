@@ -156,8 +156,79 @@ void fn_1_97B8(void) {
 }
 
 // .text:0x000097E4 size:0x2CC
+extern u8 lbl_1_data_FBC;
+extern u32 lbl_1_data_B80;
+typedef struct ChallengeLayoutGlobal { u8 _pad0[8]; s32 queue; } ChallengeLayoutGlobal;
+extern ChallengeLayoutGlobal lbl_80366158;
+void fn_80035A00(void);
+void fn_800AD038(s32 queue);
 void fn_1_97E4(void) {
-    return;
+    DrawingSceneStruct* scene;
+    ChallengeLayoutState* state = &lbl_1_bss_2FA8;
+    scene = lbl_803CC1B8;
+    switch (lbl_803C77B8.pressed) {
+    case 0x100:
+        state->field8 = 0;
+        state->field9 = 0;
+        state->field28 = 0;
+        if (++state->mode == 3) state->mode = 0;
+        switch (state->selected) {
+        case 11: break;
+        default: fn_80034CEC((u32)state->item); break;
+        }
+        state->loaded = 0;
+        break;
+    case 0x200:
+        fn_80034CEC((u32)state->item);
+        fn_80035A00();
+        fn_800AD038(lbl_80366158.queue);
+        scene->currentDrawingItem->loadingState = 1;
+        break;
+    case 0x800: lbl_1_data_FBC = 1; break;
+    case 0x400: lbl_1_data_FBC = 0; break;
+    case 0x20: lbl_1_data_B80 = 0; break;
+    case 0x1000: lbl_1_data_B80 = 0x10000; break;
+    case 8:
+        if (scene->unk1a_hi != 0) scene->unk1a_hi--;
+        else scene->unk1a_hi = 1;
+        break;
+    case 4:
+        scene->unk1a_hi++;
+        if (scene->unk1a_hi == 2) scene->unk1a_hi = 0;
+        break;
+    case 1:
+        switch (scene->unk1a_hi) {
+        case 0:
+            state->field10 = 0;
+            state->selected++;
+            if ((s8)state->selected >= 12) state->selected = 0;
+            break;
+        case 1:
+            lbl_1_data_B80 += 1000;
+            if (lbl_1_data_B80 > 0x70000) lbl_1_data_B80 = 0x70000;
+            break;
+        }
+        state->field28 = 0;
+        break;
+    case 2:
+        switch (scene->unk1a_hi) {
+        case 0:
+            state->field10 = 0;
+            state->selected--;
+            if ((s8)state->selected < 0) state->selected = 11;
+            break;
+        case 1:
+            lbl_1_data_B80 -= 1000;
+            if (lbl_1_data_B80 >= (u32)-1000) lbl_1_data_B80 = 0;
+            break;
+        }
+        state->field28 = 0;
+        break;
+    case 3:
+    case 0x10:
+    case 0x40:
+        break;
+    }
 }
 
 // .text:0x00009AB0 size:0x3F0

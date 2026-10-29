@@ -40,10 +40,14 @@ typedef struct ChallengeLayoutState {
     u16 index;
     u8 loaded;
     u8 mode;
-    u8 _pad8[9];
+    u8 field8;
+    u8 field9;
+    u8 _padA[6];
+    u8 field10;
     u8 previous;
     u8 _pad12[0x12];
     DrawingSceneStruct* item;
+    u8 field28;
 } ChallengeLayoutState;
 extern ChallengeLayoutState lbl_1_bss_2FA8;
 typedef struct ChallengeLayoutInput { u8 _pad0[0x69]; u8 mode; } ChallengeLayoutInput;
