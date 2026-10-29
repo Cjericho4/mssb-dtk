@@ -340,7 +340,7 @@ void fn_1_F040(void) {
 // .text:0x0000F0D0 size:0x108
 void fn_1_F0D0(void) {
     ChallengeState* state = &lbl_1_bss_3070;
-    fn_1_F798(&lbl_1_data_F278[state->page]->base, &lbl_1_data_F284.base, sizeof(ChallengeCopyValues));
+    fn_1_F798(lbl_1_data_F278[state->page]->base.values, (u8*)&lbl_1_data_F284, sizeof(ChallengeCopyValues));
     if (lbl_803C77B8.pressed & 0x1000) {
         state->page = (state->page + 1) % 3;
     } else if (lbl_803C77B8.buttons & 0x100) {
@@ -449,7 +449,7 @@ void fn_1_F6E4(void) {
     ChallengeState* state = &lbl_1_bss_3070;
     Vec pos = {0.0f, 0.0f, 10.0f};
 
-    fn_1_F798(dst, &lbl_1_data_F0A8, sizeof(Rep0610Triple));
+    fn_1_F798(dst->values, (u8*)&lbl_1_data_F0A8, sizeof(Rep0610Triple));
     if (lbl_803C77B8.pressed & 0x100) {
         dst->values[0] = state->selection;
         fn_80031CA4(&pos, dst);
@@ -460,8 +460,86 @@ void fn_1_F6E4(void) {
 }
 
 // .text:0x0000F798 size:0x400
-void fn_1_F798(Rep0610Triple* dst, Rep0610Triple* src, s32 size) {
-    return;
+extern s32 lbl_1_bss_307C;
+/* Edit indexed integer parameters with modifier-dependent steps and per-field limits. */
+void fn_1_F798(s32* values, u8* fields, s32 count) {
+    s32 small, medium, large;
+    u16 pressed;
+    if (lbl_803C77B8.buttons & 0x400) { small = 10; medium = 100; large = 10000; }
+    else if (lbl_803C77B8.buttons & 0x800) { small = 20; medium = 10000; large = 1000000; }
+    else { small = 1; medium = 1000; large = 100000; }
+    pressed = lbl_803C77B8.pressed;
+    if (pressed & 8) {
+        if (lbl_1_bss_307C) lbl_1_bss_307C--;
+        else lbl_1_bss_307C = count - 1;
+    } else if (pressed & 4) {
+        if (++lbl_1_bss_307C == count) lbl_1_bss_307C = 0;
+    } else if (pressed & 1) {
+        switch (fields[lbl_1_bss_307C]) {
+        case 1: values[fields[lbl_1_bss_307C]] = (values[fields[lbl_1_bss_307C]] + 41) % 42; break;
+        case 2:
+            values[2] -= small;
+            if (values[2] < 1) values[2] = 1;
+            break;
+        case 3: case 4: case 5: case 8: case 9: case 20:
+            if (values[fields[lbl_1_bss_307C]] - medium > 0) values[fields[lbl_1_bss_307C]] -= medium;
+            break;
+        case 6:
+            values[6] -= small;
+            if (values[6] < 1) {
+                values[6] = 1;
+                if (values[7] > values[6]) values[7] = values[6];
+            }
+            break;
+        case 7: case 11: case 21: case 22:
+            values[fields[lbl_1_bss_307C]] -= small;
+            if (values[fields[lbl_1_bss_307C]] < 0) values[fields[lbl_1_bss_307C]] = 0;
+            break;
+        case 10: values[fields[lbl_1_bss_307C]] ^= 1; break;
+        case 12: case 13:
+            values[fields[lbl_1_bss_307C]] -= large;
+            if (values[fields[lbl_1_bss_307C]] < 0) values[fields[lbl_1_bss_307C]] = 0;
+            break;
+        case 23: case 24: values[fields[lbl_1_bss_307C]] -= medium; break;
+        case 14: case 15:
+            values[fields[lbl_1_bss_307C]] -= large;
+            /* Fall through: these fields also reduce the shared grayscale color. */
+        case 16: {
+            s32 color = (values[16] >> 8) & 255;
+            color -= small;
+            if (color < 0) color = 0;
+            values[16] = color * 0x1010100;
+            break;
+        }
+        }
+    } else if (pressed & 2) {
+        switch (fields[lbl_1_bss_307C]) {
+        case 1: values[fields[lbl_1_bss_307C]] = (values[fields[lbl_1_bss_307C]] + 1) % 42; break;
+        case 2: values[2] += small; break;
+        case 3: case 4: case 5: case 8: case 9: case 20: values[fields[lbl_1_bss_307C]] += medium; break;
+        case 6: values[6] += small; break;
+        case 7:
+            values[7] += small;
+            if (values[7] > values[6]) values[7] = values[6];
+            break;
+        case 11: case 21:
+            values[fields[lbl_1_bss_307C]] += small;
+            if (values[fields[lbl_1_bss_307C]] > 255) values[fields[lbl_1_bss_307C]] = 255;
+            break;
+        case 22: values[fields[lbl_1_bss_307C]] += small; break;
+        case 10: values[fields[lbl_1_bss_307C]] ^= 1; break;
+        case 12: case 13: values[fields[lbl_1_bss_307C]] += large; break;
+        case 23: case 24: values[fields[lbl_1_bss_307C]] += medium; break;
+        case 14: case 15: values[fields[lbl_1_bss_307C]] += large; break;
+        case 16: {
+            s32 color = (values[16] >> 8) & 255;
+            color += small;
+            if (color > 255) color = 255;
+            values[16] = color * 0x1010100;
+            break;
+        }
+        }
+    }
 }
 
 // .text:0x0000FB98 size:0x4AC

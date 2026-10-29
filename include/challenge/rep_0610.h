@@ -263,7 +263,7 @@ void fn_1_F2F8(void);
 void fn_1_F37C(void);
 void fn_1_F50C(void);
 void fn_1_F6E4(void);
-void fn_1_F798(Rep0610Triple* dst, Rep0610Triple* src, s32 size);
+void fn_1_F798(s32* values, u8* fields, s32 count);
 void fn_1_FB98(void);
 void fn_1_10044(void);
 void fn_1_10458(void);
