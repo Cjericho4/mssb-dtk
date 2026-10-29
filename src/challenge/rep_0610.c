@@ -647,8 +647,32 @@ void fn_1_1496C(void) {
 }
 
 // .text:0x00014FB8 size:0x1B8
+/* Select a challenge animation action, wrapping the cursor over nine entries. */
 void fn_1_14FB8(void) {
-    return;
+    u16 pressed = lbl_803C77B8.pressed;
+    ChallengeScene* scene = (ChallengeScene*)lbl_803CC1B8;
+    if (pressed & 8) {
+        if (scene->bytes[12]) scene->bytes[12]--;
+        else scene->bytes[12] = 8;
+    } else if (pressed & 4) {
+        scene->bytes[12]++;
+        if (scene->bytes[12] == 9) scene->bytes[12] = 0;
+    } else if (lbl_803C77B8.buttons & 0x100) {
+        switch (scene->bytes[12]) {
+        case 0: if (pressed & 0x100) lbl_1_bss_5F71 = 3; break;
+        case 1: if (pressed & 0x100) lbl_1_bss_5F71 = 4; break;
+        case 2: if (pressed & 0x100) lbl_1_bss_5F71 = 5; break;
+        case 3: if (pressed & 0x100) lbl_1_bss_5F71 = 6; break;
+        case 4: if (lbl_803C77B8.held & 0x100) lbl_1_bss_5F71 = 2; break;
+        case 5: if (lbl_803C77B8.held & 0x100) lbl_1_bss_5F71 = 8; break;
+        case 6: if (lbl_803C77B8.held & 0x100) lbl_1_bss_5F71 = 7; break;
+        case 7: if (pressed & 0x100) lbl_1_bss_5F71 = 9; break;
+        case 8: if (pressed & 0x100) lbl_1_bss_5F71 = 10; break;
+        }
+    } else if (lbl_803C77B8.held & 0x200) {
+        lbl_1_bss_5F71 = 0;
+        minigamesSetSomePointers();
+    }
 }
 
 // .text:0x00015170 size:0x88
