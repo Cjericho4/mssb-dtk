@@ -1,0 +1,174 @@
+diff --git a/include/challenge/rep_0610.h b/include/challenge/rep_0610.h
+index ebf04dbd..5e042126 100644
+--- a/include/challenge/rep_0610.h
++++ b/include/challenge/rep_0610.h
+@@ -21,6 +21,19 @@ typedef struct Rep0610Items {
+ } Rep0610Items;
+ 
+ typedef struct Gap8000B9C8Texture Gap8000B9C8Texture;
++typedef struct ChallengeSequenceChoice {
++    s16 table, entry, frame, preserveTime;
++} ChallengeSequenceChoice;
++typedef struct ChallengeSequenceTrack {
++    f32 time;
++    u8 _pad4[4];
++    u16 enabled;
++    u8 _padA[2];
++    u16 cursor;
++    u8 _padE[10];
++    u16 start;
++    u8 _pad1A[6];
++} ChallengeSequenceTrack;
+ typedef struct ChallengeState {
+     /* 0x0000 */ u8 _pad0[0xC];
+     /* 0x000C */ s32 unkC;
+@@ -39,7 +52,10 @@ typedef struct ChallengeState {
+     /* 0x01A4 */ u8 phase;
+     /* 0x01A5 */ u8 enabled;
+     /* 0x01A6 */ u8 mode;
+-    /* 0x01A7 */ u8 _pad1A7[0x2D4B];
++    u8 _pad1A7;
++    ChallengeSequenceChoice sequence[8];
++    ChallengeSequenceTrack tracks[8][5];
++    u8 _pad6E8[0x280A];
+     /* 0x2EF2 */ u8 channel;
+     /* 0x2EF3 */ u8 _pad2EF3[6];
+     /* 0x2EF9 */ u8 unk2EF9;
+@@ -53,8 +69,15 @@ typedef struct ChallengeState {
+     /* 0x2F08 */ u8 blendEnabled;
+     u8 _pad2F09[0x16B];
+     /* 0x3074 */ Gap8000B9C8Texture* extraTexture;
+-    /* 0x3078 */ u8 _pad3078[0x6D0];
+-    /* 0x3748 */ Rep0610Items items;
++    u8 _pad3078[4];
++    u8 attachmentTemplates[5][0x5C];
++    u8 _pad3248[0x500];
++    union {
++        Rep0610Items items;
++        ChallengeSequenceTrack* activeTracks[6];
++    };
++    u8 _pad3760[0x170];
++    Rep0610Slot previewSlots[13];
+ } ChallengeState;
+ extern ChallengeState lbl_1_bss_3070;
+ 
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 34137f67..7a2002fa 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -256,8 +256,114 @@ void fn_1_D8A0(void) {
+ }
+ 
+ // .text:0x0000D9B8 size:0x464
++typedef struct ChallengeSequenceControl {
++    void* model;
++    AnimSlotTable* table;
++    u8 _pad8[6];
++    u16 entry;
++    u8 _pad10[0x48];
++    u8 active, valid, enabled, _pad5B;
++    f32 time, blend;
++} ChallengeSequenceControl;
++typedef struct ChallengeSequenceAttachments {
++    u32 header;
++    u8 first[0x5C];
++    u8 firstOwner;
++    u8 _pad61[7];
++    u8 second[0x5C];
++    u8 secondOwner;
++    u8 _padC5[8];
++    u8 flagCD, flagCE, ownerCF, ownerD0;
++    u8 _padD1[3];
++} ChallengeSequenceAttachments;
++typedef struct ChallengeSequencePool {
++    u8 _pad0[0x140];
++    ChallengeSequenceAttachments entries[13];
++} ChallengeSequencePool;
++typedef struct ChallengeSequenceActor {
++    void* model;
++    u8 _pad4[0x2C];
++    ChallengeSequenceAttachments* attachments;
++} ChallengeSequenceActor;
++/* Advance configured animation sequences and refresh paired character attachments. */
+ void fn_1_D9B8(void) {
+-    return;
++    ChallengeState* state = &lbl_1_bss_3070;
++    hugeAnimStruct* animation = &g_hugeAnimStruct;
++    DrawingSceneStruct* scene;
++    s32 count;
++    ChallengeModel* model;
++    s32 frame, i;
++    s16 trigger;
++    model = (ChallengeModel*)animation->ctrlOrBonePtr[state->modelIndex].unk34;
++    scene = lbl_803CC1B8;
++    count = model->count;
++    for (i = 0; i < count; i++) {
++        if (model->objects[i]->animation && model->objects[i]->animation->data) break;
++    }
++    if (i < count) frame = model->objects[i]->animation->time;
++    trigger = state->sequence[(s8)scene->flag15].frame;
++    if ((trigger < 0 && (lbl_803C77B8.held & 0x100)) || (trigger >= 0 && frame >= trigger)) {
++        u8 index;
++        Rep0610Slot* slot;
++        ChallengeSequenceControl* control;
++        f32 time;
++        s32 first, second;
++        AnimationStruct* actor;
++        ChallengeSequenceActor** actors;
++        do {
++            scene->flag15++;
++            if (scene->flag15 == 8) scene->flag15 = 0;
++        } while (state->sequence[(s8)scene->flag15].table < 0);
++        index = state->modelIndex;
++        slot = &state->previewSlots[index];
++        slot->table = state->sequence[(s8)scene->flag15].table;
++        slot->entry = state->sequence[(s8)scene->flag15].entry;
++        control = (ChallengeSequenceControl*)&animation->ctrlOrBonePtr[index].unk34;
++        control->table = animation->fielderStructs[index].slots[slot->table];
++        control->entry = slot->entry;
++        control->time = 0;
++        control->active = 1;
++        control->valid = control->table != 0;
++        control->enabled = control->table != 0;
++        control->blend = 0;
++        time = state->activeTracks[0]->time;
++        for (i = 5; i--;) {
++            ChallengeSequenceTrack* track = &state->tracks[(s8)scene->flag15][i];
++            if (track->enabled) {
++                u16 cursor = state->activeTracks[0]->cursor;
++                state->activeTracks[i] = track;
++                if (state->sequence[(s8)scene->flag15].preserveTime && state->activeTracks[i]->start < time) {
++                    state->activeTracks[i]->time = time;
++                    state->activeTracks[i]->cursor = cursor;
++                } else {
++                    state->activeTracks[i]->time = 0;
++                    state->activeTracks[i]->cursor = 0;
++                }
++            } else state->activeTracks[i] = 0;
++        }
++        index = state->modelIndex;
++        actor = &animation->fielderStructs[index];
++        switch (state->previewSlots[index].table) {
++        case 0: case 1: first = 1; second = 2; break;
++        default:
++            if (state->unk2EF9) { first = 1; second = 4; }
++            else { first = 3; second = 2; }
++            break;
++        }
++        actors = (ChallengeSequenceActor**)animation->AnimationStructPtrs;
++        actors[index]->attachments = &((ChallengeSequencePool*)animation)->entries[index];
++        memcpy(actors[state->modelIndex]->attachments->first, state->attachmentTemplates[first], 0x5C);
++        memcpy(actors[state->modelIndex]->attachments->second, state->attachmentTemplates[second], 0x5C);
++        actors[state->modelIndex]->attachments->firstOwner = state->modelIndex;
++        actors[state->modelIndex]->attachments->secondOwner = state->modelIndex;
++        actors[state->modelIndex]->attachments->flagCD = actor->unk25A;
++        actors[state->modelIndex]->attachments->flagCE = actor->unk25B;
++        actors[state->modelIndex]->attachments->ownerCF = state->modelIndex;
++        actors[state->modelIndex]->attachments->ownerD0 = state->modelIndex;
++        actors[state->modelIndex]->model = animation->ctrlOrBonePtr[state->modelIndex].unk34;
++    }
++    if (lbl_803C77B8.pressed & 0x200) lbl_803CC1B8->aFunctionPointer = fn_1_1770C;
++    fn_1_D8A0();
+ }
+ 
+ // .text:0x0000DE1C size:0xF8
