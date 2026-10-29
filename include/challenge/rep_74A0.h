@@ -5,7 +5,8 @@
 #include "challenge/challenge.h"
 
 typedef struct Rep74A0State {
-    /* 0x00 */ u8 _pad0[0x40];
+    /* 0x00 */ u8 _pad0[0x10];
+    Mtx lightMatrix;
     /* 0x40 */ u8 flags[0x18];
 } Rep74A0State;
 extern Rep74A0State lbl_1_bss_69FC;

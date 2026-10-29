@@ -1,4 +1,15 @@
 #include "challenge/rep_74A0.h"
+/* The light owning header conflicts with this unit's actor and allocator
+   declarations; these forward declarations preserve its light API types. */
+typedef struct Gap800BD3A0Light Gap800BD3A0Light;
+typedef struct Gap800BD3A0Color { u8 r, g, b, a; } Gap800BD3A0Color;
+void LITInitAttn(Gap800BD3A0Light*, f32, f32, f32, f32, f32, f32);
+void LITInitPos(Gap800BD3A0Light*, f32, f32, f32);
+void LITInitColor(Gap800BD3A0Light*, Gap800BD3A0Color*);
+void LITXForm(Gap800BD3A0Light*, Mtx);
+typedef struct ChallengeLightPosition { Vec position; f32 unk_0x0C; } ChallengeLightPosition;
+extern ChallengeLightPosition lbl_80367318[3];
+
 
 // .text:0x000182C0 size:0x2BC
 void fn_1_182C0(void) {
@@ -153,8 +164,21 @@ void fn_1_1ADA4(void) {
 }
 
 // .text:0x0001B038 size:0xC4
+/* FAKEMATCH: pass the colour by value to preserve the original temporary
+   copy before calling the light API. */
+static inline void setChallengeLightColor(Gap800BD3A0Light* light, Gap800BD3A0Color color) {
+    LITInitColor(light, &color);
+}
+// Set up three white challenge lights and transform them into view space.
 void fn_1_1B038(void) {
-    return;
+    Gap800BD3A0Color color = {255, 255, 255, 255};
+    s32 i;
+    for (i = 0; i < 3; i++) {
+        LITInitAttn((Gap800BD3A0Light*)g_hugeAnimStruct.menuLights[i], 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+        LITInitPos((Gap800BD3A0Light*)g_hugeAnimStruct.menuLights[i], lbl_80367318[i].position.x, lbl_80367318[i].position.y, lbl_80367318[i].position.z);
+        setChallengeLightColor((Gap800BD3A0Light*)g_hugeAnimStruct.menuLights[i], color);
+        LITXForm((Gap800BD3A0Light*)g_hugeAnimStruct.menuLights[i], lbl_1_bss_69FC.lightMatrix);
+    }
 }
 
 // .text:0x0001B0FC size:0x1CC
