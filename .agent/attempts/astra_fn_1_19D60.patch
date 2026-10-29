@@ -1,0 +1,157 @@
+diff --git a/include/challenge/rep_74A0.h b/include/challenge/rep_74A0.h
+index f58aeb32..884ecf1b 100644
+--- a/include/challenge/rep_74A0.h
++++ b/include/challenge/rep_74A0.h
+@@ -63,7 +63,7 @@ typedef struct ChallengeRenderTask {
+ void fn_800B2D5C(ChallengeRenderObject* object);
+ void GXInvalidateVtxCache(void);
+ void DOSetWorldMatrix(ChallengeRenderModel* model, MtxPtr world);
+-void fn_1_19D60(ChallengeRenderModel* model, s32 mode);
++void fn_1_19D60(ChallengeRenderModel* model, MtxPtr view);
+ void fn_1_1A1EC(ChallengeRenderTask* task, s32 mode);
+ #include "Dolphin/GX/GXPixel.h"
+ #include "Dolphin/GX/GXGeometry.h"
+@@ -76,7 +76,9 @@ typedef struct ChallengeModelGroup {
+ typedef struct ChallengeSelection {
+     u16 selected;
+     u8 group;
+-    u8 _pad3[0x189];
++    u8 _pad3[3];
++    u8 alpha, blue, green, red;
++    u8 _padA[0x182];
+     Mtx matrix;
+ } ChallengeSelection;
+ extern ChallengeSelection lbl_1_bss_69F0;
+diff --git a/src/challenge/rep_74A0.c b/src/challenge/rep_74A0.c
+index c288c5f1..445734af 100644
+--- a/src/challenge/rep_74A0.c
++++ b/src/challenge/rep_74A0.c
+@@ -109,8 +109,94 @@ s32 fn_1_19D1C(u32 flags) {
+ }
+ 
+ // .text:0x00019D60 size:0x48C
+-void fn_1_19D60(ChallengeRenderModel* model, s32 mode) {
+-    return;
++#include "C3/unktypes.h"
++struct ChallengeRenderModel {
++    PositionData* positions;
++    ColorData* colors;
++    TextureData* texcoords;
++    LightingData* lighting;
++    DisplayData* display;
++    u8 textureCount;
++    u8 _pad15[3];
++    Mtx transform;
++};
++static inline s32 previewComponentSize(u8 format) {
++    switch (format) {
++    case 0: case 1: return 1;
++    case 2: case 3: return 2;
++    case 4: return 4;
++    default: return 0;
++    }
++}
++/* Draw a model with the selected flat color while retaining its vertex layout. */
++void fn_1_19D60(ChallengeRenderModel* model, MtxPtr view) {
++    GXVtxDescList descriptors[27];
++    Mtx transform;
++    GXColor color;
++    DisplayStateList* state;
++    s32 i;
++    color.r = lbl_1_bss_69F0.red; color.g = lbl_1_bss_69F0.green; color.b = lbl_1_bss_69F0.blue; color.a = lbl_1_bss_69F0.alpha; GXSetChanMatColor(4, color);
++    GXSetNumChans(1);
++    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
++    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
++    GXSetNumTevStages(1);
++    GXSetTevOrder(0, 255, 255, 4);
++    GXSetTevColorIn(0, 10, 15, 15, 15);
++    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
++    GXSetTevAlphaIn(0, 5, 7, 7, 7);
++    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
++    PSMTXConcat(view, model->transform, transform);
++    GXLoadPosMtxImm(transform, 0);
++    GXSetCurrentMtx(0);
++    GXSetArray(9, model->positions->positionArray, model->positions->compCount * previewComponentSize(model->positions->quantizeInfo >> 4));
++    GXSetVtxAttrFmt(0, 9, 1, model->positions->quantizeInfo >> 4, model->positions->quantizeInfo & 15);
++    if (model->texcoords) {
++        for (i = 0; i < model->textureCount; i++) {
++            GXSetArray(i + 13, model->texcoords[i].textureCoordArray, model->texcoords[i].compCount * previewComponentSize(model->texcoords[i].quantizeInfo >> 4));
++            GXSetVtxAttrFmt(0, i + 13, 1, model->texcoords[i].quantizeInfo >> 4, model->texcoords[i].quantizeInfo & 15);
++            GXSetTexCoordGen2(i, 1, i + 4, 60, 0, 125);
++        }
++    }
++    {
++    s32 j;
++    for (state = model->display->displayStateList, j = 0; j < model->display->numStateEntries; state++, j++) {
++        switch (state->id) {
++        case 1: break;
++        case 2: {
++            s32 count;
++            s32 attr;
++            s32 shift;
++            u32 type;
++            GXClearVtxDesc();
++            count = 0;
++            type = state->setting & 3;
++            if (type) {
++                descriptors[count].mAttr = 0;
++                descriptors[count].mType = type;
++                count++;
++            }
++            for (attr = 9, shift = 2; attr < 21; attr++, shift += 2) {
++                type = (state->setting >> shift) & 3;
++                if (type) {
++                    descriptors[count].mAttr = attr;
++                    descriptors[count].mType = type;
++                count++;
++                }
++            }
++            type = (state->setting >> 26) & 3;
++            if (type) {
++                descriptors[count].mAttr = attr;
++                descriptors[count].mType = type;
++                count++;
++            }
++            descriptors[count].mAttr = 255;
++            GXSetVtxDescv(descriptors);
++            break;
++        }
++        }
++        if (state->primitiveList) GXCallDisplayList(state->primitiveList, state->listSize);
++    }
++}
+ }
+ 
+ // .text:0x0001A1EC size:0xA4
+@@ -122,13 +208,13 @@ void fn_1_1A1EC(ChallengeRenderTask* task, s32 mode) {
+     if (object->model != 0) {
+         fn_800B2D5C(object);
+         GXInvalidateVtxCache();
+-        fn_1_19D60(object->model, mode);
++        fn_1_19D60(object->model, (MtxPtr)mode);
+     } else {
+         for (object = object->children; object != 0; object = object->next) {
+             if (object->model != 0) {
+                 DOSetWorldMatrix(object->model, object->world);
+             }
+-            fn_1_19D60(object->model, mode);
++            fn_1_19D60(object->model, (MtxPtr)mode);
+         }
+     }
+ }
+@@ -144,13 +230,13 @@ static inline void drawChallengeTask(HugeAnimEntry68* entry, s32 mode) {
+     if (object->model != 0) {
+         fn_800B2D5C(object);
+         GXInvalidateVtxCache();
+-        fn_1_19D60(object->model, mode);
++        fn_1_19D60(object->model, (MtxPtr)mode);
+     } else {
+         for (object = object->children; object != 0; object = object->next) {
+             if (object->model != 0) {
+                 DOSetWorldMatrix(object->model, object->world);
+             }
+-            fn_1_19D60(object->model, mode);
++            fn_1_19D60(object->model, (MtxPtr)mode);
+         }
+     }
+     }
