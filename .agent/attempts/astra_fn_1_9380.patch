@@ -1,0 +1,80 @@
+diff --git a/include/challenge/rep_0250.h b/include/challenge/rep_0250.h
+index cbd60ccc..b7658857 100644
+--- a/include/challenge/rep_0250.h
++++ b/include/challenge/rep_0250.h
+@@ -45,7 +45,9 @@ typedef struct ChallengeLayoutState {
+     u8 _padA[6];
+     u8 field10;
+     u8 previous;
+-    u8 _pad12[0x12];
++    u8 _pad12[6];
++    u16 previewIndex;
++    u8 _pad1A[0xA];
+     DrawingSceneStruct* item;
+     u8 field28;
+ } ChallengeLayoutState;
+diff --git a/src/challenge/rep_0250.c b/src/challenge/rep_0250.c
+index 11821484..b09e7ac0 100644
+--- a/src/challenge/rep_0250.c
++++ b/src/challenge/rep_0250.c
+@@ -114,9 +114,59 @@ void fn_1_9290(void) {
+     if (lbl_803C77B8.held & 0x200) fn_800B0A14_removeQueue();
+ }
+ 
++typedef struct ChallengePreviewPool {
++    u8 _pad0[0xD4];
++    s32 value;
++    u8 _padD8[0x40];
++    ChallengeLayoutConfig numeric;
++    u8 _pad12D[0x1B8 - 0x118 - sizeof(ChallengeLayoutConfig)];
++    ChallengeLayoutConfig animated;
++    u8 _pad1CD[0x50E - 0x1B8 - sizeof(ChallengeLayoutConfig)];
++    u16 glyph;
++} ChallengePreviewPool;
++extern ChallengePreviewPool lbl_1_data_AB0;
++s32 fn_80036824(u8 id, s32 mode, s32 index);
++
+ // .text:0x00009380 size:0x324
+ void fn_1_9380(void) {
+-    return;
++    u8 id;
++    DrawingSceneStruct* scene;
++    ChallengeLayoutConfig* config;
++    ChallengePreviewPool* pool = &lbl_1_data_AB0;
++    ChallengeLayoutState* state = &lbl_1_bss_2FA8;
++    scene = lbl_803CC1B8;
++    id = (config = &pool->numeric)->id;
++    state->item = scene;
++    if (state->mode == 0) {
++        fn_80034E20(scene, config);
++        fn_8003664C(id, 0, fn_80036824(id, 1, 4), 2);
++        fn_8003664C(id, 1, 0x11, 3);
++    } else if (state->mode == 1) {
++        s32 value;
++        fn_80034E20(scene, config);
++        value = pool->value;
++        lbl_80371C30[state->item->unkIndex].obj->field_0x5C = 0x80000;
++        fn_8003664C(id, 0, value / 1000 + 10, 4);
++        value %= 1000;
++        lbl_80371C30[state->item->unkIndex + 1].obj->field_0x5C = 0xC0000;
++        fn_8003664C(id, 1, value / 100 + 10, 5);
++        value %= 100;
++        lbl_80371C30[state->item->unkIndex + 2].obj->field_0x5C = 0x100000;
++        fn_8003664C(id, 2, value / 10 + 10, 6);
++    } else {
++        ChallengeLayoutPosition* position;
++        fn_80034E20(scene, &pool->animated);
++        config = &pool->animated;
++        position = fn_80035F20(config->id, 1, state->previewIndex, -1);
++        lbl_80371C30[scene->unkIndex].obj->pos.x = position->x / 2;
++        lbl_80371C30[scene->unkIndex].obj->pos.y = position->y / 2;
++        fn_80035ED0(1);
++        fn_8003664C(config->id, 0, pool->glyph, 1);
++        if (++state->previewIndex > 7) state->previewIndex = 0;
++        if (++pool->glyph > 9) pool->glyph = 0;
++    }
++    scene->unk18 = 0;
++    lbl_803CC1B8->aFunctionPointer = fn_1_9290;
+ }
+ 
+ // .text:0x000096A4 size:0x2C
