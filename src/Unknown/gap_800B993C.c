@@ -273,19 +273,28 @@ void fn_800BD1E8(s32 value) {
     lbl_803CC20C = value;
 }
 
+// Set quantization register 5 for paired-single loads and stores.
 // .text:0x800BD1F0 size:0x8
-void __MTGQR5(void) {
-    return;
+asm void __MTGQR5(register u32 value) {
+    nofralloc
+    mtspr GQR5, value
+    blr
 }
 
+// Set quantization register 6 for paired-single loads and stores.
 // .text:0x800BD1F8 size:0x8
-void __MTGQR6(void) {
-    return;
+asm void __MTGQR6(register u32 value) {
+    nofralloc
+    mtspr GQR6, value
+    blr
 }
 
+// Set quantization register 7 for paired-single loads and stores.
 // .text:0x800BD200 size:0x8
-void __MTGQR7(void) {
-    return;
+asm void __MTGQR7(register u32 value) {
+    nofralloc
+    mtspr GQR7, value
+    blr
 }
 
 // .text:0x800BD208 size:0x38
