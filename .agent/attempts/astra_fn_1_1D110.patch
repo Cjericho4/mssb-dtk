@@ -1,0 +1,98 @@
+diff --git a/src/challenge/rep_74A0.c b/src/challenge/rep_74A0.c
+index ad0873d3..fa74de60 100644
+--- a/src/challenge/rep_74A0.c
++++ b/src/challenge/rep_74A0.c
+@@ -412,8 +412,92 @@ void fn_1_1D10C(void) {
+ }
+ 
+ // .text:0x0001D110 size:0x340
++static inline void initializeChallengePreviewLights(void) {
++    Gap800BD3A0Color color = {255, 255, 255, 255};
++    s32 i;
++    for (i = 0; i < 3; i++) {
++        LITInitAttn((Gap800BD3A0Light*)g_hugeAnimStruct.menuLights[i], 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
++        LITInitPos((Gap800BD3A0Light*)g_hugeAnimStruct.menuLights[i], lbl_80367318[i].position.x, lbl_80367318[i].position.y, lbl_80367318[i].position.z);
++        setChallengeLightColor((Gap800BD3A0Light*)g_hugeAnimStruct.menuLights[i], color);
++        LITXForm((Gap800BD3A0Light*)g_hugeAnimStruct.menuLights[i], lbl_1_bss_69FC.lightMatrix);
++    }
++}
++extern u8 lbl_1_bss_69F5;
++typedef struct ChallengePreviewActor {
++    ChallengeRenderTask task;
++    u8 _padC[4];
++    Control ctrl;
++    u8 _pad4C[8];
++    f32 scale;
++    u8 _pad58[2];
++    u8 dirty;
++    u8 _pad5B[0x11];
++    u8 visible;
++} ChallengePreviewActor;
++static inline ChallengePreviewActor* getChallengePreviewActor(HugeAnimEntry68* entries, s32 index) {
++    return (ChallengePreviewActor*)&entries[index].unk34;
++}
++static inline void setChallengePreviewVisible(ChallengePreviewActor* actor, u8 visible) {
++    actor->visible = visible;
++}
++static inline void drawPreviewChildren(ChallengeRenderObject* parent, s32 mode) {
++    ChallengeRenderObject* child;
++    for (child = parent->children; child; child = child->next) {
++        if (child->model) DOSetWorldMatrix(child->model, child->world);
++        fn_1_19D60(child->model, mode);
++    }
++}
++static inline void drawPreviewTask(HugeAnimEntry68* entry, s32 mode) {
++    ChallengeRenderTask* task = (ChallengeRenderTask*)&entry->unk34;
++    ChallengeRenderObject* object = task->object;
++    if (object != 0 && entry[1].unk10 != 0) {
++    if (task->callback != 0) {
++        task->callback(task);
++    }
++    if (object->model != 0) {
++        fn_800B2D5C(object);
++        GXInvalidateVtxCache();
++        fn_1_19D60(object->model, mode);
++    } else {
++        drawPreviewChildren(object, mode);
++    }
++    }
++}
++/* Apply editor transforms, render selected models, and restore actor visibility. */
++static inline void applyChallengePreviewTransforms(DrawingSceneStruct* scene) {
++    s32 i;
++    for (i = 0; i < 24; i++) {
++        AnimationStruct* settings = &g_hugeAnimStruct.fielderStructs[i];
++        ChallengePreviewActor* actor = getChallengePreviewActor(g_hugeAnimStruct.ctrlOrBonePtr, i);
++        actor->visible = (scene->flag16 != 1) & (i == scene->flag14);
++        CTRLSetTranslation(&actor->ctrl, settings->unk34.x, settings->unk34.y, settings->unk34.z);
++        CTRLSetRotation(&actor->ctrl, 57.295776f * settings->unk40.x, 57.295776f * settings->unk40.y, 57.295776f * settings->unk40.z);
++        actor->scale = settings->previewScale;
++        actor->dirty = 1;
++    }
++}
+ void fn_1_1D110(void) {
+-    return;
++    DrawingSceneStruct* scene = lbl_803CC1B8;
++    s32 i;
++    initializeChallengePreviewLights();
++    applyChallengePreviewTransforms(scene);
++    if (!lbl_1_bss_69F5) {
++        fn_800BD670((HugeAnimCtrlObj*)g_hugeAnimStruct.ctrlOrBonePtr, (s32)lbl_1_bss_69FC.lightMatrix);
++    } else {
++        HugeAnimEntry68* entries = g_hugeAnimStruct.ctrlOrBonePtr;
++        u16 index;
++        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
++        GXSetCullMode(GX_CULL_BACK);
++        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
++        for (index = 0; index < entries->count; index++) {
++            drawPreviewTask(&entries[index], (s32)lbl_1_bss_69FC.lightMatrix);
++        }
++    }
++    for (i = 0; i < 24; i++) {
++        ChallengePreviewActor* actor = getChallengePreviewActor(g_hugeAnimStruct.ctrlOrBonePtr, i);
++        setChallengePreviewVisible(actor, 1);
++    }
++    fn_800BD8C4((HugeAnimCtrlObj*)g_hugeAnimStruct.ctrlOrBonePtr, (s32)lbl_1_bss_69FC.lightMatrix);
+ }
+ 
+ // .text:0x0001D450 size:0x20
