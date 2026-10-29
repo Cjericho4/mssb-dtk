@@ -45,7 +45,7 @@ typedef struct ChallengeState {
     /* 0x2EF9 */ u8 unk2EF9;
     /* 0x2EFA */ u8 _pad2EFA[2];
     /* 0x2EFC */ u32 selectedBone;
-    /* 0x2F00 */ u8 _pad2F00;
+    /* 0x2F00 */ u8 lightIndex;
     /* 0x2F01 */ u8 unk2F01;
     /* 0x2F02 */ u8 _pad2F02;
     /* 0x2F03 */ u8 modelIndex;

@@ -1031,8 +1031,55 @@ s32 fn_1_16590(void) {
 }
 
 // .text:0x000165E0 size:0x2E8
+/* Light header has incompatible allocator declarations in this unit. */
+struct MenusLight {
+    u8 _pad0[0x40];
+    Vec position;
+    u8 _pad4C[12];
+    Vec direction;
+    u8 _pad64[12];
+    GXColor color;
+};
 void fn_1_165E0(void) {
-    return;
+    ChallengeState* state = &lbl_1_bss_3070;
+    struct MenusLight* light = g_hugeAnimStruct.menuLights[(s8)state->lightIndex];
+    s16 step = 0;
+    if (lbl_803C77B8.pressed & 1) step = -1;
+    else if (lbl_803C77B8.pressed & 2) step = 1;
+    else if (lbl_803C77B8.pressed & 8) {
+        if (--state->unkC < 0) state->unkC = 9;
+    } else if (lbl_803C77B8.pressed & 4) {
+        if (++state->unkC >= 10) state->unkC = 0;
+    } else if (lbl_803C77B8.held & 0x200) {
+        state->lightIndex = 0;
+        state->unkC = 0;
+        state->unk2F01 = 1;
+    }
+    if (lbl_803C77B8.buttons & 0x400) step *= 10;
+    switch (state->unkC) {
+    case 0:
+        if ((s8)(state->lightIndex += step) < 0) state->lightIndex = 2;
+        else if ((s8)state->lightIndex >= 3) state->lightIndex = 0;
+        break;
+    case 1:
+        light->color.r += step;
+        if (light->color.r > 255) light->color.r = 0;
+        break;
+    case 2:
+        light->color.g += step;
+        if (light->color.g > 255) light->color.g = 0;
+        break;
+    case 3:
+        light->color.b += step;
+        if (light->color.b > 255) light->color.b = 0;
+        break;
+    case 4: light->position.x += step; break;
+    case 5: light->position.y += step; break;
+    case 6: light->position.z += step; break;
+    case 7: light->direction.x += step; break;
+    case 8: light->direction.y += step; break;
+    case 9: light->direction.z += step; break;
+    }
 }
 
 // .text:0x000168C8 size:0xB0
