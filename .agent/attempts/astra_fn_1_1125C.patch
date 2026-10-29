@@ -1,0 +1,113 @@
+diff --git a/include/challenge/rep_0610.h b/include/challenge/rep_0610.h
+index ebf04dbd..1e43434c 100644
+--- a/include/challenge/rep_0610.h
++++ b/include/challenge/rep_0610.h
+@@ -39,7 +39,8 @@ typedef struct ChallengeState {
+     /* 0x01A4 */ u8 phase;
+     /* 0x01A5 */ u8 enabled;
+     /* 0x01A6 */ u8 mode;
+-    /* 0x01A7 */ u8 _pad1A7[0x2D4B];
++    /* 0x01A7 */ u8 _pad1A7[0x2D49];
++    u16 sampleCount;
+     /* 0x2EF2 */ u8 channel;
+     /* 0x2EF3 */ u8 _pad2EF3[6];
+     /* 0x2EF9 */ u8 unk2EF9;
+@@ -280,7 +281,7 @@ extern u8 lbl_1_data_ABA8;
+ void fn_800B2C88(ChallengeModel* model, u16 index, Mtx matrix);
+ void fn_1_10CEC(Rep0610Obj12F18* object);
+ void fn_1_10E2C(Mtx matrix, Mtx view, u32 x, u32 y, u32 z);
+-void fn_1_1125C(void);
++void fn_1_1125C(Rep0610Obj12F18* camera);
+ void fn_1_116EC(struct TextureHeader* tex);
+ void fn_1_11714(void);
+ void fn_1_11C98(void);
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 34137f67..d3452731 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -726,10 +726,83 @@ void fn_1_10E2C(Mtx matrix, Mtx view, u32 x, u32 y, u32 z) {
+ }
+ 
+ // .text:0x0001125C size:0x490
+-void fn_1_1125C(void) {
+-    return;
++typedef struct ChallengeFloorTexture { u8 header[32]; } ChallengeFloorTexture;
++typedef struct ChallengeFloorArchive { u32 count; ChallengeFloorTexture entries[1]; } ChallengeFloorArchive;
++void C_MTXFrustum(Mtx44 matrix, f32 top, f32 bottom, f32 left, f32 right, f32 nearZ, f32 farZ);
++/* Draw either a reference grid or a tiled texture beneath the preview model. */
++static inline struct TextureHeader* selectFloorTexture(ChallengeFloorArchive* archive, u8 channel) {
++    return (struct TextureHeader*)&archive->entries[(s8)channel];
++}
++void fn_1_1125C(Rep0610Obj12F18* camera) {
++    ChallengeState* state = &lbl_1_bss_3070;
++    s8 channel;
++    Mtx44 projection;
++    s32 i;
++    C_MTXFrustum(projection, -0.000175f, 0.000175f, 0.00025f, -0.00025f, 0.001f, 512.0f);
++    GXSetProjection(projection, 0);
++    GXLoadPosMtxImm(camera->mtx, 0);
++    GXSetCurrentMtx(0);
++    GXSetColorUpdate(1);
++    channel = state->channel;
++    if (channel < 0) {
++    GXClearVtxDesc();
++    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
++    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
++    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
++    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
++    GXSetNumTevStages(1);
++    GXSetNumChans(1);
++    GXSetNumTexGens(0);
++    GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
++    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
++    GXSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
++    GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
++    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_COPY);
++    for (i = -24; i < 25; i++) {
++        f32 coordinate = i;
++        GXBegin(GX_LINES, GX_VTXFMT0, 4);
++        GXWGFifo.f32 = -24.0f; GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = coordinate;
++        GXWGFifo.u8 = 0; GXWGFifo.u8 = 255; GXWGFifo.u8 = 0; GXWGFifo.u8 = 200;
++        GXWGFifo.f32 = 24.0f; GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = coordinate;
++        GXWGFifo.u8 = 0; GXWGFifo.u8 = 255; GXWGFifo.u8 = 0; GXWGFifo.u8 = 200;
++        GXWGFifo.f32 = coordinate; GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = -24.0f;
++        GXWGFifo.u8 = 0; GXWGFifo.u8 = 255; GXWGFifo.u8 = 0; GXWGFifo.u8 = 200;
++        GXWGFifo.f32 = coordinate; GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = 24.0f;
++        GXWGFifo.u8 = 0; GXWGFifo.u8 = 255; GXWGFifo.u8 = 0; GXWGFifo.u8 = 200;
++    }
++    } else {
++        u16 repeat;
++        ChallengeFloorArchive* archive = (ChallengeFloorArchive*)state->extraTexture;
++        SetDisplayStateTexture(selectFloorTexture(archive, channel), 0, 0);
++        GXClearVtxDesc();
++        GXSetVtxDesc(9, 1);
++        GXSetVtxDesc(11, 1);
++        GXSetVtxDesc(13, 1);
++        GXSetVtxAttrFmt(0, 9, 1, 4, 0);
++        GXSetVtxAttrFmt(0, 11, 1, 5, 0);
++        GXSetVtxAttrFmt(0, 13, 1, 2, 0);
++        GXSetNumTevStages(1);
++        GXSetNumChans(1);
++        GXSetNumTexGens(1);
++        GXSetTexCoordGen2(0, 1, 4, 60, 0, 125);
++        GXSetTevOp(0, 3);
++        GXSetTevOrder(0, 0, 0, 4);
++        GXSetChanCtrl(0, 0, 1, 1, 0, 0, 2);
++        GXSetChanCtrl(2, 0, 1, 1, 0, 0, 2);
++        GXSetBlendMode(1, 4, 5, 3);
++        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
++        GXWGFifo.f32 = -24.0f; GXWGFifo.f32 = 0; GXWGFifo.f32 = -24.0f;
++        GXWGFifo.u32 = 0xFFFFFFFF; GXWGFifo.u16 = 0; GXWGFifo.u16 = 0;
++        GXWGFifo.f32 = -24.0f; GXWGFifo.f32 = 0; GXWGFifo.f32 = 24.0f;
++        GXWGFifo.u32 = 0xFFFFFFFF; GXWGFifo.u16 = 0; repeat = state->sampleCount; GXWGFifo.u16 = repeat;
++        GXWGFifo.f32 = 24.0f; GXWGFifo.f32 = 0; GXWGFifo.f32 = 24.0f;
++        GXWGFifo.u32 = 0xFFFFFFFF; GXWGFifo.u16 = repeat; GXWGFifo.u16 = repeat;
++        GXWGFifo.f32 = 24.0f; GXWGFifo.f32 = 0; GXWGFifo.f32 = -24.0f;
++        GXWGFifo.u32 = 0xFFFFFFFF; GXWGFifo.u16 = repeat; GXWGFifo.u16 = 0;
++    }
+ }
+ 
++
+ // .text:0x000116EC size:0x28
+ void fn_1_116EC(struct TextureHeader* tex) {
+     SetDisplayStateTexture(tex, 0, 0);
