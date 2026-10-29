@@ -1,5 +1,7 @@
 #include "challenge/rep_0610.h"
 #include "game/rep_1C0.h"
+/* rep_0138.h declares a conflicting light view; keep its projection API here. */
+void fn_800B806C(s32 index, f32 t, f32 b, f32 l, f32 r, f32 nearZ, f32 farZ, f32 scale);
 /* Texture owning header has conflicting actor views with this unit. */
 void convertTextureHeader(Gap8000B9C8Texture* texture);
 extern CompressedDiskRead lbl_1_data_ADE0;
@@ -584,8 +586,22 @@ void fn_1_131E4(void) {
 }
 
 // .text:0x0001347C size:0x144
+/* Initialize the challenge camera, projection volumes, and camera control state. */
 void fn_1_1347C(void) {
-    return;
+    Mtx44 projection;
+    lbl_1_bss_67E0.pos.x = 0.0f;
+    lbl_1_bss_67E0.pos.y = -0.8f;
+    lbl_1_bss_67E0.pos.z = 0.0f;
+    lbl_1_bss_67E0.target.x = 0.0f;
+    lbl_1_bss_67E0.target.y = 0.0f;
+    lbl_1_bss_67E0.target.z = 10.0f;
+    C_MTXFrustum(projection, -0.000175f, 0.000175f, 0.00025f, -0.00025f, 0.001f, 512.0f);
+    GXSetProjection(projection, GX_PERSPECTIVE);
+    fn_800B806C(0, -240.0f, 240.0f, -320.0f, 320.0f, -512.0f, -0.001f, 1280.0f);
+    lbl_1_bss_67E0.unk_0x114 = 0;
+    lbl_1_bss_67E0.unk_0xF8 = 0.0f;
+    lbl_1_bss_67E0.unk_0xF0 = 0;
+    lbl_1_bss_67E0.unk_0xF2 = 0;
 }
 
 // .text:0x000135C0 size:0x1150

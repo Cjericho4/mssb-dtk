@@ -92,9 +92,19 @@ void LITXForm(struct MenusLight* light, Mtx view);
 #include "Dolphin/GX/GXTransform.h"
 typedef struct Rep0610Unk67E0 {
     /* 0x000 */ u8 _pad0[0x30];
-    /* 0x030 */ u32 context[0x36];
+    union {
+        /* 0x030 */ u32 context[0x36];
+        struct {
+            u8 _pad30[0xC0];
+            /* 0x0F0 */ s16 unk_0xF0;
+            /* 0x0F2 */ s16 unk_0xF2;
+            u8 _padF4[4];
+            /* 0x0F8 */ f32 unk_0xF8;
+            /* 0x0FC */ Vec target;
+        };
+    };
     /* 0x108 */ Vec pos;
-    /* 0x114 */ u8 _pad114[4];
+    /* 0x114 */ u32 unk_0x114;
     /* 0x118 */ u8 useContext;
     /* 0x119 */ u8 _pad119[3];
 } Rep0610Unk67E0;
