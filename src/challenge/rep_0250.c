@@ -1,4 +1,7 @@
 #include "challenge/rep_0250.h"
+extern ChallengeLayoutConfig lbl_1_data_BC8;
+/* The owning gap_80035DD4.h still declares a void stub; this call takes four arguments. */
+void fn_8003664C(u8 id, s32 slot, u16 glyph, s32 position);
 
 // .text:0x00008CD4 size:0xE8
 void fn_1_8CD4(void) {
@@ -73,8 +76,18 @@ void fn_1_90B8(void) {
 }
 
 // .text:0x000090E4 size:0x1AC
-void fn_1_90E4(void) {
-    return;
+/* Display the thousands, hundreds, and tens digits in the challenge numeric layout. */
+void fn_1_90E4(s32 value) {
+    fn_80034CEC((u32)lbl_1_bss_2FCC);
+    fn_80034E20(lbl_1_bss_2FCC, &lbl_1_data_BC8);
+    lbl_80371C30[lbl_1_bss_2FCC->unkIndex].obj->field_0x5C = 0x80000;
+    fn_8003664C(lbl_1_data_BC8.id, 0, value / 1000 + 10, 4);
+    value %= 1000;
+    lbl_80371C30[lbl_1_bss_2FCC->unkIndex + 1].obj->field_0x5C = 0xC0000;
+    fn_8003664C(lbl_1_data_BC8.id, 1, value / 100 + 10, 5);
+    value %= 100;
+    lbl_80371C30[lbl_1_bss_2FCC->unkIndex + 2].obj->field_0x5C = 0x100000;
+    fn_8003664C(lbl_1_data_BC8.id, 2, value / 10 + 10, 6);
 }
 
 // .text:0x00009290 size:0xF0

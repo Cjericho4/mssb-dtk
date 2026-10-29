@@ -32,7 +32,7 @@ void fn_1_8DBC(void);
 void fn_80034E20(DrawingSceneStruct* scene, ChallengeLayoutConfig* config);
 void fn_1_8F34(void);
 void fn_1_90B8(void);
-void fn_1_90E4(void);
+void fn_1_90E4(s32 value);
 typedef struct ChallengeLayoutState {
     u8 _pad0[2];
     u8 selected;
