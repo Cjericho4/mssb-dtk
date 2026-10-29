@@ -121,7 +121,7 @@ typedef struct AnimationStruct {
     AnimSlotTable* slots[9]; /* 0x10 */
     VecXYZ unk34;       /* 0x34 */
     VecXYZ unk40;       /* 0x40 */
-    u8 _pad4C[0x10];
+    union { u8 _pad4C[0x10]; struct { f32 previewScale; u8 _pad50[12]; }; };
     void* funcPtr_0x5c; /* 0x5C - function pointer */
     u8 _rest60[0x2];
     s16 animID;         /* 0x62 */

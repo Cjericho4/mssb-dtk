@@ -313,8 +313,87 @@ void fn_1_1C3CC(void) {
 }
 
 // .text:0x0001C8C0 size:0x324
+typedef union ChallengeModelSection { u32 offset; u8* data; } ChallengeModelSection;
+struct MenusAnimationAux { ChallengeModelSection sections[5]; };
+typedef struct ChallengeModelCallback {
+    u8 _pad0[0x3C];
+    void (*callback)(Rep74A0Obj*);
+} ChallengeModelCallback;
+extern u8 lbl_1_bss_6A94[24];
+extern u8* lbl_1_bss_6AAC[24];
+HugeAnimEntry68* ActorObjectInitTable(u16 count);
+void ANIMGet(AnimSlotTable* bank);
+void convertTextureHeader(u8* texture);
+void LoadActorLayout(u8* layout);
+void convertGeometryAndSknHeader(u8* geometry, u8* skin);
+void fn_800BCE38(u8* geometry);
+void haveActLayoutPointToGeoHeader(u8* layout, u8* geometry);
+void fn_800BD190(u8* geometry, u8* texture);
+void fn_800BDC88(HugeAnimEntry68* entries, u16 slot, u16 index, u8* layout, AnimSlotTable* bank, u8* skin);
+void fn_800B2C08(AnimLevel1* model, s32 mode);
 void fn_1_1C8C0(void) {
-    return;
+    u32 i;
+    u8* layout;
+    u8* skin;
+    g_hugeAnimStruct.ctrlOrBonePtr = ActorObjectInitTable(24);
+    for (i = 0; i < 24; i++) {
+        ActRelatedSub* playback;
+        AnimSlotTable* bank;
+        if (i < 24) {
+            struct MenusAnimationAux* archive = g_hugeAnimStruct.fielderStructs[i].aux;
+            u8* geometry;
+            u8* texture;
+            if (lbl_1_bss_6A94[i]) {
+                u32 j;
+                for (j = 0; j < 5; j++) {
+                    if (j == 4) {
+                        g_hugeAnimStruct.fielderStructs[i].slots[0] = (AnimSlotTable*)((u8*)archive + archive->sections[j].offset);
+                        ANIMGet(g_hugeAnimStruct.fielderStructs[i].slots[0]);
+                    } else {
+                        g_hugeAnimStruct.fielderStructs[i].aux->sections[j].data = (u8*)archive + archive->sections[j].offset;
+                    }
+                }
+            } else {
+                g_hugeAnimStruct.fielderStructs[i].aux->sections[0].data = (u8*)archive + archive->sections[0].offset;
+                g_hugeAnimStruct.fielderStructs[i].aux->sections[1].data = (u8*)archive + archive->sections[1].offset;
+                g_hugeAnimStruct.fielderStructs[i].aux->sections[2].data = (u8*)archive + archive->sections[2].offset;
+            }
+            texture = g_hugeAnimStruct.fielderStructs[i].aux->sections[0].data;
+            geometry = g_hugeAnimStruct.fielderStructs[i].aux->sections[1].data;
+            layout = g_hugeAnimStruct.fielderStructs[i].aux->sections[2].data;
+            skin = lbl_1_bss_6A94[i] ? g_hugeAnimStruct.fielderStructs[i].aux->sections[3].data : NULL;
+            convertTextureHeader(texture);
+            LoadActorLayout(layout);
+            if (lbl_1_bss_6A94[i]) convertGeometryAndSknHeader(geometry, skin);
+            else fn_800BCE38(geometry);
+            lbl_1_bss_6AAC[i] = texture;
+            haveActLayoutPointToGeoHeader(layout, geometry);
+            fn_800BD190(geometry, texture);
+        }
+        {
+            AnimationStruct* actor;
+            bank = lbl_1_bss_6A94[i] ? g_hugeAnimStruct.fielderStructs[i].slots[0] : NULL;
+            actor = &g_hugeAnimStruct.fielderStructs[i];
+            fn_800BDC88(g_hugeAnimStruct.ctrlOrBonePtr, (u16)i, (u16)i, layout,
+                bank, skin);
+            fn_800BD548(&((HugeAnimCtrlEntry*)g_hugeAnimStruct.ctrlOrBonePtr)[i].sub34, 3,
+                g_hugeAnimStruct.menuLights[0], g_hugeAnimStruct.menuLights[1], g_hugeAnimStruct.menuLights[2], g_hugeAnimStruct.menuLights[3]);
+            CTRLSetTranslation(&((HugeAnimCtrlEntry*)g_hugeAnimStruct.ctrlOrBonePtr)[i].ctrl, 0, 0, 0);
+            CTRLSetRotation(&((HugeAnimCtrlEntry*)g_hugeAnimStruct.ctrlOrBonePtr)[i].ctrl, 0, 0, 0);
+            playback = &((ActRelatedEntry*)g_hugeAnimStruct.ctrlOrBonePtr)[i].sub;
+            playback->float54 = 0.5f;
+            playback->flag5a = 1;
+            g_hugeAnimStruct.ctrlOrBonePtr[i].unk34->animFlags |= 4;
+            if (i == 1) fn_800B2C08(g_hugeAnimStruct.ctrlOrBonePtr[i].unk34, 0);
+            else fn_800B2C08(g_hugeAnimStruct.ctrlOrBonePtr[i].unk34, 1);
+            actor->ring = (AnimRingInfo*)g_hugeAnimStruct.ctrlOrBonePtr[i].unk34;
+            actor->unk34.x = 0; actor->unk34.y = 0; actor->unk34.z = 10;
+            actor->previewScale = 0.5f;
+            actor->unk_25D = i == 0;
+            ((ChallengeModelCallback*)&g_hugeAnimStruct.ctrlOrBonePtr[i])->callback = fn_1_1D0E8;
+        }
+    }
+    lbl_803CC1B8->aFunctionPointer = fn_1_1C3CC;
 }
 
 // .text:0x0001CBE4 size:0x504
