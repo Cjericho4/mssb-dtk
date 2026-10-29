@@ -66,9 +66,37 @@ void fn_3_12EFA4(void) {
     return;
 }
 
+extern Vec lbl_3_data_216BC[15];
+extern f32 lbl_3_data_21770[6];
+enum { BARREL_WAITING = 2, BARREL_PENDING_EXPLOSION = 3, BARREL_EXPLODING = 4 };
+
 // .text:0x0012F28C size:0x198 mapped:0x8076E320
-void fn_3_12F28C(void) {
-    return;
+// Explode a barrel after its delay and let the barrel above it begin replacing it.
+void fn_3_12F28C(s32 index) {
+    BB_barrelStruct* barrel = &g_Minigame.barrels[index];
+    if (barrel->animationCounter >= barrel->delayUntilBlownUp) {
+        barrel->barrelState = BARREL_EXPLODING;
+        barrel->animationCounter = 0;
+        if (index % 3 != 2) {
+            BB_barrelStruct* above = &g_Minigame.barrels[index + 1];
+            u8 state = above->barrelState;
+            if (state != BARREL_EXPLODING &&
+                (state != BARREL_PENDING_EXPLOSION ||
+                 !(above->currentPos.y - barrel->currentPos.y > 0.3 + lbl_3_data_21770[3]))) {
+                above->replacingBarrelInd = 1;
+                above->velo_bounceUpOnBlowUp = lbl_3_data_21770[4];
+                if ((index + 1) % 3 == 1) {
+                    above->_28 = lbl_3_data_216BC[index].y;
+                } else {
+                    u8 supported = 0;
+                    supported |= (&g_Minigame.barrels[index])[-1].barrelState == BARREL_WAITING;
+                    supported |= g_Minigame.barrels[index].barrelState == BARREL_WAITING;
+                    above->_28 = lbl_3_data_216BC[supported].y;
+                }
+            }
+        }
+        fn_3_6C854(g_Minigame.minigameControlStruct[0].characterIndex[(s8)g_Minigame.rosterID], 0);
+    }
 }
 
 // .text:0x0012F424 size:0x200 mapped:0x8076E4B8
@@ -120,7 +148,7 @@ void fn_3_12F624(void) {
     return;
 }
 
-extern f32 lbl_3_data_21770[6];
+
 void fn_8004C108(VecXYZ* pos, s32 arg1);
 
 // .text:0x0012F9D4 size:0xF0 mapped:0x8076EA68
@@ -169,8 +197,6 @@ void fn_3_12FD6C(void) {
         g_Minigame.barrels[i].animationCounter = 0;
     }
 }
-
-extern Vec lbl_3_data_216BC[15];
 
 // .text:0x0012FE84 size:0x150 mapped:0x8076EF18
 // Reset Barrel Batter barrels with randomized fall heights and colors.
