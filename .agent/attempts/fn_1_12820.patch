@@ -1,0 +1,65 @@
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 63ddb006..4cb5bf3e 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -1,7 +1,13 @@
+ #include "challenge/rep_0610.h"
++#include "Dolphin/GX/GXPixel.h"
++#include "Dolphin/GX/GXGeometry.h"
++#include "Dolphin/GX/GXTev.h"
+ #include "game/rep_1C0.h"
+ #include "Dolphin/OS/OSUtil.h"
+ extern s32 lbl_1_bss_3084;
++/* Color API uses the same four-byte RGBA layout as GXColor. */
++void fn_800BD2CC(u8 enable, GXColor color);
++void fn_800BDA94(struct StadiumAnimEntry* entry, Mtx viewMtx);
+ /* Partial view of the animation auxiliary data referenced by AnimationStruct. */
+ struct MenusAnimationAux { u8 _pad0[0x10]; u32 unk_0x10; };
+ /* rep_0138.h declares a conflicting light view; keep its projection API here. */
+@@ -562,8 +568,45 @@ void fn_1_126CC(void) {
+ }
+ 
+ // .text:0x00012820 size:0x1B0
++/* Draw visible challenge actors, updating the tint only when their alpha changes. */
+ void fn_1_12820(HugeAnimEntry68* entry, Mtx mtx) {
+-    return;
++    Mtx transform;
++    Mtx44 projection;
++    GXColor color = {100, 114, 108, 255};
++    u16 i;
++    ActRelatedSub* render;
++    u8 previousAlpha = 255;
++    C_MTXFrustum(projection, -0.000175f, 0.000175f, 0.00025f, -0.00025f, 0.001f, 512.0f);
++    GXSetProjection(projection, GX_PERSPECTIVE);
++    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
++    GXSetCullMode(GX_CULL_BACK);
++    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_OR);
++    GXSetAlphaCompare(GX_GREATER, 0, GX_AOP_AND, GX_ALWAYS, 0);
++    for (i=0; i<entry->count; i++) {
++        HugeAnimEntry68* current = &entry[i];
++        AnimationStruct* actor;
++        render = (ActRelatedSub*)&current->unk34;
++        actor = &g_hugeAnimStruct.fielderStructs[i];
++        if (render->obj != NULL) {
++            render->obj->animFlags = 255;
++            if (current[1].unk10) {
++                if (previousAlpha != actor->unk277) {
++                    previousAlpha = actor->unk277;
++                    if (255 - actor->unk277) {
++                        color.a = actor->unk277;
++                        if (!actor->unk277) continue;
++                        fn_800BD2CC(1, color);
++                    } else {
++                        color.a = 255;
++                        fn_800BD2CC(0, color);
++                    }
++                }
++                PSMTXTrans(transform, g_hugeAnimStruct.fielderStructs[i].unk34.x, g_hugeAnimStruct.fielderStructs[i].unk34.y, g_hugeAnimStruct.fielderStructs[i].unk34.z);
++                PSMTXConcat(mtx, transform, transform);
++                fn_800BDA94((struct StadiumAnimEntry*)render, transform);
++            }
++        }
++    }
+ }
+ 
+ // .text:0x000129D0 size:0x548
