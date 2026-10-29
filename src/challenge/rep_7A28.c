@@ -37,8 +37,85 @@ void fn_1_27594(void) {
 }
 
 // .text:0x000276CC size:0x404
+typedef struct ChallengeEffectEditor {
+    const char* name;
+    s32 count, kind, state, timer, enabled;
+    ChallengeScriptEntry* entries;
+} ChallengeEffectEditor;
+typedef struct ChallengeEffectScene {
+    u8 _pad0[0x1C];
+    ChallengeEffectEditor* editor;
+    u8 _pad20[0xC];
+    f32 length, scale;
+    u16 flags;
+    u8 choice;
+    s8 cursor;
+} ChallengeEffectScene;
+void fn_80048820(ChallengeEffectEditor* editor, u16 buttons, u16 held, u16 pressed, u8 axis);
+/* Select effect presets and edit playback scale, length and script parameters. */
 void fn_1_276CC(void) {
-    return;
+    void (**presets)(void) = lbl_1_data_108E8;
+    ChallengeEffectScene* scene = (ChallengeEffectScene*)lbl_803CC1B8;
+    if (scene->flags & 8) {
+        fn_80048820(scene->editor, lbl_803C77B8.buttons, lbl_803C77B8.held, lbl_803C77B8.pressed, lbl_803C77B8.axes.bytes[5]);
+        if (lbl_803C77B8.buttons & 0x100) {
+            ((ChallengeEffectScene*)lbl_803CC1B8)->flags &= ~2;
+            ((ChallengeEffectScene*)lbl_803CC1B8)->flags |= 2;
+        } else if (lbl_803C77B8.held & 0x200) {
+            ((ChallengeEffectScene*)lbl_803CC1B8)->flags ^= 8;
+        }
+    } else if (lbl_803C77B8.pressed & 8) scene->cursor = (scene->cursor + 6) % 7;
+    else if (lbl_803C77B8.pressed & 4) scene->cursor = (scene->cursor + 1) % 7;
+    else if (lbl_803C77B8.pressed & 1) {
+        switch (scene->cursor) {
+        case 0: scene->flags ^= 4; break;
+        case 1: scene->scale *= 0.5f; break;
+        case 2: scene->length -= (scene->length > 1.0f); break;
+        }
+    } else if (lbl_803C77B8.pressed & 2) {
+        switch (scene->cursor) {
+        case 0: scene->flags ^= 4; break;
+        case 1: scene->scale *= 2.0f; break;
+        case 2: scene->length += 1.0f; break;
+        }
+    } else if (lbl_803C77B8.buttons & 0x100) {
+        scene->editor->state = 0;
+        scene->editor->timer = 0;
+        scene->editor->count = 0;
+        switch (scene->cursor) {
+        case 3:
+            scene->editor->name = "Fire 0";
+            scene->editor->entries = (ChallengeScriptEntry*)&presets[0x154 / 4];
+            ((ChallengeEffectScene*)lbl_803CC1B8)->flags ^= 8;
+            break;
+        case 4:
+            scene->editor->name = "Fire 1";
+            scene->editor->entries = (ChallengeScriptEntry*)&presets[0x3E8 / 4];
+            ((ChallengeEffectScene*)lbl_803CC1B8)->flags ^= 8;
+            break;
+        case 5:
+            scene->editor->name = "Smoke";
+            scene->editor->entries = (ChallengeScriptEntry*)&presets[0x650 / 4];
+            ((ChallengeEffectScene*)lbl_803CC1B8)->flags ^= 8;
+            break;
+        case 6:
+            scene->editor->name = "Fireball";
+            scene->editor->entries = (ChallengeScriptEntry*)&presets[0x8B8 / 4];
+            ((ChallengeEffectScene*)lbl_803CC1B8)->flags ^= 8;
+            break;
+        default:
+            scene->editor->entries = 0;
+            ((ChallengeEffectScene*)lbl_803CC1B8)->flags &= ~2;
+            ((ChallengeEffectScene*)lbl_803CC1B8)->flags |= 2;
+            break;
+        }
+        if (scene->editor->entries) {
+            while (scene->editor->entries[scene->editor->count].data) scene->editor->count++;
+        }
+    } else if (lbl_803C77B8.held & 0x200) {
+        scene->choice = 0;
+        scene->cursor = 0;
+    }
 }
 
 // .text:0x00027AD0 size:0x4
