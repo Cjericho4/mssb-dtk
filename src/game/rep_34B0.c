@@ -1,5 +1,9 @@
 #include "game/rep_34B0.h"
 #include "game/m_sound.h"
+#include "game/rep_E08.h"
+// game_batter.h currently pulls in a conflicting lbl_80366158 struct view.
+extern void setBatterContactConstants(void);
+extern int someAnimationIndFunction(void);
 
 #include "UnknownHeaders.h"
 #include "header_rep_data.h"
@@ -13,6 +17,15 @@
 #include "game/rep_13B8.h"
 #include "game/rep_AC8.h"
 #include "game/gap_FBCD0.h"
+
+// Partial view of the simulation flags; older units have local partial views.
+typedef struct SimulationFlags {
+    u8 unk_0x0;
+    u8 unk_0x1;
+    u8 unk_0x2;
+} SimulationFlags;
+extern SimulationFlags lbl_803CBC3C;
+extern u8 lbl_3_data_21798[];
 
 extern void fn_3_BF158(void);
 extern void fn_3_BF1AC(void);
@@ -272,9 +285,42 @@ void fn_3_131C88(void) {
     return;
 }
 
+// Initialize the Barrel Batter turn and wait for the batter animation to finish.
 // .text:0x00131EC4 size:0x138 mapped:0x80770F58
 void fn_3_131EC4(void) {
-    return;
+    GameControlsStruct* logic = &g_GameLogic;
+    MiniGameStruct* minigame;
+    switch (logic->_125) {
+    case 0:
+        minigame = &g_Minigame;
+        minigame->rosterID = minigame->players.battingOrder[minigame->turnNumberWithinRound];
+        logic->pre_PostMiniGameInd = 1;
+        minigame->miniGameTurnCounter = 0;
+        minigame->pointsTargetReachedInd = 0;
+        if (minigame->multiPlayerInd == 0) {
+            minigame->bB_pitchesRemainingInTurn = lbl_3_data_21798[minigame->soloMinigameDifficulty];
+        } else {
+            minigame->bB_pitchesRemainingInTurn = lbl_3_data_21798[4];
+        }
+        fn_3_F578();
+        fn_3_753E8(0);
+        fn_3_6EBB4(-1);
+        setBatterContactConstants();
+        setInMemBatterConstants(minigame->rosterID);
+        lbl_803CBC3C.unk_0x2 = 0;
+        logic->_125++;
+        break;
+    case 1:
+        if (someAnimationIndFunction()) {
+            lbl_3_common_bss_32234.unk1 = 1;
+            logic->_125++;
+        }
+        break;
+    default:
+        lbl_3_common_bss_32724.unk_B6 = 1;
+        fn_3_5A6D4(0);
+        break;
+    }
 }
 
 // .text:0x00131FFC size:0x80 mapped:0x80771090
