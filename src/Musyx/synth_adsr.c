@@ -14,13 +14,16 @@ static u32 adsrGetIndex(ADSR_VARS* adsr) {
 
 u32 adsrConvertTimeCents(long tc) { return 1000.f * (f32)pow(2.0, 1.2715658e-08f * tc); }
 
+/* FAKEMATCH: prevent this unmatched state-transition stub from inlining into ADSR callers. */
+#pragma dont_inline on
 u32 salChangeADSRState(ADSR_VARS* adsr) {
-  u32 VoiceDone; // r30
 }
+#pragma dont_inline reset
 
+// Reset the envelope state and start its first ADSR phase.
 u32 adsrSetup(ADSR_VARS* adsr) {
   adsr->state = 0;
-  salChangeADSRState(adsr);
+  return salChangeADSRState(adsr);
 }
 
 u32 adsrStartRelease(ADSR_VARS* adsr, u32 rtime) {
