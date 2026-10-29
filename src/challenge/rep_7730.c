@@ -192,8 +192,42 @@ void fn_1_1E28C(void) {
 }
 
 // .text:0x0001E290 size:0x340
-void fn_1_1E290(void) {
-    return;
+static inline f32 adjustChallengeNormal(u16 buttons, s32 negate, f32 value, f32 stepA, f32 step, f32 stepB, f32 min, f32 max) {
+    if (buttons & 0x40) {
+        step = stepA;
+    } else if (buttons & 0x20) {
+        step = stepB;
+    }
+    if (negate) {
+        step = -step;
+    }
+    value += step;
+    if (value < min) {
+        value = min;
+    }
+    if (value > max) {
+        value = max;
+    }
+    return value;
+}
+/* Adjust the selected normal-vector component with fine and coarse input steps. */
+s16 fn_1_1E290(s16 selected, u16 held, u16 unused, u16 pressed) {
+    if (selected < 0 || selected >= 3) return selected;
+    if (pressed & 1) {
+        switch (selected) {
+        case 0: lbl_1_bss_6BF4.normal.x = adjustChallengeNormal(held, 1, lbl_1_bss_6BF4.normal.x, 0.0001f, 0.01f, 0.1f, -10, 10); break;
+        case 1: lbl_1_bss_6BF4.normal.y = adjustChallengeNormal(held, 1, lbl_1_bss_6BF4.normal.y, 0.0001f, 0.01f, 0.1f, -10, 10); break;
+        case 2: lbl_1_bss_6BF4.normal.z = adjustChallengeNormal(held, 1, lbl_1_bss_6BF4.normal.z, 0.0001f, 0.01f, 0.1f, -10, 10); break;
+        }
+    } else if (pressed & 2) {
+        switch (selected) {
+        case 0: lbl_1_bss_6BF4.normal.x = adjustChallengeNormal(held, 0, lbl_1_bss_6BF4.normal.x, 0.0001f, 0.01f, 0.1f, -10, 10); break;
+        case 1: lbl_1_bss_6BF4.normal.y = adjustChallengeNormal(held, 0, lbl_1_bss_6BF4.normal.y, 0.0001f, 0.01f, 0.1f, -10, 10); break;
+        case 2: lbl_1_bss_6BF4.normal.z = adjustChallengeNormal(held, 0, lbl_1_bss_6BF4.normal.z, 0.0001f, 0.01f, 0.1f, -10, 10); break;
+        }
+    } else if (pressed & 8) selected--;
+    else if (pressed & 4) selected++;
+    return selected;
 }
 
 // .text:0x0001E5D0 size:0x2F0

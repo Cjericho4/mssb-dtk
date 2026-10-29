@@ -65,7 +65,7 @@ f32 fn_1_1DE50(void);
 void fn_1_1DE5C(void);
 void fn_1_1DE60(void);
 void fn_1_1E28C(void);
-void fn_1_1E290(void);
+s16 fn_1_1E290(s16 selected, u16 held, u16 unused, u16 pressed);
 void fn_1_1E5D0(Rep7730Unk6BF4* arg0);
 void fn_1_1E8C0(s32 arg);
 void fn_1_1E90C(void);
