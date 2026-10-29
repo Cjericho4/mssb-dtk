@@ -1,0 +1,61 @@
+diff --git a/src/challenge/rep_0010.c b/src/challenge/rep_0010.c
+index 65ed88e3..cfa981fb 100644
+--- a/src/challenge/rep_0010.c
++++ b/src/challenge/rep_0010.c
+@@ -1,9 +1,11 @@
++#include "Dolphin/GX/GXFifo.h"
+ #include "challenge/rep_0010.h"
+ #include "Dolphin/GX/GXGeometry.h"
+ #include "Dolphin/GX/GXTev.h"
+ #include "Dolphin/GX/GXLight.h"
+ #include "Dolphin/GX/GXTransform.h"
+ #include "challenge/challenge.h"
++#include "Dolphin/GX/GXHardware.h"
+ 
+ /* gap_800AD780.h has incompatible queue-node and OSGetTime declarations with
+    this unit; retain its exact callback prototype until those views are unified. */
+@@ -15,8 +17,42 @@ void fn_1_5EC(void) {
+ }
+ 
+ // .text:0x00000AF4 size:0x438
+-void fn_1_AF4(s32 arg0, s32 arg1, f32 arg2) {
+-    return;
++/* Draw a centered ground grid with independently sized rows and columns. */
++void fn_1_AF4(s32 rows, s32 columns, f32 spacing) {
++    f32 startX;
++    f32 x, z, width;
++    s32 i;
++    GXClearVtxDesc();
++    GXSetVtxDesc(9, 1);
++    GXSetVtxAttrFmt(0, 9, 1, 4, 0);
++    GXSetVtxDesc(11, 1);
++    GXSetVtxAttrFmt(0, 11, 1, 5, 0);
++    GXSetTevOrder(0, 255, 255, 4);
++    GXSetChanCtrl(4, 0, 1, 1, 0, 0, 2);
++    GXSetTexCoordGen2(0, 1, 4, 60, 0, 125);
++    GXSetNumChans(1);
++    GXSetNumTexGens(0);
++    GXSetNumTevStages(1);
++    GXSetTevOp(0, 4);
++    startX = -spacing * columns / 2.0f;
++    x = startX;
++    z = -spacing * rows / 2.0f;
++    width = columns * spacing;
++    GXBegin(GX_LINES, GX_VTXFMT0, (columns + 1) * 2);
++    { f32 length = rows * spacing;
++    f32 endZ = z + length;
++    for (i = columns; i >= 0; i--) {
++        GXWGFifo.f32 = x; GXWGFifo.f32 = 0; GXWGFifo.f32 = z; GXWGFifo.u32 = 0xFFFFFFFF;
++        GXWGFifo.f32 = x; GXWGFifo.f32 = 0; GXWGFifo.f32 = endZ; GXWGFifo.u32 = 0xFFFFFFFF;
++        x += spacing;
++    }
++    }
++    GXBegin(GX_LINES, GX_VTXFMT0, (rows + 1) * 2);
++    for (i = rows; i >= 0; i--) {
++        GXWGFifo.f32 = startX; GXWGFifo.f32 = 0; GXWGFifo.f32 = z; GXWGFifo.u32 = 0xFFFFFFFF;
++        GXWGFifo.f32 = startX + width; GXWGFifo.f32 = 0; GXWGFifo.f32 = z; GXWGFifo.u32 = 0xFFFFFFFF;
++        z += spacing;
++    }
+ }
+ 
+ // .text:0x00000F2C size:0x1D8
