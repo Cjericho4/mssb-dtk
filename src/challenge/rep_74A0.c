@@ -1,10 +1,13 @@
 #include "challenge/rep_74A0.h"
+#include "Dolphin/gx.h"
+#include "Dolphin/GX/GXHardware.h"
 /* rep_0138.h uses a conflicting light type; preserve its projection API here. */
 void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 void fn_800B806C(s32 index, f32 t, f32 b, f32 l, f32 r, f32 nearZ, f32 farZ, f32 scale);
 #include "Dolphin/GX/GXTransform.h"
 typedef struct ChallengeProjectionState {
-    u8 _pad0[0x3C];
+    Mtx view;
+    u8 _pad30[0xC];
     Vec position;
     Vec direction;
 } ChallengeProjectionState;
@@ -171,8 +174,40 @@ void fn_1_1A850(Mtx matrix, Mtx view, s32 r, s32 g, s32 b, s32 a) {
 }
 
 // .text:0x0001ADA4 size:0x294
+/* Draw a unit-spaced green reference grid across the preview ground plane. */
 void fn_1_1ADA4(void) {
-    return;
+    Mtx44 projection;
+    s32 i;
+    C_MTXFrustum(projection, -0.175f, 0.175f, 0.25f, -0.25f, 1.0f, 512.0f);
+    GXSetProjection(projection, GX_PERSPECTIVE);
+    GXLoadPosMtxImm(lbl_1_bss_6B7C.view, 0);
+    GXSetCurrentMtx(0);
+    GXSetColorUpdate(GX_TRUE);
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetNumTevStages(1);
+    GXSetNumChans(1);
+    GXSetNumTexGens(0);
+    GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_COPY);
+    for (i = -24; i < 25; i++) {
+        f32 coordinate = i;
+        GXBegin(GX_LINES, GX_VTXFMT0, 4);
+        GXWGFifo.f32 = -24.0f; GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = coordinate;
+        GXWGFifo.u8 = 0; GXWGFifo.u8 = 255; GXWGFifo.u8 = 0; GXWGFifo.u8 = 200;
+        GXWGFifo.f32 = 24.0f; GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = coordinate;
+        GXWGFifo.u8 = 0; GXWGFifo.u8 = 255; GXWGFifo.u8 = 0; GXWGFifo.u8 = 200;
+        GXWGFifo.f32 = coordinate; GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = -24.0f;
+        GXWGFifo.u8 = 0; GXWGFifo.u8 = 255; GXWGFifo.u8 = 0; GXWGFifo.u8 = 200;
+        GXWGFifo.f32 = coordinate; GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = 24.0f;
+        GXWGFifo.u8 = 0; GXWGFifo.u8 = 255; GXWGFifo.u8 = 0; GXWGFifo.u8 = 200;
+    }
 }
 
 // .text:0x0001B038 size:0xC4
