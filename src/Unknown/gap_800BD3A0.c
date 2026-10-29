@@ -395,19 +395,49 @@ void SKNLoadFile(void) {
     return;
 }
 
+// Flush cache lines containing the indexed skinned vertices and normals.
 // .text:0x800BF1A4 size:0x1C
-void SKNFlushByIndex1(void) {
-    return;
+asm void SKNFlushByIndex1(register const u16* indices, register u32 count, register SkinVertex* vertices) {
+    nofralloc
+    mtctr count
+    subi indices, indices, 2
+flush_loop:
+    lhzu r6, 2(indices)
+    mulli r7, r6, 24
+    dcbf r7, vertices
+    bdnz flush_loop
+    blr
 }
 
+// Flush cache lines containing the indexed 12-byte vertex stream.
 // .text:0x800BF1C0 size:0x28
-void SKNFlushByIndex2(void) {
-    return;
+asm void SKNFlushByIndex2(register const u16* indices, register u32 count, register Vec* vertices) {
+    nofralloc
+    mtctr count
+    subi indices, indices, 2
+flush_loop:
+    lhzu r6, 2(indices)
+    add r7, r6, r6
+    add r6, r7, r6
+    add r6, r6, r6
+    add r6, r6, r6
+    dcbf r6, vertices
+    bdnz flush_loop
+    blr
 }
 
+// Zero an aligned skinning buffer in 32-byte cache blocks.
 // .text:0x800BF1E8 size:0x1C
-void SKNBzero32B(void) {
-    return;
+asm void SKNBzero32B(register u8* buffer, register u32 size) {
+    nofralloc
+    li r0, 0
+    srwi size, size, 5
+    mtctr size
+zero_loop:
+    dcbz r0, buffer
+    addi buffer, buffer, 32
+    bdnz zero_loop
+    blr
 }
 
 // .text:0x800BF204 size:0xA4

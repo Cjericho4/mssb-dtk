@@ -164,9 +164,14 @@ void fn_800BF048(s32 value);
 void fn_800BF058(Gap800BD3A0Callback value);
 Gap800BD3A0State* fn_800BF068(void);
 void SKNLoadFile(void);
-void SKNFlushByIndex1(void);
-void SKNFlushByIndex2(void);
-void SKNBzero32B(void);
+typedef struct SkinVertex {
+    Vec position;
+    Vec normal;
+} SkinVertex;
+STATIC_ASSERT(sizeof(SkinVertex) == 0x18);
+void SKNFlushByIndex1(const u16* indices, u32 count, SkinVertex* vertices);
+void SKNFlushByIndex2(const u16* indices, u32 count, Vec* vertices);
+void SKNBzero32B(u8* buffer, u32 size);
 void SKNInit(void);
 void fn_800BF2A8(void);
 void SKNIt(void);
