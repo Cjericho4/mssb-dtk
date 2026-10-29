@@ -1,0 +1,26 @@
+diff --git a/include/game/gap_106DFC.h b/include/game/gap_106DFC.h
+index f14894a3..c2575ef4 100644
+--- a/include/game/gap_106DFC.h
++++ b/include/game/gap_106DFC.h
+@@ -53,7 +53,7 @@ u32 minigame_checkIfAIInputIs_Algorithmic_Or_ControllerBased(s8 arg0);
+ void fn_3_107E80(void);
+ void fn_3_108230(void);
+ void fn_3_1084B4(void);
+-void fn_3_108854(void);
++BOOL fn_3_108854(void);
+ void fn_3_1089E8(void);
+ void fn_3_108C54(void);
+ void fn_3_109254(void);
+diff --git a/include/game/substitution_state.h b/include/game/substitution_state.h
+index cf8334ee..2e47d6bc 100644
+--- a/include/game/substitution_state.h
++++ b/include/game/substitution_state.h
+@@ -8,7 +8,7 @@ typedef struct {
+     s16 field_0x04;      /* 0x04 */
+     u16 field_0x06;      /* 0x06 */
+     u16 field_0x08;      /* 0x08 */
+-    u8 _pad1[0x02];      /* 0x0A */
++    s16 field_0x0A;      /* 0x0A */
+     s16 field_0x0C;      /* 0x0C */
+     s16 field_0x0E;      /* 0x0E */
+     s16 field_0x10;      /* 0x10 */
