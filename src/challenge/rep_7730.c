@@ -182,16 +182,6 @@ void fn_1_1DE5C(void) {
 }
 
 // .text:0x0001DE60 size:0x42C
-void fn_1_1DE60(void) {
-    return;
-}
-
-// .text:0x0001E28C size:0x4
-void fn_1_1E28C(void) {
-    return;
-}
-
-// .text:0x0001E290 size:0x340
 static inline f32 adjustChallengeNormal(u16 buttons, s32 negate, f32 value, f32 stepA, f32 step, f32 stepB, f32 min, f32 max) {
     if (buttons & 0x40) {
         step = stepA;
@@ -210,6 +200,34 @@ static inline f32 adjustChallengeNormal(u16 buttons, s32 negate, f32 value, f32 
     }
     return value;
 }
+/* Edit interpolation and offset components for the preview camera. */
+s16 fn_1_1DE60(s16 selected, u16 held, u16 unused, u16 pressed) {
+    if (selected < 0 || selected >= 4) return selected;
+    if (pressed & 1) {
+        switch (selected) {
+        case 0: lbl_1_bss_6BE4.value0 = adjustChallengeNormal(held, 1, lbl_1_bss_6BE4.value0, 0.0001f, 0.01f, 0.1f, 0, 1); break;
+        case 1: lbl_1_bss_6BE4.value4 = adjustChallengeNormal(held, 1, lbl_1_bss_6BE4.value4, 0.0001f, 0.01f, 0.1f, -10, 10); break;
+        case 2: lbl_1_bss_6BE4.value8 = adjustChallengeNormal(held, 1, lbl_1_bss_6BE4.value8, 0.0001f, 0.01f, 0.1f, -10, 10); break;
+        case 3: lbl_1_bss_6BE4.valueC = adjustChallengeNormal(held, 1, lbl_1_bss_6BE4.valueC, 0.0001f, 0.01f, 0.1f, -10, 10); break;
+        }
+    }     else if (pressed & 2) {
+        switch (selected) {
+        case 0: lbl_1_bss_6BE4.value0 = adjustChallengeNormal(held, 0, lbl_1_bss_6BE4.value0, 0.0001f, 0.01f, 0.1f, 0, 1); break;
+        case 1: lbl_1_bss_6BE4.value4 = adjustChallengeNormal(held, 0, lbl_1_bss_6BE4.value4, 0.0001f, 0.01f, 0.1f, -10, 10); break;
+        case 2: lbl_1_bss_6BE4.value8 = adjustChallengeNormal(held, 0, lbl_1_bss_6BE4.value8, 0.0001f, 0.01f, 0.1f, -10, 10); break;
+        case 3: lbl_1_bss_6BE4.valueC = adjustChallengeNormal(held, 0, lbl_1_bss_6BE4.valueC, 0.0001f, 0.01f, 0.1f, -10, 10); break;
+        }
+    } else if (pressed & 8) selected--;
+    else if (pressed & 4) selected++;
+    return selected;
+}
+
+// .text:0x0001E28C size:0x4
+void fn_1_1E28C(void) {
+    return;
+}
+
+// .text:0x0001E290 size:0x340
 /* Adjust the selected normal-vector component with fine and coarse input steps. */
 s16 fn_1_1E290(s16 selected, u16 held, u16 unused, u16 pressed) {
     if (selected < 0 || selected >= 3) return selected;
