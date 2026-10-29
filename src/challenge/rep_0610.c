@@ -780,8 +780,58 @@ void fn_1_15170(void) {
 }
 
 // .text:0x000151F8 size:0x214
+/* FAKEMATCH: inline direction retains the original positive multiplication. */
+static inline void adjustChallengeBlend(ChallengeState* state, f32 direction) {
+    f32 step = 0.01f;
+    if (lbl_803C77B8.buttons & 0x400) step *= 10.0f;
+    step *= direction;
+    state->blend += step;
+    if (state->blend > 1.0f) state->blend = 0.0f;
+    if (state->blend < 0.0f) state->blend = 1.0f;
+    fn_800B9A9C(state->blendEnabled, state->blend);
+}
+/* Adjust the preview blend toggle/value and wrap its two-row selector. */
 void fn_1_151F8(void) {
-    return;
+    u16 pressed = lbl_803C77B8.pressed;
+    ChallengeState* state = &lbl_1_bss_3070;
+    if (pressed & 8) {
+        if (--state->unkC < 0) state->unkC = 1;
+    } else if (pressed & 4) {
+        if (++state->unkC >= 2) state->unkC = 0;
+    } else if (pressed & 1) {
+        switch (state->unkC) {
+        case 0:
+            state->blendEnabled ^= 1;
+            fn_800B9A9C(state->blendEnabled, state->blend);
+            break;
+        case 1:
+            {
+                f32 step = 0.01f;
+                if (lbl_803C77B8.buttons & 0x400) step *= 10.0f;
+                step *= -1.0f;
+                state->blend += step;
+                if (state->blend > 1.0f) state->blend = 0.0f;
+                if (state->blend < 0.0f) state->blend = 1.0f;
+                fn_800B9A9C(state->blendEnabled, state->blend);
+            }
+            break;
+        }
+    } else if (pressed & 2) {
+        switch (state->unkC) {
+        case 0:
+            state->blendEnabled ^= 1;
+            fn_800B9A9C(state->blendEnabled, state->blend);
+            break;
+        case 1:
+            {
+                adjustChallengeBlend(state, 1.0f);
+            }
+            break;
+        }
+    } else if (pressed & 0x200) {
+        state->unkC = 0;
+        state->unk2F01 = 1;
+    }
 }
 
 // .text:0x0001540C size:0x354

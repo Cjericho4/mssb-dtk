@@ -49,7 +49,9 @@ typedef struct ChallengeState {
     /* 0x2F01 */ u8 unk2F01;
     /* 0x2F02 */ u8 _pad2F02;
     /* 0x2F03 */ u8 modelIndex;
-    /* 0x2F04 */ u8 _pad2F04[0x170];
+    /* 0x2F04 */ f32 blend;
+    /* 0x2F08 */ u8 blendEnabled;
+    u8 _pad2F09[0x16B];
     /* 0x3074 */ Gap8000B9C8Texture* extraTexture;
     /* 0x3078 */ u8 _pad3078[0x6D0];
     /* 0x3748 */ Rep0610Items items;
