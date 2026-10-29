@@ -167,8 +167,85 @@ void fn_1_1A290(HugeAnimEntry68* entries, s32 mode) {
 }
 
 // .text:0x0001A3B4 size:0x3C0
+#include "game/sta_c4.h"
+typedef struct ChallengePreviewTexture { StaC4TexDesc desc; u16 selected, reserved; } ChallengePreviewTexture;
+typedef struct ChallengePreviewTextures {
+    u16 count, reserved;
+    ChallengePreviewTexture entries[1];
+} ChallengePreviewTextures;
+extern u8* lbl_1_bss_6AAC[24];
+static inline ChallengePreviewTexture* selectedPreviewTexture(ChallengePreviewTextures* archive) {
+    return &archive->entries[archive->entries[0].selected];
+}
+/* Load the selected texture archive and draw its preview quad. */
 void fn_1_1A3B4(void) {
-    return;
+    GXTexObj texture;
+    GXTlutObj palette;
+    GXColor color = {255,255,255,255};
+    ChallengePreviewTextures* archive = (ChallengePreviewTextures*)lbl_1_bss_6AAC[lbl_803CC1B8->flag14];
+    ChallengePreviewTexture* entry;
+    u32 count = archive->count;
+    u32 i;
+    {
+    ChallengePreviewTexture* selected = selectedPreviewTexture(archive);
+    u32 hasPalette = selected->desc.tlut != 0;
+    entry = selected;
+    if (hasPalette) {
+        for (i = 0; i < count; entry++, i++) {
+            GXInitTlutObj(&palette, entry->desc.tlut, entry->desc.tlutFormat, entry->desc.tlutEntries);
+            GXLoadTlut(&palette, 0);
+            GXInitTexObjCI(&texture, entry->desc.image, entry->desc.width, entry->desc.height, entry->desc.format, 0, 0, 0, 0);
+            GXInitTexObjLOD(&texture, 0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
+            GXLoadTexObj(&texture, 0);
+        }
+    } else {
+        for (i = 0; i < count; entry++, i++) {
+            GXInitTexObj(&texture, entry->desc.image, entry->desc.width, entry->desc.height, entry->desc.format, 0, 0, 0);
+            GXInitTexObjLOD(&texture, 0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
+            GXLoadTexObj(&texture, 0);
+        }
+    }
+    }
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetVtxAttrFmt(0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(1);
+    GXSetNumTexGens(1);
+    GXSetNumTevStages(1);
+    GXSetTevColor(1, color);
+    GXSetTevColorIn(0, 15, 15, 15, 8);
+    GXSetTevAlphaIn(0, 7, 7, 7, 1);
+    GXSetTevColorOp(0, 0, 0, 0, 0, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 0, 0);
+    GXSetTevOrder(0, 0, 0, 4);
+    GXSetBlendMode(0, 4, 5, 7);
+    GXSetCullMode(0);
+    GXLoadPosMtxImm(lbl_1_bss_6B7C.view, 0);
+    GXSetCurrentMtx(0);
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+    GXWGFifo.f32 = -3.0f;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 20.0f;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 1.0f;
+    GXWGFifo.f32 = -3.0f;
+    GXWGFifo.f32 = -3.0f;
+    GXWGFifo.f32 = 20.0f;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = -3.0f;
+    GXWGFifo.f32 = 20.0f;
+    GXWGFifo.f32 = 1.0f;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 20.0f;
+    GXWGFifo.f32 = 1.0f;
+    GXWGFifo.f32 = 1.0f;
 }
 
 // .text:0x0001A774 size:0xDC
