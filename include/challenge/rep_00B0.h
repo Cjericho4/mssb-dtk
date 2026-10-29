@@ -11,8 +11,8 @@ void fn_1_1DBC(s32 a, s32 b, s32 c, s32 d, s32 face);
 void fn_1_25BC(void);
 void fn_1_3E38(Vec* position, u32 index);
 void fn_1_4074(Vec* position);
-void fn_1_4290(void);
 typedef struct ChallengeSegment { Vec start, end; } ChallengeSegment;
+void fn_1_4290(ChallengeSegment* segment);
 typedef struct ChallengeHit { Vec position, normal; } ChallengeHit;
 typedef struct ChallengeCollisionQuery {
     Mtx view;

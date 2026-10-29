@@ -89,8 +89,18 @@ void fn_1_4074(Vec* position) {
 }
 
 // .text:0x00004290 size:0x498
-void fn_1_4290(void) {
-    return;
+/* Emit a collision segment with distinct endpoint attribute indices. */
+void fn_1_4290(ChallengeSegment* segment) {
+    __GDCheckOverflowed(1);
+    __GDWriteU8(0xA8);
+    __GDCheckOverflowed(2);
+    __GDWriteU16(2);
+    writeChallengePosition(segment->start.x, segment->start.y, segment->start.z);
+    __GDCheckOverflowed(1);
+    __GDWriteU8(19);
+    writeChallengePosition(segment->end.x, segment->end.y, segment->end.z);
+    __GDCheckOverflowed(1);
+    __GDWriteU8(20);
 }
 
 // .text:0x00004728 size:0x2FC
