@@ -825,8 +825,33 @@ void fn_1_161D0(void) {
 }
 
 // .text:0x0001620C size:0x1F0
+/* Reset the preview actor and establish its camera and overlay projections. */
 void fn_1_1620C(void) {
-    return;
+    Mtx44 projection;
+    s32 i = 0;
+    do {
+        g_hugeAnimStruct.fielderStructs[i].unk34.x = 0.0f;
+        g_hugeAnimStruct.fielderStructs[i].unk34.y = 0.0f;
+        g_hugeAnimStruct.fielderStructs[i].unk34.z = 10.0f;
+        g_hugeAnimStruct.fielderStructs[i].unk40.x = 0.0f;
+        g_hugeAnimStruct.fielderStructs[i].unk40.y = 0.0f;
+        g_hugeAnimStruct.fielderStructs[i].unk40.z = 0.0f;
+        CTRLSetTranslation(&((HugeAnimCtrlEntry*)g_hugeAnimStruct.ctrlOrBonePtr)[i].ctrl, 0.0f, 0.0f, 0.0f);
+        CTRLSetRotation(&((HugeAnimCtrlEntry*)g_hugeAnimStruct.ctrlOrBonePtr)[i].ctrl, 0.0f, 0.0f, 0.0f);
+    } while (++i < 1);
+    lbl_1_bss_67E0.pos.x = 0.0f;
+    lbl_1_bss_67E0.pos.y = -0.8f;
+    lbl_1_bss_67E0.pos.z = 0.0f;
+    lbl_1_bss_67E0.target.x = 0.0f;
+    lbl_1_bss_67E0.target.y = 0.0f;
+    lbl_1_bss_67E0.target.z = 10.0f;
+    C_MTXFrustum(projection, -0.000175f, 0.000175f, 0.00025f, -0.00025f, 0.001f, 512.0f);
+    GXSetProjection(projection, GX_PERSPECTIVE);
+    fn_800B806C(0, -240.0f, 240.0f, -320.0f, 320.0f, -512.0f, -0.001f, 1280.0f);
+    lbl_1_bss_67E0.unk_0x114 = 0;
+    lbl_1_bss_67E0.unk_0xF8 = 0.0f;
+    lbl_1_bss_67E0.unk_0xF0 = 0;
+    lbl_1_bss_67E0.unk_0xF2 = 0;
 }
 
 // .text:0x000163FC size:0x4
