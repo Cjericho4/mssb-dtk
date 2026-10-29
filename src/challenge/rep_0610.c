@@ -1,4 +1,10 @@
 #include "challenge/rep_0610.h"
+/* Light owning header conflicts with the allocator declaration in this unit. */
+void LITAlloc(struct MenusLight** light);
+void LITInitAttn(struct MenusLight* light, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
+void LITInitPos(struct MenusLight* light, f32 x, f32 y, f32 z);
+void LITInitDir(struct MenusLight* light, f32 x, f32 y, f32 z);
+void LITInitColor(struct MenusLight* light, GXColor* color);
 #include "Dolphin/GX/GXPixel.h"
 #include "Dolphin/GX/GXLight.h"
 #include "Dolphin/GX/GXTev.h"
@@ -707,8 +713,30 @@ void fn_1_12F8C(void) {
 }
 
 // .text:0x000131E4 size:0x298
+/* Allocate and initialize the four model-preview lights. */
 void fn_1_131E4(void) {
-    return;
+    GXColor white = {255, 255, 255, 255};
+    LITAlloc(&g_hugeAnimStruct.menuLights[0]);
+    LITAlloc(&g_hugeAnimStruct.menuLights[1]);
+    LITAlloc(&g_hugeAnimStruct.menuLights[2]);
+    LITAlloc(&g_hugeAnimStruct.menuLights[3]);
+    LITInitAttn(g_hugeAnimStruct.menuLights[0], 1, 0, 0, 1, 0, 0);
+    LITInitPos(g_hugeAnimStruct.menuLights[0], 5, -10, 5);
+    LITInitDir(g_hugeAnimStruct.menuLights[0], 0, 0, 0);
+    { GXColor color = white; LITInitColor(g_hugeAnimStruct.menuLights[0], &color); }
+    LITInitDir(g_hugeAnimStruct.menuLights[0], -5, 0, -5);
+    LITInitAttn(g_hugeAnimStruct.menuLights[1], 1, 0, 0, 1, 0, 0);
+    LITInitPos(g_hugeAnimStruct.menuLights[1], -5, -10, 0);
+    LITInitDir(g_hugeAnimStruct.menuLights[1], 0, 0, 0);
+    { GXColor color = white; LITInitColor(g_hugeAnimStruct.menuLights[1], &color); }
+    LITInitAttn(g_hugeAnimStruct.menuLights[2], 1, 0, 0, 1, 0, 0);
+    LITInitPos(g_hugeAnimStruct.menuLights[2], 0, -10, 5);
+    LITInitDir(g_hugeAnimStruct.menuLights[2], 0, 0, 0);
+    { GXColor color = white; LITInitColor(g_hugeAnimStruct.menuLights[2], &color); }
+    LITInitAttn(g_hugeAnimStruct.menuLights[3], 1, 0, 0, 1, 0, 0);
+    LITInitPos(g_hugeAnimStruct.menuLights[3], 0, -10, -5);
+    LITInitDir(g_hugeAnimStruct.menuLights[3], 0, 0, 0);
+    { GXColor color = white; LITInitColor(g_hugeAnimStruct.menuLights[3], &color); }
 }
 
 // .text:0x0001347C size:0x144
