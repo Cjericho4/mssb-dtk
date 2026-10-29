@@ -362,8 +362,28 @@ void fn_1_10044(void) {
 }
 
 // .text:0x00010458 size:0x108
+// Handle the seven-item challenge selector and its confirm/cancel controls.
 void fn_1_10458(void) {
-    return;
+    ChallengeState* state = &lbl_1_bss_3070;
+    if ((u32)state->selection == 0) {
+        if (state->unk_0x24 == 0) {
+            DrawingSceneStruct* entry = (DrawingSceneStruct*)fn_800B0A5C_insertQueue(fn_1_10560, 11);
+            entry->loadingState = 0;
+        }
+    } else if (lbl_803C77B8.pressed & PAD_BUTTON_UP) {
+        if (state->unkC != 0) state->unkC--;
+        else state->unkC = 6;
+    } else if (lbl_803C77B8.pressed & PAD_BUTTON_DOWN) {
+        if (++state->unkC == 7) state->unkC = 0;
+    } else if (lbl_803C77B8.pressed & PAD_BUTTON_LEFT) {
+    } else if (lbl_803C77B8.pressed & PAD_BUTTON_RIGHT) {
+    } else if (lbl_803C77B8.pressed & PAD_BUTTON_A) {
+        state->unk2F01 += state->unkC + 1;
+        state->unkC = 0;
+    } else if (lbl_803C77B8.pressed & PAD_BUTTON_B) {
+        state->unkC = 0;
+        state->unk2F01 = 1;
+    }
 }
 
 // .text:0x00010560 size:0x110

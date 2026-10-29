@@ -27,7 +27,8 @@ typedef struct ChallengeState {
     /* 0x0011 */ u8 unk11;
     /* 0x0012 */ u8 _pad12[0xE];
     /* 0x0020 */ u8 blink;
-    /* 0x0021 */ u8 _pad21[7];
+    /* 0x0021 */ u8 _pad21[3];
+    /* 0x0024 */ u32 unk_0x24;
     /* 0x0028 */ s32 selection;
     /* 0x002C */ u8 _pad2C[0xC];
     /* 0x0038 */ s32 page;
