@@ -1,4 +1,14 @@
 #include "challenge/rep_74A0.h"
+/* rep_0138.h uses a conflicting light type; preserve its projection API here. */
+void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+void fn_800B806C(s32 index, f32 t, f32 b, f32 l, f32 r, f32 nearZ, f32 farZ, f32 scale);
+#include "Dolphin/GX/GXTransform.h"
+typedef struct ChallengeProjectionState {
+    u8 _pad0[0x3C];
+    Vec position;
+    Vec direction;
+} ChallengeProjectionState;
+extern ChallengeProjectionState lbl_1_bss_6B7C;
 /* The light owning header conflicts with this unit's actor and allocator
    declarations; these forward declarations preserve its light API types. */
 typedef struct Gap800BD3A0Light Gap800BD3A0Light;
@@ -197,8 +207,18 @@ void fn_1_1B424(void) {
 }
 
 // .text:0x0001B6BC size:0x120
+/* Set the challenge camera pose and perspective/overlay projection volumes. */
 void fn_1_1B6BC(void) {
-    return;
+    Mtx44 projection;
+    lbl_1_bss_6B7C.direction.x = 0.0f;
+    lbl_1_bss_6B7C.direction.y = -0.8f;
+    lbl_1_bss_6B7C.direction.z = 0.0f;
+    lbl_1_bss_6B7C.position.x = 0.0f;
+    lbl_1_bss_6B7C.position.y = 0.0f;
+    lbl_1_bss_6B7C.position.z = 10.0f;
+    C_MTXFrustum(projection, -0.175f, 0.175f, 0.25f, -0.25f, 1.0f, 512.0f);
+    GXSetProjection(projection, GX_PERSPECTIVE);
+    fn_800B806C(0, -240.0f, 240.0f, -320.0f, 320.0f, -512.0f, -1.0f, 1280.0f);
 }
 
 // .text:0x0001B7DC size:0xBF0
