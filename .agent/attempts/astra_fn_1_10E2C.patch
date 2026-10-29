@@ -1,0 +1,73 @@
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 34137f67..03b6f5c6 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -11,6 +11,7 @@ void LITInitColor(struct MenusLight* light, GXColor* color);
+ #include "Dolphin/GX/GXTev.h"
+ #include "Dolphin/GX/GXGeometry.h"
+ #include "Dolphin/GX/GXFifo.h"
++#include "Dolphin/GX/GXHardware.h"
+ extern f32 lbl_1_data_F570;
+ void fn_1_F2C(s32 mode, s32 arg1, s32 arg2);
+ #include "game/rep_1C0.h"
+@@ -721,8 +722,59 @@ void fn_1_10CEC(Rep0610Obj12F18* object) {
+ }
+ 
+ // .text:0x00010E2C size:0x430
++/* Draw the preview axis marker with caller-selected packed colors. */
++static inline void drawPreviewSecondaryAxes(u32 y, u32 z) {
++    GXPosition3f32(0.0f, 0.0f, 0.0f); GXColor1u32(y);
++    GXPosition3f32(0.0f, 0.05f, 0.0f); GXColor1u32(y);
++    GXPosition3f32(-0.005f, 0.0f, 0.0f); GXColor1u32(y);
++    GXPosition3f32(0.0f, 0.05f, 0.0f); GXColor1u32(y);
++    GXPosition3f32(0.005f, 0.0f, 0.0f); GXColor1u32(y);
++    GXPosition3f32(0.0f, 0.05f, 0.0f); GXColor1u32(y);
++    GXPosition3f32(0.0f, 0.0f, 0.0f); GXColor1u32(z);
++    GXPosition3f32(0.0f, 0.0f, 0.05f); GXColor1u32(z);
++    GXPosition3f32(-0.005f, 0.0f, 0.0f); GXColor1u32(z);
++    GXPosition3f32(0.0f, 0.0f, 0.05f); GXColor1u32(z);
++    GXPosition3f32(0.005f, 0.0f, 0.0f); GXColor1u32(z);
++    GXPosition3f32(0.0f, 0.0f, 0.05f); GXColor1u32(z);
++}
+ void fn_1_10E2C(Mtx matrix, Mtx view, u32 x, u32 y, u32 z) {
+-    return;
++    Mtx combined;
++    GXCullMode cull;
++    GXGetCullMode(&cull);
++    PSMTXConcat(view, matrix, combined);
++    GXLoadPosMtxImm(combined, 0);
++    GXSetCurrentMtx(0);
++    GXClearVtxDesc();
++    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
++    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
++    GXSetVtxAttrFmt(0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
++    GXSetVtxAttrFmt(0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
++    GXSetNumTevStages(1);
++    GXSetNumChans(1);
++    GXSetNumTexGens(0);
++    GXSetTevOp(0, GX_PASSCLR);
++    GXSetTevOrder(0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
++    GXSetChanCtrl(GX_COLOR0, 0, GX_SRC_VTX, GX_SRC_VTX, 0, 0, 2);
++    GXSetChanCtrl(GX_ALPHA0, 0, GX_SRC_VTX, GX_SRC_VTX, 0, 0, 2);
++    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_COPY);
++    GXSetCullMode(GX_CULL_NONE);
++    GXSetZMode(1, GX_ALWAYS, 1);
++    GXSetLineWidth(7, 0);
++    GXBegin(GX_LINES, 0, 22);
++    GXPosition3f32(-0.01f, 0.0f, 0.0f); GXColor1u32(x);
++    GXPosition3f32(0.2f, 0.0f, 0.0f); GXColor1u32(x);
++    GXPosition3f32(0.0f, 0.0f, 0.01f); GXColor1u32(x);
++    GXPosition3f32(0.2f, 0.0f, 0.0f); GXColor1u32(x);
++    GXPosition3f32(0.0f, 0.0f, -0.01f); GXColor1u32(x);
++    GXPosition3f32(0.2f, 0.0f, 0.0f); GXColor1u32(x);
++    GXPosition3f32(-0.01f, 0.0f, 0.0f); GXColor1u32(x);
++    GXPosition3f32(0.0f, 0.0f, 0.01f); GXColor1u32(x);
++    GXPosition3f32(-0.01f, 0.0f, 0.0f); GXColor1u32(x);
++    GXPosition3f32(0.0f, 0.0f, -0.01f); GXColor1u32(x);
++    drawPreviewSecondaryAxes(y, z);
++    GXSetLineWidth(6, 0);
++    GXSetCullMode(cull);
++    GXSetZMode(1, GX_LEQUAL, 1);
+ }
+ 
+ // .text:0x0001125C size:0x490
