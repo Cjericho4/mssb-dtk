@@ -94,11 +94,78 @@ void fn_1_4290(void) {
 }
 
 // .text:0x00004728 size:0x2FC
-void fn_1_4728(void) {
-    return;
+#include <string.h>
+#include <math.h>
+typedef struct ChallengeCollisionArchive {
+    ChallengeSegment* bounds;
+    struct ChallengeCollisionMesh* meshes[1];
+} ChallengeCollisionArchive;
+typedef struct ChallengeCollisionState {
+    u8 _pad0[0x224];
+    ChallengeCollisionArchive* archive;
+    s16 count;
+} ChallengeCollisionState;
+extern ChallengeCollisionState lbl_1_common_bss_472B4;
+extern Vec lbl_1_data_218, lbl_1_data_224;
+void makeLookAtMatrix(Mtx matrix, Vec* eye, Vec* up, Vec* target);
+typedef union ChallengeVectorBits { Vec vector; u32 bits[3]; } ChallengeVectorBits;
+u16 fn_1_4728(ChallengeSegment* segment, ChallengeHit* hit) {
+    u8 rejected[256];
+    ChallengeCollisionQuery query;
+    ChallengeVectorBits delta[4];
+    Mtx inverse;
+    ChallengeCollisionState* state = &lbl_1_common_bss_472B4;
+    s32 count;
+    u32 noCandidates;
+    ChallengeSegment* bounds = state->archive->bounds;
+    u8* flag;
+    memset(rejected, 1, state->count);
+    count = state->count;
+    flag = rejected;
+    noCandidates = 1;
+    do {
+        PSVECSubtract(&segment->start, &bounds->start, &delta[0].vector);
+        PSVECSubtract(&bounds->end, &segment->start, &delta[1].vector);
+        PSVECSubtract(&segment->end, &bounds->start, &delta[2].vector);
+        PSVECSubtract(&bounds->end, &segment->end, &delta[3].vector);
+        if (!(((delta[0].bits[0] & delta[2].bits[0]) | (delta[1].bits[0] & delta[3].bits[0])) & 0x80000000) &&
+            !(((delta[0].bits[1] & delta[2].bits[1]) | (delta[1].bits[1] & delta[3].bits[1])) & 0x80000000) &&
+            !(((delta[0].bits[2] & delta[2].bits[2]) | (delta[1].bits[2] & delta[3].bits[2])) & 0x80000000)) {
+            *flag = 0;
+            noCandidates = 0;
+        }
+        bounds++;
+        flag++;
+    } while (--count);
+    if (noCandidates) return 0;
+    makeLookAtMatrix(query.view, &segment->start, &lbl_1_data_218, &segment->end);
+    query.nearest = query.length = dolsqrtf2(PSVECSquareDistance(&segment->end, &segment->start));
+    query.hits = 0;
+    {
+        u8* meshFlag;
+        s32 meshCount;
+        struct ChallengeCollisionMesh** mesh;
+        mesh = state->archive->meshes;
+        meshCount = state->count;
+        meshFlag = rejected;
+        do {
+            if (*meshFlag++ == 0) fn_1_4A24(&query, *mesh);
+            mesh++;
+        } while (--meshCount);
+    }
+    if (query.hits) {
+        PSMTXInverse(query.view, inverse);
+        lbl_1_data_224.z = -query.nearest;
+        PSMTXMultVec(inverse, &lbl_1_data_224, &hit->position);
+        PSMTXTranspose(query.view, inverse);
+        PSMTXMultVec(inverse, &query.normal, &hit->normal);
+        PSVECNormalize(&hit->normal, &hit->normal);
+        return query.hits;
+    }
+    return 0;
 }
 
 // .text:0x00004A24 size:0x3B4
-void fn_1_4A24(void) {
+void fn_1_4A24(ChallengeCollisionQuery* query, struct ChallengeCollisionMesh* mesh) {
     return;
 }

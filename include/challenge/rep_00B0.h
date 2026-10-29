@@ -12,7 +12,18 @@ void fn_1_25BC(void);
 void fn_1_3E38(Vec* position, u32 index);
 void fn_1_4074(Vec* position);
 void fn_1_4290(void);
-void fn_1_4728(void);
-void fn_1_4A24(void);
+typedef struct ChallengeSegment { Vec start, end; } ChallengeSegment;
+typedef struct ChallengeHit { Vec position, normal; } ChallengeHit;
+typedef struct ChallengeCollisionQuery {
+    Mtx view;
+    u8 _pad30[0x30];
+    Vec normal;
+    f32 length, nearest;
+    u16 hits;
+    u8 _pad76[2];
+} ChallengeCollisionQuery;
+struct ChallengeCollisionMesh;
+u16 fn_1_4728(ChallengeSegment* segment, ChallengeHit* hit);
+void fn_1_4A24(ChallengeCollisionQuery* query, struct ChallengeCollisionMesh* mesh);
 
 #endif // !__CHALLENGE_rep_00B0_H_
