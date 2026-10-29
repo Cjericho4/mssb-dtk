@@ -140,9 +140,33 @@ void fn_3_B4124(s32 team, s32 slot, s32 charId, s32 hand) {
 }
 
 
+extern u8 lbl_3_data_FAA8[];
+
 // .text:0x000B42A8 size:0x140 mapped:0x806F333C
+// Set both practice lineups to the default roster and copy their character stats.
 void fn_3_B42A8(void) {
-    return;
+    /* FAKEMATCH: Shared loop counters in this order preserve register allocation. */
+    s32 slot;
+    s32 team;
+    g_GameLogic.battingOrderAndPositionMapping[0][0][0] = lbl_3_data_FAA8[0];
+    g_GameLogic.battingOrderAndPositionMapping[1][0][0] = lbl_3_data_FAA8[0];
+    for (team = 0; team < TEAMS_PER_GAME; team++) {
+        for (slot = 0; slot < PLAYERS_PER_TEAM; slot++) {
+            s32 character = lbl_3_data_FAA8[slot + PLAYERS_PER_TEAM];
+            g_GameLogic.battingOrderAndPositionMapping[team][slot + 1][0] = character;
+            g_GameLogic.battingOrderAndPositionMapping[team][slot + 1][1] = character;
+            lbl_80354720[team][slot].unk0 = slot;
+            lbl_80354720[team][slot].unk1 = slot;
+            lbl_80354720[team][slot].unk2 = slot;
+        }
+    }
+    for (team = 0; team < TEAMS_PER_GAME; team++) {
+        for (slot = 0; slot < PLAYERS_PER_TEAM; slot++) {
+            memcpy(&inMemRoster[team][slot],
+                   &lbl_8034E9A0[g_GameLogic.battingOrderAndPositionMapping[team][slot + 1][0]],
+                   sizeof(CharacterStats));
+        }
+    }
 }
 
 // .text:0x000B43E8 size:0x444 mapped:0x806F347C
