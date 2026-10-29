@@ -66,7 +66,9 @@ typedef struct ChallengePreviewState {
     s8 option;
     u8 _pad232[2];
     u8 active;
-    u8 _pad235[0xB];
+    u8 _pad235[7];
+    s8 fogSelection;
+    u8 _pad23D[3];
 } ChallengePreviewState;
 extern ChallengePreviewState lbl_1_common_bss_472B4;
 void fn_800B472C(Rep0138Model* model);

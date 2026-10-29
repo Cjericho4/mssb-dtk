@@ -230,8 +230,56 @@ void fn_1_7EF8(void) {
 }
 
 // .text:0x00007FF8 size:0x370
+/* Edit fog type, RGB color, and start/end distances in the preview menu. */
 void fn_1_7FF8(void) {
-    return;
+    switch (lbl_803C77B8.pressed) {
+    case 8:
+        if (--lbl_1_common_bss_472B4.fogSelection < 0) lbl_1_common_bss_472B4.fogSelection = 5;
+        break;
+    case 4:
+        if (++lbl_1_common_bss_472B4.fogSelection >= 6) lbl_1_common_bss_472B4.fogSelection = 0;
+        break;
+    case 1:
+        switch (lbl_1_common_bss_472B4.fogSelection) {
+        case 0:
+            switch (--lbl_1_bss_4E0->type) {
+            case 255: lbl_1_bss_4E0->type = 7; break;
+            case 3: lbl_1_bss_4E0->type = 2; break;
+            case 1: lbl_1_bss_4E0->type = 0; break;
+            }
+            break;
+        case 1: lbl_1_bss_4E0->rgb[0]--; break;
+        case 2: lbl_1_bss_4E0->rgb[1]--; break;
+        case 3: lbl_1_bss_4E0->rgb[2]--; break;
+        case 4:
+            if ((lbl_1_bss_4E0->start -= 1.0f) < 0) lbl_1_bss_4E0->start = 0;
+            break;
+        case 5:
+            if ((lbl_1_bss_4E0->end -= 1.0f) < 0) lbl_1_bss_4E0->end = 0;
+            break;
+        }
+        break;
+    case 2:
+        switch (lbl_1_common_bss_472B4.fogSelection) {
+        case 0:
+            switch (++lbl_1_bss_4E0->type) {
+            case 1: lbl_1_bss_4E0->type = 2; break;
+            case 3: lbl_1_bss_4E0->type = 4; break;
+            case 8: lbl_1_bss_4E0->type = 0; break;
+            }
+            break;
+        case 1: lbl_1_bss_4E0->rgb[0]++; break;
+        case 2: lbl_1_bss_4E0->rgb[1]++; break;
+        case 3: lbl_1_bss_4E0->rgb[2]++; break;
+        case 4:
+            if ((lbl_1_bss_4E0->start += 1.0f) > 512) lbl_1_bss_4E0->start = 512;
+            break;
+        case 5:
+            if ((lbl_1_bss_4E0->end += 1.0f) > 512) lbl_1_bss_4E0->end = 512;
+            break;
+        }
+        break;
+    }
 }
 
 // .text:0x00008368 size:0x240
