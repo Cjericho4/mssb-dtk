@@ -174,9 +174,45 @@ void fn_3_111A88(void) {
     fn_3_5A6D4(8);
 }
 
+extern s16 lbl_3_data_21448;
+void fn_3_155288(void);
+enum { MINIGAME_END_SUCCESS_SOUND = 0x1BE };
+
 // .text:0x00111AC4 size:0x198 mapped:0x80750B58
+// Count down the Bob-omb Derby turn ending and play its success cue before fading.
 void fn_3_111AC4(void) {
-    return;
+    if (g_Minigame.turnOverStatus == 0) {
+        if (g_Pitcher.pitcherActionState == PITCHER_ACTION_STATE_NO_CONTACT) {
+            if (g_Minigame.miniGameTurnCounter >= g_Minigame.bODRoundStartingNumPitches) {
+                g_Minigame.turnOverStatus = 1;
+                g_Minigame.pointsTargetReachedInd = 1;
+            }
+            g_Minigame.bODCharacterHRStreakTracker[(s8)g_Minigame.rosterID * 2] = 0;
+            fn_3_155288();
+        }
+    } else {
+        if (g_Minigame.turnOverStatus == 1) {
+            g_Minigame.turnOverStatus = 2;
+            g_GameLogic.CountdownUntilFade = lbl_3_data_21448;
+        }
+        g_GameLogic.CountdownUntilFade--;
+        if (g_Minigame.pointsTargetReachedInd != 0 &&
+            (g_Minigame.multiPlayerInd == 0 ||
+             (g_Minigame.multiPlayerInd != 0 && g_Minigame.turnNumberWithinRound + 1 >= g_Minigame.miniGameNumberOfParticipants &&
+              g_Scores.highscore >= g_Scores.threshold)) &&
+            g_Minigame._1A37 == 0 && g_GameLogic.CountdownUntilFade == 67) {
+            sndFXStartEx(MINIGAME_END_SUCCESS_SOUND, lbl_800EFBA4.unk7, 0x3F, 0);
+        }
+        if (g_GameLogic.CountdownUntilFade == 7) {
+            changeScene(SCENE_ID_REPLAY_AT_BAT, 6);
+        }
+        if (g_GameLogic.CountdownUntilFade <= 0) {
+            g_GameLogic.pre_PostMiniGameInd = 1;
+            g_GameLogic.minigameLastTurnSuccessInd = 1;
+            g_GameLogic.hudLoadingRelated = 1;
+            fn_3_5A6D4(GAME_STATUS_TRANSITION);
+        }
+    }
 }
 
 // .text:0x00111C5C size:0x324 mapped:0x80750CF0
@@ -213,7 +249,6 @@ void fn_3_111F80(void) {
 
 // .text:0x00112070 size:0x70 mapped:0x80751104
 void fn_3_112070(void) {
-    extern void fn_3_155288(void);
     extern void fn_3_DE4FC(void);
 
     fn_3_DE4FC();
