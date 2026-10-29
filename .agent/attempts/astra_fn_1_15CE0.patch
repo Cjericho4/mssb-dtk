@@ -1,0 +1,151 @@
+diff --git a/include/challenge/rep_0610.h b/include/challenge/rep_0610.h
+index f7117755..1791dc42 100644
+--- a/include/challenge/rep_0610.h
++++ b/include/challenge/rep_0610.h
+@@ -21,6 +21,24 @@ typedef struct Rep0610Items {
+ } Rep0610Items;
+ 
+ typedef struct Gap8000B9C8Texture Gap8000B9C8Texture;
++typedef struct Rep0610Unk67E0 {
++    /* 0x000 */ Mtx view;
++    union {
++        /* 0x030 */ u32 context[0x36];
++        struct {
++            u8 _pad30[0xC0];
++            /* 0x0F0 */ u16 unk_0xF0;
++            /* 0x0F2 */ u16 unk_0xF2;
++            f32 strafe;
++            /* 0x0F8 */ f32 unk_0xF8;
++            /* 0x0FC */ Vec target;
++        };
++    };
++    /* 0x108 */ Vec pos;
++    /* 0x114 */ u32 unk_0x114;
++    /* 0x118 */ u8 useContext;
++    /* 0x119 */ u8 _pad119[3];
++} Rep0610Unk67E0;
+ typedef struct ChallengeState {
+     /* 0x0000 */ u8 _pad0[0xC];
+     /* 0x000C */ s32 unkC;
+@@ -39,7 +57,8 @@ typedef struct ChallengeState {
+     /* 0x01A4 */ u8 phase;
+     /* 0x01A5 */ u8 enabled;
+     /* 0x01A6 */ u8 mode;
+-    /* 0x01A7 */ u8 _pad1A7[0x2D4B];
++    /* 0x01A7 */ u8 _pad1A7[0x2D49];
++    u16 sampleCount;
+     /* 0x2EF2 */ u8 channel;
+     /* 0x2EF3 */ u8 _pad2EF3[6];
+     /* 0x2EF9 */ u8 unk2EF9;
+@@ -55,6 +74,8 @@ typedef struct ChallengeState {
+     /* 0x3074 */ Gap8000B9C8Texture* extraTexture;
+     /* 0x3078 */ u8 _pad3078[0x6D0];
+     /* 0x3748 */ Rep0610Items items;
++    u8 _pad3754[0x1C];
++    Rep0610Unk67E0 camera;
+ } ChallengeState;
+ extern ChallengeState lbl_1_bss_3070;
+ 
+@@ -92,24 +113,6 @@ typedef struct Rep0610Camera68FC {
+ extern Rep0610Camera68FC lbl_1_bss_68FC;
+ void LITXForm(struct MenusLight* light, Mtx view);
+ #include "Dolphin/GX/GXTransform.h"
+-typedef struct Rep0610Unk67E0 {
+-    /* 0x000 */ Mtx view;
+-    union {
+-        /* 0x030 */ u32 context[0x36];
+-        struct {
+-            u8 _pad30[0xC0];
+-            /* 0x0F0 */ u16 unk_0xF0;
+-            /* 0x0F2 */ u16 unk_0xF2;
+-            f32 strafe;
+-            /* 0x0F8 */ f32 unk_0xF8;
+-            /* 0x0FC */ Vec target;
+-        };
+-    };
+-    /* 0x108 */ Vec pos;
+-    /* 0x114 */ u32 unk_0x114;
+-    /* 0x118 */ u8 useContext;
+-    /* 0x119 */ u8 _pad119[3];
+-} Rep0610Unk67E0;
+ extern Rep0610Unk67E0 lbl_1_bss_67E0;
+ typedef struct Rep0610Obj1073C {
+     /* 0x00 */ u8 _pad0[0x34];
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 82435d46..14ed498b 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -944,10 +944,72 @@ void fn_1_15760(void) {
+ }
+ 
+ // .text:0x00015CE0 size:0x3F8
++static inline void resetPreviewSettings(ChallengeState* state) {
++    Mtx44 projection;
++    s32 i = 0;
++    do {
++        g_hugeAnimStruct.fielderStructs[i].unk34.x = 0.0f;
++        g_hugeAnimStruct.fielderStructs[i].unk34.y = 0.0f;
++        g_hugeAnimStruct.fielderStructs[i].unk34.z = 10.0f;
++        g_hugeAnimStruct.fielderStructs[i].unk40.x = 0.0f;
++        g_hugeAnimStruct.fielderStructs[i].unk40.y = 0.0f;
++        g_hugeAnimStruct.fielderStructs[i].unk40.z = 0.0f;
++        CTRLSetTranslation(&((HugeAnimCtrlEntry*)g_hugeAnimStruct.ctrlOrBonePtr)[i].ctrl, 0.0f, 0.0f, 0.0f);
++        CTRLSetRotation(&((HugeAnimCtrlEntry*)g_hugeAnimStruct.ctrlOrBonePtr)[i].ctrl, 0.0f, 0.0f, 0.0f);
++    } while (++i < 1);
++    state->camera.pos.x = 0.0f;
++    state->camera.pos.y = -0.8f;
++    state->camera.pos.z = 0.0f;
++    state->camera.target.x = 0.0f;
++    state->camera.target.y = 0.0f;
++    state->camera.target.z = 10.0f;
++    C_MTXFrustum(projection, -0.000175f, 0.000175f, 0.00025f, -0.00025f, 0.001f, 512.0f);
++    GXSetProjection(projection, GX_PERSPECTIVE);
++    fn_800B806C(0, -240.0f, 240.0f, -320.0f, 320.0f, -512.0f, -0.001f, 1280.0f);
++    state->camera.unk_0x114 = 0;
++    state->camera.unk_0xF8 = 0.0f;
++    state->camera.unk_0xF0 = 0;
++    state->camera.unk_0xF2 = 0;
++}
++
++extern u8 lbl_1_data_1F1A;
++/* Edit preview sampling, camera behavior and model settings. */
+ void fn_1_15CE0(void) {
+-    return;
++    ChallengeState* state = &lbl_1_bss_3070;
++    u16 pressed = lbl_803C77B8.pressed;
++    if (pressed & 8) {
++        if (--state->unkC < 0) state->unkC = 5;
++    } else if (pressed & 4) {
++        if (++state->unkC >= 6) state->unkC = 0;
++    } else if (pressed & 1) {
++        switch (state->unkC) {
++        case 0: if (--state->_pad2F02 >= 2) state->_pad2F02 = 1; break;
++        case 1: break;
++        case 2: state->camera.useContext ^= 1; break;
++        case 3: lbl_1_data_1F1A ^= 1; break;
++        case 4: if ((s8)state->channel >= 0) state->channel--; break;
++        case 5: if (state->sampleCount > 1) state->sampleCount--; break;
++        }
++    } else if (pressed & 2) {
++        switch (state->unkC) {
++        case 0: if (++state->_pad2F02 >= 2) state->_pad2F02 = 0; break;
++        case 1: break;
++        case 2: state->camera.useContext ^= 1; break;
++        case 3: lbl_1_data_1F1A ^= 1; break;
++        case 4: if ((s8)state->channel < 1) state->channel++; break;
++        case 5: if (state->sampleCount < 16) state->sampleCount++; break;
++        }
++    } else if (pressed & 0x100) {
++        switch (state->unkC) {
++        case 1: resetPreviewSettings(state); break;
++        }
++    } else if (pressed & 0x200) {
++        state->unkC = 0;
++        state->unk2F01 = 1;
++    }
+ }
+ 
++
+ // .text:0x000160D8 size:0x20
+ s32 fn_1_160D8(s8 a, s8 b) {
+     if (a == b) {
