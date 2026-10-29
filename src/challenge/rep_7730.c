@@ -670,9 +670,52 @@ void fn_1_23098(void) {
     return;
 }
 
+typedef struct ChallengeWaveCamera {
+    Mtx view;
+    u16 pitch, yaw;
+    f32 strafe, forward;
+    Vec target, eye;
+} ChallengeWaveCamera;
+extern ChallengeWaveCamera lbl_1_bss_43EE0;
+extern Vec lbl_1_bss_F6E0[][112];
 // .text:0x00023804 size:0x2D4
-void fn_1_23804(void) {
-    return;
+void fn_1_23804(s32 unusedA, s32 unusedB, s32 columns, s32 rows) {
+    s32 j;
+    GXSetProjection(lbl_1_bss_47010, GX_PERSPECTIVE);
+    GXClearVtxDesc();
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+    GXSetNumChans(1);
+    GXSetNumTexGens(1);
+    GXSetNumTevStages(1);
+    GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+    GXLoadPosMtxImm(lbl_1_bss_43EE0.view, 0);
+    GXSetCurrentMtx(0);
+    j = rows;
+    while (--columns) {
+        rows = j;
+        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, j * 2);
+        while (rows--) {
+            GXPosition3f32(lbl_1_bss_F6E0[rows][columns].x, lbl_1_bss_F6E0[rows][columns].z, lbl_1_bss_F6E0[rows][columns].y);
+            GXColor1u32((columns & 1) ? 0xFFFFFFFF : 0xFFFF);
+            GXPosition3f32(lbl_1_bss_F6E0[rows][columns - 1].x, lbl_1_bss_F6E0[rows][columns - 1].z, lbl_1_bss_F6E0[rows][columns - 1].y);
+            if (columns & 1) GXColor1u32(0xFFFF);
+            else GXColor1u32(0xFFFFFFFF);
+        }
+    }
+    GXBegin(GX_LINESTRIP, GX_VTXFMT0, 8);
+    GXPosition3f32(-25, 0, -25); GXColor1u32(0xFF0000FF);
+    GXPosition3f32(-25, 0, 25); GXColor1u32(0xFF0000FF);
+    GXPosition3f32(-25, 0, 25); GXColor1u32(0xFFFF);
+    GXPosition3f32(25, 0, 25); GXColor1u32(0xFFFF);
+    GXPosition3f32(25, 0, 25); GXColor1u32(0xFF0000FF);
+    GXPosition3f32(25, 0, -25); GXColor1u32(0xFF0000FF);
+    GXPosition3f32(25, 0, -25); GXColor1u32(0xFFFF);
+    GXPosition3f32(-25, 0, -25); GXColor1u32(0xFFFF);
 }
 
 // .text:0x00023AD8 size:0x7C
@@ -692,12 +735,6 @@ void fn_1_23B54(void) {
 }
 
 // .text:0x00024410 size:0x29C
-typedef struct ChallengeWaveCamera {
-    Mtx view;
-    u16 pitch, yaw;
-    f32 strafe, forward;
-    Vec target, eye;
-} ChallengeWaveCamera;
 typedef struct ChallengeWaveScene {
     u8 _pad0[0x14];
     f32 scale, width, damping, speed;

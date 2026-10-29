@@ -121,7 +121,7 @@ void fn_1_22874(void);
 void fn_1_22DF4(void);
 void fn_1_22F4C(void);
 void fn_1_23098(void);
-void fn_1_23804(void);
+void fn_1_23804(s32 unusedA, s32 unusedB, s32 columns, s32 rows);
 void fn_1_23AD8(Mtx44 projection, Vec* eye, Vec* target);
 void C_MTXFrustum(Mtx44 projection, f32 top, f32 bottom, f32 left, f32 right, f32 nearZ, f32 farZ);
 void fn_1_23B54(void);
