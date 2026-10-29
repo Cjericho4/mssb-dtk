@@ -624,8 +624,59 @@ void fn_1_23B54(void) {
 }
 
 // .text:0x00024410 size:0x29C
+typedef struct ChallengeWaveCamera {
+    Mtx view;
+    u16 pitch, yaw;
+    f32 strafe, forward;
+    Vec target, eye;
+} ChallengeWaveCamera;
+typedef struct ChallengeWaveScene {
+    u8 _pad0[0x14];
+    f32 scale, width, damping, speed;
+    u16 frame;
+    u8 _pad26;
+    u8 red, green, blue, option, active, phase;
+} ChallengeWaveScene;
+extern ChallengeWaveCamera lbl_1_bss_43EE0;
+extern f32 lbl_1_bss_74E0[128];
+extern f32 lbl_1_bss_76E0[8192];
+/* Initialize the wave-preview camera, cosine table, and randomly seeded surface. */
 void fn_1_24410(void) {
-    return;
+    ChallengeWaveScene* scene = (ChallengeWaveScene*)lbl_803CC1B8;
+    s32 i;
+    lbl_1_bss_43EE0.eye.x = 0;
+    lbl_1_bss_43EE0.eye.y = 0;
+    lbl_1_bss_43EE0.eye.z = -10;
+    lbl_1_bss_43EE0.target.x = 0;
+    lbl_1_bss_43EE0.target.y = 0;
+    lbl_1_bss_43EE0.target.z = 0;
+    C_MTXFrustum(lbl_1_bss_47010, -0.175f, 0.175f, 0.25f, -0.25f, 1.0f, 512.0f);
+    lbl_1_bss_43EE0.pitch = 0;
+    lbl_1_bss_43EE0.forward = 0;
+    lbl_1_bss_43EE0.yaw = 0;
+    scene->red = 64;
+    scene->blue = 64;
+    scene->green = 64;
+    scene->option = 0;
+    scene->scale = 500.0f;
+    scene->width = 32.0f;
+    scene->frame = 0;
+    scene->damping = 0.15f;
+    scene->speed = 0.08f;
+    scene->active = 1;
+    for (i = 0; i < 128; i++) lbl_1_bss_74E0[i] = cos(3.1415925f * (2.0f * ((f32)i / 128.0f)));
+    scene->phase = 0;
+    memset(lbl_1_bss_76E0, 0, sizeof(lbl_1_bss_76E0));
+    {
+        s32 j;
+        s32 index;
+        for (j = 0; j < 32; j++) {
+            index = (rand() % 32) * 128;
+            index += rand() % 128;
+            lbl_1_bss_76E0[index] = 1.0f;
+        }
+    }
+    lbl_803CC1B8->aFunctionPointer = fn_1_23B54;
 }
 
 // .text:0x000246AC size:0xCC
