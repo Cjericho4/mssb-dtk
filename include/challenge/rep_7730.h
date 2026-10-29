@@ -65,7 +65,14 @@ void fn_1_1F05C(void);
 void fn_800385F0(Rep7730Unk6BF4* camera, f32 a, f32 b, f32 c, f32 d);
 void fn_1_1F23C(Rep7730Unk6BF4* camera);
 void fn_1_1F2D8(void);
-void fn_1_1F418(void);
+typedef struct ChallengeRenderSettings {
+    u8 _pad0[0x1C];
+    u32 value;
+    u8 mode;
+    u8 selection;
+} ChallengeRenderSettings;
+void fn_1_1F418(ChallengeRenderSettings* settings);
+s32 fn_80048EA8(s32 index);
 void fn_1_1F618(void);
 void fn_1_1F900(void);
 void fn_1_1FD78(void);

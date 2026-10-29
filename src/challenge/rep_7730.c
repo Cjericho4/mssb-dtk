@@ -165,8 +165,58 @@ void fn_1_1F2D8(void) {
 }
 
 // .text:0x0001F418 size:0x200
-void fn_1_1F418(void) {
-    return;
+/* Adjust four renderer settings and wrap the selected settings row. */
+void fn_1_1F418(ChallengeRenderSettings* settings) {
+    s32 i;
+    for (i=0; i<4; i++) {
+        s32 value;
+        u8 selected = settings->selection;
+        switch (i) {
+        case 0:
+            if (i == selected) {
+                if (lbl_803C77B8.pressed & 1) {
+                    if (settings->mode == 0) settings->mode = 2;
+                    settings->mode--;
+                } else if (lbl_803C77B8.pressed & 2) {
+                    settings->mode++;
+                    if (settings->mode == 2) settings->mode = 0;
+                }
+            }
+            break;
+        case 1:
+            value = fn_80048EA8(0);
+            if (i == settings->selection) {
+                if (lbl_803C77B8.pressed & 1) value--;
+                else if (lbl_803C77B8.pressed & 2) value++;
+                fn_80048E00(0, value);
+            }
+            break;
+        case 2:
+            value = fn_80048EA8(1);
+            if (i == settings->selection) {
+                if (lbl_803C77B8.pressed & 1) value--;
+                else if (lbl_803C77B8.pressed & 2) value++;
+                fn_80048E00(1, value);
+            }
+            break;
+        case 3:
+            if (i == selected) {
+                if (lbl_803C77B8.pressed & 1) {
+                    if (settings->value != 0) settings->value--;
+                } else if (lbl_803C77B8.pressed & 2) {
+                    settings->value++;
+                }
+            }
+            break;
+        }
+    }
+    if (lbl_803C77B8.pressed & 8) {
+        if (settings->selection == 0) settings->selection = 4;
+        settings->selection--;
+    } else if (lbl_803C77B8.pressed & 4) {
+        settings->selection++;
+        if (settings->selection == 4) settings->selection = 0;
+    }
 }
 
 // .text:0x0001F618 size:0x2E8
