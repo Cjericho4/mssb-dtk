@@ -1,0 +1,81 @@
+diff --git a/src/challenge/rep_7730.c b/src/challenge/rep_7730.c
+index 337ccf0e..ed43f2c7 100644
+--- a/src/challenge/rep_7730.c
++++ b/src/challenge/rep_7730.c
+@@ -864,8 +864,75 @@ void fn_1_25064(void) {
+ }
+ 
+ // .text:0x00025C68 size:0x330
++typedef struct ChallengeWavePhysics {
++    f32 radius, damping, tension, speed, amplitude, viscosity;
++    f32 dt, dtSq;
++    s32 steps;
++    f32 inverseStep;
++} ChallengeWavePhysics;
++typedef struct ChallengeWaveDefaults {
++    u8 _pad0[0x8D0];
++    f32 tension, speed, radius;
++    s32 steps;
++    f32 spacing, viscosity;
++    Vec up, eye, target;
++} ChallengeWaveDefaults;
++typedef struct ChallengeWavePreviewScene {
++    u8 _pad0[0x14];
++    f32 damping;
++    u16 tension, radius, speed, amplitude, viscosity, count, spacing, limit, rate;
++    u8 steps, segments, active;
++} ChallengeWavePreviewScene;
++typedef struct ChallengeWaveStorage {
++    u8 _pad0[0x3D360];
++    Mtx view;
++    u8 simulation[0x1900];
++    ChallengeWavePhysics physics;
++    u8 _pad3ECB8[0x40438 - 0x3ECB8];
++    Mtx44 projection;
++} ChallengeWaveStorage;
++extern ChallengeWaveStorage lbl_1_bss_6BD8;
++void fn_80038E2C(ChallengeWavePhysics* physics);
++void fn_80038CD0(s32 segments, ChallengeWavePhysics* physics, void* simulation, f32 scale, f32 spacing);
++/* Initialize the spring-wave preview camera and simulation parameters. */
+ void fn_1_25C68(void) {
+-    return;
++    ChallengeWavePreviewScene* scene = (ChallengeWavePreviewScene*)lbl_803CC1B8;
++    ChallengeWaveDefaults* defaults = (ChallengeWaveDefaults*)lbl_1_data_FB98;
++    ChallengeWaveStorage* storage = &lbl_1_bss_6BD8;
++    GXColor clear = {0, 0, 0, 0};
++    GXSetCopyClear(clear, 0xFFFFFF);
++    C_MTXFrustum(storage->projection, -224, 224, -320, 320, 1, 512);
++    C_MTXLookAt(storage->view, &defaults->eye, &defaults->up, &defaults->target);
++    scene->tension = 64 * defaults->tension;
++    scene->speed = 64 * defaults->speed;
++    scene->radius = defaults->radius;
++    scene->amplitude = 32;
++    scene->steps = defaults->steps;
++    scene->count = 10;
++    scene->segments = 20;
++    scene->viscosity = 64 * defaults->viscosity;
++    scene->spacing = 64 * defaults->spacing;
++    scene->damping = 0.5f;
++    scene->limit = 100;
++    scene->rate = 10;
++    {
++        ChallengeWavePreviewScene* current = (ChallengeWavePreviewScene*)lbl_803CC1B8;
++        fn_80038E2C(&storage->physics);
++        storage->physics.radius = current->radius;
++        storage->physics.damping = current->damping;
++        storage->physics.tension = current->tension / 64.0f;
++        storage->physics.speed = current->speed / 64.0f;
++        storage->physics.amplitude = current->amplitude / 64.0f;
++        storage->physics.viscosity = current->viscosity / 10000.0f;
++        storage->physics.steps = current->steps;
++        storage->physics.dt = 1.0f / current->steps;
++        storage->physics.dtSq = storage->physics.dt * storage->physics.dt;
++        storage->physics.inverseStep = 1.0f / (2.0f * storage->physics.dt);
++        if (lbl_803C77B8.held & 0x40) storage->physics.steps = 1;
++        fn_80038CD0(current->segments, &storage->physics, storage->simulation, 10.0f, current->spacing / 64.0f);
++    }
++    lbl_803CC1B8->aFunctionPointer = fn_1_25064;
++    scene->active = 0;
+ }
+ 
+ // .text:0x00025F98 size:0x824
