@@ -909,8 +909,35 @@ void fn_3_F66C8(void) {
 }
 
 // .text:0x000F6938 size:0x15C mapped:0x807359CC
-void fn_3_F6938(void) {
-    return;
+// Append each moving stadium object to the collision list using its drift position.
+void fn_3_F6938(s32* count) {
+    Control control;
+    Mtx m;
+    struct StadiumModel* model;
+    u16 start;
+    s32 i;
+    s32 index;
+    StadiumObjectElem* object;
+    StaC5DriftTarget* target;
+
+    for (i = 0; i < lbl_3_bss_B220; i++) {
+        start = lbl_3_common_bss_350E4[0].unk40[*count - 1] + lbl_3_common_bss_350E4[0].unk3C[*count - 1];
+        lbl_3_common_bss_350E4[0].unk40[*count] = start;
+        index = lbl_3_bss_B21F + i;
+        lbl_3_common_bss_350E4[0].unk44[start] = index;
+        lbl_3_common_bss_350E4[0].unk3C[*count]++;
+        object = &lbl_3_common_bss_350E4[0].src[index];
+        model = object->unk_78;
+        control.type = 0;
+        target = &lbl_3_data_1B884[object->unk9C];
+        CTRLSetTranslation(&control, target->pos.x, -target->pos.y, target->pos.z);
+        CTRLSetScale(&control, 1.5f, 1.5f, 1.5f);
+        CTRLBuildMatrix(&control, m);
+        fn_3_B8574();
+        fn_3_B8464(m, model);
+        fn_3_B8414(&lbl_3_common_bss_350E4[0].unk48[*count * 2].x, &lbl_3_common_bss_350E4[0].unk48[*count * 2 + 1].x);
+        (*count)++;
+    }
 }
 
 // .text:0x000F6A94 size:0x1CC mapped:0x80735B28

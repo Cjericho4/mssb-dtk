@@ -268,7 +268,7 @@ void fn_3_F6084(void);
 struct StadiumModel* fn_3_F6504(s32 index, Mtx m);
 void fn_3_F65C8(s32* count);
 void fn_3_F66C8(void);
-void fn_3_F6938(void);
+void fn_3_F6938(s32* count);
 void fn_3_F6A94(s32* count);
 void fn_3_F6C60(void);
 void fn_3_F6FCC(void);
