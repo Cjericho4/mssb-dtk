@@ -269,6 +269,11 @@ void hwSetVirtualSampleLoopBuffer(u32 voice, void *addr, u32 len)
 
 u32 hwGetVirtualSampleState(u32 voice) { return dspVoice[voice].vSampleInfo.inLoopBuffer; }
 
+// Return the codec-specific extra data for a sample voice.
+void* hwGetSampleExtraData(u32 voice) {
+    return dspVoice[voice].smp_info.extraData;
+}
+
 u8 hwGetSampleType(u32 voice) { return dspVoice[voice].smp_info.compType; }
 
 u16 hwGetSampleID(u32 voice) { return dspVoice[voice].smp_id; }

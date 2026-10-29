@@ -809,6 +809,7 @@ extern DSPstudioinfo dspStudio[8];
 extern SYNTH_VOICE* synthVoice;
 
 extern DSPvoice* dspVoice;
+void* hwGetSampleExtraData(u32 voice);
 typedef s32 (*SND_COMPARE)(void*, void*);
 
 typedef struct CHANNEL_DEFAULTS {
