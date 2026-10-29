@@ -61,12 +61,6 @@ void fn_1_25BC(void) {
     return;
 }
 
-// .text:0x00003E38 size:0x23C
-void fn_1_3E38(void) {
-    return;
-}
-
-// .text:0x00004074 size:0x21C
 static inline void writeChallengeFloat(f32 value) {
     union { f32 value; u32 bits; } encoded;
     encoded.value = value;
@@ -78,6 +72,15 @@ static inline void writeChallengePosition(f32 x, f32 y, f32 z) {
     writeChallengeFloat(y);
     writeChallengeFloat(z);
 }
+// .text:0x00003E38 size:0x23C
+/* Emit a position and decode the packed display-list attribute index. */
+void fn_1_3E38(Vec* position, u32 index) {
+    writeChallengePosition(position->x, position->y, position->z);
+    __GDCheckOverflowed(1);
+    __GDWriteU8((index >> 7) + ((index & 0x7F) - 1) * 2);
+}
+
+// .text:0x00004074 size:0x21C
 /* Emit a floating-point position and its display-list attribute index. */
 void fn_1_4074(Vec* position) {
     writeChallengePosition(position->x, position->y, position->z);
