@@ -19,7 +19,22 @@ typedef struct Rep7BF0Unk471BC {
 } Rep7BF0Unk471BC;
 extern Rep7BF0Unk471BC lbl_1_bss_471BC;
 typedef struct Rep7BF0View471D8 {
-    /* 0x00 */ Rep7978Camera camera;
+    union {
+        Rep7978Camera camera;
+        struct {
+            u8 _pad0[0x50];
+            f32 frame;
+            u8 _pad54[0x64];
+            Mtx transform;
+            Vec direction;
+            Quaternion rotation;
+            u8 _pad104[0x18];
+            Vec localPosition;
+            Vec worldPosition;
+            u8 _pad134[12];
+            Vec normal;
+        };
+    };
 } Rep7BF0View471D8;
 extern Rep7BF0View471D8 lbl_1_bss_471D8;
 void fn_80048BEC(Rep7BF0Unk471BC* arg0, s32 arg1, s32 arg2);
@@ -31,7 +46,9 @@ s32 fn_1_289E0(ChallengeScript* script, u16 buttons);
 void fn_1_28AE0(void);
 typedef struct ChallengeScriptGlobals {
     s32 bounds[4];
-    u8 _pad10[0x24];
+    s32 frame, height, rotation;
+    s32 position[3];
+    s32 normal[3];
     s32 mode;
     u8 selection;
     u8 pending;
