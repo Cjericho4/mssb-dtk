@@ -170,9 +170,26 @@ void fn_3_12FD6C(void) {
     }
 }
 
+extern Vec lbl_3_data_216BC[15];
+
 // .text:0x0012FE84 size:0x150 mapped:0x8076EF18
+// Reset Barrel Batter barrels with randomized fall heights and colors.
 void fn_3_12FE84(void) {
-    return;
+    s32 i;
+    for (i = 0; i < 15; i++) {
+        g_Minigame.barrels[i].barrelState = 1;
+        g_Minigame.barrels[i].animationCounter = 0;
+        g_Minigame.barrels[i].replacingBarrelInd = 0;
+        g_Minigame.barrels[i].desiredPos.x = lbl_3_data_216BC[i].x;
+        g_Minigame.barrels[i].desiredPos.y = lbl_3_data_216BC[i].y;
+        g_Minigame.barrels[i].desiredPos.z = lbl_3_data_216BC[i].z;
+        g_Minigame.barrels[i].currentPos.x = lbl_3_data_216BC[i].x;
+        g_Minigame.barrels[i].currentPos.y = lbl_3_data_216BC[i].y;
+        g_Minigame.barrels[i].currentPos.z = lbl_3_data_216BC[i].z;
+        g_Minigame.barrels[i].currentPos.y += lbl_3_data_21770[0];
+        g_Minigame.barrels[i].currentPos.y += (i % 3) * 10 - fn_3_9EE24(101) * 5 / 100.0;
+        g_Minigame.barrels[i].barrelColour = fn_3_9EE24(3);
+    }
 }
 
 // .text:0x0012FFD4 size:0x2B4 mapped:0x8076F068
