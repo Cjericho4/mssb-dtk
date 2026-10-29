@@ -1,4 +1,7 @@
 #include "challenge/gap_85A8.h"
+extern char lbl_1_data_B70[];
+/* Owning resource API header has incompatible actor declarations. */
+s32 fn_80035838(char* descriptor, s32 mode);
 
 // .text:0x000085A8 size:0x7C
 void fn_1_85A8(void) {
@@ -103,8 +106,36 @@ void fn_1_88CC(void) {
 }
 
 // .text:0x000088D0 size:0x1C0
+/* Load the mode-selection resource, then handle selection and confirmation. */
 void fn_1_88D0(void) {
-    return;
+    Gap85A8State* state = &lbl_1_common_bss_47674;
+    switch (state->unkC) {
+    case 0:
+        if (fn_80035838(lbl_1_data_B70, 6)) {
+            lbl_1_common_bss_47674.pending = 0;
+            lbl_1_common_bss_47674.previous = 3;
+            state->unkC++;
+        }
+        break;
+    case 1:
+    if (lbl_803C77B8.held & 8) {
+        if (--state->mode < 0) state->mode = 2;
+    } else if (lbl_803C77B8.held & 4) {
+        if (++state->mode == 3) state->mode = 0;
+    } else if (lbl_803C77B8.held & 0x100) {
+        if (state->ready == 0) {
+            state->pending = 1;
+            state->ready = 1;
+        } else {
+            state->pending = 2;
+        }
+        updateChallengeMode();
+    } else if (lbl_803C77B8.held & 0x200) {
+        state->unkC = 0;
+        lbl_803CC1B8->aFunctionPointer = fn_1_8B90;
+    }
+        break;
+    }
 }
 
 // .text:0x00008A90 size:0xFC
