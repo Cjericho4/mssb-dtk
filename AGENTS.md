@@ -58,6 +58,12 @@ budget rules take precedence over older agent workflows in this checkout.
 
 - Do not commit, push, publish, or update `queue.log`/`working_progress.md`
   automatically. Report the diff and verification result for review first.
+  Exception: in a batch worktree (`.agent/workflows/parallel_batch.md`), commit
+  each verified match on that worktree's own branch without waiting for review.
+  Never commit to `main` or push; review happens when the branch is merged.
+- Before starting a function in a batch, claim it in the main checkout:
+  `mkdir /home/plex/repos/mssb-dtk/.claims/<fn>`. If `mkdir` fails, another agent
+  has it: skip it.
 - Never run broad cleanup/reset commands. Preserve unrelated worktree changes.
 - For routine planning, produce a short read-only shortlist from the queue and
   score report; do not schedule unattended source edits or commits.

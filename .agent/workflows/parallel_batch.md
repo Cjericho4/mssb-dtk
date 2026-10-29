@@ -36,7 +36,7 @@ Include: worktree path + branch; `source .venv/bin/activate`; read CLAUDE.md and
 `<worktree>/.scratch/`; the function list; ~6 attempts per function; on MATCH commit
 `matched <fn>` (no Co-Authored-By), each commit must build, compare
 `tools/find_matches.py` counts to prove nothing regressed; on no match restore and save the
-best attempt in `.scratch/`; don't touch queue.log/working_progress.md; report one line per
+best attempt in `.scratch/`; claim each function first with `mkdir /home/plex/repos/mssb-dtk/.claims/<fn>` (skip it if mkdir fails); commit on the worktree branch without waiting for review; don't touch queue.log/working_progress.md; report one line per
 function plus shared-header changes and new tips.
 
 **Merge hygiene to put in the prompt** (the recurring merge breakages):
