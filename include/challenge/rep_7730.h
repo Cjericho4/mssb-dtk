@@ -70,12 +70,14 @@ typedef struct ChallengeRenderSettings {
     u32 value;
     u8 mode;
     u8 selection;
+    u8 stages;
+    u8 textureIndex;
 } ChallengeRenderSettings;
 void fn_1_1F418(ChallengeRenderSettings* settings);
 s32 fn_80048EA8(s32 index);
 void fn_1_1F618(void);
 void fn_1_1F900(void);
-void fn_1_1FD78(void);
+void fn_1_1FD78(ChallengeRenderSettings* settings);
 void fn_1_2004C(void);
 void fn_80048C1C(void);
 void fn_80048D4C(void);
