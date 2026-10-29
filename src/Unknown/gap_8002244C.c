@@ -669,8 +669,43 @@ u32 fn_80024D2C(Gap8002244CKeyAnimation* animation) {
 }
 
 // .text:0x80024DB0 size:0x1F4
-void fn_80024DB0(void) {
-    return;
+static inline void markKeyRepeat(Gap8002244CKeyAnimation* animation) {
+    if (animation) animation->repeat = 3;
+}
+static inline void markKeyChange(Gap8002244CKeyAnimation* animation) {
+    if (animation) animation->mode = 3;
+}
+BOOL fn_80024DB0(Gap8002244CKeyAnimation* animation) {
+    Gap8002244CKeyTrack* track = &animation->tracks[animation->trackIndex];
+    u32 first;
+    u32 previous;
+    BOOL ended;
+    if (animation->repeatsLeft == 0) return FALSE;
+    if (!animation->active) return FALSE;
+    first = 0.0f == animation->time;
+    previous = animation->keyIndex;
+    animation->time += animation->rate;
+    markKeyRepeat(animation);
+    ended = animation->time >= (f32)(u32)track->duration;
+    if (ended) {
+        if (animation->repeatsLeft > 0) animation->repeatsLeft--;
+        if (animation->repeatsLeft != 0) {
+            animation->time -= (f32)(u32)track->duration;
+            animation->keyIndex = track->count;
+            do {
+                animation->keyIndex--;
+            } while ((f32)(u32)(track->keys[animation->keyIndex].time & 0xFFF) > animation->time);
+        } else {
+            animation->time = (f32)(u32)track->duration;
+        }
+    } else {
+        if (animation->keyIndex < track->count - 1) {
+            while (animation->time >= (f32)(u32)(track->keys[(u32)(animation->keyIndex + 1)].time & 0xFFF))
+                animation->keyIndex++;
+        }
+    }
+    if (first || previous != animation->keyIndex) markKeyChange(animation);
+    return ended;
 }
 
 // .text:0x80024FA4 size:0xCB4

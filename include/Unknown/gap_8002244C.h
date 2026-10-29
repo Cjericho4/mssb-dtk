@@ -191,16 +191,25 @@ typedef union Gap8002244CKey {
     u32 word;
     struct { u16 time, value; };
 } Gap8002244CKey;
-typedef struct Gap8002244CKeyTrack { u16 unk0, count; Gap8002244CKey* keys; } Gap8002244CKeyTrack;
+typedef struct Gap8002244CKeyTrack { u16 duration, count; Gap8002244CKey* keys; } Gap8002244CKeyTrack;
 typedef struct Gap8002244CKeyAnimation {
     f32 time;
-    u8 _pad4[6];
+    f32 rate;
+    u16 playing;
     u16 trackIndex;
-    u8 _padC[0xC];
+    u16 keyIndex;
+    s16 repeatsLeft;
+    u8 dirty;
+    u8 active : 1;
+    u8 repeat : 2;
+    u8 mode : 2;
+    u8 reserved : 3;
+    u16 _pad12;
+    void* callback;
     Gap8002244CKeyTrack tracks[1];
 } Gap8002244CKeyAnimation;
 u32 fn_80024D2C(Gap8002244CKeyAnimation* animation);
-void fn_80024DB0(void);
+BOOL fn_80024DB0(Gap8002244CKeyAnimation* animation);
 void fn_80024FA4(void);
 void fn_80025C58(void);
 
