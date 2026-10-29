@@ -4,12 +4,56 @@
 #include "game/gap_AC9F8.h"
 #include "game/rep_3448.h"
 #include "stl/mem.h"
+#include "musyx/musyx.h"
 
 void fn_80069A98(void);
 
+typedef struct SoundQueueEntry {
+    s16 unk_0x00;
+    u8 _pad02[6];
+} SoundQueueEntry;
+STATIC_ASSERT(sizeof(SoundQueueEntry) == 8);
+extern SoundQueueEntry lbl_3_data_BE50[];
+
 // .text:0x00097144 size:0x15C mapped:0x806D61D8
+// Advance the pending sound queue and schedule playback when a new entry starts.
 void fn_3_97144(void) {
-    return;
+    BOOL started = FALSE;
+    lbl_3_common_bss_32718_struct* sound;
+    if (g_GameLogic.gameStatus == GAME_STATUS_INNING_TRANSITION ||
+        (u8)(g_GameLogic.gameStatus - GAME_STATUS_HOMERUN_END) <= GAME_STATUS_CHAMPIONSHIP - GAME_STATUS_HOMERUN_END ||
+        g_GameLogic.gameStatus == GAME_STATUS_0x18) {
+        g_UnkSound_32718._02 = 0;
+        g_UnkSound_32718._03 = 0;
+        g_UnkSound_32718._04 = 0;
+        g_UnkSound_32718._05 = 0;
+        g_UnkSound_32718._06 = 0;
+        return;
+    }
+    sound = &g_UnkSound_32718;
+    if (sound->_07 == 0) {
+        if (sound->_02 != 0) {
+            if (g_Stats.unk36 == 0) {
+                started = TRUE;
+                sound->_07 = sound->_02;
+                sound->_02 = sound->_03;
+                sound->_03 = sound->_04;
+                sound->_04 = sound->_05;
+                sound->_05 = sound->_06;
+                sound->_06 = 0;
+                sound->_00 = 0;
+            }
+            sndFXKeyOff(lbl_3_common_bss_34C58._1C);
+        }
+    } else {
+        sound->_00++;
+        if (sound->_02 != 0 && sound->_00 < 60) {
+            sound->_00 = 60;
+        }
+    }
+    if (lbl_3_data_BE50[sound->_07].unk_0x00 >= 0 && started) {
+        fn_800B0A5C_insertQueue(fn_3_96CA4, 2);
+    }
 }
 
 // .text:0x000972A0 size:0x28 mapped:0x806D6334
