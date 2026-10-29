@@ -39,7 +39,7 @@ typedef struct Rep7BF0View471D8 {
 extern Rep7BF0View471D8 lbl_1_bss_471D8;
 void fn_80048BEC(Rep7BF0Unk471BC* arg0, s32 arg1, s32 arg2);
 
-void fn_1_2858C(void);
+void fn_1_2858C(Rep7978Camera* camera, u16 buttons, u16 held, u16 pressed, ChallengeAxes* axes);
 void fn_1_289C0(Rep7978Camera* camera);
 extern ChallengeScriptData* lbl_1_data_11424[];
 s32 fn_1_289E0(ChallengeScript* script, u16 buttons);

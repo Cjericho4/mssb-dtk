@@ -1,8 +1,41 @@
 #include "challenge/rep_7BF0.h"
 
 // .text:0x0002858C size:0x434
-void fn_1_2858C(void) {
-    return;
+/* Update free-camera orientation, translation and zoom from controller axes. */
+void fn_1_2858C(Rep7978Camera* camera, u16 buttons, u16 held, u16 pressed, ChallengeAxes* axes) {
+    Mtx rotation;
+    Quaternion quaternion;
+    Vec movement;
+    if (held & 0x10) {
+        fn_1_273D8(camera);
+    } else {
+        camera->angleX -= (((3.1415927f * camera->turnSpeed) / 180.0f) * (s8)axes->bytes[2] / 128.0f) / 60.0f;
+        camera->angleY += (((3.1415927f * camera->turnSpeed) / 180.0f) * (s8)axes->bytes[3] / 128.0f) / 60.0f;
+        while (camera->angleX < -3.1415927f) camera->angleX += 6.2831855f;
+        while (camera->angleX >= 3.1415927f) camera->angleX -= 6.2831855f;
+        if (camera->angleY < -3.1385248f) camera->angleY = -3.1385248f;
+        else if (camera->angleY > 3.1385248f) camera->angleY = 3.1385248f;
+        movement.y = movement.x = 0.0f;
+        movement.z = 1.0f;
+        PSVECCrossProduct(&movement, &camera->up, &camera->direction);
+        PSVECNormalize(&camera->direction, &camera->direction);
+        C_QUATRotAxisRad(&quaternion, &camera->direction, camera->angleY);
+        PSMTXQuat(rotation, &quaternion);
+        PSMTXMultVec(rotation, &movement, &camera->direction);
+        C_QUATRotAxisRad(&quaternion, &camera->up, camera->angleX);
+        PSMTXQuat(rotation, &quaternion);
+        PSMTXMultVec(rotation, &camera->direction, &camera->direction);
+        movement.x = (camera->moveSpeed * -(s8)axes->bytes[0] / 128.0f) / 60.0f;
+        movement.z = (camera->moveSpeed * (s8)axes->bytes[1] / 128.0f) / 60.0f;
+        movement.y -= (camera->moveSpeed * axes->bytes[4] / 150.0f) / 60.0f;
+        movement.y += (camera->moveSpeed * axes->bytes[5] / 150.0f) / 60.0f;
+        PSMTXMultVec(rotation, &movement, &movement);
+        PSVECAdd(&camera->eye, &movement, &camera->eye);
+        camera->height += camera->width * ((buttons & 0x400) != 0) / 60.0f;
+        camera->height -= camera->width * ((buttons & 0x800) != 0) / 60.0f;
+        camera->height = 0.1f * (camera->height == 0.0f) + camera->height * (camera->height != 0.0f);
+        camera->scale = 1.0f / camera->height;
+    }
 }
 
 // .text:0x000289C0 size:0x20
