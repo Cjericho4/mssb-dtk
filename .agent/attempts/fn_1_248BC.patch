@@ -1,0 +1,87 @@
+diff --git a/include/challenge/rep_7730.h b/include/challenge/rep_7730.h
+index 3cef041e..35a8f434 100644
+--- a/include/challenge/rep_7730.h
++++ b/include/challenge/rep_7730.h
+@@ -121,7 +121,7 @@ extern void (*lbl_1_data_104A8[4])(void);
+ void fn_1_246AC(void);
+ void fn_1_24778(void);
+ void fn_1_247A0(void);
+-void fn_1_248BC(void);
++void fn_1_248BC(s32 count);
+ void fn_1_24A8C(void);
+ void fn_1_24C4C(void);
+ void fn_1_25064(void);
+diff --git a/src/challenge/rep_7730.c b/src/challenge/rep_7730.c
+index 50d948dc..a61e0ec5 100644
+--- a/src/challenge/rep_7730.c
++++ b/src/challenge/rep_7730.c
+@@ -2,10 +2,16 @@
+ typedef struct ChallengeLinePoint {
+     u8 _pad0[0xC];
+     Vec position;
+-    u8 _pad18[0x28];
++    u8 _pad18[0xC];
++    Vec normal;
++    Vec direction;
++    u8 _pad3C[4];
+ } ChallengeLinePoint;
+ STATIC_ASSERT(sizeof(ChallengeLinePoint) == 0x40);
+ extern ChallengeLinePoint lbl_1_bss_6FE0[];
++extern ChallengeLinePoint lbl_1_bss_43F68[];
++extern u32 lbl_1_data_10384[];
++extern f32 lbl_1_data_104A4;
+ extern u32 lbl_1_data_104DC[6];
+ extern GXTexObj lbl_1_bss_6EA4[];
+ extern GXTlutObj lbl_1_bss_6E44[];
+@@ -533,8 +539,49 @@ void fn_1_247A0(void) {
+ }
+ 
+ // .text:0x000248BC size:0x1D0
+-void fn_1_248BC(void) {
+-    return;
++/* Attempt: inline pass narrows register differences; first-loop allocation remains unmatched. */
++static inline void drawChallengePoints(s32 count, ChallengeLinePoint* current, u32* currentColor) {
++    while (--current, --currentColor, count--) {
++        GXWGFifo.f32 = current->position.x;
++        GXWGFifo.f32 = current->position.y;
++        GXWGFifo.f32 = current->position.z;
++        GXWGFifo.u32 = *currentColor;
++    }
++}
++/* Draw the curve and colored direction/normal vectors, restoring its line width. */
++void fn_1_248BC(s32 count) {
++    GXTexOffset offset;
++    u8 width;
++    ChallengeLinePoint* point;
++    u32* color;
++    s32 i;
++    GXGetLineWidth(&width, &offset);
++    GXSetLineWidth(24, offset);
++    GXBegin(GX_LINESTRIP, GX_VTXFMT0, count);
++    point = &lbl_1_bss_43F68[count];
++    color = &lbl_1_data_10384[count];
++    drawChallengePoints(count, point, color);
++    GXSetLineWidth(width, offset);
++    GXBegin(GX_LINES, GX_VTXFMT0, count * 4);
++    i = count;
++    while (--point, --color, i--) {
++        GXWGFifo.f32 = point->position.x;
++        GXWGFifo.f32 = point->position.y;
++        GXWGFifo.f32 = point->position.z;
++        GXWGFifo.u32 = *color;
++        GXWGFifo.f32 = point->position.x + lbl_1_data_104A4 * point->direction.x;
++        GXWGFifo.f32 = point->position.y + lbl_1_data_104A4 * point->direction.y;
++        GXWGFifo.f32 = point->position.z + lbl_1_data_104A4 * point->direction.z;
++        GXWGFifo.u32 = *color;
++        GXWGFifo.f32 = point->position.x;
++        GXWGFifo.f32 = point->position.y;
++        GXWGFifo.f32 = point->position.z;
++        GXWGFifo.u32 = *color ^ 0xFFFFFF00;
++        GXWGFifo.f32 = point->position.x + lbl_1_data_104A4 * point->normal.x;
++        GXWGFifo.f32 = point->position.y + lbl_1_data_104A4 * point->normal.y;
++        GXWGFifo.f32 = point->position.z + lbl_1_data_104A4 * point->normal.z;
++        GXWGFifo.u32 = *color ^ 0xFFFFFF00;
++    }
+ }
+ 
+ // .text:0x00024A8C size:0x1C0
