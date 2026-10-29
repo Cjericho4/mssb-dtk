@@ -1,4 +1,10 @@
 #include "challenge/rep_0610.h"
+#include "game/rep_1C0.h"
+/* Texture owning header has conflicting actor views with this unit. */
+void convertTextureHeader(Gap8000B9C8Texture* texture);
+extern CompressedDiskRead lbl_1_data_ADE0;
+extern CompressedDiskRead lbl_1_data_A940;
+
 
 // .text:0x0000C5AC size:0x434
 void fn_1_C5AC(void) {
@@ -387,8 +393,30 @@ void fn_1_10458(void) {
 }
 
 // .text:0x00010560 size:0x110
+// Load and relocate the selector's two texture resources over successive frames.
 void fn_1_10560(void) {
-    return;
+    ChallengeState* state = &lbl_1_bss_3070;
+    switch (lbl_803CC1B8->loadingState) {
+    case 0:
+        state->unk_0x24 = (u32)ARAMTransfer(&lbl_1_data_ADE0, 0, 0, 0);
+        lbl_803CC1B8->loadingState = 1;
+        break;
+    case 1:
+        if (lbl_803C6CF8.allowLoad == 1) {
+            u32* file = (u32*)state->unk_0x24;
+            state->texture = (Gap8000B9C8Texture*)((u8*)file + file[0]);
+            convertTextureHeader(state->texture);
+            state->extraTexture = (Gap8000B9C8Texture*)ARAMTransfer(&lbl_1_data_A940, 0, 1, 0);
+            lbl_803CC1B8->loadingState = 2;
+        }
+        break;
+    case 2:
+        if (lbl_803C6CF8.allowLoad == 1) {
+            convertTextureHeader(state->extraTexture);
+            fn_800B0A14_removeQueue();
+        }
+        break;
+    }
 }
 
 // .text:0x00010670 size:0x34

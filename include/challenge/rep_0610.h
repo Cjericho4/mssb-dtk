@@ -20,6 +20,7 @@ typedef struct Rep0610Items {
     /* 0x8 */ DrawingSceneItem* item8;
 } Rep0610Items;
 
+typedef struct Gap8000B9C8Texture Gap8000B9C8Texture;
 typedef struct ChallengeState {
     /* 0x0000 */ u8 _pad0[0xC];
     /* 0x000C */ s32 unkC;
@@ -29,7 +30,7 @@ typedef struct ChallengeState {
     /* 0x0020 */ u8 blink;
     /* 0x0021 */ u8 _pad21[3];
     /* 0x0024 */ u32 unk_0x24;
-    /* 0x0028 */ s32 selection;
+    /* 0x0028 */ union { s32 selection; Gap8000B9C8Texture* texture; };
     /* 0x002C */ u8 _pad2C[0xC];
     /* 0x0038 */ s32 page;
     /* 0x003C */ u8 _pad3C[0x10];
@@ -48,7 +49,9 @@ typedef struct ChallengeState {
     /* 0x2F01 */ u8 unk2F01;
     /* 0x2F02 */ u8 _pad2F02;
     /* 0x2F03 */ u8 modelIndex;
-    /* 0x2F04 */ u8 _pad2F04[0x844];
+    /* 0x2F04 */ u8 _pad2F04[0x170];
+    /* 0x3074 */ Gap8000B9C8Texture* extraTexture;
+    /* 0x3078 */ u8 _pad3078[0x6D0];
     /* 0x3748 */ Rep0610Items items;
 } ChallengeState;
 extern ChallengeState lbl_1_bss_3070;
