@@ -1,0 +1,128 @@
+diff --git a/include/challenge/rep_0610.h b/include/challenge/rep_0610.h
+index f7117755..f6ff3961 100644
+--- a/include/challenge/rep_0610.h
++++ b/include/challenge/rep_0610.h
+@@ -13,6 +13,7 @@ extern Rep0610Slot lbl_1_bss_6940[];
+ extern u8 lbl_1_bss_5F73;
+ extern u32 lbl_1_bss_5F6C;
+ #include "challenge/challenge.h"
++#include "UnknownHeaders.h"
+ 
+ typedef struct Rep0610Items {
+     /* 0x0 */ u8 _pad0[4];
+@@ -24,9 +25,11 @@ typedef struct Gap8000B9C8Texture Gap8000B9C8Texture;
+ typedef struct ChallengeState {
+     /* 0x0000 */ u8 _pad0[0xC];
+     /* 0x000C */ s32 unkC;
+-    /* 0x0010 */ u8 _pad10;
++    /* 0x0010 */ u8 showBones;
+     /* 0x0011 */ u8 unk11;
+-    /* 0x0012 */ u8 _pad12[0xE];
++    /* 0x0012 */ u8 _pad12[6];
++    s32 boneScroll;
++    u8 _pad1C[4];
+     /* 0x0020 */ u8 blink;
+     /* 0x0021 */ u8 _pad21[3];
+     /* 0x0024 */ u32 unk_0x24;
+@@ -51,7 +54,8 @@ typedef struct ChallengeState {
+     /* 0x2F03 */ u8 modelIndex;
+     /* 0x2F04 */ f32 blend;
+     /* 0x2F08 */ u8 blendEnabled;
+-    u8 _pad2F09[0x16B];
++    u8 _pad2F09[0x167];
++    HugeAnimEntry68* extraActors;
+     /* 0x3074 */ Gap8000B9C8Texture* extraTexture;
+     /* 0x3078 */ u8 _pad3078[0x6D0];
+     /* 0x3748 */ Rep0610Items items;
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 82435d46..e5951db5 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -934,8 +934,86 @@ void fn_1_151F8(void) {
+ }
+ 
+ // .text:0x0001540C size:0x354
++#include "challenge/gap_C2A4.h"
++typedef struct ChallengeBoneNode {
++    u8 _pad0[0x14];
++    void* geometry;
++} ChallengeBoneNode;
++typedef struct ChallengeBoneModel {
++    u8 _pad0[6];
++    u16 count;
++    u8 _pad8[0x10];
++    ChallengeBoneNode** nodes;
++} ChallengeBoneModel;
++typedef struct ChallengeAttachmentBoneIndex {
++    u8 _pad0[0xDAE];
++    u16 index;
++} ChallengeAttachmentBoneIndex;
++extern s8 lbl_1_data_AC90;
++s32 fn_800B2BA8(AnimLevel1* actor, u16 bone, ChallengeBoneModel* other, u16 index);
++static inline void cycleChallengeBone(u32* selected, u32 count, s32 step) {
++    step += count;
++    *selected = (*selected + step) % count;
++}
++/* Navigate the bone hierarchy and attach or detach the selected extra model. */
+ void fn_1_1540C(void) {
+-    return;
++    ChallengeState* state = &lbl_1_bss_3070;
++    char prefix[32];
++    s32 skip;
++    s32 count = 20;
++    s32 remaining = state->selectedBone;
++    if (state->boneScroll > remaining) state->boneScroll = remaining;
++    else if (state->boneScroll < remaining - 19) state->boneScroll = remaining - 19;
++    skip = state->boneScroll;
++    fn_1_C2DC((ChallengeTreeNode*)((ChallengeBoneModel*)g_hugeAnimStruct.ctrlOrBonePtr[state->modelIndex].unk34)->nodes[0],
++        prefix, 0, 19, 4, &remaining, &skip, &count);
++    if (lbl_803C77B8.pressed & 8) {
++        if (--state->unkC < 0) state->unkC = 5;
++    } else if (lbl_803C77B8.pressed & 4) {
++        if (++state->unkC >= 6) state->unkC = 0;
++    } else if (lbl_803C77B8.pressed & 1) {
++        switch (state->unkC) {
++        case 0: state->showBones ^= 1; break;
++        case 1: lbl_1_data_ABA8 ^= 1; break;
++        case 2: {
++            cycleChallengeBone(&state->selectedBone,
++                g_hugeAnimStruct.fielderStructs[state->modelIndex].ring->count, -1);
++            break;
++        }
++        case 3: break;
++        case 4: if (lbl_1_data_AC90 >= 0) lbl_1_data_AC90--; break;
++        case 5: fn_1_1644C(); break;
++        }
++    } else if (lbl_803C77B8.pressed & 2) {
++        switch (state->unkC) {
++        case 0: state->showBones ^= 1; break;
++        case 1: lbl_1_data_ABA8 ^= 1; break;
++        case 2: {
++            cycleChallengeBone(&state->selectedBone,
++                g_hugeAnimStruct.fielderStructs[state->modelIndex].ring->count, +1);
++            break;
++        }
++        case 3: break;
++        case 4: if (lbl_1_data_AC90 < 4) lbl_1_data_AC90++; break;
++        case 5: fn_1_1644C(); break;
++        }
++    } else if (lbl_803C77B8.pressed & 0x200) {
++        state->unkC = 0;
++        state->unk2F01 = 1;
++    }
++    {
++        u16 bone = ((ChallengeAttachmentBoneIndex*)&g_hugeAnimStruct)->index;
++        if (bone != 0xFFFF) {
++            if (lbl_1_data_AC90 >= 0) {
++                ChallengeBoneModel* model = (ChallengeBoneModel*)state->extraActors[lbl_1_data_AC90].unk34;
++                s32 i;
++                for (i = 0; i < model->count; i++) {
++                    if (model->nodes[i]->geometry)
++                        fn_800B2BA8(g_hugeAnimStruct.ctrlOrBonePtr[0].unk34, bone, model, i);
++                }
++            } else fn_800B2BA8(g_hugeAnimStruct.ctrlOrBonePtr[0].unk34, bone, NULL, 0);
++        }
++    }
+ }
+ 
+ // .text:0x00015760 size:0x580
