@@ -1,0 +1,90 @@
+diff --git a/include/challenge/rep_0138.h b/include/challenge/rep_0138.h
+index 3f193671..9bbea89b 100644
+--- a/include/challenge/rep_0138.h
++++ b/include/challenge/rep_0138.h
+@@ -52,10 +52,15 @@ typedef struct ChallengeModelPose {
+     u8 _pad38[0x34];
+ } ChallengeModelPose;
+ typedef struct ChallengePreviewState {
+-    u8 _pad0[0x30];
++    Mtx view;
+     u16 flags;
+-    u8 _pad32[0x1A];
+-    Vec position;
++    u16 yaw;
++    f32 strafe, forward;
++    Vec target;
++    union {
++        struct { f32 centerX; Vec position; };
++        struct { Vec center; f32 zoom; };
++    };
+     u8 _pad58[4];
+     ChallengeModelPose poses[4];
+     u8 _pad20C[0x10];
+diff --git a/src/challenge/rep_0138.c b/src/challenge/rep_0138.c
+index cb7e7ac3..843dd030 100644
+--- a/src/challenge/rep_0138.c
++++ b/src/challenge/rep_0138.c
+@@ -195,8 +195,61 @@ void fn_1_78E4(void) {
+ }
+ 
+ // .text:0x00007960 size:0x4A4
++extern Vec lbl_1_data_87C;
++extern u8 lbl_1_bss_C0;
++void makeLookAtMatrix(Mtx view, Vec* eye, Vec* up, Vec* target);
++void fn_80011640(Mtx source, Mtx destination);
++void fn_800B9950(u32 flags, f32 x, f32 y);
++/* Orbit and pan the model-preview camera, then update projection and lighting. */
++static inline void updatePreviewLights(Mtx view) {
++    s32 i;
++    for (i = 0; i < 3; i++) LITXForm(lbl_1_data_848[i], view);
++}
+ void fn_1_7960(void) {
+-    return;
++    Mtx pitch, yaw, rotation;
++    Mtx44 projection;
++    Vec angles;
++    f32 strafe = (s8)lbl_803C77B8.axes.bytes[0] / -128.0f;
++    f32 forward = (s8)lbl_803C77B8.axes.bytes[1] / 128.0f;
++    Vec offset = {0.0f, 0.0f, 100.0f};
++    f32 cosine, sine;
++    ChallengePreviewState* state = &lbl_1_common_bss_472B4;
++    state->flags -= (s8)lbl_803C77B8.axes.bytes[3] * 2;
++    state->yaw += (s8)lbl_803C77B8.axes.bytes[2] * 2;
++    state->strafe = strafe;
++    state->forward = forward;
++    if (lbl_803C77B8.buttons & 0x10) {
++        state->zoom -= lbl_803C77B8.axes.bytes[4] / 4096.0f;
++        state->zoom += lbl_803C77B8.axes.bytes[5] / 4096.0f;
++    } else {
++        state->center.y -= lbl_803C77B8.axes.bytes[5] / 1024.0f;
++        state->center.y += lbl_803C77B8.axes.bytes[4] / 1024.0f;
++    }
++    angles.x = state->flags;
++    angles.y = state->yaw;
++    angles.z = 0;
++    PSVECScale(&angles, 0.0000958738f, &angles);
++    PSMTXRotRad(pitch, 'X', angles.x);
++    PSMTXRotRad(yaw, 'Y', angles.y);
++    sine = yaw[0][2];
++    cosine = yaw[0][0];
++    PSMTXConcat(yaw, pitch, rotation);
++    PSMTXMultVec(rotation, &offset, &lbl_1_common_bss_472B4.target);
++    lbl_1_common_bss_472B4.center.x += lbl_1_common_bss_472B4.forward * sine - lbl_1_common_bss_472B4.strafe * cosine;
++    lbl_1_common_bss_472B4.center.z += lbl_1_common_bss_472B4.forward * cosine + lbl_1_common_bss_472B4.strafe * sine;
++    lbl_1_common_bss_472B4.target.x += lbl_1_common_bss_472B4.center.x;
++    lbl_1_common_bss_472B4.target.y += lbl_1_common_bss_472B4.center.y;
++    lbl_1_common_bss_472B4.target.z += lbl_1_common_bss_472B4.center.z;
++    makeLookAtMatrix(lbl_1_common_bss_472B4.view, &lbl_1_common_bss_472B4.center, &lbl_1_data_87C, &lbl_1_common_bss_472B4.target);
++    { cosine = 1.0f / lbl_1_common_bss_472B4.zoom;
++    C_MTXFrustum(projection, -0.175f * cosine, 0.175f * cosine, 0.25f * cosine, -0.25f * cosine, 1.0f, 512.0f);
++    GXSetProjection(projection, 0);
++    fn_800B806C(0, -240.0f * cosine, 240.0f * cosine, -320.0f * cosine, 320.0f * cosine, -512.0f, -1.0f, 1280.0f);
++    }
++    updatePreviewLights(lbl_1_common_bss_472B4.view);
++    fn_80011640(lbl_1_common_bss_472B4.view, lbl_1_common_bss_472B4.view);
++    if (lbl_1_bss_C0) fn_800B9950(3, (65535 - state->yaw) / 32768.0f, (s16)state->flags / 32768.0f);
++    else fn_800B9950(3, 0, 0);
+ }
+ 
+ // .text:0x00007E04 size:0xF4
