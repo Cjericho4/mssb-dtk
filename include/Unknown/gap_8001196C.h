@@ -121,7 +121,9 @@ typedef struct Gap8001196CAnim {
             /* 0x030 */ struct Gap8001196CSubItemEntry* subItems; /* &g_hugeAnimStruct.subItemEntries[slotKind*3] once fn_80012B90 is done */
         };
     };
-    u8 _pad34[0x60 - 0x34];
+    u8 _pad34[0x4C - 0x34];
+    /* 0x04C */ f32 unk4C;
+    u8 _pad50[0x60 - 0x50];
     /* 0x060 */ s16 unk60;
     /* 0x062 */ s16 animID;
     /* 0x064 */ s16 nextAnim;
@@ -130,7 +132,8 @@ typedef struct Gap8001196CAnim {
     /* 0x06A */ s16 unk6A;
     /* 0x06C */ s16 unk6C;
     /* 0x06E */ s16 unk6E;
-    u8 _pad70[0x162 - 0x70];
+    /* 0x070 */ s16 unk70;
+    u8 _pad72[0x162 - 0x72];
     /* 0x162 */ u16 boneIndices[120];        /* bone id -> actor bone index, 0xFFFF = none */
     /* 0x252 */ s8 charID;
     u8 _pad253;
@@ -161,16 +164,19 @@ typedef struct Gap8001196CAnim {
     /* 0x26C */ u8 unk26C;
     /* 0x26D */ u8 unk26D;
     /* 0x26E */ u8 unk26E;
-    u8 _pad26F;
+    /* 0x26F */ u8 unk_0x26F;
     /* 0x270 */ u8 unk270;
     /* 0x271 */ u8 unk271;
     /* 0x272 */ u8 unk272;
     /* 0x273 */ u8 unk273;
-    u8 _pad274[3];
+    u8 _pad274;
+    /* 0x275 */ u8 unk_0x275;
+    u8 _pad276;
     /* 0x277 */ u8 unk277;
     /* 0x278 */ u8 isBatter;
     u8 _pad279[0x27C - 0x279];
 } Gap8001196CAnim;
+STATIC_ASSERT(sizeof(Gap8001196CAnim) == 0x27C);
 /* per memory-block (Gap8001196CAnim.blockIndex) animation-bank buffers, filled by fn_80016B60 */
 typedef struct Gap8001196CSlotBanks {
     /* 0x00 */ u8* bankA;                    /* -> Gap8001196CAnim.animBankA (subfile track 4, or 13 in mode 7) */
@@ -275,7 +281,16 @@ typedef struct Gap8001196CAnimTable {
         };
     };
 } Gap8001196CAnimTable;
-typedef struct Gap8001196CGameSettings { u8 _pad0[7]; u8 mode; u8 _pad8[9]; u8 unk11; u8 _pad12[0x46]; } Gap8001196CGameSettings; /* 0x58, g_d_GameSettings @0x800E86FC */
+typedef struct Gap8001196CGameSettings {
+    u8 _pad0[6];
+    /* 0x06 */ u8 unk_0x06;
+    /* 0x07 */ u8 mode;
+    u8 _pad8;
+    /* 0x09 */ u8 unk_0x09;
+    u8 _padA[7];
+    /* 0x11 */ u8 unk11;
+    u8 _pad12[0x46];
+} Gap8001196CGameSettings; /* 0x58, g_d_GameSettings @0x800E86FC */
 extern Gap8001196CGameSettings g_d_GameSettings;
 extern Gap8001196CAnimTable g_hugeAnimStruct;
 typedef struct Gap8001196CRosterEntry { u8 _pad0[0x24]; s16 charID; u8 unk26; u8 unk27; u8 _pad28[0x78]; } Gap8001196CRosterEntry; /* 0xA0 */
