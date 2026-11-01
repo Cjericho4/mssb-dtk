@@ -126,6 +126,40 @@ static inline void slerpAnimation(Quaternion* from, Quaternion* to, Quaternion* 
     }
 }
 
+// Evaluates one axis while preserving the authored Bezier polynomial association.
+static inline f32 bezierAnimationAxis(f32 from, f32 to, f32 outgoing, f32 incoming, f32 tripleTime, f32 inverseTime, f32 tripleSquare, f32 cube) {
+    return inverseTime * (tripleSquare * (incoming + to) + inverseTime * (inverseTime * from + tripleTime * (outgoing + from))) + cube * to;
+}
+
+// Samples cubic Bezier control offsets for a three-component animation channel.
+static inline void bezierAnimationVector(volatile f32* result, const f32* from, const f32* to, const f32* outgoing, const f32* incoming, f32 time) {
+    f32 square = time * time;
+    f32 tripleTime = 3.0f * time;
+    f32 cube = time * square;
+    f32 inverseTime = 1.0f - time;
+    f32 tripleSquare = 3.0f * square;
+    s32 axis;
+    for (axis = 0; axis < 3; axis++) {
+        result[axis] = bezierAnimationAxis(from[axis], to[axis], outgoing[axis], incoming[axis], tripleTime, inverseTime, tripleSquare, cube);
+    }
+}
+
+// Samples Hermite tangents without scaling them by the key interval duration.
+static inline void hermiteAnimationVector(volatile f32* result, const f32* from, const f32* to, const f32* outgoing, const f32* incoming, f32 time) {
+    f32 square = time * time;
+    f32 cube = square * time;
+    f32 difference = 2.0f * cube - 3.0f * square;
+    f32 currentTangentWeight = -(2.0f * square - time);
+    f32 nextWeight = -difference;
+    f32 currentWeight = 1.0f + difference;
+    f32 nextTangentWeight = -square + cube;
+    s32 axis;
+    currentTangentWeight = cube + currentTangentWeight;
+    for (axis = 0; axis < 3; axis++) {
+        result[axis] = nextTangentWeight * incoming[axis] + (currentTangentWeight * outgoing[axis] + (currentWeight * from[axis] + nextWeight * to[axis]));
+    }
+}
+
 #pragma dont_inline on
 // .text:0x800B516C size:0x4A0
 // Spherical cubic blend: slerp(q0,q1,t) and slerp(a,b,t) are slerped again by 2t(1-t) into out.
@@ -280,10 +314,93 @@ void GetData(u8 type, void* src, f32* dst, u8 count, f32 scale) {
 }
 
 // .text:0x800B5DA8 size:0x634
+// Samples the bone translation with hold, linear, Bezier, or eased Hermite interpolation.
+#pragma dont_inline off
 void DoTranslationAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
-    return;
+    Vec from;
+    Vec to;
+    /* FAKEMATCH: retain the original interpolation scratch stores across the panic path. */
+    volatile f32 result[3];
+    Vec outgoing;
+    Vec incoming;
+    f32 easeIn;
+    f32 easeOut;
+    f32 scale = 1.0f / (f32)(1 << (pipe->currentTrack->quantizeInfo & 0xF));
+    s32 width;
+    s32 vectorSize;
+    u8 type;
+    s32 offset;
+    f32 time;
+    u32 scaleMode;
+    u32 rotationMode;
+    char* payload;
+
+    type = pipe->currentTrack->quantizeInfo >> 4;
+    width = animationValueSize(type);
+    vectorSize = width * 3;
+    offset = 0;
+    if (pipe->currentTrack->animType & ANIM_TYPE_SCALE) {
+        offset = animationValueSize(type) * 3;
+        if (pipe->currentTrack->animType & ANIM_TYPE_SCALE_QUAT) offset += animationValueSize(type) * 4;
+    }
+    if (pipe->currentTrack->animType & ANIM_TYPE_ROT_EULER) offset += vectorSize;
+    if (pipe->currentTrack->animType & ANIM_TYPE_ROT_QUAT) offset += sizeof(((AnimationQuatAux*)0)->incoming);
+    GetData(type, &current->setting[offset], &from.x, 3, scale);
+    GetData(type, &next->setting[offset], &to.x, 3, scale);
+    time = animationKeyTime(pipe, current, next);
+    offset = 0;
+    if (pipe->currentTrack->animType & ANIM_TYPE_SCALE) {
+        scaleMode = ((s32)pipe->currentTrack->interpolationType >> 2) & 3;
+        if (scaleMode == 2) offset = vectorSize * 2;
+        if (scaleMode == 3) offset = vectorSize * 2 + sizeof(AnimationEase);
+    }
+    if (pipe->currentTrack->animType & ANIM_TYPE_ROT_QUAT) {
+        rotationMode = ((s32)pipe->currentTrack->interpolationType >> 4) & 7;
+        if (rotationMode == 4) offset += sizeof(AnimationQuatAux) - sizeof(AnimationEase);
+        if (rotationMode == 5) offset += sizeof(AnimationQuatAux);
+    } else if (pipe->currentTrack->animType & ANIM_TYPE_ROT_EULER) {
+        rotationMode = ((s32)pipe->currentTrack->interpolationType >> 4) & 7;
+        if (rotationMode == 2) offset += vectorSize * 2;
+        if (rotationMode == 3) offset = vectorSize * 2 + offset + sizeof(AnimationEase);
+    }
+    switch (pipe->currentTrack->interpolationType & 3) {
+    case 0:
+        result[0] = from.x;
+        result[1] = from.y;
+        result[2] = from.z;
+        break;
+    case 1: {
+        f32 inverseTime = 1.0f - time;
+        result[0] = time * to.x + inverseTime * from.x;
+        result[1] = time * to.y + inverseTime * from.y;
+        result[2] = time * to.z + inverseTime * from.z;
+        break;
+    }
+    case 2: {
+        GetData(type, &current->interpolation[offset + vectorSize], &outgoing.x, 3, scale);
+        GetData(type, &next->interpolation[offset], &incoming.x, 3, scale);
+        bezierAnimationVector(result, &from.x, &to.x, &outgoing.x, &incoming.x, time);
+        break;
+    }
+    case 3: {
+        payload = &current->interpolation[offset + vectorSize];
+        GetData(type, payload, &outgoing.x, 3, scale);
+        GetData(lbl_803CBB51, &((AnimationEase*)&payload[vectorSize])->outgoing, &easeIn, 1, lbl_803CBB4C);
+        payload = &next->interpolation[offset];
+        GetData(type, payload, &incoming.x, 3, scale);
+        GetData(lbl_803CBB51, &payload[vectorSize * 2], &easeOut, 1, lbl_803CBB4C);
+        time = easeAnimationTime(time, easeIn, easeOut);
+        hermiteAnimationVector(result, &from.x, &to.x, &outgoing.x, &incoming.x, time);
+        break;
+    }
+    default:
+        OSPanic(lbl_800E7D88, 0x222, lbl_800E7D94);
+        break;
+    }
+    CTRLSetTranslation(pipe->control, result[0], result[1], result[2]);
 }
 
+#pragma dont_inline on
 // .text:0x800B63DC size:0xA30
 void DoScaleAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next, u8 mode) {
     return;

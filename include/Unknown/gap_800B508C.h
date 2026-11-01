@@ -24,6 +24,7 @@ extern f32 lbl_803CBB4C;
 extern u8 lbl_803CBB50;
 extern u8 lbl_803CBB51;
 extern char lbl_800E7D88[];
+extern char lbl_800E7D94[];
 extern char lbl_800E7E50[];
 
 void Squad(Quaternion* q0, Quaternion* a, Quaternion* b, Quaternion* q1, Quaternion* out, f32 t);
