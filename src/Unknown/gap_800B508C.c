@@ -132,6 +132,7 @@ static inline f32 bezierAnimationAxis(f32 from, f32 to, f32 outgoing, f32 incomi
 }
 
 // Samples cubic Bezier control offsets for a three-component animation channel.
+/* FAKEMATCH: volatile output preserves the retail stack scratch stores. */
 static inline void bezierAnimationVector(volatile f32* result, const f32* from, const f32* to, const f32* outgoing, const f32* incoming, f32 time) {
     f32 square = time * time;
     f32 tripleTime = 3.0f * time;
@@ -145,6 +146,7 @@ static inline void bezierAnimationVector(volatile f32* result, const f32* from, 
 }
 
 // Samples Hermite tangents without scaling them by the key interval duration.
+/* FAKEMATCH: volatile output preserves the retail stack scratch stores. */
 static inline void hermiteAnimationVector(volatile f32* result, const f32* from, const f32* to, const f32* outgoing, const f32* incoming, f32 time) {
     f32 square = time * time;
     f32 cube = square * time;

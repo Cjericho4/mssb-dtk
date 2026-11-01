@@ -19,7 +19,7 @@ typedef struct AnimationQuatAux {
 } AnimationQuatAux;
 STATIC_ASSERT(sizeof(AnimationQuatAux) == 0x14);
 
-/* Partial view of the animation decoder's read-only diagnostic strings. */
+/* Partial view of the animation decoder's read-only defaults and diagnostic strings. */
 typedef struct AnimationDiagnostics {
     Quaternion scaleDefaults[3];
     char file[0xC];
