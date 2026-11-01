@@ -402,8 +402,77 @@ void DoTranslationAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
 
 #pragma dont_inline on
 // .text:0x800B63DC size:0xA30
+// Samples bone scale and its optional scale-axis quaternion, using the eased time for Hermite mode.
+#pragma dont_inline off
 void DoScaleAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next, u8 mode) {
-    return;
+    f32 from[3];
+    f32 to[3];
+    f32 result[3];
+    f32 outgoing[3];
+    f32 incoming[3];
+    AnimationDiagnostics* diagnostics = &lbl_800E7D58;
+    Quaternion fromQuat = diagnostics->scaleDefaults[0];
+    Quaternion toQuat = diagnostics->scaleDefaults[1];
+    Quaternion resultQuat = diagnostics->scaleDefaults[2];
+    f32 easeIn;
+    f32 easeOut;
+    f32 scale = 1.0f / (f32)(1 << (pipe->currentTrack->quantizeInfo & 0xF));
+    s32 vectorSize;
+    u8 type;
+    f32 time;
+    char* payload;
+
+    type = pipe->currentTrack->quantizeInfo >> 4;
+    vectorSize = animationValueSize(type) * 3;
+    GetData(type, current->setting, from, 3, scale);
+    GetData(type, next->setting, to, 3, scale);
+    if (pipe->currentTrack->animType & ANIM_TYPE_SCALE_QUAT) {
+        GetData(type, &current->setting[vectorSize], &fromQuat.x, 4, scale);
+        GetData(type, &next->setting[vectorSize], &toQuat.x, 4, scale);
+    }
+    time = animationKeyTime(pipe, current, next);
+    switch ((pipe->currentTrack->interpolationType >> 2) & 3) {
+    case 0:
+        result[0] = from[0];
+        result[1] = from[1];
+        result[2] = from[2];
+        if (pipe->currentTrack->animType & ANIM_TYPE_SCALE_QUAT) {
+            resultQuat.x = fromQuat.x;
+            resultQuat.y = fromQuat.y;
+            resultQuat.z = fromQuat.z;
+            resultQuat.w = fromQuat.w;
+        }
+        break;
+    case 1: {
+        f32 inverseTime = 1.0f - time;
+        result[0] = time * to[0] + inverseTime * from[0];
+        result[1] = time * to[1] + inverseTime * from[1];
+        result[2] = time * to[2] + inverseTime * from[2];
+        if (pipe->currentTrack->animType & ANIM_TYPE_SCALE_QUAT) slerpAnimation(&fromQuat, &toQuat, &resultQuat, time);
+        break;
+    }
+    case 2:
+        GetData(type, &current->interpolation[vectorSize], outgoing, 3, scale);
+        GetData(type, next->interpolation, incoming, 3, scale);
+        bezierAnimationVector(result, from, to, outgoing, incoming, time);
+        if (pipe->currentTrack->animType & ANIM_TYPE_SCALE_QUAT) slerpAnimation(&fromQuat, &toQuat, &resultQuat, time);
+        break;
+    case 3:
+        payload = &current->interpolation[vectorSize];
+        GetData(type, payload, outgoing, 3, scale);
+        GetData(lbl_803CBB51, &((AnimationEase*)&payload[vectorSize])->outgoing, &easeIn, 1, lbl_803CBB4C);
+        GetData(type, next->interpolation, incoming, 3, scale);
+        GetData(lbl_803CBB51, &next->interpolation[vectorSize * 2], &easeOut, 1, lbl_803CBB4C);
+        time = easeAnimationTime(time, easeIn, easeOut);
+        hermiteAnimationVector(result, from, to, outgoing, incoming, time);
+        if (pipe->currentTrack->animType & ANIM_TYPE_SCALE_QUAT) slerpAnimation(&fromQuat, &toQuat, &resultQuat, time);
+        break;
+    default:
+        OSPanic(diagnostics->file, 0x1A8, diagnostics->unsupportedInterpolation);
+        break;
+    }
+    CTRLSetScale(pipe->control, result[0], result[1], result[2]);
+    CTRL_SetQuatUnk(pipe->control, resultQuat.x, resultQuat.y, resultQuat.z, resultQuat.w);
 }
 
 // .text:0x800B6E0C size:0x3B4

@@ -21,7 +21,7 @@ STATIC_ASSERT(sizeof(AnimationQuatAux) == 0x14);
 
 /* Partial view of the animation decoder's read-only diagnostic strings. */
 typedef struct AnimationDiagnostics {
-    char _pad0[0x30];
+    Quaternion scaleDefaults[3];
     char file[0xC];
     char unsupportedInterpolation[0x48];
     char unsupportedEuler[0x74];
