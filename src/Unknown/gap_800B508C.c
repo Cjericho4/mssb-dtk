@@ -407,8 +407,69 @@ void DoScaleAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next, u8 mode
 }
 
 // .text:0x800B6E0C size:0x3B4
+// Samples Euler rotation in degrees, wrapping linear segments across the half-turn boundary.
+#pragma dont_inline off
 void DoEulerAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
-    return;
+    f32 from[3];
+    f32 to[3];
+    f32 result[3];
+    Vec outgoing;
+    Vec incoming;
+    AnimationDiagnostics* diagnostics = &lbl_800E7D58;
+    f32 scale = 1.0f / (f32)(1 << (pipe->currentTrack->quantizeInfo & 0xF));
+    s32 vectorSize;
+    u8 type;
+    s32 offset;
+    f32 time;
+    u32 scaleMode;
+
+    type = pipe->currentTrack->quantizeInfo >> 4;
+    vectorSize = animationValueSize(type) * 3;
+    offset = 0;
+    if (pipe->currentTrack->animType & ANIM_TYPE_SCALE) offset = vectorSize;
+    GetData(type, &current->setting[offset], &from[0], 3, scale);
+    GetData(type, &next->setting[offset], &to[0], 3, scale);
+    time = animationKeyTime(pipe, current, next);
+    offset = 0;
+    if (pipe->currentTrack->animType & ANIM_TYPE_SCALE) {
+        scaleMode = (pipe->currentTrack->interpolationType >> 2) & 3;
+        if (scaleMode == 2) offset = vectorSize * 2;
+        if (scaleMode == 3) offset = vectorSize * 2 + sizeof(AnimationEase);
+    }
+    switch ((pipe->currentTrack->interpolationType >> 4) & 7) {
+    case 0:
+        result[0] = from[0];
+        result[1] = from[1];
+        result[2] = from[2];
+        break;
+    case 1: {
+        f32* nextAxis = &to[0];
+        f32* currentAxis = &from[0];
+        f32* resultAxis = result;
+        s32 count;
+        f32 difference;
+        f32 inverseTime = 1.0f - time;
+        for (count = 0; count < 3; count++) {
+            difference = *currentAxis - *nextAxis;
+            if (difference > 180.0f) *currentAxis -= 360.0f;
+            else if (difference < -180.0f) *nextAxis -= 360.0f;
+            *resultAxis++ = time * *nextAxis++ + inverseTime * *currentAxis++;
+        }
+        break;
+    }
+    case 2:
+        GetData(type, &current->interpolation[offset + vectorSize], &outgoing.x, 3, scale);
+        GetData(type, &next->interpolation[offset], &incoming.x, 3, scale);
+        bezierAnimationVector(result, &from[0], &to[0], &outgoing.x, &incoming.x, time);
+        break;
+    case 3:
+        OSPanic(diagnostics->file, 0x12D, diagnostics->unsupportedEuler);
+        break;
+    default:
+        OSPanic(diagnostics->file, 0x130, diagnostics->unsupportedInterpolation);
+        break;
+    }
+    CTRLSetRotation(pipe->control, result[0], result[1], result[2]);
 }
 
 // .text:0x800B71C0 size:0x558
