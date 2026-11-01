@@ -1,5 +1,6 @@
 #include "Unknown/gap_800B508C.h"
 #include "math.h"
+#include "Dolphin/OS/OSError.h"
 
 // .text:0x800B508C size:0xE0
 // Relocates a freshly loaded bank in place: every file offset (user data, sequence table, names,
@@ -27,6 +28,101 @@ void ANIMGet(ANIMBank* bank) {
     for (i = 0; i < bank->numKeyFrames; i++) {
         keys[i].setting = (char*)((u32)bank + (u32)keys[i].setting);
         keys[i].interpolation = (char*)((u32)bank + (u32)keys[i].interpolation);
+    }
+}
+
+// Returns the byte width of one quantized animation value.
+static inline s32 animationValueSize(u8 type) {
+    switch ((s32)type) {
+    case 0: case 1: return 1;
+    case 2: case 3: return 2;
+    case 4: return 4;
+    default: return 0;
+    }
+}
+
+// Converts the sampled track time to the current key interval's interpolation factor.
+static inline f32 animationKeyTime(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
+    f32 time = 0.0f;
+    f32 elapsed = pipe->time - current->time;
+    f32 start = current->time;
+    if (elapsed == time) {
+        return time;
+    } else if (next->time > start) {
+        time = elapsed / (next->time - start);
+    } else if (pipe->currentTrack->animTime >= start) {
+        time = 1.0f;
+    } else {
+        time = elapsed / (pipe->currentTrack->animTime - start);
+    }
+    return time;
+}
+
+// Applies the retail ease remap, including its negative coefficient for small ease sums.
+static inline f32 easeAnimationTime(f32 time, f32 incoming, f32 outgoing) {
+    f32 sum = incoming + outgoing;
+    f32 coefficient;
+    f32 reciprocal;
+    f32 remaining;
+    if (0.0f != time && 1.0f != time) {
+        if (0.0f == sum) {
+            return time;
+        } else {
+            if (sum > 1.0f) {
+                reciprocal = 1.0f / sum;
+                incoming *= reciprocal;
+                outgoing *= reciprocal;
+                coefficient = 0.5f - reciprocal;
+            } else {
+                coefficient = 0.5f - (1.0f / sum);
+            }
+            if (time < incoming) {
+                time *= time * (coefficient / incoming);
+            } else if (time < 1.0f - outgoing) {
+                time = coefficient * (2.0f * time - incoming);
+            } else {
+                remaining = 1.0f - time;
+                time = -(remaining * (remaining * (coefficient / outgoing)) - 1.0f);
+            }
+        }
+    }
+    return time;
+}
+
+// Blends animation quaternions along the authored spherical arc, including antipodal keys.
+static inline void slerpAnimation(Quaternion* from, Quaternion* to, Quaternion* out, f32 time) {
+    f32 cosine = from->w * to->w + (from->z * to->z + (from->x * to->x + from->y * to->y));
+    f32 first;
+    f32 second = time;
+    f32 angle;
+    f32 step;
+    f32 reciprocal;
+    if (1.0f + cosine > 0.000001f) {
+        if (1.0f - cosine > 0.000001f) {
+            angle = (f32)acos(cosine);
+            step = time * angle;
+            reciprocal = 1.0f / (f32)sin(angle);
+            first = reciprocal * (f32)sin(angle - step);
+            second = reciprocal * (f32)sin(step);
+        } else {
+            first = 1.0f - time;
+        }
+        out->x = first * from->x + second * to->x;
+        out->y = first * from->y + second * to->y;
+        out->z = first * from->z + second * to->z;
+        out->w = first * from->w + second * to->w;
+    } else {
+        out->x = -to->y;
+        out->y = to->x;
+        out->z = -to->w;
+        out->w = to->z;
+        step = 1.5707963705062866f * time;
+        first = (f32)sin(1.5707963705062866f - step);
+        second = (f32)sin(step);
+        out->x = first * from->x + second * out->x;
+        out->y = first * from->y + second * out->y;
+        out->z = first * from->z + second * out->z;
+        out->w = first * from->w + second * out->w;
     }
 }
 
@@ -199,8 +295,65 @@ void DoEulerAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
 }
 
 // .text:0x800B71C0 size:0x558
+// Samples the bone rotation quaternion using hold, slerp, or eased spherical cubic interpolation.
+#pragma dont_inline off
 void DoQuatAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
-    return;
+    Quaternion result;
+    Quaternion from;
+    Quaternion to;
+    Quaternion outgoing;
+    Quaternion incoming;
+    f32 easeOut;
+    f32 easeIn;
+    u8 type = pipe->currentTrack->quantizeInfo >> 4;
+    s32 vectorSize = animationValueSize(type) * 3;
+    s32 settingOffset = 0;
+    s32 auxiliaryOffset;
+    f32 time;
+    f32 easedTime;
+    u32 scaleMode;
+    if (pipe->currentTrack->animType & ANIM_TYPE_SCALE) {
+        settingOffset = animationValueSize(type) * 3;
+        if (pipe->currentTrack->animType & ANIM_TYPE_SCALE_QUAT) {
+            settingOffset += animationValueSize(type) * 4;
+        }
+    }
+    GetData(lbl_803CBB50, &current->setting[settingOffset], &from.x, 4, lbl_803CBB48);
+    GetData(lbl_803CBB50, &next->setting[settingOffset], &to.x, 4, lbl_803CBB48);
+    time = animationKeyTime(pipe, current, next);
+    easedTime = time;
+    auxiliaryOffset = 0;
+    if (pipe->currentTrack->animType & ANIM_TYPE_SCALE) {
+        scaleMode = (pipe->currentTrack->interpolationType >> 2) & 3;
+        if (scaleMode == 2) auxiliaryOffset = vectorSize * 2;
+        if (scaleMode == 3) auxiliaryOffset = vectorSize * 2 + sizeof(AnimationEase);
+    }
+    switch ((pipe->currentTrack->interpolationType >> 4) & 7) {
+    case 5:
+        GetData(lbl_803CBB51, &((AnimationQuatAux*)&next->interpolation[auxiliaryOffset])->ease.incoming, &easeOut, 1, lbl_803CBB4C);
+        GetData(lbl_803CBB51, &((AnimationQuatAux*)&current->interpolation[auxiliaryOffset])->ease.outgoing, &easeIn, 1, lbl_803CBB4C);
+        time = easeAnimationTime(time, easeIn, easeOut);
+        easedTime = time;
+        /* fallthrough */
+    case 4:
+        GetData(lbl_803CBB50, ((AnimationQuatAux*)&current->interpolation[auxiliaryOffset])->outgoing, &outgoing.x, 4, lbl_803CBB48);
+        GetData(lbl_803CBB50, &next->interpolation[auxiliaryOffset], &incoming.x, 4, lbl_803CBB48);
+        Squad(&from, &outgoing, &incoming, &to, &result, easedTime);
+        break;
+    case 6:
+        slerpAnimation(&from, &to, &result, time);
+        break;
+    case 0:
+        result.x = from.x;
+        result.y = from.y;
+        result.z = from.z;
+        result.w = from.w;
+        break;
+    default:
+        OSPanic(lbl_800E7D88, 0xE1, lbl_800E7E50);
+        break;
+    }
+    CTRLSetQuat(pipe->control, result.x, result.y, result.z, result.w);
 }
 #pragma dont_inline off
 
