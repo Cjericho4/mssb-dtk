@@ -1,3 +1,5 @@
+#include "Dolphin/gx.h"
+#include "Dolphin/GX/GXFifo.h"
 #include "challenge/rep_0010.h"
 #include "Dolphin/GX/GXGeometry.h"
 #include "Dolphin/GX/GXTev.h"
@@ -10,8 +12,55 @@
 void fn_800B0C80(void (*callback)(void));
 
 // .text:0x000005EC size:0x508
+/* Draw the translucent overlap test quads over a gray background. */
 void fn_1_5EC(void) {
-    return;
+    Mtx44 projection;
+    Mtx identity;
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3X4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+    GXSetNumChans(1);
+    GXSetNumTexGens(0);
+    GXSetNumTevStages(1);
+    GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+    GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+    C_MTXOrtho(projection, 0.0f, 448.0f, 0.0f, 640.0f, 0.0f, 1.0f);
+    GXSetProjection(projection, GX_ORTHOGRAPHIC);
+    PSMTXIdentity(identity);
+    GXLoadPosMtxImm(identity, GX_PNMTX0);
+    GXSetCurrentMtx(GX_PNMTX0);
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+    GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0x808080FF;
+    GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = 448.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0x808080FF;
+    GXWGFifo.f32 = 640.0f; GXWGFifo.f32 = 448.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0x808080FF;
+    GXWGFifo.f32 = 640.0f; GXWGFifo.f32 = 0.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0x808080FF;
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_CLEAR);
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+    GXWGFifo.f32 = 100.0f; GXWGFifo.f32 = 100.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0x00FF0080;
+    GXWGFifo.f32 = 50.0f; GXWGFifo.f32 = 150.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0x00FF0080;
+    GXWGFifo.f32 = 100.0f; GXWGFifo.f32 = 200.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0x00FF0080;
+    GXWGFifo.f32 = 150.0f; GXWGFifo.f32 = 150.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0x00FF0080;
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+    GXWGFifo.f32 = 120.0f; GXWGFifo.f32 = 100.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0xFF000080;
+    GXWGFifo.f32 = 70.0f; GXWGFifo.f32 = 150.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0xFF000080;
+    GXWGFifo.f32 = 120.0f; GXWGFifo.f32 = 200.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0xFF000080;
+    GXWGFifo.f32 = 170.0f; GXWGFifo.f32 = 150.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0xFF000080;
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+    GXWGFifo.f32 = 120.0f; GXWGFifo.f32 = 220.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0xFF000080;
+    GXWGFifo.f32 = 70.0f; GXWGFifo.f32 = 270.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0xFF000080;
+    GXWGFifo.f32 = 120.0f; GXWGFifo.f32 = 320.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0xFF000080;
+    GXWGFifo.f32 = 170.0f; GXWGFifo.f32 = 270.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0xFF000080;
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+    GXWGFifo.f32 = 100.0f; GXWGFifo.f32 = 220.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0x00FF0080;
+    GXWGFifo.f32 = 50.0f; GXWGFifo.f32 = 270.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0x00FF0080;
+    GXWGFifo.f32 = 100.0f; GXWGFifo.f32 = 320.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0x00FF0080;
+    GXWGFifo.f32 = 150.0f; GXWGFifo.f32 = 270.0f; GXWGFifo.f32 = -0.5f; GXWGFifo.u32 = 0x00FF0080;
 }
 
 // .text:0x00000AF4 size:0x438
