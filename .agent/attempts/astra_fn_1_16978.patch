@@ -1,0 +1,159 @@
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 720f73a1..9c3f8547 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -1338,10 +1338,153 @@ void fn_1_168C8(void) {
+ }
+ 
+ // .text:0x00016978 size:0xD74
++#include "C3/anim.h"
++typedef struct Load169Model {u8 _pad0[0x10];u32 hasAux;} Load169Model;
++typedef struct Load169Aux {u8* data;u8 _pad4[0x60];} Load169Aux;
++typedef struct Load169Actor {u8 _pad0[8];Load169Model* model;u32 unknownC;ANIMBank* banks[7];Load169Aux* aux;u8 _pad30[0x24C];} Load169Actor;
++typedef struct Load169Huge {u8 _pad0[0xC04];Load169Actor actors[13];u8 _pad2C50[0x34];u32* archive;} Load169Huge;
++typedef struct Load169Choice {s16 bank,sequence,frame,flags;} Load169Choice;
++typedef struct Load169Preset {s8 enabled,flags;s16 bank,sequence,frame;} Load169Preset;
++typedef struct Load169PresetBlock {u8 _pad0[0x10];Load169Preset entries[8];} Load169PresetBlock;
++typedef struct Load169Slot {u8 _pad0[0x46];u8 variant,pad;} Load169Slot;
++typedef struct Load169State {
++    u8 active;u8 _pad1[3];s32 base;u8 _pad8[0x20];u32 ready;
++    u8 _pad2C[0x17C];Load169Choice choices[8];u8 _pad1E8[0x2D1B];u8 index;
++    u8 _pad2F04[0x12C];u8* extra[13];u8 _pad3064[8];u32* archive;HugeAnimEntry68* table;
++    u8 _pad3074[0x858];u8 models[1];u8 _pad38CD[3];Load169Slot slots[1];
++} Load169State;
++/* The auxiliary array starts at 0x3918, overlapping the first slot's tail. */
++typedef struct Load169AuxState {u8 _pad0[0x3918];Load169Aux aux[13];} Load169AuxState;
++typedef struct Load169Data {
++    u8 _pad0[0x5D0];u8 banks[13][7];u8 _pad62B[0x8618-0x62B];
++    CompressedDiskRead actorArchive;u8 _pad8628[0x10];CompressedDiskRead aux;
++    u8 _pad8648[0x1D0];CompressedDiskRead extras[55];
++    u8 _pad8B88[8];CompressedDiskRead models;u8 _pad8BA0[0x18];s16 extraIndices[13];
++    u8 _pad8BD2[0xD718-0x8BD2];Load169PresetBlock* preset;
++} Load169Data;
++extern Load169Data lbl_1_data_1DC0;
++extern CompressedDiskRead lbl_1_data_2398[];
++typedef struct Load169Layout Load169Layout;
++typedef struct Load169Geometry Load169Geometry;
++typedef Gap8000B9C8Texture Load169Texture;
++HugeAnimEntry68* ActorObjectInitTable(u16);
++void LoadActorLayout(Load169Layout*);
++void convertGeometryAndSknHeader(Load169Geometry*,u8*);
++void haveActLayoutPointToGeoHeader(Load169Layout*,Load169Geometry*);
++void convertTextureHeader(Load169Texture*);
++void fn_800BD190(Load169Geometry*,Load169Texture*);
++void fn_800BDC88(HugeAnimEntry68*,s32,u16,Load169Layout*,ANIMBank*,s32);
++void fn_8004B1B8(void);
++STATIC_ASSERT(sizeof(Load169Actor)==0x27C);
++/* Load a preview actor, optional animation banks and auxiliary model resources. */
+ void fn_1_16978(void) {
+-    return;
++    Load169State* state=(Load169State*)&lbl_1_bss_3070;
++    Load169Huge* huge=(Load169Huge*)&g_hugeAnimStruct;
++    Load169Layout* layout;
++    Load169Geometry* geometry;
++    s32 i;
++    switch(lbl_803CC1B8->loadingState) {
++    case 0: state->ready=0;((DrawingSceneStruct*)fn_800B0A5C_insertQueue(fn_1_10560,11))->loadingState=0;lbl_803CC1B8->loadingState++;return;
++    case 1: if(state->ready){fn_8004B1B8();lbl_803CC1B8->loadingState++;}break;
++    case 2: state->index=0;lbl_803CC1B8->loadingState=4;return;
++    case 3: if(++state->index==1)lbl_803CC1B8->loadingState=27;else lbl_803CC1B8->loadingState=4;return;
++    case 4: huge->actors[state->index].model=ARAMTransfer(&lbl_1_data_2398[state->base+state->models[state->index]*19+state->slots[state->index].variant],0,0,0);lbl_803CC1B8->loadingState++;return;
++    case 5: if(lbl_803C6CF8.allowLoad==1)lbl_803CC1B8->loadingState=6;break;
++    case 6:
++        if(lbl_1_data_1DC0.banks[state->index][0]) {
++            huge->actors[state->index].banks[0]=ARAMTransfer(&lbl_1_data_2398[state->base+state->models[state->index]*19+2],0,0,0);
++            lbl_803CC1B8->loadingState++;
++        } else {huge->actors[state->index].banks[0]=0;lbl_803CC1B8->loadingState=8;}return;
++    case 7: if(lbl_803C6CF8.allowLoad==1){ANIMGet(huge->actors[state->index].banks[0]);lbl_803CC1B8->loadingState++;}break;
++    case 8:
++        if(lbl_1_data_1DC0.banks[state->index][1]) {
++            huge->actors[state->index].banks[1]=ARAMTransfer(&lbl_1_data_2398[state->base+state->models[state->index]*19+3],0,0,0);
++            lbl_803CC1B8->loadingState++;
++        } else {huge->actors[state->index].banks[1]=0;lbl_803CC1B8->loadingState=10;}return;
++    case 9: if(lbl_803C6CF8.allowLoad==1){ANIMGet(huge->actors[state->index].banks[1]);lbl_803CC1B8->loadingState++;}break;
++    case 10:
++        if(lbl_1_data_1DC0.banks[state->index][2]) {
++            huge->actors[state->index].banks[2]=ARAMTransfer(&lbl_1_data_2398[state->base+state->models[state->index]*19+4],0,0,0);
++            lbl_803CC1B8->loadingState++;
++        } else {huge->actors[state->index].banks[2]=0;lbl_803CC1B8->loadingState=12;}return;
++    case 11: if(lbl_803C6CF8.allowLoad==1){ANIMGet(huge->actors[state->index].banks[2]);lbl_803CC1B8->loadingState++;}break;
++    case 12:
++        if(lbl_1_data_1DC0.banks[state->index][3]) {
++            huge->actors[state->index].banks[3]=ARAMTransfer(&lbl_1_data_2398[state->base+state->models[state->index]*19+5],0,0,0);
++            lbl_803CC1B8->loadingState++;
++        } else {huge->actors[state->index].banks[3]=0;lbl_803CC1B8->loadingState=14;}return;
++    case 13: if(lbl_803C6CF8.allowLoad==1){ANIMGet(huge->actors[state->index].banks[3]);lbl_803CC1B8->loadingState++;}break;
++    case 14:
++        if(lbl_1_data_1DC0.banks[state->index][4]) {
++            huge->actors[state->index].banks[4]=ARAMTransfer(&lbl_1_data_2398[state->base+state->models[state->index]*19+6],0,0,0);
++            lbl_803CC1B8->loadingState++;
++        } else {huge->actors[state->index].banks[4]=0;lbl_803CC1B8->loadingState=18;}return;
++    case 15: if(lbl_803C6CF8.allowLoad==1){ANIMGet(huge->actors[state->index].banks[4]);lbl_803CC1B8->loadingState++;}break;
++    case 16:
++        if(lbl_1_data_1DC0.banks[state->index][5]) {
++            huge->actors[state->index].banks[5]=ARAMTransfer(&lbl_1_data_2398[state->base+state->models[state->index]*19+7],0,0,0);
++            lbl_803CC1B8->loadingState++;
++        } else {huge->actors[state->index].banks[5]=0;lbl_803CC1B8->loadingState=18;}return;
++    case 17: if(lbl_803C6CF8.allowLoad==1){ANIMGet(huge->actors[state->index].banks[5]);lbl_803CC1B8->loadingState++;}break;
++    case 18:
++        if(lbl_1_data_1DC0.banks[state->index][6]) {
++            huge->actors[state->index].banks[6]=ARAMTransfer(&lbl_1_data_2398[state->base+state->models[state->index]*19+8],0,0,0);
++            lbl_803CC1B8->loadingState++;
++        } else {huge->actors[state->index].banks[6]=0;lbl_803CC1B8->loadingState=19;}return;
++    case 19: if(lbl_803C6CF8.allowLoad==1){if(lbl_1_data_1DC0.banks[state->index][6]) ANIMGet(huge->actors[state->index].banks[6]);lbl_803CC1B8->loadingState++;}break;
++    case 20:
++        if(!state->active || !huge->actors[state->index].model->hasAux){lbl_803CC1B8->loadingState=22;return;}
++        huge->actors[state->index].aux=&((Load169AuxState*)state)->aux[state->index];
++        if(state->models[state->index]){state->active=0;lbl_803CC1B8->loadingState=22;return;}
++        huge->actors[state->index].aux->data=ARAMTransfer(&lbl_1_data_1DC0.aux,0,0,0);lbl_803CC1B8->loadingState++;return;
++    case 21:if(lbl_803C6CF8.allowLoad==1)lbl_803CC1B8->loadingState++;break;
++    case 22:{
++        s16 extra=lbl_1_data_1DC0.extraIndices[state->models[state->index]];
++        if(extra>=0){state->extra[state->index]=ARAMTransfer(&lbl_1_data_1DC0.extras[extra],0,0,0);lbl_803CC1B8->loadingState++;}
++        else lbl_803CC1B8->loadingState=3;
++        return;
++    }
++    case 23:if(lbl_803C6CF8.allowLoad==1)lbl_803CC1B8->loadingState=3;break;
++    case 24:huge->archive=ARAMTransfer(&lbl_1_data_1DC0.actorArchive,0,0,0);lbl_803CC1B8->loadingState++;return;
++    case 25:if(lbl_803C6CF8.allowLoad==1)lbl_803CC1B8->loadingState++;break;
++    case 26:{
++        Load169Preset* preset=lbl_1_data_1DC0.preset->entries+8;
++        Load169Choice* choice=state->choices+8;
++        i=8;
++        while(i--){--preset;--choice;
++            if(preset->enabled){
++                ANIMBank* bank;
++                choice->bank=preset->bank;choice->sequence=preset->sequence;choice->flags=preset->flags;
++                bank=huge->actors[state->index].banks[preset->bank];
++                if(preset->frame==-2)choice->frame=bank ? bank->animSequences[preset->sequence].trackArray[0].animTime : 0;
++                else choice->frame=preset->frame;
++            }else{choice->bank=-1;choice->flags=choice->frame=0;}
++        }
++        /* File-relative pointers in the loaded actor archive. */
++        for(i=0;i<80;i++)huge->archive[i]+=(u32)huge->archive;
++        lbl_803CC1B8->loadingState=27;return;
++    }
++    case 27:state->archive=ARAMTransfer(&lbl_1_data_1DC0.models,0,0,0);lbl_803CC1B8->loadingState=28;return;
++    case 28:
++        if(lbl_803C6CF8.allowLoad==1){
++            state->table=ActorObjectInitTable(5);
++            for(i=0;i<15;i++)if(state->archive[i]){
++                state->archive[i]+=(u32)state->archive;
++                switch(i){
++                case 0:case 3:case 6:case 9:case 12:layout=(Load169Layout*)state->archive[i];LoadActorLayout(layout);break;
++                case 1:case 4:case 7:case 10:case 13:geometry=(Load169Geometry*)state->archive[i];convertGeometryAndSknHeader(geometry,0);haveActLayoutPointToGeoHeader(layout,geometry);break;
++                case 2:case 5:case 8:case 11:case 14:{
++                    Load169Texture* textures=(Load169Texture*)state->archive[i];
++                    u16 slot=i/3;convertTextureHeader(textures);fn_800BD190(geometry,textures);fn_800BDC88(state->table,slot,slot,layout,0,0);break;
++                }}
++            }
++            lbl_803CC1B8->loadingState=29;return;
++        }break;
++    case 29:state->index=0;lbl_803CC1B8->loadingState=0;lbl_803CC1B8->aFunctionPointer=fn_1_168C8;break;
++    }
+ }
+ 
++
+ // .text:0x000176EC size:0x20
+ void fn_1_176EC(void) {
+     fn_1_1496C();
