@@ -736,8 +736,88 @@ void fn_1_116EC(struct TextureHeader* tex) {
 }
 
 // .text:0x00011714 size:0x584
-void fn_1_11714(void) {
-    return;
+typedef struct ChallengeProjectedUV { f32 s,t; } ChallengeProjectedUV;
+extern Vec lbl_1_data_AD30[8];
+extern u8 lbl_1_data_AD90[6][4];
+extern u32 lbl_1_data_ADA8[6];
+/* Owning headers still expose stubs or incompatible texture return types. */
+void fn_800245EC(Mtx44 projection,Mtx view,Vec* vertices,ChallengeProjectedUV* uv,s32 count,s32 mode);
+struct TextureHeader* fn_80039AB4(void);
+/* Draw a projected-texture box with white outlines and face diagonals. */
+void fn_1_11714(ChallengeView* view) {
+    /* FAKEMATCH: declaration order preserves the original matrix stack slots. */
+    Mtx44 textureProjection;
+    ChallengeProjectedUV uv[8];
+    Mtx44 projection;
+    s32 i;
+    C_MTXFrustum(projection,-0.000175f,0.000175f,0.00025f,-0.00025f,0.001f,512.0f);
+    GXSetProjection(projection,GX_PERSPECTIVE);
+    GXLoadPosMtxImm(view->matrix,0);
+    GXSetCurrentMtx(0);
+    GXSetColorUpdate(GX_TRUE);
+    C_MTXFrustum(textureProjection,-0.000175f,0.000175f,0.00025f,-0.00025f,0.001f,512.0f);
+    fn_800245EC(textureProjection,lbl_1_bss_68FC.view,lbl_1_data_AD30,uv,8,1);
+    SetDisplayStateTexture(fn_80039AB4(),0,0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS,GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0,GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0,GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0,GX_VA_POS,GX_POS_XYZ,GX_F32,0);
+    GXSetVtxAttrFmt(GX_VTXFMT0,GX_VA_CLR0,GX_CLR_RGBA,GX_RGBA8,0);
+    GXSetVtxAttrFmt(GX_VTXFMT0,GX_VA_TEX0,GX_TEX_ST,GX_F32,0);
+    GXSetZMode(GX_TRUE,GX_LEQUAL,GX_TRUE);
+    GXSetNumTevStages(1);
+    GXSetNumChans(1);
+    GXSetNumTexGens(1);
+    GXSetTexCoordGen2(GX_TEXCOORD0,GX_TG_MTX3X4,GX_TG_TEX0,GX_IDENTITY,GX_FALSE,GX_PTIDENTITY);
+    GXSetTevOp(GX_TEVSTAGE0,GX_REPLACE);
+    GXSetTevOrder(GX_TEVSTAGE0,GX_TEXCOORD0,GX_TEXMAP0,GX_COLOR0A0);
+    GXSetChanCtrl(GX_COLOR0,GX_FALSE,GX_SRC_VTX,GX_SRC_VTX,GX_LIGHT_NULL,GX_DF_NONE,GX_AF_NONE);
+    GXSetChanCtrl(GX_ALPHA0,GX_FALSE,GX_SRC_VTX,GX_SRC_VTX,GX_LIGHT_NULL,GX_DF_NONE,GX_AF_NONE);
+    GXSetBlendMode(GX_BM_BLEND,GX_BL_SRCALPHA,GX_BL_INVSRCALPHA,GX_LO_COPY);
+    GXBegin(GX_QUADS,GX_VTXFMT0,24);
+    for(i=0;i<24;i++) {
+        s32 index=lbl_1_data_AD90[i/4][i%4];
+        GXPosition3f32(lbl_1_data_AD30[index].x,lbl_1_data_AD30[index].y,lbl_1_data_AD30[index].z);
+        GXWGFifo.u32=lbl_1_data_ADA8[i/4];
+        GXWGFifo.f32=uv[index].s;
+        GXWGFifo.f32=uv[index].t;
+    }
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS,GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0,GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0,GX_VA_POS,GX_POS_XYZ,GX_F32,0);
+    GXSetVtxAttrFmt(GX_VTXFMT0,GX_VA_CLR0,GX_CLR_RGBA,GX_RGBA8,0);
+    GXSetNumTexGens(0);
+    GXSetTevOp(GX_TEVSTAGE0,GX_PASSCLR);
+    GXSetTevOrder(GX_TEVSTAGE0,GX_TEXCOORD_NULL,GX_TEXMAP_NULL,GX_COLOR0A0);
+    for(i=0;i<6;i++) {
+        GXBegin(GX_LINESTRIP,GX_VTXFMT0,6);
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][0]].x;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][0]].y;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][0]].z;
+        GXWGFifo.u32=0xFFFFFFFF;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][1]].x;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][1]].y;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][1]].z;
+        GXWGFifo.u32=0xFFFFFFFF;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][2]].x;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][2]].y;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][2]].z;
+        GXWGFifo.u32=0xFFFFFFFF;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][3]].x;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][3]].y;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][3]].z;
+        GXWGFifo.u32=0xFFFFFFFF;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][0]].x;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][0]].y;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][0]].z;
+        GXWGFifo.u32=0xFFFFFFFF;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][2]].x;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][2]].y;
+        GXWGFifo.f32=lbl_1_data_AD30[lbl_1_data_AD90[i][2]].z;
+        GXWGFifo.u32=0xFFFFFFFF;
+    }
 }
 
 // .text:0x00011C98 size:0x68

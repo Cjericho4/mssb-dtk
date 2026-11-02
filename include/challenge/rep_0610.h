@@ -283,7 +283,7 @@ void fn_1_10CEC(Rep0610Obj12F18* object);
 void fn_1_10E2C(Mtx matrix, Mtx view, u32 x, u32 y, u32 z);
 void fn_1_1125C(void);
 void fn_1_116EC(struct TextureHeader* tex);
-void fn_1_11714(void);
+void fn_1_11714(ChallengeView* view);
 void fn_1_11C98(void);
 void fn_1_11D00(void);
 void fn_1_11F08(Rep0610Unk67E0* camera);
