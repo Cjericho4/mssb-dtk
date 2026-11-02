@@ -1,0 +1,414 @@
+diff --git a/include/challenge/rep_74A0.h b/include/challenge/rep_74A0.h
+index f58aeb32..659b20b3 100644
+--- a/include/challenge/rep_74A0.h
++++ b/include/challenge/rep_74A0.h
+@@ -20,21 +20,21 @@ void fn_800B9AA8(u32 context);
+ void fn_1_182C0(void);
+ void fn_1_1857C(void);
+ typedef struct ChallengeOrbit {
+-    u32 header;
++    union {u32 header; struct ChallengeOrbit* next;};
+     Vec origin;
+     Vec position;
+     Vec rotation;
+     Vec angularVelocity;
+-    u8 _pad34[12];
++    u8 _pad34[4]; f32 scaleX, scaleY;
+     GXColor colors[2];
+-    u16 _pad48;
++    union {u16 _pad48; s16 delay;};
+     s16 index;
+ } ChallengeOrbit;
+ typedef struct ChallengeOrbitConfig {
+     s32 unk0;
+     s32 radius;
+     s32 angularSpeed;
+-    u8 _padC[8];
++    s32 scaleX, scaleY;
+     s32 colorMinimum;
+ } ChallengeOrbitConfig;
+ extern ChallengeOrbitConfig lbl_1_data_FB24;
+@@ -76,7 +76,7 @@ typedef struct ChallengeModelGroup {
+ typedef struct ChallengeSelection {
+     u16 selected;
+     u8 group;
+-    u8 _pad3[0x189];
++    u8 orbitEnabled, fogEnabled, colorEnabled; u8 color[4]; u8 _padA[0x182];
+     Mtx matrix;
+ } ChallengeSelection;
+ extern ChallengeSelection lbl_1_bss_69F0;
+diff --git a/src/challenge/rep_74A0.c b/src/challenge/rep_74A0.c
+index c288c5f1..46e4b1aa 100644
+--- a/src/challenge/rep_74A0.c
++++ b/src/challenge/rep_74A0.c
+@@ -380,8 +380,369 @@ void fn_1_1B6BC(void) {
+ }
+ 
+ // .text:0x0001B7DC size:0xBF0
++typedef struct OrbitList185 {u8 _pad0[12]; ChallengeOrbit* head;} OrbitList185;
++typedef struct OrbitScene185 {u8 _pad0[0x18];u8 mode;} OrbitScene185;
++typedef struct OrbitGlobals185 {u8 _pad0[8];s32 unk8;} OrbitGlobals185;
++extern OrbitGlobals185 lbl_80366158;
++void fn_800AD038(s32);
++extern GXColor lbl_1_data_FB08, lbl_1_rodata_74F0;
++void SetFog(u8 type, GXColor color, f32 start, f32 end, f32 nearScale, f32 farScale);
++extern f32 lbl_1_rodata_7520;
++extern f32 lbl_1_rodata_753C;
++extern f32 lbl_1_rodata_7540;
++extern f32 lbl_1_rodata_7550;
++extern f32 lbl_1_rodata_7568;
++extern f32 lbl_1_rodata_757C;
++extern f32 lbl_1_rodata_7580;
++extern f32 lbl_1_rodata_75C0;
++/* Preview options and initialization of the orbiting test objects. */
+ void fn_1_1B7DC(void) {
+-    return;
++    GXColor sp1C;
++    GXColor sp18;
++    GXColor sp14;
++    GXColor sp10;
++    GXColor spC;
++    GXColor sp8;
++    f32 temp_f1;
++    f32 temp_f1_2;
++    f32 temp_f1_3;
++    f32 temp_f1_4;
++    f32 temp_f24;
++    f32 temp_f24_2;
++    f32 temp_f24_3;
++    f32 temp_f24_4;
++    f32 temp_f25;
++    f32 temp_f25_2;
++    f32 temp_f26;
++    f32 temp_f26_2;
++    f32 temp_f27;
++    f32 temp_f28;
++    f32 temp_f28_2;
++    f32 temp_f29;
++    f32 temp_f30;
++    f32 temp_f30_2;
++    f32 temp_f31;
++    f32 temp_f31_2;
++    s16 var_r25_2;
++    s16 var_r26;
++    s32 temp_r0_11;
++    s32 temp_r0_6;
++    s32 temp_r28;
++    s32 temp_r30;
++    u32 temp_r24_2;
++    u32 temp_r24_4;
++    u8 temp_r0;
++    u8 temp_r0_10;
++    u8 temp_r0_2;
++    u8 temp_r0_3;
++    u8 temp_r0_4;
++    u8 temp_r0_5;
++    u8 temp_r0_7;
++    u8 temp_r0_8;
++    u8 temp_r0_9;
++    u8 temp_r24;
++    u8 temp_r24_3;
++    u8 temp_r3_2;
++    u8 temp_r3_3;
++    u8 temp_r3_4;
++    u8 temp_r3_5;
++    u8 temp_r5;
++    DrawingSceneStruct *temp_r3;
++    OrbitList185* temp_r3_6;
++    OrbitList185* temp_r3_7;
++    ChallengeOrbit *var_r25;
++    ChallengeOrbit *var_r26_2;
++
++    sp1C = lbl_1_rodata_74F0;
++    if (lbl_803C77B8.held & 0x200) {
++        fn_800AD038(lbl_80366158.unk8);
++        sp18 = sp1C;
++        SetFog(0, sp18, lbl_1_rodata_7520, lbl_1_rodata_7520, lbl_1_rodata_7520, lbl_1_rodata_7520);
++        temp_r3 = lbl_803CC1B8->currentDrawingItem;
++        temp_r3->loadingState = 1;
++        minigamesSetSomePointers();
++        return;
++    }
++    if (lbl_803C77B8.pressed & 8) {
++        temp_r5 = lbl_803CC1B8->flag15;
++        if (temp_r5 != 0) {
++            lbl_803CC1B8->flag15 = (u8) (temp_r5 - 1);
++            return;
++        }
++        if ((u8) lbl_1_bss_69F0.colorEnabled != 0) {
++            lbl_803CC1B8->flag15 = 0xAU;
++            return;
++        }
++        lbl_803CC1B8->flag15 = 6U;
++        return;
++    }
++    if (lbl_803C77B8.pressed & 4) {
++        lbl_803CC1B8->flag15 = (u8) (lbl_803CC1B8->flag15 + 1);
++        temp_r0 = lbl_803CC1B8->flag15;
++        if ((temp_r0 > 6U) && (temp_r0 < 0xBU) && ((u8) lbl_1_bss_69F0.colorEnabled == 0)) {
++            lbl_803CC1B8->flag15 = 0U;
++        }
++        if ((u8) lbl_803CC1B8->flag15 == 0xB) {
++            lbl_803CC1B8->flag15 = 0U;
++        }
++    } else if (lbl_803C77B8.pressed & 1) {
++        temp_r0_2 = lbl_803CC1B8->flag15;
++        switch (temp_r0_2) {                        /* switch 1 */
++        case 0:                                     /* switch 1 */
++            temp_r3_2 = lbl_803CC1B8->flag14;
++            if (temp_r3_2 != 0) {
++                lbl_803CC1B8->flag14 = (u8) (temp_r3_2 - 1);
++                return;
++            }
++            lbl_803CC1B8->flag14 = 0x17U;
++            return;
++        case 1:                                     /* switch 1 */
++            temp_r3_3 = lbl_803CC1B8->flag16;
++            if (temp_r3_3 != 0) {
++                lbl_803CC1B8->flag16 = (u8) (temp_r3_3 - 1);
++                return;
++            }
++            lbl_803CC1B8->flag16 = 2U;
++            return;
++        case 2:                                     /* switch 1 */
++            temp_r3_4 = lbl_803CC1B8->flag17;
++            if (temp_r3_4 != 0) {
++                lbl_803CC1B8->flag17 = (u8) (temp_r3_4 - 1);
++                return;
++            }
++            lbl_803CC1B8->flag17 = 1U;
++            return;
++        case 3:                                     /* switch 1 */
++            temp_r3_5 = ((OrbitScene185*)lbl_803CC1B8)->mode;
++            if (temp_r3_5 != 0) {
++                ((OrbitScene185*)lbl_803CC1B8)->mode = (u8) (temp_r3_5 - 1);
++                return;
++            }
++            ((OrbitScene185*)lbl_803CC1B8)->mode = 1U;
++            return;
++        case 4:                                     /* switch 1 */
++            temp_r0_3 = lbl_1_bss_69F0.fogEnabled == 0;
++            lbl_1_bss_69F0.fogEnabled = temp_r0_3;
++            if (temp_r0_3 != 0) {
++                sp14 = lbl_1_data_FB08;
++                SetFog(4, sp14, lbl_1_rodata_7520, lbl_1_rodata_75C0, lbl_1_rodata_753C, lbl_1_rodata_7540);
++                return;
++            }
++            sp10 = lbl_1_rodata_74F0;
++            SetFog(0, sp10, lbl_1_rodata_7520, lbl_1_rodata_7520, lbl_1_rodata_7520, lbl_1_rodata_7520);
++            return;
++        case 6:                                     /* switch 1 */
++            lbl_1_bss_69F0.colorEnabled = (u8) (lbl_1_bss_69F0.colorEnabled == 0);
++            return;
++        case 7:                                     /* switch 1 */
++            if ((u8) lbl_1_bss_69F0.colorEnabled != 0) {
++                lbl_1_bss_69F0.color[3] = (u8) (lbl_1_bss_69F0.color[3] - 1);
++                return;
++            }
++            break;
++        case 8:                                     /* switch 1 */
++            if ((u8) lbl_1_bss_69F0.colorEnabled != 0) {
++                lbl_1_bss_69F0.color[2] = (u8) (lbl_1_bss_69F0.color[2] - 1);
++                return;
++            }
++            break;
++        case 9:                                     /* switch 1 */
++            if ((u8) lbl_1_bss_69F0.colorEnabled != 0) {
++                lbl_1_bss_69F0.color[1] = (u8) (lbl_1_bss_69F0.color[1] - 1);
++                return;
++            }
++            break;
++        case 10:                                    /* switch 1 */
++            if ((u8) lbl_1_bss_69F0.colorEnabled != 0) {
++                lbl_1_bss_69F0.color[0] = (u8) (lbl_1_bss_69F0.color[0] - 1);
++                return;
++            }
++            break;
++        case 5:                                     /* switch 1 */
++            temp_r0_4 = lbl_1_bss_69F0.orbitEnabled == 0;
++            lbl_1_bss_69F0.orbitEnabled = temp_r0_4;
++            if (temp_r0_4 != 0) {
++                temp_r3_6 = (OrbitList185*)fn_80033A24(&fn_1_1857C, 0, 0, lbl_1_data_FB24.unk0, 1, 0x80);
++                if (temp_r3_6 != NULL) {
++                    var_r25 = temp_r3_6->head;
++                    temp_f28 = lbl_1_rodata_7568;
++                    temp_f27 = lbl_1_rodata_7580;
++                    temp_f26 = lbl_1_rodata_757C;
++                    var_r26 = 0;
++                    temp_f25 = lbl_1_rodata_7520;
++                    temp_f31 = lbl_1_rodata_753C;
++                    temp_f30 = lbl_1_rodata_7550;
++                    do {
++                        var_r25->index = var_r26;
++                        var_r25->scaleX = (f32) ((f32) lbl_1_data_FB24.scaleX / temp_f26);
++                        var_r25->scaleY = (f32) ((f32) lbl_1_data_FB24.scaleY / temp_f26);
++                        temp_r28 = lbl_1_data_FB24.colorMinimum;
++                        temp_r24 = (u8) temp_r28;
++                        temp_f1 = (f32) (var_r25->index * 2);
++                        var_r25->origin.x = (f32) ((temp_f1 / (f32) lbl_1_data_FB24.unk0) - temp_f31);
++                        var_r25->origin.y = temp_f30;
++                        var_r25->origin.z = (f32) ((temp_f27 * ((f32) rand() / temp_f28)) + temp_f27);
++                        temp_f24 = (f32) sin(lbl_1_rodata_7520);
++                        temp_f1_2 = (f32) cos(lbl_1_rodata_7520);
++                        var_r25->position.x = (f32) ((temp_f24 * (f32) lbl_1_data_FB24.radius) / temp_f26);
++                        var_r25->position.y = (f32) ((temp_f1_2 * (f32) lbl_1_data_FB24.radius) / temp_f26);
++                        var_r25->position.z = temp_f25;
++                        var_r25->rotation.z = temp_f25;
++                        var_r25->rotation.y = temp_f25;
++                        var_r25->rotation.x = temp_f25;
++                        temp_f24_2 = (f32) lbl_1_data_FB24.angularSpeed / temp_f26;
++                        var_r25->angularVelocity.x = (f32) (temp_f24_2 * ((f32) rand() / temp_f28));
++                        var_r25->angularVelocity.y = (f32) (temp_f24_2 * ((f32) rand() / temp_f28));
++                        var_r25->angularVelocity.z = (f32) (temp_f24_2 * ((f32) rand() / temp_f28));
++                        var_r25->colors[1].a = 0xFF;
++                        var_r25->colors[0].a = 0xFF;
++                        temp_r0_5 = 0xFF - temp_r28;
++                        var_r25->colors[0].g = (s8) (temp_r24 + (rand() % temp_r0_5));
++                        var_r25->colors[0].b = (s8) (temp_r24 + (rand() % temp_r0_5));
++                        var_r25->colors[1].r = (s8) (temp_r24 + (rand() % temp_r0_5));
++                        var_r25->colors[1].g = (s8) (temp_r24 + (rand() % temp_r0_5));
++                        var_r25->colors[1].b = (s8) (temp_r24 + (rand() % temp_r0_5));
++                        temp_r24_2 = lbl_1_data_FB24.unk0 / 5;
++                        temp_r0_6 = var_r26 % 5;
++                        var_r26 += 1;
++                        var_r25->delay = (s16) (((temp_r0_6 * temp_r24_2) + (rand() % temp_r24_2)) * 2);
++                        var_r25 = var_r25->next;
++                    } while (var_r25 != NULL);
++                    return;
++                }
++            } else {
++                minigamesSetSomePointers();
++                return;
++            }
++            break;
++        }
++    } else if (lbl_803C77B8.pressed & 2) {
++        temp_r0_7 = lbl_803CC1B8->flag15;
++        switch (temp_r0_7) {                        /* switch 2 */
++        case 0:                                     /* switch 2 */
++            lbl_803CC1B8->flag14 = (u8) (lbl_803CC1B8->flag14 + 1);
++            if ((u8) lbl_803CC1B8->flag14 == 0x18) {
++                lbl_803CC1B8->flag14 = 0U;
++                return;
++            }
++            break;
++        case 1:                                     /* switch 2 */
++            lbl_803CC1B8->flag16 = (u8) (lbl_803CC1B8->flag16 + 1);
++            if ((u8) lbl_803CC1B8->flag16 == 3) {
++                lbl_803CC1B8->flag16 = 0U;
++                return;
++            }
++            break;
++        case 2:                                     /* switch 2 */
++            lbl_803CC1B8->flag17 = (u8) (lbl_803CC1B8->flag17 + 1);
++            if ((u8) lbl_803CC1B8->flag17 == 2) {
++                lbl_803CC1B8->flag17 = 0U;
++                return;
++            }
++            break;
++        case 3:                                     /* switch 2 */
++            ((OrbitScene185*)lbl_803CC1B8)->mode = (u8) (((OrbitScene185*)lbl_803CC1B8)->mode + 1);
++            if ((u8) ((OrbitScene185*)lbl_803CC1B8)->mode == 2) {
++                ((OrbitScene185*)lbl_803CC1B8)->mode = 0U;
++                return;
++            }
++            break;
++        case 4:                                     /* switch 2 */
++            temp_r0_8 = lbl_1_bss_69F0.fogEnabled == 0;
++            lbl_1_bss_69F0.fogEnabled = temp_r0_8;
++            if (temp_r0_8 != 0) {
++                spC = lbl_1_data_FB08;
++                SetFog(4, spC, lbl_1_rodata_7520, lbl_1_rodata_75C0, lbl_1_rodata_753C, lbl_1_rodata_7540);
++                return;
++            }
++            sp8 = lbl_1_rodata_74F0;
++            SetFog(0, sp8, lbl_1_rodata_7520, lbl_1_rodata_7520, lbl_1_rodata_7520, lbl_1_rodata_7520);
++            return;
++        case 6:                                     /* switch 2 */
++            lbl_1_bss_69F0.colorEnabled = (u8) (lbl_1_bss_69F0.colorEnabled == 0);
++            return;
++        case 7:                                     /* switch 2 */
++            if ((u8) lbl_1_bss_69F0.colorEnabled != 0) {
++                lbl_1_bss_69F0.color[3] = (u8) (lbl_1_bss_69F0.color[3] + 1);
++                return;
++            }
++            break;
++        case 8:                                     /* switch 2 */
++            if ((u8) lbl_1_bss_69F0.colorEnabled != 0) {
++                lbl_1_bss_69F0.color[2] = (u8) (lbl_1_bss_69F0.color[2] + 1);
++                return;
++            }
++            break;
++        case 9:                                     /* switch 2 */
++            if ((u8) lbl_1_bss_69F0.colorEnabled != 0) {
++                lbl_1_bss_69F0.color[1] = (u8) (lbl_1_bss_69F0.color[1] + 1);
++                return;
++            }
++            break;
++        case 10:                                    /* switch 2 */
++            if ((u8) lbl_1_bss_69F0.colorEnabled != 0) {
++                lbl_1_bss_69F0.color[0] = (u8) (lbl_1_bss_69F0.color[0] + 1);
++                return;
++            }
++            break;
++        case 5:                                     /* switch 2 */
++            temp_r0_9 = lbl_1_bss_69F0.orbitEnabled == 0;
++            lbl_1_bss_69F0.orbitEnabled = temp_r0_9;
++            if (temp_r0_9 != 0) {
++                temp_r3_7 = (OrbitList185*)fn_80033A24(&fn_1_1857C, 0, 0, lbl_1_data_FB24.unk0, 1, 0x80);
++                if (temp_r3_7 != NULL) {
++                    var_r26_2 = temp_r3_7->head;
++                    temp_f28_2 = lbl_1_rodata_7568;
++                    temp_f29 = lbl_1_rodata_7580;
++                    temp_f30_2 = lbl_1_rodata_757C;
++                    var_r25_2 = 0;
++                    temp_f31_2 = lbl_1_rodata_7520;
++                    temp_f25_2 = lbl_1_rodata_753C;
++                    temp_f26_2 = lbl_1_rodata_7550;
++                    do {
++                        var_r26_2->index = var_r25_2;
++                        var_r26_2->scaleX = (f32) ((f32) lbl_1_data_FB24.scaleX / temp_f30_2);
++                        var_r26_2->scaleY = (f32) ((f32) lbl_1_data_FB24.scaleY / temp_f30_2);
++                        temp_r30 = lbl_1_data_FB24.colorMinimum;
++                        temp_r24_3 = (u8) temp_r30;
++                        temp_f1_3 = (f32) (var_r26_2->index * 2);
++                        var_r26_2->origin.x = (f32) ((temp_f1_3 / (f32) lbl_1_data_FB24.unk0) - temp_f25_2);
++                        var_r26_2->origin.y = temp_f26_2;
++                        var_r26_2->origin.z = (f32) ((temp_f29 * ((f32) rand() / temp_f28_2)) + temp_f29);
++                        temp_f24_3 = (f32) sin(lbl_1_rodata_7520);
++                        temp_f1_4 = (f32) cos(lbl_1_rodata_7520);
++                        var_r26_2->position.x = (f32) ((temp_f24_3 * (f32) lbl_1_data_FB24.radius) / temp_f30_2);
++                        var_r26_2->position.y = (f32) ((temp_f1_4 * (f32) lbl_1_data_FB24.radius) / temp_f30_2);
++                        var_r26_2->position.z = temp_f31_2;
++                        var_r26_2->rotation.z = temp_f31_2;
++                        var_r26_2->rotation.y = temp_f31_2;
++                        var_r26_2->rotation.x = temp_f31_2;
++                        temp_f24_4 = (f32) lbl_1_data_FB24.angularSpeed / temp_f30_2;
++                        var_r26_2->angularVelocity.x = (f32) (temp_f24_4 * ((f32) rand() / temp_f28_2));
++                        var_r26_2->angularVelocity.y = (f32) (temp_f24_4 * ((f32) rand() / temp_f28_2));
++                        var_r26_2->angularVelocity.z = (f32) (temp_f24_4 * ((f32) rand() / temp_f28_2));
++                        var_r26_2->colors[1].a = 0xFF;
++                        var_r26_2->colors[0].a = 0xFF;
++                        temp_r0_10 = 0xFF - temp_r30;
++                        var_r26_2->colors[0].g = (s8) (temp_r24_3 + (rand() % temp_r0_10));
++                        var_r26_2->colors[0].b = (s8) (temp_r24_3 + (rand() % temp_r0_10));
++                        var_r26_2->colors[1].r = (s8) (temp_r24_3 + (rand() % temp_r0_10));
++                        var_r26_2->colors[1].g = (s8) (temp_r24_3 + (rand() % temp_r0_10));
++                        var_r26_2->colors[1].b = (s8) (temp_r24_3 + (rand() % temp_r0_10));
++                        temp_r24_4 = lbl_1_data_FB24.unk0 / 5;
++                        temp_r0_11 = var_r25_2 % 5;
++                        var_r25_2 += 1;
++                        var_r26_2->delay = (s16) (((temp_r0_11 * temp_r24_4) + (rand() % temp_r24_4)) * 2);
++                        var_r26_2 = var_r26_2->next;
++                    } while (var_r26_2 != NULL);
++                    return;
++                }
++            } else {
++                minigamesSetSomePointers();
++            }
++            break;
++        }
++    }
+ }
+ 
+ // .text:0x0001C3CC size:0x4F4
