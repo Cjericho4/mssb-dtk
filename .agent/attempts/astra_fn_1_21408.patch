@@ -1,0 +1,165 @@
+diff --git a/src/challenge/rep_7730.c b/src/challenge/rep_7730.c
+index 97908c10..a11ad29c 100644
+--- a/src/challenge/rep_7730.c
++++ b/src/challenge/rep_7730.c
+@@ -699,13 +699,143 @@ void fn_1_21298(ChallengeLineScene* scene) {
+ }
+ 
+ // .text:0x00021408 size:0x8E0
+-void fn_1_21408(void) {
++void fn_1_21CE8(void) {
+     return;
+ }
+ 
+ // .text:0x00021CE8 size:0x8D0
+-void fn_1_21CE8(void) {
+-    return;
++#include "C3/control.h"
++typedef struct ChallengeChainPoint { f32 mass; u8 _pad4[8]; Vec position, previous; u8 _pad24[0x18]; s32 fixed; } ChallengeChainPoint;
++typedef struct ChallengeChainPhysics { f32 stiffness, value4, value8, valueC, value10, value14, dt, dtSquared; s32 steps; f32 inverseDt; } ChallengeChainPhysics;
++typedef struct ChallengeChainScene { u8 _pad0[0x18]; f32 spacing, force; u8 steps, count, shadow, fixed, colored; } ChallengeChainScene;
++typedef struct ChallengeChainPool { u8 _pad0[8]; HugeAnimEntry68* actors; u8 _padC[0x3C4]; Vec endpoint; u8 _pad3DC[4]; ChallengeChainPhysics physics; ChallengeChainPoint points[20]; } ChallengeChainPool;
++typedef struct ChallengeChainModel { u8 _pad0[0x98]; u8 flags; } ChallengeChainModel;
++typedef struct ChallengeChainInstance { ChallengeChainModel* model; u8 _pad4[12]; Control control; u8 _pad4C[0x20]; u8 hidden; } ChallengeChainInstance;
++typedef struct ChallengeChainInput { u8 _pad0[0x70]; s8 x,z,unused,y; u8 _pad74,trigger; } ChallengeChainInput;
++extern ChallengeChainPool lbl_1_bss_6BD8;
++typedef struct ChallengeWaveCamera {
++    Mtx view;
++    u16 pitch, yaw;
++    f32 strafe, forward;
++    Vec target, eye;
++} ChallengeWaveCamera;
++extern ChallengeWaveCamera lbl_1_bss_43EE0;
++void fn_1_121D4(ChallengeWaveCamera* camera);
++
++extern Vec lbl_1_data_104D0;
++extern u32 lbl_1_data_104DC[6];
++void fn_80038CD0(u8 count, ChallengeChainPhysics*, ChallengeChainPoint*, f32 mass, f32 spacing);
++void fn_80038B48(ChallengeChainPhysics*, ChallengeChainPoint*, u8 count, Vec* force);
++void fn_800BDA24(ChallengeChainInstance* instance);
++/* Simulate the linked preview chain and orient its segment models along the current points. */
++void fn_1_21408(void) {
++    Mtx matrix;
++    Vec force;
++    Quaternion rotation, alignment;
++    Vec middle, direction;
++    ChallengeChainScene* scene=(ChallengeChainScene*)lbl_803CC1B8;
++    ChallengeChainPool* pool=&lbl_1_bss_6BD8;
++    ChallengeChainInput* input=(ChallengeChainInput*)&lbl_803C77B8;
++    s32 i;
++    if(lbl_803C77B8.held&0x1000) {
++        ((ChallengeScene*)scene)->callback=fn_1_21CE8;
++    } else if(lbl_803C77B8.held&0x100) {
++        pool->physics.steps=scene->steps;
++        pool->physics.dt=(1.0f/scene->steps)/60.0f;
++        pool->physics.dtSquared=pool->physics.dt*pool->physics.dt;
++        pool->physics.inverseDt=1.0f/(2.0f*pool->physics.dt);
++        if(lbl_803C77B8.buttons&0x400) pool->physics.steps=1;
++        fn_80038CD0(scene->count,&pool->physics,pool->points,.2f,scene->spacing);
++        pool->endpoint=pool->points[scene->count-1].position;
++        pool->points[scene->count-1].fixed=scene->fixed;
++    } else if(lbl_803C77B8.held&0x200) {
++        pool->actors=0;
++        ((ChallengeScene*)scene)->callback=fn_1_24778;
++    }
++    fn_1_121D4(&lbl_1_bss_43EE0);
++    if(scene->fixed) {
++        f32 step=input->trigger>=80 ? .0001f*scene->force:.00001f*scene->force;
++        pool->points[scene->count-1].position.x+=input->x*step;
++        pool->points[scene->count-1].position.y+=input->y*step;
++        pool->points[scene->count-1].position.z+=input->z*step;
++        memcpy(&pool->points[scene->count-1].previous,&pool->points[scene->count-1].position,sizeof(Vec));
++        force.x=force.y=force.z=0;
++    } else {
++        f32 mass=pool->points[scene->count-1].mass;
++        force.x=scene->force*(input->x*mass);
++        force.y=scene->force*(input->y*mass);
++        force.z=scene->force*(input->z*mass);
++    }
++    fn_80038B48(&pool->physics,pool->points,scene->count,&force);
++    GXSetProjection(lbl_1_bss_47010,GX_PERSPECTIVE);
++    GXClearVtxDesc(); GXSetCullMode(GX_CULL_NONE);
++    GXSetVtxDesc(GX_VA_POS,GX_DIRECT); GXSetVtxDesc(GX_VA_CLR0,GX_DIRECT);
++    GXSetVtxAttrFmt(GX_VTXFMT0,GX_VA_POS,GX_POS_XYZ,GX_F32,0);
++    GXSetVtxAttrFmt(GX_VTXFMT0,GX_VA_CLR0,GX_CLR_RGBA,GX_RGBA8,0);
++    GXSetChanCtrl(GX_COLOR0A0,0,GX_SRC_VTX,GX_SRC_VTX,0,GX_DF_NONE,GX_AF_NONE);
++    GXSetNumChans(1); GXSetNumTexGens(1); GXSetNumTevStages(1); GXSetTevOp(GX_TEVSTAGE0,GX_PASSCLR);
++    GXLoadPosMtxImm(lbl_1_bss_43EE0.view,0); GXSetCurrentMtx(0);
++    GXBegin(GX_LINES,GX_VTXFMT0,44);
++    for(i=0;i<11;i++) {
++        u32 color=0xFFFFFFFF;
++        f32 coordinate=(i-5)*10;
++        if(i==5) color=0xFF0000FF;
++        GXWGFifo.f32=coordinate;GXWGFifo.f32=0;GXWGFifo.f32=-50;GXWGFifo.u32=color;
++        GXWGFifo.f32=coordinate;GXWGFifo.f32=0;GXWGFifo.f32=50;GXWGFifo.u32=color;
++        if(i==5) color=0x00FF00FF;
++        GXWGFifo.f32=-50;GXWGFifo.f32=0;GXWGFifo.f32=coordinate;GXWGFifo.u32=color;
++        GXWGFifo.f32=50;GXWGFifo.f32=0;GXWGFifo.f32=coordinate;GXWGFifo.u32=color;
++    }
++    if(scene->shadow) {
++        u8 j=scene->count;
++        GXBegin(GX_LINESTRIP,GX_VTXFMT0,(scene->count-1)*2);
++        while(--j) {
++            GXWGFifo.f32=pool->points[j].position.x;GXWGFifo.f32=0;GXWGFifo.f32=pool->points[j].position.z;GXWGFifo.u32=128;
++            GXWGFifo.f32=pool->points[j-1].position.x;GXWGFifo.f32=0;GXWGFifo.f32=pool->points[j-1].position.z;GXWGFifo.u32=128;
++        }
++    }
++    if(scene->colored) {
++        u8 j=scene->count;
++        GXBegin(GX_LINESTRIP,GX_VTXFMT0,(scene->count-1)*2);
++        while(--j) {
++            u32 color=lbl_1_data_104DC[j%6];
++            GXWGFifo.f32=pool->points[j].position.x;GXWGFifo.f32=-pool->points[j].position.y;GXWGFifo.f32=pool->points[j].position.z;GXWGFifo.u32=color;
++            GXWGFifo.f32=pool->points[j-1].position.x;GXWGFifo.f32=-pool->points[j-1].position.y;GXWGFifo.f32=pool->points[j-1].position.z;GXWGFifo.u32=color;
++        }
++    }
++    if(pool->actors) {
++        s32 last=scene->count-1;
++        for(i=20;i--;) {
++            ChallengeChainInstance* instance=(ChallengeChainInstance*)&pool->actors[i].unk34;
++            instance->hidden=i>=last;
++            if(i<last) {
++                PSVECSubtract(&pool->points[i+1].position,&pool->points[i].position,&direction);
++                PSVECScale(&direction,.5f,&middle);
++                PSVECAdd(&pool->points[i].position,&middle,&middle);
++                CTRLSetTranslation(&instance->control,middle.x,-middle.y,middle.z);
++                if(PSVECMag(&direction)!=0) {
++                    f32 angle;
++                    PSVECNormalize(&direction,&direction);
++                    direction.y=-direction.y;
++                    middle.x=1;middle.y=0;middle.z=0;
++                    C_QUATRotAxisRad(&rotation,&middle,3.141592502593994*(2.5+(i&1))/6.0);
++                    angle=acos(PSVECDotProduct(&direction,&middle));
++                    PSVECCrossProduct(&middle,&direction,&middle);
++                    if(PSVECMag(&middle)!=0) {
++                        C_QUATRotAxisRad(&alignment,&middle,angle);
++                        PSQUATMultiply(&alignment,&rotation,&rotation);
++                    }
++                    CTRLSetQuat(&instance->control,rotation.x,rotation.y,rotation.z,rotation.w);
++                }
++                CTRLSetScale(&instance->control,lbl_1_data_104D0.x,lbl_1_data_104D0.y,lbl_1_data_104D0.z);
++                fn_800BDA24(instance);
++            }
++            PSMTXTrans(matrix,0,0,0);
++            PSMTXConcat(lbl_1_bss_43EE0.view,matrix,matrix);
++            instance->model->flags|=3;
++        }
++        fn_800BD670((HugeAnimCtrlObj*)pool->actors,(s32)lbl_1_bss_43EE0.view);
++    }
+ }
+ 
+ // .text:0x000225B8 size:0x8C
+@@ -753,13 +883,6 @@ void fn_1_23098(void) {
+     return;
+ }
+ 
+-typedef struct ChallengeWaveCamera {
+-    Mtx view;
+-    u16 pitch, yaw;
+-    f32 strafe, forward;
+-    Vec target, eye;
+-} ChallengeWaveCamera;
+-extern ChallengeWaveCamera lbl_1_bss_43EE0;
+ extern Vec lbl_1_bss_F6E0[][112];
+ // .text:0x00023804 size:0x2D4
+ void fn_1_23804(s32 unusedA, s32 unusedB, s32 columns, s32 rows) {
