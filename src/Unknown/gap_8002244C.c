@@ -105,8 +105,31 @@ void fn_800227A0(void) {
 }
 
 // .text:0x800227E4 size:0x1E8
+// Reserves the model ARAM blob, partitions its address tables, and queues the boot-time transfer.
 void fn_800227E4(void) {
-    return;
+    /* FAKEMATCH: local order assigns cursor/tier to r30/r31 and item to r12. */
+    s32 descriptorIndex;
+    s32 item;
+    s32 tier;
+    void** cursor;
+
+    lbl_803716B8.modelAramBase = fn_800A6418(MODEL_ARAM_BLOB_SIZE);
+    lbl_803716B8.unk1E9 = 1;
+    cursor = lbl_8017E320;
+    descriptorIndex = 0;
+    for (tier = 0; tier < MODEL_ARAM_TIERS; tier++) {
+        lbl_803716B8.tierAramAddrs[tier] = cursor;
+        cursor += lbl_803CB7E0[tier];
+        for (item = 0; item < lbl_803CB7E0[tier];) {
+            lbl_803716B8.tierAramAddrs[tier][item] = (void*)(lbl_803716B8.modelAramBase + lbl_800EFD38[descriptorIndex].discOffset);
+            /* FAKEMATCH: increment the item before the descriptor to preserve retail scheduling. */
+            item++;
+            descriptorIndex++;
+        }
+    }
+    /* This callback ignores the queue's descriptor, destination and parameter arguments. */
+    queueLoadInline(lbl_800F1D68, (void*)lbl_803716B8.modelAramBase, 2, NULL,
+                    (Gap8002244CLoadCallback)fn_800227A0, 0);
 }
 
 // .text:0x800229CC size:0x58
