@@ -1,0 +1,254 @@
+diff --git a/include/challenge/rep_0610.h b/include/challenge/rep_0610.h
+index ff50089a..809f9cc2 100644
+--- a/include/challenge/rep_0610.h
++++ b/include/challenge/rep_0610.h
+@@ -21,6 +21,19 @@ typedef struct Rep0610Items {
+ } Rep0610Items;
+ 
+ typedef struct Gap8000B9C8Texture Gap8000B9C8Texture;
++typedef struct ChallengeSequenceChoice {
++    s16 table, entry, frame, preserveTime;
++} ChallengeSequenceChoice;
++typedef struct ChallengeSequenceTrack {
++    f32 time;
++    u8 _pad4[4];
++    u16 enabled;
++    u8 _padA[2];
++    u16 cursor;
++    u8 _padE[10];
++    u16 start;
++    u8 _pad1A[6];
++} ChallengeSequenceTrack;
+ typedef struct ChallengeState {
+     /* 0x0000 */ u8 _pad0[0xC];
+     /* 0x000C */ s32 unkC;
+@@ -33,13 +46,18 @@ typedef struct ChallengeState {
+     /* 0x0028 */ union { s32 selection; Gap8000B9C8Texture* texture; };
+     /* 0x002C */ u8 _pad2C[0xC];
+     /* 0x0038 */ s32 page;
+-    /* 0x003C */ u8 _pad3C[0x10];
++    u8 _pad3C[0xA];
++    u8 sequenceRow, sequenceColumn;
++    u8 _pad48[4];
+     /* 0x004C */ s32 queued;
+     /* 0x0050 */ u8 _pad50[0x154];
+     /* 0x01A4 */ u8 phase;
+     /* 0x01A5 */ u8 enabled;
+     /* 0x01A6 */ u8 mode;
+-    /* 0x01A7 */ u8 _pad1A7[0x2D4B];
++    u8 _pad1A7;
++    ChallengeSequenceChoice sequence[8];
++    ChallengeSequenceTrack tracks[8][5];
++    u8 _pad6E8[0x280A];
+     /* 0x2EF2 */ u8 channel;
+     /* 0x2EF3 */ u8 _pad2EF3[6];
+     /* 0x2EF9 */ u8 unk2EF9;
+@@ -53,8 +71,15 @@ typedef struct ChallengeState {
+     /* 0x2F08 */ u8 blendEnabled;
+     u8 _pad2F09[0x16B];
+     /* 0x3074 */ Gap8000B9C8Texture* extraTexture;
+-    /* 0x3078 */ u8 _pad3078[0x6D0];
+-    /* 0x3748 */ Rep0610Items items;
++    u8 _pad3078[4];
++    u8 attachmentTemplates[5][0x5C];
++    u8 _pad3248[0x500];
++    union {
++        Rep0610Items items;
++        ChallengeSequenceTrack* activeTracks[6];
++    };
++    u8 _pad3760[0x170];
++    Rep0610Slot previewSlots[13];
+ } ChallengeState;
+ extern ChallengeState lbl_1_bss_3070;
+ 
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 720f73a1..0913f549 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -293,8 +293,185 @@ void fn_1_DF14(void) {
+ }
+ 
+ // .text:0x0000E098 size:0x83C
++typedef struct ChallengeSequenceControl {
++    void* model;
++    AnimSlotTable* table;
++    u8 _pad8[6];
++    u16 entry;
++    u8 _pad10[0x48];
++    u8 active, valid, enabled, _pad5B;
++    f32 time, blend;
++} ChallengeSequenceControl;
++typedef struct ChallengeSequenceAttachments {
++    u32 header;
++    u8 first[0x5C];
++    u8 firstOwner;
++    u8 _pad61[7];
++    u8 second[0x5C];
++    u8 secondOwner;
++    u8 _padC5[8];
++    u8 flagCD, flagCE, ownerCF, ownerD0;
++    u8 _padD1[3];
++} ChallengeSequenceAttachments;
++typedef struct ChallengeSequencePool {
++    u8 _pad0[0x140];
++    ChallengeSequenceAttachments entries[13];
++} ChallengeSequencePool;
++typedef struct ChallengeSequenceActor {
++    void* model;
++    u8 _pad4[0x2C];
++    ChallengeSequenceAttachments* attachments;
++} ChallengeSequenceActor;
++
++typedef struct ChallengeSequencePresetEntry { s8 enabled, preserveTime; s16 table, entry, frame; } ChallengeSequencePresetEntry;
++typedef struct ChallengeSequencePreset { u8 _pad0[16]; ChallengeSequencePresetEntry entries[8]; } ChallengeSequencePreset;
++typedef struct ChallengeSequencePresets { s16 count, selected; ChallengeSequencePreset* presets; } ChallengeSequencePresets;
++typedef struct ChallengeSequenceAnimation { u32 flags; f32* length; u32 reserved; } ChallengeSequenceAnimation;
++typedef struct ChallengeSequenceBank { u32 flags; ChallengeSequenceAnimation* entries; u16 reserved, count; } ChallengeSequenceBank;
++extern ChallengeSequencePresets lbl_1_data_F4D4;
++/* Edit animation sequence rows, load presets and start a preview with matching attachments. */
+ void fn_1_E098(void) {
+-    return;
++    ChallengeState* state=&lbl_1_bss_3070;
++    hugeAnimStruct* animation=&g_hugeAnimStruct;
++    s32 row;
++    for(row=0;row<11;row++) {
++        switch(row) {
++        case 8:
++            if(row==state->sequenceRow) {
++                s16 previous=lbl_1_data_F4D4.selected;
++                if(lbl_803C77B8.pressed&1) {
++                    if(!lbl_1_data_F4D4.selected) lbl_1_data_F4D4.selected=lbl_1_data_F4D4.count;
++                    lbl_1_data_F4D4.selected--;
++                } else if(lbl_803C77B8.pressed&2) {
++                    if(++lbl_1_data_F4D4.selected==lbl_1_data_F4D4.count) lbl_1_data_F4D4.selected=0;
++                }
++                if(previous!=lbl_1_data_F4D4.selected) {
++                    s32 j;
++                    for(j=8;j--;) {
++                        ChallengeSequencePresetEntry* entry=&lbl_1_data_F4D4.presets[lbl_1_data_F4D4.selected].entries[j];
++                        ChallengeSequenceChoice* choice=&state->sequence[j];
++                        if(entry->enabled) {
++                            ChallengeSequenceBank* bank;
++                            choice->table=entry->table;
++                            choice->entry=entry->entry;
++                            bank=(ChallengeSequenceBank*)animation->fielderStructs[state->modelIndex].slots[choice->table];
++                            choice->preserveTime=entry->preserveTime;
++                            if(entry->frame==-2) {
++                                if(bank) choice->frame=*bank->entries[choice->entry].length;
++                                else choice->frame=0;
++                            } else choice->frame=entry->frame;
++                        } else {
++                            choice->table=-1;
++                            choice->preserveTime=0;
++                            choice->frame=0;
++                        }
++                    }
++                }
++            }
++            break;
++        case 9:
++            if(row==state->sequenceRow && (lbl_803C77B8.held&0x100)) {
++                lbl_803CC1B8->aFunctionPointer=fn_1_DE1C;
++                lbl_803CC1B8->flag14=0; lbl_803CC1B8->flag15=8;
++            }
++            break;
++        case 10:
++            if(row==state->sequenceRow && (lbl_803C77B8.held&0x100)) {
++                u8 index;
++                Rep0610Slot* slot;
++                ChallengeSequenceControl* control;
++                AnimationStruct* actor;
++                ChallengeSequenceActor** actors;
++                s32 j, first, second;
++                lbl_803CC1B8->aFunctionPointer=fn_1_DE1C;
++                lbl_803CC1B8->flag15=0;
++                index=state->modelIndex;
++                slot=&state->previewSlots[index];
++                slot->table=state->sequence[(s8)lbl_803CC1B8->flag15].table;
++                slot->entry=state->sequence[(s8)lbl_803CC1B8->flag15].entry;
++                control=(ChallengeSequenceControl*)&animation->ctrlOrBonePtr[index].unk34;
++                control->table=animation->fielderStructs[index].slots[slot->table];
++                control->entry=slot->entry;
++                control->time=0; control->active=1;
++                control->valid=control->table!=0; control->enabled=control->table!=0;
++                control->blend=0;
++                for(j=5;j--;) {
++                    if(state->tracks[(s8)lbl_803CC1B8->flag15][j].enabled) {
++                        /* Original uses the outer menu-row offset for the selected track. */
++                        state->activeTracks[j]=&state->tracks[(s8)lbl_803CC1B8->flag15][row];
++                        state->activeTracks[j]->time=0;
++                    } else state->activeTracks[j]=0;
++                }
++                index=state->modelIndex;
++                actor=&animation->fielderStructs[index];
++                switch(state->previewSlots[index].table) {
++                case 0: case 1: first=1;second=2;break;
++                default:
++                    if(state->unk2EF9) {first=1;second=4;}
++                    else {first=3;second=2;}
++                    break;
++                }
++                actors=(ChallengeSequenceActor**)animation->AnimationStructPtrs;
++                actors[index]->attachments=&((ChallengeSequencePool*)animation)->entries[index];
++                memcpy(actors[state->modelIndex]->attachments->first,state->attachmentTemplates[first],0x5C);
++                memcpy(actors[state->modelIndex]->attachments->second,state->attachmentTemplates[second],0x5C);
++                actors[state->modelIndex]->attachments->firstOwner=state->modelIndex;
++                actors[state->modelIndex]->attachments->secondOwner=state->modelIndex;
++                actors[state->modelIndex]->attachments->flagCD=actor->unk25A;
++                actors[state->modelIndex]->attachments->flagCE=actor->unk25B;
++                actors[state->modelIndex]->attachments->ownerCF=state->modelIndex;
++                actors[state->modelIndex]->attachments->ownerD0=state->modelIndex;
++                actors[state->modelIndex]->model=animation->ctrlOrBonePtr[state->modelIndex].unk34;
++            }
++            break;
++        default: {
++            ChallengeSequenceChoice* choice=&state->sequence[row];
++            ChallengeSequenceBank* bank;
++            ChallengeSequenceAnimation* entry;
++            s32 left=lbl_803C77B8.pressed&1, right=lbl_803C77B8.pressed&2, column;
++            if(choice->table>=0) {
++                bank=(ChallengeSequenceBank*)animation->fielderStructs[state->modelIndex].slots[choice->table];
++                entry=&bank->entries[choice->entry];
++            } else {bank=0;entry=0;}
++            for(column=0;column<4;column++) {
++                u16 color;
++                if(row!=state->sequenceRow || column!=state->sequenceColumn) color=0xFFFF;
++                else if(lbl_803C77B8.buttons&0x100) color=0xF00F;
++                else color=0xFF0F;
++                switch(column) {
++                case 0:
++                    if(color==0xF00F && bank) {
++                        if(left) {if(choice->frame>=0) choice->frame--;}
++                        else if(right) {if(choice->frame<(s16)*entry->length) choice->frame++;}
++                    } break;
++                case 1:
++                    if(color==0xF00F) {
++                        s16 old=choice->table;
++                        if(left) {if(old>=0) choice->table--;}
++                        else if(right && old<6) choice->table++;
++                        if(old!=choice->table) choice->entry=0;
++                    } break;
++                case 2:
++                    if(color==0xF00F && bank) {
++                        if(left) {if(choice->entry>0) choice->entry--;}
++                        else if(right) {if(choice->entry<bank->count-1) choice->entry++;}
++                    } break;
++                case 3:
++                    if(color==0xF00F && bank && (lbl_803C77B8.pressed&3)) choice->preserveTime=!choice->preserveTime;
++                    break;
++                }
++            }
++            break;
++        }
++        }
++    }
++    if(!(lbl_803C77B8.buttons&0x100)) {
++        if(lbl_803C77B8.pressed&8) {if(!state->sequenceRow) state->sequenceRow=11;state->sequenceRow--;}
++        else if(lbl_803C77B8.pressed&4) {if(++state->sequenceRow==11) state->sequenceRow=0;}
++        else if(lbl_803C77B8.pressed&1) {if(!state->sequenceColumn) state->sequenceColumn=4;state->sequenceColumn--;}
++        else if(lbl_803C77B8.pressed&2) {if(++state->sequenceColumn==4) state->sequenceColumn=0;}
++        else if(lbl_803C77B8.pressed&0x200) state->unk2F01=1;
++    }
+ }
+ 
+ // .text:0x0000E8D4 size:0x124
