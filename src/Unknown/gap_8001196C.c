@@ -1414,8 +1414,9 @@ void fn_800188C0(void) {
 }
 
 // .text:0x800189B8 size:0x2C
+void fn_800ACFB0(void* allocation);
 void fn_800189B8(void) {
-    return;
+    fn_800ACFB0(g_hugeAnimStruct.allocatedAnimBanks);
 }
 
 // .text:0x800189E4 size:0x154
