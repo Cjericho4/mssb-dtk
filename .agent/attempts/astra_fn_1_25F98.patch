@@ -1,0 +1,156 @@
+diff --git a/include/challenge/rep_7730.h b/include/challenge/rep_7730.h
+index f716ac90..96569a1b 100644
+--- a/include/challenge/rep_7730.h
++++ b/include/challenge/rep_7730.h
+@@ -156,7 +156,8 @@ typedef struct ChallengeSpriteHeader {
+     s32* indices;
+ } ChallengeSpriteHeader;
+ typedef struct ChallengeSpriteSlot {
+-    u8 _pad0[0x38];
++    u8 _pad0[0x34];
++    struct ChallengeTextureArchive* textures;
+     ChallengeSpriteHeader* header;
+ } ChallengeSpriteSlot;
+ extern ChallengeSpriteSlot lbl_803C4BE0[];
+diff --git a/src/challenge/rep_7730.c b/src/challenge/rep_7730.c
+index 97908c10..a38d0eb5 100644
+--- a/src/challenge/rep_7730.c
++++ b/src/challenge/rep_7730.c
+@@ -992,9 +992,136 @@ void fn_1_25C68(void) {
+ }
+ 
+ // .text:0x00025F98 size:0x824
++#include "menus/menu_ui.h"
++typedef struct ChallengeSpriteNode {
++    u8 _pad0[0x48];
++    f32 x, y;
++    u8 _pad50[0xC];
++    u32 frame;
++    u8 _pad60[6];
++    u8 resource, _pad67, playback;
++} ChallengeSpriteNode;
++typedef struct ChallengeSpriteRef { ChallengeSpriteNode* node; u32 reserved; } ChallengeSpriteRef;
++extern ChallengeSpriteRef lbl_80371C30[];
++typedef struct ChallengeSpriteEditor {
++    u8 _pad0[0x14];
++    DrawingSceneStruct* task;
++    u16 count;
++    s16 x, y;
++    u8 _pad1E[3];
++    u8 sequence, selected, paused, frame;
++} ChallengeSpriteEditor;
++typedef struct ChallengeSpriteFrame { u16 type, frame, flags, texture; u8 _remaining[0x58]; } ChallengeSpriteFrame;
++u32 fn_8000CEF0(MenuUiSpriteBank*, s32, s32, s32, ChallengeSpriteFrame*);
++void fn_80035A00(void);
++void SetDisplayStateTexture(StaC4TexDesc*, s32, s32);
++extern s32 lbl_1_bss_6BD8, lbl_1_bss_6BDC;
++#define EDITOR_NODE(scene) (lbl_80371C30[(scene)->task->unkIndex].node)
++#define EDITOR_BANK(scene) ((MenuUiSpriteBank*)lbl_803C4BE0[EDITOR_NODE(scene)->resource].header)
++/* Inspect sprite sequences, step playback, edit frames and position, and show the selected texture. */
+ void fn_1_25F98(void) {
+-    return;
++    ChallengeSpriteFrame frame;
++    ChallengeSpriteEditor* scene = (ChallengeSpriteEditor*)lbl_803CC1B8;
++    s32 i;
++    for(i=0;i<6;i++) {
++        switch(i) {
++        case 0:
++            if(i == scene->selected) {
++                if(lbl_803C77B8.pressed & 2) {
++                    fn_80034CEC((u32)scene->task);
++                    if(++scene->sequence == scene->count) scene->sequence=0;
++                    scene->frame=0;
++                    ((MenusSceneScript*)lbl_1_data_10344)->sequence=scene->sequence;
++                    fn_80034E20(scene->task,lbl_1_data_10344);
++                } else if(lbl_803C77B8.pressed & 1) {
++                    fn_80034CEC((u32)scene->task);
++                    if(!scene->sequence) scene->sequence=scene->count;
++                    scene->sequence--;
++                    scene->frame=0;
++                    ((MenusSceneScript*)lbl_1_data_10344)->sequence=scene->sequence;
++                    fn_80034E20(scene->task,lbl_1_data_10344);
++                } else if(lbl_803C77B8.held & 0x100) EDITOR_NODE(scene)->playback=1;
++                else if(lbl_803C77B8.held & 0x200) EDITOR_NODE(scene)->playback=0;
++                else if(lbl_803C77B8.held & 0x400) EDITOR_NODE(scene)->frame=0;
++            }
++            break;
++        case 1:
++            if(i == scene->selected) {
++                if(lbl_803C77B8.held & 0x100) scene->paused = !scene->paused;
++                if(scene->paused) EDITOR_NODE(scene)->playback=0;
++                else EDITOR_NODE(scene)->playback=1;
++                if(lbl_803C77B8.pressed & 2) {
++                    if(scene->paused) EDITOR_NODE(scene)->playback=1;
++                } else if(lbl_803C77B8.pressed & 1) {
++                    if(scene->paused) EDITOR_NODE(scene)->playback=4;
++                }
++            }
++            break;
++        case 2:
++            if(i == scene->selected) {
++                if(lbl_803C77B8.pressed & 2) scene->frame++;
++                else if(lbl_803C77B8.pressed & 1) scene->frame--;
++            }
++            fn_8000CEF0(EDITOR_BANK(scene),scene->sequence,0,scene->frame,&frame);
++            break;
++        case 3:
++            if(i == scene->selected) {
++                if(lbl_803C77B8.pressed & 2) frame.texture++;
++                else if(lbl_803C77B8.pressed & 1) frame.texture--;
++                EDITOR_BANK(scene)->sequences->sequences[scene->sequence]->lists[1]->records[0].frame.textureIndex=frame.texture;
++            }
++            break;
++        case 4:
++            if(i == scene->selected) {
++                if(lbl_803C77B8.pressed & 0x800) scene->x=0;
++                else if(lbl_803C77B8.pressed & 0x400) scene->x=320;
++                else if(lbl_803C77B8.pressed & 2) scene->x+=8;
++                else if(lbl_803C77B8.pressed & 1) scene->x-=8;
++                EDITOR_NODE(scene)->x=((MenusSceneScript*)lbl_1_data_10344)->x=scene->x;
++            }
++            break;
++        case 5:
++            if(i == scene->selected) {
++                if(lbl_803C77B8.pressed & 0x800) scene->y=0;
++                else if(lbl_803C77B8.pressed & 0x400) scene->y=224;
++                else if(lbl_803C77B8.pressed & 2) scene->y+=8;
++                else if(lbl_803C77B8.pressed & 1) scene->y-=8;
++                EDITOR_NODE(scene)->y=((MenusSceneScript*)lbl_1_data_10344)->y=scene->y;
++            }
++            break;
++        }
++    }
++    if(lbl_803C77B8.held & 4) { if(++scene->selected==6) scene->selected=0; }
++    else if(lbl_803C77B8.held & 8) { if(!scene->selected) scene->selected=6; scene->selected--; }
++    if(lbl_803C77B8.held & 0x1000) {
++        fn_80034CEC((u32)scene->task);
++        scene->task->loadingState=1;
++        lbl_803CC1B8->aFunctionPointer=fn_1_26928;
++        fn_80035A00();
++    }
++    { Mtx identity = {{1,0,0,0},{0,1,0,0},{0,0,1,0}};
++    if(lbl_1_bss_6BD8) {
++        GXClearVtxDesc();
++        GXSetVtxDesc(GX_VA_POS,GX_DIRECT);
++        GXSetVtxDesc(GX_VA_TEX0,GX_DIRECT);
++        GXSetVtxAttrFmt(GX_VTXFMT0,GX_VA_POS,GX_POS_XYZ,GX_F32,0);
++        GXSetVtxAttrFmt(GX_VTXFMT0,GX_VA_TEX0,GX_TEX_ST,GX_U16,0);
++        GXSetChanCtrl(GX_COLOR0A0,0,GX_SRC_VTX,GX_SRC_VTX,0,GX_DF_NONE,GX_AF_NONE);
++        GXSetNumChans(0); GXSetNumTexGens(1); GXSetNumTevStages(1);
++        GXSetTevOrder(GX_TEVSTAGE0,GX_TEXCOORD0,GX_TEXMAP0,GX_COLOR_NULL);
++        GXSetTevOp(GX_TEVSTAGE0,GX_REPLACE);
++        GXLoadPosMtxImm(identity,0); GXSetCurrentMtx(0);
++        SetDisplayStateTexture(&lbl_803C4BE0[EDITOR_NODE(scene)->resource].textures->entries[lbl_1_bss_6BDC].desc,0,0);
++        GXBegin(GX_QUADS,GX_VTXFMT0,4);
++        GXWGFifo.f32=-.5f; GXWGFifo.f32=-.35f; GXWGFifo.f32=-2; GXWGFifo.u16=0; GXWGFifo.u16=0;
++        GXWGFifo.f32=-.5f; GXWGFifo.f32=.35f; GXWGFifo.f32=-2; GXWGFifo.u16=0; GXWGFifo.u16=1;
++        GXWGFifo.f32=.5f; GXWGFifo.f32=.35f; GXWGFifo.f32=-2; GXWGFifo.u16=1; GXWGFifo.u16=1;
++        GXWGFifo.f32=.5f; GXWGFifo.f32=-.35f; GXWGFifo.f32=-2; GXWGFifo.u16=1; GXWGFifo.u16=0;
++    }
++    }
+ }
++#undef EDITOR_NODE
++#undef EDITOR_BANK
+ 
+ // .text:0x000267BC size:0x38
+ void fn_1_267BC(void) {
