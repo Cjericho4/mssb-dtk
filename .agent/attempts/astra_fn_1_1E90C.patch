@@ -1,0 +1,86 @@
+diff --git a/include/challenge/rep_7730.h b/include/challenge/rep_7730.h
+index f716ac90..a4d0bc39 100644
+--- a/include/challenge/rep_7730.h
++++ b/include/challenge/rep_7730.h
+@@ -68,7 +68,9 @@ void fn_1_1E28C(void);
+ s16 fn_1_1E290(s16 selected, u16 held, u16 unused, u16 pressed);
+ void fn_1_1E5D0(Rep7730Unk6BF4* arg0);
+ void fn_1_1E8C0(s32 arg);
+-void fn_1_1E90C(void);
++extern s16 (*lbl_1_data_10668[])(s16, u16, u16, u16);
++extern s32 lbl_1_data_10670[];
++s16 fn_1_1E90C(s16 selected, u16 held, u16 triggered, u16 pressed);
+ void fn_1_1EFF4(void);
+ void fn_1_1F05C(void);
+ void fn_800385F0(Rep7730Unk6BF4* camera, f32 a, f32 b, f32 c, f32 d);
+diff --git a/src/challenge/rep_7730.c b/src/challenge/rep_7730.c
+index 97908c10..75158551 100644
+--- a/src/challenge/rep_7730.c
++++ b/src/challenge/rep_7730.c
+@@ -289,8 +289,64 @@ void fn_1_1E8C0(s32 arg) {
+ }
+ 
+ // .text:0x0001E90C size:0x6E8
+-void fn_1_1E90C(void) {
+-    return;
++/* Edit preview camera parameters and dispatch each mode's additional controls. */
++s16 fn_1_1E90C(s16 selected, u16 held, u16 triggered, u16 pressed) {
++    f32 a = ((ChallengeScene*)lbl_803CC1B8)->parameters[0];
++    f32 b = ((ChallengeScene*)lbl_803CC1B8)->parameters[1];
++    f32 c = ((ChallengeScene*)lbl_803CC1B8)->parameters[2];
++    f32 d = ((ChallengeScene*)lbl_803CC1B8)->parameters[3];
++    f32 e = ((ChallengeScene*)lbl_803CC1B8)->parameters[4];
++    s16 next = lbl_1_data_10668[((ChallengeScene*)lbl_803CC1B8)->mode28](selected - 8, held, triggered, pressed) + 8;
++    if (selected != next) {
++        s32 count = lbl_1_data_10670[((ChallengeScene*)lbl_803CC1B8)->mode28] + 8;
++        selected = (next + count) % count;
++    } else if (triggered & 0x100) {
++        switch (selected) {
++        case 0: break;
++        case 1:
++            fn_800385F0(&lbl_1_bss_6BF4,
++                ((ChallengeScene*)lbl_803CC1B8)->parameters[0],
++                ((ChallengeScene*)lbl_803CC1B8)->parameters[1],
++                ((ChallengeScene*)lbl_803CC1B8)->parameters[2],
++                ((ChallengeScene*)lbl_803CC1B8)->parameters[3]);
++            lbl_1_bss_6BF4.time += 2;
++            lbl_1_bss_6BF4.angle = -((ChallengeScene*)lbl_803CC1B8)->parameters[4];
++            ((ChallengeScene*)lbl_803CC1B8)->flags2C &= ~2;
++            ((ChallengeScene*)lbl_803CC1B8)->flags2C |= 2;
++            break;
++        case 2: ((ChallengeScene*)lbl_803CC1B8)->flags2C ^= 4; break;
++        }
++    } else if (pressed & 1) {
++        switch (selected) {
++        case 0: ((ChallengeScene*)lbl_803CC1B8)->mode28 = (((ChallengeScene*)lbl_803CC1B8)->mode28 + 7) % 8; break;
++        case 3: a = adjustChallengeNormal(held, 1, a, .0001f, .01f, .1f, 1, 10); break;
++        case 4: b = adjustChallengeNormal(held, 1, b, .0001f, .01f, .1f, 0, 1); break;
++        case 5: c = adjustChallengeNormal(held, 1, c, .0001f, .01f, .1f, 1, 10); break;
++        case 7: e = adjustChallengeNormal(held, 1, e, .0001f, .01f, .1f, 0, 10); break;
++        }
++    } else if (pressed & 2) {
++        switch (selected) {
++        case 0: ((ChallengeScene*)lbl_803CC1B8)->mode28 = (((ChallengeScene*)lbl_803CC1B8)->mode28 + 1) % 8; break;
++        case 3: a = adjustChallengeNormal(held, 0, a, .0001f, .01f, .1f, 1, 10); break;
++        case 4: b = adjustChallengeNormal(held, 0, b, .0001f, .01f, .1f, 0, 1); break;
++        case 5: c = adjustChallengeNormal(held, 0, c, .0001f, .01f, .1f, 1, 10); break;
++        case 6: d = adjustChallengeNormal(held, 0, d, .0001f, .01f, .1f, 0, 10); break;
++        case 7: e = adjustChallengeNormal(held, 0, e, .0001f, .01f, .1f, 0, 10); break;
++        }
++    } else if (pressed & 8) {
++        if (selected < 8) {
++            s32 count = lbl_1_data_10670[((ChallengeScene*)lbl_803CC1B8)->mode28];
++            selected = (count + selected + 7) % (count + 8);
++        }
++    } else if (pressed & 4) {
++        if (selected < 8) selected = (selected + 1) % (lbl_1_data_10670[((ChallengeScene*)lbl_803CC1B8)->mode28] + 8);
++    }
++    ((ChallengeScene*)lbl_803CC1B8)->parameters[0] = a;
++    ((ChallengeScene*)lbl_803CC1B8)->parameters[1] = b;
++    ((ChallengeScene*)lbl_803CC1B8)->parameters[2] = c;
++    ((ChallengeScene*)lbl_803CC1B8)->parameters[3] = d;
++    ((ChallengeScene*)lbl_803CC1B8)->parameters[4] = e;
++    return selected;
+ }
+ 
+ // .text:0x0001EFF4 size:0x68
