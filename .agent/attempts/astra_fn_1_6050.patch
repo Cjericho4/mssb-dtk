@@ -1,0 +1,97 @@
+diff --git a/src/challenge/rep_0138.c b/src/challenge/rep_0138.c
+index cb7e7ac3..240e1b14 100644
+--- a/src/challenge/rep_0138.c
++++ b/src/challenge/rep_0138.c
+@@ -1,3 +1,5 @@
++#include "math.h"
++#include "string.h"
+ #include "challenge/rep_0138.h"
+ #include "Dolphin/gx.h"
+ #include "Dolphin/GX/GXHardware.h"
+@@ -79,8 +81,85 @@ void fn_1_5AC0(void) {
+ }
+ 
+ // .text:0x00006050 size:0x528
++extern Vec lbl_1_data_A3C;
++/* Build a tiled two-channel texture encoding spherical coordinate offsets. */
+ void fn_1_6050(u16* pixels, s32 width, s32 height, f32 scale) {
+-    return;
++    Mtx rotation;
++    Vec normal, projected, axis;
++    Quaternion quaternion;
++    s32 y, x;
++    s32 size = height * (width * 2);
++    f32 v;
++    f32 nx, ny, baseU, baseV;
++    f32 u;
++    memset(pixels, 0, size);
++    for (y = 0; y < height; y++) {
++        ny = 2.0f * ((f32)y / height - 0.5f);
++        baseV = ny / 2.0f + 0.5f;
++        for (x = 0; x < width; x++) {
++            f32 zSquared;
++            nx = 2.0f * ((f32)x / width - 0.5f);
++            baseU = nx / 2.0f + 0.5f;
++            if (y == height / 2) zSquared = 1.0f - nx * nx;
++            else zSquared = 1.0f - nx * nx - ny * ny;
++            if (zSquared < 0.0f) {
++                normal.x = nx; normal.y = ny; normal.z = 0.0f;
++                PSVECNormalize(&normal, &normal);
++            } else {
++                f32 depth = -sqrt(zSquared);
++                normal.x = nx; normal.y = ny; normal.z = depth;
++            }
++            if (1.0f != scale) {
++                PSVECCrossProduct(&lbl_1_data_A3C, &normal, &axis);
++                if (PSVECMag(&axis)) {
++                    f32 sine, angle;
++                    PSVECNormalize(&axis, &axis);
++                    angle = (f32)acos(PSVECDotProduct(&lbl_1_data_A3C, &normal));
++                    angle *= scale;
++                    u = angle / 2.0f;
++                    sine = sin(u);
++                    quaternion.w = cos(u);
++                    quaternion.x = axis.x * sine;
++                    quaternion.y = axis.y * sine;
++                    quaternion.z = axis.z * sine;
++                    PSMTXQuat(rotation, &quaternion);
++                    PSMTXMultVec(rotation, &lbl_1_data_A3C, &normal);
++                }
++            }
++            projected.x = normal.x;
++            projected.y = 0.0f;
++            projected.z = normal.z;
++            if (!PSVECMag(&projected)) {
++                u = 0.0f;
++                v = u;
++            } else {
++                PSVECNormalize(&projected, &projected);
++                if (0.0f == ny) v = 0.5f;
++                else {
++                    v = acos(PSVECDotProduct(&projected, &normal));
++                    PSVECCrossProduct(&projected, &normal, &axis);
++                    if (!PSVECMag(&axis)) v = 0.0f;
++                    else if (axis.x < 0.0f) v = -v;
++                    v /= 3.1415927f;
++                    v += 0.5f;
++                }
++                if (0.0f == nx) u = 0.5f;
++                else {
++                    u = acos(PSVECDotProduct(&lbl_1_data_A3C, &projected));
++                    PSVECCrossProduct(&lbl_1_data_A3C, &projected, &axis);
++                    if (!PSVECMag(&axis)) u = 0.0f;
++                    else if (axis.y > 0.0f) u = -u;
++                    u /= 3.1415927f;
++                    u += 0.5f;
++                }
++                u -= baseU;
++                v -= baseV;
++            }
++            pixels[(x / 4) * 16 + (y / 4) * width * 4 + (y % 4) * 4 + (x % 4)] =
++                ((u8)(s32)(128.0f * u + 128.0f) << 8) | (u8)(s32)(128.0f * v + 128.0f);
++        }
++    }
++    DCFlushRange(pixels, size);
+ }
+ 
+ // .text:0x00006578 size:0x14C
