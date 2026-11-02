@@ -176,9 +176,8 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
         entry->arm = anim->rosterUnk26;
         entry->stance = anim->rosterUnk27;
         entry->valid = 1;
-        /* FAKEMATCH: keep the quotient ahead of the slot multiplier. */
-        pairIndex = lbl_803CBC04 / 3;
-        pairIndex += slotKind * 3;
+        /* FAKEMATCH: keep the slot product first to reproduce the index scratch registers. */
+        pairIndex = slotKind * 3 + lbl_803CBC04 / 3;
         lbl_803CBC04++;
         entry->obj0.index0 = pairIndex * 2;
         entry->obj1.index0 = pairIndex * 2 + 1;
