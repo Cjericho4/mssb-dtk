@@ -646,7 +646,7 @@ config.libs = [
             Object(NonMatching, "Unknown/gap_80067AC8.c"),
             Object(NonMatching, "Unknown/gap_80069B08.c"),
             Object(NonMatching, "Unknown/gap_80091450.c"),
-            Object(NonMatching, "Unknown/gap_800A1A70.c"),
+            Object(NonMatching, "Unknown/gap_800A1A70.c", mw_version="GC/1.2.5"),
             Object(NonMatching, "Unknown/gap_800A6870.c"),
             Object(NonMatching, "Unknown/gap_800A97D0.c"),
             Object(NonMatching, "Unknown/gap_800AD780.c"),

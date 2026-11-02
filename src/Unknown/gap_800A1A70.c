@@ -14,8 +14,9 @@ void fn_800A1A88(void) {
 }
 
 // .text:0x800A1B80 size:0x30
+extern void (*lbl_803CC0F4)(void);
 void fn_800A1B80(void) {
-    return;
+    if (lbl_803CC0F4) lbl_803CC0F4();
 }
 
 // .text:0x800A1BB0 size:0x28C
