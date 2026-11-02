@@ -96,6 +96,7 @@ typedef struct Rep0610Unk67E0 {
     /* 0x000 */ Mtx view;
     union {
         /* 0x030 */ u32 context[0x36];
+        struct { u8 _pad30dir[0x58]; Vec direction; };
         struct {
             u8 _pad30[0xC0];
             /* 0x0F0 */ u16 unk_0xF0;
@@ -286,7 +287,7 @@ void fn_1_11714(void);
 void fn_1_11C98(void);
 void fn_1_11D00(void);
 void fn_1_11F08(Rep0610Unk67E0* camera);
-void fn_1_121D4(void);
+void fn_1_121D4(Rep0610Unk67E0* camera);
 void fn_1_126CC(void);
 void fn_1_12820(HugeAnimEntry68* entry, Mtx mtx);
 void fn_1_129D0(void);

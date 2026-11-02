@@ -799,8 +799,84 @@ void fn_1_11F08(Rep0610Unk67E0* camera) {
 }
 
 // .text:0x000121D4 size:0x4F8
-void fn_1_121D4(void) {
-    return;
+extern Vec lbl_1_data_AD24;
+void fn_80011640(Mtx source, Mtx dest);
+void fn_80052968(void);
+/* FAKEMATCH: separate mode helpers preserve the original inline-local stack allocation. */
+static inline void updatePreviewOrbit(Rep0610Unk67E0* camera) {
+    Mtx pitch, yaw, rotation;
+    Vec angles;
+    Vec offset = {0.0f, 0.0f, 100.0f};
+    f32 cosine, sine;
+    ChallengeCameraOutput* output;
+    if (!(lbl_803C77B8.buttons & 0x10)) {
+        camera->unk_0xF0 -= (s8)lbl_803C77B8.axes.bytes[3] * 4;
+        camera->unk_0xF2 += (s8)lbl_803C77B8.axes.bytes[2] * 4;
+        camera->strafe = (s8)lbl_803C77B8.axes.bytes[0] / -256.0f;
+        camera->unk_0xF8 = (s8)lbl_803C77B8.axes.bytes[1] / 256.0f;
+        camera->pos.y += lbl_803C77B8.axes.bytes[5] / 1024.0f;
+        camera->pos.y -= lbl_803C77B8.axes.bytes[4] / 1024.0f;
+    }
+    angles.x = camera->unk_0xF0;
+    angles.y = camera->unk_0xF2;
+    angles.z = 0.0f;
+    PSVECScale(&angles, 0.0000958738f, &angles);
+    PSMTXRotRad(pitch, 'X', angles.x);
+    PSMTXRotRad(yaw, 'Y', angles.y);
+    sine = yaw[0][2];
+    cosine = yaw[0][0];
+    PSMTXConcat(yaw, pitch, rotation);
+    PSMTXMultVec(rotation, &offset, &camera->target);
+    camera->pos.x += camera->unk_0xF8 * sine - camera->strafe * cosine;
+    camera->pos.z += camera->unk_0xF8 * cosine + camera->strafe * sine;
+    camera->target.x += camera->pos.x;
+    camera->target.y += camera->pos.y;
+    camera->target.z += camera->pos.z;
+    makeLookAtMatrix(camera->view, &camera->pos, &lbl_1_data_AD18, &camera->target);
+    output = fn_80052768(0);
+    memcpy(&output->eye, &camera->pos, sizeof(Vec));
+    memcpy(&output->target, &camera->target, sizeof(Vec));
+}
+/* Update the target-centered camera, including its rotated up vector. */
+static inline void updatePreviewTarget(Rep0610Unk67E0* camera) {
+
+        Mtx pitch, yaw, rotation;
+        Vec angles;
+        Vec offset = {0.0f, 0.0f, 100.0f};
+        if (!(lbl_803C77B8.buttons & 0x10)) {
+            camera->unk_0xF0 -= (s8)lbl_803C77B8.axes.bytes[3] * 4;
+            camera->unk_0xF2 += (s8)lbl_803C77B8.axes.bytes[2] * 4;
+            camera->unk_0xF8 += (s8)lbl_803C77B8.axes.bytes[1] / 256.0f;
+            camera->target.y += lbl_803C77B8.axes.bytes[5] / 1024.0f;
+            camera->target.y -= lbl_803C77B8.axes.bytes[4] / 1024.0f;
+        }
+        angles.x = camera->unk_0xF0;
+        angles.y = camera->unk_0xF2;
+        angles.z = 0.0f;
+        PSVECScale(&angles, 0.0000958738f, &angles);
+        PSMTXRotRad(pitch, 'X', angles.x);
+        PSMTXRotRad(yaw, 'Y', angles.y);
+        PSMTXConcat(pitch, yaw, rotation);
+        offset.z = -camera->unk_0xF8;
+        PSMTXMultVec(rotation, &offset, &offset);
+        PSVECAdd(&offset, &camera->target, &camera->pos);
+        PSMTXMultVec(rotation, &lbl_1_data_AD24, &offset);
+        makeLookAtMatrix(camera->view, &camera->pos, &offset, &camera->target);
+}
+/* Update both preview-camera modes and publish the normalized view direction. */
+void fn_1_121D4(Rep0610Unk67E0* camera) {
+    switch ((s32)camera->unk_0x114) {
+    case 0:
+        updatePreviewOrbit(camera);
+        break;
+    case 1:
+        updatePreviewTarget(camera);
+        break;
+    }
+    fn_80011640(camera->view, camera->view);
+    PSVECSubtract(&camera->pos, &camera->target, &camera->direction);
+    PSVECNormalize(&camera->direction, &camera->direction);
+    fn_80052968();
 }
 
 // .text:0x000126CC size:0x154
