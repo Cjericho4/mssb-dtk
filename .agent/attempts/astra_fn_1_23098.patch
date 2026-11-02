@@ -1,0 +1,147 @@
+diff --git a/include/challenge/rep_7730.h b/include/challenge/rep_7730.h
+index f716ac90..3d56c52a 100644
+--- a/include/challenge/rep_7730.h
++++ b/include/challenge/rep_7730.h
+@@ -129,7 +129,8 @@ void fn_1_22644(void);
+ void fn_1_22874(void);
+ void fn_1_22DF4(void);
+ void fn_1_22F4C(void);
+-void fn_1_23098(void);
++extern Vec lbl_1_bss_F6E0[][112];
++s32 fn_1_23098(Mtx44 projection, Mtx view, s32 resolution, s32 rows, f32 nearDepth, f32 farDepth);
+ void fn_1_23804(s32 unusedA, s32 unusedB, s32 columns, s32 rows);
+ void fn_1_23AD8(Mtx44 projection, Vec* eye, Vec* target);
+ void C_MTXFrustum(Mtx44 projection, f32 top, f32 bottom, f32 left, f32 right, f32 nearZ, f32 farZ);
+diff --git a/src/challenge/rep_7730.c b/src/challenge/rep_7730.c
+index 97908c10..beefef55 100644
+--- a/src/challenge/rep_7730.c
++++ b/src/challenge/rep_7730.c
+@@ -749,8 +749,114 @@ void fn_1_22F4C(void) {
+ }
+ 
+ // .text:0x00023098 size:0x76C
+-void fn_1_23098(void) {
+-    return;
++#include "Dolphin/mtxext.h"
++/* Intersect the camera frustum with the preview plane and generate its projected grid. */
++s32 fn_1_23098(Mtx44 projection, Mtx view, s32 resolution, s32 rows, f32 nearDepth, f32 farDepth) {
++    Mtx44 inverseProjection;
++    Mtx inverseView;
++    Vec edges[4], origins[4], normal, origin;
++    f32 intersections[4];
++    f32 plane, nearY, farY, nearX, farX, extent;
++    s32 i, j, columns, lastRow;
++    origin.x = origin.y = origin.z = 0;
++    normal.x = 0; normal.y = -1; normal.z = 0;
++    PSMTXMultVec(view, &origin, &origin);
++    PSMTXMultVec(view, &normal, &normal);
++    PSVECSubtract(&normal, &origin, &normal);
++    PSVECNormalize(&normal, &normal);
++    plane = PSVECDotProduct(&normal, &origin);
++    nearY = 448 * nearDepth / 1280 * .5f;
++    farY = 448 * farDepth / 1280 * .5f;
++    nearX = 640 * nearDepth / 1280 * .5f;
++    farX = 640 * farDepth / 1280 * .5f;
++    nearDepth = -nearDepth; farDepth = -farDepth;
++    origins[0].x = nearX; origins[0].y = 0; origins[0].z = nearDepth;
++    origins[1].x = farX; origins[1].y = 0; origins[1].z = farDepth;
++    origins[2].x = farX; origins[2].y = farY; origins[2].z = farDepth;
++    origins[3].x = farX; origins[3].y = -farY; origins[3].z = farDepth;
++    edges[0].x = 0; edges[0].y = nearY; edges[0].z = 0;
++    edges[1].x = 0; edges[1].y = farY; edges[1].z = 0;
++    edges[2].x = nearX - farX; edges[2].y = nearY - farY; edges[2].z = nearDepth - farDepth;
++    edges[3].x = nearX - farX; edges[3].y = -(nearY - farY); edges[3].z = nearDepth - farDepth;
++    for (i = 0; i < 4; i++) {
++        intersections[i] = PSVECDotProduct(&normal, &edges[i]);
++        if (0 == intersections[i]) edges[i].z = 0;
++        else {
++            intersections[i] = -(-plane + PSVECDotProduct(&normal, &origins[i])) / intersections[i];
++            PSVECScale(&edges[i], intersections[i], &edges[i]);
++            PSVECAdd(&origins[i], &edges[i], &edges[i]);
++        }
++        if (intersections[i] < 0) intersections[i] = -intersections[i];
++    }
++    if (edges[2].z <= nearDepth && edges[2].z >= farDepth &&
++        edges[3].z <= nearDepth && edges[3].z >= farDepth) {
++        memcpy(&edges[0], &edges[2], sizeof(Vec));
++        memcpy(&edges[1], &edges[3], sizeof(Vec));
++    } else if (intersections[0] <= 1 && intersections[1] <= 1) {
++    } else if (intersections[0] <= 1 || intersections[1] <= 1) {
++        if (edges[2].z <= nearDepth && edges[2].z >= farDepth)
++            memcpy(&edges[3], &edges[2], sizeof(Vec));
++        if (intersections[0] < 1) memcpy(&edges[1], &edges[3], sizeof(Vec));
++        else memcpy(&edges[0], &edges[3], sizeof(Vec));
++    } else return 0;
++    PSMTXInverse(view, inverseView);
++    lastRow = rows - 1;
++    PSMTXMultVec(inverseView, &edges[1], &edges[2]);
++    lbl_1_bss_F6E0[lastRow][0].x = edges[2].x;
++    lbl_1_bss_F6E0[lastRow][0].y = edges[2].z;
++    edges[2].x = -edges[1].x; edges[2].y = edges[1].y; edges[2].z = edges[1].z;
++    PSMTXMultVec(inverseView, &edges[2], &edges[2]);
++    lbl_1_bss_F6E0[0][0].x = edges[2].x;
++    lbl_1_bss_F6E0[0][0].y = edges[2].z;
++    PSMTXMultVec(inverseView, &edges[0], &edges[2]);
++    lbl_1_bss_F6E0[lastRow][1].x = edges[2].x;
++    lbl_1_bss_F6E0[lastRow][1].y = edges[2].z;
++    edges[2].x = -edges[0].x; edges[2].y = edges[0].y; edges[2].z = edges[0].z;
++    PSMTXMultVec(inverseView, &edges[2], &edges[2]);
++    lbl_1_bss_F6E0[0][1].x = edges[2].x;
++    lbl_1_bss_F6E0[0][1].y = edges[2].z;
++    PSMTX44Identity(inverseProjection);
++    memcpy(inverseProjection, view, sizeof(Mtx));
++    PSMTX44Concat(projection, inverseProjection, inverseProjection);
++    C_MTX44Inverse(inverseProjection, inverseProjection);
++    PSMTX44MultVec(projection, &edges[0], &edges[0]);
++    PSMTX44MultVec(projection, &edges[1], &edges[1]);
++    extent = edges[0].y - edges[1].y;
++    if (extent < 0) extent = -extent;
++    columns = resolution * (extent + 2.0f / resolution) * .5f;
++    if (columns < 2) columns = 2;
++    i = columns - 1;
++    lbl_1_bss_F6E0[0][i].x = lbl_1_bss_F6E0[0][1].x;
++    lbl_1_bss_F6E0[0][i].y = lbl_1_bss_F6E0[0][1].y;
++    lbl_1_bss_F6E0[lastRow][i].x = lbl_1_bss_F6E0[lastRow][1].x;
++    lbl_1_bss_F6E0[lastRow][i].y = lbl_1_bss_F6E0[lastRow][1].y;
++    PSVECSubtract(&edges[0], &edges[1], &edges[2]);
++    while (--i) {
++        PSVECScale(&edges[2], (f32)i / (columns - 1), &edges[3]);
++        PSVECAdd(&edges[1], &edges[3], &edges[3]);
++        PSMTX44MultVec(inverseProjection, &edges[3], &origin);
++        lbl_1_bss_F6E0[lastRow][i].x = origin.x;
++        lbl_1_bss_F6E0[lastRow][i].y = origin.z;
++        edges[3].x = -edges[3].x;
++        PSMTX44MultVec(inverseProjection, &edges[3], &origin);
++        lbl_1_bss_F6E0[0][i].x = origin.x;
++        lbl_1_bss_F6E0[0][i].y = origin.z;
++    }
++    edges[0].y = edges[1].y = 0;
++    for (i = 0; i < columns; i++) {
++        edges[0].x = lbl_1_bss_F6E0[0][i].x;
++        edges[0].z = lbl_1_bss_F6E0[0][i].y;
++        edges[1].x = lbl_1_bss_F6E0[lastRow][i].x - edges[0].x;
++        edges[1].z = lbl_1_bss_F6E0[lastRow][i].y - edges[0].z;
++        j = lastRow;
++        while (--j) {
++            PSVECScale(&edges[1], (f32)j / lastRow, &edges[2]);
++            PSVECAdd(&edges[0], &edges[2], &edges[2]);
++            lbl_1_bss_F6E0[j][i].x = edges[2].x;
++            lbl_1_bss_F6E0[j][i].y = edges[2].z;
++        }
++    }
++    return columns;
+ }
+ 
+ typedef struct ChallengeWaveCamera {
+@@ -783,9 +889,9 @@ void fn_1_23804(s32 unusedA, s32 unusedB, s32 columns, s32 rows) {
+         rows = j;
+         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, j * 2);
+         while (rows--) {
+-            GXPosition3f32(lbl_1_bss_F6E0[rows][columns].x, lbl_1_bss_F6E0[rows][columns].z, lbl_1_bss_F6E0[rows][columns].y);
++            GXPosition3f32(lbl_1_bss_F6E0[rows][columns].x, lbl_1_bss_F6E0[rows][columns].y, lbl_1_bss_F6E0[rows][columns].y);
+             GXColor1u32((columns & 1) ? 0xFFFFFFFF : 0xFFFF);
+-            GXPosition3f32(lbl_1_bss_F6E0[rows][columns - 1].x, lbl_1_bss_F6E0[rows][columns - 1].z, lbl_1_bss_F6E0[rows][columns - 1].y);
++            GXPosition3f32(lbl_1_bss_F6E0[rows][columns - 1].x, lbl_1_bss_F6E0[rows][columns - 1].y, lbl_1_bss_F6E0[rows][columns - 1].y);
+             if (columns & 1) GXColor1u32(0xFFFF);
+             else GXColor1u32(0xFFFFFFFF);
+         }
