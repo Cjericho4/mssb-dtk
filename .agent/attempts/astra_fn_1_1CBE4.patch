@@ -1,0 +1,101 @@
+diff --git a/src/challenge/rep_74A0.c b/src/challenge/rep_74A0.c
+index c288c5f1..3180c293 100644
+--- a/src/challenge/rep_74A0.c
++++ b/src/challenge/rep_74A0.c
+@@ -474,8 +474,95 @@ void fn_1_1C8C0(void) {
+ }
+ 
+ // .text:0x0001CBE4 size:0x504
++typedef struct ChallengeDiskRequest {
++    const char* filename;
++    u32 sizeFlags, discOffset, compressedSize;
++} ChallengeDiskRequest;
++STATIC_ASSERT(sizeof(ChallengeDiskRequest) == 16);
++/* This scene uses filename-bearing requests; DOL headers expose numeric flags for the first word. */
++struct MenusAnimationAux* ARAMTransfer(ChallengeDiskRequest*, void*, u8, void*);
++extern ChallengeDiskRequest lbl_1_data_F968[24];
++extern const char lbl_1_rodata_7610[], lbl_1_rodata_7630[], lbl_1_rodata_7654[], lbl_1_rodata_7678[];
++extern const char lbl_1_rodata_769C[], lbl_1_rodata_76C0[], lbl_1_rodata_76E4[], lbl_1_rodata_7708[];
++extern const f32 lbl_1_rodata_7520, lbl_1_rodata_75F0, lbl_1_rodata_75F4, lbl_1_rodata_752C, lbl_1_rodata_7530, lbl_1_rodata_7534, lbl_1_rodata_7538, lbl_1_rodata_753C, lbl_1_rodata_7540, lbl_1_rodata_75F8, lbl_1_rodata_75FC, lbl_1_rodata_7600, lbl_1_rodata_7604, lbl_1_rodata_7608, lbl_1_rodata_7550, lbl_1_rodata_760C, lbl_1_rodata_75B8, lbl_1_rodata_75BC, lbl_1_rodata_75C0, lbl_1_rodata_75C4, lbl_1_rodata_75C8;
++static inline void initPreviewProjection(void) {
++    Mtx44 projection;
++    lbl_1_bss_6B7C.direction.x = lbl_1_rodata_7520;
++    lbl_1_bss_6B7C.direction.y = lbl_1_rodata_75F0;
++    lbl_1_bss_6B7C.direction.z = lbl_1_rodata_7520;
++    lbl_1_bss_6B7C.position.x = lbl_1_rodata_7520;
++    lbl_1_bss_6B7C.position.y = lbl_1_rodata_7520;
++    lbl_1_bss_6B7C.position.z = lbl_1_rodata_75F4;
++    C_MTXFrustum(projection, lbl_1_rodata_752C, lbl_1_rodata_7530, lbl_1_rodata_7534, lbl_1_rodata_7538, lbl_1_rodata_753C, lbl_1_rodata_7540);
++    GXSetProjection(projection, GX_PERSPECTIVE);
++    fn_800B806C(0, lbl_1_rodata_75F8, lbl_1_rodata_75FC, lbl_1_rodata_7600, lbl_1_rodata_7604, lbl_1_rodata_7608, lbl_1_rodata_7550, lbl_1_rodata_760C);
++}
++static inline void initPreviewLights(void) {
++    Gap800BD3A0Color white = {255, 255, 255, 255};
++    Gap800BD3A0Color blue = {0, 0, 255, 255};
++    Gap800BD3A0Light** first = (Gap800BD3A0Light**)&g_hugeAnimStruct.menuLights[0];
++    Gap800BD3A0Light** second;
++    Gap800BD3A0Light** third;
++    LITAlloc(first);
++    second = (Gap800BD3A0Light**)&g_hugeAnimStruct.menuLights[1];
++    LITAlloc(second);
++    third = (Gap800BD3A0Light**)&g_hugeAnimStruct.menuLights[2];
++    LITAlloc(third);
++    LITInitAttn(*first, lbl_1_rodata_753C, lbl_1_rodata_7520, lbl_1_rodata_7520, lbl_1_rodata_753C, lbl_1_rodata_7520, lbl_1_rodata_7520);
++    LITInitPos(*first, lbl_1_rodata_75B8, lbl_1_rodata_75B8, lbl_1_rodata_75BC);
++    setChallengeLightColor(*first, white);
++    LITInitAttn(*second, lbl_1_rodata_753C, lbl_1_rodata_7520, lbl_1_rodata_7520, lbl_1_rodata_753C, lbl_1_rodata_7520, lbl_1_rodata_7520);
++    LITInitPos(*second, lbl_1_rodata_75C0, lbl_1_rodata_75C4, lbl_1_rodata_75C8);
++    setChallengeLightColor(*second, blue);
++    LITInitAttn(*third, lbl_1_rodata_753C, lbl_1_rodata_7520, lbl_1_rodata_7520, lbl_1_rodata_753C, lbl_1_rodata_7520, lbl_1_rodata_7520);
++    LITInitPos(*third, lbl_1_rodata_7520, lbl_1_rodata_75C4, lbl_1_rodata_75C8);
++    setChallengeLightColor(*third, blue);
++    LITInitDir(*first, lbl_1_rodata_75BC, lbl_1_rodata_75BC, lbl_1_rodata_75B8);
++}
++/* Load the 24 preview model archives in sequence, initializing the camera and lights. */
++static inline void initModelPreview(DrawingSceneStruct* scene) {
++
++        s32 i;
++        for (i = 0; i < 24; i++) lbl_1_bss_6A94[i] = 0;
++        scene->flag14 = 0;
++        scene->flag16 = 0;
++        scene->flag17 = 0;
++        ((ChallengeScene*)scene)->byte18 = 1;
++        initPreviewProjection();
++        initPreviewLights();
++        lbl_803CC1B8->loadingState = 2;
++}
+ void fn_1_1CBE4(void) {
+-    return;
++    DrawingSceneStruct* scene = lbl_803CC1B8;
++    switch (scene->loadingState) {
++    case 0:
++        initModelPreview(scene);
++        break;
++    case 1:
++        scene->flag14++;
++        if (scene->flag14 == 24) lbl_803CC1B8->loadingState = 8;
++        else lbl_803CC1B8->loadingState = 2;
++        break;
++    case 2: {
++        const char* name = lbl_1_data_F968[scene->flag14].filename;
++        if (name == lbl_1_rodata_7610 || name == lbl_1_rodata_7630 ||
++            name == lbl_1_rodata_7654 || name == lbl_1_rodata_7678 ||
++            name == lbl_1_rodata_769C || name == lbl_1_rodata_76C0 ||
++            name == lbl_1_rodata_76E4 || name == lbl_1_rodata_7708)
++            lbl_1_bss_6A94[scene->flag14] = 1;
++        g_hugeAnimStruct.fielderStructs[scene->flag14].aux = ARAMTransfer(&lbl_1_data_F968[scene->flag14], 0, 0, 0);
++        lbl_803CC1B8->loadingState++;
++        break;
++    }
++    case 3:
++        if ((u8)lbl_803C6CF8.allowLoad == 1) scene->loadingState = 1;
++        break;
++    case 8:
++        scene->flag14 = 0;
++        lbl_803CC1B8->loadingState = 0;
++        lbl_803CC1B8->aFunctionPointer = fn_1_1C8C0;
++        break;
++    }
+ }
+ 
+ // .text:0x0001D0E8 size:0x24
