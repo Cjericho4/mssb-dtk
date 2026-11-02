@@ -1,0 +1,128 @@
+diff --git a/src/challenge/rep_74A0.c b/src/challenge/rep_74A0.c
+index c288c5f1..4cbb5600 100644
+--- a/src/challenge/rep_74A0.c
++++ b/src/challenge/rep_74A0.c
+@@ -270,8 +270,122 @@ void fn_1_1A774(void) {
+ }
+ 
+ // .text:0x0001A850 size:0x554
++/* Draw the selected bone's direction marker and colored local axes. */
+ void fn_1_1A850(Mtx matrix, Mtx view, s32 r, s32 g, s32 b, s32 a) {
+-    return;
++    Mtx transform;
++    GXCullMode cull;
++    GXGetCullMode(&cull);
++    PSMTXConcat(view,matrix,transform);
++    GXLoadPosMtxImm(transform,0);
++    GXSetCurrentMtx(0);
++    GXClearVtxDesc();
++    GXSetVtxDesc(GX_VA_POS,GX_DIRECT);
++    GXSetVtxDesc(GX_VA_CLR0,GX_DIRECT);
++    GXSetVtxAttrFmt(GX_VTXFMT0,GX_VA_POS,GX_POS_XYZ,GX_F32,0);
++    GXSetVtxAttrFmt(GX_VTXFMT0,GX_VA_CLR0,GX_CLR_RGBA,GX_RGBA8,0);
++    GXSetNumTevStages(1);
++    GXSetNumChans(1);
++    GXSetNumTexGens(0);
++    GXSetTevOp(GX_TEVSTAGE0,GX_PASSCLR);
++    GXSetTevOrder(GX_TEVSTAGE0,GX_TEXCOORD_NULL,GX_TEXMAP_NULL,GX_COLOR0A0);
++    GXSetChanCtrl(GX_COLOR0,GX_FALSE,GX_SRC_VTX,GX_SRC_VTX,GX_LIGHT_NULL,GX_DF_NONE,GX_AF_NONE);
++    GXSetChanCtrl(GX_ALPHA0,GX_FALSE,GX_SRC_VTX,GX_SRC_VTX,GX_LIGHT_NULL,GX_DF_NONE,GX_AF_NONE);
++    GXSetBlendMode(GX_BM_BLEND,GX_BL_SRCALPHA,GX_BL_INVSRCALPHA,GX_LO_COPY);
++    GXSetCullMode(GX_CULL_NONE);
++    GXSetZMode(GX_TRUE,GX_ALWAYS,GX_TRUE);
++    GXSetLineWidth(7,GX_TO_ZERO);
++    GXBegin(GX_LINES,GX_VTXFMT0,22);
++    GXWGFifo.f32 = -0.01f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(r, g, b, a);
++    GXWGFifo.f32 = 0.2f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(r, g, b, a);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.01f;
++    GXColor4u8(r, g, b, a);
++    GXWGFifo.f32 = 0.2f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(r, g, b, a);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = -0.01f;
++    GXColor4u8(r, g, b, a);
++    GXWGFifo.f32 = 0.2f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(r, g, b, a);
++    GXWGFifo.f32 = -0.01f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(r, g, b, a);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.01f;
++    GXColor4u8(r, g, b, a);
++    GXWGFifo.f32 = -0.01f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(r, g, b, a);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = -0.01f;
++    GXColor4u8(r, g, b, a);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(0, 255, 0, a);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.05f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(0, 255, 0, a);
++    GXWGFifo.f32 = -0.005f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(0, 255, 0, a);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.05f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(0, 255, 0, a);
++    GXWGFifo.f32 = 0.005f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(0, 255, 0, a);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.05f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(0, 255, 0, a);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(255, 0, 255, a);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.05f;
++    GXColor4u8(255, 0, 255, a);
++    GXWGFifo.f32 = -0.005f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(255, 0, 255, a);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.05f;
++    GXColor4u8(255, 0, 255, a);
++    GXWGFifo.f32 = 0.005f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXColor4u8(255, 0, 255, a);
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.0f;
++    GXWGFifo.f32 = 0.05f;
++    GXColor4u8(255, 0, 255, a);
++    GXSetLineWidth(6,GX_TO_ZERO);
++    GXSetCullMode(cull);
++    GXSetZMode(GX_TRUE,GX_LEQUAL,GX_TRUE);
+ }
+ 
+ // .text:0x0001ADA4 size:0x294
