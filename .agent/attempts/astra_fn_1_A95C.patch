@@ -1,0 +1,383 @@
+diff --git a/include/challenge/rep_02A8.h b/include/challenge/rep_02A8.h
+index 4e28d01c..72b8a776 100644
+--- a/include/challenge/rep_02A8.h
++++ b/include/challenge/rep_02A8.h
+@@ -37,8 +37,18 @@ s32 fn_1_A880(void);
+ s32 fn_1_A8B4(void);
+ s32 fn_1_A908(void);
+ void fn_1_A95C(void);
++typedef struct ChallengeSoundListener {
++    u8 _pad0[0xC]; Vec position; f32 positionOffset;
++    Vec direction, heading, right, up; Mtx transform;
++    f32 front, back, speed, volume; u8 _pad8C[4];
++} ChallengeSoundListener;
++typedef struct ChallengeSoundEmitter {
++    u8 _pad0[0x10]; Vec position, direction;
++    f32 maxDistance, maxVolume; u8 _pad30[0x20];
++} ChallengeSoundEmitter;
+ typedef struct ChallengeSoundState {
+-    u8 _pad0[0xE0];
++    ChallengeSoundListener listener;
++    ChallengeSoundEmitter emitter;
+     u8 pending;
+ } ChallengeSoundState;
+ extern ChallengeSoundState lbl_1_common_bss_49994;
+@@ -56,4 +66,26 @@ void fn_1_BFB0(void);
+ extern u8 lbl_1_bss_2FDD;
+ void fn_1_C188(void);
+ 
++typedef struct ChallengeSoundPreview {
++    u8 _pad0[0x12]; s16 soundIndex; u8 listenerSelection, emitterSelection;
++    u8 _pad16[2]; f32 emitterValues[7], listenerValues[13];
++} ChallengeSoundPreview;
++typedef struct ChallengeEmitterConfig {
++    f32 maxDistance, minVolume, maxVolume, volumePush; u16 effect; u8 _pad12[2];
++} ChallengeEmitterConfig;
++typedef struct ChallengeListenerConfig {
++    f32 front, back, speed; u8 volume; u8 _padD[3];
++} ChallengeListenerConfig;
++STATIC_ASSERT(sizeof(ChallengeSoundListener) == 0x90);
++STATIC_ASSERT(sizeof(ChallengeSoundEmitter) == 0x50);
++extern ChallengeSoundPreview lbl_1_bss_2FD8;
++extern ChallengeEmitterConfig lbl_1_common_bss_49980;
++extern ChallengeListenerConfig lbl_1_common_bss_49970;
++extern u16 lbl_1_data_188C[];
++void sndRemoveListener(ChallengeSoundListener*);
++void sndRemoveEmitter(ChallengeSoundEmitter*);
++void sndAddEmitter(ChallengeSoundEmitter*, Vec*, Vec*, u32, u16, s32, s32, SND_ROOM*, f32, f32);
++void sndAddListener(ChallengeSoundListener*, Vec*, Vec*, Vec*, Vec*, u32, u8, SND_ROOM*, f32, f32, f32);
++void sndUpdateListener(ChallengeSoundListener*, Vec*, Vec*, Vec*, Vec*, u32, SND_ROOM*);
++void sndUpdateEmitter(ChallengeSoundEmitter*, Vec*, Vec*, u8, SND_ROOM*);
+ #endif // !__CHALLENGE_rep_02A8_H_
+diff --git a/src/challenge/rep_02A8.c b/src/challenge/rep_02A8.c
+index c661eb0f..e2325094 100644
+--- a/src/challenge/rep_02A8.c
++++ b/src/challenge/rep_02A8.c
+@@ -131,8 +131,326 @@ s32 fn_1_A908(void) {
+ }
+ 
+ // .text:0x0000A95C size:0xB48
++extern f32 lbl_1_rodata_5E8;
++extern f32 lbl_1_rodata_5EC;
++extern f32 lbl_1_rodata_5F0;
++extern f32 lbl_1_rodata_5F4;
++extern f32 lbl_1_rodata_5F8;
++extern f32 lbl_1_rodata_5FC;
++extern f64 lbl_1_rodata_600, lbl_1_rodata_608;
++/* Spatial sound test controls; preserve the original duplicate Y controls. */
+ void fn_1_A95C(void) {
+-    return;
++    s16 temp_r3_5;
++    s16 temp_r3_6;
++    s32 var_r6;
++    s32 var_r7;
++    s8 var_r31;
++    u16 temp_r29;
++    u8 temp_r3;
++    u8 temp_r3_2;
++    u8 temp_r3_3;
++    u8 temp_r3_4;
++    f32 *temp_r5;
++    f32 *temp_r6;
++
++    if (lbl_803C77B8.held & 0x100) {
++        temp_r29 = lbl_1_data_188C[lbl_1_bss_2FD8.soundIndex];
++        if ((u8) lbl_1_common_bss_49994.pending != 0) {
++            sndRemoveListener(&lbl_1_common_bss_49994.listener);
++            sndRemoveEmitter(&lbl_1_common_bss_49994.emitter);
++        }
++        lbl_1_common_bss_49980.effect = temp_r29;
++        lbl_1_common_bss_49980.maxVolume = (f32) lbl_1_rodata_5E8;
++        lbl_1_common_bss_49980.volumePush = (f32) lbl_1_rodata_5EC;
++        lbl_1_common_bss_49980.minVolume = (f32) lbl_1_rodata_5EC;
++        lbl_1_common_bss_49980.maxDistance = (f32) lbl_1_rodata_5F0;
++        sndAddEmitter(&lbl_1_common_bss_49994.emitter, &lbl_1_common_bss_49994.emitter.position, &lbl_1_common_bss_49994.emitter.direction, 1, temp_r29, (s32) lbl_1_rodata_5E8, (s32) lbl_1_rodata_5EC, 0, lbl_1_rodata_5F0, lbl_1_rodata_5EC);
++        lbl_1_common_bss_49970.front = (f32) lbl_1_rodata_5F0;
++        lbl_1_common_bss_49970.back = (f32) lbl_1_rodata_5F4;
++        lbl_1_common_bss_49970.volume = 0x7F;
++        lbl_1_common_bss_49970.speed = (f32) lbl_1_rodata_5F8;
++        lbl_1_common_bss_49994.listener.heading.x = (f32) lbl_1_rodata_5EC;
++        lbl_1_common_bss_49994.listener.heading.y = (f32) lbl_1_rodata_5EC;
++        lbl_1_common_bss_49994.listener.heading.z = (f32) lbl_1_rodata_5FC;
++        lbl_1_common_bss_49994.listener.up.x = (f32) lbl_1_rodata_5EC;
++        lbl_1_common_bss_49994.listener.up.y = (f32) lbl_1_rodata_5F8;
++        lbl_1_common_bss_49994.listener.up.z = (f32) lbl_1_rodata_5EC;
++        sndAddListener(&lbl_1_common_bss_49994.listener, &lbl_1_common_bss_49994.listener.position, &lbl_1_common_bss_49994.listener.direction, &lbl_1_common_bss_49994.listener.heading, &lbl_1_common_bss_49994.listener.up, 0, 0x7F, 0, lbl_1_rodata_5F0, lbl_1_rodata_5F4, lbl_1_rodata_5F8);
++        lbl_1_common_bss_49994.pending = 1U;
++    } else if (lbl_803C77B8.held & 0x1200) {
++        lbl_1_common_bss_49994.pending = 0U;
++        var_r31 = (s8) lbl_800EF808.unk390 - 1;
++loop_8:
++        if (var_r31 > 0) {
++            if (fn_800214D0() != 0) {
++                var_r31 -= 1;
++                goto loop_8;
++            }
++        }
++        lbl_803CC1B8->aFunctionPointer = fn_1_A348;
++    } else if (lbl_803C77B8.buttons & 0x800) {
++        if (lbl_803C77B8.pressed & 1) {
++            if ((u32) (s8) lbl_1_bss_2FD8.listenerSelection <= 0xCU) {
++                switch ((s8) lbl_1_bss_2FD8.listenerSelection) { /* switch 1 */
++                case 0:                             /* switch 1 */
++                    lbl_1_common_bss_49994.listener.position.x = (f32) ((f64) lbl_1_common_bss_49994.listener.position.x - lbl_1_rodata_600);
++                    break;
++                case 1:                             /* switch 1 */
++                    lbl_1_common_bss_49994.listener.position.y = (f32) ((f64) lbl_1_common_bss_49994.listener.position.y - lbl_1_rodata_600);
++                    break;
++                case 2:                             /* switch 1 */
++                    lbl_1_common_bss_49994.listener.position.z = (f32) ((f64) lbl_1_common_bss_49994.listener.position.z - lbl_1_rodata_600);
++                    break;
++                case 3:                             /* switch 1 */
++                    lbl_1_common_bss_49994.listener.direction.y = (f32) ((f64) lbl_1_common_bss_49994.listener.direction.y - lbl_1_rodata_600);
++                    break;
++                case 4:                             /* switch 1 */
++                    lbl_1_common_bss_49994.listener.direction.y = (f32) ((f64) lbl_1_common_bss_49994.listener.direction.y - lbl_1_rodata_600);
++                    break;
++                case 5:                             /* switch 1 */
++                    lbl_1_common_bss_49994.listener.direction.z = (f32) ((f64) lbl_1_common_bss_49994.listener.direction.z - lbl_1_rodata_600);
++                    break;
++                case 6:                             /* switch 1 */
++                    lbl_1_common_bss_49994.listener.heading.x = (f32) ((f64) lbl_1_common_bss_49994.listener.heading.x - lbl_1_rodata_600);
++                    break;
++                case 7:                             /* switch 1 */
++                    lbl_1_common_bss_49994.listener.heading.y = (f32) ((f64) lbl_1_common_bss_49994.listener.heading.y - lbl_1_rodata_600);
++                    break;
++                case 8:                             /* switch 1 */
++                    lbl_1_common_bss_49994.listener.heading.z = (f32) ((f64) lbl_1_common_bss_49994.listener.heading.z - lbl_1_rodata_600);
++                    break;
++                case 9:                             /* switch 1 */
++                    lbl_1_common_bss_49994.listener.up.x = (f32) ((f64) lbl_1_common_bss_49994.listener.up.x - lbl_1_rodata_600);
++                    break;
++                case 10:                            /* switch 1 */
++                    lbl_1_common_bss_49994.listener.up.y = (f32) ((f64) lbl_1_common_bss_49994.listener.up.y - lbl_1_rodata_600);
++                    break;
++                case 11:                            /* switch 1 */
++                    lbl_1_common_bss_49994.listener.up.z = (f32) ((f64) lbl_1_common_bss_49994.listener.up.z - lbl_1_rodata_600);
++                    break;
++                case 12:                            /* switch 1 */
++                    lbl_1_common_bss_49994.listener.volume = (f32) ((f64) lbl_1_common_bss_49994.listener.volume - lbl_1_rodata_608);
++                    break;
++                }
++            }
++        } else if (lbl_803C77B8.pressed & 2) {
++            if ((u32) (s8) lbl_1_bss_2FD8.listenerSelection <= 0xCU) {
++                switch ((s8) lbl_1_bss_2FD8.listenerSelection) { /* switch 2 */
++                case 0:                             /* switch 2 */
++                    lbl_1_common_bss_49994.listener.position.x = (f32) ((f64) lbl_1_common_bss_49994.listener.position.x + lbl_1_rodata_600);
++                    break;
++                case 1:                             /* switch 2 */
++                    lbl_1_common_bss_49994.listener.position.y = (f32) ((f64) lbl_1_common_bss_49994.listener.position.y + lbl_1_rodata_600);
++                    break;
++                case 2:                             /* switch 2 */
++                    lbl_1_common_bss_49994.listener.position.z = (f32) ((f64) lbl_1_common_bss_49994.listener.position.z + lbl_1_rodata_600);
++                    break;
++                case 3:                             /* switch 2 */
++                    lbl_1_common_bss_49994.listener.direction.y = (f32) ((f64) lbl_1_common_bss_49994.listener.direction.y + lbl_1_rodata_600);
++                    break;
++                case 4:                             /* switch 2 */
++                    lbl_1_common_bss_49994.listener.direction.y = (f32) ((f64) lbl_1_common_bss_49994.listener.direction.y + lbl_1_rodata_600);
++                    break;
++                case 5:                             /* switch 2 */
++                    lbl_1_common_bss_49994.listener.direction.z = (f32) ((f64) lbl_1_common_bss_49994.listener.direction.z + lbl_1_rodata_600);
++                    break;
++                case 6:                             /* switch 2 */
++                    lbl_1_common_bss_49994.listener.heading.x = (f32) ((f64) lbl_1_common_bss_49994.listener.heading.x + lbl_1_rodata_600);
++                    break;
++                case 7:                             /* switch 2 */
++                    lbl_1_common_bss_49994.listener.heading.y = (f32) ((f64) lbl_1_common_bss_49994.listener.heading.y + lbl_1_rodata_600);
++                    break;
++                case 8:                             /* switch 2 */
++                    lbl_1_common_bss_49994.listener.heading.z = (f32) ((f64) lbl_1_common_bss_49994.listener.heading.z + lbl_1_rodata_600);
++                    break;
++                case 9:                             /* switch 2 */
++                    lbl_1_common_bss_49994.listener.up.x = (f32) ((f64) lbl_1_common_bss_49994.listener.up.x + lbl_1_rodata_600);
++                    break;
++                case 10:                            /* switch 2 */
++                    lbl_1_common_bss_49994.listener.up.y = (f32) ((f64) lbl_1_common_bss_49994.listener.up.y + lbl_1_rodata_600);
++                    break;
++                case 11:                            /* switch 2 */
++                    lbl_1_common_bss_49994.listener.up.z = (f32) ((f64) lbl_1_common_bss_49994.listener.up.z + lbl_1_rodata_600);
++                    break;
++                case 12:                            /* switch 2 */
++                    lbl_1_common_bss_49994.listener.volume = (f32) ((f64) lbl_1_common_bss_49994.listener.volume + lbl_1_rodata_608);
++                    break;
++                }
++            }
++        } else if (lbl_803C77B8.pressed & 8) {
++            temp_r3 = lbl_1_bss_2FD8.listenerSelection - 1;
++            lbl_1_bss_2FD8.listenerSelection = temp_r3;
++            if ((s8) temp_r3 < 0) {
++                lbl_1_bss_2FD8.listenerSelection = 0xCU;
++            }
++        } else if (lbl_803C77B8.pressed & 4) {
++            temp_r3_2 = lbl_1_bss_2FD8.listenerSelection + 1;
++            lbl_1_bss_2FD8.listenerSelection = temp_r3_2;
++            if ((s8) temp_r3_2 == 0xD) {
++                lbl_1_bss_2FD8.listenerSelection = 0U;
++            }
++        }
++    } else if (lbl_803C77B8.buttons & 0x400) {
++        if (lbl_803C77B8.pressed & 1) {
++            if ((u32) (s8) lbl_1_bss_2FD8.emitterSelection <= 6U) {
++                switch ((s8) lbl_1_bss_2FD8.emitterSelection) { /* switch 3 */
++                case 0:                             /* switch 3 */
++                    lbl_1_common_bss_49994.emitter.position.x = (f32) ((f64) lbl_1_common_bss_49994.emitter.position.x - lbl_1_rodata_600);
++                    break;
++                case 1:                             /* switch 3 */
++                    lbl_1_common_bss_49994.emitter.position.y = (f32) ((f64) lbl_1_common_bss_49994.emitter.position.y - lbl_1_rodata_600);
++                    break;
++                case 2:                             /* switch 3 */
++                    lbl_1_common_bss_49994.emitter.position.z = (f32) ((f64) lbl_1_common_bss_49994.emitter.position.z - lbl_1_rodata_600);
++                    break;
++                case 3:                             /* switch 3 */
++                    lbl_1_common_bss_49994.emitter.direction.y = (f32) ((f64) lbl_1_common_bss_49994.emitter.direction.y - lbl_1_rodata_600);
++                    break;
++                case 4:                             /* switch 3 */
++                    lbl_1_common_bss_49994.emitter.direction.y = (f32) ((f64) lbl_1_common_bss_49994.emitter.direction.y - lbl_1_rodata_600);
++                    break;
++                case 5:                             /* switch 3 */
++                    lbl_1_common_bss_49994.emitter.direction.z = (f32) ((f64) lbl_1_common_bss_49994.emitter.direction.z - lbl_1_rodata_600);
++                    break;
++                case 6:                             /* switch 3 */
++                    lbl_1_common_bss_49994.emitter.maxVolume = (f32) ((f64) lbl_1_common_bss_49994.emitter.maxVolume - lbl_1_rodata_608);
++                    break;
++                }
++            }
++        } else if (lbl_803C77B8.pressed & 2) {
++            if ((u32) (s8) lbl_1_bss_2FD8.emitterSelection <= 6U) {
++                switch ((s8) lbl_1_bss_2FD8.emitterSelection) { /* switch 4 */
++                case 0:                             /* switch 4 */
++                    lbl_1_common_bss_49994.emitter.position.x = (f32) ((f64) lbl_1_common_bss_49994.emitter.position.x + lbl_1_rodata_600);
++                    break;
++                case 1:                             /* switch 4 */
++                    lbl_1_common_bss_49994.emitter.position.y = (f32) ((f64) lbl_1_common_bss_49994.emitter.position.y + lbl_1_rodata_600);
++                    break;
++                case 2:                             /* switch 4 */
++                    lbl_1_common_bss_49994.emitter.position.z = (f32) ((f64) lbl_1_common_bss_49994.emitter.position.z + lbl_1_rodata_600);
++                    break;
++                case 3:                             /* switch 4 */
++                    lbl_1_common_bss_49994.emitter.direction.y = (f32) ((f64) lbl_1_common_bss_49994.emitter.direction.y + lbl_1_rodata_600);
++                    break;
++                case 4:                             /* switch 4 */
++                    lbl_1_common_bss_49994.emitter.direction.y = (f32) ((f64) lbl_1_common_bss_49994.emitter.direction.y + lbl_1_rodata_600);
++                    break;
++                case 5:                             /* switch 4 */
++                    lbl_1_common_bss_49994.emitter.direction.z = (f32) ((f64) lbl_1_common_bss_49994.emitter.direction.z + lbl_1_rodata_600);
++                    break;
++                case 6:                             /* switch 4 */
++                    lbl_1_common_bss_49994.emitter.maxVolume = (f32) ((f64) lbl_1_common_bss_49994.emitter.maxVolume + lbl_1_rodata_608);
++                    break;
++                }
++            }
++        } else if (lbl_803C77B8.pressed & 8) {
++            temp_r3_3 = lbl_1_bss_2FD8.emitterSelection - 1;
++            lbl_1_bss_2FD8.emitterSelection = temp_r3_3;
++            if ((s8) temp_r3_3 < 0) {
++                lbl_1_bss_2FD8.emitterSelection = 6U;
++            }
++        } else if (lbl_803C77B8.pressed & 4) {
++            temp_r3_4 = lbl_1_bss_2FD8.emitterSelection + 1;
++            lbl_1_bss_2FD8.emitterSelection = temp_r3_4;
++            if ((s8) temp_r3_4 == 7) {
++                lbl_1_bss_2FD8.emitterSelection = 0U;
++            }
++        }
++    } else if (lbl_803C77B8.pressed & 1) {
++        temp_r3_5 = lbl_1_bss_2FD8.soundIndex - 1;
++        lbl_1_bss_2FD8.soundIndex = temp_r3_5;
++        if (temp_r3_5 < 0) {
++            lbl_1_bss_2FD8.soundIndex = 1;
++        }
++    } else if (lbl_803C77B8.pressed & 2) {
++        temp_r3_6 = lbl_1_bss_2FD8.soundIndex + 1;
++        lbl_1_bss_2FD8.soundIndex = temp_r3_6;
++        if (temp_r3_6 > 2) {
++            lbl_1_bss_2FD8.soundIndex = 0;
++        }
++    }
++    if ((u8) lbl_1_common_bss_49994.pending != 0) {
++        sndUpdateListener(&lbl_1_common_bss_49994.listener, &lbl_1_common_bss_49994.listener.position, &lbl_1_common_bss_49994.listener.direction, &lbl_1_common_bss_49994.listener.heading, &lbl_1_common_bss_49994.listener.up, 0x80, 0);
++        sndUpdateEmitter(&lbl_1_common_bss_49994.emitter, &lbl_1_common_bss_49994.emitter.position, &lbl_1_common_bss_49994.emitter.direction, 0x80, 0);
++    }
++    temp_r5 = lbl_1_bss_2FD8.listenerValues;
++    var_r6 = 0;
++    do {
++        if ((u32) (s8) lbl_1_bss_2FD8.listenerSelection <= 0xCU) {
++            switch ((s8) lbl_1_bss_2FD8.listenerSelection) {    /* switch 5 */
++            case 0:                                 /* switch 5 */
++                lbl_1_bss_2FD8.listenerValues[0] = (f32) lbl_1_common_bss_49994.listener.position.x;
++                break;
++            case 1:                                 /* switch 5 */
++                temp_r5[1] = (f32) lbl_1_common_bss_49994.listener.position.y;
++                break;
++            case 2:                                 /* switch 5 */
++                temp_r5[2] = (f32) lbl_1_common_bss_49994.listener.position.z;
++                break;
++            case 3:                                 /* switch 5 */
++                temp_r5[3] = (f32) lbl_1_common_bss_49994.listener.direction.y;
++                break;
++            case 4:                                 /* switch 5 */
++                temp_r5[4] = (f32) lbl_1_common_bss_49994.listener.direction.y;
++                break;
++            case 5:                                 /* switch 5 */
++                temp_r5[5] = (f32) lbl_1_common_bss_49994.listener.direction.z;
++                break;
++            case 6:                                 /* switch 5 */
++                temp_r5[6] = (f32) lbl_1_common_bss_49994.listener.heading.x;
++                break;
++            case 7:                                 /* switch 5 */
++                temp_r5[7] = (f32) lbl_1_common_bss_49994.listener.heading.y;
++                break;
++            case 8:                                 /* switch 5 */
++                temp_r5[8] = (f32) lbl_1_common_bss_49994.listener.heading.z;
++                break;
++            case 9:                                 /* switch 5 */
++                temp_r5[9] = (f32) lbl_1_common_bss_49994.listener.up.x;
++                break;
++            case 10:                                /* switch 5 */
++                temp_r5[10] = (f32) lbl_1_common_bss_49994.listener.up.y;
++                break;
++            case 11:                                /* switch 5 */
++                temp_r5[11] = (f32) lbl_1_common_bss_49994.listener.up.z;
++                break;
++            case 12:                                /* switch 5 */
++                temp_r5[12] = (f32) lbl_1_common_bss_49994.listener.volume;
++                break;
++            }
++        }
++        var_r6 += 1;
++    } while (var_r6 < 0xD);
++    temp_r6 = lbl_1_bss_2FD8.emitterValues;
++    var_r7 = 0;
++    do {
++        if ((u32) (s8) lbl_1_bss_2FD8.emitterSelection <= 6U) {
++            switch ((s8) lbl_1_bss_2FD8.emitterSelection) {    /* switch 6 */
++            case 0:                                 /* switch 6 */
++                lbl_1_bss_2FD8.emitterValues[0] = (f32) lbl_1_common_bss_49994.emitter.position.x;
++                break;
++            case 1:                                 /* switch 6 */
++                temp_r6[1] = (f32) lbl_1_common_bss_49994.emitter.position.y;
++                break;
++            case 2:                                 /* switch 6 */
++                temp_r6[2] = (f32) lbl_1_common_bss_49994.emitter.position.z;
++                break;
++            case 3:                                 /* switch 6 */
++                temp_r6[3] = (f32) lbl_1_common_bss_49994.emitter.direction.y;
++                break;
++            case 4:                                 /* switch 6 */
++                temp_r6[4] = (f32) lbl_1_common_bss_49994.emitter.direction.y;
++                break;
++            case 5:                                 /* switch 6 */
++                temp_r6[5] = (f32) lbl_1_common_bss_49994.emitter.direction.z;
++                break;
++            case 6:                                 /* switch 6 */
++                temp_r6[6] = (f32) lbl_1_common_bss_49994.emitter.maxVolume;
++                break;
++            }
++        }
++        var_r7 += 1;
++    } while (var_r7 < 7);
+ }
+ 
+ // .text:0x0000B4A4 size:0x114
