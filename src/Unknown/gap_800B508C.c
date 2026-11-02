@@ -364,7 +364,7 @@ void DoTranslationAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
     } else if (pipe->currentTrack->animType & ANIM_TYPE_ROT_EULER) {
         rotationMode = ((s32)pipe->currentTrack->interpolationType >> 4) & 7;
         if (rotationMode == 2) offset += vectorSize * 2;
-        if (rotationMode == 3) offset = vectorSize * 2 + offset + sizeof(AnimationEase);
+        if (rotationMode == 3) { offset += vectorSize * 2; offset += sizeof(AnimationEase); }
     }
     switch (pipe->currentTrack->interpolationType & 3) {
     case 0:
@@ -381,13 +381,13 @@ void DoTranslationAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
     }
     case 2: {
         /* FAKEMATCH: associate the payload base with the tangent stride before the channel offset. */
-        GetData(type, &(&current->interpolation[vectorSize])[offset], &outgoing.x, 3, scale);
+        GetData(type, &(&current->interpolation[offset])[vectorSize], &outgoing.x, 3, scale);
         GetData(type, &next->interpolation[offset], &incoming.x, 3, scale);
         bezierAnimationVector(result, &from.x, &to.x, &outgoing.x, &incoming.x, time);
         break;
     }
     case 3: {
-        payload = &(&current->interpolation[vectorSize])[offset];
+        payload = &(&current->interpolation[offset])[vectorSize];
         GetData(type, payload, &outgoing.x, 3, scale);
         GetData(lbl_803CBB51, &((AnimationEase*)&payload[vectorSize])->outgoing, &easeIn, 1, lbl_803CBB4C);
         payload = &next->interpolation[offset];
