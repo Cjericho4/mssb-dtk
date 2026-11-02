@@ -1,0 +1,88 @@
+diff --git a/include/challenge/rep_0610.h b/include/challenge/rep_0610.h
+index ebf04dbd..84bee32e 100644
+--- a/include/challenge/rep_0610.h
++++ b/include/challenge/rep_0610.h
+@@ -31,7 +31,9 @@ typedef struct ChallengeState {
+     /* 0x0021 */ u8 _pad21[3];
+     /* 0x0024 */ u32 unk_0x24;
+     /* 0x0028 */ union { s32 selection; Gap8000B9C8Texture* texture; };
+-    /* 0x002C */ u8 _pad2C[0xC];
++    /* 0x002C */ s32 parameterPreset;
++    /* 0x0030 */ s32 parameterPage;
++    /* 0x0034 */ u8 _pad34[4];
+     /* 0x0038 */ s32 page;
+     /* 0x003C */ u8 _pad3C[0x10];
+     /* 0x004C */ s32 queued;
+@@ -264,6 +266,14 @@ void fn_1_F37C(void);
+ void fn_1_F50C(void);
+ void fn_1_F6E4(void);
+ void fn_1_F798(s32* values, u8* fields, s32 count);
++typedef struct ChallengeParameterPool {
++    u8 _pad0[0xD2C4];
++    s32 count;
++    s32 opacity;
++    f32 values[4];
++    struct { f32 unk0, value; } range;
++} ChallengeParameterPool;
++extern ChallengeParameterPool lbl_1_data_1DC0;
+ void fn_1_FB98(void);
+ void fn_1_10044(void);
+ void fn_1_10458(void);
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 34137f67..46f9537a 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -543,8 +543,52 @@ void fn_1_F798(s32* values, u8* fields, s32 count) {
+ }
+ 
+ // .text:0x0000FB98 size:0x4AC
++/* Edit the eight preview parameters with fine or accelerated controller steps. */
+ void fn_1_FB98(void) {
+-    return;
++    u16 pressed = lbl_803C77B8.pressed;
++    ChallengeParameterPool* data = &lbl_1_data_1DC0;
++    ChallengeState* state = &lbl_1_bss_3070;
++    if (pressed & 8) {
++        if (state->unkC) state->unkC--;
++        else state->unkC = 7;
++    } else if (pressed & 4) {
++        if (++state->unkC == 8) state->unkC = 0;
++    } else if (pressed & 1) {
++        s32 step;
++        if (lbl_803C77B8.buttons & 0x400) step = 10;
++        else if (lbl_803C77B8.buttons & 0x800) step = 100;
++        else step = 1;
++        switch (state->unkC) {
++        case 0: if (--state->parameterPreset < 0) state->parameterPreset = 13; break;
++        case 1: data->range.value -= 0.1 * step; break;
++        case 2: data->values[0] -= 0.0001 * step; break;
++        case 3: data->values[1] -= 0.0001 * step; break;
++        case 4: data->values[2] -= 0.0001 * step; break;
++        case 5: data->values[3] -= 0.0001 * step; break;
++        case 6: data->count -= step; if (data->count < 1) data->count = 1; break;
++        case 7: data->opacity -= step; if (data->opacity < 0) data->opacity = 0; break;
++        }
++    } else if (pressed & 2) {
++        s32 step;
++        if (lbl_803C77B8.buttons & 0x400) step = 10;
++        else if (lbl_803C77B8.buttons & 0x800) step = 100;
++        else step = 1;
++        switch (state->unkC) {
++        case 0: if (++state->parameterPreset >= 14) state->parameterPreset = 0; break;
++        case 1: data->range.value += 0.1 * step; break;
++        case 2: data->values[0] += 0.0001 * step; break;
++        case 3: data->values[1] += 0.0001 * step; break;
++        case 4: data->values[2] += 0.0001 * step; break;
++        case 5: data->values[3] += 0.0001 * step; break;
++        case 6: data->count += step; break;
++        case 7: data->opacity += step; if (data->opacity > 255) data->opacity = 255; break;
++        }
++    } else if (lbl_803C77B8.buttons & 0x100) {
++        if (lbl_803C77B8.held & 0x100) state->parameterPage = (state->parameterPage + 1) % 16;
++    } else if (pressed & 0x200) {
++        state->unkC = 0;
++        state->unk2F01 = 10;
++    }
+ }
+ 
+ // .text:0x00010044 size:0x414
