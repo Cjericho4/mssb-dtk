@@ -380,13 +380,14 @@ void DoTranslationAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
         break;
     }
     case 2: {
-        GetData(type, &current->interpolation[offset + vectorSize], &outgoing.x, 3, scale);
+        /* FAKEMATCH: associate the payload base with the tangent stride before the channel offset. */
+        GetData(type, &(&current->interpolation[vectorSize])[offset], &outgoing.x, 3, scale);
         GetData(type, &next->interpolation[offset], &incoming.x, 3, scale);
         bezierAnimationVector(result, &from.x, &to.x, &outgoing.x, &incoming.x, time);
         break;
     }
     case 3: {
-        payload = &current->interpolation[offset + vectorSize];
+        payload = &(&current->interpolation[vectorSize])[offset];
         GetData(type, payload, &outgoing.x, 3, scale);
         GetData(lbl_803CBB51, &((AnimationEase*)&payload[vectorSize])->outgoing, &easeIn, 1, lbl_803CBB4C);
         payload = &next->interpolation[offset];
