@@ -52,15 +52,6 @@ void fn_1_1BF8(ChallengeBounds* bounds, s32 index) {
 }
 
 // .text:0x00001DBC size:0x800
-void fn_1_1DBC(s32 a, s32 b, s32 c, s32 d, s32 face) {
-    return;
-}
-
-// .text:0x000025BC size:0x187C
-void fn_1_25BC(void) {
-    return;
-}
-
 static inline void writeChallengeFloat(f32 value) {
     union { f32 value; u32 bits; } encoded;
     encoded.value = value;
@@ -72,6 +63,27 @@ static inline void writeChallengePosition(f32 x, f32 y, f32 z) {
     writeChallengeFloat(y);
     writeChallengeFloat(z);
 }
+/* Emit the four bounding-box corners and their shared face color index. */
+void fn_1_1DBC(s32 a, s32 b, s32 c, s32 d, u8 face) {
+    writeChallengePosition(lbl_1_bss_60[a].x, lbl_1_bss_60[a].y, lbl_1_bss_60[a].z);
+    __GDCheckOverflowed(1);
+    __GDWriteU8(face);
+    writeChallengePosition(lbl_1_bss_60[b].x, lbl_1_bss_60[b].y, lbl_1_bss_60[b].z);
+    __GDCheckOverflowed(1);
+    __GDWriteU8(face);
+    writeChallengePosition(lbl_1_bss_60[c].x, lbl_1_bss_60[c].y, lbl_1_bss_60[c].z);
+    __GDCheckOverflowed(1);
+    __GDWriteU8(face);
+    writeChallengePosition(lbl_1_bss_60[d].x, lbl_1_bss_60[d].y, lbl_1_bss_60[d].z);
+    __GDCheckOverflowed(1);
+    __GDWriteU8(face);
+}
+
+// .text:0x000025BC size:0x187C
+void fn_1_25BC(void) {
+    return;
+}
+
 // .text:0x00003E38 size:0x23C
 /* Emit a position and decode the packed display-list attribute index. */
 void fn_1_3E38(Vec* position, u32 index) {
