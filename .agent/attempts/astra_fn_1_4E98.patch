@@ -1,0 +1,156 @@
+diff --git a/include/challenge/rep_0138.h b/include/challenge/rep_0138.h
+index 0090647c..449553c0 100644
+--- a/include/challenge/rep_0138.h
++++ b/include/challenge/rep_0138.h
+@@ -26,7 +26,18 @@ extern Rep0138UnkC4 lbl_1_bss_C4;
+ extern GXColor lbl_1_data_858;
+ void SetFogNoneAgain(void);
+ 
+-void fn_1_4E98(void);
++#include "C3/unktypes.h"
++typedef struct ChallengeNormalModel {
++    PositionData* positions;
++    ColorData* colors;
++    TextureData* textures;
++    LightingData* lighting;
++    DisplayData* display;
++    u8 textureCount;
++    u8 _pad15[3];
++    Mtx transform;
++} ChallengeNormalModel;
++void fn_1_4E98(ChallengeNormalModel* model, Mtx view);
+ void fn_1_54E0(Mtx view);
+ void fn_1_5540(void);
+ void fn_1_5544(void);
+diff --git a/src/challenge/rep_0138.c b/src/challenge/rep_0138.c
+index 7e780ed0..b6fc9fa3 100644
+--- a/src/challenge/rep_0138.c
++++ b/src/challenge/rep_0138.c
+@@ -5,8 +5,125 @@
+ #include "Dolphin/GX/GXHardware.h"
+ 
+ // .text:0x00004E98 size:0x648
+-void fn_1_4E98(void) {
+-    return;
++/* Decode the model's binary GX command stream and draw each vertex normal. */
++void fn_1_4E98(ChallengeNormalModel* model, Mtx view) {
++    s32 descriptors[21];
++    Mtx transform;
++    s32 i, attr, shift, positionIndex, normalIndex;
++    f32 x, y, z;
++    if (!model->lighting || !model->positions || !model->display) return;
++    GXSetZMode(GX_TRUE, GX_ALWAYS, GX_FALSE);
++    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
++    GXSetCullMode(GX_CULL_NONE);
++    GXClearVtxDesc();
++    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
++    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
++    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
++    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
++    GXSetNumChans(1);
++    GXSetNumTevStages(1);
++    GXSetNumTexGens(0);
++    GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
++    PSMTXConcat(view, model->transform, transform);
++    GXLoadPosMtxImm(transform, 0);
++    GXSetCurrentMtx(0);
++    for (i = 0; i < model->display->numStateEntries; i++) {
++        switch (model->display->displayStateList[i].id) {
++        case 1: break;
++        case 2: {
++            u32 setting;
++            memset(descriptors, 0, sizeof(descriptors));
++            setting = model->display->displayStateList[i].setting;
++            for (attr = 9, shift = 2; attr < 21; attr++, shift += 2) {
++                s32 type = (setting >> shift) & 3;
++                if (type) descriptors[attr] = type;
++            }
++            break;
++        }
++        }
++        if (model->display->displayStateList[i].primitiveList) {
++            u8* cursor = (u8*)model->display->displayStateList[i].primitiveList;
++            u32 consumed = 0;
++            while (consumed < model->display->displayStateList[i].listSize) {
++                BOOL skip = FALSE;
++                switch (*cursor) {
++                case 0: skip = TRUE; cursor++; consumed++; break;
++                case 0x61: skip = TRUE; cursor += 5; consumed += 5; break;
++                case 8: skip = TRUE; cursor += 6; consumed += 6; break;
++                case 0x10: {
++                    u32 size = *(u16*)cursor * 4 + 5;
++                    skip = TRUE; cursor += size; consumed += size;
++                    break;
++                }
++                case 0x20: case 0x28: case 0x30: case 0x38:
++                    skip = TRUE; cursor += 5; break;
++                case 0x40: case 0x48:
++                    skip = TRUE; cursor++; consumed++; break;
++                case 0x80: case 0x90: case 0x98: case 0xA0:
++                case 0xA8: case 0xB0: case 0xB8: break;
++                }
++                if (!skip) {
++                    s32 count = *(u16*)(cursor + 1);
++                    cursor += 3;
++                    consumed += 3;
++                    GXBegin(GX_LINES, GX_VTXFMT0, count * 2);
++                    while (count--) {
++                        f32 divisor;
++                        u8 format, stride;
++                        for (attr = 9; attr < 21; attr++) {
++                            s32 type = descriptors[attr];
++                            if (type) {
++                                switch (attr) {
++                                case 9:
++                                    switch (type) {
++                                    case 2: positionIndex = *cursor; break;
++                                    case 3: positionIndex = *(u16*)cursor; break;
++                                    }
++                                    break;
++                                case 10:
++                                    switch (type) {
++                                    case 2: normalIndex = *cursor; break;
++                                    case 3: normalIndex = *(u16*)cursor; break;
++                                    }
++                                    break;
++                                }
++                                switch (type) {
++                                case 2: cursor++; consumed++; break;
++                                case 3: cursor += 2; consumed += 2; break;
++                                }
++                            }
++                        }
++                        divisor = 1 << (model->positions->quantizeInfo & 15);
++                        format = model->positions->quantizeInfo >> 4;
++                        stride = model->positions->compCount;
++                        switch (format) {
++                        case 3: {
++                            s16* coords = (s16*)model->positions->positionArray + stride * positionIndex;
++                            x = coords[0] / divisor;
++                            y = coords[1] / divisor;
++                            z = coords[2] / divisor;
++                            break;
++                        }
++                        }
++                        GXWGFifo.f32 = x; GXWGFifo.f32 = y; GXWGFifo.f32 = z; GXWGFifo.u32 = 0xFF0000FF;
++                        divisor = 1 << (model->lighting->quantizeInfo & 15);
++                        format = model->lighting->quantizeInfo >> 4;
++                        stride = model->lighting->compCount;
++                        switch (format) {
++                        case 3: {
++                            s16* normal = (s16*)model->lighting->normalArray + stride * normalIndex;
++                            x += normal[0] / divisor;
++                            y += normal[1] / divisor;
++                            z += normal[2] / divisor;
++                            break;
++                        }
++                        }
++                        GXWGFifo.f32 = x; GXWGFifo.f32 = y; GXWGFifo.f32 = z; GXWGFifo.u32 = 0x0000FFFF;
++                    }
++                }
++            }
++        }
++    }
+ }
+ 
+ // .text:0x000054E0 size:0x60
