@@ -1,0 +1,174 @@
+diff --git a/include/challenge/rep_0138.h b/include/challenge/rep_0138.h
+index 0090647c..cc3464b1 100644
+--- a/include/challenge/rep_0138.h
++++ b/include/challenge/rep_0138.h
+@@ -35,8 +35,17 @@ void fn_1_5924(void);
+ void fn_1_5AC0(u16* pixels,s32 width,s32 height,f32 scale);
+ void fn_1_6050(u16* pixels, s32 width, s32 height, f32 scale);
+ #include "Dolphin/GX/GXTexture.h"
++/* rep_1C0.h conflicts with this unit's SetFog interface. */
++typedef struct ChallengePreviewFile { u32 source, size, compressedSize, reserved; } ChallengePreviewFile;
++STATIC_ASSERT(sizeof(ChallengePreviewFile)==0x10);
++typedef struct ChallengePreviewPreset { u32 words[3]; } ChallengePreviewPreset;
+ typedef struct ChallengeMipSettings {
+-    u8 _pad0[0x778];
++    ChallengePreviewPreset presets[15][8];
++    Rep0138Light* lights[3];
++    s32 dimension;
++    u8 _pad5B0[0x74];
++    s32 modelCount;
++    ChallengePreviewFile files[21];
+     u8 levels;
+     u8 _pad779[3];
+     f32 scales[4];
+@@ -49,18 +58,21 @@ typedef struct ChallengeModelPose {
+     u32 flags;
+     void (*draw)(Rep0138Model*);
+     Mtx transform;
+-    u8 _pad38[0x34];
++    u8 _pad38[0x30];
++    struct ChallengeLoadedActor* actor;
+ } ChallengeModelPose;
+ typedef struct ChallengePreviewState {
+     u8 _pad0[0x30];
+     u16 flags;
+     u8 _pad32[0x1A];
+     Vec position;
+-    u8 _pad58[4];
++    struct TextureHeader* textures;
+     ChallengeModelPose poses[4];
+     u8 _pad20C[0x10];
+     u16* pixels;
+-    u8 _pad220[0xE];
++    u8 _pad220[0xA];
++    u16 actorCount;
++    u8 _pad22C[2];
+     s16 selection;
+     s8 mode;
+     s8 option;
+diff --git a/src/challenge/rep_0138.c b/src/challenge/rep_0138.c
+index 7e780ed0..8c856e67 100644
+--- a/src/challenge/rep_0138.c
++++ b/src/challenge/rep_0138.c
+@@ -220,8 +220,120 @@ void fn_1_66C4(void) {
+ }
+ 
+ // .text:0x00006848 size:0x5CC
++typedef struct ChallengeLoadedActor { u8 _pad0[6]; u16 count; } ChallengeLoadedActor;
++typedef struct ChallengeLoadedGeometry ChallengeLoadedGeometry;
++typedef struct ChallengeMaterialBlock ChallengeMaterialBlock;
++typedef struct ChallengeTextureArchive { u32 count; struct TextureHeader* first; } ChallengeTextureArchive;
++typedef struct ChallengePreviewArchive { u32 actor, secondaryActor, materials, geometry, secondaryGeometry, textures; } ChallengePreviewArchive;
++typedef struct ChallengePreviewBuffers {
++    u8 _pad0[0x420];
++    ChallengePreviewPreset* preset;
++    GXTexObj texture;
++    u8 _pad444[0x1C];
++    u16 pixels[1];
++} ChallengePreviewBuffers;
++extern ChallengePreviewBuffers lbl_1_bss_C0;
++/* These owning headers still expose untyped stubs or incompatible actor views. */
++void* ARAMTransfer(ChallengePreviewFile* file,void* destination,u8 loadInfo,void* aramAddress);
++void fn_800B9AA8(u32 value);
++void fn_800B996C(void (*callback)(void));
++void LITAlloc(Rep0138Light** light);
++void LITInitAttn(Rep0138Light* light,f32,f32,f32,f32,f32,f32);
++void LITInitPos(Rep0138Light* light,f32,f32,f32);
++void LITInitDir(Rep0138Light* light,f32,f32,f32);
++void LITInitColor(Rep0138Light* light,GXColor* color);
++void fn_1_4DD8(ChallengeMaterialBlock* materials);
++void fn_800B49E4(ChallengeLoadedActor* actor);
++void fn_800BCE38(ChallengeLoadedGeometry* geometry);
++void convertTextureHeader(ChallengeTextureArchive* textures);
++void fn_800BD190(ChallengeLoadedGeometry* geometry,ChallengeTextureArchive* textures);
++void haveActLayoutPointToGeoHeader(ChallengeLoadedActor* actor,ChallengeLoadedGeometry* geometry);
++/* Resolve a file-relative offset within the loaded preview archive. */
++static inline u8* previewArchiveOffset(ChallengePreviewArchive* archive,u32 offset) { return (u8*)archive+offset; }
++/* Load preview models and their shared textures, with procedural mipmaps and lighting. */
+ void fn_1_6848(void) {
+-    return;
++    DrawingSceneStruct* scene=lbl_803CC1B8;
++    ChallengeMipSettings* settings=&lbl_1_data_2A8;
++    ChallengePreviewBuffers* buffers=&lbl_1_bss_C0;
++    switch(scene->loadingState) {
++    case 0: {
++        s32 width,height,mipWidth,mipHeight,filter,offset=0,i;
++        f32* scale;
++        fn_800B9AA8(0);
++        width=height=settings->dimension;
++        mipWidth=width; mipHeight=height;
++        if(!settings->levels) {
++            width/=4; height/=4;
++            fn_1_6050(buffers->pixels,width,height,1);
++            filter=1;
++        } else {
++            scale=settings->scales;
++            for(i=0;i<=settings->levels;i++) {
++                fn_1_6050(&buffers->pixels[offset],mipWidth,mipHeight,*scale);
++                offset+=mipWidth*mipHeight;
++                mipWidth/=2;mipHeight/=2;scale++;
++            }
++            filter=settings->filter;
++        }
++        GXInitTexObj(&buffers->texture,buffers->pixels,width,height,GX_TF_IA8,GX_REPEAT,GX_REPEAT,settings->levels);
++        GXInitTexObjLOD(&buffers->texture,filter,GX_LINEAR,0,settings->levels,settings->bias,0,0,0);
++        fn_800B996C(fn_1_5544);
++        LITAlloc(&settings->lights[0]); LITAlloc(&settings->lights[1]); LITAlloc(&settings->lights[2]);
++        { GXColor colors[3]={{255,0,0,255},{0,0,255,255},{0,255,0,255}};
++        LITInitAttn(settings->lights[0],1,0,0,1,0,0);
++        LITInitPos(settings->lights[0],10000,-200,0);
++        LITInitDir(settings->lights[0],0,0,0);
++        { GXColor color=colors[0]; LITInitColor(settings->lights[0],&color); }
++        LITInitAttn(settings->lights[1],1,0,0,1,0,0);
++        LITInitPos(settings->lights[1],0,-200,10000);
++        LITInitDir(settings->lights[1],0,0,0);
++        { GXColor color=colors[1]; LITInitColor(settings->lights[1],&color); }
++        LITInitAttn(settings->lights[2],1,0,0,1,0,0);
++        LITInitPos(settings->lights[2],10000,-200,10000);
++        LITInitDir(settings->lights[2],0,0,0);
++        { GXColor color=colors[2]; LITInitColor(settings->lights[2],&color); }
++        }
++        scene->loadingState=1;
++    }
++    case 1:
++        switch(lbl_803C77B8.pressed) {
++        case 8: if(--lbl_1_common_bss_472B4.mode<0) lbl_1_common_bss_472B4.mode=settings->modelCount-1; break;
++        case 4: if(++lbl_1_common_bss_472B4.mode>=settings->modelCount) lbl_1_common_bss_472B4.mode=0; break;
++        case 0x200: if(++lbl_1_common_bss_472B4.option>2) lbl_1_common_bss_472B4.option=0; break;
++        case 0x100: scene->loadingState=2; break;
++        case 0x1000: fn_800B996C(0);scene->currentDrawingItem->loadingState=1;break;
++        }
++        break;
++    case 2:
++        scene->unk18=lbl_1_common_bss_472B4.option+lbl_1_common_bss_472B4.mode*3;
++        scene->unk14=ARAMTransfer(&settings->files[(s16)scene->unk18],0,0,0);
++        scene->loadingState=3;
++        buffers->preset=&settings->presets[lbl_1_common_bss_472B4.mode][lbl_1_common_bss_472B4.option];
++        break;
++    case 3:
++        if((u8)lbl_803C6CF8.allowLoad==1) {
++            ChallengePreviewArchive* archive=(ChallengePreviewArchive*)scene->unk14;
++            ChallengeLoadedActor* actor=(ChallengeLoadedActor*)previewArchiveOffset(archive,archive->actor);
++            ChallengeLoadedGeometry* geometry=(ChallengeLoadedGeometry*)previewArchiveOffset(archive,archive->geometry);
++            ChallengeTextureArchive* textures=(ChallengeTextureArchive*)previewArchiveOffset(archive,archive->textures);
++            fn_1_4DD8((ChallengeMaterialBlock*)previewArchiveOffset(archive,archive->materials));
++            fn_800B49E4(actor); fn_800BCE38(geometry); convertTextureHeader(textures);
++            lbl_1_common_bss_472B4.textures=(struct TextureHeader*)&textures->first;
++            fn_800BD190(geometry,textures); haveActLayoutPointToGeoHeader(actor,geometry);
++            lbl_1_common_bss_472B4.actorCount=actor->count;
++            lbl_1_common_bss_472B4.poses[1].actor=actor;
++            lbl_1_common_bss_472B4.poses[0].actor=actor;
++            actor=(ChallengeLoadedActor*)previewArchiveOffset(archive,archive->secondaryActor);
++            geometry=(ChallengeLoadedGeometry*)previewArchiveOffset(archive,archive->secondaryGeometry);
++            fn_800B49E4(actor); fn_800BCE38(geometry); fn_800BD190(geometry,textures);
++            haveActLayoutPointToGeoHeader(actor,geometry);
++            lbl_1_common_bss_472B4.poses[3].actor=actor;
++            lbl_1_common_bss_472B4.poses[2].actor=actor;
++            DCFlushRangeNoSync(scene->unk14,settings->files[(s16)scene->unk18].size&0x0FFFFFFF);
++            lbl_803CC1B8->aFunctionPointer=fn_1_6E14;
++        }
++        break;
++    }
+ }
+ 
+ // .text:0x00006E14 size:0x368
