@@ -1,0 +1,193 @@
+diff --git a/include/challenge/rep_0610.h b/include/challenge/rep_0610.h
+index ff50089a..9279c786 100644
+--- a/include/challenge/rep_0610.h
++++ b/include/challenge/rep_0610.h
+@@ -7,7 +7,8 @@ typedef struct Rep0610Slot {
+     /* 0x00 */ u8 _pad0[0x44];
+     /* 0x44 */ u8 table;
+     /* 0x45 */ u8 entry;
+-    /* 0x46 */ u8 _pad46[2];
++    /* 0x46 */ u8 paused;
++    u8 _pad47;
+ } Rep0610Slot;
+ extern Rep0610Slot lbl_1_bss_6940[];
+ extern u8 lbl_1_bss_5F73;
+@@ -21,8 +22,30 @@ typedef struct Rep0610Items {
+ } Rep0610Items;
+ 
+ typedef struct Gap8000B9C8Texture Gap8000B9C8Texture;
++typedef struct Rep0610Unk67E0 {
++    /* 0x000 */ Mtx view;
++    union {
++        /* 0x030 */ u32 context[0x36];
++        struct { u8 _pad30dir[0x58]; Vec direction; };
++        struct {
++            u8 _pad30[0xC0];
++            /* 0x0F0 */ u16 unk_0xF0;
++            /* 0x0F2 */ u16 unk_0xF2;
++            f32 strafe;
++            /* 0x0F8 */ f32 unk_0xF8;
++            /* 0x0FC */ Vec target;
++        };
++    };
++    /* 0x108 */ Vec pos;
++    /* 0x114 */ u32 unk_0x114;
++    /* 0x118 */ u8 useContext;
++    /* 0x119 */ u8 _pad119[3];
++} Rep0610Unk67E0;
+ typedef struct ChallengeState {
+-    /* 0x0000 */ u8 _pad0[0xC];
++    u8 active;
++    u8 _pad1[3];
++    u32 renderFlags;
++    u8 _pad8[4];
+     /* 0x000C */ s32 unkC;
+     /* 0x0010 */ u8 _pad10;
+     /* 0x0011 */ u8 unk11;
+@@ -41,7 +64,9 @@ typedef struct ChallengeState {
+     /* 0x01A6 */ u8 mode;
+     /* 0x01A7 */ u8 _pad1A7[0x2D4B];
+     /* 0x2EF2 */ u8 channel;
+-    /* 0x2EF3 */ u8 _pad2EF3[6];
++    u8 _pad2EF3;
++    f32 step;
++    u8 paused;
+     /* 0x2EF9 */ u8 unk2EF9;
+     /* 0x2EFA */ u8 _pad2EFA[2];
+     /* 0x2EFC */ u32 selectedBone;
+@@ -55,6 +80,10 @@ typedef struct ChallengeState {
+     /* 0x3074 */ Gap8000B9C8Texture* extraTexture;
+     /* 0x3078 */ u8 _pad3078[0x6D0];
+     /* 0x3748 */ Rep0610Items items;
++    u8 _pad3754[0x1C];
++    Rep0610Unk67E0 camera;
++    struct { u8 _pad0[0x40]; u8 selections[1]; u8 _pad41[3]; } previewSelection;
++    Rep0610Slot previewSlots[13];
+ } ChallengeState;
+ extern ChallengeState lbl_1_bss_3070;
+ 
+@@ -92,25 +121,7 @@ typedef struct Rep0610Camera68FC {
+ extern Rep0610Camera68FC lbl_1_bss_68FC;
+ void LITXForm(struct MenusLight* light, Mtx view);
+ #include "Dolphin/GX/GXTransform.h"
+-typedef struct Rep0610Unk67E0 {
+-    /* 0x000 */ Mtx view;
+-    union {
+-        /* 0x030 */ u32 context[0x36];
+-        struct { u8 _pad30dir[0x58]; Vec direction; };
+-        struct {
+-            u8 _pad30[0xC0];
+-            /* 0x0F0 */ u16 unk_0xF0;
+-            /* 0x0F2 */ u16 unk_0xF2;
+-            f32 strafe;
+-            /* 0x0F8 */ f32 unk_0xF8;
+-            /* 0x0FC */ Vec target;
+-        };
+-    };
+-    /* 0x108 */ Vec pos;
+-    /* 0x114 */ u32 unk_0x114;
+-    /* 0x118 */ u8 useContext;
+-    /* 0x119 */ u8 _pad119[3];
+-} Rep0610Unk67E0;
++
+ extern Rep0610Unk67E0 lbl_1_bss_67E0;
+ typedef struct Rep0610Obj1073C {
+     /* 0x00 */ u8 _pad0[0x34];
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 720f73a1..f18a8ca0 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -1067,8 +1067,92 @@ void fn_1_14928(void) {
+ }
+ 
+ // .text:0x0001496C size:0x64C
++static inline void initPreviewLights1496C(void) {
++    GXColor white = {255, 255, 255, 255};
++    LITAlloc(&g_hugeAnimStruct.menuLights[0]);
++    LITAlloc(&g_hugeAnimStruct.menuLights[1]);
++    LITAlloc(&g_hugeAnimStruct.menuLights[2]);
++    LITAlloc(&g_hugeAnimStruct.menuLights[3]);
++    LITInitAttn(g_hugeAnimStruct.menuLights[0], 1, 0, 0, 1, 0, 0);
++    LITInitPos(g_hugeAnimStruct.menuLights[0], 5, -10, 5);
++    LITInitDir(g_hugeAnimStruct.menuLights[0], 0, 0, 0);
++    { GXColor color = white; LITInitColor(g_hugeAnimStruct.menuLights[0], &color); }
++    LITInitDir(g_hugeAnimStruct.menuLights[0], -5, 0, -5);
++    LITInitAttn(g_hugeAnimStruct.menuLights[1], 1, 0, 0, 1, 0, 0);
++    LITInitPos(g_hugeAnimStruct.menuLights[1], -5, -10, 0);
++    LITInitDir(g_hugeAnimStruct.menuLights[1], 0, 0, 0);
++    { GXColor color = white; LITInitColor(g_hugeAnimStruct.menuLights[1], &color); }
++    LITInitAttn(g_hugeAnimStruct.menuLights[2], 1, 0, 0, 1, 0, 0);
++    LITInitPos(g_hugeAnimStruct.menuLights[2], 0, -10, 5);
++    LITInitDir(g_hugeAnimStruct.menuLights[2], 0, 0, 0);
++    { GXColor color = white; LITInitColor(g_hugeAnimStruct.menuLights[2], &color); }
++    LITInitAttn(g_hugeAnimStruct.menuLights[3], 1, 0, 0, 1, 0, 0);
++    LITInitPos(g_hugeAnimStruct.menuLights[3], 0, -10, -5);
++    LITInitDir(g_hugeAnimStruct.menuLights[3], 0, 0, 0);
++    { GXColor color = white; LITInitColor(g_hugeAnimStruct.menuLights[3], &color); }
++}
++/* Select the preview model and initialize or leave the animation editor. */
+ void fn_1_1496C(void) {
+-    return;
++    ChallengeState* state = &lbl_1_bss_3070;
++    DrawingSceneStruct* scene;
++    u8 i = 0;
++    u8 previousPaused = state->previewSlots[state->modelIndex].paused;
++    state->modelIndex = 0;
++    scene = lbl_803CC1B8;
++    if (lbl_803C77B8.pressed & 1) {
++        if (state->previewSelection.selections[0]) {
++            for (; i < 1; i++) state->previewSelection.selections[i]--;
++        } else {
++            for (; i < 1; i++) state->previewSelection.selections[i] = 53;
++        }
++        state->modelIndex = i;
++    } else if (lbl_803C77B8.pressed & 2) {
++        for (; i < 1; i++) {
++            if (++state->previewSelection.selections[i] == 54)
++                state->previewSelection.selections[i] = 0;
++        }
++        state->modelIndex = i;
++    } else if (lbl_803C77B8.held & 0x400) {
++        for (; i < 1; i++) state->previewSlots[i].paused ^= 1;
++        state->modelIndex = i;
++    } else if (lbl_803C77B8.held & 0x800) {
++        state->renderFlags = 0x402 - state->renderFlags;
++    } else if (lbl_803C77B8.held & 0x40) state->active = 1;
++    else if (lbl_803C77B8.held & 0x20) state->active = 0;
++    if (lbl_803C77B8.held & 0x100) {
++        s32 j;
++        Mtx44 projection;
++        AnimationStruct* anim = g_hugeAnimStruct.fielderStructs;
++        memset(anim, 0, sizeof(g_hugeAnimStruct.fielderStructs));
++        for (j = 0; j < 13; j++) g_hugeAnimStruct.AnimationStructPtrs[j] = anim;
++        g_hugeAnimStruct.AnimationStructPtrs[0]->_rest255[0] = 0;
++        g_hugeAnimStruct.AnimationStructPtrs[0]->unk254 = 0;
++        state->camera.pos.x = 0;
++        state->camera.pos.y = -0.8f;
++        state->camera.pos.z = 0;
++        state->camera.target.x = 0;
++        state->camera.target.y = 0;
++        state->camera.target.z = 10;
++        C_MTXFrustum(projection, -0.000175f, 0.000175f, 0.00025f, -0.00025f, 0.001f, 512);
++        GXSetProjection(projection, GX_PERSPECTIVE);
++        fn_800B806C(0, -240, 240, -320, 320, -512, -0.001f, 1280);
++        state->camera.unk_0x114 = 0;
++        state->camera.unk_0xF8 = 0;
++        state->camera.unk_0xF0 = 0;
++        state->camera.unk_0xF2 = 0;
++        initPreviewLights1496C();
++        scene->unk20 = 0;
++        lbl_803CC1B8->loadingState = 0;
++        lbl_803CC1B8->aFunctionPointer = fn_1_16978;
++        lbl_803CC1B8->loadingState = 0;
++        state->paused = 0;
++        state->step = 0;
++    } else if (lbl_803C77B8.held & 0x200) {
++        memset(&g_hugeAnimStruct, 0, 0x3154);
++        state->active = 0;
++        fn_800AD038(lbl_80366158.unk8);
++        lbl_803CC1B8->currentDrawingItem->loadingState = 1;
++    }
+ }
+ 
+ // .text:0x00014FB8 size:0x1B8
