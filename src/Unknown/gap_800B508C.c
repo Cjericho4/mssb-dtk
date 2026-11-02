@@ -152,10 +152,11 @@ static inline void hermiteAnimationVector(volatile f32* result, const f32* from,
     f32 square = time * time;
     f32 cube = square * time;
     f32 difference = 2.0f * cube - 3.0f * square;
-    f32 currentTangentWeight = -(2.0f * square - time);
+    /* FAKEMATCH: coefficient declaration order preserves the retail float register allocation. */
+    f32 nextTangentWeight = -square + cube;
     f32 nextWeight = -difference;
     f32 currentWeight = 1.0f + difference;
-    f32 nextTangentWeight = -square + cube;
+    f32 currentTangentWeight = -(2.0f * square - time);
     s32 axis;
     currentTangentWeight = cube + currentTangentWeight;
     for (axis = 0; axis < 3; axis++) {
@@ -363,7 +364,11 @@ void DoTranslationAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
     } else if (pipe->currentTrack->animType & ANIM_TYPE_ROT_EULER) {
         rotationMode = ((s32)pipe->currentTrack->interpolationType >> 4) & 7;
         if (rotationMode == 2) offset += vectorSize * 2;
-        if (rotationMode == 3) { offset += vectorSize * 2; offset += sizeof(AnimationEase); }
+        /* FAKEMATCH: keep the tangent-stride and ease increments separate. */
+        if (rotationMode == 3) {
+            offset += vectorSize * 2;
+            offset += sizeof(AnimationEase);
+        }
     }
     switch (pipe->currentTrack->interpolationType & 3) {
     case 0:
