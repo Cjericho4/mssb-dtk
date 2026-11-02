@@ -23,8 +23,10 @@ void fn_8001B224(void) {
 }
 
 // .text:0x8001B2D0 size:0x38
+extern Gap8001196CAnim lbl_8036C4FC[13];
+/* Snapshot all thirteen character animation slots. */
 void fn_8001B2D0(void) {
-    return;
+    memcpy(lbl_8036C4FC,g_hugeAnimStruct.slots,sizeof(g_hugeAnimStruct.slots));
 }
 
 // .text:0x8001B308 size:0x54
