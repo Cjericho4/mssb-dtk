@@ -1,0 +1,187 @@
+diff --git a/include/challenge/rep_0610.h b/include/challenge/rep_0610.h
+index 838c49b5..b4e8c49b 100644
+--- a/include/challenge/rep_0610.h
++++ b/include/challenge/rep_0610.h
+@@ -24,7 +24,7 @@ typedef struct Gap8000B9C8Texture Gap8000B9C8Texture;
+ typedef struct ChallengeState {
+     /* 0x0000 */ u8 _pad0[0xC];
+     /* 0x000C */ s32 unkC;
+-    /* 0x0010 */ u8 _pad10;
++    /* 0x0010 */ u8 hidden;
+     /* 0x0011 */ u8 unk11;
+     /* 0x0012 */ u8 _pad12[0xE];
+     /* 0x0020 */ u8 blink;
+@@ -39,9 +39,13 @@ typedef struct ChallengeState {
+     /* 0x01A4 */ u8 phase;
+     /* 0x01A5 */ u8 enabled;
+     /* 0x01A6 */ u8 mode;
+-    /* 0x01A7 */ u8 _pad1A7[0x2D4B];
++    u8 _pad1A7[0x2D45];
++    s32 manualAttachments;
++    u8 _pad2EF0[2];
+     /* 0x2EF2 */ u8 channel;
+-    /* 0x2EF3 */ u8 _pad2EF3[6];
++    u8 _pad2EF3;
++    f32 step;
++    u8 paused;
+     /* 0x2EF9 */ u8 unk2EF9;
+     /* 0x2EFA */ u8 _pad2EFA[2];
+     /* 0x2EFC */ u32 selectedBone;
+@@ -51,10 +55,19 @@ typedef struct ChallengeState {
+     /* 0x2F03 */ u8 modelIndex;
+     /* 0x2F04 */ f32 blend;
+     /* 0x2F08 */ u8 blendEnabled;
+-    u8 _pad2F09[0x16B];
++    u8 _pad2F09[3];
++    struct HugeAnimCtrlEntry* attachments;
++    u8 _pad2F10[0x164];
+     /* 0x3074 */ Gap8000B9C8Texture* extraTexture;
+     /* 0x3078 */ u8 _pad3078[0x6D0];
+-    /* 0x3748 */ Rep0610Items items;
++    union { Rep0610Items items; struct ChallengePreviewTrack* tracks[5]; };
++    struct ChallengePreviewScript* scripts[5];
++    u8 attachmentState[0x11C];
++    u8 cameraHeader[0x10];
++    Mtx view;
++    u8 cameraIndex;
++    u8 _pad38CD[3];
++    Rep0610Slot previewSlots[13];
+ } ChallengeState;
+ extern ChallengeState lbl_1_bss_3070;
+ 
+@@ -292,7 +305,7 @@ void fn_1_126CC(void);
+ void fn_1_12820(HugeAnimEntry68* entry, Mtx mtx);
+ void fn_1_129D0(void);
+ void fn_1_12F18(Rep0610Obj12F18* obj);
+-void fn_1_12F8C(void);
++void fn_1_12F8C(HugeAnimEntry68* entries, Mtx view);
+ void fn_1_131E4(void);
+ void fn_1_1347C(void);
+ void fn_1_135C0(void);
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 8e30a9f0..eea7016c 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -890,8 +890,112 @@ void fn_1_12820(HugeAnimEntry68* entry, Mtx mtx) {
+ }
+ 
+ // .text:0x000129D0 size:0x548
++typedef struct ChallengePreviewTrack {
++    f32 time, rate;
++    u8 _pad8[9];
++    u8 active : 1;
++    u8 repeat : 2;
++    u8 mode : 2;
++    u8 reserved : 3;
++    u8 _pad12[0xE];
++} ChallengePreviewTrack;
++STATIC_ASSERT(sizeof(ChallengePreviewTrack) == 0x20);
++typedef struct ChallengePreviewScript ChallengePreviewScript;
++typedef struct ChallengePreviewSlot { u8 header[0x10]; ChallengePreviewTrack track; } ChallengePreviewSlot;
++/* Owning headers retain incompatible stub/actor types for these animation APIs. */
++BOOL fn_80024DB0(ChallengePreviewTrack* track);
++void fn_80024FA4(HugeAnimSubObj34* control, ChallengePreviewScript* script, ChallengePreviewTrack* track, s32 mask);
++void fn_80038EC4(AnimationStruct* actor, AnimLevel1** model, u8 count);
++void fn_8003414C(u8* attachmentState);
++extern const f32 lbl_1_rodata_73C8, lbl_1_rodata_7460;
++extern f32 lbl_1_data_ABA4;
++extern u8 lbl_1_data_A938[];
++extern ChallengeView lbl_1_data_AC9C[];
++/* Advance preview animation, paired attachment tracks and camera-dependent rendering. */
+ void fn_1_129D0(void) {
+-    return;
++    hugeAnimStruct* animation = &g_hugeAnimStruct;
++    ChallengeState* state = &lbl_1_bss_3070;
++    AnimationStruct* actor = &animation->fielderStructs[0];
++    HugeAnimEntry68* entry;
++    VecXYZ position;
++    MtxPtr view;
++    f32 speed;
++    s32 i;
++    if (actor) {
++        actor->unk276 >>= 1;
++        actor->unk276 = (actor->unk276 & 31) << 3;
++        getAnimRelatedCoordinates(0, 30, &position);
++        if (actor->unk34.y - position.y < lbl_1_rodata_73C8) actor->unk276 |= 2;
++        getAnimRelatedCoordinates(0, 34, &position);
++        if (actor->unk34.y - position.y < lbl_1_rodata_73C8) actor->unk276 |= 4;
++    }
++    animation->AnimationStructPtrs[0]->unk276 |= 1;
++    view = state->view;
++    for (i=0; i<3; i++) LITXForm(animation->menuLights[i], view);
++    actor = &animation->fielderStructs[0];
++    entry = g_hugeAnimStruct.ctrlOrBonePtr;
++    CTRLSetTranslation(&((HugeAnimCtrlEntry*)entry)->ctrl, 0, 0, 0);
++    CTRLSetRotation(&((HugeAnimCtrlEntry*)entry)->ctrl, lbl_1_rodata_7460 * actor->unk40.x, lbl_1_rodata_7460 * actor->unk40.y, lbl_1_rodata_7460 * actor->unk40.z);
++    if (!state->paused) {
++        speed = entry->unk88 = lbl_1_data_ABA4;
++        entry->unk8E = 1;
++        if (state->tracks[0]) state->tracks[0]->rate = speed;
++    } else {
++        speed = entry->unk88 = state->step;
++        entry->unk8E = 1;
++        if (state->tracks[0]) state->tracks[0]->rate = speed;
++    }
++    if (speed != 0) {
++        BOOL enabled = state->enabled != 0;
++        if (enabled) {
++            ChallengeModel* model = (ChallengeModel*)g_hugeAnimStruct.ctrlOrBonePtr->unk34;
++            s32 count = model->count;
++            f32 frame;
++            Rep0610Slot* slot;
++            s32 id;
++            for(i=0;i<count;i++) if(model->objects[i]->animation && model->objects[i]->animation->data) break;
++            frame = i<count ? model->objects[i]->animation->time : 0;
++            slot = &state->previewSlots[state->modelIndex];
++            id = lbl_1_data_A938[slot->table] + slot->entry;
++            if (enabled && state->mode) {
++                if (state->mode==2) {
++                    if ((s32)frame==0) state->phase += state->phase != 0;
++                    if (state->phase==3) state->phase=0;
++                    if (state->phase!=2) goto tracks;
++                }
++                fn_8004B208((s32)actor,id,(s8)state->channel < 0 ? 0 : (s8)state->channel);
++            }
++        }
++    }
++tracks:
++    state->step=0;
++    if (!state->manualAttachments) {
++        for (i=0;i<4;i++) {
++            HugeAnimSubObj34* control;
++            if(state->scripts[i] && state->tracks[i]) {
++                state->tracks[i]->rate=speed;
++                if(fn_80024DB0(state->tracks[i]) && state->tracks[i]) state->tracks[i]->mode=3;
++                if(i==0) control=&((HugeAnimCtrlEntry*)g_hugeAnimStruct.ctrlOrBonePtr)->sub34;
++                else if(i==3) control=&state->attachments[i].sub34;
++                else control=&state->attachments[i-1].sub34;
++                if(i==0 || !state->unk2EF9) fn_80024FA4(control,state->scripts[i],state->tracks[i],-1);
++                else if(i==2) fn_80024FA4(control,state->scripts[i-1],state->tracks[i],-1);
++                else fn_80024FA4(control,state->scripts[i+1],state->tracks[i],-1);
++            }
++        }
++        if(state->tracks[0]) memcpy(&((ChallengePreviewSlot*)g_hugeAnimStruct.fielderStructs[state->modelIndex].slots[7])->track,state->tracks[0],0x20);
++    }
++    PSMTXCopy(view,lbl_1_data_AC9C[lbl_803CBBC0].matrix);
++    fn_800A7D4C(7,&lbl_1_data_AC9C[lbl_803CBBC0]);
++    if(lbl_1_data_A978[state->cameraIndex]>=0) fn_800BD8C4((HugeAnimCtrlObj*)state->attachments,(s32)view);
++    g_hugeAnimStruct.ctrlOrBonePtr[1].unk10=1;
++    fn_1_12F8C(g_hugeAnimStruct.ctrlOrBonePtr,view);
++    g_hugeAnimStruct.ctrlOrBonePtr[1].unk10=(state->hidden==0)&(state->modelIndex==0);
++    if(g_hugeAnimStruct.field277_0x3083[0]) {
++        u8 index=g_hugeAnimStruct.field277_0x3083[1];
++        fn_80038EC4(&g_hugeAnimStruct.fielderStructs[index],&g_hugeAnimStruct.ctrlOrBonePtr[index].unk34,0);
++    }
++    fn_8003414C(state->attachmentState);
+ }
+ 
+ // .text:0x00012F18 size:0x74
+@@ -903,7 +1007,7 @@ void fn_1_12F18(Rep0610Obj12F18* obj) {
+ }
+ 
+ // .text:0x00012F8C size:0x258
+-void fn_1_12F8C(void) {
++void fn_1_12F8C(HugeAnimEntry68* entries, Mtx view) {
+     return;
+ }
+ 
