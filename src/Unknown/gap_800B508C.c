@@ -532,7 +532,7 @@ void DoEulerAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
     }
     case 2:
         /* FAKEMATCH: preserve the retail association of tangent stride and channel offset. */
-        GetData(type, &(&current->interpolation[vectorSize])[offset], &outgoing.x, 3, scale);
+        GetData(type, &(&current->interpolation[offset])[vectorSize], &outgoing.x, 3, scale);
         GetData(type, &next->interpolation[offset], &incoming.x, 3, scale);
         bezierAnimationVector(result, &from[0], &to[0], &outgoing.x, &incoming.x, time);
         break;
