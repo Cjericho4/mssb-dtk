@@ -1,0 +1,117 @@
+diff --git a/include/challenge/rep_74A0.h b/include/challenge/rep_74A0.h
+index f58aeb32..3d547249 100644
+--- a/include/challenge/rep_74A0.h
++++ b/include/challenge/rep_74A0.h
+@@ -73,11 +73,20 @@ typedef struct ChallengeModelGroup {
+     u8 _pad0[6];
+     u16 count;
+ } ChallengeModelGroup;
++typedef struct ChallengeOrbitCamera {
++    Mtx matrix;
++    u16 pitch, yaw;
++    f32 strafe, forward;
++    Vec target, center;
++} ChallengeOrbitCamera;
+ typedef struct ChallengeSelection {
+     u16 selected;
+     u8 group;
+     u8 _pad3[0x189];
+-    Mtx matrix;
++    union {
++        Mtx matrix;
++        ChallengeOrbitCamera camera;
++    };
+ } ChallengeSelection;
+ extern ChallengeSelection lbl_1_bss_69F0;
+ void fn_800B2C88(ChallengeModelGroup* model, u16 index, Mtx matrix);
+@@ -90,6 +99,18 @@ void fn_1_1B2C8(void);
+ void fn_1_1B424(void);
+ void fn_1_1B6BC(void);
+ void fn_1_1B7DC(void);
++typedef struct ChallengePreviewList { u32 words[2]; } ChallengePreviewList;
++typedef struct ChallengePreviewData {
++    u8 _pad0[0x260];
++    ChallengePreviewList objects[2], overlays[2];
++    u32 unk280;
++    Vec up, rotation;
++} ChallengePreviewData;
++extern ChallengePreviewData lbl_1_data_F888;
++void fn_800A7D4C(s32 mode, ChallengePreviewList* list);
++/* gap_800AD780.h still declares this four-argument camera routine as a void stub. */
++void makeLookAtMatrix(Mtx matrix, const Vec* eye, const Vec* up, const Vec* target);
++extern u8 lbl_803CBBC0;
+ void fn_1_1C3CC(void);
+ void fn_1_1C8C0(void);
+ void fn_1_1CBE4(void);
+diff --git a/src/challenge/rep_74A0.c b/src/challenge/rep_74A0.c
+index c288c5f1..2a82a1c4 100644
+--- a/src/challenge/rep_74A0.c
++++ b/src/challenge/rep_74A0.c
+@@ -385,8 +385,66 @@ void fn_1_1B7DC(void) {
+ }
+ 
+ // .text:0x0001C3CC size:0x4F4
++extern const f32 lbl_1_rodata_752C, lbl_1_rodata_7530, lbl_1_rodata_7534, lbl_1_rodata_7538, lbl_1_rodata_753C, lbl_1_rodata_7540;
++/* Move the selected model or orbit its preview camera, then queue its render lists. */
+ void fn_1_1C3CC(void) {
+-    return;
++    Mtx44 projection;
++    Mtx combined, yaw, pitch;
++    Vec angles;
++    ChallengeScene* scene = (ChallengeScene*)lbl_803CC1B8;
++    ChallengePreviewData* data = &lbl_1_data_F888;
++    ChallengeSelection* state = &lbl_1_bss_69F0;
++    C_MTXFrustum(projection, lbl_1_rodata_752C, lbl_1_rodata_7530, lbl_1_rodata_7534, lbl_1_rodata_7538, lbl_1_rodata_753C, lbl_1_rodata_7540);
++    GXSetProjection(projection, GX_PERSPECTIVE);
++    fn_1_1B7DC();
++    if (scene->bytes[3]) {
++        AnimationStruct* model = &g_hugeAnimStruct.fielderStructs[((ChallengeScene*)lbl_803CC1B8)->bytes[0]];
++        model->unk34.x += (s8)lbl_803C77B8.axes.bytes[0] / 768.0f;
++        model->unk34.y += lbl_803C77B8.axes.bytes[5] / 768.0f;
++        model->unk34.y -= lbl_803C77B8.axes.bytes[4] / 768.0f;
++        model->unk34.z += (s8)lbl_803C77B8.axes.bytes[1] / 768.0f;
++        model->unk40.x = data->rotation.x - (s8)lbl_803C77B8.axes.bytes[3] * 0.001953125f;
++        model->unk40.y = data->rotation.y - (s8)lbl_803C77B8.axes.bytes[2] * 0.001953125f;
++        data->rotation.y = model->unk40.y;
++        data->rotation.x = model->unk40.x;
++        model->unk40.z = data->rotation.z;
++    } else {
++        Vec offset = {0.0f, 0.0f, 100.0f};
++        f32 sine, cosine;
++        if (!(lbl_803C77B8.buttons & 0x10)) {
++            state->camera.center.y += lbl_803C77B8.axes.bytes[5] * 0.0009765625f;
++            state->camera.pitch -= (s8)lbl_803C77B8.axes.bytes[3];
++            state->camera.yaw += (s8)lbl_803C77B8.axes.bytes[2];
++            state->camera.strafe = (s8)lbl_803C77B8.axes.bytes[0] / -256.0f;
++            state->camera.forward = (s8)lbl_803C77B8.axes.bytes[1] / 256.0f;
++            state->camera.center.y -= lbl_803C77B8.axes.bytes[4] * 0.0009765625f;
++        }
++        angles.x = state->camera.pitch;
++        angles.y = state->camera.yaw;
++        angles.z = 0.0f;
++        PSVECScale(&angles, 0.0000958738f, &angles);
++        PSMTXRotRad(pitch, 'X', angles.x);
++        PSMTXRotRad(yaw, 'Y', angles.y);
++        sine = yaw[0][2];
++        cosine = yaw[0][0];
++        PSMTXConcat(yaw, pitch, combined);
++        {
++        Vec* target = &state->camera.target;
++        PSMTXMultVec(combined, &offset, target);
++        state->camera.center.x += state->camera.forward * sine - state->camera.strafe * cosine;
++        state->camera.center.z += state->camera.forward * cosine + state->camera.strafe * sine;
++        state->camera.target.y += state->camera.center.y;
++        state->camera.target.z += state->camera.center.z;
++        state->camera.target.x += state->camera.center.x;
++        makeLookAtMatrix(state->matrix, &state->camera.center, &data->up, target);
++        }
++    }
++    PSMTXCopy(state->matrix, lbl_1_bss_69FC.lightMatrix);
++    state->group = scene->bytes[0];
++    fn_800A7D4C(0, &data->objects[lbl_803CBBC0]);
++    if (scene->bytes[2] != 2) fn_800A7D4C(0, &data->overlays[lbl_803CBBC0]);
++    fn_1_1D110();
++    if (scene->byte18) fn_1_1A3B4();
+ }
+ 
+ // .text:0x0001C8C0 size:0x324
