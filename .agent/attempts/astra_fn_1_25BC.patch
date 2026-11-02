@@ -1,0 +1,112 @@
+diff --git a/include/challenge/rep_00B0.h b/include/challenge/rep_00B0.h
+index d2b81a74..dc4ac62d 100644
+--- a/include/challenge/rep_00B0.h
++++ b/include/challenge/rep_00B0.h
+@@ -8,7 +8,12 @@ void fn_1_19AC(void);
+ typedef struct ChallengeBounds { f32 minX, minY, minZ, maxX, maxY, maxZ; } ChallengeBounds;
+ void fn_1_1BF8(ChallengeBounds* bounds, s32 index);
+ void fn_1_1DBC(s32 a, s32 b, s32 c, s32 d, u8 face);
+-void fn_1_25BC(void);
++typedef struct ChallengeCollisionVertex {Vec position;u16 attribute;u16 reserved;} ChallengeCollisionVertex;
++typedef struct ChallengeCollisionPacket {
++    union {u32 marker;struct{u8 flags,strip;u16 count;};};
++    ChallengeCollisionVertex vertices[1];
++} ChallengeCollisionPacket;
++void fn_1_25BC(ChallengeCollisionPacket* packet);
+ void fn_1_3E38(Vec* position, u32 index);
+ void fn_1_4074(Vec* position);
+ typedef struct ChallengeSegment { Vec start, end; } ChallengeSegment;
+diff --git a/src/challenge/rep_00B0.c b/src/challenge/rep_00B0.c
+index d48bf850..bbbd72dc 100644
+--- a/src/challenge/rep_00B0.c
++++ b/src/challenge/rep_00B0.c
+@@ -80,8 +80,87 @@ void fn_1_1DBC(s32 a, s32 b, s32 c, s32 d, u8 face) {
+ }
+ 
+ // .text:0x000025BC size:0x187C
+-void fn_1_25BC(void) {
+-    return;
++static inline void beginCollisionPrimitive(u8 primitive,u16 count) {
++    __GDCheckOverflowed(1);__GDWriteU8(primitive);
++    __GDCheckOverflowed(2);__GDWriteU16(count);
++}
++static inline void collisionVertex(ChallengeCollisionVertex* vertex,u32 attribute) {
++    writeChallengePosition(vertex->position.x,vertex->position.y,vertex->position.z);
++    __GDCheckOverflowed(1);__GDWriteU8((attribute>>7)+((attribute&0x7F)-1)*2);
++}
++static inline void collisionOutline(ChallengeCollisionVertex* vertex) {
++    writeChallengePosition(vertex->position.x,vertex->position.y,vertex->position.z);
++    __GDCheckOverflowed(1);__GDWriteU8(18);
++}
++/* Emit collision triangles/strips with material colors and wireframe outlines. */
++void fn_1_25BC(ChallengeCollisionPacket* packet) {
++    ChallengeCollisionVertex* cursor;
++    do {
++        u16 count=packet->count;
++        if(packet->strip==0){
++            u32 remaining=count*3;
++            ChallengeCollisionVertex* vertex=packet->vertices;
++            beginCollisionPrimitive(0x90,remaining);
++            while(remaining){
++                u16 attribute;u8 color;
++                writeChallengePosition(vertex->position.x,vertex->position.y,vertex->position.z);
++                attribute=vertex->attribute;color=(attribute>>7)+((attribute&0x7F)-1)*2;
++                __GDCheckOverflowed(1);__GDWriteU8(color);
++                vertex++;remaining--;
++            }
++            remaining=count;cursor=packet->vertices;
++            while(remaining){
++                ChallengeCollisionVertex* first=cursor;
++                beginCollisionPrimitive(0xB0,4);
++                collisionOutline(cursor);
++                collisionOutline(cursor+1);
++                collisionOutline(cursor+2);
++                cursor+=3;
++                collisionOutline(first);
++                remaining--;
++            }
++        }else{
++            u32 total=0;
++            u16 attribute=packet->vertices[0].attribute;
++            ChallengeCollisionVertex* scan=packet->vertices;
++            s32 n=count+2;
++            while(n--){
++                u16 next=scan->attribute;total++;
++                if(attribute!=next){attribute=next;total+=2;}
++                scan++;
++            }
++            attribute=packet->vertices[0].attribute;
++            cursor=packet->vertices;
++            beginCollisionPrimitive(0x98,total);
++            total=count+2;
++            while(total){
++                u16 next=cursor->attribute;
++                if(attribute!=next){
++                    attribute=next;
++                    collisionVertex(cursor-2,next);
++                    collisionVertex(cursor-1,next);
++                }
++                collisionVertex(cursor,next);
++                cursor++;total--;
++            }
++            {
++                u32 remaining=count+2;ChallengeCollisionVertex* vertex=packet->vertices;
++                beginCollisionPrimitive(0xB0,remaining);
++                while(remaining){collisionOutline(vertex);vertex++;remaining--;}
++            }
++            {
++                u32 remaining=(u32)(count+3)>>1;ChallengeCollisionVertex* vertex=packet->vertices;
++                beginCollisionPrimitive(0xB0,remaining);
++                while(remaining){collisionOutline(vertex);vertex+=2;remaining--;}
++            }
++            {
++                u32 remaining=(u32)(count+2)>>1;ChallengeCollisionVertex* vertex=packet->vertices+1;
++                beginCollisionPrimitive(0xB0,remaining);
++                while(remaining){collisionOutline(vertex);vertex+=2;remaining--;}
++            }
++        }
++        packet=(ChallengeCollisionPacket*)cursor;
++    }while(packet->marker);
+ }
+ 
+ // .text:0x00003E38 size:0x23C
