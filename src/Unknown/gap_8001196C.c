@@ -464,8 +464,58 @@ void fn_80014204(void) {
 }
 
 // .text:0x800145F8 size:0x398
+// Allocates and resets 13 sub-item pairs, using a roster-only or all-character maximum file size.
 void fn_800145F8(s32 allCharacters) {
-    return;
+    u32 size;
+    u32 stride;
+    u32 team;
+    u32 player;
+    u32 charID;
+    u32 item;
+    u32 entry;
+    s16 descriptorIndex;
+    u32 maximum = 0;
+
+    if (allCharacters == 0) {
+        for (team = 0; team < 2; team++) {
+            for (player = 0; player < 9; player++) {
+                descriptorIndex = lbl_800EEAAC[inMemRoster[team][player].charID];
+                if (descriptorIndex >= 0) {
+                    for (item = 0; item < SUBITEM_FILES_PER_CHARACTER; item++) {
+                        size = lbl_803CB7A8[descriptorIndex + item].sizeFlags & 0x0FFFFFFF;
+                        if (maximum < size) maximum = size;
+                    }
+                }
+            }
+        }
+    } else {
+        for (charID = 0; charID < NUM_CHOOSABLE_CHARACTERS; charID++) {
+            descriptorIndex = lbl_800EEAAC[charID];
+            if (descriptorIndex >= 0) {
+                for (item = 0; item < SUBITEM_FILES_PER_CHARACTER; item++) {
+                    size = lbl_803CB7A8[descriptorIndex + item].sizeFlags & 0x0FFFFFFF;
+                    if (maximum < size) maximum = size;
+                }
+            }
+        }
+    }
+    stride = (maximum + 31) & ~31;
+    lbl_803CBC24 = _OSAllocFromHeap(32, stride * (SUBITEM_CACHE_ENTRIES * 2));
+    for (entry = 0; entry < SUBITEM_CACHE_ENTRIES; entry++) {
+        g_hugeAnimStruct.subItemEntries[entry].obj0.buf = lbl_803CBC24 + stride * (entry * 2);
+        g_hugeAnimStruct.subItemEntries[entry].obj1.buf = lbl_803CBC24 + stride * (entry * 2 + 1);
+    }
+    for (entry = 0; entry < SUBITEM_CACHE_ENTRIES; entry++) {
+        g_hugeAnimStruct.subItemEntries[entry].charID = CHAR_ID_NONE;
+        g_hugeAnimStruct.subItemEntries[entry].prevSlotKind = -1;
+        g_hugeAnimStruct.subItemEntries[entry].slotKind = -1;
+        g_hugeAnimStruct.subItemEntries[entry].arm = 0xFF;
+        g_hugeAnimStruct.subItemEntries[entry].stance = 0xFF;
+        g_hugeAnimStruct.subItemEntries[entry].textureArchive = NULL;
+        g_hugeAnimStruct.subItemEntries[entry].valid = 0;
+        g_hugeAnimStruct.subItemEntries[entry].obj0.index0 = entry * 2;
+        g_hugeAnimStruct.subItemEntries[entry].obj1.index0 = entry * 2 + 1;
+    }
 }
 
 // .text:0x80014990 size:0x88
