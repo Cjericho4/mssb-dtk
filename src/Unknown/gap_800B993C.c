@@ -298,8 +298,8 @@ asm void __MTGQR7(register u32 value) {
 }
 
 // .text:0x800BD208 size:0x38
-void GQRSetup7(void) {
-    return;
+void GQRSetup7(u32 loadScale,u32 loadType,u32 storeScale,u32 storeType) {
+    __MTGQR7((((loadScale << 8) + loadType) << 16) | ((storeScale << 8) + storeType));
 }
 
 // .text:0x800BD240 size:0x38
