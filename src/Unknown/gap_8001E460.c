@@ -2254,8 +2254,12 @@ void fn_80021954(Gap8001E460Resource** resource) {
 }
 
 // .text:0x80021980 size:0x34
-void fn_80021980(void) {
-    return;
+/* Relocate the four file-relative fields in a loaded sound resource. */
+void fn_80021980(Gap8001E460Resource* resource) {
+    resource->project+=(u32)resource;
+    resource->sdir+=(u32)resource;
+    resource->pool+=(u32)resource;
+    resource->end=(Gap8001E460Resource*)((u8*)resource->end+(u32)resource);
 }
 
 // .text:0x800219B4 size:0xEC

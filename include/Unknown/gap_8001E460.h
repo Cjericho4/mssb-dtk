@@ -179,7 +179,7 @@ Gap8001E460Task* fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
 void fn_800216F8(u8 a, s32 b);
 void fn_80021758(void);
 void fn_80021954(struct Gap8001E460Resource** resource);
-void fn_80021980(void);
+void fn_80021980(struct Gap8001E460Resource* resource);
 void f_initSound(void);
 void fn_80021AA0(void);
 void fn_80021AC0(void);
