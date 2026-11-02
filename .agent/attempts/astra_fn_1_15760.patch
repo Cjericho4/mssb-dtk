@@ -1,0 +1,138 @@
+diff --git a/include/challenge/rep_0610.h b/include/challenge/rep_0610.h
+index 838c49b5..2a425527 100644
+--- a/include/challenge/rep_0610.h
++++ b/include/challenge/rep_0610.h
+@@ -39,9 +39,13 @@ typedef struct ChallengeState {
+     /* 0x01A4 */ u8 phase;
+     /* 0x01A5 */ u8 enabled;
+     /* 0x01A6 */ u8 mode;
+-    /* 0x01A7 */ u8 _pad1A7[0x2D4B];
++    u8 _pad1A7[0x2D45];
++    s32 animationChanged;
++    u8 _pad2EF0[2];
+     /* 0x2EF2 */ u8 channel;
+-    /* 0x2EF3 */ u8 _pad2EF3[6];
++    u8 _pad2EF3;
++    f32 step;
++    u8 paused;
+     /* 0x2EF9 */ u8 unk2EF9;
+     /* 0x2EFA */ u8 _pad2EFA[2];
+     /* 0x2EFC */ u32 selectedBone;
+@@ -54,7 +58,9 @@ typedef struct ChallengeState {
+     u8 _pad2F09[0x16B];
+     /* 0x3074 */ Gap8000B9C8Texture* extraTexture;
+     /* 0x3078 */ u8 _pad3078[0x6D0];
+-    /* 0x3748 */ Rep0610Items items;
++    union { Rep0610Items items; struct Rep7920Anim* tracks[5]; };
++    u8 _pad375C[0x174];
++    Rep0610Slot previewSlots[13];
+ } ChallengeState;
+ extern ChallengeState lbl_1_bss_3070;
+ 
+diff --git a/src/challenge/rep_0610.c b/src/challenge/rep_0610.c
+index 8e30a9f0..97afa2cb 100644
+--- a/src/challenge/rep_0610.c
++++ b/src/challenge/rep_0610.c
+@@ -1093,8 +1093,101 @@ void fn_1_1540C(void) {
+ }
+ 
+ // .text:0x00015760 size:0x580
++#include "challenge/rep_7920.h"
++extern u8 lbl_1_data_2390[];
++extern f32 lbl_1_data_ABA4;
++typedef struct ChallengeAnimationTable { u8 _pad0[0xA]; u16 count; } ChallengeAnimationTable;
++/* Edit animation selection, playback speed, stepping and paired-track preview modes. */
+ void fn_1_15760(void) {
+-    return;
++    ChallengeState* state=&lbl_1_bss_3070;
++    s32 i=0;
++    state->modelIndex=i;
++    if (!state->animationChanged) {
++        u32 pressed=lbl_803C77B8.pressed;
++        if(pressed&8) { if(--state->unkC<0) state->unkC=7; }
++        else if(pressed&4) { if(++state->unkC>=8) state->unkC=i; }
++        else if(pressed&1) {
++            switch(state->unkC) {
++            case 0: {
++                Rep0610Slot* slot=&state->previewSlots[0];
++                s32 old=slot->table;
++                u8 table=old;
++                do { table=table ? table-1 : 6; } while(!lbl_1_data_2390[table]);
++                slot->table=table;
++                if(old!=table) { state->animationChanged=1; state->previewSlots[0].entry=0; }
++                break;
++            }
++            case 1: {
++                Rep0610Slot* slot=&state->previewSlots[0];
++                s32 old=slot->entry;
++                s32 count=((ChallengeAnimationTable*)g_hugeAnimStruct.fielderStructs[0].slots[slot->table])->count;
++                if(old) slot->entry=old-1; else slot->entry=count-1;
++                if(old!=slot->entry) state->animationChanged=1;
++                break;
++            }
++            case 2: if((lbl_1_data_ABA4-=0.01f)<0) lbl_1_data_ABA4=0; break;
++            case 3: fn_1_1644C(); break;
++            case 4: state->unk11^=1; break;
++            case 6:
++                state->paused^=1;
++                if(state->paused) { g_hugeAnimStruct.ctrlOrBonePtr[1].unk0=0; g_hugeAnimStruct.ctrlOrBonePtr->unk8D=1; }
++                break;
++            case 5: if(!state->mode) state->mode=3; state->mode--; break;
++            }
++        } else if(pressed&2) {
++            switch(state->unkC) {
++            case 0: {
++                Rep0610Slot* slot=&state->previewSlots[0];
++                s32 old=slot->table;
++                u8 table=old;
++                do { if(++table==7) table=0; } while(!lbl_1_data_2390[table]);
++                slot->table=table;
++                if(old!=table) { state->animationChanged=1; state->previewSlots[0].entry=0; }
++                break;
++            }
++            case 1: {
++                Rep0610Slot* slot=&state->previewSlots[0];
++                s32 old=slot->entry;
++                s32 count=((ChallengeAnimationTable*)g_hugeAnimStruct.fielderStructs[0].slots[slot->table])->count;
++                if(++slot->entry==count) slot->entry=i;
++                if(old!=slot->entry) state->animationChanged=1;
++                break;
++            }
++            case 2: lbl_1_data_ABA4+=0.01f; break;
++            case 3: fn_1_1644C(); break;
++            case 4: state->unk11^=1; break;
++            case 6:
++                state->paused^=1;
++                if(state->paused) {
++                    g_hugeAnimStruct.ctrlOrBonePtr[1].unk0=0; g_hugeAnimStruct.ctrlOrBonePtr->unk8D=1;
++                    for(;i<5;i++) if(state->tracks[i]) fn_1_26B7C(state->tracks[i]);
++                }
++                break;
++            case 5: if(++state->mode==3) state->mode=i; break;
++            }
++        } else if(pressed&0x1000) {
++            if (!state->queued) {
++                DrawingSceneStruct* entry;
++                state->queued=1;
++                entry=(DrawingSceneStruct*)fn_800B0A5C_insertQueue(fn_1_CCC8,(u16)(lbl_803CC1B8->priority+1));
++                if(state->unk2EF9) { entry->unk14=state->items.item4; entry->unk18=lbl_1_data_F56C; }
++                else { entry->unk14=state->items.item8; entry->unk18=lbl_1_data_F56E; }
++            }
++        } else if(pressed&0x400) {
++            switch(state->unkC) { case 6: if((pressed&0x400)&&state->paused) state->step=lbl_1_data_ABA4; break; }
++        } else if(pressed&0x800) {
++            switch(state->unkC) { case 6: if((pressed&0x800)&&state->paused) state->step=-lbl_1_data_ABA4; break; }
++        } else if(pressed&0x100) {
++            switch(state->unkC) {
++            case 6: if((pressed&0x100)&&state->paused) state->step=1; break;
++            case 5: if(pressed&0x100) state->phase=1; break;
++            }
++        } else if(pressed&0x200) { state->unkC=i; state->unk2F01=1; }
++    }
++    {
++        ChallengeModel* model=(ChallengeModel*)g_hugeAnimStruct.ctrlOrBonePtr[state->modelIndex].unk34;
++        for(i=0;i<model->count;i++) if(model->objects[i]->animation && model->objects[i]->animation->data) break;
++    }
+ }
+ 
+ // .text:0x00015CE0 size:0x3F8
