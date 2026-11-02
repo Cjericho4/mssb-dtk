@@ -94,8 +94,9 @@ static inline void slerpAnimation(Quaternion* from, Quaternion* to, Quaternion* 
     f32 cosine = from->w * to->w + (from->z * to->z + (from->x * to->x + from->y * to->y));
     f32 first;
     f32 second = time;
-    f32 angle;
+    /* FAKEMATCH: declaration order keeps the spherical angle in the retail saved register. */
     f32 step;
+    f32 angle;
     f32 reciprocal;
     if (1.0f + cosine > 0.000001f) {
         if (1.0f - cosine > 0.000001f) {
