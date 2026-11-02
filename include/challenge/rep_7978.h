@@ -3,6 +3,7 @@
 
 #include "mssbTypes.h"
 #include "Dolphin/mtx.h"
+#include "challenge/challenge.h"
 #include "Dolphin/GX/GXTransform.h"
 
 typedef struct Rep7978Camera {
@@ -25,7 +26,10 @@ typedef struct Rep7978Camera {
     /* 0xCC */ f32 bottom;
     /* 0xD0 */ f32 left;
     /* 0xD4 */ f32 right;
-    u32 flags;
+    union {
+        u32 flags;
+        void (*update)(struct Rep7978Camera*,u16,u16,u16,ChallengeAxes*);
+    };
 } Rep7978Camera;
 
 #include "challenge/challenge.h"
