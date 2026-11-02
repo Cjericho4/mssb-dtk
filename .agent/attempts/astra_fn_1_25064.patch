@@ -1,0 +1,347 @@
+diff --git a/src/challenge/rep_7730.c b/src/challenge/rep_7730.c
+index 97908c10..af88da93 100644
+--- a/src/challenge/rep_7730.c
++++ b/src/challenge/rep_7730.c
+@@ -982,10 +982,341 @@ void fn_1_24C4C(ChallengeSpringPoint* points, s32 count, Vec* impulse, f32 stiff
+ }
+ 
+ // .text:0x00025064 size:0xC04
++typedef struct Chain250Point {f32 mass; u8 _pad4[8]; Vec position, previous, axis, normal; s32 fixed;} Chain250Point;
++typedef struct Chain250Physics {f32 stiffness, damping, tension, valueC, value10, value14, dt, dtSquared; s32 steps; f32 inverseDt;} Chain250Physics;
++typedef struct Chain250Scene {u8 _pad0[0x14];f32 damping;u16 stiffness,tension,valueC,value10,value14,force,spacing,value26,value28;u8 steps,count,selection;} Chain250Scene;
++typedef struct Chain250Pool {u8 _pad0[0x3D360];Mtx view;Chain250Point points[100];Chain250Physics physics;u8 _pad3ECB8[0x40438-0x3ECB8];Mtx44 projection;} Chain250Pool;
++typedef struct Chain250Input {u8 _pad0[0x10];s8 x,z,unused,y;} Chain250Input;
++extern Chain250Pool lbl_1_bss_6BD8;
++extern u32 lbl_1_data_10384[];
++extern f32 lbl_1_data_104A4;
++void fn_80038E2C(Chain250Physics*);
++void fn_80038CD0(u8,Chain250Physics*,Chain250Point*,f32,f32);
++void fn_80038B48(Chain250Physics*,Chain250Point*,u8,Vec*);
++STATIC_ASSERT(sizeof(Chain250Point)==0x40);
++extern f32 lbl_1_rodata_77E4;
++extern f64 lbl_1_rodata_77F0;
++extern f32 lbl_1_rodata_7808;
++extern f32 lbl_1_rodata_780C;
++extern f64 lbl_1_rodata_7818;
++extern f32 lbl_1_rodata_7848;
++extern f32 lbl_1_rodata_78C4;
++extern f32 lbl_1_rodata_78C8;
++/* Edit and simulate a chain, then render its position and force axes. */
+ void fn_1_25064(void) {
+-    return;
++    Vec force;
++    GXColor sp14;
++    GXColor sp10;
++    GXTexOffset spC;
++    u8 sp8;
++    u32 *var_r29;
++    u32 *var_r6;
++    f32 temp_f1;
++    f32 temp_f1_2;
++    f32 temp_f1_3;
++    f32 temp_f1_4;
++    f32 temp_f2;
++    f32 temp_f3;
++    f32 temp_f4;
++    f32 temp_f4_2;
++    s32 temp_cr0_eq;
++    s32 temp_cr0_eq_2;
++    s32 var_r23;
++    s32 var_r24;
++    s32 var_r25;
++    u16 temp_r9;
++    u32 var_r26;
++    u8 temp_r3;
++    u8 temp_r3_2;
++    u8 temp_r3_3;
++    u8 temp_r5;
++    u8 temp_r5_2;
++    u8 temp_r5_3;
++    u8 var_r31;
++    u8 var_r5;
++    Chain250Point *temp_r10;
++    Chain250Scene *temp_r27;
++    Chain250Physics *temp_r28;
++    Chain250Scene *temp_r29;
++    Chain250Scene *temp_r29_2;
++    Chain250Scene *temp_r29_3;
++    DrawingSceneStruct *temp_r3_4;
++    Chain250Point *var_r28;
++    Chain250Point *var_r4;
++
++    temp_r27 = (Chain250Scene*)lbl_803CC1B8;
++    if (lbl_803C77B8.buttons & 0x20) {
++        var_r25 = 4;
++        var_r24 = 1;
++    } else {
++        var_r25 = 0x40;
++        var_r24 = 0xA;
++    }
++    temp_r28 = &lbl_1_bss_6BD8.physics;
++    var_r26 = 0U;
++    var_r23 = 0;
++    do {
++        if (var_r26 <= 0xAU) {
++            switch (var_r26) { /* unable to parse jump table */
++            case 0:
++                if ((s32) var_r26 == (s32) temp_r27->selection) {
++                    if (lbl_803C77B8.pressed & 1) {
++                        temp_r5 = temp_r27->count;
++                        temp_r27->count = (u8) (temp_r5 - 1);
++                        temp_r29 = (Chain250Scene*)lbl_803CC1B8;
++                        fn_80038E2C(&lbl_1_bss_6BD8.physics);
++                        lbl_1_bss_6BD8.physics.stiffness = (f32) temp_r29->tension;
++                        temp_r28->damping = (f32) temp_r29->damping;
++                        temp_r28->tension = (f32) ((f32) temp_r29->stiffness * lbl_1_rodata_78C4);
++                        temp_r28->valueC = (f32) ((f32) temp_r29->valueC * lbl_1_rodata_78C4);
++                        temp_r28->value10 = (f32) ((f32) temp_r29->value10 * lbl_1_rodata_78C4);
++                        temp_r28->value14 = (f32) ((f32) temp_r29->value14 / lbl_1_rodata_78C8);
++                        temp_r3 = temp_r29->steps;
++                        temp_r28->steps = (s32) temp_r3;
++                        temp_f1 = lbl_1_rodata_77E4 / (f32) temp_r3;
++                        temp_r28->dt = temp_f1;
++                        temp_r28->dtSquared = (f32) (temp_f1 * temp_f1);
++                        temp_r28->inverseDt = (f32) (lbl_1_rodata_77E4 / (lbl_1_rodata_780C * temp_f1));
++                        if (lbl_803C77B8.buttons & 0x40) {
++                            temp_r28->steps = 1;
++                        }
++                        fn_80038CD0(temp_r29->count, &lbl_1_bss_6BD8.physics, lbl_1_bss_6BD8.points, lbl_1_rodata_7808, (f32) temp_r29->spacing * lbl_1_rodata_78C4);
++                    } else if (lbl_803C77B8.pressed & 2) {
++                        temp_r5_2 = temp_r27->count;
++                        temp_r27->count = (u8) (temp_r5_2 + 1);
++                        temp_r29_2 = (Chain250Scene*)lbl_803CC1B8;
++                        fn_80038E2C(&lbl_1_bss_6BD8.physics);
++                        lbl_1_bss_6BD8.physics.stiffness = (f32) temp_r29_2->tension;
++                        temp_r28->damping = (f32) temp_r29_2->damping;
++                        temp_r28->tension = (f32) ((f32) temp_r29_2->stiffness * lbl_1_rodata_78C4);
++                        temp_r28->valueC = (f32) ((f32) temp_r29_2->valueC * lbl_1_rodata_78C4);
++                        temp_r28->value10 = (f32) ((f32) temp_r29_2->value10 * lbl_1_rodata_78C4);
++                        temp_r28->value14 = (f32) ((f32) temp_r29_2->value14 / lbl_1_rodata_78C8);
++                        temp_r3_2 = temp_r29_2->steps;
++                        temp_r28->steps = (s32) temp_r3_2;
++                        temp_f1_2 = lbl_1_rodata_77E4 / (f32) temp_r3_2;
++                        temp_r28->dt = temp_f1_2;
++                        temp_r28->dtSquared = (f32) (temp_f1_2 * temp_f1_2);
++                        temp_r28->inverseDt = (f32) (lbl_1_rodata_77E4 / (lbl_1_rodata_780C * temp_f1_2));
++                        if (lbl_803C77B8.buttons & 0x40) {
++                            temp_r28->steps = 1;
++                        }
++                        fn_80038CD0(temp_r29_2->count, &lbl_1_bss_6BD8.physics, lbl_1_bss_6BD8.points, lbl_1_rodata_7808, (f32) temp_r29_2->spacing * lbl_1_rodata_78C4);
++                    }
++                }
++                break;
++            case 1:
++                if ((s32) var_r26 == (s32) temp_r27->selection) {
++                    if (lbl_803C77B8.pressed & 1) {
++                        temp_r27->steps = (u8) (temp_r27->steps - 1);
++                    } else if (lbl_803C77B8.pressed & 2) {
++                        temp_r27->steps = (u8) (temp_r27->steps + 1);
++                    }
++                    if ((u8) temp_r27->steps == 0) {
++                        temp_r27->steps = 1U;
++                    }
++                }
++                break;
++            case 2:
++                if ((s32) var_r26 == (s32) temp_r27->selection) {
++                    if (lbl_803C77B8.pressed & 1) {
++                        temp_r27->stiffness = (u16) (temp_r27->stiffness - var_r25);
++                    } else if (lbl_803C77B8.pressed & 2) {
++                        temp_r27->stiffness = (u16) (temp_r27->stiffness + var_r25);
++                    }
++                }
++                break;
++            case 3:
++                if ((s32) var_r26 == (s32) temp_r27->selection) {
++                    if (lbl_803C77B8.pressed & 1) {
++                        temp_r27->valueC = (u16) (temp_r27->valueC - var_r25);
++                    } else if (lbl_803C77B8.pressed & 2) {
++                        temp_r27->valueC = (u16) (temp_r27->valueC + var_r25);
++                    }
++                }
++                break;
++            case 4:
++                if ((s32) var_r26 == (s32) temp_r27->selection) {
++                    if (lbl_803C77B8.pressed & 1) {
++                        temp_r27->tension = (u16) (temp_r27->tension - var_r24);
++                    } else if (lbl_803C77B8.pressed & 2) {
++                        temp_r27->tension = (u16) (temp_r27->tension + var_r24);
++                    }
++                }
++                break;
++            case 5:
++                if ((s32) var_r26 == (s32) temp_r27->selection) {
++                    if (lbl_803C77B8.pressed & 1) {
++                        temp_r27->spacing = (u16) (temp_r27->spacing - var_r25);
++                    } else if (lbl_803C77B8.pressed & 2) {
++                        temp_r27->spacing = (u16) (temp_r27->spacing + var_r25);
++                    }
++                }
++                break;
++            case 6:
++                if ((s32) var_r26 == (s32) temp_r27->selection) {
++                    if (lbl_803C77B8.pressed & 1) {
++                        temp_r27->force = (u16) (temp_r27->force - 1);
++                    } else if (lbl_803C77B8.pressed & 2) {
++                        temp_r27->force = (u16) (temp_r27->force + 1);
++                    }
++                }
++                break;
++            case 7:
++                if ((s32) var_r26 == (s32) temp_r27->selection) {
++                    if (lbl_803C77B8.pressed & 1) {
++                        temp_r27->value14 = (u16) (temp_r27->value14 - var_r24);
++                    } else if (lbl_803C77B8.pressed & 2) {
++                        temp_r27->value14 = (u16) (temp_r27->value14 + var_r24);
++                    }
++                }
++                break;
++            case 8:
++                if ((s32) var_r26 == (s32) temp_r27->selection) {
++                    if (lbl_803C77B8.pressed & 1) {
++                        temp_r27->value26 = (u16) (temp_r27->value26 - var_r24);
++                    } else if (lbl_803C77B8.pressed & 2) {
++                        temp_r27->value26 = (u16) (temp_r27->value26 + var_r24);
++                    }
++                }
++                break;
++            case 9:
++                if ((s32) var_r26 == (s32) temp_r27->selection) {
++                    if (lbl_803C77B8.pressed & 1) {
++                        temp_r27->value10 = (u16) (temp_r27->value10 - var_r25);
++                    } else if (lbl_803C77B8.pressed & 2) {
++                        temp_r27->value10 = (u16) (temp_r27->value10 + var_r25);
++                    }
++                }
++                break;
++            case 10:
++                if ((s32) var_r26 == (s32) temp_r27->selection) {
++                    if (lbl_803C77B8.pressed & 1) {
++                        temp_r27->value28 = (u16) (temp_r27->value28 - var_r24);
++                    } else if (lbl_803C77B8.pressed & 2) {
++                        temp_r27->value28 = (u16) (temp_r27->value28 + var_r24);
++                    }
++                }
++                break;
++            }
++        }
++        var_r26 += 1;
++        var_r23 += 4;
++    } while ((s32) var_r26 < 0xB);
++    if (lbl_803C77B8.pressed & 8) {
++        if ((u8) temp_r27->selection == 0) {
++            temp_r27->selection = 0xBU;
++        }
++        temp_r27->selection = (u8) (temp_r27->selection - 1);
++    } else if (lbl_803C77B8.pressed & 4) {
++        temp_r27->selection = (u8) (temp_r27->selection + 1);
++        if ((u8) temp_r27->selection == 0xB) {
++            temp_r27->selection = 0U;
++        }
++    } else if (lbl_803C77B8.held & 0x100) {
++        temp_r29_3 = (Chain250Scene*)lbl_803CC1B8;
++        fn_80038E2C(&lbl_1_bss_6BD8.physics);
++        lbl_1_bss_6BD8.physics.stiffness = (f32) temp_r29_3->tension;
++        temp_r28->damping = (f32) temp_r29_3->damping;
++        temp_r28->tension = (f32) ((f32) temp_r29_3->stiffness * lbl_1_rodata_78C4);
++        temp_r28->valueC = (f32) ((f32) temp_r29_3->valueC * lbl_1_rodata_78C4);
++        temp_r28->value10 = (f32) ((f32) temp_r29_3->value10 * lbl_1_rodata_78C4);
++        temp_r28->value14 = (f32) ((f32) temp_r29_3->value14 / lbl_1_rodata_78C8);
++        temp_r3_3 = temp_r29_3->steps;
++        temp_r28->steps = (s32) temp_r3_3;
++        temp_f1_3 = lbl_1_rodata_77E4 / (f32) temp_r3_3;
++        temp_r28->dt = temp_f1_3;
++        temp_r28->dtSquared = (f32) (temp_f1_3 * temp_f1_3);
++        temp_r28->inverseDt = (f32) (lbl_1_rodata_77E4 / (lbl_1_rodata_780C * temp_f1_3));
++        if (lbl_803C77B8.buttons & 0x40) {
++            temp_r28->steps = 1;
++        }
++        fn_80038CD0(temp_r29_3->count, &lbl_1_bss_6BD8.physics, lbl_1_bss_6BD8.points, lbl_1_rodata_7808, (f32) temp_r29_3->spacing * lbl_1_rodata_78C4);
++    } else if (lbl_803C77B8.held & 0x200) {
++        sp14.r=0x11;sp14.g=0x77;sp14.b=0x55;sp14.a=0;
++        sp10=sp14;
++        GXSetCopyClear(sp10, 0xFFFFFF);
++        temp_r3_4 = lbl_803CC1B8->currentDrawingItem;
++        temp_r3_4->loadingState = 1;
++        fn_800B0A14_removeQueue();
++    }
++    temp_r9 = ((Chain250Scene*)lbl_803CC1B8)->force;
++    temp_r5_3 = ((Chain250Scene*)lbl_803CC1B8)->count;
++    temp_r10 = lbl_1_bss_6BD8.points - 1;
++    temp_f4 = temp_r10[temp_r5_3].mass;
++    temp_f4_2 = (f32) temp_r9 * ((f32) (s8) ((Chain250Input*)&lbl_803C77B8)->x * temp_f4);
++    temp_f3 = (f32) temp_r9;
++    temp_f2 = temp_f3 * ((f32) (s8) ((Chain250Input*)&lbl_803C77B8)->y * temp_f4);
++    force.x = temp_f4_2;
++    temp_f1_4 = (f32) temp_r9;
++    force.y = temp_f2;
++    force.z = temp_f1_4 * ((f32) (s8) ((Chain250Input*)&lbl_803C77B8)->z * temp_f4);
++    fn_80038B48(&lbl_1_bss_6BD8.physics,lbl_1_bss_6BD8.points,temp_r5_3,&force);
++    GXSetProjection(lbl_1_bss_6BD8.projection, 0);
++    GXClearVtxDesc();
++    GXSetCullMode(0);
++    GXSetVtxDesc(9, 1);
++    GXSetVtxDesc(0xB, 1);
++    GXSetVtxAttrFmt(0, 9, 1, 4, 0);
++    GXSetVtxAttrFmt(0, 0xB, 1, 5, 0);
++    GXSetChanCtrl(4, 0, 1, 1, 0, 0, 2);
++    GXSetNumChans(1);
++    GXSetNumTexGens(1);
++    GXSetNumTevStages(1);
++    GXSetTevOp(0, 4);
++    GXLoadPosMtxImm(lbl_1_bss_6BD8.view, 0);
++    GXSetCurrentMtx(0);
++    fn_1_AF4(0xB, 0xB, lbl_1_rodata_7848);
++    var_r31 = temp_r27->count;
++    GXGetLineWidth(&sp8, &spC);
++    GXSetLineWidth(0x18U, spC);
++    GXBegin(0xB0, 0, var_r31);
++    var_r5 = var_r31;
++    var_r28 = lbl_1_bss_6BD8.points + var_r31;
++    var_r29 = lbl_1_data_10384 + var_r31;
++    var_r4 = var_r28;
++    var_r6 = var_r29;
++loop_83:
++    temp_cr0_eq = (s32) var_r5 == 0;
++    var_r5 -= 1;
++    --var_r4;
++    --var_r6;
++    if (temp_cr0_eq == 0) {
++        GXWGFifo.f32 = var_r4->position.x;
++        GXWGFifo.f32 = var_r4->position.y;
++        GXWGFifo.f32 = var_r4->position.z;
++        GXWGFifo.u32 = *var_r6;
++        goto loop_83;
++    }
++    GXSetLineWidth(sp8, spC);
++    GXBegin(0xA8, 0, (u8) (u16) (var_r31 * 4));
++loop_86:
++    temp_cr0_eq_2 = (s32) var_r31 == 0;
++    var_r31 -= 1;
++    --var_r28;
++    --var_r29;
++    if (temp_cr0_eq_2 == 0) {
++        GXWGFifo.f32 = (f32) var_r28->position.x;
++        GXWGFifo.f32 = (f32) var_r28->position.y;
++        GXWGFifo.f32 = (f32) var_r28->position.z;
++        GXWGFifo.u32 = *var_r29;
++        GXWGFifo.f32 = (f32) ((lbl_1_data_104A4 * var_r28->normal.x) + var_r28->position.x);
++        GXWGFifo.f32 = (f32) ((lbl_1_data_104A4 * var_r28->normal.y) + var_r28->position.y);
++        GXWGFifo.f32 = (f32) ((lbl_1_data_104A4 * var_r28->normal.z) + var_r28->position.z);
++        GXWGFifo.u32 = *var_r29;
++        GXWGFifo.f32 = (f32) var_r28->position.x;
++        GXWGFifo.f32 = (f32) var_r28->position.y;
++        GXWGFifo.f32 = (f32) var_r28->position.z;
++        GXWGFifo.u32 = *var_r29 ^ -0x100;
++        GXWGFifo.f32 = (f32) ((lbl_1_data_104A4 * var_r28->axis.x) + var_r28->position.x);
++        GXWGFifo.f32 = (f32) ((lbl_1_data_104A4 * var_r28->axis.y) + var_r28->position.y);
++        GXWGFifo.f32 = (f32) ((lbl_1_data_104A4 * var_r28->axis.z) + var_r28->position.z);
++        GXWGFifo.u32 = *var_r29 ^ -0x100;
++        goto loop_86;
++    }
+ }
+ 
++
+ // .text:0x00025C68 size:0x330
+ void fn_1_25C68(void) {
+     return;
