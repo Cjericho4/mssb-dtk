@@ -160,7 +160,7 @@ void __MTGQR6(u32 value);
 void __MTGQR7(u32 value);
 void GQRSetup7(void);
 void GQRSetup6(void);
-void GQRSetup5(void);
+void GQRSetup5(u32 loadScale,u32 loadType,u32 storeScale,u32 storeType);
 u8 fn_800BD2B0(Gap800B993CColor* out);
 void fn_800BD2CC(u8 enable, Gap800B993CColor* color);
 void fn_800BD2DC(void);
