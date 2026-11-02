@@ -32,7 +32,7 @@ void fn_1_5540(void);
 void fn_1_5544(void);
 void fn_1_5698(void);
 void fn_1_5924(void);
-void fn_1_5AC0(void);
+void fn_1_5AC0(u16* pixels,s32 width,s32 height,f32 scale);
 void fn_1_6050(u16* pixels, s32 width, s32 height, f32 scale);
 #include "Dolphin/GX/GXTexture.h"
 typedef struct ChallengeMipSettings {
