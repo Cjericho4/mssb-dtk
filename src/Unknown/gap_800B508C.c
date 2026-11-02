@@ -322,8 +322,7 @@ void GetData(u8 type, void* src, f32* dst, u8 count, f32 scale) {
 void DoTranslationAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
     Vec from;
     Vec to;
-    /* FAKEMATCH: retain the original interpolation scratch stores across the panic path. */
-    volatile f32 result[3];
+    f32 result[3];
     Vec outgoing;
     Vec incoming;
     f32 easeIn;
@@ -380,7 +379,7 @@ void DoTranslationAnimation(ANIMPipe* pipe, KeyFrame* current, KeyFrame* next) {
         break;
     }
     case 2: {
-        /* FAKEMATCH: associate the payload base with the tangent stride before the channel offset. */
+        /* FAKEMATCH: add the channel offset to the payload before the tangent stride. */
         GetData(type, &(&current->interpolation[offset])[vectorSize], &outgoing.x, 3, scale);
         GetData(type, &next->interpolation[offset], &incoming.x, 3, scale);
         bezierAnimationVector(result, &from.x, &to.x, &outgoing.x, &incoming.x, time);
