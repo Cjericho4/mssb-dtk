@@ -238,7 +238,7 @@ Dolphin/os/OSTime.c:
 	.data       start:0x8010CBC0 end:0x8010CC20
 
 Unknown/debug_bba.c:
-	.init       start:0x8000314C end:0x80003154
+	.init       start:0x80003140 end:0x80003154
 
 Dolphin/os/__ppc_eabi_init.cpp:
 	.init       start:0x80003400 end:0x80003458
