@@ -176,9 +176,8 @@ u8 fn_80012B90(struct Gap8001196CAnim* anim) {
         entry->arm = anim->rosterUnk26;
         entry->stance = anim->rosterUnk27;
         entry->valid = 1;
-        /* FAKEMATCH: keep the quotient ahead of the slot multiplier. */
-        pairIndex = lbl_803CBC04 / 3;
-        pairIndex += slotKind * 3;
+        /* FAKEMATCH: keep the slot product first to reproduce the index scratch registers. */
+        pairIndex = slotKind * 3 + lbl_803CBC04 / 3;
         lbl_803CBC04++;
         entry->obj0.index0 = pairIndex * 2;
         entry->obj1.index0 = pairIndex * 2 + 1;
@@ -465,8 +464,58 @@ void fn_80014204(void) {
 }
 
 // .text:0x800145F8 size:0x398
-void fn_800145F8(void) {
-    return;
+// Allocates and resets 13 sub-item pairs, using a roster-only or all-character maximum file size.
+void fn_800145F8(s32 allCharacters) {
+    u32 size;
+    u32 stride;
+    u32 team;
+    u32 player;
+    u32 charID;
+    u32 item;
+    u32 entry;
+    s16 descriptorIndex;
+    u32 maximum = 0;
+
+    if (allCharacters == 0) {
+        for (team = 0; team < 2; team++) {
+            for (player = 0; player < 9; player++) {
+                descriptorIndex = lbl_800EEAAC[inMemRoster[team][player].charID];
+                if (descriptorIndex >= 0) {
+                    for (item = 0; item < SUBITEM_FILES_PER_CHARACTER; item++) {
+                        size = lbl_803CB7A8[descriptorIndex + item].sizeFlags & 0x0FFFFFFF;
+                        if (maximum < size) maximum = size;
+                    }
+                }
+            }
+        }
+    } else {
+        for (charID = 0; charID < NUM_CHOOSABLE_CHARACTERS; charID++) {
+            descriptorIndex = lbl_800EEAAC[charID];
+            if (descriptorIndex >= 0) {
+                for (item = 0; item < SUBITEM_FILES_PER_CHARACTER; item++) {
+                    size = lbl_803CB7A8[descriptorIndex + item].sizeFlags & 0x0FFFFFFF;
+                    if (maximum < size) maximum = size;
+                }
+            }
+        }
+    }
+    stride = (maximum + 31) & ~31;
+    lbl_803CBC24 = _OSAllocFromHeap(32, stride * (SUBITEM_CACHE_ENTRIES * 2));
+    for (entry = 0; entry < SUBITEM_CACHE_ENTRIES; entry++) {
+        g_hugeAnimStruct.subItemEntries[entry].obj0.buf = lbl_803CBC24 + stride * (entry * 2);
+        g_hugeAnimStruct.subItemEntries[entry].obj1.buf = lbl_803CBC24 + stride * (entry * 2 + 1);
+    }
+    for (entry = 0; entry < SUBITEM_CACHE_ENTRIES; entry++) {
+        g_hugeAnimStruct.subItemEntries[entry].charID = CHAR_ID_NONE;
+        g_hugeAnimStruct.subItemEntries[entry].prevSlotKind = -1;
+        g_hugeAnimStruct.subItemEntries[entry].slotKind = -1;
+        g_hugeAnimStruct.subItemEntries[entry].arm = 0xFF;
+        g_hugeAnimStruct.subItemEntries[entry].stance = 0xFF;
+        g_hugeAnimStruct.subItemEntries[entry].textureArchive = NULL;
+        g_hugeAnimStruct.subItemEntries[entry].valid = 0;
+        g_hugeAnimStruct.subItemEntries[entry].obj0.index0 = entry * 2;
+        g_hugeAnimStruct.subItemEntries[entry].obj1.index0 = entry * 2 + 1;
+    }
 }
 
 // .text:0x80014990 size:0x88
@@ -1399,8 +1448,91 @@ void fn_80017DBC(void) {
 }
 
 // .text:0x80018024 size:0x24C
+// Allocates four body-file buffers from the largest retail character descriptors, with mode-6 alternates.
 void fn_80018024(void) {
-    return;
+    u32 maxAlternate = 0;
+    u32 maxBody = 0;
+    u32 bodySize;
+    u32 alternateSize;
+    s32 charID;
+    s32 descriptorIndex;
+    u8* cursor;
+
+    descriptorIndex = 0;
+    for (charID = 0; charID < NUM_CHOOSABLE_CHARACTERS; charID++) {
+        bodySize = lbl_803CB790[descriptorIndex].sizeFlags & 0x0FFFFFFF;
+        if (maxBody < bodySize) maxBody = bodySize;
+        alternateSize = lbl_803CB790[descriptorIndex + 1].sizeFlags & 0x0FFFFFFF;
+        if (maxAlternate < alternateSize) maxAlternate = alternateSize;
+        descriptorIndex += SUBFILE_TRACKS;
+    }
+    bodySize = (maxBody + 31) & ~31;
+    g_hugeAnimStruct.maxBodyFileSize = bodySize;
+    alternateSize = (maxAlternate + 31) & ~31;
+    if (g_d_GameSettings.mode == BODY_DOUBLE_BUFFER_MODE) {
+        g_hugeAnimStruct.bodyBufferPool = _OSAllocFromHeap(32, (bodySize + alternateSize) * RUNNING_BANKS);
+    } else {
+        g_hugeAnimStruct.bodyBufferPool = _OSAllocFromHeap(32, bodySize * RUNNING_BANKS);
+    }
+    cursor = g_hugeAnimStruct.bodyBufferPool;
+    /* FAKEMATCH: explicit slot stores retain more of the retail initialization schedule. */
+    if (g_d_GameSettings.mode == BODY_DOUBLE_BUFFER_MODE) {
+        g_hugeAnimStruct.slots[0].fileBuffer = cursor;
+        cursor += bodySize;
+        g_hugeAnimStruct.slots[0].stadiumObj = NULL;
+        g_hugeAnimStruct.slots[0].subItems = NULL;
+        g_hugeAnimStruct.slots[0].alternateFileBuffer = cursor;
+        cursor += alternateSize;
+        g_hugeAnimStruct.slots[4].stadiumObj = NULL;
+        g_hugeAnimStruct.slots[4].subItems = NULL;
+
+        g_hugeAnimStruct.slots[1].fileBuffer = cursor;
+        cursor += bodySize;
+        g_hugeAnimStruct.slots[1].stadiumObj = NULL;
+        g_hugeAnimStruct.slots[1].subItems = NULL;
+        g_hugeAnimStruct.slots[1].alternateFileBuffer = cursor;
+        cursor += alternateSize;
+        g_hugeAnimStruct.slots[5].stadiumObj = NULL;
+        g_hugeAnimStruct.slots[5].subItems = NULL;
+
+        g_hugeAnimStruct.slots[2].fileBuffer = cursor;
+        cursor += bodySize;
+        g_hugeAnimStruct.slots[2].stadiumObj = NULL;
+        g_hugeAnimStruct.slots[2].subItems = NULL;
+        g_hugeAnimStruct.slots[2].alternateFileBuffer = cursor;
+        cursor += alternateSize;
+        g_hugeAnimStruct.slots[6].stadiumObj = NULL;
+        g_hugeAnimStruct.slots[6].subItems = NULL;
+
+        g_hugeAnimStruct.slots[3].fileBuffer = cursor;
+        cursor += bodySize;
+        g_hugeAnimStruct.slots[3].stadiumObj = NULL;
+        g_hugeAnimStruct.slots[3].subItems = NULL;
+        g_hugeAnimStruct.slots[3].alternateFileBuffer = cursor;
+        cursor += alternateSize;
+        g_hugeAnimStruct.slots[7].stadiumObj = NULL;
+        g_hugeAnimStruct.slots[7].subItems = NULL;
+    } else {
+        g_hugeAnimStruct.slots[0].fileBuffer = cursor;
+        cursor += bodySize;
+        g_hugeAnimStruct.slots[0].stadiumObj = NULL;
+        g_hugeAnimStruct.slots[0].subItems = NULL;
+
+        g_hugeAnimStruct.slots[1].fileBuffer = cursor;
+        cursor += bodySize;
+        g_hugeAnimStruct.slots[1].stadiumObj = NULL;
+        g_hugeAnimStruct.slots[1].subItems = NULL;
+
+        g_hugeAnimStruct.slots[2].fileBuffer = cursor;
+        cursor += bodySize;
+        g_hugeAnimStruct.slots[2].stadiumObj = NULL;
+        g_hugeAnimStruct.slots[2].subItems = NULL;
+
+        g_hugeAnimStruct.slots[3].fileBuffer = cursor;
+        cursor += bodySize;
+        g_hugeAnimStruct.slots[3].stadiumObj = NULL;
+        g_hugeAnimStruct.slots[3].subItems = NULL;
+    }
 }
 
 // .text:0x80018270 size:0x650

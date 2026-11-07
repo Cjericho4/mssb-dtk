@@ -7,6 +7,33 @@ typedef struct PitchBankLoadState {
 } PitchBankLoadState;
 extern PitchBankLoadState lbl_803CBC3C;
 
+enum {
+    ANIMATION_SLOT_COUNT = 13,
+    ANIMATION_TIMER_LIMIT = 600,
+    ANIMATION_NONE = -1,
+    ANIMATION_SWITCH_IMMEDIATE = 1,
+    ANIMATION_SWITCH_ON_END = 2,
+    ANIMATION_DISPATCH_ALTERNATE = 2
+};
+
+/* Partial view: the flag at +0x28 gates animation frame counting. */
+typedef struct AnimationDispatchGameState {
+    u8 _pad0[0x28];
+    u8 unk_0x28;
+} AnimationDispatchGameState;
+extern AnimationDispatchGameState lbl_80366158;
+
+/* gap_800B117C.h cannot be included alongside gap_8001196C.h: their ANIMGet
+ * bank-buffer declarations disagree. Use its GameActor query signatures here;
+ * the legacy Gap8001196CActor view still needs reconciling with GameActor.
+ * gap_80048BEC.h also has a conflicting settings view and its event dispatcher
+ * lacks the f1 frame argument forwarded unchanged to the callback in retail. */
+struct GameActor;
+f32 fn_800B4A44(struct GameActor* actor, u16 index);
+f32 fn_800B4C40(struct GameActor* actor);
+s32 fn_8004AD54(u32 mode, u32 character);
+void fn_8004B208(Gap8001196CAnim* anim, s32 animation, s32 channel, f32 frame);
+
 // .text:0x8001B200 size:0x14
 void fn_8001B200(void) {
     return;
@@ -70,18 +97,91 @@ void AnimateCharacter(void) {
 }
 
 // .text:0x8001BA44 size:0x40C
-void fn_8001BA44(void) {
+/* FAKEMATCH: retain calls to the still-unimplemented animation installers. */
+#pragma dont_inline on
+void fn_8001BA44(s32 slot, s32 animation, s32 flags260, s32 flags263, s32 frames, s32 flags266, s32 flags26A) {
     return;
 }
 
 // .text:0x8001BE50 size:0x3E4
-void fn_8001BE50(void) {
+void fn_8001BE50(s32 slot, s32 animation, s32 flags260, s32 flags263, s32 frames, s32 flags266, s32 flags26A) {
     return;
 }
 
+#pragma dont_inline off
 // .text:0x8001C234 size:0x2F4
-void fn_8001C234(void) {
-    return;
+// Advances pending gameplay animations and reports changed slots before dispatching frame sound events.
+void fn_8001C234(u32* changedSlots) {
+    Gap8001196CAnim* anim;
+    s32 slot;
+    Gap8001196CAnimTable* animations = &g_hugeAnimStruct;
+    AnimationDispatchGameState* gameState = &lbl_80366158;
+    Gap8001196CGameSettings* settings = &g_d_GameSettings;
+    f32 frame;
+    f32 duration;
+    s32 boneIndex;
+    s32 overrideFrame;
+
+    *changedSlots = 0;
+    for (slot = 0; slot < ANIMATION_SLOT_COUNT; slot++) {
+        anim = animations->slotPtrs[slot];
+        if (anim != NULL && anim->unk25D != 0) {
+            if (anim->unk6A < ANIMATION_TIMER_LIMIT && gameState->unk_0x28 == 0 && lbl_803CBC3C.reset == 0 && anim->unk_0x26F == 0) {
+                anim->unk6A++;
+            }
+            duration = 1.0f;
+            if (animations->slotPtrs[slot] != NULL) boneIndex = (animations->slotPtrs[slot])->boneIndices[4];
+            else boneIndex = 0xFFFF;
+            if (boneIndex != 0xFFFF) {
+                duration = fn_800B4A44((struct GameActor*)animations->actorEntries[anim->blockIndex].slot.actor, boneIndex);
+            }
+            anim->unk68 = duration / anim->unk4C;
+            overrideFrame = anim->unk70;
+            if ((s16)overrideFrame >= 0) anim->unk68 = overrideFrame;
+            anim->unk70 = ANIMATION_NONE;
+            if (anim->unk25E == ANIMATION_SWITCH_IMMEDIATE ||
+                (anim->unk25E == ANIMATION_SWITCH_ON_END && anim->unk68 == 0 && anim->unk6A > 1) || anim->animID == ANIMATION_NONE) {
+                *changedSlots |= 1 << slot;
+                if (anim->nextAnim >= 0) {
+                    frame = anim->unk6C;
+                    if (settings->unk11 != 0 && settings->unk_0x06 == ANIMATION_DISPATCH_ALTERNATE) {
+                        fn_8001BA44(slot, anim->nextAnim, anim->unk260, anim->unk263, anim->unk6C, anim->unk266, anim->unk26A);
+                    } else {
+                        fn_8001BE50(slot, anim->nextAnim, anim->unk260, anim->unk263, anim->unk6C, anim->unk266, anim->unk26A);
+                    }
+                    anim->unk60 = anim->animID;
+                    anim->animID = anim->nextAnim;
+                    anim->nextAnim = ANIMATION_NONE;
+                    anim->unk25F = anim->unk260;
+                    anim->unk262 = anim->unk263;
+                    anim->unk265 = anim->unk266;
+                    anim->unk269 = anim->unk26A;
+                    anim->unk26C = anim->unk26D;
+                    anim->unk6A = 0;
+                    if (anim->unk66 >= 0) {
+                        anim->nextAnim = anim->unk66;
+                        anim->unk6C = anim->unk6E;
+                        anim->unk260 = anim->unk261;
+                        anim->unk263 = anim->unk264;
+                        anim->unk25E = ANIMATION_SWITCH_ON_END;
+                        anim->unk266 = anim->unk267;
+                        anim->unk26A = anim->unk26B;
+                        anim->unk26D = anim->unk26E;
+                        anim->unk66 = ANIMATION_NONE;
+                        continue;
+                    }
+                } else {
+                    frame = 0.0f;
+                }
+                anim->unk25E = 0;
+            } else {
+                frame = fn_800B4C40((struct GameActor*)animations->actorEntries[anim->blockIndex].slot.actor);
+            }
+            if (lbl_803CBC3C.reset == 0) {
+                fn_8004B208(anim, anim->animID, fn_8004AD54(settings->unk_0x09, anim->unk_0x275), frame);
+            }
+        }
+    }
 }
 
 // .text:0x8001C528 size:0x60

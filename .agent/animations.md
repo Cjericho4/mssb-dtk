@@ -150,7 +150,11 @@ exist, where that decode is wrong.
 ANIM type bits (not CTRL type bits): **1=translation, 2=scale, 4=Euler, 8=quaternion,
 0x10=matrix, 0x20=scale quaternion**. Setting record order: scale (3×elem) if bit 2, then scale
 quaternion (4×elem) if bit 0x20, then rotation (quaternion 8 B fixed, or Euler 3×elem), then
-translation (3×elem). Matrix tracks (0x10) are handled in `ANIMTick` alone: the twelve f32 of the
+translation (3×elem). **Euler exception (2026-11-01 C pass):** `DoEulerAnimation`
+at **0x800B6EC0..CC** skips only the scale vector when finding Euler settings; it does not
+skip a scale quaternion even when bit 0x20 is set. The general setting order above describes
+the quaternion/translation readers, not that mixed Euler layout. No Euler track occurs in the
+surveyed character banks. Matrix tracks (0x10) are handled in `ANIMTick` alone: the twelve f32 of the
 **current** key are multiplied **in place** by 2^−lowNibble every tick (compounding unless the low
 nibble is 0) and passed to `CTRLSetMatrix`; no interpolation.
 
@@ -181,6 +185,13 @@ clamps there), so this never fires.
 | quaternion | 5 | ease-remap `u`, then as mode 4 |
 | quaternion | 6 | slerp(cur, next, u) |
 | anything else | | `OSPanic` |
+
+**Scale-axis quaternion clarification (2026-11-01 C pass):** scale mode 0 holds it;
+scale modes 1 and 2 slerp it with the original `u`, and scale mode 3 slerps it with the
+same ease-remapped `u` used for the Hermite scale vector. It has no separate interpolation
+mode or auxiliary tangent payload. When absent, `DoScaleAnimation` installs the identity
+scale quaternion. The interpolation formulas above were confirmed; no arithmetic correction
+was found during this pass.
 
 slerp (shared by 6, `Squad`, the scale-quaternion path and the control blend): `c = dot(a,b)`;
 if `1 + c > 1e−6`: if `1 − c > 1e−6` then `w0 = sin((1−u)θ)/sinθ, w1 = sin(uθ)/sinθ` with
@@ -429,6 +440,13 @@ ACTSetAnimation -> ACTSetBoneTrack / ANIMBind -> AnimateActorBones -> ANIMTick -
 
 `AnimateCharacter` records loop/transition parameters and starting frame, avoiding some redundant
 requests. `QueueCharacterAnimation` (0x8001B918) supplies a queued follow-on request.
+`fn_8001C234(u32* changedSlots)` is **MATCH** on codex-anim (2026-11-01). It clears the
+output bitmask, examines all 13 slots, and sets a slot's bit when transition processing is
+requested (even if no pending ID is available). A queued follow-on is promoted after the pending
+request is installed. Its frame counter saturates at 600 and respects the global/per-slot gates.
+The audio/event call receives `(slot record, current ID, channel, frame)`; its float frame argument
+is forwarded in f1 by `fn_8004B208`, despite that function's older integer-only declaration.
+
 `fn_8001C234` dispatches the pending animation, copies current+0x62 to previous+0x60, pending to
 current, then clears pending to −1. The two dispatchers implement the partition in §1 and set
 instance bank/sequence, flags, blend increment and initial time = requested frame × slot+0x4C.

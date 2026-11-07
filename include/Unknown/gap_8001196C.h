@@ -15,7 +15,7 @@ void LoadModel(void);
 u8 fn_80013680(struct Gap8001196CAnim* anim);
 u8 fn_80012B90(struct Gap8001196CAnim* anim);
 void fn_80014204(void);
-void fn_800145F8(void);
+void fn_800145F8(s32 allCharacters);
 void fn_80014990(void);
 void fn_80014A18(void);
 void fn_80014D4C(void);
@@ -41,6 +41,7 @@ typedef struct Gap8001196CStadiumObj {
     /* 0x61 */ u8 index1;                    /* slot (stadium objects) */
     u8 _pad62[2];
 } Gap8001196CStadiumObj;                     /* 0x64 */
+STATIC_ASSERT(sizeof(Gap8001196CStadiumObj) == 0x64);
 /* one bat/glove pair of a character: two sub-item models plus bookkeeping (fn_80012B90) */
 typedef struct Gap8001196CSubItemEntry {
     /* 0x00 */ Gap8001196CStadiumObj obj0;
@@ -54,6 +55,7 @@ typedef struct Gap8001196CSubItemEntry {
     /* 0xD1 */ s8 prevSlotKind;
     u8 _padD2[2];
 } Gap8001196CSubItemEntry;                   /* 0xD4 */
+STATIC_ASSERT(sizeof(Gap8001196CSubItemEntry) == 0xD4);
 
 extern Gap8001196CStadiumObj lbl_80118220[13];
 extern u8 lbl_803CBC04;                      /* fn_80012B90 step 0..8 */
@@ -106,7 +108,7 @@ typedef struct Gap8001196CAnim {
     };
     u8 _pad4[4];
     /* 0x008 */ u8* fileBuffer;              /* body .gpc / anim bank buffer */
-    u8 _padC[4];
+    /* 0x00C */ u8* alternateFileBuffer; /* track 1 body in mode 6 */
     union {
         /* 0x010 */ struct Gap8001196CSlotTable* slotTables[9];
         struct {
@@ -121,7 +123,9 @@ typedef struct Gap8001196CAnim {
             /* 0x030 */ struct Gap8001196CSubItemEntry* subItems; /* &g_hugeAnimStruct.subItemEntries[slotKind*3] once fn_80012B90 is done */
         };
     };
-    u8 _pad34[0x60 - 0x34];
+    u8 _pad34[0x4C - 0x34];
+    /* 0x04C */ f32 unk4C;
+    u8 _pad50[0x60 - 0x50];
     /* 0x060 */ s16 unk60;
     /* 0x062 */ s16 animID;
     /* 0x064 */ s16 nextAnim;
@@ -130,7 +134,8 @@ typedef struct Gap8001196CAnim {
     /* 0x06A */ s16 unk6A;
     /* 0x06C */ s16 unk6C;
     /* 0x06E */ s16 unk6E;
-    u8 _pad70[0x162 - 0x70];
+    /* 0x070 */ s16 unk70;
+    u8 _pad72[0x162 - 0x72];
     /* 0x162 */ u16 boneIndices[120];        /* bone id -> actor bone index, 0xFFFF = none */
     /* 0x252 */ s8 charID;
     u8 _pad253;
@@ -161,16 +166,19 @@ typedef struct Gap8001196CAnim {
     /* 0x26C */ u8 unk26C;
     /* 0x26D */ u8 unk26D;
     /* 0x26E */ u8 unk26E;
-    u8 _pad26F;
+    /* 0x26F */ u8 unk_0x26F;
     /* 0x270 */ u8 unk270;
     /* 0x271 */ u8 unk271;
     /* 0x272 */ u8 unk272;
     /* 0x273 */ u8 unk273;
-    u8 _pad274[3];
+    u8 _pad274;
+    /* 0x275 */ u8 unk_0x275;
+    u8 _pad276;
     /* 0x277 */ u8 unk277;
     /* 0x278 */ u8 isBatter;
     u8 _pad279[0x27C - 0x279];
 } Gap8001196CAnim;
+STATIC_ASSERT(sizeof(Gap8001196CAnim) == 0x27C);
 /* per memory-block (Gap8001196CAnim.blockIndex) animation-bank buffers, filled by fn_80016B60 */
 typedef struct Gap8001196CSlotBanks {
     /* 0x00 */ u8* bankA;                    /* -> Gap8001196CAnim.animBankA (subfile track 4, or 13 in mode 7) */
@@ -232,13 +240,13 @@ typedef struct Gap8001196CAnimTable {
     /* 0x00B8 */ void* unkB8;
     u8 _padBC[0x13C - 0xBC];
     /* 0x013C */ Gap8001196CActorEntry* subItemActorEntries; /* actor entries for bats/gloves */
-    /* 0x0140 */ Gap8001196CSubItemEntry subItemEntries[12]; /* [slotKind*3 + k], three bat/glove pairs per slot kind (0x140..0xB30) */
-    u8 _padB30[0xC04 - 0xB30];
+    /* 0x0140 */ Gap8001196CSubItemEntry subItemEntries[13]; /* 13 cached pairs, 0x140..0xC04 */
     /* 0x0C04 */ Gap8001196CAnim slots[13];
     /* 0x2C50 */ Gap8001196CAnim* slotPtrs[13];
     u8 _pad2C84[4];
     /* 0x2C88 */ u8* allocatedAnimBanks;
-    u8 _pad2C8C[0x2CA4 - 0x2C8C];
+    /* 0x2C8C */ u8* bodyBufferPool;
+    u8 _pad2C90[0x2CA4 - 0x2C90];
     /* 0x2CA4 */ u32 maxTrack15Size;
     u8 _pad2CA8[4];
     /* 0x2CAC */ u8* sharedAnimBank;
@@ -263,7 +271,9 @@ typedef struct Gap8001196CAnimTable {
             /* 0x2D54 */ void* cachedBatterData;
             /* 0x2D58 */ u32 cachedBatterSize;
             /* 0x2D5C */ s16 cachedBatterCharID;
-            u8 _pad2D5E[0x2D6A - 0x2D5E];
+            u8 _pad2D5E[0x2D64 - 0x2D5E];
+            /* 0x2D64 */ u32 maxBodyFileSize;
+            u8 _pad2D68[2];
             /* 0x2D6A */ s8 slotOwner[13];   /* slotKind using slots[i], -1 = free (fn_80017098) */
             /* 0x2D77 */ u8 loadState;       /* fn_80016344/fn_80016710 state: 1 queued, 2..5 loading, 6 done */
             /* 0x2D78 */ u8 reused;          /* fn_80017098 result: the slot was already loaded (fn_8001500C) */
@@ -277,7 +287,16 @@ typedef struct Gap8001196CAnimTable {
         };
     };
 } Gap8001196CAnimTable;
-typedef struct Gap8001196CGameSettings { u8 _pad0[7]; u8 mode; u8 _pad8[9]; u8 unk11; u8 _pad12[0x46]; } Gap8001196CGameSettings; /* 0x58, g_d_GameSettings @0x800E86FC */
+typedef struct Gap8001196CGameSettings {
+    u8 _pad0[6];
+    /* 0x06 */ u8 unk_0x06;
+    /* 0x07 */ u8 mode;
+    u8 _pad8;
+    /* 0x09 */ u8 unk_0x09;
+    u8 _padA[7];
+    /* 0x11 */ u8 unk11;
+    u8 _pad12[0x46];
+} Gap8001196CGameSettings; /* 0x58, g_d_GameSettings @0x800E86FC */
 extern Gap8001196CGameSettings g_d_GameSettings;
 extern Gap8001196CAnimTable g_hugeAnimStruct;
 typedef struct Gap8001196CRosterEntry { u8 _pad0[0x24]; s16 charID; u8 unk26; u8 unk27; u8 _pad28[0x78]; } Gap8001196CRosterEntry; /* 0xA0 */
@@ -288,6 +307,12 @@ typedef struct Gap8001196CFlags { u8 _pad0[0x1E8]; u8 loadBusy; } Gap8001196CFla
 extern Gap8001196CFlags lbl_803716B8;
 /* disc file descriptor, 16 bytes (DiskFileDesc in gap_8001E460.h) */
 typedef struct Gap8001196CDiskDesc { u32 flags; u32 sizeFlags; u32 discOffset; u32 compressedSize; } Gap8001196CDiskDesc;
+STATIC_ASSERT(sizeof(Gap8001196CDiskDesc) == 0x10);
+extern Gap8001196CDiskDesc* lbl_803CB7A8; /* runtime sub-item descriptors */
+extern u8* lbl_803CBC24; /* backing allocation for 26 sub-item file buffers */
+#define SUBITEM_FILES_PER_CHARACTER 6
+#define SUBITEM_CACHE_ENTRIES 13
+#define BODY_DOUBLE_BUFFER_MODE 6
 #define SUBFILE_TRACKS 19
 #define RUNNING_BANKS 4       /* running banks cached for the runner slots (fn_80017340) */
 #define RUNNER_SLOT0 9        /* first of the RUNNING_BANKS anim slots that share them */

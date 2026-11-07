@@ -48,7 +48,15 @@ typedef struct Gap8002244CDiskDesc {
     /* 0x8 */ u32 discOffset;
     /* 0xC */ u32 compressedSize;
 } Gap8002244CDiskDesc;
+STATIC_ASSERT(sizeof(Gap8002244CDiskDesc) == 0x10);
 #define MASTER_DESC_SUBITEM_BASE 54
+#define MODEL_ARAM_BLOB_SIZE 0x4D6600
+#define MODEL_ARAM_TIERS 4
+#define MODEL_ARAM_DESCRIPTORS 515
+extern void* lbl_8017E320[MODEL_ARAM_DESCRIPTORS];
+extern u16 lbl_803CB7E0[MODEL_ARAM_TIERS];
+extern Gap8002244CDiskDesc lbl_800F1D68[1];
+u32 fn_800A6418(u32 size);
 extern Gap8002244CDiskDesc lbl_800EFD38[];
 /* memory block a sub-item is loaded into; the aligned file size is kept at 0xC */
 typedef struct Gap8002244CLoadBlock {
@@ -78,11 +86,16 @@ typedef struct Gap8002244CFlags {
     u8 _pad1CB;
     u32 current; /* 0x1CC */
     u32 pending; /* 0x1D0 */
-    u8 _pad1D4[4];
-    /* 0x1D8 */ void** bodyAramAddrs;
-    /* 0x1DC */ void** subItemAramAddrs;
-    /* 0x1E0 */ void** skeletonAramAddrs;
-    u8 _pad1E4[4];
+    /* 0x1D4 */ u32 modelAramBase;
+    union {
+        struct {
+            /* 0x1D8 */ void** bodyAramAddrs;
+            /* 0x1DC */ void** subItemAramAddrs;
+            /* 0x1E0 */ void** skeletonAramAddrs;
+            /* 0x1E4 */ void** stadiumAramAddrs;
+        };
+        void** tierAramAddrs[4];
+    };
     /* 0x1E8 */ u8 unk1E8;
     u8 unk1E9;
     u8 flags;
