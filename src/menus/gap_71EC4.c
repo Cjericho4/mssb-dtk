@@ -459,8 +459,7 @@ void fn_2_74E14(void) {
 void fn_2_74F40(DrawingSceneStruct* scene, s32 index) {
     s32 charID;
     s32 i;
-    s32 rating[4];
-    s32 pane[4];
+    s32 pitching, running, batting, fielding;
     s32 colour;
     u32 texture;
     MenusCharacterStats* stats;
@@ -470,11 +469,40 @@ void fn_2_74F40(DrawingSceneStruct* scene, s32 index) {
         else
             charID = lbl_800FE930[lbl_80361B20.challengeCaptainPage][lbl_2_bss_F410.selections[0]];
         stats = &lbl_8034E9A0.stats[charID / 9][charID % 9];
-        rating[0] = stats->pitchingDisplay;
-        rating[1] = stats->runningDisplay;
-        rating[2] = stats->battingDisplay;
-        rating[3] = stats->fieldingDisplay;
-        goto bars;
+        pitching = stats->pitchingDisplay;
+        running = stats->runningDisplay;
+        batting = stats->battingDisplay;
+        fielding = stats->fieldingDisplay;
+            lbl_80371C30[scene->unkIndex + index + 0x97].obj->flags |= 2;
+            lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x5C = 0;
+            lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x68 = 1;
+            lbl_80371C30[scene->unkIndex + index * 4 + 0x9C].obj->field_0x5C = (pitching - 1) << 16;
+            texture = fn_80036214(scene, 0xAB, 0, (pitching + 1) / 2 - 1);
+            lbl_80371C30[scene->unkIndex + index * 4 + 0x9C + 8].obj->field_0x5C = (pitching - 1) << 16;
+            lbl_80371C30[scene->unkIndex + index * 4 + 0x9C + 8].obj->field_0x58 = texture;
+            lbl_80371C30[scene->unkIndex + index + 0x97].obj->flags |= 2;
+            lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x5C = 0;
+            lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x68 = 1;
+            lbl_80371C30[scene->unkIndex + index * 4 + 0x9E].obj->field_0x5C = (running - 1) << 16;
+            texture = fn_80036214(scene, 0xAB, 0, (running + 1) / 2 - 1);
+            lbl_80371C30[scene->unkIndex + index * 4 + 0x9E + 8].obj->field_0x5C = (running - 1) << 16;
+            lbl_80371C30[scene->unkIndex + index * 4 + 0x9E + 8].obj->field_0x58 = texture;
+            lbl_80371C30[scene->unkIndex + index + 0x97].obj->flags |= 2;
+            lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x5C = 0;
+            lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x68 = 1;
+            lbl_80371C30[scene->unkIndex + index * 4 + 0x9B].obj->field_0x5C = (batting - 1) << 16;
+            texture = fn_80036214(scene, 0xAB, 0, (batting + 1) / 2 - 1);
+            lbl_80371C30[scene->unkIndex + index * 4 + 0x9B + 8].obj->field_0x5C = (batting - 1) << 16;
+            lbl_80371C30[scene->unkIndex + index * 4 + 0x9B + 8].obj->field_0x58 = texture;
+            lbl_80371C30[scene->unkIndex + index + 0x97].obj->flags |= 2;
+            lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x5C = 0;
+            lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x68 = 1;
+            lbl_80371C30[scene->unkIndex + index * 4 + 0x9D].obj->field_0x5C = (fielding - 1) << 16;
+            texture = fn_80036214(scene, 0xAB, 0, (fielding + 1) / 2 - 1);
+            lbl_80371C30[scene->unkIndex + index * 4 + 0x9D + 8].obj->field_0x5C = (fielding - 1) << 16;
+            lbl_80371C30[scene->unkIndex + index * 4 + 0x9D + 8].obj->field_0x58 = texture;
+        lbl_80371C30[scene->unkIndex + index + 0xAE].obj->flags &= ~2;
+        return;
     }
     if (lbl_2_bss_F468.flags41[index]) {
         charID = lbl_2_bss_F410.gridPick[index];
@@ -510,10 +538,10 @@ void fn_2_74F40(DrawingSceneStruct* scene, s32 index) {
     lbl_80371C30[scene->unkIndex + index + 0xAC].obj->flags |= 2;
     if (charID >= 0 && charID < 54) {
         stats = &lbl_8034E9A0.stats[charID / 9][charID % 9];
-        rating[0] = stats->pitchingDisplay;
-        rating[1] = stats->runningDisplay;
-        rating[2] = stats->battingDisplay;
-        rating[3] = stats->fieldingDisplay;
+        pitching = stats->pitchingDisplay;
+        running = stats->runningDisplay;
+        batting = stats->battingDisplay;
+        fielding = stats->fieldingDisplay;
         lbl_80371C30[scene->unkIndex + index + 0xB0].obj->flags |= 2;
         lbl_80371C30[scene->unkIndex + index + 0xB0].obj->field_0x5C = charID << 16;
         lbl_80371C30[scene->unkIndex + index + 0xAC].obj->field_0x5C = 0;
@@ -523,19 +551,34 @@ void fn_2_74F40(DrawingSceneStruct* scene, s32 index) {
         lbl_80371C30[scene->unkIndex + index + 0x97].obj->flags &= ~2;
         return;
     }
-bars:
-    pane[0] = 0x9C; pane[1] = 0x9E; pane[2] = 0x9B; pane[3] = 0x9D;
-    for (i = 0; i < 4; i++) {
         lbl_80371C30[scene->unkIndex + index + 0x97].obj->flags |= 2;
         lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x5C = 0;
         lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x68 = 1;
-        lbl_80371C30[scene->unkIndex + index * 4 + pane[i]].obj->field_0x5C = (rating[i] - 1) << 16;
-        texture = fn_80036214(scene, 0xAB, 0, (rating[i] + 1) / 2 - 1);
-        lbl_80371C30[scene->unkIndex + index * 4 + pane[i] + 8].obj->field_0x5C = (rating[i] - 1) << 16;
-        lbl_80371C30[scene->unkIndex + index * 4 + pane[i] + 8].obj->field_0x58 = texture;
-    }
-    if (lbl_803CBBCC->selection == 9 || lbl_803C66B0.flags5D[index] == 0xB)
-        lbl_80371C30[scene->unkIndex + index + 0xAE].obj->flags &= ~2;
+        lbl_80371C30[scene->unkIndex + index * 4 + 0x9C].obj->field_0x5C = (pitching - 1) << 16;
+        texture = fn_80036214(scene, 0xAB, 0, (pitching + 1) / 2 - 1);
+        lbl_80371C30[scene->unkIndex + index * 4 + 0x9C + 8].obj->field_0x5C = (pitching - 1) << 16;
+        lbl_80371C30[scene->unkIndex + index * 4 + 0x9C + 8].obj->field_0x58 = texture;
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x5C = 0;
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x68 = 1;
+        lbl_80371C30[scene->unkIndex + index * 4 + 0x9E].obj->field_0x5C = (running - 1) << 16;
+        texture = fn_80036214(scene, 0xAB, 0, (running + 1) / 2 - 1);
+        lbl_80371C30[scene->unkIndex + index * 4 + 0x9E + 8].obj->field_0x5C = (running - 1) << 16;
+        lbl_80371C30[scene->unkIndex + index * 4 + 0x9E + 8].obj->field_0x58 = texture;
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x5C = 0;
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x68 = 1;
+        lbl_80371C30[scene->unkIndex + index * 4 + 0x9B].obj->field_0x5C = (batting - 1) << 16;
+        texture = fn_80036214(scene, 0xAB, 0, (batting + 1) / 2 - 1);
+        lbl_80371C30[scene->unkIndex + index * 4 + 0x9B + 8].obj->field_0x5C = (batting - 1) << 16;
+        lbl_80371C30[scene->unkIndex + index * 4 + 0x9B + 8].obj->field_0x58 = texture;
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->flags |= 2;
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x5C = 0;
+        lbl_80371C30[scene->unkIndex + index + 0x97].obj->field_0x68 = 1;
+        lbl_80371C30[scene->unkIndex + index * 4 + 0x9D].obj->field_0x5C = (fielding - 1) << 16;
+        texture = fn_80036214(scene, 0xAB, 0, (fielding + 1) / 2 - 1);
+        lbl_80371C30[scene->unkIndex + index * 4 + 0x9D + 8].obj->field_0x5C = (fielding - 1) << 16;
+        lbl_80371C30[scene->unkIndex + index * 4 + 0x9D + 8].obj->field_0x58 = texture;
 }
 
 // .text:0x00075B58 size:0x8C
