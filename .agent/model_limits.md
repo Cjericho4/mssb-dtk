@@ -173,3 +173,10 @@ bone arrays, matrix arrays and per-bone/display data from that workspace.
 Growing a body file allocation does not grow the actor workspace. Deriving
 allowed geometry/bone expansion requires accounting for that independent layout;
 there is no general vertex-count ceiling established by the three functions here.
+
+
+2026-11-01 latest matching continuation: all sizing formulas above remain unchanged.
+fn_800145F8 remains 98.208694%; fn_80018024 remains 76.17007%. Each received
+five refinements and retains its prior source. Final ninja succeeds and all 4141
+exact matches are preserved. Complete remaining instruction diffs are in
+`fn_800145F8.final.diff` and `fn_80018024.final.diff`; no runtime asset test was run.
