@@ -29,7 +29,7 @@ void fn_8001CCC8(void);
 void fn_8001CE74(void);
 void fn_8001D074(void);
 void fn_8001D0D0(void);
-void fn_8001D110(void);
+void fn_8001D110(s32 index, f32 x, f32 y, f32 z);
 void fn_8001D148(void);
 void fn_8001D180(void);
 void fn_8001D2D4(void);
