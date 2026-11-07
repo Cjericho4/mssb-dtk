@@ -223,7 +223,7 @@ typedef struct Gap8001196CRootHeader {
 typedef struct Gap8001196CAnimTable {
     u8 _pad0[0x60];
     /* 0x0060 */ Gap8001196CActorEntry* actorEntries;
-    u8 _pad64[4];
+    /* 0x0064 */ Gap8001196CActorEntry* actorEntries64;
     /* 0x0068 */ Gap8001196CActorEntry* actorEntries68;
     u8 _pad6C[0xAC - 0x6C];
     /* 0x00AC */ void* unkAC;
