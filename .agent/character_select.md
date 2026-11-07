@@ -479,3 +479,74 @@ confirmed pick plus the roster card and chemistry. Neither writes `teams[]`.
 So a skin picker hooks the L choice in `fn_2_3624` / `fn_2_A040`, keeps a per-slot skin next to
 `teams[side][slot]`, and then feeds the charID-keyed UI paths above (and the model loader) from it.
 
+
+## CPU roster selection and deterministic tests
+
+Use this section when changing CPU roster composition or reproducing a selection.
+The evidence is the retail assembly for `fn_80067F70` in
+`build/GYQE01/asm/Unknown/gap_80067AC8.s`.
+
+1. The function truncates the player index to eight bits.
+2. It copies the selected captain into roster slot zero.
+3. It calls `fn_80067C48` to rank all 54 character IDs by chemistry.
+4. It excludes IDs with a nonzero taken flag at `lbl_8034E9A0 + 0x4757`.
+5. Before each remaining roster slot, it moves candidates across empty entries.
+6. It calls `randRange(0, 19)` until the selected candidate is not -1.
+7. It marks the selected ID and its color-family members as taken.
+8. It removes every family member from the candidate list.
+9. It replaces a family member with the family's first ID before storing the roster slot.
+10. It stores the resulting character's chemistry with the captain in `selectionFlags`.
+11. It initializes three lineup-index bytes per slot, then calls `fn_800670A0`.
+
+The two family walks have different purposes.
+The first updates global taken flags (`0x80068180..0x80068240`).
+The second removes candidates and selects the family's first ID (`0x80068240..0x8006838C`).
+Thus a randomly chosen variant does not remain a variant in the resulting CPU roster.
+
+The chemistry read uses the resulting character as the row and the captain as the column.
+See `0x8006838C..0x800683D4`; each row occupies 0xA0 bytes, with chemistry at offset 0x3B.
+Do not reverse those keys when reproducing selection behavior.
+
+`randRange` uses the global state `lbl_803CB750`.
+Its assembly updates that state with `state * 0x5D588B65 + 1`, then uses the upper 16 bits.
+The range includes both endpoints; this call selects indices 0 through 19.
+See `src/Unknown/gap_80041348.c:randRange` and its retail assembly.
+
+For deterministic tests, preserve the random state, ranked list, captain, and taken flags.
+Retries consume additional random values.
+The retry loop has no empty-list fallback.
+If all candidates disappear, the retail loop cannot finish.
+
+## Preview keys and compilation structure
+
+Use these anchors when adding character artwork or changing the preview display:
+
+| Function | Input key and behavior |
+|---|---|
+| `fn_2_7F8BC` | Resolves visible cursor through `order[side]`; writes raw roster charID into the mini-portrait frame. |
+| `fn_2_776A0` | Consumes `unk50[side]`, refreshes that portrait and preview, then clears the request. |
+| `fn_80051D00` | Reads charID from the 36-cell `lbl_800FDE84` grid; passes it to sequence 0x19. |
+| `fn_2_74F40` | Reads stats by raw charID; uses separate captain-grid and roster-preview paths. |
+
+These handlers do not call `fn_800698F8` to select their portrait or rating keys.
+That lookup collapses variants to their base grid index and has a separate alternate-Birdo case.
+
+`fn_2_74F40` renders four rating bars in this order:
+
+| Rating | Main pane | Texture pane |
+|---|---|---|
+| Pitching | 0x9C | 0xA4 |
+| Running | 0x9E | 0xA6 |
+| Batting | 0x9B | 0xA3 |
+| Fielding | 0x9D | 0xA5 |
+
+Each pane also receives `side * 4`.
+The frame is `(rating - 1) << 16`.
+The texture ordinal is `(rating + 1) / 2 - 1`.
+
+The retail function contains two separate copies of this four-bar sequence.
+The captain path hides pane `side + 0xAE` and exits before the roster-preview path.
+A shared loop with stack arrays produces substantially different code.
+Preserve the separate branches when refining a matching decompilation.
+
+Evidence: `src/menus/gap_71EC4.c`, `src/Unknown/gap_800506E8.c`, and the corresponding retail assembly.
