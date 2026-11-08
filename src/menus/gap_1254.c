@@ -17,7 +17,7 @@
  * Declarations agree with the owning headers except the two conflicts documented below. */
 extern s16 lbl_80108EDC[][5];                                    /* gap_80067AC8.h */
 extern s16 fn_80067AC8(s16 key, s8 column);                      /* gap_80067AC8.h */
-extern u8 fn_80067B40(u8 side, u8 id, s32 enabled);              /* header says (s32, s16, u8); its body is unmatched, settle the types when it matches */
+extern u8 fn_80067B40(u8 side, u8 charID, u8 value);
 extern s32 randRange(s32 low, s32 high);                         /* gap_80041348.h */
 extern void sndFXRelated(s32 id);                                /* gap_80041348.h */
 extern void fn_8004EEF4(s32 a, s32 b, s32 c, s32 d, s32 enabled); /* gap_8004CA48.h */

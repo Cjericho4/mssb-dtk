@@ -17,26 +17,21 @@ s16 fn_80067AC8(s16 key, s8 column) {
 }
 
 // .text:0x80067B40 size:0x108
-/* fn_80067B40 -- mark every colour variant of charID's family as taken/free on the roster grid.
- * arg0: unused (passed by callers, not read); charID: the picked character (compared as u8, so
- * -1 never matches: a 0xFF charID returns 0 immediately); value: byte written into
- * lbl_8034E9A0.charsOnCharacterGridSelected[member] for each member of the family row of
- * lbl_80108EDC that contains charID, except value == 2 which only queries.  Returns 1 when charID
- * belongs to a colour family, else 0.  The retail compiler fully unrolls the 5-member loop.
- * Match status: NOT matched -- 8 lines: the u8 key lands in r7 (fresh reg) and the row/column
- * walkers in r6/r4 in retail; here the key stays in r4.  Explicit walkers made it worse. */
-u8 fn_80067B40(s32 arg0, s16 charID, u8 value) {
+// Marks (value 0/1) or only queries (value 2) every colour variant of charID's family in the
+// roster grid taken-flags; returns 1 when charID belongs to a colour family, else 0.
+// `side` is passed by every caller but never read. charID arrives as the zero-extended byte the
+// callers pass, so the retail `== -1` guard can never fire; it is kept because the binary has it.
+u8 fn_80067B40(u8 side, u8 charID, u8 value) {
     s32 i;
     s32 j;
     s32 k;
     s16 member;
-    s32 id = (u8)charID;
-    if (id == -1) {
+    if (charID == -1) {
         return 0;
     }
     for (i = 0; i < 9; i++) {
         for (j = 0; j < 5; j++) {
-            if (id == lbl_80108EDC[i][j]) {
+            if (charID == lbl_80108EDC[i][j]) {
                 for (k = 0; k < 5; k++) {
                     member = lbl_80108EDC[i][k];
                     if (member != -1 && value != 2) {

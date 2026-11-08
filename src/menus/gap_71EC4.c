@@ -24,7 +24,7 @@ extern void fn_800363D8(DrawingSceneStruct* scene, s32 index, s32 enabled, s32 v
 extern void fn_80053FE8(void);
 extern u8 lbl_800FE5D4[12];
 extern u8 lbl_800FE930[][6];
-extern u8 fn_80067B40(u8 side, u8 id, s32 mode);
+extern u8 fn_80067B40(u8 side, u8 charID, u8 value);
 extern s32 fn_80036214(DrawingSceneStruct* scene, s32 pane, s32 list, s32 index);
 extern void fn_80051D00(void);
 extern s32 fn_80042DA8(DrawingSceneStruct* scene, s32 index, s32 value);
