@@ -180,3 +180,182 @@ fn_800145F8 remains 98.208694%; fn_80018024 remains 76.17007%. Each received
 five refinements and retains its prior source. Final ninja succeeds and all 4141
 exact matches are preserved. Complete remaining instruction diffs are in
 `fn_800145F8.final.diff` and `fn_80018024.final.diff`; no runtime asset test was run.
+
+## Runtime limits for a new body on an existing skeleton (Codex read-only audit, 2026-11-08)
+
+All from target asm; no custom-model runtime test yet.
+
+### 1. Actor workspace: exact allocation and headroom
+
+**The 0x86A0-byte workspace limits runtime structure size, not mesh size directly.**
+
+`fn_80023B04` allocates `count × 0x86A0`, with consecutive slots spaced by that amount: `mullw` at **80023B20**, allocation at **80023B28**, stride at **80023B48–50**. Neither it nor the builders checks the final cursor against the slot’s end.
+
+Evidence: [actor builders, C](../src/Unknown/gap_8002244C.c:319), [target assembly](../build/GYQE01/asm/Unknown/gap_8002244C.s).
+
+Let `A(x) = (x + 31) & ~31`, `N = totalBones`, `S = 1` when `skinFileID != 0xFFFF`, and `L = 1` when the skin display object has lighting data.
+
+```text
+workspace =
+    0xA0                         actor
+  + A(4N)                        bone pointer array
+  + (1 + 2S + S·L) × A(0x30N)   matrix arrays
+  + 0x140N                       runtime bones
+  + 0x20N                        animation pipes
+  + sum(display-object costs)
+```
+
+Matrix arrays are forward matrices, plus skin and inverse-orientation matrices when skinned, plus inverse-transpose matrices when lit.
+
+For **each instantiated display object**:
+
+```text
+D(layout) =
+    0x80
+  + 0x20 × (position-header-present
+          + colour-header-present
+          + lighting-header-present
+          + display-header-present)
+  + A(0x10 × textureChannelCount)  [when texture data and count are nonzero]
+```
+
+The instantiated objects are the skin object plus **one per bone with a valid geometry reference**. Reusing a descriptor on several bones still creates several copies.
+
+Evidence:
+
+- `f_InitActorWithLayout`: bone-pointer/matrix sizing **80023314–34**; actor `0xA0`, bone stride `0x140`, reservation arithmetic **800233C0–80023418**.
+- `f_InitBone`: reserves `0x80` before calling `fn_80023078` at **80022ECC**; each animation pipe advances the cursor by `0x20` at **80022F0C**.
+- `fn_80023078`: copies only headers. Position/colour/lighting/display each advance by `0x20` at **800230A8**, **800230E8**, **800231C4**, **8002320C**; texture-header storage is `A(16T)` at **80023138–50**.
+
+**Nothing here scales directly with vertex count, triangle count, skin-list counts, morph-shape counts, or uninstantiated geometry descriptors.** Their payloads remain in the loaded file.
+
+| Retail body | Workspace used | Remaining |
+|---|---:|---:|
+| Largest workspace: Dry Bones family, IDs 48–51, both tracks; 52 bones, 12 bone display objects plus skin | `0x7E80` / 32,384 B | **`0x820` / 2,080 B** |
+| Largest file: Luigi track 0; 37 bones, one bone display object plus skin | `0x5260` / 21,088 B | **`0x3440` / 13,376 B** |
+| Mario, either track | `0x5260` | `0x3440` |
+
+There is a bone-count consistency panic **after construction**, not a workspace-capacity check. An oversized layout can already have overwritten memory.
+
+### 2. Runtime skinning: list limits and output storage
+
+**There is fixed skinning scratch space, independent of the actor workspace.**
+
+`SKNInit` assigns locked-cache addresses at **800BF230–8C**:
+
+| Path | Alternating scratch regions | Required transfer footprint for s16 position+normal records |
+|---|---|---|
+| SK1 | `E0000000`, `E0002000`: **0x2000 bytes each** | `A(offset + 12n) ≤ 0x2000` |
+| SK2 | vertex regions at `+0000/+2000`, weights at `+1000/+3000` | `A(offset + 12n) ≤ 0x1000`; `A(2n) ≤ 0x1000` |
+| Accumulator | source at `+0000/+2000`, indices at `+1000/+3000`, weights at `+1800/+3800` | `A(12n) ≤ 0x1000`; `A(2n) ≤ 0x800`; `A(n) ≤ 0x800` |
+
+Thus the zero-offset **scratch-capacity ceilings** are SK1 **682**, SK2 **341**, accumulator **341** contributions per list. Offsets reduce the first two. These are derived capacity ceilings, **not tested safe boundary cases**; kernels also perform read-ahead loads.
+
+Evidence: [skinning assembly](../build/GYQE01/asm/Unknown/gap_800BD3A0.s), especially `fn_800BF2A8`:
+
+- SK1 `12 × count + offset`: **800BF2F0–800BF30C**.
+- SK2 vertex and weight block counts: **800BF464–800BF4B4**.
+- Accumulator source/index/weight block counts: **800BF6AC–800BF710**.
+
+Additional constraints:
+
+- **SK1/SK2 lists should contain at least two vertices.** Their kernels load CTR with `count−1` and enter an unconditional `bdnz` loop: `fn_800BFF9C` **800BFFA8–B8**, **800C002C–78**; `fn_800C02C8` **800C02D0–800C0308**. Counts 0/1 are unsafe. Accumulator lists require a positive count.
+- List counts are **u16** at skin-header `+0/+2/+4`; vertex counts are u16 at SK1 `+0x3A`, SK2 `+0x70`, accumulator `+0x42`. No smaller fixed list-count array or total-contribution ceiling was found.
+- Bone indices address the actor’s **runtime traversal order**, not stable bone IDs: e.g. **800BF370–80** indexes `boneArray[boneIndex]`.
+- Accumulator destination indices are **u16** and multiplied by **12** at **800C063C–68**. Repeated contributions allow more than two influences; no eight-influence runtime cap was found.
+- Use **32-byte-aligned DMA bases**, reserve complete rounded transfer ranges, and preserve readable kernel padding. SK1/SK2 store whole rounded ranges, including bytes surrounding their logical vertices; arrange overlapping boundary blocks consistently.
+
+**Output lives inside the loaded model file.** `LoadGeoPalette` finds the position array with `compCount == 6`; `convertGeometryAndSknHeader` saves that pointer at palette `+8`. Skinning adds each list’s destination offset to that base: **800BF3BC–C8**, **800BF5B4–C4**, **800BF7BC–E0**. There is no vertex-sized heap allocation here.
+
+Provide one coherent interleaved output array of **12 bytes per s16 position+normal record**, with valid padding and destination ranges. Avoid multiple competing `compCount==6` arrays: palette loading selects the last, while actor initialization searches from the first.
+
+Retail maxima observed: **681 SK1**, **340 SK2**, **146 accumulator** entries per list; largest skinned output array **1,551 records**. These are retail usage, not total-model limits.
+
+### 3. Geometry descriptors and display lists
+
+**The generic body path does not require a character-specific descriptor count.** It consumes the file’s palette count, bone `geoFileID`s and layout `skinFileID`.
+
+- `skinFileID` and bone geometry IDs must reference existing descriptors, or use `0xFFFF` for absence. Invalid bone IDs report and omit that display object; invalid **skin** IDs report, then dereference NULL at **800233A0**.
+- Descriptor numbers also appear in **morph array/target bindings**. `fn_80025C58` directly indexes `descriptorArray[id]` at **80025D3C–50**, without a bounds check.
+- No additional fixed descriptor-number requirement was found in the inspected character setup paths. **An exhaustive proof covering every character-specific gameplay/effect consumer remains unverified.** Those paths also depend on stable bone IDs.
+
+Evidence: [geometry C](../src/Unknown/gap_800B993C.c:145), [renderer assembly](../build/GYQE01/asm/Unknown/gap_800B993C.s).
+
+`DOVARender` walks the file’s display-state records, calls `SetState`, then passes each primitive buffer directly to `GXCallDisplayList`: **800BC778–800BC7C0**, call at **800BC7A8**. It does **not** parse or require triangles rather than strips.
+
+`SetState` recognizes IDs **1–4**:
+
+- 1: texture state.
+- 2: vertex descriptor.
+- 3: custom state handler.
+- 4: matrix state.
+
+Evidence: dispatch **800BBB5C–88**; vertex-descriptor decoding **800BBD64–800BBEAC**. Supply the appropriate states before drawing; arbitrary IDs do not establish missing GX state.
+
+Vertex descriptor fields retain their two-bit GX modes, so **u8 and u16 indexed attributes are supported**; the runtime does not force every index to u16. There is no u32 indexed mode in this encoding. Attribute array counts are u16, so keep advertised counts and all referenced indices consistent. Display-list lengths/counts do not consume actor workspace.
+
+### 4. Morph data: optional, but referenced shapes must exist
+
+**A body may have morph pointer zero.** `fn_80017814` skips morph relocation/binding when root `+0x10 == 0`; `fn_80025FFC` returns immediately for a NULL morph pointer at **80025FFC–80026000**. `fn_80024FA4` also exits for NULL morph data or a NULL array table at **80024FC4–80024FF4**.
+
+Retail confirms this: **every track-1 body has no morph block**, and several track-0 bodies also lack one.
+
+When morphing is retained:
+
+- Event keys select shapes by number, including caller-selected shapes under flag `0x2000`: **800252F0–80025350**.
+- `fn_80024FA4` multiplies selected shape IDs by four and directly loads target shape pointers at **80025350–64**, **800254BC–D4**.
+- **No selected-shape-versus-shape-count check was found.** Fewer shapes than scripts request causes out-of-range pointer reads, not automatic clamping.
+- Morph targets must be rebuilt for the new vertex arrays/runs. Keeping retail targets while changing vertex order can overwrite incorrect vertices or exceed the new array.
+- Morph data and optional work storage are file-resident: `fn_80025DDC` relocates array work pointers at **80025EC0–D8**; these are not additions to the actor workspace.
+
+Evidence: [morph application assembly](../build/GYQE01/asm/auto_fn_80024FA4_text.s), [binding assembly](../build/GYQE01/asm/auto_fn_80025C58_text.s).
+
+Omitting body morphs disables those deformations. The inspected paths tolerate absence; **complete visual/character-specific behavior without them is unverified**. Hand/glove morphs belong to separate sub-item files and remain relevant.
+
+### 5. Low-detail body, track 1
+
+`fn_8001758C` selects:
+
+```text
+track = charID × 19 + (variant == 0)
+```
+
+Normal fielders and runners use variant 0; batters and menu/cutscene actors use variant 1. Evidence: [loader C](../src/Unknown/gap_8001196C.c:1190), including cached runner/batter branches.
+
+**The low body can structurally be the same model as the high body.** There is no separate low-body skeleton-order rule in this loader. It must satisfy its own file-buffer capacity, workspace budget and skin/morph bindings; using high detail for all fielders also increases rendering cost.
+
+Mario’s retail bodies both have 37 bones, but different record order and different `skinFileID`—high 0, low 1. That is **file-local organization**, not a required high/low convention.
+
+Preserve stable bone IDs, hierarchy and bind transforms. If records/traversal change, regenerate skin-list bone indices accordingly. `f_InitBone` constructs runtime order by recursively walking children and siblings; `fn_80017814` separately builds the gameplay bone-ID map.
+
+**Same bone count alone is insufficient.** The gameplay map has 120 entries; non-sentinel bone IDs are written without a range check. Preserve the existing skeleton’s IDs, including attachment bones.
+
+### 6. Additional buffers and constraints
+
+**Important omission from `model_limits.md`: `fn_80018270`.**
+
+Its target assembly in [gap_8001196C.s](../build/GYQE01/asm/Unknown/gap_8001196C.s) establishes another body allocation:
+
+- Ordinary path: **nine low-body slots + four high-body slots + one cache of each**.
+- With aligned maxima `H` and `L`, total allocation is **`5H + 10L`**: arithmetic **80018714–40**; slot/cache placement **80018760–800187F0**.
+- Selector 0 scans the active roster. The nonzero/non-2 path scans high tracks for IDs **0–47**, low tracks for **0–53**. Do not assume every later replacement contributes to its allocation.
+- **Selector 2 uses fixed fielder allocations:** slot 0 gets **0x13E80**, slots 1–8 get **0x12C40** each: **8001829C–800182E4**. Its low-body cache is also **0x13E80**, at **800183F0–80018418**. Descriptor growth does not enlarge these constants.
+- Cached copies use the established cache size, without checking the destination: **800176A4–AC**, **800176EC–F4**.
+
+For textures, no independent body texture-byte staging allocation was found: `convertTextureHeader` relocates the archive in place. However:
+
+- Sub-items use the **body’s texture archive**; preserve their texture IDs or update them.
+- ARAM overlays overwrite at `body + root.texture`: `fn_8002254C`, **80022558**, **80022584**. An old overlay can corrupt a repacked body if its destination region no longer fits or has changed meaning.
+
+The four-buffer allocator, sub-item pools and ARAM blob limits already documented in `model_limits.md` still apply. **No exhaustive whole-game allocation audit or runtime heap-headroom measurement was performed.**
+
+### Importer rules
+
+1. Preserve the existing skeleton’s IDs, hierarchy and bind transforms; regenerate skin bone indices if traversal order changes.
+2. Compute the workspace formula and require **`used ≤ 0x86A0`**. Count instantiated display objects, including repeated descriptor references.
+3. Split skin lists to fit the locked-cache partitions; prohibit SK1/SK2 counts below two, and reserve DMA rounding/read-ahead padding.
+4. Store correctly sized skinned output inside the body file; validate every destination, accumulator index and bone index.
+5. Keep geometry, skin, morph and texture references internally consistent. Triangles and strips are both usable; encode indices according to the supplied GX vertex descriptor.
+6. Either rebuild every referenced morph shape/run or omit the body morph block, accepting lost deformation.
+7. Validate **both tracks against every applicable allocator**, especially `fn_80018270`’s fixed selector-2 buffers. High-body duplication into track 1 is not universally safe through descriptor edits alone.
+8. Rebuild or disable incompatible texture overlays, preserve sub-item texture bindings, and update file/ARAM descriptors before allocation.
