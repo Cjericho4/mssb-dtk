@@ -359,3 +359,136 @@ The four-buffer allocator, sub-item pools and ARAM blob limits already documente
 6. Either rebuild every referenced morph shape/run or omit the body morph block, accepting lost deformation.
 7. Validate **both tracks against every applicable allocator**, especially `fn_80018270`’s fixed selector-2 buffers. High-body duplication into track 1 is not universally safe through descriptor edits alone.
 8. Rebuild or disable incompatible texture overlays, preserve sub-item texture bindings, and update file/ARAM descriptors before allocation.
+## Body without morph, and heap headroom (Codex read-only audit, 2026-11-08)
+
+### 1. Morph removed
+
+**The inspected shared gameplay and menu paths tolerate `body+0x10 == 0`, even when `lbl_800EEB18[charID] != -1`: they silently omit body morph expressions.** Code does read `slot+0x2C` outside practice, but the identified body consumers guard it. This is a static finding; exhaustive character-specific and visual runtime behavior remains **unverified**.
+
+`stadiumObj` is a misleading legacy name: here it is the character’s **expression-script instance**, separate from stadium scenery.
+
+### Consumer audit
+
+Evidence comes from [character loading C](../src/Unknown/gap_8001196C.c:567) and its [target assembly](../build/GYQE01/asm/Unknown/gap_8001196C.s).
+
+| Consumer | NULL handling and consequence |
+|---|---|
+| `fn_80017814`: body morph relocation/binding | Checks root `+0x10` at **80017964–6C**, skips `fn_80025DDC` / `fn_80025C58` when zero. **Safe.** |
+| `fn_8001500C`, `fn_8001594C`: runner/batter/fielder expression attachment | Fresh attachment checks **both** model map and morph root; zero root sets `slot+0x2C = NULL`. Examples **80015BC4–80015BF0**; bind at **800152D8 / 80015C50 / 80015FAC**. Cache reuse can copy a zero morph pointer into an existing instance; application still checks it. |
+| `fn_80016344`, `fn_80016710`: explicit/menu actor attachment | Same dual condition. Example **800165A8–800165EC**; binding calls **80016650, 80016970, 80016A74**. **Safe.** |
+| `fn_8001BA44`, `fn_8001BE50`: gameplay animation → expression selection | Check `slot+0x2C` before `fn_80025EEC`: **8001BC88–8001BCA0**, **8001C04C–8001C064**. **No body expression.** |
+| `fn_8001D2D4`: shared per-frame update | Checks expression instance before forming playback pointer, changing playback flags/rate, ticking and applying: **8001D444–470**, **8001D508–8001D620**, **8001D660–670**, **8001D78C–8001D7A8**. **Safe.** |
+| `fn_2_16A98`, `fn_2_8CD58`: menu expression selection | Guard `slot+0x2C`: menus **16BA0–16BC4**, **8CEEC–8CF04**. **No body expression.** |
+| `fn_8001196C`, `fn_80011A60`, `fn_80011B64`, `fn_80011BE4`, `fn_8001594C`: release/reassignment | Guard the instance before touching its metadata. Examples **80011988–90**, **80011B80–88**, **80011C00–08**, **8001617C–84**. **Safe.** |
+| `fn_8004B6EC`: reads body-script event flags | Checks instance at **8004B70C–14**; absence selects its default branch instead of calling the key reader. **Safe**, although associated bone visibility follows that default. |
+
+Gameplay/update evidence: [target assembly](../build/GYQE01/asm/Unknown/gap_8001B200.s). Menu evidence: [selection dispatcher](../build/GYQE01/menus/asm/menus/rep_0568.s), [animation dispatcher](../build/GYQE01/menus/asm/menus/rep_0F60.s).
+
+**The underlying helpers are not uniformly NULL-safe:**
+
+| Helper | Actual checks |
+|---|---|
+| `fn_80025DDC`, `fn_80025C58` | **No morph-pointer NULL check**; first accesses at **80025DE0**, **80025C60**. Body setup guards these calls. |
+| `fn_80025FFC` | Checks morph pointer, output pointer and script pointer at **80025FFC–80026018**. |
+| `fn_80025EEC` | **No selector NULL check**; reads selector/categories at **80025EF0–80025F08**. |
+| `fn_80024DB0` | **No effective entry NULL check**; dereferences playback at **80024DB4**. |
+| `fn_80024FA4` | Checks morph pointer/array table at **80024FC4–80024FF4**, but reads playback at **80024FC8** first. Passing NULL playback is unsafe. |
+| `fn_80024D2C` | **No playback NULL check**; returns the current key’s upper flag bits. |
+
+See [key-reader/ticker C](../src/Unknown/gap_8002244C.c:683), [morph application assembly](../build/GYQE01/asm/auto_fn_80024FA4_text.s), and [script binding assembly](../build/GYQE01/asm/Unknown/gap_80025DDC.s).
+
+The complete direct-call inventory found for **key-flag reader `fn_80024D2C`** is:
+
+- `fn_8004B6EC`, **8004B724**: guarded body instance.
+- `fn_8004B7F4`, **8004BA80**: hand/glove playback; enclosing sub-item check at **8004BA18**.
+- `fn_8004BAEC`, **8004BCE0**: hand/glove playback; individual pointer check at **8004BCD8–DC**.
+- `fn_80037984`, **80037A34**: **unguarded queued playback pointer**, supplied through `fn_80037AA0`; identified caller is challenge code at **challenge:CDAC**.
+- Challenge **CFC0**: playback checked at **CFB8–BC**.
+
+The last two are **not proof of a retail body-morph dependency in exhibition**. Likewise, stadium actors, pitching effects and cutscene props have independent morph/script resources; removing a character body’s root does not remove theirs. For example, `fn_3_11AB2C` applies its independent pitching-effect morph at **game:11AC00**.
+
+### Path conclusions
+
+| Path | Conclusion for removing only body morphs |
+|---|---|
+| Hit, home run, strikeout, out, runner celebration/dejection | **Safe through shared animation/update path; silently no body morph expression.** |
+| Menus and menu-driven poses | **Safe through inspected dispatchers; silently no body morph expression.** |
+| Cutscenes and victory screens using those actors | Same guarded behavior; **complete scene-by-scene coverage unverified**. |
+| Captain/star-swing events | Shared actor path is safe; **every bespoke character/effect branch remains unverified**. |
+| Practice/challenge special paths | **Do not certify globally.** Challenge **12DFC–12E04** copies into `slots[index].stadiumObj+0x10` without checking that instance; its particular setup must be preserved or guarded. |
+
+Thus: **no identified exhibition/menu crash from the missing body morph alone; a blanket whole-game “safe” guarantee is not established.**
+
+### 2. Heap headroom
+
+**A numeric free-space value—and therefore a maximum safe enlarged body size—cannot be established from this checkout alone.** The crucial correction is that these allocations **do not use an OSAlloc heap handle**.
+
+### Actual allocator and allocation costs
+
+`_OSAllocFromHeap` at **800ACFD0** is a game-specific, two-ended bump arena:
+
+```text
+0x803C7898 = remaining gap
+0x803C789C = low cursor
+0x803C78A0 = high cursor
+
+p     = align32(low + 8)
+low'  = p + align4(request)
+gap'  = high - low'
+```
+
+It writes allocation metadata at `p−8/p−4` and **does not check exhaustion**. The high-end allocator is `fn_800ACF34`, **800ACF44–70**. Source fields and assembly agree: [C](../src/Unknown/gap_800A97D0.c:169), [target assembly](../build/GYQE01/asm/Unknown/gap_800A97D0.s).
+
+| Pool | Request, excluding allocator prefix |
+|---|---:|
+| `fn_80018024`, ordinary | `4B`; retail **0x95D00** |
+| `fn_80018024`, mode 6 | `4(B+A)`; retail **0xE5700** |
+| `fn_80018270`, ordinary | `5H+10L`; all-character retail maxima give **0x182540** |
+
+**Mode 6 is Toy Field**, not a nine-fielder exhibition match; see [mode enum](../include/mssbTypes.h:257).
+
+The exhibition setup calls `fn_8001A3FC(0)` at **game:5A5F8**, selecting the roster scan. Subsequent allocations include expression-script storage (**8001A52C**), the 26-slice sub-item pool (**8001A54C**), sub-item actor table (**8001A550**), animation banks (**8001A564**) and thirteen actor workspaces (**8001A56C**, **0x6D620** bytes). The four-body setup instead allocates four/eight workspaces at **80019C64**, script pool at **80019D50**, then additional banks/tables. These are different setup paths; **do not automatically add both body-pool formulas as simultaneous permanent usage**. [Setup assembly](../build/GYQE01/asm/Unknown/gap_8001196C.s).
+
+Before these, the same arena has renderer storage, threads/I/O/sound initialization, loaded REL/resources and scene allocations. Stadium, roster, scene and transient loading state affect the remaining gap.
+
+### Arena bounds
+
+- `OSInit` uses boot-info arena words **0x80000030/34**, falling back to **0x803EF320 / 0x81700000**; see **8006D3D0–8006D444**. The fallback interval is **0x1310CE0 bytes**, merely a **pre-reservation upper bound**.
+- `__fstLoad` can replace arena high from boot/FST information at **8007B4E4–EC**.
+- `initRenderMode` reserves framebuffer/GX FIFO storage, establishes the game arena at **800A82D4**, then sets OS arena low to high at **800A82FC**.
+- `fn_800BEC30` reserves further renderer tables and establishes the remaining arena again at **800BEDEC**.
+- Scene loading restores saved game bounds through `fn_800AD054` / cursor-reset helpers; e.g. **80009814**.
+
+Consequently, **OS arena `hi−lo` is not gameplay free RAM**. [OS initialization](../build/GYQE01/asm/Dolphin/os/OS.s), [renderer initialization](../build/GYQE01/asm/Unknown/gap_800A6870.s).
+
+### Exact Dolphin measurement
+
+Read big-endian words at these breakpoints:
+
+| Breakpoint | Purpose |
+|---|---|
+| **80018150 / 8001816C** | Immediately before four-body allocation; `r4=request`. |
+| **80018740** | Immediately before ordinary `5H+10L` allocation; `r4=request`. |
+| **800ACFD0** and **800ACF34** | Log every low/high allocation, arguments and LR to identify later consumers. |
+| **8001D2D4** entry | Sample the gap during fully loaded gameplay and event/cutscene transitions. |
+
+Record **`[803C7898, 803C789C, 803C78A0]`** before/after allocation and the **minimum gap through the complete match**, including loading transitions. Repeat separately for Toy Field.
+
+Also record:
+
+- OS arena low **`0x803CB910`**, high **`0x803CBD90`**.
+- Saved scene bounds **`0x80366158 / 0x8036615C`**.
+- If investigating the separate SDK heap: handle **`0x803CB908`**, descriptor-table pointer **`0x803CBD80`**. For valid handle `h`, descriptor is `table+12h`; **free-list head is descriptor+4**, allocated-list head `+8`. Free cells contain next at `+4`, size at `+8`. **These are not the model-pool allocator.** [SDK heap assembly](../build/GYQE01/asm/Dolphin/os/OSAlloc.s).
+
+With unchanged other resources and aligned maxima, increasing high-body maximum by `Δ` costs **`4Δ`** in the four-slot phase or **`5Δ`** in exhibition. A measured minimum gap can therefore bound growth, after retaining a chosen reserve. **No numerical `Bmax` is verified yet.**
+
+**Importer rules**
+
+- Zeroing root `+0x10` is supported by the inspected shared paths; expect lost body deformation and expressions.
+- Keep hand/glove morphs and independent effect resources valid.
+- If retaining morphs, validate every selected shape and target range; application does not clamp shape IDs.
+- Update runtime descriptors **before allocation**; preserve workspace/skinning/overlay constraints.
+- Measure the **game arena’s minimum gap**; nine fielders and OS arena bounds alone do not establish headroom.
+- Treat practice/challenge special consumers and complete captain/cutscene coverage as **unverified**.
+
+No files were edited.
