@@ -93,7 +93,7 @@ static inline f32 easeAnimationTime(f32 time, f32 incoming, f32 outgoing) {
 static inline void slerpAnimation(Quaternion* from, Quaternion* to, Quaternion* out, f32 time) {
     f32 cosine = from->w * to->w + (from->z * to->z + (from->x * to->x + from->y * to->y));
     f32 first;
-    f32 second = time;
+    f32 second;
     /* FAKEMATCH: declaration order keeps the spherical angle in the retail saved register. */
     f32 step;
     f32 angle;
@@ -107,6 +107,7 @@ static inline void slerpAnimation(Quaternion* from, Quaternion* to, Quaternion* 
             second = reciprocal * (f32)sin(step);
         } else {
             first = 1.0f - time;
+            second = time;
         }
         out->x = first * from->x + second * to->x;
         out->y = first * from->y + second * to->y;
@@ -164,153 +165,20 @@ static inline void hermiteAnimationVector(volatile f32* result, const f32* from,
     }
 }
 
-#pragma dont_inline on
 // .text:0x800B516C size:0x4A0
 // Spherical cubic blend: slerp(q0,q1,t) and slerp(a,b,t) are slerped again by 2t(1-t) into out.
+// Placed before `#pragma dont_inline on` so the three slerpAnimation expansions inline; the
+// remaining diff is one saved float register (retail allocates f20..f31, this build f21..f31).
 void Squad(Quaternion *q0, Quaternion *a, Quaternion *b, Quaternion *q1, Quaternion *out, f32 t) {
-    f32 dotEnds;
-    f32 dotControls;
-    f32 dotBlend;
-    f32 antipodalSecondBlend;
-    f32 angleEnds;
-    f32 reciprocalEnds;
-    f32 antipodalStepEnds;
-    f32 controlZ;
-    f32 angleControls;
-    f32 reciprocalControls;
-    f32 angleBlend;
-    f32 antipodalFirstBlend;
-    f32 stepEnds;
-    f32 controlW;
-    f32 stepControls;
-    f32 reciprocalBlend;
-    f32 antipodalStepBlend;
-    f32 antipodalStepControls;
-    f32 stepBlend;
-    f32 endY;
-    f32 controlY;
-    f32 endX;
-    f32 controlX;
-    f32 endW;
-    f32 endZ;
-    f32 antipodalFirstEnds;
-    f32 antipodalFirstControls;
-    f32 sineEnds;
-    f32 sineControls;
-    f32 sineBlend;
-    f32 perpendicularZ;
-    f32 blend;
-    f32 antipodalSecondEnds;
-    f32 antipodalSecondControls;
-    f32 firstWeightBlend;
-    f32 firstWeightControls;
-    f32 controlsZ;
-    f32 controlsY;
-    f32 endsW;
-    f32 endsZ;
-    f32 endsY;
-    f32 endsX;
-    f32 firstWeightEnds;
-    f32 controlsW;
-    f32 controlsX;
-    f32 secondWeightBlend;
-    f32 secondWeightEnds;
-    f32 secondWeightControls;
-
-    endY = q1->y;
-    firstWeightControls = 1.0f - t;
-    endX = q1->x;
-    endZ = q1->z;
-    endW = q1->w;
-    dotEnds = (q0->w * endW) + ((q0->z * endZ) + ((q0->x * endX) + (q0->y * endY)));
-    blend = 2.0f * firstWeightControls * t;
-    if ((1.0f + dotEnds) > 0.000001f) {
-        if ((1.0f - dotEnds) > 0.000001f) {
-            angleEnds = (f32) acos(dotEnds);
-            stepEnds = t * angleEnds;
-            sineEnds = (f32) sin(angleEnds);
-            reciprocalEnds = 1.0f / sineEnds;
-            firstWeightEnds = reciprocalEnds * (f32) sin(angleEnds - stepEnds);
-            secondWeightEnds = reciprocalEnds * (f32) sin(stepEnds);
-        } else {
-            firstWeightEnds = firstWeightControls;
-            secondWeightEnds = t;
-        }
-        endsX = (firstWeightEnds * q0->x) + (secondWeightEnds * q1->x);
-        endsY = (firstWeightEnds * q0->y) + (secondWeightEnds * q1->y);
-        endsZ = (firstWeightEnds * q0->z) + (secondWeightEnds * q1->z);
-        endsW = (firstWeightEnds * q0->w) + (secondWeightEnds * q1->w);
-    } else {
-        antipodalStepEnds = 1.5707963705062866f * t;
-        antipodalFirstEnds = (f32) sin(1.5707963705062866f - antipodalStepEnds);
-        antipodalSecondEnds = (f32) sin(antipodalStepEnds);
-        endsX = (antipodalFirstEnds * q0->x) + (antipodalSecondEnds * -endY);
-        endsY = (antipodalFirstEnds * q0->y) + (antipodalSecondEnds * endX);
-        endsZ = (antipodalFirstEnds * q0->z) + (antipodalSecondEnds * -endW);
-        endsW = (antipodalFirstEnds * q0->w) + (antipodalSecondEnds * endZ);
-    }
-    controlY = b->y;
-    controlX = b->x;
-    controlZ = b->z;
-    controlW = b->w;
-    dotControls = (a->w * controlW) + ((a->z * controlZ) + ((a->x * controlX) + (a->y * controlY)));
-    if ((1.0f + dotControls) > 0.000001f) {
-        if ((1.0f - dotControls) > 0.000001f) {
-            angleControls = (f32) acos(dotControls);
-            stepControls = t * angleControls;
-            sineControls = (f32) sin(angleControls);
-            reciprocalControls = 1.0f / sineControls;
-            firstWeightControls = reciprocalControls * (f32) sin(angleControls - stepControls);
-            secondWeightControls = reciprocalControls * (f32) sin(stepControls);
-        } else {
-            secondWeightControls = t;
-        }
-        controlsX = (firstWeightControls * a->x) + (secondWeightControls * b->x);
-        controlsY = (firstWeightControls * a->y) + (secondWeightControls * b->y);
-        controlsZ = (firstWeightControls * a->z) + (secondWeightControls * b->z);
-        controlsW = (firstWeightControls * a->w) + (secondWeightControls * b->w);
-    } else {
-        antipodalStepControls = 1.5707963705062866f * t;
-        antipodalFirstControls = (f32) sin(1.5707963705062866f - antipodalStepControls);
-        antipodalSecondControls = (f32) sin(antipodalStepControls);
-        controlsX = (antipodalFirstControls * a->x) + (antipodalSecondControls * -controlY);
-        controlsY = (antipodalFirstControls * a->y) + (antipodalSecondControls * controlX);
-        controlsZ = (antipodalFirstControls * a->z) + (antipodalSecondControls * -controlW);
-        controlsW = (antipodalFirstControls * a->w) + (antipodalSecondControls * controlZ);
-    }
-    dotBlend = (endsW * controlsW) + ((endsZ * controlsZ) + ((endsX * controlsX) + (endsY * controlsY)));
-    if ((1.0f + dotBlend) > 0.000001f) {
-        if ((1.0f - dotBlend) > 0.000001f) {
-            angleBlend = (f32) acos(dotBlend);
-            stepBlend = blend * angleBlend;
-            sineBlend = (f32) sin(angleBlend);
-            reciprocalBlend = 1.0f / sineBlend;
-            firstWeightBlend = reciprocalBlend * (f32) sin(angleBlend - stepBlend);
-            secondWeightBlend = reciprocalBlend * (f32) sin(stepBlend);
-        } else {
-            firstWeightBlend = 1.0f - blend;
-            secondWeightBlend = blend;
-        }
-        out->x = (firstWeightBlend * endsX) + (secondWeightBlend * controlsX);
-        out->y = (firstWeightBlend * endsY) + (secondWeightBlend * controlsY);
-        out->z = (firstWeightBlend * endsZ) + (secondWeightBlend * controlsZ);
-        out->w = (firstWeightBlend * endsW) + (secondWeightBlend * controlsW);
-        return;
-    }
-    perpendicularZ = -controlsW;
-    antipodalStepBlend = 1.5707963705062866f * blend;
-    out->x = -controlsY;
-    out->y = controlsX;
-    out->z = perpendicularZ;
-    out->w = controlsZ;
-    antipodalFirstBlend = (f32) sin(1.5707963705062866f - antipodalStepBlend);
-    antipodalSecondBlend = (f32) sin(antipodalStepBlend);
-    out->x = (antipodalFirstBlend * endsX) + (antipodalSecondBlend * out->x);
-    out->y = (antipodalFirstBlend * endsY) + (antipodalSecondBlend * out->y);
-    out->z = (antipodalFirstBlend * endsZ) + (antipodalSecondBlend * out->z);
-    out->w = (antipodalFirstBlend * endsW) + (antipodalSecondBlend * out->w);
+    Quaternion ends;
+    Quaternion controls;
+    f32 blend = 2.0f * (1.0f - t) * t;
+    slerpAnimation(q0, q1, &ends, t);
+    slerpAnimation(a, b, &controls, t);
+    slerpAnimation(&ends, &controls, out, blend);
 }
 
+#pragma dont_inline on
 // .text:0x800B560C size:0x79C
 // Decodes `count` quantized values (type: 0 u8, 1 s8, 2 u16, 3 s16, 4 f32) into floats, times `scale`.
 void GetData(u8 type, void* src, f32* dst, u8 count, f32 scale) {
