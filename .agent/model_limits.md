@@ -492,3 +492,124 @@ With unchanged other resources and aligned maxima, increasing high-body maximum 
 - Treat practice/challenge special consumers and complete captain/cutscene coverage as **unverified**.
 
 No files were edited.
+## Match arena: animation pool, common archive, load staging, Toy Field (Codex read-only audit, 2026-11-08)
+
+Measured context: emutest exhibition_heap scene (mssb-modding branch model-heap). Retail minimum free gap 1,455,000 B (Mario Stadium), 1,295,864 B (Peach Garden).
+
+### 1. The 0x60A940 allocation
+
+**It is the character animation-bank pool**, stored at `g_hugeAnimStruct+0x2C88`, not another body/model pool. The allocation call is **8001927C**; **80019280 is its return address**.
+
+For ordinary exhibition, define:
+
+```text
+Mt = align32(max(subfile[charID*19+t].sizeFlags & 0x0FFFFFFF))
+
+allocation = 2*M2 + 4*M3 + 9*M4 + M5 + M6
+```
+
+Selector 0 scans both nine-player rosters (**8001903C–800190DC**); the other ordinary selector scans all 54 characters (**800190E4–800191C4**). Alignment and allocation arithmetic are at **800191C8–8001927C**. The retail all-character maxima reproduce your measurement exactly:
+
+| Track | Aligned maximum | Copies |
+|---|---:|---:|
+| 2 | `0x781C0` | 2 |
+| 3 | `0x37FE0` | 4 |
+| 4 | `0x6F6C0` | 9 |
+| 5 | `0x4A780` | 1 |
+| 6 | `0x5200` | 1 |
+| **Total** | **`0x60A940`** | |
+
+Evidence: [target assembly](../build/GYQE01/asm/Unknown/gap_8001196C.s:9263), [retail subfile descriptors](../src/Unknown/gap_8001E460.c:560). The C implementation of `fn_80018DEC` is currently a stub.
+
+**Importer impact**
+
+- Animation descriptor sizes on **tracks 2–6** can enlarge this pool when they increase an applicable maximum.
+- Body tracks 0/1, sub-item sizes, master descriptors and ARAM-blob size **do not directly enter this formula**.
+- It uses advertised **uncompressed sizes**, not compressed lengths. Other animation tracks have separate allocations.
+
+### 2. The 0x94000 NOW LOADING allocation
+
+**This is `game_common.0`, not the stadium-model descriptor.** At **80018950**, `fn_800188C0` passes descriptor **0x800EE910** to `ARAMTransfer`:
+
+```text
+{ 0x40B, 0x40093FF8, 0x0E581000, 0x5F484 }
+           output size   disc offset   stored length
+```
+
+`ARAMTransfer` masks the size word and rounds it to 32 bytes at **800A71F4–800A7208**:
+
+```text
+align32(0x93FF8) = 0x94000
+```
+
+The allocator return address is **800A720C = ARAMTransfer+0x130**. This archive supplies common gameplay objects: `fn_8001F8A4` processes 24 layout/geometry entries and creates a 25-entry actor table (**8001F8C4–8001F9C0**). **Exact object-by-object identities remain unverified.**
+
+Evidence: [descriptor](../build/GYQE01/asm/auto_08_800E8300_data.s:6665), [loader](../build/GYQE01/asm/Unknown/gap_8001196C.s:8881), [allocation](../build/GYQE01/asm/Unknown/gap_800A6870.s:1690).
+
+The stadium-dependent spread comes from other allocations already present when this common archive loads. `manageStadiumLoading` selects:
+
+```text
+lbl_800EFBE8[stadium*3 + variant]
+```
+
+at **game:0000054C–00000570**, then loads a separate per-stadium field-object set. For example, variant-0 stadium requests are **Peach `0x16C140` versus DK `0xEB1C0`**, a **528,256-byte difference before other allocations**. This supports your observed scale, but **does not fully account for the measured ~540 KB spread**. [Stadium loader C](../src/game/gap_464.c:38), [stadium sizes](../src/Unknown/gap_8001E460.c:9).
+
+**Importer impact**
+
+- Character descriptor changes do not change this `0x94000` request.
+- Larger character pools reduce the gap available when it occurs.
+- Stadium choice changes the surrounding allocation baseline; Peach’s lower measured headroom is consistent with its larger stadium resource.
+
+### 3. Restoring ARAMTransfer’s high buffer
+
+**The normal release goes through `fn_800ACF14` at 0x800ACF14.** It is a high-end rewind helper, so tracing only allocator entries misses it.
+
+In loading thread `fn_800A6900`, the completed mode-0/3 path waits for decompression, flushes the destination, then:
+
+- loads the staging pointer from `lbl_803C6CF8+0x6FC` at **800A6B98**;
+- calls `fn_800ACF14` at **800A6BA4**;
+- clears that pointer at **800A6BAC**.
+
+The helper directly performs:
+
+```text
+oldHigh = *(buffer - 8)
+[803C78A0] = oldHigh       // 800ACF24
+[803C7898] = oldHigh-low   // 800ACF2C
+```
+
+It restores allocation metadata, including alignment/prefix overhead—not simply `high += 0x20000`. Another completion path calls it at **800A6C70**; cancellation callbacks also release buffers.
+
+Evidence: [completion assembly](../build/GYQE01/asm/Unknown/gap_800A6870.s:1203), [rewind assembly](../build/GYQE01/asm/Unknown/gap_800A97D0.s:4538), [C](../src/Unknown/gap_800A97D0.c:170).
+
+**Importer impact**
+
+- The 128 KiB staging buffer is transient, but overlaps the destination allocation during loading.
+- Include `fn_800ACF14` in arena tracing to distinguish retained usage from loading peaks.
+
+### 4. Toy Field versus exhibition
+
+**Toy Field has smaller principal character pools, but additional mode-specific resources.** Static differences include:
+
+| Allocation | Exhibition | Toy Field |
+|---|---|---|
+| Bodies | `5H+10L`, roster maxima | `4(B+A)`, all-character maxima |
+| Actor workspaces | 13 × `0x86A0` | 8 × `0x86A0` |
+| Expression-script buffers | One maximum-sized buffer | Four maximum-sized buffers |
+| Sub-items | 26 slices, roster maximum | 24 slices, all-character maximum |
+| Common archive | `game_common.0`: `0x94000` | `game_common.1`: `0x95BC0` |
+| Main animation pool | Formula in §1 | `M2 + 4*(M4+M14+M18+M16)` |
+
+Toy Field’s animation allocator is `fn_80018B74`: mode-6 track selection at **80018BE4–80018C18**, arithmetic/allocation at **80018C7C–80018CDC**. Retail descriptors give **`0x3E80C0`**. Toy Field reaches it through `fn_3_DFBAC` → `fn_3_10B8D0`, calls at **game:000DFD08 / 0010BBE8**.
+
+The four-body setup establishes the other pools at **80019C40–80019DB0**. Sub-item sizing is **800142E0–800142F4**. [Setup/pool assembly](../build/GYQE01/asm/Unknown/gap_8001196C.s:10272).
+
+Toy Field additionally loads **`game_common.2`**, output size **`0x1640`**, at **80019F00–80019F20**, and calls `fn_8001F5E8` at **8001A214**. That creates **30 additional prop actors** and **`30*0x28 = 0x4B0`** of records, plus their constructed actor storage. [Extra-resource assembly](../build/GYQE01/asm/Unknown/gap_8001E460.s:2103).
+
+**Importer impact**
+
+- Toy Field responds to **different animation tracks** and scans all characters; an unused replacement can increase its pool.
+- Its larger expression-buffer count and extra props prevent deriving headroom from body count alone.
+- The principal retail pools favor more headroom, but **Toy Field’s actual minimum—and whether a later transition can fall below exhibition—remains unverified without its own complete runtime trace**.
+
+No files were edited.
