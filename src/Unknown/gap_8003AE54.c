@@ -133,8 +133,39 @@ s32 fn_80040FE0(Gap8003AE54Save* save) {
 }
 
 // .text:0x80041074 size:0xDC
-void fn_80041074(void) {
-    return;
+// Verifies the checksums of the save blocks selected by `mask` (bit 0 the header, bits 1..3
+// the challenge slots) and records the bad ones; a bad header stops the scan. Returns 0xB if
+// anything failed, 0x11 if all passed.
+s32 fn_80041074(Gap8003AE54Save* save, s32 unused, u32 mask) {
+    u8* data = save->data;
+    u32 bit;
+    Gap8003AE54SaveBlock* block;
+    s32 i;
+    u16 sum;
+
+    lbl_803C50E8.badBlocks = 0;
+    for (i = 0; i < 4; i++) {
+        bit = 1 << i;
+        if (mask & bit) {
+            if (i == 0) {
+                sum = fn_800ABB14(data, sizeof(save->data));
+                if (sum != save->checksum) {
+                    lbl_803C50E8.badBlocks = bit;
+                    break;
+                }
+            } else {
+                block = &save->blocks[i - 1];
+                sum = fn_800ABB14(block->data, sizeof(block->data));
+                if (sum != block->checksum) {
+                    lbl_803C50E8.badBlocks |= bit;
+                }
+            }
+        }
+    }
+    if (lbl_803C50E8.badBlocks != 0) {
+        return 0xB;
+    }
+    return 0x11;
 }
 
 // .text:0x80041150 size:0x1F8

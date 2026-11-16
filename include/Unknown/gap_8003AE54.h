@@ -77,7 +77,12 @@ typedef struct Gap8003AE54Save {
 } Gap8003AE54Save;
 u16 fn_800ABB14(u8* data, s32 size);
 s32 fn_80040FE0(Gap8003AE54Save* save);
-void fn_80041074(void);
+typedef struct Gap8003AE54CardState {
+    u8 _pad0[0x54];
+    /* 0x54 */ u32 badBlocks; /* bit 0 header, bits 1..3 the challenge slots whose checksum failed */
+} Gap8003AE54CardState;
+extern Gap8003AE54CardState lbl_803C50E8;
+s32 fn_80041074(Gap8003AE54Save* save, s32 unused, u32 mask);
 void fn_80041150(void);
 
 #endif // !__UNKNOWN_gap_8003AE54_H_
