@@ -28,13 +28,21 @@ extern s32 lbl_803CBD00;
 extern s32 lbl_803CBD04;
 extern s32 lbl_803CBD08;
 extern s32 lbl_803CBD0C;
+typedef struct Gap80048BECKeyAnimation Gap80048BECKeyAnimation; /* Gap8002244CKeyAnimation */
+typedef struct Gap80048BECSlotTable {
+    u8 _pad0[0x10];
+    /* 0x10 */ u8 animation[1]; /* a key animation state, passed to fn_80024D2C */
+} Gap80048BECSlotTable;
 typedef struct Gap80048BECObj {
-    u8 _pad0[0x3E];
+    u8 _pad0[0x2C];
+    /* 0x2C */ Gap80048BECSlotTable* slotTable7; /* AnimationStruct.slots[7] */
+    u8 _pad30[0x3E - 0x30];
     /* 0x3E */ u8 state;
     u8 _pad3F;
     /* 0x40 */ Vec rotation;
-    u8 _pad4C[0x1FA - 0x4C];
-    u16 actorIndex; /* 0x1FA */
+    u8 _pad4C[0x1F8 - 0x4C];
+    /* 0x1F8 */ u16 boneIndex75; /* boneIndices[75] */
+    u16 actorIndex; /* 0x1FA boneIndices[76] */
     u8 _pad1FC[0x56];
     s8 id; /* 0x252 charID */
     u8 _pad253;
@@ -133,7 +141,10 @@ extern s8 lbl_800FBDEC[0x78];
 void fn_8004B208(s32 a, s32 index, s32 c);
 void fn_8004B270(void);
 void fn_8004B284(void);
-void fn_8004B6EC(void);
+u32 fn_80024D2C(Gap80048BECKeyAnimation* animation);
+void fn_800B2BE4(struct Gap80048BECActor* actor, u16 index);
+s32 fn_800B2BA8(struct Gap80048BECActor* actor, u16 index, struct Gap80048BECActor* other, u16 otherIndex);
+void fn_8004B6EC(Gap80048BECObj* obj, struct Gap80048BECActor** actor);
 s32 fn_8004B7B4(Gap80048BECObj* obj, struct Gap80048BECActor** actor);
 void fn_8004B7F4(void);
 void fn_8004BAEC(void);
@@ -195,6 +206,5 @@ void fn_8004CA08(s32 value);
 void fn_8004CA14(s32 a, s32 b);
 
 typedef struct Gap80048BECActor Gap80048BECActor;
-s32 fn_800B2BA8(Gap80048BECActor* actor, u16 index, Gap80048BECActor* other, u16 otherIndex);
 
 #endif // !__UNKNOWN_gap_80048BEC_H_

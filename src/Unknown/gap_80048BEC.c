@@ -276,8 +276,32 @@ void fn_8004B284(void) {
 }
 
 // .text:0x8004B6EC size:0xC8
-void fn_8004B6EC(void) {
-    return;
+// Bowser Jr.'s per-frame slot update (from fn_80011468): shows one of the two bones 75 / 76 and
+// hides the other, chosen by bit 28 of the slot-7 key animation's state (bone 75 shown when the
+// bit is clear or there is no animation).
+void fn_8004B6EC(Gap80048BECObj* obj, Gap80048BECActor** actor) {
+    BOOL clear;
+
+    if (obj == NULL || obj->slotTable7 == NULL) {
+        clear = TRUE;
+    } else {
+        clear = ((fn_80024D2C((Gap80048BECKeyAnimation*)obj->slotTable7->animation) >> 28) & 1) ^ 1;
+    }
+    if (clear) {
+        if (obj->boneIndex75 != 0xFFFF) {
+            fn_800B2BE4(*actor, obj->boneIndex75);
+        }
+        if (obj->actorIndex != 0xFFFF) {
+            fn_800B2BA8(*actor, obj->actorIndex, NULL, 0);
+        }
+    } else {
+        if (obj->boneIndex75 != 0xFFFF) {
+            fn_800B2BA8(*actor, obj->boneIndex75, NULL, 0);
+        }
+        if (obj->actorIndex != 0xFFFF) {
+            fn_800B2BE4(*actor, obj->actorIndex);
+        }
+    }
 }
 
 // .text:0x8004B7B4 size:0x40
