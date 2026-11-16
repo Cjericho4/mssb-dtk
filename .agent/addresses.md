@@ -282,7 +282,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_3_BF878 / fn_3_BEFF8 / fn_3_106E50 / fn_3_1665E4 | misc loaders | model42 / 44-section / camera / results text | DM §4 |
 | game .data+0x0 | `stats_game` | stats.0 descriptor for the debug loader maybeProcessTeamData (file as 12 teams x 9 rows) | DM §4; ST §1 |
 | game .data+0x7EC | `stadium_game` | 21 stadium descriptors | DM §4 |
-| game .data+0x3B4C | `lbl_3_data_3B4C` | 54 s32 (9; row 9 Bowser 78; row 38 52), to object +0x938 in fn_3_FDB30; charID indexing medium, meaning unknown | RX §3.2 |
+| game .data+0x3B4C | `lbl_3_data_3B4C` | 54 s32 per charID (9; Bowser 78; charID 38 52), index = runner charID (+0xE2) or fielder +0x17A, to object +0x938 in fn_3_FDB30; meaning unknown | RX §3.2 |
 | game .data+0x37AC | `lbl_3_data_37AC` | 54 s32 (56..87, per unique character), index s16 +0xE2 in fn_3_FDB30; charID indexing medium | RX §3.2 |
 | game .data+0x111C8 | `lbl_3_data_111C8` | 54 x 2 f32 via fn_3_BC850 -> fn_8003A688; charID indexing medium | RX §3.2 |
 | game .data+0x285A8 | `lbl_3_data_285A8` | 54 s32 (-150000..-350000), fn_3_168704 / fn_3_168DFC; charID indexing medium | RX §3.2 |

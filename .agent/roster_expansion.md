@@ -87,8 +87,8 @@ Runtime (`.bss`) and save data:
 | 0x7F10 | 54 s16 | character height | 7 | high | same |
 | 0x8168 | 54 u16 | voice SFX base | `fn_3_90220` | high | `sounds.md` §3 |
 | 0x17000 | 54 s32 | foot height | `fn_3_BC274`, `fn_3_BC2DC` | high | `stats.md` §6 |
-| **0x3B4C** (new) | 54 s32 | 9 for everyone except Bowser 78 and charID 38 = 52; stored to an object's +0x938 | `fn_3_FDB30` (index = s16 at fielder +0x17A, an unnamed pad in the `Fielder` struct, or an s16 near the runner record), `fn_3_106270` | med | here |
-| **0x37AC** (new) | 54 s32 (+1) | 56..87, one value per unique character (variants share), stored as s16 at +0x940 | `fn_3_FDB30` (index = s16 at +0xE2) | med | here |
+| **0x3B4C** (new) | 54 s32 | 9 for everyone except Bowser 78 and charID 38 = 52; stored to an object's +0x938 | `fn_3_FDB30`: index = `InMemRunnerType.charID` (+0xE2; the asm reads `-0xB12(g_Runners + i*0x154)` for i = 9..12, which is runner `i-9` +0xE2) or the s16 at fielder +0x17A (unnamed in the `Fielder` struct, so that is the fielder's charID copy); `fn_3_106270` | high (index), unknown (meaning) | here |
+| **0x37AC** (new) | 54 s32 (+1) | 56..87, one value per unique character (variants share), stored as s16 at +0x940 | `fn_3_FDB30` (index = s16 at +0xE2 of a record whose base was not traced; +0xE2 is `charID` in `InMemRunnerType`) | med | here |
 | **0x111C8** (new) | 54 × 2 f32 (+1 row) | 1.2/1.2, 1.4/1.4, 1.0/1.0 ... passed to `fn_8003A688` | `fn_3_BC850(_, index)` | med | here |
 | **0x285A8** (new) | 54 s32 | −150000 .. −350000 (fixed point ×1e-5?) | `fn_3_168704`, `fn_3_168DFC` | med | here |
 
@@ -271,8 +271,15 @@ Each step is testable on its own; none needs a matching build.
      menus.rel pointers.
    * Not covered yet: bases passed as arguments or kept in memory, and the tracking's blind
      spots (§3.5). The poison run is what catches those.
-   Also open: where the new space comes from (a spare DOL data section, growing a REL's `.data`,
-   or the end of the arena) and how the 54-sized parts of `lbl_8034E9A0` are split out.
+   **Space** (read from the binaries, untested): main.dol uses 9 of its 11 data section slots
+   and 2 of 7 text slots, so it can carry a new section. `.bss` ends at 0x803CD30E, the stack
+   top is 0x803DD310 and `OSInit` sets the arena start to 0x803DF320 (`lis/addi` pairs at
+   0x8006D3DC and 0x8006D414). A new section at 0x803DF320 with those two pairs raised by its
+   size takes the space from the arena; every table at N = 64 is a few tens of KB against the
+   1.3 MB the exhibition heap leaves free (`model_limits.md`). The RELs cannot simply grow: the
+   patcher re-packs each REL inside its original compressed size in aaaa.dat, so REL tables
+   would move into the DOL section too (their readers are relocation entries, which can point
+   at the DOL). Still open: how the 54-sized parts of `lbl_8034E9A0` are split out.
 2. **Chemistry out of the stats row.** Move the 54-byte rows to an N × N table and patch the
    readers, keeping the 0xA0 row stride. Removes the worst embedded 54.
 3. **Raise N for variants only** (new charIDs that reuse an existing unique character: its voice,
@@ -290,7 +297,8 @@ they are behaviour-neutral, and they turn the rest into data edits.
 
 ## 7. Open items
 
-* Trace the index of game 0x37AC, 0x111C8, 0x285A8 and name the four new tables.
+* Trace the index of game 0x37AC, 0x111C8 (`fn_3_BC850` has no direct caller: it is reached
+  through a pointer) and 0x285A8, and name the four new tables.
 * Identify `lbl_80354768`'s 54-byte block, `lbl_2_data_2FA60`, `lbl_8034E978`.
 * Read the unread derived-immediate sites (§4) and scan the `mulli` strides 6, 7 and 0xA0.
 * `addi rX, rY, 0x36` is not in the sites CSV. `fn_80021CA4` uses it three times as the master
