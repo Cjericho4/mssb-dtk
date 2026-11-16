@@ -69,8 +69,22 @@ void main(void) {
 }
 
 // .text:0x800096DC size:0xC4
+// Boot task (first run): looks up the two data files' disc entry numbers, reports them, and
+// hands the task over to fn_800097A0.
 void PrepFilesToBeLoaded(void) {
-    return;
+    Gap80008E00Task* task;
+
+    lbl_80366158.unk0.hi = lbl_803C7420.unk50.hi;
+    lbl_80366158.unk0.lo = lbl_803C7420.unk50.lo;
+    task = lbl_803CC1B8;
+    lbl_803CBBD4 = ConvertPathToEntryNum(&lbl_800E8EE8);
+    lbl_803CBBD0 = ConvertPathToEntryNum(&lbl_800E8EF8);
+    task->unk18 = 0;
+    lbl_803CC1B8->callback = fn_800097A0;
+    OSReport(lbl_800E6568, lbl_803CBBD4);
+    OSReport(lbl_800E6578, lbl_803CBBD0);
+    lbl_80110080.unk5 = 4;
+    lbl_80366158.unk1D = 1;
 }
 
 // .text:0x800097A0 size:0x6F4
