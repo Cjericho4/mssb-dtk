@@ -16,7 +16,7 @@ symbols whose colour-variant rows equal their base's row.
   32/36-cell select grid, and switch tables that stop at charID 47 or 51. A new character with its
   own voice, portrait and grid cell hits all four; a new *variant* of an existing character hits
   only the first.
-* **40 code tables** are indexed by charID (24 in the DOL, 12 in game.rel, 2 in challenge.rel,
+* **41 code tables** are indexed by charID (25 in the DOL, 12 in game.rel, 2 in challenge.rel,
   2 descriptor tables in menus.rel), plus the stats file and the menu art files. Four of the
   game.rel ones and both challenge.rel ones were not in any doc before this pass (§3).
 * The number 54 appears as an immediate at **368 candidate sites in 136 functions** (252 of them in
@@ -40,8 +40,8 @@ symbols whose colour-variant rows equal their base's row.
 | charID count | 54 (`0x36`); 54 also means "none / empty slot" in the menus | every table in §3, the sites in §5 | this doc |
 | unique characters | 32 (`uniqueIdx` 0..31 in `lbl_800E8558`) | voice group `u8[32]` (game `.data+0x8148`, challenge `.data+0xFC0`), unlock list `lbl_803CB748`, announcer and portrait files keyed by grid index | `character_select.md` §1, `sounds.md` §3 |
 | select grid | 32 cells (+0x20 alternate), roster grid `lbl_800FDE84` 36 cells (26 used), captain grid 12 | `mainCharArray` 33, `lbl_800E869C` 32, `secondaryCharacterArray` 22, `lbl_80108DF4` 33 u16, menu layout resources | `character_select.md` §1, §4, §8 |
-| per-charID switches | `jumptable_800EEC40` 48 entries (charID 0..47, `fn_80017814`), `fn_80064918` 0..51, `jumptable_801091F4` in `fn_800698F8`; candidates with the same 0..47 bound, index not traced: `jumptable_800EED00` (`fn_80017DBC`), menus `jumptable_2_data_2FEEC` (`fn_2_8D270`), challenge `jumptable_1_data_F690` (`fn_1_135C0`) | a charID past the table takes the default case or panics (`fn_800698F8`) | `character_modding_report.md` §1.1, `character_select.md` §4 |
-| field widths | the challenge lineup stores charID as `s16`; `lbl_800F73B8` is `s8` (master body entry ≤ 127); other charID fields not audited | none found that blocks 55..126 | `roster_flow.md` §2 |
+| per-charID switches | `jumptable_800EEC40` 48 entries (charID 0..47, `fn_80017814`), `fn_80064918` 0..51, `jumptable_801091F4` in `fn_800698F8`; candidates: a jump table used within 14 instructions of a read of the actor's charID byte (+0x252), index not traced: `jumptable_800EED00` (48 entries, `fn_80017DBC`), `jumptable_800EEB84` (38, `fn_80011468`), `jumptable_800EEE24` (38, `fn_8001D2D4`), `jumptable_800EEF4C` (32, `fn_8001FC4C`), `jumptable_800F7720` / `jumptable_800F77A8` (34 each, `fn_80024C6C`), menus `jumptable_2_data_2FEEC` (48, `fn_2_8D270`), challenge `jumptable_1_data_F690` (48, `fn_1_135C0`) | a charID past the table takes the default case or panics (`fn_800698F8`) | `character_modding_report.md` §1.1, `character_select.md` §4 |
+| field widths | the actor slot record keeps charID as **`s8` at +0x252** (read with `extsb` in `fn_8004BEB0`, `fn_8004C510` and the loaders), so charIDs stop at 127; the challenge lineup stores it as `s16`; `lbl_800F73B8` is `s8` (master body entry ≤ 127); other charID fields not audited | none found that blocks 55..126 | `roster_flow.md` §2 |
 
 ## 3. Per-character tables
 
@@ -65,6 +65,7 @@ indexes by a 16-bit field, index source not traced.
 | `lbl_800F743C` | 54 u8 | sub-item pair row | high | same |
 | `lbl_800EFD38` (+ `lbl_800F1D68`) | 516 × 16 B | ARAM master descriptors; tiers from `lbl_803CB7E0` = {54, 378, 54, 29}: `54 + charID*7 + k` sub-items, `432 + charID` track-15 bank, `486 + id` scripts | high | same; `data_map.md` §4 |
 | `lbl_800FB798` .. `lbl_800FBD80` | 15 × s16[54] | animation event windows (two of them, 0x800FB804 and 0x800FB9B4, are byte-identical) | high | `stats.md` §7 |
+| **`lbl_800FC494`** (new) | 54 × 3 s32 (+4 B) | effect position offset per charID, ×1e-5, added at bone 4 by the fielder-on-fire handler `fn_8004BEB0` (matched); **all zero in retail**, so neither table heuristic can see it | high | here |
 
 Runtime (`.bss`) and save data:
 
@@ -128,6 +129,7 @@ symbols the bases came from.
 | `lbl_800F73B8` | 1 | 0 | 1 | 2 | **`lbl_800EFBE8`** only (`fn_8002204C`) |
 | `lbl_800F743C` | 1 | 0 | 1 | 1 | **`lbl_800EFBE8`** only (`fn_80021CA4`) |
 | 15 window tables | 1 each | 1 | 0 | 1 | itself (`fn_8004B284`, `fn_8004BEB0`, `fn_8004C510`) |
+| `lbl_800FC494` | 1 | 1 | 0 | 2 | itself (`fn_8004BEB0`) |
 | `lbl_8034E9A0` (whole 0x4C28 block) | 212 | 588 | 918 | 451 | itself, `lbl_8034E978` |
 | game 0x37AC, 0x6EF8, 0x7690, 0x79B4, 0x7E34, 0x7F10, 0x17000 | 1, 5, 1, 2, 2, 7, 2 | all | 0 | — | itself |
 | game 0x3B4C / 0x285A8 | 2 / 2 | 5 / 2 | 2 / 1 | 5 / 1 | itself |
@@ -308,5 +310,9 @@ they are behaviour-neutral, and they turn the rest into data edits.
   `lbl_803CB7E0`. The other `addi 0x36` sites (`fn_8002244C`, `fn_8005B760`, `fn_8005DE14`,
   `fn_80060184`, game `fn_3_12A910`) are unread.
 * Read the 39 functions with no evidence; decide per `equals` site whether its marker must move.
-* Per-charID switch tables: trace the index of the three 0..47 candidates (§2); switches with
-  another bound are not searched.
+* Per-charID switch tables: trace the index of the eight candidates (§2).
+* The table list is not proven complete: `lbl_800FC494` was found only by decompiling its
+  reader. A search for data symbols used near a read of the actor's charID byte (+0x252) also
+  turns up `lbl_800FC720`, `lbl_80108BF0`, `lbl_80108D30`, game `lbl_3_data_4444`, `lbl_3_data_49DC`,
+  `lbl_3_data_7D24`, `lbl_3_data_266A8`; none is 54 rows by size, none has been read. Other charID
+  sources (`InMemRunnerType.charID` +0xE2, `CharacterStats.charID`) are not searched this way yet.

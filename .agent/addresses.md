@@ -47,6 +47,7 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | 0x800F73B8 (0xF43B8) | `lbl_800F73B8` | 54x2 s8 {bodyEntry, overlayEntry or -1} per charID; retail values in CMR §3 | CMR §3 |
 | 0x800F7424 / 0x800F743C | `lbl_800F7424` / `lbl_800F743C` | 2x6x2 sub-item pair rows {k1,k2} / 54 per-character row index | CMR §3 |
 | 0x800F7478 | end of gap_8001E460.c `.data` split | split is 0x800EFBE8..0x800F7478 | CMR §6 |
+| 0x800FC494 | `lbl_800FC494` | 54 x 3 s32 effect offset per charID (x1e-5), fielder-on-fire handler fn_8004BEB0; all zero in retail | RX §3.1 |
 | 0x800FB798..0x800FBD80 | `lbl_800FB798` + 14 more 0x6C tables | 15 x s16[54]: 7 intervals + one exact-frame event; animation IDs mapped, 99 usually disables | ST §7 |
 | 0x800FB798 / 804 | runner dive turn-around window | anim 0x32, fn_8004B284 +0x5C | ST §7 |
 | 0x800FB870 / 8DC | runner body-check window | anim 0x33, +0xC0 | ST §7 |

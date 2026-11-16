@@ -646,6 +646,9 @@ lbl_800FBD14 (window),dol,fn_8004BEB0,8004BF1C,"addi r3, r3, lbl_800FBD14@l",0x0
 lbl_800FBD14 (window),dol,fn_8004BEB0,8004BF20,"lhax r0, r3, r4",0x0,indexed,lbl_800FBD14
 lbl_800FBD80 (window),dol,fn_8004C510,8004C54C,"addi r4, r4, lbl_800FBD80@l",0x0,named,lbl_800FBD80
 lbl_800FBD80 (window),dol,fn_8004C510,8004C558,"lhax r0, r4, r5",0x0,indexed,lbl_800FBD80
+lbl_800FC494,dol,fn_8004BEB0,8004BF50,"addi r3, r3, lbl_800FC494@l",0x0,named,lbl_800FC494
+lbl_800FC494,dol,fn_8004BEB0,8004BF58,"lwzx r0, r3, r0",0x0,indexed,lbl_800FC494
+lbl_800FC494,dol,fn_8004BEB0,8004BF8C,"add r6, r3, r0",0x0,indexed,lbl_800FC494
 lbl_8034E9A0 (stats block),dol,challengeStarMenu,80042E2C,"addi r5, r5, lbl_8034E9A0@l",0x0,named,lbl_8034E9A0
 lbl_8034E9A0 (stats block),dol,challengeStarMenu,80042E30,"lbz r0, 0x46f8(r5)",0x46F8,anchor+offset,lbl_8034E9A0
 lbl_8034E9A0 (stats block),dol,challengeStarRelatedInd,8002494C,"addi r3, r3, lbl_8034E9A0@l",0x0,named,lbl_8034E9A0
