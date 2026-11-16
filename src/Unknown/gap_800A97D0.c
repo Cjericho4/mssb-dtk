@@ -93,8 +93,21 @@ void fn_800AAFEC(void) {
 }
 
 // .text:0x800AB474 size:0xC0
-void fn_800AB474(void) {
-    return;
+// Queues card operation 3 (task fn_800AB534) for `chan` / `slot` with a copy of the caller's
+// 32-byte block, and stores the channel's 64-bit value.
+void fn_800AB474(u8 chan, u8 slot, u16 unk6, void* block, u64 value) {
+    Gap800A97D0Queue* queue;
+
+    lbl_803C7838.unk55 = 3;
+    queue = fn_800B0A5C_insertQueue(fn_800AB534, 0xFF);
+    memset((u8*)&queue->request, 0, sizeof(Gap800A97D0Request));
+    queue->request.chan = chan;
+    queue->request.slot = slot;
+    queue->request.unk6 = unk6;
+    queue->request.buffer = lbl_802EF2D0;
+    memcpy(queue->request.buffer, block, sizeof(lbl_802EF2D0));
+    lbl_802EF2C0[chan] = value;
+    lbl_803CC1B8->unk10 = 0;
 }
 
 // .text:0x800AB534 size:0x5E0

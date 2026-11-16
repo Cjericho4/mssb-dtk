@@ -30,7 +30,9 @@ typedef struct Gap800A97D0Request {
     u8 _pad0[4];
     /* 0x4 */ u8 chan;
     /* 0x5 */ u8 slot;
-    u8 _pad6[0x26];
+    /* 0x6 */ u16 unk6;
+    /* 0x8 */ u8* buffer;
+    u8 _padC[0x20];
 } Gap800A97D0Request;
 typedef struct Gap800A97D0Queue {
     u8 _pad0[0x10];
@@ -80,7 +82,9 @@ void fn_800AA930(void);
 void fn_800AAA70(void);
 void fn_800AAEE4(void);
 void fn_800AAFEC(void);
-void fn_800AB474(void);
+extern u8 lbl_802EF2D0[0x20]; /* copy of the 32-byte block passed to fn_800AB474 */
+void* memcpy(void* dst, const void* src, unsigned long n);
+void fn_800AB474(u8 chan, u8 slot, u16 unk6, void* block, u64 value);
 void fn_800AB534(void);
 u16 fn_800ABB14(u8* data, s32 count);
 void fn_800ABB60(void);
