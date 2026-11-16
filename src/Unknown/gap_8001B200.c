@@ -265,8 +265,25 @@ void fn_8001CA40(u8 lightSet) {
 }
 
 // .text:0x8001CB10 size:0xC4
-void fn_8001CB10(void) {
-    return;
+/* Hands the normalised direction of the first runtime light to fn_800BEBCC. */
+static inline void applyFirstLightDirection(void) {
+    Vec direction;
+
+    direction.x = lbl_80367318[0].x;
+    direction.y = lbl_80367318[0].y;
+    direction.z = lbl_80367318[0].z;
+    PSVECNormalize(&direction, &direction);
+    fn_800BEBCC(0, direction);
+}
+
+// Converts `count` light specs into the runtime lights and applies the first one's direction.
+void fn_8001CB10(Gap8001B200LightSpec* specs, s32 count) {
+    s32 i;
+
+    for (i = 0; i < count; i++) {
+        fn_80023B90(&specs[i], &lbl_80367318[i]);
+    }
+    applyFirstLightDirection();
 }
 
 // .text:0x8001CBD4 size:0xF4

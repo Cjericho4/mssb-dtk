@@ -40,7 +40,7 @@ extern Gap8001B200Light lbl_80367318[4]; /* start of a larger block */
 /* gap_8002244C.h declares this as a (void) stub; arguments from fn_8001CA40's loop. */
 void fn_80023B90(Gap8001B200LightSpec* spec, Gap8001B200Light* light);
 void fn_8001CA40(u8 lightSet);
-void fn_8001CB10(void);
+void fn_8001CB10(Gap8001B200LightSpec* specs, s32 count);
 void fn_8001CBD4(void);
 void fn_8001CCC8(void);
 void fn_8001CE74(void);
