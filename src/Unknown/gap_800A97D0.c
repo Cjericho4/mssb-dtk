@@ -188,13 +188,35 @@ void fn_800ACF14(Gap800A97D0Block* block) {
 }
 
 // .text:0x800ACF34 size:0x44
-void fn_800ACF34(void) {
-    return;
+// Allocates `size` bytes (rounded up to 4) from the high end of the game's two-ended arena,
+// aligned down to `alignment`; the 8-byte header before the block records the old end and the
+// bytes taken.
+Gap800A97D0Block* fn_800ACF34(s32 alignment, u32 size) {
+    /* Non-matching: registers only. */
+    s32 end = lbl_803C7898.end;
+    s32 start = lbl_803C7898.start;
+    Gap800A97D0Block* block = (Gap800A97D0Block*)(-alignment & (end - ((size + 3) & ~3)));
+    s32 newEnd = (s32)(block - 1);
+
+    block[-1].addr = end;
+    block[-1].size = end - newEnd;
+    lbl_803C7898.size = newEnd - start;
+    lbl_803C7898.end = newEnd;
+    return block;
 }
 
 // .text:0x800ACF78 size:0x38
-void fn_800ACF78(void) {
-    return;
+// Resizes the most recent low-end block to `size` bytes (rounded up to 4) and moves the arena
+// start to its new end.
+void fn_800ACF78(Gap800A97D0Block* block, u32 size) {
+    /* Non-matching: registers only. */
+    s32 base = block[-1].addr;
+
+    size = ((size + 3) & ~3) + ((s32)block - base);
+    base += size; /* now the new arena start */
+    lbl_803C7898.start = base;
+    lbl_803C7898.size = lbl_803C7898.end - base;
+    block[-1].size = size;
 }
 
 // .text:0x800ACFB0 size:0x20
@@ -205,8 +227,27 @@ void fn_800ACFB0(Gap800A97D0Block* block) {
 }
 
 // .text:0x800ACFD0 size:0x4C
-void _OSAllocFromHeap(void) {
-    return;
+// Allocates `size` bytes (rounded up to 4) from the low end of the game's two-ended arena at
+// the next `alignment` boundary that leaves room for the 8-byte header (old start, bytes
+// taken). Nothing checks that the two ends do not cross.
+Gap800A97D0Block* _OSAllocFromHeap(s32 alignment, u32 size) {
+    /* Non-matching: registers only. */
+    s32 start;
+    s32 end;
+    s32 total;
+    Gap800A97D0Block* block;
+
+    size = (size + 3) & ~3;
+    start = lbl_803C7898.start;
+    end = lbl_803C7898.end;
+    block = (Gap800A97D0Block*)(-alignment & (start + (alignment + 7)));
+    total = (s32)block - start + size;
+    block[-1].addr = start;
+    size += (u32)block; /* now the new arena start */
+    block[-1].size = total;
+    lbl_803C7898.size = end - size;
+    lbl_803C7898.start = size;
+    return block;
 }
 
 // .text:0x800AD01C size:0x1C
