@@ -182,6 +182,13 @@ switch names; a new charID gets the default.
   47 <-> 52, Paratroopas 74 <-> 75, Paragoomba 47..51 <-> 52..56. This is the left-handed flip
   the model importer lists as open: an imported body flips correctly only if its bones keep
   these ids.
+* **Sub-item setup** (`fn_8004BD6C`, matched; the model setup hook of Petey, Monty and the
+  Goombas): calls `fn_8001D180(slotKind, item, 0)` for items 0, 1 and the character's own pair
+  (Petey 2 / 3, Monty 4 / 5, Goombas 6 / 7) and `fn_800B2B74` on the pair's bones (ids 20 / 26,
+  74 / 75, 60 / 61). `fn_8001D180` (decompiled, registers only) detaches (third argument 0) or
+  attaches a sub-item: the owner bone is `lbl_803CB7B4[item]`; attaching needs
+  `lbl_800EEAAC[charID] >= 0` and copies the display attachment of the sub-item model's last
+  bone that has one.
 * **Hand sub-item** (`fn_80024C6C`), **per-frame extras** (`fn_80011468`: Bowser Jr.'s bone
   toggle, the Boos' fade, Goomba / Petey / Monty handlers, model byte +0x99 for seven
   characters): see the switches row in §2.
