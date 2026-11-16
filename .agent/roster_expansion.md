@@ -40,7 +40,7 @@ symbols whose colour-variant rows equal their base's row.
 | charID count | 54 (`0x36`); 54 also means "none / empty slot" in the menus | every table in §3, the sites in §5 | this doc |
 | unique characters | 32 (`uniqueIdx` 0..31 in `lbl_800E8558`) | voice group `u8[32]` (game `.data+0x8148`, challenge `.data+0xFC0`), unlock list `lbl_803CB748`, announcer and portrait files keyed by grid index | `character_select.md` §1, `sounds.md` §3 |
 | select grid | 32 cells (+0x20 alternate), roster grid `lbl_800FDE84` 36 cells (26 used), captain grid 12 | `mainCharArray` 33, `lbl_800E869C` 32, `secondaryCharacterArray` 22, `lbl_80108DF4` 33 u16, menu layout resources | `character_select.md` §1, §4, §8 |
-| per-charID switches | `jumptable_800EEC40` 48 entries (charID 0..47, `fn_80017814`), `fn_80064918` 0..51, `jumptable_801091F4` in `fn_800698F8`, `jumptable_800F7720` / `jumptable_800F77A8` (charID 14..47, `fn_80024C6C`, matched: which sub-item a fielder's hand uses; Petey and the Goombas none, Boo / King Boo / Shy Guys their own, default for everyone else and for any charID above 47), `jumptable_800EEB84` (charID 6..43, `fn_80011468`, read from asm: a per-frame pass over the 13 actor slots; Bowser Jr. -> `fn_8004B6EC`, Goomba / Paragoomba -> `fn_8004B7F4`, Petey and Monty -> `fn_8004BAEC`, Boo / King Boo -> `fn_8005240C`, charIDs 6, 10, 12, 24, 25, 26, 42 set byte +0x99 of their model object, Paratroopas 20 / 43 set it unless animation 0x40 plays); candidates: a jump table used within 14 instructions of a read of the actor's charID byte (+0x252), index not traced: `jumptable_800EED00` (48 entries, `fn_80017DBC`), `jumptable_800EEE24` (38, `fn_8001D2D4`), `jumptable_800EEF4C` (32, `fn_8001FC4C`), menus `jumptable_2_data_2FEEC` (48, `fn_2_8D270`), challenge `jumptable_1_data_F690` (48, `fn_1_135C0`) | a charID past the table takes the default case or panics (`fn_800698F8`) | `character_modding_report.md` §1.1, `character_select.md` §4 |
+| per-charID switches | `jumptable_800EEC40` 48 entries (charID 0..47, `fn_80017814`), `fn_80064918` 0..51, `jumptable_801091F4` in `fn_800698F8`, `jumptable_800F7720` / `jumptable_800F77A8` (charID 14..47, `fn_80024C6C`, matched: which sub-item a fielder's hand uses; Petey and the Goombas none, Boo / King Boo / Shy Guys their own, default for everyone else and for any charID above 47), `jumptable_800EEB84` (charID 6..43, `fn_80011468`, matched: a per-frame pass over the 13 actor slots; Bowser Jr. -> `fn_8004B6EC` (matched: shows one of bones 75 / 76), Goomba / Paragoomba -> `fn_8004B7F4`, Petey and Monty -> `fn_8004BAEC`, Boo / King Boo -> `fn_8005240C` (matched: alpha fade from the key frames in `lbl_800FEB08`, own row per Boo for animation 0x67), Yoshi, Wario, the Koopas and Nokis set byte +0x99 of their model, the Paratroopas set it unless animation 0x40 plays), `jumptable_800EEF4C` (charID 16..47, `fn_8001FC4C`, decompiled: extra left/right bone pairs for the mirror map, below); candidates: a jump table used within 14 instructions of a read of the actor's charID byte (+0x252), index not traced: `jumptable_800EED00` (48 entries, `fn_80017DBC`), `jumptable_800EEE24` (38, `fn_8001D2D4`), menus `jumptable_2_data_2FEEC` (48, `fn_2_8D270`), challenge `jumptable_1_data_F690` (48, `fn_1_135C0`) | a charID past the table takes the default case or panics (`fn_800698F8`) | `character_modding_report.md` §1.1, `character_select.md` §4 |
 | field widths | the actor slot record keeps charID as **`s8` at +0x252** (read with `extsb` in `fn_8004BEB0`, `fn_8004C510` and the loaders), so charIDs stop at 127; the challenge lineup stores it as `s16`; `lbl_800F73B8` is `s8` (master body entry ≤ 127); other charID fields not audited | none found that blocks 55..126 | `roster_flow.md` §2 |
 
 ## 3. Per-character tables
@@ -170,6 +170,21 @@ files (`153 + c` indexing, 48 mini buffers with alias groups, `character_select.
 banks `sound.(5+u)` per unique index and announcer names in `sound.37` (`sounds.md`), the body,
 sub-item and ANIM files named by the descriptor tables above. All of these are file contents the
 existing tools already rewrite; growing them is data work once the tables that point at them grow.
+
+### 3.6 Per-character behaviour that is code, not a table
+
+Found by decompiling the charID switches. A clone inherits these only if it sits on a charID the
+switch names; a new charID gets the default.
+
+* **Mirror map** (`fn_8001FC4C`): each actor slot has `mirrorBones[120]` at +0x72 (actor bone ->
+  its left/right counterpart), built from bone-id pairs: 13 common pairs (16..21 <-> 22..27,
+  28..31 <-> 32..35, 37/38, 39/40, 60/61) plus per character: Shy Guys 65..70 <-> 71..76, Birdo
+  47 <-> 52, Paratroopas 74 <-> 75, Paragoomba 47..51 <-> 52..56. This is the left-handed flip
+  the model importer lists as open: an imported body flips correctly only if its bones keep
+  these ids.
+* **Hand sub-item** (`fn_80024C6C`), **per-frame extras** (`fn_80011468`: Bowser Jr.'s bone
+  toggle, the Boos' fade, Goomba / Petey / Monty handlers, model byte +0x99 for seven
+  characters): see the switches row in §2.
 
 ## 4. Index spaces derived from 54
 
