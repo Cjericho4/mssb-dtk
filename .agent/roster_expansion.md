@@ -5,9 +5,10 @@ have not been traced. Owns: the list of everything keyed by charID or sized 54, 
 code sites that use 54 as a number, and the relocation plan. Table *meanings* stay in their owning
 docs (linked per row). Nothing here has been tried in the game yet.
 
-Reproduce: `python3 tools/roster_scan.py --tables` (needs a built tree). It rewrites
-`.agent/roster_expansion_sites.csv` and prints the 54 × N data symbols whose colour-variant rows
-equal their base's row.
+Reproduce: `python3 tools/roster_scan.py --tables --refs` (needs a built tree). It rewrites
+`.agent/roster_expansion_sites.csv` (uses of 54) and `.agent/roster_expansion_refs.csv` (every
+instruction that forms an address inside a per-character table), and prints the 54 × N data
+symbols whose colour-variant rows equal their base's row.
 
 ## 1. TL;DR
 
@@ -27,8 +28,9 @@ equal their base's row.
   (`54 + charID*7 + k`, `432 + charID`, `486 + id`: every later tier base moves when 54 grows).
 * Recommended first experiment: **relocate with N still 54** and poison the old copies. It changes
   no behaviour, so any difference in an emutest run is a missed reference. Grow N only after that
-  passes (§6). The top risk is finding the references: tables are read as *unit anchor + offset*,
-  not by their own symbol (§6 step 1).
+  passes (§6). The reference list for it exists (`roster_expansion_refs.csv`, §3.5): most tables
+  are addressed by their own symbol; the five descriptor tables of `gap_8001E460` are reached as
+  *unit anchor + offset* and through two data pointers.
 
 ## 2. The limits
 
@@ -96,7 +98,7 @@ Runtime (`.bss`) and save data:
 
 | Where | Shape | What | Conf. |
 |---|---|---|---|
-| challenge `.data+0xFC0` / `+0xFE0` | u8[32] / 54 u16 | byte-identical copies of game.rel 0x8148 / 0x8168 (voice group, voice SFX base). The Clone Maker writes the game.rel 0x8168 row for a clone; no write to the challenge.rel copy was found. The copy is read by the challenge.rel function at `.text` 0xB5B8 (reference at 0xB5D0); when that runs is not traced | high (the copy), open (its use) |
+| challenge `.data+0xFC0` / `+0xFE0` | u8[32] / 54 u16 | byte-identical copies of game.rel 0x8148 / 0x8168 (voice group, voice SFX base). The Clone Maker writes the game.rel 0x8168 row for a clone; no write to the challenge.rel copy was found. **No reader of the copy was found either**: `fn_1_B5B8` names `lbl_1_data_FC0` only as its unit's data anchor (it reads +0xCE2), and no instruction forms an address in 0xFC0..0x104B. Probably dead data linked in with shared source | high (the copy), med (unused) |
 | challenge `lbl_1_data_A978` | 54 s16 (+ padding to 0xDC) | identity 0..53, read by the 54-loop in `fn_1_17B5C` | med |
 | menus `lbl_2_data_241C` (`menu_char_a`) | 54 × 16 B | per-charID menu 3D scene descriptors (`data_map.md` §4) | high |
 | menus `lbl_2_data_2FA60` | 54 × 16 B | same descriptor shape, reader `fn_2_8E6A4`; not identified | low |
@@ -105,6 +107,58 @@ Runtime (`.bss`) and save data:
 No other duplicate of a per-character table exists in any of the four binaries: a byte search of
 every table in §3.1–3.2 finds only itself, apart from the identical window pair and the window
 tables that are constant (all 0 or all 99), which match any run of the same value.
+
+### 3.5 How the code reaches each table (`roster_expansion_refs.csv`)
+
+`tools/roster_scan.py --refs` follows `lis`/`addi`/`addis`/`mr` chains from a symbol through each
+function and records every instruction whose address lands inside a table: 2,620 sites. "named"
+= the instruction carries the table's own symbol; "anchor+offset" = a constant offset from a
+tracked base; "indexed" = a tracked base used in `add` / `lbzx`-style forms. "Via" lists the
+symbols the bases came from.
+
+| Table | Functions | named | anchor+offset | indexed | Via |
+|---|---|---|---|---|---|
+| `charSizeMultipliers` | 8 | 9 | 0 | 10 | itself |
+| `lbl_800E8558` | 62 | 94 | 163 | 101 | itself (the offsets are fields of a row) |
+| `lbl_800EEAAC` / `lbl_800EEB18` | 6 / 6 | 11 / 8 | 4 / 4 | 9 / 6 | itself |
+| `lbl_800EFD38` (master) | 7 | 9 | 11 | 13 | itself, `lbl_800F1D68`, **`lbl_800EFBE8`** |
+| `lbl_800F1D78` | 4 | 4 | 1 | 5 | itself (`fn_80021BBC`, game `fn_3_59B20`, challenge `fn_1_1E0`), **`lbl_800EFBE8`** (`fn_8002204C`) |
+| `lbl_800F5D98` | 1 | 0 | 1 | 1 | **`lbl_800EFBE8`** only (`fn_80021CA4`) |
+| `lbl_800F73B8` | 1 | 0 | 1 | 2 | **`lbl_800EFBE8`** only (`fn_8002204C`) |
+| `lbl_800F743C` | 1 | 0 | 1 | 1 | **`lbl_800EFBE8`** only (`fn_80021CA4`) |
+| 15 window tables | 1 each | 1 | 0 | 1 | itself (`fn_8004B284`, `fn_8004BEB0`, `fn_8004C510`) |
+| `lbl_8034E9A0` (whole 0x4C28 block) | 212 | 588 | 918 | 451 | itself, `lbl_8034E978` |
+| game 0x37AC, 0x6EF8, 0x7690, 0x79B4, 0x7E34, 0x7F10, 0x17000 | 1, 5, 1, 2, 2, 7, 2 | all | 0 | — | itself |
+| game 0x3B4C / 0x285A8 | 2 / 2 | 5 / 2 | 2 / 1 | 5 / 1 | itself |
+| game 0x7870 | 3 | 3 | 2 | 3 | itself, `g_hitFloats` |
+| game 0x8168 | 3 | 1 | 9 | 10 | itself, `lbl_3_data_8148` |
+| game 0x111C8 | 3 | 1 | 8 | 4 | itself, `lbl_3_data_111A8` |
+| challenge 0xA978 | 4 | 6 | 10 | 6 | itself, `lbl_1_data_1DC0` |
+| challenge 0xFE0 | 0 | — | — | — | no reader found |
+| menus 0x241C / 0x2FA60 | 4 / 1 | 4 / 1 | 0 | 10 / 1 | itself |
+
+Inside `lbl_8034E9A0`, by offset: stats rows (+0..0x21BF, which includes every plain load of the
+block's address) 1,166 sites in 207 functions; +0x21C0..0x4756 519 sites in 122; taken flags
+(+0x4757) 86 in 19; ranked ids (+0x478D) 24 in 1; chemistry rows (+0x47F9..) 162 in 33.
+
+Pointers held in data (not visible to the register tracking), from a scan of every DOL data word
+and every REL `ADDR32` relocation:
+
+* `lbl_803CB790` -> `lbl_800F1D78` (the documented runtime subfile pointer) and `lbl_803CB7A8` ->
+  `lbl_800F5D98`. Code that loads through these two words reads the tables without naming them:
+  `lbl_803CB7A8` in `fn_80014204` and `fn_800145F8`; `lbl_803CB790` in 18 functions
+  (`fn_80014A18`, `fn_80014D4C`, `fn_80014E50`, `fn_80014F40`, `fn_80015468`, `fn_80016344`,
+  `fn_80016710`, `fn_80016B60`, `fn_80017340`, `fn_8001758C`, `fn_80018024`, `fn_80018270`,
+  `fn_800189E4`, `fn_80018B74`, `fn_80018DEC`, `fn_8001C588`, `fn_8001C67C_animation`,
+  `fn_8001C920`). Moving the tables only needs the two words rewritten; growing the rows per
+  character (19, 6) would need these functions' index math.
+* menus.rel `.data+0x277C`, `+0x13220`, `+0x2FE40` -> `lbl_800F5D98`.
+* No REL data word points into a game.rel, challenge.rel or menus.rel table of §3.2–3.3.
+
+Limits of the tracking: control flow is ignored, calls clear the volatile registers, and a base
+passed to another function or stored in memory is lost. Checked against the docs: the six
+readers of `lbl_800EEB18` and the 62 of `lbl_800E8558` are all found; game 0x7870 and 0x8168
+gain readers the docs did not list (3 functions each, was 2 and 1).
 
 ### 3.4 Files on the disc
 
@@ -120,8 +174,9 @@ These are why "append 10 rows" is not enough:
 
 * **Master descriptor tiers.** Tier bases are sums of `lbl_803CB7E0` = {54, 378, 54, 29}. With N
   characters the sub-item tier becomes N*7 and the track-15 tier N, so the bases 54, 432 and 486
-  all move. The counts are read from `lbl_803CB7E0` at run time in the documented loaders, but any
-  site that uses 432 or 486 as an immediate must be found (not scanned yet).
+  all move. `fn_80021CA4` adds the first base as an immediate (`addi rX, rY, 0x36`, three
+  times), so the counts in `lbl_803CB7E0` are not the only copy; sites that use 432 or 486 as an
+  immediate are not scanned yet.
 * **Body entries 0..32 / overlay entries 33..53** in the same master table are *not* charID-keyed;
   they are reached through `lbl_800F73B8`. A new unique body needs a new entry there, which the
   first tier (54) currently has no room for.
@@ -170,7 +225,8 @@ From other docs, not re-read here: `fn_80021BBC`, `fn_8002204C` (`charID < 0x36`
 probably that switch's bound.
 
 Unverified, context not read: DOL `DrawSprite`, `fn_8000FA9C` (compares a value with 0x36, then
-0x27), `fn_80018B74`, `fn_80069A68`; game `fn_3_12A6C4`, `fn_3_12B7A0`, `fn_3_B6D80`, `fn_3_B7184`;
+0x27), `fn_80018B74` (`li r0, 0x36`; it loads through `lbl_803CB790`, so probably a 54-row
+loop over the subfile table), `fn_80069A68`; game `fn_3_12A6C4`, `fn_3_12B7A0`, `fn_3_B6D80`, `fn_3_B7184`;
 every menus.rel site, including the 26 functions with an empty `evidence` column (the
 `fn_2_44504`..`fn_2_46ADC` and `fn_2_4D378`..`fn_2_4E1C0` runs neighbour known readers of
 `lbl_800E8558`).
@@ -192,9 +248,16 @@ Each step is testable on its own; none needs a matching build.
      offsets stay valid, but a table in the middle still cannot grow), or alone, by rewriting each
      `anchor + offset` access into a load of the new address (needs room for an extra instruction
      or a 32-bit offset form at every site).
-   * Needed first: a per-unit list of anchor loads and the offsets used from each (an extension
-     of `tools/roster_scan.py`: track the anchor register through each function). RELs are the
-     same pattern with relocation entries on the anchor.
+   * `roster_expansion_refs.csv` is that reference list (§3.5). What it shows: only the
+     `gap_8001E460` pool (`lbl_800EFBE8`: master, subfile, sub-item, pair and row-kind tables) and
+     four REL tables (game 0x7870, 0x8168, 0x111C8, challenge 0xA978) are reached from a
+     neighbour's symbol; every other table is addressed by its own symbol, so retargeting its
+     `@ha/@l` pairs (DOL) or relocation entries (REL) moves it. The five `gap_8001E460` tables
+     have 20 anchor-relative sites in two functions (`fn_80021CA4`, `fn_8002204C`), plus the two
+     data pointers `lbl_803CB790` / `lbl_803CB7A8` (20 loader functions, §3.5) and three
+     menus.rel pointers.
+   * Not covered yet: bases passed as arguments or kept in memory, and the tracking's blind
+     spots (§3.5). The poison run is what catches those.
    Also open: where the new space comes from (a spare DOL data section, growing a REL's `.data`,
    or the end of the arena) and how the 54-sized parts of `lbl_8034E9A0` are split out.
 2. **Chemistry out of the stats row.** Move the 54-byte rows to an N × N table and patch the
@@ -217,8 +280,9 @@ they are behaviour-neutral, and they turn the rest into data edits.
 * Trace the index of game 0x37AC, 0x111C8, 0x285A8 and name the four new tables.
 * Identify `lbl_80354768`'s 54-byte block, `lbl_2_data_2FA60`, `lbl_8034E978`.
 * Scan for the derived immediates (432, 486, 0x21C0, 54*19, 54*6) and for `mulli` strides.
-* Extend the scanner to list anchor + offset accesses per unit (blocks step 1).
+* `addi rX, rY, 0x36` is not in the sites CSV. `fn_80021CA4` uses it three times as the master
+  tier base (`54 + charID*7 + k`), so that base is an immediate, not only a count read from
+  `lbl_803CB7E0`. The other `addi 0x36` sites (`fn_8002244C`, `fn_8005B760`, `fn_8005DE14`,
+  `fn_80060184`, game `fn_3_12A910`) are unread.
 * Read the 39 functions with no evidence; split the menus sites into sentinel / loop / bound.
 * Per-charID switch tables: list every one (three are known).
-* Whether the challenge.rel voice copies matter for existing clones (a clone in challenge mode
-  would use its donor's voice base).

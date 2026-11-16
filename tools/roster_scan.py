@@ -9,6 +9,9 @@ per-character tables the same function references as evidence.
     python3 tools/roster_scan.py                 # writes .agent/roster_expansion_sites.csv
     python3 tools/roster_scan.py --tables        # also prints data symbols sized 54 x N whose
                                                  # colour-variant rows equal their base's row
+    python3 tools/roster_scan.py --refs          # also writes .agent/roster_expansion_refs.csv:
+                                                 # every instruction that forms the address of a
+                                                 # per-character table, by name or anchor + offset
 
 Needs a configured build (`python3 configure.py && ninja`) for the asm, and orig/GYQE01.
 A site is a candidate, not proof: 0x36 is also an ordinary number. `evidence` lists the known
@@ -89,6 +92,147 @@ def scan_sites():
     return sites, evidence
 
 
+# Per-character tables as (module, section, start, size, name). REL starts are section offsets.
+TABLES = [
+    ('dol', 'dol', 0x800E8300, 54 * 8, 'charSizeMultipliers'),
+    ('dol', 'dol', 0x800E8558, 54 * 6, 'lbl_800E8558'),
+    ('dol', 'dol', 0x800EEAAC, 108, 'lbl_800EEAAC'),
+    ('dol', 'dol', 0x800EEB18, 108, 'lbl_800EEB18'),
+    ('dol', 'dol', 0x800EFD38, 516 * 16, 'lbl_800EFD38 (master)'),
+    ('dol', 'dol', 0x800F1D78, 54 * 19 * 16, 'lbl_800F1D78'),
+    ('dol', 'dol', 0x800F5D98, 54 * 6 * 16, 'lbl_800F5D98'),
+    ('dol', 'dol', 0x800F73B8, 108, 'lbl_800F73B8'),
+    ('dol', 'dol', 0x800F743C, 54, 'lbl_800F743C'),
+    ('dol', 'dol', 0x8034E9A0, 0x4C28, 'lbl_8034E9A0 (stats block)'),
+    ('game', '.data', 0x37AC, 216, 'game 0x37AC'),
+    ('game', '.data', 0x3B4C, 216, 'game 0x3B4C'),
+    ('game', '.data', 0x6EF8, 54 * 36, 'game 0x6EF8 BatterHitbox'),
+    ('game', '.data', 0x7690, 108, 'game 0x7690'),
+    ('game', '.data', 0x7870, 54 * 6, 'game 0x7870'),
+    ('game', '.data', 0x79B4, 54 * 16, 'game 0x79B4'),
+    ('game', '.data', 0x7E34, 216, 'game 0x7E34'),
+    ('game', '.data', 0x7F10, 108, 'game 0x7F10'),
+    ('game', '.data', 0x8148, 32, 'game 0x8148 (u8[32])'),
+    ('game', '.data', 0x8168, 108, 'game 0x8168'),
+    ('game', '.data', 0x111C8, 54 * 8, 'game 0x111C8'),
+    ('game', '.data', 0x17000, 216, 'game 0x17000'),
+    ('game', '.data', 0x285A8, 216, 'game 0x285A8'),
+    ('challenge', '.data', 0xFC0, 32, 'challenge 0xFC0 (u8[32])'),
+    ('challenge', '.data', 0xFE0, 108, 'challenge 0xFE0'),
+    ('challenge', '.data', 0xA978, 108, 'challenge 0xA978'),
+    ('menus', '.data', 0x241C, 54 * 16, 'menus 0x241C'),
+    ('menus', '.data', 0x2FA60, 54 * 16, 'menus 0x2FA60'),
+] + [('dol', 'dol', a, 108, 'lbl_%08X (window)' % a) for a in range(0x800FB798, 0x800FBD81, 0x6C)]
+
+REG_RE = re.compile(r'^r(\d+)$')
+MEM_RE = re.compile(r'^(-?(?:0x)?[0-9a-fA-F]+|[\w$]+@l)\((r\d+)\)$')
+RELOC_RE = re.compile(r'^([A-Za-z_][\w$]*)(?:([+-])(0x[0-9a-fA-F]+|\d+))?@(ha|l)$')
+NO_DEST = ('st', 'cmp', 'b', 'mt', 'tw', 'dcb', 'icb', 'sync', 'isync', 'nop', '.')
+
+
+def scan_refs(syms):
+    """Linear register tracking per function: which instructions form an address inside a table.
+
+    Tracks `lis`/`addi`/`addis`/`mr` chains from a symbol and reports every instruction whose
+    address operand (or result) lands inside a TABLES entry. Control flow is ignored (state runs
+    straight through labels) and calls clear r0, r3-r12, so a site can be missed or, rarely,
+    attributed wrongly; indexed forms (`lbzx`, `add`) are reported at the instruction that uses
+    the tracked base.
+    """
+    def resolve(mod, name):
+        for m in (mod, 'dol'):
+            if (m, name) in syms:
+                sect, addr, _, kind = syms[(m, name)]
+                if kind != 'function':
+                    return (m, 'dol' if m == 'dol' else sect, addr)
+        return None
+
+    def table_at(val):
+        if val is None:
+            return None
+        for mod, sect, start, size, name in TABLES:
+            if (val[0], val[1]) == (mod, sect) and start <= val[2] < start + size:
+                return name, val[2] - start
+        return None
+
+    def imm(text):
+        try:
+            return int(text, 0)
+        except ValueError:
+            return None
+
+    rows = {}
+    for mod, (patterns, _) in MODULES.items():
+        for pattern in patterns:
+            for path in glob.glob(pattern, recursive=True):
+                fn, regs = None, {}
+                for line in open(path, errors='replace'):
+                    if line.startswith('.fn '):
+                        fn, regs = line.split()[1].rstrip(','), {}
+                        continue
+                    if line.startswith('.endfn'):
+                        fn = None
+                        continue
+                    m = INSN_RE.match(line) if fn else None
+                    if not m:
+                        continue
+                    addr, op, args = m.groups()
+                    ops = [a.strip() for a in args.split(',')] if args else []
+                    hit = None          # (value, how)
+                    new = None          # value for the destination register
+                    if op == 'lis' and len(ops) == 2:
+                        r = RELOC_RE.match(ops[1])
+                        if r and r.group(4) == 'ha':
+                            new = ('ha', r.group(1))
+                    elif op in ('addi', 'subi', 'addic', 'addic.', 'addis', 'subis') and len(ops) == 3:
+                        src = regs.get(ops[1])
+                        r = RELOC_RE.match(ops[2])
+                        if r and r.group(4) == 'l' and src == ('ha', r.group(1)):
+                            base = resolve(mod, r.group(1))
+                            if base:
+                                off = int(r.group(3), 0) * (-1 if r.group(2) == '-' else 1) if r.group(2) else 0
+                                new = (base[0], base[1], base[2] + off, r.group(1))
+                                hit = (new, 'named')
+                        elif src and src[0] != 'ha' and imm(ops[2]) is not None:
+                            k = imm(ops[2]) * (0x10000 if 'is' in op else 1) * (-1 if op.startswith('sub') else 1)
+                            new = (src[0], src[1], src[2] + k, src[3])
+                            hit = (new, 'anchor+offset')
+                    elif op in ('mr', 'mr.') and len(ops) == 2:
+                        new = regs.get(ops[1])
+                    else:
+                        for a in ops[1:]:
+                            mm = MEM_RE.match(a)
+                            if mm:
+                                src = regs.get(mm.group(2))
+                                r = RELOC_RE.match(mm.group(1))
+                                if r and src == ('ha', r.group(1)):
+                                    base = resolve(mod, r.group(1))
+                                    if base:
+                                        hit = (base + (r.group(1),), 'named')
+                                elif src and src[0] != 'ha' and imm(mm.group(1)) is not None:
+                                    hit = ((src[0], src[1], src[2] + imm(mm.group(1)), src[3]), 'anchor+offset')
+                            elif REG_RE.match(a) and regs.get(a) and regs[a][0] != 'ha' and op != 'mr':
+                                if table_at(regs[a]):
+                                    hit = (regs[a], 'indexed')
+                    if hit and table_at(hit[0]):
+                        name, off = table_at(hit[0])
+                        rows[(mod, addr)] = (fn, op + ' ' + args, name, off, hit[1], hit[0][3])
+                    if op == 'bl':
+                        for r in ['r0'] + ['r%d' % i for i in range(3, 13)]:
+                            regs.pop(r, None)
+                    elif ops and REG_RE.match(ops[0]) and not op.startswith(NO_DEST):
+                        if new is not None:
+                            regs[ops[0]] = new
+                        else:
+                            regs.pop(ops[0], None)
+                    if op[-1] == 'u' or op.endswith('ux'):       # update forms write the base
+                        for a in ops[1:]:
+                            mm = MEM_RE.match(a)
+                            if mm:
+                                regs.pop(mm.group(2), None)
+    return rows
+
+
 def read_section(mod, sect, addr, size):
     if mod == 'dol':
         data = open('orig/GYQE01/sys/main.dol', 'rb').read()
@@ -126,6 +270,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--out', default='.agent/roster_expansion_sites.csv')
     ap.add_argument('--tables', action='store_true', help='print 54 x N data symbols with family-equal rows')
+    ap.add_argument('--refs', action='store_true', help='write the table address-forming sites CSV')
     args = ap.parse_args()
     sites, evidence = scan_sites()
     assert sites, 'no asm found: run `python3 configure.py && ninja` first'
@@ -140,6 +285,25 @@ def main():
         ', '.join('%s %d' % kv for kv in sorted(per_mod.items()))))
     if args.tables:
         print_tables(load_symbols())
+    if args.refs:
+        rows = scan_refs(load_symbols())
+        out = args.out.replace('_sites.csv', '_refs.csv')
+        with open(out, 'w', newline='') as f:
+            w = csv.writer(f, lineterminator='\n')
+            w.writerow(['table', 'module', 'function', 'address', 'instruction', 'table_offset', 'form', 'anchor'])
+            for (mod, addr), (fn, text, name, off, how, anchor) in sorted(
+                    rows.items(), key=lambda kv: (kv[1][2], kv[0][0], kv[1][0], kv[0][1])):
+                w.writerow([name, mod, fn, addr, text, '0x%X' % off, how, anchor])
+        per = collections.defaultdict(lambda: [collections.Counter(), set(), set()])
+        for (mod, _), (fn, _, name, _, how, anchor) in rows.items():
+            per[name][0][how] += 1
+            per[name][1].add((mod, fn))
+            per[name][2].add(anchor)
+        print('%d address-forming sites -> %s' % (len(rows), out))
+        for _, _, _, _, name in TABLES:
+            c, fns, anchors = per[name]
+            print('  %-28s %3d functions  named %3d  anchor+offset %3d  indexed %3d  via %s'
+                  % (name, len(fns), c['named'], c['anchor+offset'], c['indexed'], ' '.join(sorted(anchors))))
 
 
 if __name__ == '__main__':

@@ -28,7 +28,7 @@ old ones: #2→1, #3→2, #5→3, #6→4, #7→5, #8→6, #18→7, #25→8, #26�
 | Animation bank swaps, sequences, bone binding, playback (R5) | `animations.md` (owns R5); parser: `tools/datamap/animations.py`; full audit: `audit_animations.py` |
 | Custom model size limits (body/sub-item/ARAM buffers, actor workspace) | `model_limits.md` |
 | Menu portraits, names, colour word | `character_select.md` §8.1–8.3 |
-| More than 54 characters (phase 6): tables, bounds, relocation plan | `roster_expansion.md`; `tools/roster_scan.py`; site list `roster_expansion_sites.csv` |
+| More than 54 characters (phase 6): tables, bounds, relocation plan | `roster_expansion.md`; `tools/roster_scan.py`; site list `roster_expansion_sites.csv`, table reference list `roster_expansion_refs.csv` |
 | What's planned / status | `modding_roadmap.md`; live status on the GitHub board (users/Cjericho4/projects/3, issues on Cjericho4/mssb-dtk) |
 | Pick up an interrupted function | `handoff_<fn>.md` if present |
 

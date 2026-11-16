@@ -286,7 +286,8 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | game .data+0x37AC | `lbl_3_data_37AC` | 54 s32 (56..87, per unique character), index s16 +0xE2 in fn_3_FDB30; charID indexing medium | RX §3.2 |
 | game .data+0x111C8 | `lbl_3_data_111C8` | 54 x 2 f32 via fn_3_BC850 -> fn_8003A688; charID indexing medium | RX §3.2 |
 | game .data+0x285A8 | `lbl_3_data_285A8` | 54 s32 (-150000..-350000), fn_3_168704 / fn_3_168DFC; charID indexing medium | RX §3.2 |
-| challenge .data+0xFC0 / +0xFE0 | `lbl_1_data_FC0` | copies of game 0x8148 (u8[32] voice group) / 0x8168 (54 u16 voice base) | RX §3.3 |
+| challenge .data+0xFC0 / +0xFE0 | `lbl_1_data_FC0` | copies of game 0x8148 (u8[32] voice group) / 0x8168 (54 u16 voice base); no reader found | RX §3.3 |
+| 0x803CB7A8 | `lbl_803CB7A8` | data pointer to `lbl_800F5D98` (sub-item descriptors); menus .data+0x277C / 0x13220 / 0x2FE40 point there too | RX §3.5 |
 | game .data+0x8168 | `characterSoundArray` | voice SFX base, 54 u16 per charID (lines base+0..12) | SN §3 |
 | game .data+0x8148 | `lbl_3_data_8148` | u8[32] voice group id per unique index (symbols.txt says float) | SN §3 |
 | game .data+0x7F7C | `lbl_3_data_7F7C` | s16[32][4] per unique index: anim frame of voice line 0 (HR end) / 7 (championship) | SN §3 |
