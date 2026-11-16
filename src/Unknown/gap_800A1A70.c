@@ -1,32 +1,5 @@
 #include "Unknown/gap_800A1A70.h"
 
-// .text:0x800A1A70 size:0x18
-void fn_800A1A70(Gap800A1A70Range* range, u8* start, u32 length) {
-    range->start = start;
-    range->cur = start;
-    range->end = start + length;
-    range->length = length;
-}
-
-// .text:0x800A1A88 size:0xF8
-void fn_800A1A88(void) {
-    return;
-}
-
-// .text:0x800A1B80 size:0x30
-extern void (*lbl_803CC0F4)(void);
-/* FAKEMATCH: the writers below call this out of line (it is a separate SDK file, GDBase.c). */
-#pragma dont_inline on
-void fn_800A1B80(void) {
-    if (lbl_803CC0F4) lbl_803CC0F4();
-}
-#pragma dont_inline reset
-
-// .text:0x800A1BB0 size:0x28C
-void fn_800A1BB0(void) {
-    return;
-}
-
 /* GD display-list writers (the SDK's GDWrite_u8 / GDWrite_u32 with their overflow checks). */
 static inline void gdPutU8(u8 value) {
     *lbl_803CC0F0->cur++ = value;
@@ -47,6 +20,40 @@ static inline void gdWriteU32(u32 value) {
     gdPutU8(value >> 16);
     gdPutU8(value >> 8);
     gdPutU8(value);
+}
+
+// .text:0x800A1A70 size:0x18
+void fn_800A1A70(Gap800A1A70Range* range, u8* start, u32 length) {
+    range->start = start;
+    range->cur = start;
+    range->end = start + length;
+    range->length = length;
+}
+
+// .text:0x800A1A88 size:0xF8
+// GDPadCurr32: pads the current display list with zero bytes up to a 32-byte boundary.
+void fn_800A1A88(void) {
+    u32 offset = (u32)lbl_803CC0F0->cur & 31;
+
+    if (offset != 0) {
+        for (; offset < 32; offset++) {
+            gdPutU8(0);
+        }
+    }
+}
+
+// .text:0x800A1B80 size:0x30
+extern void (*lbl_803CC0F4)(void);
+/* FAKEMATCH: the writers below call this out of line (it is a separate SDK file, GDBase.c). */
+#pragma dont_inline on
+void fn_800A1B80(void) {
+    if (lbl_803CC0F4) lbl_803CC0F4();
+}
+#pragma dont_inline reset
+
+// .text:0x800A1BB0 size:0x28C
+void fn_800A1BB0(void) {
+    return;
 }
 
 // .text:0x800A1E3C size:0x104
