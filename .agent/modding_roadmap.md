@@ -30,6 +30,24 @@ alongside for the byte-exact rebuild goal, but a later phase never waits on a ma
 - Clone Maker on Tauri: PyInstaller build retired and README_GUI points at the new app (#34);
   a quick Windows check of the exe is still open. Clone voices (#29), model size (#38) and painted
   body textures (#37) are merged and Rio-tested (`sounds.md` §6).
+- **Model and animation import (2026-11-08): built, checked in headless Dolphin, unmerged.** Branch
+  `model-importer` in mssb-modding (worktree `../mssb-modding-model`, 54 commits ahead of `main`;
+  it contains `model-import`, `model-strips`, `model-heap` and `model-rust`):
+  `tools/datamap/gpc.py` (body / sub-item codec, every character round-trips),
+  `import_model.py` (glTF body onto a character's skeleton: hi body, ARAM master, optional lo body)
+  with a Rust port in the Clone Maker core (`import-model` CLI, parity with the Python),
+  `import_anim.py` (edited glTF Actions back into the banks) and the Dolphin harness
+  `tools/emutest` (M1 built and locked). Runs so far are from copies of the harness with the
+  proposals applied, so they report UNLOCKED where the locked harness would say PASS: animation
+  fixtures G0-G3 on the preview and practice scenes (2026-11-01,
+  `tools/datamap/emutest_proposal/README.md` and `practice/README.md`); imported bodies in practice
+  batting and pitching (an unchanged Mario export renders with 0 differing frames; a 1.5x head, a
+  decimated body and a blocky test figure boot, load and animate) and the exhibition heap
+  measurement behind the 300,000-byte hi-body limit (`tools/datamap/README.md`). Waiting on the
+  user: install `emutest_proposal/install_all.patch` and `exhibition_heap.patch` behind the lock
+  and relock, a Rio test of an imported character, then the merge.
+- **Phase 6 inventory** (2026-11-15): every per-character table and charID bound, with a
+  relocation plan, in `roster_expansion.md`.
 
 ## Phases
 1. **Character-select code: understood and documented, matched where practical.**
@@ -104,9 +122,13 @@ the "enables" line says what each unlocks. Status: ⏳ not started, 🟡 in prog
   Tools: `tools/datamap/animations.py`, `audit_animations.py`, synthetic unittest. All 544 distinct
   disc banks / 3,829,384 keys / 108 bodies parse; all 54 master/disc track-15 pairs agree.
   Open: track7/8 callers, extra-pose names, visual identity of 0x2E, auxiliary curves and Blender
-  conventions; data-only swap recipe documented but no Dolphin validation or authoring round trip.
-- **R6. Model format (`.gpc`)** ⏳ (#14). Geometry, display lists, skinning; `f_InitActorWithLayout`
-  (111 feedback lines from matching) is the key function. *Enables:* editing or importing models, not just
+  conventions; data-only swap recipe documented. Authoring: `import_anim.py` on `model-importer`
+  (see "In progress"); its Dolphin fixtures G0-G3 pass in a harness copy and are not installed yet.
+- **R6. Model format (`.gpc`)** 🟡 (#14). Geometry, display lists and skinning are decoded and
+  re-encoded by `gpc.py`, and glTF bodies import through `import_model.py` and the Rust core, all on
+  `model-importer` (see "In progress"); runtime size limits are in `model_limits.md`.
+  `f_InitActorWithLayout` is still unmatched. Open: a Rio test, the merge, the Clone Maker
+  window for it, morphs and left-handed flips. *Enables:* editing or importing models, not just
   textures; a step toward phase 6.
 - **R7. Menu text and graphics** ⏳ (#15). Names are CI4 images (111x18), not text; map every menu
   resource, sequence and font (`inspect_menu_ui.py` is the start). *Enables:* custom names, logos and

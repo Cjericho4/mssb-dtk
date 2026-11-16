@@ -1,6 +1,6 @@
 # Address lookup (GYQE01 modding): grep an address or symbol name; each row points at the doc section that owns the fact. Rows and docs must agree: fix both together.
 
-DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 0xE5300. REL symbols (`fn_2_`/`lbl_2_` menus, `fn_3_`/`lbl_3_` game, `fn_1_`/`lbl_1_` challenge) are section offsets: the RELs are relocated at load, so they have no fixed RAM address. Docs: CMR `character_modding_report.md`, CS `character_select.md`, DM `data_map.md`, RF `roster_flow.md`, RM `modding_roadmap.md`, DK `decomp_knowledge.md`, SN `sounds.md`, ST `stats.md`, AN `animations.md`. Status = `tools/feedback_diff.py` lines (DK §2), 2026-10-24.
+DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 0xE5300. REL symbols (`fn_2_`/`lbl_2_` menus, `fn_3_`/`lbl_3_` game, `fn_1_`/`lbl_1_` challenge) are section offsets: the RELs are relocated at load, so they have no fixed RAM address. Docs: CMR `character_modding_report.md`, CS `character_select.md`, DM `data_map.md`, RF `roster_flow.md`, RM `modding_roadmap.md`, DK `decomp_knowledge.md`, SN `sounds.md`, ST `stats.md`, AN `animations.md`, RX `roster_expansion.md`. Status = `tools/feedback_diff.py` lines (DK §2), 2026-10-24.
 
 ## 1. DOL tables and globals
 
@@ -282,6 +282,11 @@ DOL RAM addresses unless prefixed. DOL `.data` file offset = RAM - 0x800E8300 + 
 | fn_3_BF878 / fn_3_BEFF8 / fn_3_106E50 / fn_3_1665E4 | misc loaders | model42 / 44-section / camera / results text | DM §4 |
 | game .data+0x0 | `stats_game` | stats.0 descriptor for the debug loader maybeProcessTeamData (file as 12 teams x 9 rows) | DM §4; ST §1 |
 | game .data+0x7EC | `stadium_game` | 21 stadium descriptors | DM §4 |
+| game .data+0x3B4C | `lbl_3_data_3B4C` | 54 s32 (9; row 9 Bowser 78; row 38 52), to object +0x938 in fn_3_FDB30; charID indexing medium, meaning unknown | RX §3.2 |
+| game .data+0x37AC | `lbl_3_data_37AC` | 54 s32 (56..87, per unique character), index s16 +0xE2 in fn_3_FDB30; charID indexing medium | RX §3.2 |
+| game .data+0x111C8 | `lbl_3_data_111C8` | 54 x 2 f32 via fn_3_BC850 -> fn_8003A688; charID indexing medium | RX §3.2 |
+| game .data+0x285A8 | `lbl_3_data_285A8` | 54 s32 (-150000..-350000), fn_3_168704 / fn_3_168DFC; charID indexing medium | RX §3.2 |
+| challenge .data+0xFC0 / +0xFE0 | `lbl_1_data_FC0` | copies of game 0x8148 (u8[32] voice group) / 0x8168 (54 u16 voice base) | RX §3.3 |
 | game .data+0x8168 | `characterSoundArray` | voice SFX base, 54 u16 per charID (lines base+0..12) | SN §3 |
 | game .data+0x8148 | `lbl_3_data_8148` | u8[32] voice group id per unique index (symbols.txt says float) | SN §3 |
 | game .data+0x7F7C | `lbl_3_data_7F7C` | s16[32][4] per unique index: anim frame of voice line 0 (HR end) / 7 (championship) | SN §3 |

@@ -28,6 +28,7 @@ old ones: #2→1, #3→2, #5→3, #6→4, #7→5, #8→6, #18→7, #25→8, #26�
 | Animation bank swaps, sequences, bone binding, playback (R5) | `animations.md` (owns R5); parser: `tools/datamap/animations.py`; full audit: `audit_animations.py` |
 | Custom model size limits (body/sub-item/ARAM buffers, actor workspace) | `model_limits.md` |
 | Menu portraits, names, colour word | `character_select.md` §8.1–8.3 |
+| More than 54 characters (phase 6): tables, bounds, relocation plan | `roster_expansion.md`; `tools/roster_scan.py`; site list `roster_expansion_sites.csv` |
 | What's planned / status | `modding_roadmap.md`; live status on the GitHub board (users/Cjericho4/projects/3, issues on Cjericho4/mssb-dtk) |
 | Pick up an interrupted function | `handoff_<fn>.md` if present |
 
@@ -40,6 +41,7 @@ old ones: #2→1, #3→2, #5→3, #6→4, #7→5, #8→6, #18→7, #25→8, #26�
 | `character_select.md` | select/roster screen code, UI and announcer lookups, menu art files, index math and descriptor copies | ~10k |
 | `data_map.md` | every descriptor table and file in ZZZZ.dat / aaaa.dat, formats, coverage, UI slots, unknowns | ~7k |
 | `roster_flow.md` | roster → match data flow (R2): copy sites, skin-byte audit, actor drivers, re-load points, phase-3 skin design | ~8k |
+| `roster_expansion.md` | every charID-indexed table and 54-sized object, code sites that use 54, relocation plan (phase 6) | ~4k |
 | `model_limits.md` | how the game sizes model buffers (file-size based, no vertex/bone caps), ARAM blob, actor workspace 0x86A0 | ~3k |
 | `animations.md` | character ANIM track/action map, bank/key format, body bone hierarchy, sharing, playback, swap requirements and R5 unknowns | ~6k |
 | `stats.md` | stats.0 layout, every CharacterStats field, star skills, chemistry, captain teams, game.rel per-character tables, DOL animation windows (R3) | ~5k |
