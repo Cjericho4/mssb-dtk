@@ -71,6 +71,17 @@ void fn_8003A6B0(void);
 void fn_8003A848(u8 a, u8 b, u8 c);
 void fn_8003A85C(u8 mode);
 void fn_8003A8A0(void);
+typedef struct Gap80039AA8Color { u8 r, g, b, a; } Gap80039AA8Color; /* GXColor */
+extern u8 lbl_803CBCB4; /* grey level used for the flat material colour */
+void GXSetChanMatColor(s32 channel, Gap80039AA8Color color);
+void GXSetNumChans(u8 count);
+void GXSetChanCtrl(s32 channel, u8 enable, s32 ambSrc, s32 matSrc, u32 lightMask, s32 diffuseFn, s32 attnFn);
+void GXSetNumTevStages(u8 count);
+void GXSetTevOrder(s32 stage, s32 coord, s32 map, s32 color);
+void GXSetTevColorIn(s32 stage, s32 a, s32 b, s32 c, s32 d);
+void GXSetTevColorOp(s32 stage, s32 op, s32 bias, s32 scale, u8 clamp, s32 outReg);
+void GXSetTevAlphaIn(s32 stage, s32 a, s32 b, s32 c, s32 d);
+void GXSetTevAlphaOp(s32 stage, s32 op, s32 bias, s32 scale, u8 clamp, s32 outReg);
 void fn_8003AC90(void);
 /* Colour-indexed texture description read by fn_8003AD84. */
 typedef struct Gap80039AA8TexDesc {

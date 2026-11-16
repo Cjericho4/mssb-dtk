@@ -161,8 +161,24 @@ void fn_8003A8A0(void) {
 }
 
 // .text:0x8003AC90 size:0xF4
+// Sets up untextured drawing in one flat grey (level lbl_803CBCB4, opaque): one colour channel
+// with lighting off and one TEV stage that passes the rasterised colour and alpha through.
 void fn_8003AC90(void) {
-    return;
+    Gap80039AA8Color color;
+
+    color.a = 0xFF;
+    color.b = lbl_803CBCB4;
+    color.g = lbl_803CBCB4;
+    color.r = lbl_803CBCB4;
+    GXSetChanMatColor(4, color);
+    GXSetNumChans(1);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetNumTevStages(1);
+    GXSetTevOrder(0, 0xFF, 0xFF, 4);
+    GXSetTevColorIn(0, 10, 15, 15, 15);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaIn(0, 5, 7, 7, 7);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
 }
 
 // .text:0x8003AD84 size:0xD0
