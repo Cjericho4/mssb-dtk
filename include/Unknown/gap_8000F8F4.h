@@ -85,4 +85,37 @@ extern Gap8000F8F4Mtx lbl_800E6600;
 u32 PSMTXInverse(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* inv);
 Gap8000F8F4Mtx* fn_800118AC(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* dst);
 
+/* Local views of AnimLevel1, HugeAnimEntry68, AnimationStruct and hugeAnimStruct
+   (UnknownHeaders.h); that header cannot be included here because this unit declares its own
+   matrix types for the PSMTX functions. */
+typedef struct Gap8000F8F4Model {
+    u8 _pad0[0x99];
+    /* 0x99 */ u8 unk99;
+} Gap8000F8F4Model;
+typedef struct Gap8000F8F4Block {
+    u8 _pad0[0x34];
+    /* 0x34 */ Gap8000F8F4Model* model;
+    u8 _pad38[0x90 - 0x38];
+} Gap8000F8F4Block;
+typedef struct Gap8000F8F4ActorSlot {
+    u8 _pad0[0x62];
+    /* 0x62 */ s16 animID;
+    u8 _pad64[0x252 - 0x64];
+    /* 0x252 */ s8 charID;
+    u8 _pad253[2];
+    /* 0x255 */ s8 blockIndex;
+} Gap8000F8F4ActorSlot;
+typedef struct Gap8000F8F4HugeAnim {
+    u8 _pad0[0x60];
+    /* 0x60 */ Gap8000F8F4Block* blocks;
+    u8 _pad64[0x2C50 - 0x64];
+    /* 0x2C50 */ Gap8000F8F4ActorSlot* slots[13];
+} Gap8000F8F4HugeAnim;
+extern Gap8000F8F4HugeAnim g_hugeAnimStruct;
+/* Per-character slot updates called by fn_80011468 with the slot in r3 and its model pointer in r4; their owning headers
+   (gap_80048BEC.h, gap_800506E8.h) still declare them as (void) stubs. */
+void fn_8004B6EC(Gap8000F8F4ActorSlot* slot, Gap8000F8F4Model** model);
+void fn_8004B7F4(Gap8000F8F4ActorSlot* slot, Gap8000F8F4Model** model);
+void fn_8004BAEC(Gap8000F8F4ActorSlot* slot, Gap8000F8F4Model** model);
+void fn_8005240C(Gap8000F8F4ActorSlot* slot, Gap8000F8F4Model** model);
 #endif // !__UNKNOWN_gap_8000F8F4_H_

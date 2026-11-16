@@ -149,7 +149,7 @@ void fn_2_8D9DC(s32 mode) {
     s32 i;
     for (i = 0; i < lbl_2_bss_1A824C->objectCount; i++) {
         lbl_2_bss_340140->AnimationStructPtrs[i] = &g_hugeAnimStruct.fielderStructs[i];
-        lbl_2_bss_340140->AnimationStructPtrs[i]->_rest255[0] = i;
+        lbl_2_bss_340140->AnimationStructPtrs[i]->blockIndex = i;
         lbl_2_bss_340140->AnimationStructPtrs[i]->unk254 = i;
         switch (mode) {
         case 0: lbl_2_bss_340140->AnimationStructPtrs[i]->unk252 = lbl_2_data_3CD0[i]; break;

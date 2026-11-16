@@ -136,7 +136,8 @@ typedef struct AnimationStruct {
     s8 unk252;          /* 0x252 */
     u8 _rest253;
     s8 unk254;          /* 0x254 */
-    u8 _rest255[0x25A - 0x255];
+    s8 blockIndex;      /* 0x255 index into hugeAnimStruct.ctrlOrBonePtr */
+    u8 _rest256[0x25A - 0x256];
     u8 unk25A;          /* 0x25A */
     u8 unk25B;          /* 0x25B */
     u8 _rest25C;        /* 0x25C */

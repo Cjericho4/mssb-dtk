@@ -155,8 +155,57 @@ void fn_80011358(void) {
 }
 
 // .text:0x80011468 size:0x108
+// Per-frame special handling by character over the 13 actor slots: effect / state updates for
+// Bowser Jr., the Goombas, Petey, Monty and the Boos, and the model's byte +0x99 for Yoshi,
+// Wario, the Koopas and Nokis (set) and the Paratroopas (clear while animation 0x40 plays).
 void fn_80011468(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 13; i++) {
+        Gap8000F8F4ActorSlot* anim = g_hugeAnimStruct.slots[i];
+        Gap8000F8F4Model** model;
+
+        if (anim == NULL) {
+            continue;
+        }
+        model = &g_hugeAnimStruct.blocks[anim->blockIndex].model;
+        switch (anim->charID) {
+        case CHAR_ID_BOWSERJR:
+            fn_8004B6EC(anim, model);
+            break;
+        case CHAR_ID_GOOMBA:
+        case CHAR_ID_PARAGOOMBA:
+            fn_8004B7F4(anim, model);
+            break;
+        case CHAR_ID_PETEY:
+            (*model)->unk99 = 1;
+            /* fallthrough */
+        case CHAR_ID_MONTY:
+            fn_8004BAEC(anim, model);
+            break;
+        case CHAR_ID_BOO:
+        case CHAR_ID_KINGBOO:
+            fn_8005240C(anim, model);
+            break;
+        case CHAR_ID_YOSHI:
+        case CHAR_ID_WARIO:
+        case CHAR_ID_KOOPA_GREEN:
+        case CHAR_ID_NOKI_BLUE:
+        case CHAR_ID_NOKI_RED:
+        case CHAR_ID_NOKI_GREEN:
+        case CHAR_ID_KOOPA_RED:
+            (*model)->unk99 = 1;
+            break;
+        case CHAR_ID_PARATROOPA_RED:
+        case CHAR_ID_PARATROOPA_GREEN:
+            if (anim->animID == 0x40) {
+                (*model)->unk99 = 0;
+            } else {
+                (*model)->unk99 = 1;
+            }
+            break;
+        }
+    }
 }
 
 // .text:0x80011570 size:0x8
