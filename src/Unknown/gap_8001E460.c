@@ -2146,8 +2146,33 @@ BOOL fn_80020388(void) {
 }
 
 // .text:0x800203E0 size:0xEC
-void fn_800203E0(void) {
-    return;
+// Requests resource state `request` (and stores unk14 when it is not negative). State 7 is
+// entered at once through the fn_80020624 queue task; requests 1, 6 and 13 are replaced by the
+// entry state of the group the current state belongs to (4..6 -> 6, 10..12 -> 10, 13..15 -> 13,
+// otherwise 1).
+void fn_800203E0(u8 request, s8 unk14) {
+    if (unk14 >= 0) {
+        lbl_8037169C.unk14 = unk14;
+    }
+    if (request == 7) {
+        lbl_8037169C.state = 7;
+        lbl_8037169C.requested = 1;
+        fn_800B0A5C_insertQueue(fn_80020624, 2);
+        return;
+    }
+    if (request == 1 || request == 6 || request == 13) {
+        if (lbl_8037169C.state >= 4 && lbl_8037169C.state <= 6) {
+            request = 6;
+        } else if (lbl_8037169C.state >= 10 && lbl_8037169C.state <= 12) {
+            request = 10;
+        } else if (lbl_8037169C.state >= 13 && lbl_8037169C.state <= 15) {
+            request = 13;
+        } else {
+            request = 1;
+        }
+    }
+    lbl_8037169C.unk11 = request;
+    lbl_8037169C.requested = 1;
 }
 
 // .text:0x800204CC size:0xD0

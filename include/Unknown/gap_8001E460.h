@@ -195,7 +195,7 @@ BOOL fn_80020218(void);
 void fn_8002024C(void);
 void fn_80020278(void);
 BOOL fn_80020388(void);
-void fn_800203E0(void);
+void fn_800203E0(u8 request, s8 unk14);
 void changeScene(void);
 void fn_8002059C(void);
 void fn_80020624(void);
@@ -302,10 +302,14 @@ typedef struct Gap8001E460Resource {
 u32 sndPushGroup(u8* project, u16 gid, Gap8001E460Resource* samples, u8* sdir, u8* pool);
 typedef struct Gap8001E460ResourceState {
     Gap8001E460Resource* resource;
-    u8 _pad4[0xC];
+    u8 _pad4[8];
+    /* 0x0C */ u16 requested; /* 1 when fn_800203E0 has stored a request */
+    u8 _padE[2];
     u8 state; /* 0x10 */
-    u8 unk11, pending;
-    u8 _pad13[3];
+    u8 unk11, pending; /* unk11: the requested state */
+    u8 _pad13;
+    /* 0x14 */ u8 unk14;
+    u8 _pad15;
     u8 ready;
     u8 _pad17[5];
 } Gap8001E460ResourceState;
