@@ -21,12 +21,14 @@ typedef struct Gap8003AE54Task {
     /* 0x16 */ u8 unk16;
     /* 0x17 */ u8 unk17;
     /* 0x18 */ u8 unk18;
-    u8 _pad19;
+    /* 0x19 */ u8 unk19;
     /* 0x1A */ u8 unk1A;
     /* 0x1B */ u8 unk1B;
     u8 _pad1C;
     /* 0x1D */ u8 unk1D;
-    u8 _pad1E[3];
+    u8 _pad1E;
+    /* 0x1F */ u8 unk1F;
+    /* 0x20 */ u8 unk20;
     /* 0x21 */ u8 unk21;
 } Gap8003AE54Task;
 Gap8003AE54Task* fn_800B0A5C_insertQueue(void (*callback)(void), u16 priority);
@@ -35,9 +37,15 @@ typedef struct Gap8003AE54Counter {
     /* 0x10 */ s16 unk10;
 } Gap8003AE54Counter;
 extern Gap8003AE54Counter* lbl_803CC1B8[2];
-typedef struct Gap8003AE54Words {
-    s32 unk0, unk4, unk8, unkC;
-    u8 _pad10[0x10];
+typedef union Gap8003AE54Words {
+    struct {
+        s32 unk0, unk4, unk8, unkC;
+        u8 _pad10[0x10];
+    };
+    struct {
+        s32 unk0;
+        s32 unk4;
+    } pairs[4]; /* one pair per task unk17 value */
 } Gap8003AE54Words;
 extern Gap8003AE54Words lbl_802D4AE0;
 
@@ -48,7 +56,7 @@ u8 fn_8003AE70(s32 arg0);
 void fn_8003AECC(void);
 void fn_8003B5B0(void);
 void fn_8003BB90(void);
-void fn_8003BF54(void);
+void fn_8003BF54(u8 unk15, u8 unk16, u8 unk17, u8 unk18, u8 unk19, u8 unk1A, u8 unk1B, u8 unk20, u8 unk21);
 void fn_8003C00C(void);
 void fn_8003E8D8(void);
 void fn_8003F23C(void);

@@ -48,8 +48,28 @@ void fn_8003BB90(void) {
 }
 
 // .text:0x8003BF54 size:0xB8
-void fn_8003BF54(void) {
-    return;
+// Queues an fn_8003C00C task (priority 0x8000) with the nine parameters stored in its record,
+// clears the word pair of slot `unk17` and resets the running task's counter.
+void fn_8003BF54(u8 unk15, u8 unk16, u8 unk17, u8 unk18, u8 unk19, u8 unk1A, u8 unk1B, u8 unk20, u8 unk21) {
+    Gap8003AE54Task* task = fn_800B0A5C_insertQueue(fn_8003C00C, 0x8000);
+    s32* words; /* FAKEMATCH: one pointer for the pair, so its address is formed once */
+
+    task->unk14 = 0;
+    task->unk15 = unk15;
+    task->unk16 = unk16;
+    task->unk17 = unk17;
+    task->unk18 = unk18;
+    task->unk19 = unk19;
+    task->unk1A = unk1A;
+    task->unk1B = unk1B;
+    task->unk1D = 0;
+    task->unk20 = unk20;
+    task->unk21 = unk21;
+    words = &lbl_802D4AE0.pairs[unk17].unk0;
+    words[1] = 0;
+    words[0] = 0;
+    task->unk1F = 2;
+    lbl_803CC1B8[0]->unk10 = 0;
 }
 
 // .text:0x8003C00C size:0x28CC
