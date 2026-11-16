@@ -242,21 +242,15 @@ notReady:
 }
 
 // .text:0x8001CA40 size:0xD0
-// Selects light set `lightSet`: converts its four light specs into the runtime lights and
-// hands the normalised direction of the first one to fn_800BEBCC.
-void fn_8001CA40(u8 lightSet) {
-    /* Non-matching: the light array's address is formed in r3 and copied (target forms it in
-       r30 directly) and the two pointer increments straddle the loop compare differently. */
+/* Converts light set `lightSet` of lbl_800F7478 into the four runtime lights and hands the
+   normalised direction of the first one to fn_800BEBCC. */
+static inline void applyLightSet(u8 lightSet) {
     Vec direction;
     s32 i;
-    Gap8001B200Light* light;
-    Gap8001B200LightSpec* spec;
 
     g_d_GameSettings.lightSet = lightSet;
-    light = lbl_80367318;
-    spec = lbl_800F7478[lightSet].lights;
-    for (i = 0; i < 4; i++, light++, spec++) {
-        fn_80023B90(spec, light);
+    for (i = 0; i < 4; i++) {
+        fn_80023B90(&lbl_800F7478[lightSet].lights[i], &lbl_80367318[i]);
     }
     direction.x = lbl_80367318[0].x;
     direction.y = lbl_80367318[0].y;
@@ -265,14 +259,28 @@ void fn_8001CA40(u8 lightSet) {
     fn_800BEBCC(0, direction);
 }
 
+// Selects light set `lightSet`.
+void fn_8001CA40(u8 lightSet) {
+    applyLightSet(lightSet);
+}
+
 // .text:0x8001CB10 size:0xC4
 void fn_8001CB10(void) {
     return;
 }
 
 // .text:0x8001CBD4 size:0xF4
+// Selects the stadium's light set: row unk_0x09 of lbl_800F7478, or the alternate row seven
+// further on in mode 7.
 void fn_8001CBD4(void) {
-    return;
+    s32 lightSet;
+
+    if (g_d_GameSettings.mode == 7) {
+        lightSet = g_d_GameSettings.unk_0x09 + 7;
+    } else {
+        lightSet = g_d_GameSettings.unk_0x09;
+    }
+    applyLightSet(lightSet);
 }
 
 // .text:0x8001CCC8 size:0x1AC
