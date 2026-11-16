@@ -275,8 +275,43 @@ void fn_800A8AB0(s32 value) {
 }
 
 // .text:0x800A8AB8 size:0xC0
-void fn_800A8AB8(void) {
-    return;
+/* Stops stream playback, closes every queued stream file, empties the queue and runs the
+   pending stop callback (fn_800A90E4's body). */
+static inline void closeAllStreams(void) {
+    Gap800A6870Stream* stream;
+
+    AISetStreamPlayState(0);
+    for (stream = lbl_803CC150; stream != NULL; stream = stream->next) {
+        DVDClose(&stream->file);
+    }
+    lbl_803CC150 = NULL;
+    lbl_803CC14C = NULL;
+    lbl_803CC154 = NULL;
+    lbl_803CC148 = 0;
+    if (lbl_803CC128 != NULL) {
+        lbl_803CC128();
+        lbl_803CC128 = NULL;
+    }
+    lbl_803CC148 = 0;
+    lbl_803CC130 = 0;
+}
+
+// Stops the music stream and calls `callback` when done: if a stream is playing (state 1) the
+// disc stream is cancelled first and fn_800A90E4 finishes the job, otherwise it is done here.
+void fn_800A8AB8(void (*callback)(void)) {
+    u32 state;
+
+    if (lbl_803CC148 == 3) {
+        return;
+    }
+    state = lbl_803CC148;
+    lbl_803CC128 = callback;
+    lbl_803CC148 = 3;
+    if (state == 1) {
+        DVDCancelStreamAsync(&lbl_802EF1D0, fn_800A90E4);
+        return;
+    }
+    closeAllStreams();
 }
 
 // .text:0x800A8B78 size:0x144

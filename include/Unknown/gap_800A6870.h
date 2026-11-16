@@ -143,7 +143,10 @@ s32 fn_800A88C8(void);
 s32 fn_800A88D0(void);
 void fn_800A88D8(u32 value);
 void fn_800A8AB0(s32 value);
-void fn_800A8AB8(void);
+typedef struct Gap800A6870CommandBlock { u8 _pad0[0x30]; } Gap800A6870CommandBlock; /* DVDCommandBlock */
+extern Gap800A6870CommandBlock lbl_802EF1D0;
+BOOL DVDCancelStreamAsync(Gap800A6870CommandBlock* block, void (*callback)(void));
+void fn_800A8AB8(void (*callback)(void));
 void fn_800A8B78(void);
 void LoadFile(void);
 void fn_800A8E30(void);
