@@ -42,13 +42,31 @@ void fn_800B1388(Gap800B117CVertex* vertices) {
 }
 
 // .text:0x800B13C0 size:0xA8
-void fn_800B13C0(void) {
-    return;
+// Draws `count` coloured vertices (primitive 0xA0, no texture) through the scratch buffer;
+// every vertex gets the first corner record.
+void fn_800B13C0(Gap800B117CPos* positions, u32* colors, s32 count) {
+    s32 i;
+
+    for (i = 0; i < count; i++) {
+        memcpy(&lbl_803C8A24[i].pos, &positions[i], sizeof(Gap800B117CPos));
+        lbl_803C8A24[i].color = colors[i];
+        memcpy(lbl_803C8A24[i].corner, lbl_801115A0.corners[0], 4);
+    }
+    DrawSprite(0xA0, lbl_803C8A24, count, NULL, 0, 0);
 }
 
 // .text:0x800B1468 size:0x98
-void fn_800B1468(void) {
-    return;
+// Draws a textured quad of one colour at four positions.
+void fn_800B1468(Gap800B117CPos* positions, u32 color, Gap800B117CTexture* texture) {
+    Gap800B117CVertex vertices[4];
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        memcpy(&vertices[i].pos, &positions[i], sizeof(Gap800B117CPos));
+        vertices[i].color = color;
+        memcpy(vertices[i].corner, lbl_801115A0.corners[i], 4);
+    }
+    DrawSprite(0x80, vertices, 4, texture, texture->height, texture->width);
 }
 
 // .text:0x800B1500 size:0x9BC

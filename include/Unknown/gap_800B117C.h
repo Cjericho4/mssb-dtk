@@ -9,15 +9,26 @@ typedef struct Gap800B117CRequest {
     u32 unk0;
     u16 type;
 } Gap800B117CRequest;
-typedef struct Gap800B117CVertex Gap800B117CVertex;
+typedef struct Gap800B117CPos {
+    f32 x, y, z;
+} Gap800B117CPos;
+typedef struct Gap800B117CVertex {
+    /* 0x00 */ Gap800B117CPos pos;
+    /* 0x0C */ u32 color;
+    /* 0x10 */ u8 corner[4]; /* texture corner record, copied from lbl_801115A0 */
+} Gap800B117CVertex;
+STATIC_ASSERT(sizeof(Gap800B117CVertex) == 0x14);
 typedef struct Gap800B117CTexture {
     u8 _pad0[8];
     u16 width;
     u16 height;
 } Gap800B117CTexture;
-typedef struct Gap800B117CMasks {
-    u8 _pad0[6];
-    u16 mask6, mask8, maskA, maskC;
+typedef union Gap800B117CMasks {
+    struct {
+        u8 _pad0[6];
+        u16 mask6, mask8, maskA, maskC;
+    };
+    u8 corners[4][4]; /* one 4-byte corner record per quad vertex */
 } Gap800B117CMasks;
 extern Gap800B117CMasks lbl_801115A0;
 extern s32 lbl_803CC1C8;
@@ -89,8 +100,10 @@ void fn_800B12DC(Gap800B117CVertex* vertices, s32 count);
 void fn_800B1314(Gap800B117CVertex* vertices, Gap800B117CTexture* texture, u32 height, u32 width);
 void DrawSprite_TexObj(Gap800B117CVertex* vertices, Gap800B117CTexture* texture);
 void fn_800B1388(Gap800B117CVertex* vertices);
-void fn_800B13C0(void);
-void fn_800B1468(void);
+extern Gap800B117CVertex lbl_803C8A24[]; /* scratch vertex buffer */
+void* memcpy(void* dst, const void* src, unsigned long n);
+void fn_800B13C0(Gap800B117CPos* positions, u32* colors, s32 count);
+void fn_800B1468(Gap800B117CPos* positions, u32 color, Gap800B117CTexture* texture);
 void DrawSprite(s32 primitive, Gap800B117CVertex* vertices, s32 count, Gap800B117CTexture* texture, u32 height, u32 width);
 void fn_800B1EBC(void);
 void fn_800B2160(u8 value);
