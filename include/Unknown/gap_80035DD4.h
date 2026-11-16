@@ -114,7 +114,22 @@ void fn_8003731C(void);
 void fn_80037768(void);
 void fn_80037964(void);
 void fn_80037984(void);
-void fn_80037AA0(void);
+/* Queue task of fn_80037984 (a view of the same task record as Gap80035DD4Task). */
+typedef struct Gap80035DD4SlotTask {
+    u8 _pad0[0x14];
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ void* unk18;
+    /* 0x1C */ s32 unk1C;
+    u8 _pad20[0x3C - 0x20];
+    /* 0x3C */ s16 unk3C;
+    /* 0x3E */ u8 slotKind;
+} Gap80035DD4SlotTask;
+typedef struct Gap80035DD4HugeAnim {
+    u8 _pad0[0x2C50];
+    /* 0x2C50 */ void* slotPtrs[13];
+} Gap80035DD4HugeAnim; /* view of hugeAnimStruct (UnknownHeaders.h) */
+extern Gap80035DD4HugeAnim g_hugeAnimStruct;
+void fn_80037AA0(void* unk18, s32 slotKind, s32 unk14, s32 unk3C, s32 unk1C);
 void fn_80037B18(Gap80035DD4Xform* xf, Gap80035DD4Vec* force);
 void fn_80037BAC(void);
 void fn_8003819C(void);

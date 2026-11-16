@@ -131,8 +131,19 @@ void fn_80037984(void) {
 }
 
 // .text:0x80037AA0 size:0x78
-void fn_80037AA0(void) {
-    return;
+// Queues an fn_80037984 task (priority 0x6001) for actor slot `slotKind` if that slot is live,
+// passing the four parameters through the task record.
+void fn_80037AA0(void* unk18, s32 slotKind, s32 unk14, s32 unk3C, s32 unk1C) {
+    Gap80035DD4SlotTask* task;
+
+    if (g_hugeAnimStruct.slotPtrs[slotKind] != NULL) {
+        task = (Gap80035DD4SlotTask*)fn_800B0A5C_insertQueue(fn_80037984, 0x6001);
+        task->unk18 = unk18;
+        task->slotKind = slotKind;
+        task->unk3C = unk3C;
+        task->unk1C = unk1C;
+        task->unk14 = unk14;
+    }
 }
 
 // .text:0x80037B18 size:0x94
