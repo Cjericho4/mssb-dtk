@@ -11,9 +11,12 @@ Gap80039AA8Table* fn_80039AB4(void) {
 }
 
 // .text:0x80039AC0 size:0x538
+/* FAKEMATCH: kept out of line while it is an empty stub, so its callers still call it. */
+#pragma dont_inline on
 void fn_80039AC0(void) {
     return;
 }
+#pragma dont_inline reset
 
 // .text:0x80039FF8 size:0x98
 void fn_80039FF8(Gap80039AA8RenderMode* mode) {
@@ -64,8 +67,27 @@ void fn_8003A144(void) {
 }
 
 // .text:0x8003A1D0 size:0xF0
+// Queue task (runs once): sets the capture size to 320x224 when screen flag 2 is set, else
+// 640x448; when flag 1 is set without 0x10 it also saves the screen settings into the current
+// lbl_800F7A60 record and registers it with fn_800A7D4C(8); then runs fn_80039AC0.
 void fn_8003A1D0(void) {
-    return;
+    if (lbl_803C5090.unk1D & 2) {
+        lbl_803C5090.unk10 = 320;
+        lbl_803C5090.unk12 = 224;
+        lbl_800F7A40.width = 320;
+        lbl_800F7A40.height = 224;
+    } else {
+        lbl_803C5090.unk10 = 640;
+        lbl_803C5090.unk12 = 448;
+        lbl_800F7A40.width = 640;
+        lbl_800F7A40.height = 448;
+    }
+    if ((lbl_803C5090.unk1D & 0x11) == 1) {
+        lbl_800F7A60[lbl_803CBBC0].screen = lbl_803C5090;
+        fn_800A7D4C(8, &lbl_800F7A60[lbl_803CBBC0]);
+    }
+    fn_80039AC0();
+    fn_800B0A14_removeQueue();
 }
 
 // .text:0x8003A2C0 size:0x2C

@@ -57,6 +57,13 @@ typedef struct Gap80039AA8RenderMode {
 void fn_80039FF8(Gap80039AA8RenderMode* mode);
 void fn_8003A090(void);
 void fn_8003A144(void);
+typedef struct Gap80039AA8Saved {
+    u8 _pad0[8];
+    /* 0x08 */ Gap80039AA8Screen screen; /* copy of lbl_803C5090 */
+} Gap80039AA8Saved; /* 0x28 */
+extern Gap80039AA8Saved lbl_800F7A60[];
+extern u8 lbl_803CBBC0; /* index of the entry in use */
+void fn_800A7D4C(s32 kind, void* record);
 void fn_8003A1D0(void);
 void fn_8003A2C0(void);
 void fn_8003A2EC(void);
