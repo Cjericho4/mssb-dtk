@@ -35,11 +35,18 @@ typedef struct Gap80062578Sound {
 } Gap80062578Sound;
 extern Gap80062578Sound lbl_800EF808;
 void fn_80021518(s32 id, u32 sound);
+typedef struct Gap80062578StatusRow {
+    u8 unk0;
+    /* 0x1 */ u8 perIndex[5];
+} Gap80062578StatusRow; /* 0x6 */
 typedef struct Gap80062578Status {
-    u8 _pad0[0x55];
-    u8 flags[8];
-    u8 busy[2]; /* 0x5D */
+    /* 0x00 */ Gap80062578StatusRow rows[14];
+    u8 _pad54;
+    u8 flags[8]; /* 0x55 */
+    u8 busy[2]; /* 0x5D; fn_800625A4 stores the requested command here */
 } Gap80062578Status;
+extern char lbl_800E6970[]; /* Shift-JIS report text with "(%d) Step No %d" */
+void OSReport(const char* message, ...);
 extern Gap80062578Status lbl_803C66B0;
 typedef struct Gap80062578Flags {
     /* 0x0 */ s32 unk0;

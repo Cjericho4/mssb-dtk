@@ -6,8 +6,23 @@ BOOL fn_80062578(void) {
 }
 
 // .text:0x800625A4 size:0xD0
+// Requests `command` for player `index`: reports if a request is still flagged busy (index 0 is
+// used for the flag when g_d_GameSettings.mode is 0), stores the command and clears the
+// player's byte in all 14 status rows.
 void fn_800625A4(s32 index, s32 command) {
-    return;
+    /* Non-matching: the unrolled loop stores a separate zero register; the target stores the
+       loop counter's register (li r4, 0). */
+    s32 flagIndex;
+    s32 i;
+
+    flagIndex = (g_d_GameSettings.mode == 0) ? 0 : index;
+    if (lbl_803C66B0.flags[flagIndex] != 0) {
+        OSReport(lbl_800E6970, flagIndex, lbl_803C66B0.busy[flagIndex]);
+    }
+    lbl_803C66B0.busy[index] = command;
+    for (i = 0; i < 14; i++) {
+        lbl_803C66B0.rows[i].perIndex[index] = 0;
+    }
 }
 
 // .text:0x80062674 size:0x78
