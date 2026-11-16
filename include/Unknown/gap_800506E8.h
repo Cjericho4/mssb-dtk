@@ -46,7 +46,24 @@ typedef struct MenuGridChallengeFlags {
 extern MenuGridChallengeFlags starMissionCompletionTracker;
 void fn_80034E20(MenuGridScene* scene, MenusSceneScript* script);
 void fn_800363D8(MenuGridScene* scene, s32 pane, s32 field, s32 sourcePane, s32 frame);
-typedef struct Gap800506E8Actor { u8 _pad0[0x252]; u8 id; } Gap800506E8Actor;
+typedef struct Gap800506E8Actor {
+    u8 _pad0[0x62];
+    /* 0x62 */ s16 animID;
+    u8 _pad64[0x252 - 0x64];
+    /* 0x252 */ u8 id; /* charID */
+    u8 _pad253[0x277 - 0x253];
+    /* 0x277 */ u8 alpha;
+} Gap800506E8Actor;
+/* View of the 0x90-byte actor slot (Gap8002244CActorSlot) that fn_80011468 passes in r4. */
+typedef struct Gap800506E8ActorSlot {
+    /* 0x00 */ struct GameActor* actor;
+    u8 _pad4[0x59 - 0x4];
+    /* 0x59 */ u8 frameOverride;
+    u8 _pad5A[2];
+    /* 0x5C */ f32 frame;
+} Gap800506E8ActorSlot;
+f32 fn_800B4C40(struct GameActor* actor);
+extern s16 lbl_800FEB08[5][4]; /* fade key frames: opaque until [0], fade out to [1], hidden to [2], fade in to [3] */
 typedef struct Gap800506E8Task {
     u8 _pad0[0x14];
     s32 index;
@@ -101,7 +118,7 @@ void fn_8005138C(void);
 void fn_80051D00(void);
 void fn_80052188(void);
 void fn_800521B0(void);
-void fn_8005240C(void);
+void fn_8005240C(Gap800506E8Actor* actor, Gap800506E8ActorSlot* slot);
 void fn_80052634(Gap800506E8Actor* actor, s32 index);
 s32 fn_8005268C(void);
 void GXSetProjection(f32 mtx[4][4], s32 type);

@@ -136,8 +136,62 @@ void fn_800521B0(void) {
 }
 
 // .text:0x8005240C size:0x228
-void fn_8005240C(void) {
-    return;
+static inline u8 fadeAlpha(s16* keys, f32 frame) {
+    s32 i;
+
+    if (keys != NULL) {
+        for (i = 0; i < 4; i++) {
+            if (frame < (f32)keys[i]) {
+                switch (i) {
+                case 2:
+                    return 0;
+                case 3:
+                    return 255.0f * (frame - (f32)keys[i - 1]) / (f32)(keys[i] - keys[i - 1]);
+                case 0:
+                    return 0xFF;
+                case 1:
+                    return 255.0f * ((f32)keys[i] - frame) / (f32)(keys[i] - keys[i - 1]);
+                }
+            }
+        }
+    }
+    return 0xFF;
+}
+
+// Boo / King Boo per-frame slot update (from fn_80011468): sets the actor's alpha (+0x277) from
+// the current animation frame and the fade keys of lbl_800FEB08 for animations 0x47, 0x48,
+// 0x60 and 0x67 (Boo and King Boo have separate rows for 0x67); opaque otherwise.
+void fn_8005240C(Gap800506E8Actor* actor, Gap800506E8ActorSlot* slot) {
+    f32 frame;
+    u16 row;
+
+    if (slot->frameOverride != 0) {
+        frame = slot->frame;
+    } else {
+        frame = fn_800B4C40(slot->actor);
+    }
+    switch (actor->animID) {
+    case 0x67:
+        if ((s32)actor->id == CHAR_ID_BOO) {
+            row = 0;
+        } else {
+            row = 1;
+        }
+        break;
+    case 0x47:
+        row = 2;
+        break;
+    case 0x48:
+        row = 3;
+        break;
+    case 0x60:
+        row = 4;
+        break;
+    default:
+        actor->alpha = 0xFF;
+        return;
+    }
+    actor->alpha = fadeAlpha(lbl_800FEB08[row], frame);
 }
 
 // .text:0x80052634 size:0x58
