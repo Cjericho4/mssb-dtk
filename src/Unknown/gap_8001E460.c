@@ -2255,8 +2255,25 @@ void fn_8002128C(u8 mode) {
 }
 
 // .text:0x80021308 size:0xEC
+// Sets up the sound hooks and studio 0's two effects: a high-quality reverb (2 s, 0.1 s
+// pre-delay, mix 0.8) on aux A and a chorus (base delay 5, period 500) on aux B.
 void fn_80021308(void) {
-    return;
+    lbl_803CBC40 = (u32)lbl_80118740;
+    sndSetHooks(&lbl_803CB7D8);
+    lbl_800EF808.reverb.tempDisableFX = 0;
+    lbl_800EF808.reverb.time = 2.0f;
+    lbl_800EF808.reverb.preDelay = 0.1f;
+    lbl_800EF808.reverb.damping = 0.5f;
+    lbl_800EF808.reverb.coloration = 1.0f;
+    lbl_800EF808.reverb.crosstalk = 0.0f;
+    lbl_800EF808.reverb.mix = 0.8f;
+    sndAuxCallbackPrepareReverbHI(&lbl_800EF808.reverb);
+    lbl_800EF808.chorus.baseDelay = 5;
+    lbl_800EF808.chorus.variation = 0;
+    lbl_800EF808.chorus.period = 500;
+    sndAuxCallbackPrepareChorus(&lbl_800EF808.chorus);
+    sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbHI, &lbl_800EF808.reverb, 0xFF, 0, sndAuxCallbackChorus,
+                                 &lbl_800EF808.chorus, 0xFF, 0);
 }
 
 // .text:0x800213F4 size:0x4

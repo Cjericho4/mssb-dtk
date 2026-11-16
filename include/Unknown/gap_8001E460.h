@@ -76,10 +76,30 @@ extern DiskFileDesc lbl_800EFD38[515];
 extern DiskFileDesc lbl_800F1D78[54 * SUBFILE_TRACKS];
 void* ARAMTransfer(DiskFileDesc* desc, void* dest, s32 loadInfo, void* aramAddress);
 void* _OSAllocFromHeap(s32 heap, u32 size);
+/* Views of MusyX's SND_AUX_REVERBHI and SND_AUX_CHORUS (musyx.h is not included here). */
+typedef struct Gap8001E460ReverbHi {
+    u8 state[0x1C4];
+    /* 0x1C4 */ u8 tempDisableFX;
+    /* 0x1C8 */ f32 coloration;
+    /* 0x1CC */ f32 mix;
+    /* 0x1D0 */ f32 time;
+    /* 0x1D4 */ f32 damping;
+    /* 0x1D8 */ f32 preDelay;
+    /* 0x1DC */ f32 crosstalk;
+} Gap8001E460ReverbHi;
+STATIC_ASSERT(sizeof(Gap8001E460ReverbHi) == 0x1E0);
+typedef struct Gap8001E460Chorus {
+    u8 state[0x90];
+    /* 0x90 */ u32 baseDelay;
+    /* 0x94 */ u32 variation;
+    /* 0x98 */ u32 period;
+} Gap8001E460Chorus;
+STATIC_ASSERT(sizeof(Gap8001E460Chorus) == 0x9C);
 typedef struct Gap8001E460Sound {
     u32 unk0;
-    struct Gap8001E460Resource* resources[64]; /* 0x4 */
-    u8 _pad104[0x23C];
+    struct Gap8001E460Resource* resources[48]; /* 0x4, one per sound group */
+    /* 0xC4 */ Gap8001E460ReverbHi reverb;
+    /* 0x2A4 */ Gap8001E460Chorus chorus;
     /* 0x340 */ u8 groups[0x50];
     u8 groupCount; /* 0x390 */
     u8 _pad391[5];
@@ -188,6 +208,19 @@ void OSSetSoundMode(u32 mode);
 void fn_80021228(u8 mode);
 u32 OSGetSoundMode(void);
 void fn_8002128C(u8 mode);
+typedef struct Gap8001E460SndHooks {
+    void* (*malloc)(u32 size);
+    void (*free)(void* ptr);
+} Gap8001E460SndHooks; /* MusyX SND_HOOKS */
+extern Gap8001E460SndHooks lbl_803CB7D8;
+extern u8 lbl_80118740[];
+void sndSetHooks(Gap8001E460SndHooks* hooks);
+void sndAuxCallbackPrepareReverbHI(Gap8001E460ReverbHi* reverb);
+void sndAuxCallbackPrepareChorus(Gap8001E460Chorus* chorus);
+void sndAuxCallbackReverbHI(u8 reason, void* info, void* user);
+void sndAuxCallbackChorus(u8 reason, void* info, void* user);
+void sndSetAuxProcessingCallbacks(u8 studio, void (*auxA)(u8, void*, void*), void* userA, u8 midiA, u32 seqIDA,
+                                  void (*auxB)(u8, void*, void*), void* userB, u8 midiB, u32 seqIDB);
 void fn_80021308(void);
 void fn_800213F4(void);
 void fn_800213F8(u32 size);
