@@ -264,8 +264,61 @@ void fn_8004ACF4(Gap80048BECObj* obj, f32 value, s32 b, s32 c) {
 }
 
 // .text:0x8004AD54 size:0xC4
-void fn_8004AD54(void) {
-    return;
+// Effect colour row (lbl_800FC0FC index) for the stadium `mode` (g_d_GameSettings +0x09) and
+// the low 7 bits of the slot's unk275.
+s32 fn_8004AD54(u32 mode, u32 character) {
+    s32 kind = character & 0x7F;
+    s32 result;
+
+    switch (mode) {
+    case 0:
+        if (kind == 1) {
+            result = 1;
+        } else {
+            result = 0;
+        }
+        break;
+    case 1:
+        result = 5;
+        break;
+    case 2:
+        if (kind == 1) {
+            result = 11;
+        } else {
+            result = 10;
+        }
+        break;
+    case 3:
+        if (kind == 1) {
+            result = 7;
+        } else {
+            result = 6;
+        }
+        break;
+    case 4:
+        if (kind == 10) {
+            result = 4;
+        } else if (kind == 1) {
+            result = 3;
+        } else {
+            result = 2;
+        }
+        break;
+    case 5:
+        if (kind == 10) {
+            result = 9;
+        } else {
+            result = 8;
+        }
+        break;
+    case 6:
+        result = 12;
+        break;
+    default:
+        result = 0;
+        break;
+    }
+    return result;
 }
 
 // .text:0x8004AE18 size:0x190

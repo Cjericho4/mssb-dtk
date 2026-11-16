@@ -152,7 +152,7 @@ void fn_8004AC00(Gap80048BECObj* obj, s32 unused, s32 colorIndex, f32 frame);
 s32 fn_8004ACC4(BOOL clear);
 s32 fn_8004ACDC(BOOL clear);
 void fn_8004ACF4(Gap80048BECObj* obj, f32 value, s32 b, s32 c);
-void fn_8004AD54(void);
+s32 fn_8004AD54(u32 mode, u32 character);
 void fn_8004AE18(void);
 void fn_8004AFA8(void);
 void fn_8004B1B8(s32 value);
