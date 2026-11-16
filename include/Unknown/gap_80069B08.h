@@ -116,7 +116,7 @@ void fn_8006C444(s32 a, s32 b, s32 c);
 void fn_8006C488(void);
 void challengeDrawStarsOnMissionMenu(void);
 void fn_8006C5CC(void);
-void fn_8006C6C4(void);
+s32 fn_8006C6C4(void);
 BOOL fn_8006C79C(s32 index);
 void starMissionRelated2(void);
 void fn_8006C9D8(void);

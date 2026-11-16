@@ -180,8 +180,17 @@ void fn_8006C5CC(void) {
 }
 
 // .text:0x8006C6C4 size:0xD8
-void fn_8006C6C4(void) {
-    return;
+// Number of characters recruited in challenge mode (records in state 1).
+s32 fn_8006C6C4(void) {
+    s32 count = 0;
+    s32 i;
+
+    for (i = 0; i < NUM_CHOOSABLE_CHARACTERS; i++) {
+        if (starMissionCompletionTracker.missions[i].state == 1) {
+            count++;
+        }
+    }
+    return count;
 }
 
 // .text:0x8006C79C size:0x28
