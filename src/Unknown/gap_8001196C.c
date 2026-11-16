@@ -1229,8 +1229,17 @@ BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 unk258, 
 }
 
 // .text:0x800177B4 size:0x60
+// Queue task of fn_80017098: runs the slot loader fn_8001758C with the task's parameters each
+// frame until it reports done, then marks the load state 2 and removes itself.
 void fn_800177B4(void) {
-    return;
+    /* Non-matching: argument load order only (the target reads task->player before the others). */
+    Gap8001196CLoadTask* task = lbl_803CC1B8;
+
+    if (fn_8001758C(&task->unk14, task->slot, task->charID, task->team, task->player, task->unk1B, task->slotKind,
+                    task->variant)) {
+        g_hugeAnimStruct.loadState = 2;
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x80017814 size:0x514
@@ -1640,7 +1649,6 @@ void fn_800188C0(void) {
 }
 
 // .text:0x800189B8 size:0x2C
-void fn_800ACFB0(void* allocation);
 void fn_800189B8(void) {
     fn_800ACFB0(g_hugeAnimStruct.allocatedAnimBanks);
 }
@@ -1671,8 +1679,10 @@ void fn_800189E4(void) {
 }
 
 // .text:0x80018B38 size:0x3C
+// Frees the animation bank block and marks it gone.
 void fn_80018B38(void) {
-    return;
+    fn_800ACFB0(g_hugeAnimStruct.allocatedAnimBanks);
+    g_hugeAnimStruct.unk2D68 = -1;
 }
 
 // .text:0x80018B74 size:0x278

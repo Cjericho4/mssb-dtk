@@ -273,7 +273,7 @@ typedef struct Gap8001196CAnimTable {
             /* 0x2D5C */ s16 cachedBatterCharID;
             u8 _pad2D5E[0x2D64 - 0x2D5E];
             /* 0x2D64 */ u32 maxBodyFileSize;
-            u8 _pad2D68[2];
+            /* 0x2D68 */ s16 unk2D68;        /* set to -1 when the animation bank block is freed (fn_80018B38) */
             /* 0x2D6A */ s8 slotOwner[13];   /* slotKind using slots[i], -1 = free (fn_80017098) */
             /* 0x2D77 */ u8 loadState;       /* fn_80016344/fn_80016710 state: 1 queued, 2..5 loading, 6 done */
             /* 0x2D78 */ u8 reused;          /* fn_80017098 result: the slot was already loaded (fn_8001500C) */
@@ -328,6 +328,10 @@ void* memcpy(void* dest, const void* src, u32 n);
 BOOL fn_80016B60(Gap8001196CAnim* anim);
 BOOL fn_8001758C(u8* state, s32 slot, u8 charID, u8 team, u8 player, u8 unk258, u8 slotKind, u8 variant);
 void fn_800177B4(void);
+extern Gap8001196CLoadTask* lbl_803CC1B8; /* the queue task being run */
+void fn_800B0A14_removeQueue(void);
+void fn_800ACFB0(void* allocation);
+
 void fn_80017814(Gap8001196CAnim* anim, s32 index, s32 slotKind, void (*callback)(struct Gap8001E460Object*));
 struct Gap8001196CTexArchive;
 struct Gap8001196CActLayout;
