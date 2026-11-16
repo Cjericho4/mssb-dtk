@@ -168,7 +168,6 @@ extern Gap80062578SlotTable lbl_802E4BC0;
 u8* memset(u8* memory, s32 value, u32 size);
 void fn_80063958(s8 index);
 void fn_800639BC(void);
-void fn_80064344(void);
 typedef struct Gap80062578Vec { f32 x, y, z; } Gap80062578Vec;
 /* Emitter parameter block (0x70 bytes); lbl_80108D48 is the template fn_80064430 scales. */
 typedef struct Gap80062578Emitter {
@@ -187,6 +186,8 @@ void* memcpy(void* dst, const void* src, unsigned long n);
 /* gap_80027918 owns this; arguments from fn_80064430's call. */
 void fn_8002B7F8(Gap80062578Vec* position, Gap80062578Emitter* emitter, s32 type);
 void fn_80064430(Gap80062578Vec* position, s32 type, f32 scaleA, f32 scaleB);
+f32 PSVECMag(Gap80062578Vec* v);
+void fn_80064344(Gap80062578Vec* position, Gap80062578Vec* velocity);
 void fn_80064534(void);
 
 #endif // !__UNKNOWN_gap_80062578_H_

@@ -360,14 +360,9 @@ void fn_800639BC(void) {
 }
 
 // .text:0x80064344 size:0xEC
-void fn_80064344(void) {
-    return;
-}
-
-// .text:0x80064430 size:0x104
-// Starts an emitter at `position` from the lbl_80108D48 template with its three unk54 values
-// scaled by scaleA and its unk14 / unk38 values scaled by scaleB.
-void fn_80064430(Gap80062578Vec* position, s32 type, f32 scaleA, f32 scaleB) {
+/* Starts an emitter at `position` from the lbl_80108D48 template with its three unk54 values
+   scaled by scaleA and its unk14 / unk38 values scaled by scaleB. */
+static inline void startScaledEmitter(Gap80062578Vec* position, s32 type, f32 scaleA, f32 scaleB) {
     Gap80062578Emitter emitter;
 
     memcpy(&emitter, &lbl_80108D48, sizeof(emitter));
@@ -383,6 +378,19 @@ void fn_80064430(Gap80062578Vec* position, s32 type, f32 scaleA, f32 scaleB) {
     emitter.unk54[1] *= scaleA;
     emitter.unk54[2] *= scaleA;
     fn_8002B7F8(position, &emitter, type);
+}
+
+// Starts a type-1 emitter at `position`, scaled by 3.0 times the length of `velocity`.
+void fn_80064344(Gap80062578Vec* position, Gap80062578Vec* velocity) {
+    f32 scale = 3.0f * PSVECMag(velocity);
+
+    startScaledEmitter(position, 1, scale, scale);
+}
+
+// .text:0x80064430 size:0x104
+// Starts a scaled emitter of the given type (see startScaledEmitter).
+void fn_80064430(Gap80062578Vec* position, s32 type, f32 scaleA, f32 scaleB) {
+    startScaledEmitter(position, type, scaleA, scaleB);
 }
 
 // .text:0x80064534 size:0x220
