@@ -32,8 +32,22 @@ void fn_80039FF8(Gap80039AA8RenderMode* mode) {
 }
 
 // .text:0x8003A090 size:0xB4
+// On the GX thread, when screen flag 0x01 or 0x10 is set: copies the 640x448 frame buffer into
+// lbl_8023DD80 at the screen's capture size (unk10 x unk12) and records that size.
 void fn_8003A090(void) {
-    return;
+    u32 width;
+    u32 height;
+
+    if (GXGetCurrentGXThread() == OSGetCurrentThread() && (lbl_803C5090.unk1D & 0x11)) {
+        height = lbl_803C5090.unk12;
+        width = lbl_803C5090.unk10;
+        GXSetTexCopySrc(0, 0, 640, 448);
+        GXSetTexCopyDst(width, height, 4, width != 640);
+        GXCopyTex(&lbl_8023DD80, 0);
+        GXPixModeSync();
+        lbl_800F7A40.width = width;
+        lbl_800F7A40.height = height;
+    }
 }
 
 // .text:0x8003A144 size:0x8C
