@@ -2,21 +2,24 @@
 #define __UNKNOWN_gap_800A1A70_H_
 
 #include "mssbTypes.h"
+/* The SDK's GDLObj: a display list being written. */
 typedef struct Gap800A1A70Range {
-    /* 0x0 */ s32 start;
-    /* 0x4 */ s32 length;
-    /* 0x8 */ s32 cur;
-    /* 0xC */ s32 end;
+    /* 0x0 */ u8* start;
+    /* 0x4 */ u32 length;
+    /* 0x8 */ u8* cur;
+    /* 0xC */ u8* end;
 } Gap800A1A70Range;
 
-void fn_800A1A70(Gap800A1A70Range* range, s32 start, s32 length);
+void fn_800A1A70(Gap800A1A70Range* range, u8* start, u32 length);
 void fn_800A1A88(void);
 void fn_800A1B80(void);
 void fn_800A1BB0(void);
 void fn_800A1E3C(void);
 void fn_800A1F40(void);
 void fn_800A2194(void);
-void fn_800A2294(void);
+extern Gap800A1A70Range* lbl_803CC0F0; /* current GD display list (GDLObj) */
+extern u8 lbl_803CBAB0[8];             /* BP register id per texture map for the image pointer */
+void fn_800A2294(u32 texMap, u32 imageAddress);
 void fn_800A237C(void);
 void fn_800A246C(void);
 void fn_800A26FC(void);
