@@ -325,6 +325,19 @@ The skin picker (phase 3) delivers "more looks without losing a slot" without an
 custom model on an existing slot needs none of it either. Steps 1–2 are still worth doing first:
 they are behaviour-neutral, and they turn the rest into data edits.
 
+### 6.1 Found after the first pass (2026-11-15, by decompiling)
+
+* **Save file layout** (`fn_80040FE0`, `fn_80041074`, matched): the memory card image is a
+  header block (0x5B0 bytes at +0x48, checksum at +0x44) followed by three challenge slots of
+  0x450C bytes (u16 checksum, then a 0x4508-byte `ChallengeSaveData`). Growing the per-character
+  records changes every slot's size and the checksum ranges.
+* **`lbl_80108BF0`** is `s8[5][54]`, a per-charID table (row chosen by the caller, column
+  `actor->charID`), read in `gap_80062578.c` and passed to `fn_8004B1C0`. Not yet in §3 or
+  in `tools/roster_scan.py`; its meaning is not traced.
+* The engine arena allocator is decompiled (`_OSAllocFromHeap`, `fn_800ACF34`, `fn_800ACF78`
+  in `gap_800A97D0.c`, registers only), which is what a relocated-table section at the arena
+  start has to coexist with.
+
 ## 7. Open items
 
 * Trace the index of game 0x37AC, 0x111C8 (`fn_3_BC850` has no direct caller: it is reached

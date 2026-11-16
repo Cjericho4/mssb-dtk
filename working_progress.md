@@ -4,7 +4,7 @@
 **Source of truth:** Always follow `queue.log`. If this file disagrees with `queue.log`, `queue.log` wins.
 **Strategy:** Work through functions listed in `queue.log` (plain entries at the bottom, after all COMPLETED/NONMATCHING lines)
 **Queue file:** `queue.log`
-**Next function to attempt:** queue is empty; continue smallest never-attempted (score_functions.py filtered against queue.log + this file's tables). Next up: fn_3_BC54, fn_3_3D6AC, fn_3_3F124, fn_3_7EBD4. 2026-10-16 solo batches: 25/30, 45/50 (+ fn_3_12F9D4 fixed), 4/4.
+**Next function to attempt:** queue is empty. Game-module functions under 220 bytes are all attempted; the untried small ones are in the DOL game units (`tools/untried.sh dol 300 | grep gap_`). 2026-11-15 session: 69 matched, 24 near-matches in the DOL (4,159 -> 4,228); how-to and lessons in `.agent/HANDOFF.md`. Good next targets there. Older note: fn_3_BC54, fn_3_3D6AC, fn_3_3F124, fn_3_7EBD4.
 
 To find the next function: look for the first plain entry (not prefixed with COMPLETED/NONMATCHING/SKIPPED) in `queue.log` that hasn't been committed yet.
 
@@ -13,6 +13,75 @@ To find the next function: look for the first plain entry (not prefixed with COM
 ## Recently Completed (from queue.log)
 | Function | Notes |
 |---|---|
+| fn_8004C510 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8004BEB0 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80024C6C | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80011468 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8004B6EC | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8005240C | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80017DBC | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8004BD6C | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80017D28 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8001B224 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8004AC00 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8004AD54 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80062F38 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800637DC | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80020624 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800117CC | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800116DC | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800111D8 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80011578 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800115C8 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80018B38 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80011358 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8001CA40 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8001CBD4 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8001CB10 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8006295C | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800188C0 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80022A24 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80021308 | matched (2026-11-15 session, DOL character/engine units) |
+| f_initSound | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800203E0 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80020278 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80021064 | matched (2026-11-15 session, DOL character/engine units) |
+| LERPToNewRange_Float | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80037AA0 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800B13C0 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800B1468 | matched (2026-11-15 session, DOL character/engine units) |
+| SKNInit | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800AD780 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800AD830 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800AD9F4 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800B0A14_removeQueue | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8003A090 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8003BF54 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80048764 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8006C6C4 | matched (2026-11-15 session, DOL character/engine units) |
+| PrepFilesToBeLoaded | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80041074 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8003AD84 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8003AC90 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8003A1D0 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80049C80 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8004A1BC | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80064430 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80064344 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800A8AB8 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800AB474 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800AD490 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80033F64 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8006862C | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800362F0 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_80036134 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800A2294 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800A2194 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800A237C | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800A1E3C | matched (2026-11-15 session, DOL character/engine units) |
+| fn_800A1A88 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8001B200 | matched (2026-11-15 session, DOL character/engine units) |
+| fn_8001B214 | matched (2026-11-15 session, DOL character/engine units) |
 | fn_3_B3A4C | matched |
 | fn_3_3CB8C | matched |
 | fn_3_2A164 | matched |
@@ -113,6 +182,30 @@ To find the next function: look for the first plain entry (not prefixed with COM
 ## Almost Matched (do not retry)
 | Function | Issue |
 |---|---|
+| fn_8006C9D8 | registers only (tracker base r5 vs r6); see the "Non-matching" note in the function |
+| fn_8001FC4C | registers only: data anchor lands in r8 because the pair lists are extern, not defined in the unit; see the "Non-matching" note in the function |
+| fn_8001D180 | registers only (slot pointer r8 vs r6); see the "Non-matching" note in the function |
+| fn_8001F16C | registers only (i / block / walker want r30, r29, r28); see the "Non-matching" note in the function |
+| fn_800625A4 | unrolled clear loop stores a separate zero register; see the "Non-matching" note in the function |
+| fn_80062D94 | registers only (list walker / slot pointer swapped); see the "Non-matching" note in the function |
+| fn_800177B4 | argument load order (task->player first in target); see the "Non-matching" note in the function |
+| fn_80010FA0 | registers (state base / table swapped); see the "Non-matching" note in the function |
+| fn_8000F988 | scheduling around the fn_8000FF04 call; see the "Non-matching" note in the function |
+| randRange | registers only; see the "Non-matching" note in the function |
+| starMenu | task pointer copy and +12 index folding; see the "Non-matching" note in the function |
+| SndFree | registers only; see the "Non-matching" note in the function |
+| SndAlloc | registers only; see the "Non-matching" note in the function |
+| fn_800B0390 | registers only (first address load r5 vs r6); see the "Non-matching" note in the function |
+| fn_800B0580 | registers only (first address load r5 vs r6); see the "Non-matching" note in the function |
+| fn_800BDFE0 | registers only (loop counter / table pointer); see the "Non-matching" note in the function |
+| fn_800BE09C | one register (state address for the hook load); see the "Non-matching" note in the function |
+| challengeRelated | one instruction (li r30,0 vs mr r30,r31); see the "Non-matching" note in the function |
+| fn_800A7AD8 | end pointer formed in one addi instead of two; see the "Non-matching" note in the function |
+| _OSAllocFromHeap | registers only; see the "Non-matching" note in the function |
+| fn_800ACF34 | registers only; see the "Non-matching" note in the function |
+| fn_800ACF78 | registers only; see the "Non-matching" note in the function |
+| fn_800ACC6C | operand order of two adds; see the "Non-matching" note in the function |
+| fn_80035750 | register allocation (slot index, string base, entry pointer); see the "Non-matching" note in the function |
 | fn_3_55CC4 | Codex attempt; 15 lines off, mostly r4/r5 swaps around g_FieldingLogic.unkF4 stores |
 | fn_3_70768 | final interpolation: target computes z-prevZ into f4 first and uses non-fused fmuls+fadds; only FP register assignment differs (6 lines) |
 | fn_3_7D2E0 | CW hoists g_Stats.unk40 load above replay-frame stores (target reloads after); inline-helper and indexing variants didn't block it |

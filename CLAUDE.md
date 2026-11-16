@@ -70,6 +70,11 @@ The toolchain consists of:
 - `python3 tools/literalize_rodata.py` sweep unmatched game functions replacing extern rodata floats with literals, keeping only improvements (slow; runs ninja repeatedly).
 - `python3 tools/sbs.py <function> [unit]` side-by-side target/current asm from the last build (best for register swaps).
 - `python3 tools/brute.py <src_file> <function> <template.c> [limit]` permute the lines between `//PERM_BEGIN` and `//PERM_END` in a candidate (decl/statement order) via try_function.py until MATCH.
+- `tools/fn_asm.sh <function>` target asm of one function plus every mention in src/ and include/.
+- `tools/put_stub.py <src.c> <function> <header.h|-> "<prototype>" < body` replace an empty stub and its `(void)` prototype.
+- `tools/untried.sh [module] [max-size]` unmatched functions nobody has attempted, by size.
+- `tools/roster_scan.py [--tables] [--refs] [--derived]` phase-6 scanner (per-character tables, uses of 54, table references).
+- `.agent/HANDOFF.md` current state and the fast match loop; read it when picking the project up.
 - `.agent/workflows/parallel_batch.md` how to run a 100-function batch with 4 parallel worktree agents and merge it.
 - `.agent/attempts/` best non-matching attempts (indexed in working_progress.md's Almost Matched table).
 - `.agent/categorize/functions.csv` per-function category/difficulty for unmatched game functions (Codex-generated heuristic; use for picking batches).

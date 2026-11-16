@@ -475,3 +475,54 @@ Many structs in this project use explicit padding or fixed offsets. Always refer
     so a candidate that calls an unwritten same-unit stub loses that call and its diff misleads.
     Don't fix that with `#pragma dont_inline`: once the helpers had bodies, deleting the pragmas took
     fn_80012B90 from 26% to 88% (`code_quality.md` §4a).
+
+## 15. DOL game-unit session (Fable, 2026-11-15): 69 matches in `src/Unknown/gap_*.c`
+
+What turned near-matches into matches, in the order it paid off:
+
+* **A shared `static inline` is often the whole answer.** When two or three neighbouring
+  functions contain the same block, or a function contains the body of a *later* function, the
+  original had a static inline. Writing it once and calling it from each fixed stack slot
+  order, loop shape and register use together: `applyLightSet` (fn_8001CA40 / fn_8001CBD4),
+  `applyFirstLightDirection` (fn_8001CB10), `clearSlotCallback` (fn_80011578 / fn_800115C8),
+  `startScaledEmitter` (fn_80064344 / fn_80064430), `movieStatus` / `movieIdle` /
+  `movieRequestPause` (fn_800AD780 / AD830 / AD9F4), `closeAllStreams` (fn_800A8AB8), the GD
+  writers `gdWriteU8` / `gdWriteU32` (fn_800A1A88 .. fn_800A237C).
+* **Empty stubs get inlined away.** With `-inline auto`, a call to an empty stub defined
+  earlier in the file disappears, so the caller cannot match. Wrap the stub (or a small real
+  callee the target calls out of line) in `#pragma dont_inline on` / `reset` with a FAKEMATCH
+  note: fn_8003A1D0, fn_80049C80, fn_8004A1BC, fn_800637DC, fn_800A2294.
+* **Handlers reached through tables take more arguments than they use.** If the first free
+  register the function touches is r6, it has three integer parameters (fn_8004AC00,
+  fn_8004C510); if a callee is entered with r4 still holding a pointer computed earlier, that
+  pointer is its second argument (the fn_80011468 handlers).
+* **`cmpwi` on an unsigned byte:** `(s32)field == CONST` (cast the field, not the constant).
+* **`lbz + extsb` on a field the header calls u8:** keep the field u8 and cast at the use,
+  `(s8)x`.
+* **Booleans folded into `cntlzw` / `subfic`:** `if (x == 1) return 1; return 0;` is folded;
+  a `result` variable with `break`s and one `return result` keeps the explicit branches
+  (fn_8004AD54). The reverse also occurs (fn_800AD490 needs the explicit pair).
+* **`beq L; b end` instead of `bne end`:** written as one `if (a == NULL || b == NULL) return;`
+  (fn_80011358, fn_80049C80).
+* **Argument or field loaded "too early":** read it into a local first; a wider local
+  (`s32 boneIndex = anim->boneIndices[n]`) makes the index load before the object pointer
+  (fn_80017DBC); `s16 x = q.x; s16 y = q.y;` before the stores (fn_80036134); a `u16 sum`
+  fixes compare operand order (fn_80041074).
+* **Two stores in the "wrong" order:** swap the two statements; the compiler schedules the
+  second constant first (fn_800203E0, fn_80020278).
+* **One address for a pair of stores:** `words = &t.pairs[i].a; words[1] = 0; words[0] = 0;`
+  (fn_8003BF54).
+* **Indexing from a base slot:** `(&table[task->index])[i]` keeps `index << 3` separate from
+  the `i * 8` displacement (fn_80021064).
+* **64-bit copy that swaps registers:** copy the two words as two u32 assignments
+  (PrepFilesToBeLoaded).
+* **Stack slots swapped:** swap the two local declarations (fn_800117CC, fn_80033F64).
+* **Variable reuse:** `size += (u32)ptr;` when the target overwrites the size register with
+  the new top (SndAlloc, _OSAllocFromHeap); these still ended registers-only.
+* **Local switch block order = source case order.** Put the cases in the order their blocks
+  appear in the target (fn_8005240C's inner switch: 2, 3, 0, 1).
+
+Register-only failures that none of the above moved (do not retry without a new idea): the
+arena allocator trio, SndAlloc / SndFree, randRange, fn_8001D180, fn_8001FC4C (needs its data
+defined in the unit), fn_8006C9D8, fn_800BDFE0.
+

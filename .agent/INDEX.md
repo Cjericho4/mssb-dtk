@@ -11,6 +11,9 @@ Modding issues moved there too; old `mssb-dtk` issue links redirect. Numbers in 
 old ones: #2→1, #3→2, #5→3, #6→4, #7→5, #8→6, #18→7, #25→8, #26→9, #27→10, #28→11, #30→12,
 #33→13, #34→14, #35→15, #36→16, #37→17 (closed ones such as #29 and #38 stayed here).
 
+**Picking the project up?** Read `HANDOFF.md` next: current state, the fast match loop, what to
+check first and the traps.
+
 ## Start here by task
 | Task | Read |
 |---|---|
@@ -35,6 +38,7 @@ old ones: #2→1, #3→2, #5→3, #6→4, #7→5, #8→6, #18→7, #25→8, #26�
 ## Files
 | File | Owns | Size |
 |---|---|---|
+| `HANDOFF.md` | current state, fast loop, pre-flight checks, traps (2026-11-16) | ~1k |
 | `addresses.md` | index only: address / table / file → name → meaning → owning doc section | ~10k tokens; grep it |
 | `modding_roadmap.md` | phases 1–6, research tracks R1–R7, done / in progress, issue numbers | ~2k |
 | `character_modding_report.md` | character load chain, per-character tables (with retail values), clone recipes, patcher findings | ~5k |
