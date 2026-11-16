@@ -32,6 +32,8 @@ typedef struct Gap80062578Sound {
     u8 _pad18[0x80];
     u32 sound98;
     u32 sound9C;
+    u8 _padA0[0x398 - 0xA0];
+    /* 0x398 */ u8 unk398; /* sound system ready */
 } Gap80062578Sound;
 extern Gap80062578Sound lbl_800EF808;
 void fn_80021518(s32 id, u32 sound);
@@ -52,8 +54,10 @@ typedef struct Gap80062578Flags {
     /* 0x0 */ s32 unk0;
     /* 0x4 */ u8 unk4;
     /* 0x5 */ u8 unk5;
-    u8 _pad6[0x7];
-    /* 0xD */ u8 unkD;
+    u8 _pad6[2];
+    /* 0x8 */ u32 voice;   /* looping effect started by fn_8006295C */
+    /* 0xC */ u8 playing;
+    /* 0xD */ u8 unkD;     /* request to stop it */
 } Gap80062578Flags;
 extern Gap80062578Flags lbl_803C6714;
 typedef union Gap80062578Words {
@@ -91,6 +95,10 @@ s32 fn_800698F8(s32 charID);
 u32 sndFXCtrl(u32 handle, u8 ctrl, u8 value);
 u32 fn_800628D4(s32 charID);
 void fn_80062948(void);
+extern u8 lbl_803CB889; /* volume of effect 0 */
+extern char lbl_800E69A8[]; /* "sound end \n" */
+void sndFXKeyOff(u32 voice);
+void fn_800B0A14_removeQueue(void);
 void fn_8006295C(void);
 void initializeUnknown(void);
 void fn_80062A74(void);

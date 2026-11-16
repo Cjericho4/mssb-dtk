@@ -113,8 +113,30 @@ void fn_80062948(void) {
 }
 
 // .text:0x8006295C size:0xF4
+// Queue task: keeps sound effect 0 playing until a stop is requested (unkD), then keys it off
+// and removes itself; if the sound system is not ready it stops at once and reports "sound end".
 void fn_8006295C(void) {
-    return;
+    if (lbl_800EF808.unk398 != 0) {
+        if (lbl_803C6714.playing == 0) {
+            lbl_803C6714.voice = sndFXStartEx(0, lbl_803CB889, 0x3F, 0);
+            lbl_803C6714.playing = 1;
+            lbl_803C6714.unkD = 0;
+        }
+        if (lbl_803C6714.unkD != 0) {
+            sndFXKeyOff(lbl_803C6714.voice);
+            lbl_803C6714.voice = 0;
+            lbl_803C6714.unkD = 0;
+            lbl_803C6714.playing = 0;
+            fn_800B0A14_removeQueue();
+        }
+    } else {
+        sndFXKeyOff(lbl_803C6714.voice);
+        lbl_803C6714.voice = 0;
+        lbl_803C6714.unkD = 0;
+        lbl_803C6714.playing = 0;
+        OSReport(lbl_800E69A8);
+        fn_800B0A14_removeQueue();
+    }
 }
 
 // .text:0x80062A50 size:0x24
