@@ -24,8 +24,19 @@ void fn_80035F20(void) {
 }
 
 // .text:0x80036134 size:0xE0
-void fn_80036134(void) {
-    return;
+// Moves scene object `target` to the point that list `list` of object `index`'s current
+// animation frame gives.
+void fn_80036134(Gap80035DD4Task* task, s32 index, s32 list, s32 target) {
+    Gap80035DD4Query query;
+    Gap80035DD4Node* node = lbl_80371C30[task->baseIndex + index].node;
+    s16 x;
+    s16 y;
+
+    fn_8000CEF0(lbl_803C4BE0[node->model].data, node->frame, list, node->unk5C >> 16, &query);
+    x = query.x;
+    y = query.y;
+    lbl_80371C30[task->baseIndex + target].node->x = x;
+    lbl_80371C30[task->baseIndex + target].node->y = y;
 }
 
 // .text:0x80036214 size:0x5C

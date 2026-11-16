@@ -21,7 +21,12 @@ typedef struct Gap80035DD4Quat { f32 x, y, z, w; } Gap80035DD4Quat;
 typedef struct Gap80035DD4Vec { f32 x, y, z; } Gap80035DD4Vec;
 typedef struct Gap80035DD4Task { u8 _pad0[0x14]; /* 0x14 */ u16 baseIndex; } Gap80035DD4Task;
 typedef struct Gap80035DD4Node {
-    u8 _pad0[0x64];
+    u8 _pad0[0x48];
+    /* 0x48 */ f32 x;
+    /* 0x4C */ f32 y;
+    u8 _pad50[0xC];
+    /* 0x5C */ u32 unk5C; /* animation frame in the high half */
+    u8 _pad60[4];
     /* 0x64 */ u16 frame;
     /* 0x66 */ u8 model;
     u8 _pad67[0xAC - 0x67];
@@ -97,7 +102,7 @@ void fn_80035DD4(void);
 void fn_80035ED0(s32 index);
 void fn_80035EEC(s32 value, s32 index);
 void fn_80035F20(void);
-void fn_80036134(void);
+void fn_80036134(Gap80035DD4Task* task, s32 index, s32 list, s32 target);
 s32 fn_80036214(Gap80035DD4Task* task, s32 index, s32 a, s32 b);
 void fn_80036270(Gap80035DD4Task* task, s32 index, s32 a, s32 b, s16* x, s16* y);
 void fn_800362F0(Gap80035DD4Task* scene, s32 id);
