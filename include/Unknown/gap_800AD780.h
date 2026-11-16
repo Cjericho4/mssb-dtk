@@ -79,7 +79,7 @@ BOOL fn_800AD780(Gap800AD780Movie* movie);
 void fn_800AD830(Gap800AD780Movie* movie);
 void fn_800AD914(Gap800AD780Movie* movie);
 void fn_800AD95C(Gap800AD780Movie* movie, u8 mode);
-void fn_800AD9F4(void);
+void fn_800AD9F4(Gap800AD780Movie* movie);
 u8 fn_800ADAFC(void);
 void fn_800ADB04(void);
 void fn_800ADBFC(void);

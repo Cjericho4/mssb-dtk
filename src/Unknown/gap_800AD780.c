@@ -46,11 +46,16 @@ BOOL fn_800AD780(Gap800AD780Movie* movie) {
 }
 
 // .text:0x800AD830 size:0xE4
-// Posts message 2 to the movie thread's queue unless the movie is idle.
-void fn_800AD830(Gap800AD780Movie* movie) {
+/* Posts message 2 to the movie thread's queue unless the movie is idle. */
+static inline void movieRequestPause(Gap800AD780Movie* movie) {
     if (!movieIdle(movie)) {
         OSSendMessage(&lbl_802FB870, 2, 0);
     }
+}
+
+// Posts message 2 to the movie thread's queue unless the movie is idle.
+void fn_800AD830(Gap800AD780Movie* movie) {
+    movieRequestPause(movie);
 }
 
 // .text:0x800AD914 size:0x48
@@ -75,8 +80,14 @@ void fn_800AD95C(Gap800AD780Movie* movie, u8 mode) {
 }
 
 // .text:0x800AD9F4 size:0x108
-void fn_800AD9F4(void) {
-    return;
+// Stops a movie: message 2 first if it is running (flags 1 or 2) and not idle, then message 3.
+void fn_800AD9F4(Gap800AD780Movie* movie) {
+    if (movie != NULL) {
+        if (movie->flags & 3) {
+            movieRequestPause(movie);
+        }
+        OSSendMessage(&lbl_802FB870, 3, 0);
+    }
 }
 
 // .text:0x800ADAFC size:0x8
