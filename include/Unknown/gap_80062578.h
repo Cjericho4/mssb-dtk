@@ -169,7 +169,24 @@ u8* memset(u8* memory, s32 value, u32 size);
 void fn_80063958(s8 index);
 void fn_800639BC(void);
 void fn_80064344(void);
-void fn_80064430(void);
+typedef struct Gap80062578Vec { f32 x, y, z; } Gap80062578Vec;
+/* Emitter parameter block (0x70 bytes); lbl_80108D48 is the template fn_80064430 scales. */
+typedef struct Gap80062578Emitter {
+    /* 0x00 */ s32 unk0;
+    u8 _pad4[0x10];
+    /* 0x14 */ f32 unk14[6]; /* scaled by the second factor */
+    u8 _pad2C[0xC];
+    /* 0x38 */ f32 unk38;    /* scaled by the second factor */
+    u8 _pad3C[0x18];
+    /* 0x54 */ f32 unk54[3]; /* scaled by the first factor */
+    u8 _pad60[0x10];
+} Gap80062578Emitter;
+STATIC_ASSERT(sizeof(Gap80062578Emitter) == 0x70);
+extern Gap80062578Emitter lbl_80108D48;
+void* memcpy(void* dst, const void* src, unsigned long n);
+/* gap_80027918 owns this; arguments from fn_80064430's call. */
+void fn_8002B7F8(Gap80062578Vec* position, Gap80062578Emitter* emitter, s32 type);
+void fn_80064430(Gap80062578Vec* position, s32 type, f32 scaleA, f32 scaleB);
 void fn_80064534(void);
 
 #endif // !__UNKNOWN_gap_80062578_H_

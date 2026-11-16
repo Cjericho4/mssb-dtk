@@ -365,8 +365,24 @@ void fn_80064344(void) {
 }
 
 // .text:0x80064430 size:0x104
-void fn_80064430(void) {
-    return;
+// Starts an emitter at `position` from the lbl_80108D48 template with its three unk54 values
+// scaled by scaleA and its unk14 / unk38 values scaled by scaleB.
+void fn_80064430(Gap80062578Vec* position, s32 type, f32 scaleA, f32 scaleB) {
+    Gap80062578Emitter emitter;
+
+    memcpy(&emitter, &lbl_80108D48, sizeof(emitter));
+    emitter.unk0 = lbl_803CBD0C;
+    emitter.unk14[0] *= scaleB;
+    emitter.unk14[1] *= scaleB;
+    emitter.unk14[2] *= scaleB;
+    emitter.unk14[3] *= scaleB;
+    emitter.unk14[4] *= scaleB;
+    emitter.unk14[5] *= scaleB;
+    emitter.unk38 *= scaleB;
+    emitter.unk54[0] *= scaleA;
+    emitter.unk54[1] *= scaleA;
+    emitter.unk54[2] *= scaleA;
+    fn_8002B7F8(position, &emitter, type);
 }
 
 // .text:0x80064534 size:0x220
