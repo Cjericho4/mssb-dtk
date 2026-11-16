@@ -130,7 +130,7 @@ typedef struct Gap80062578RenderGroup {
     Gap80062578RenderObject** objects;
 } Gap80062578RenderGroup;
 s32 fn_80062ED4(s32 unused, Gap80062578RenderGroup** group);
-void fn_80062F38(void);
+
 s32 fn_80063010(s32 arg0, Gap80062578Scene** scene);
 void fn_80063028(void);
 typedef struct Gap80062578Control { u8 _pad0[0x44]; } Gap80062578Control;
@@ -138,6 +138,7 @@ typedef struct Gap80062578Transform { u8 _pad0[0x60]; Gap80062578Control current
 extern u32 lbl_803CB890;
 void fn_800B84AC(Gap80062578Control* dst, Gap80062578Control* a, Gap80062578Control* b, f32 weight);
 void fn_800633AC(Gap80062578Control* control, f32 matrix[3][4], u32 flags);
+void CTRLBuildMatrix_Flip(Gap80062578Control* control, f32 matrix[3][4], u32 flags);
 BOOL fn_80063718(Gap80062578RenderObject* obj, Gap80062578Transform* transform, f32 matrix[3][4], f32 weight);
 s32 fn_800637BC(s32 arg0, Gap80062578Scene** scene);
 s32 fn_800637D4(void);

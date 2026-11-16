@@ -207,14 +207,34 @@ s32 fn_80062ED4(s32 unused, Gap80062578RenderGroup** group) {
     return 0;
 }
 
+BOOL fn_80062F38(Gap80062578RenderObject* obj, Gap80062578Transform* transform, f32 matrix[3][4], f32 weight);
+
 // .text:0x80062F38 size:0xD8
-void fn_80062F38(void) {
-    return;
+// Bone callback installed by fn_80063010 (the Magikoopas' model setup hook): for bones 0x46,
+// 0x4A and 0x4C blends the bone's control toward its target and builds its matrix with the
+// flip variant.
+BOOL fn_80062F38(Gap80062578RenderObject* obj, Gap80062578Transform* transform, f32 matrix[3][4], f32 weight) {
+    switch (obj->type) {
+    case 0x46:
+        fn_800B84AC(&transform->current, &transform->target, &transform->current, weight);
+        CTRLBuildMatrix_Flip(&transform->current, matrix, 0);
+        return 1;
+    case 0x4A:
+        fn_800B84AC(&transform->current, &transform->target, &transform->current, weight);
+        CTRLBuildMatrix_Flip(&transform->current, matrix, 0);
+        return 1;
+    case 0x4C:
+        fn_800B84AC(&transform->current, &transform->target, &transform->current, weight);
+        CTRLBuildMatrix_Flip(&transform->current, matrix, 0);
+        return 1;
+    default:
+        return 0;
+    }
 }
 
 // .text:0x80063010 size:0x18
 s32 fn_80063010(s32 arg0, Gap80062578Scene** scene) {
-    (*scene)->callback = fn_80062F38;
+    (*scene)->callback = (void (*)(void))fn_80062F38;
     return 0;
 }
 
