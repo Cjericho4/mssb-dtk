@@ -226,6 +226,11 @@ Asm context read for this pass:
 * **54 as "not found", then tested**: `fn_80051D00` (`li r22, 0x36` ... `cmpwi r22, 0x36`).
 * **54-iteration loops**: `fn_8006C9D8` (over `starMissionCompletionTracker.missions`, see §3.1), challenge
   `fn_1_17B5C` (over `lbl_1_data_A978`); `fn_1_1496C` wraps a byte counter at 54.
+* **Loop over every character's subfile row**: `fn_80018B74` (`li r0, 0x36; mtctr`, stride 0x130
+  = 19 descriptors through `lbl_803CB790`): takes the largest size of five track groups over
+  all 54 characters and sizes the exhibition animation pools from them (`model_limits.md`). At
+  N characters the count must be N, or new characters' banks are not counted and can overflow
+  the pool.
 * **54-byte copies**: `fn_8003C00C`, `fn_80041150` (`memcpy(..., 0x36)` into `lbl_80354768`),
   game `fn_3_12CA90` (`li r6, 0x36` with `lbl_8034E978`).
 * **Not a character count**: `fn_80021518(0x36, ...)` in game `fn_3_91064` and challenge
@@ -242,8 +247,7 @@ From other docs, not re-read here: `fn_80021BBC`, `fn_8002204C` (`charID < 0x36`
 probably that switch's bound.
 
 Unverified, context not read: DOL `DrawSprite`, `fn_8000FA9C` (compares a value with 0x36, then
-0x27), `fn_80018B74` (`li r0, 0x36`; it loads through `lbl_803CB790`, so probably a 54-row
-loop over the subfile table); game `fn_3_12A6C4`, `fn_3_12B7A0`, `fn_3_B6D80`, `fn_3_B7184`;
+0x27); game `fn_3_12A6C4`, `fn_3_12B7A0`, `fn_3_B6D80`, `fn_3_B7184`;
 every menus.rel site, including the 26 functions with an empty `evidence` column (the
 `fn_2_44504`..`fn_2_46ADC` and `fn_2_4D378`..`fn_2_4E1C0` runs neighbour known readers of
 `lbl_800E8558`).
