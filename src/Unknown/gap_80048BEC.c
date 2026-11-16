@@ -63,19 +63,22 @@ s32 fn_80048EA8(s32 index) {
 }
 
 // .text:0x80048EB8 size:0x368
+/* FAKEMATCH: the three empty stubs below are kept out of line so fn_8004A1BC still calls them. */
+#pragma dont_inline on
 void startGameRelated(void) {
     return;
 }
 
 // .text:0x80049220 size:0x2AC
-void fn_80049220(void) {
+void fn_80049220(u8 player) {
     return;
 }
 
 // .text:0x800494CC size:0x3AC
-void fn_800494CC(void) {
+void fn_800494CC(u8 player) {
     return;
 }
+#pragma dont_inline reset
 
 // .text:0x80049878 size:0x408
 /* FAKEMATCH: kept out of line while it is an empty stub, so its callers still call it. */
@@ -89,6 +92,8 @@ void possiblyTransferDataBetweenDifferentRels(void) {
 // Leaves the current scene for scene 3 unless lbl_803C66B0 blocks it: in game mode 5 with
 // lbl_8037169C.unk12 clear it first requests scene (1, 6); then saves the previous scene, clears
 // lbl_803C5EE0 and sends command 0x29.
+/* FAKEMATCH: fn_8004A1BC calls this out of line in the original. */
+#pragma dont_inline on
 void fn_80049C80(void) {
     if (lbl_803C66B0.unk55 != 0 || lbl_803C66B0.unk56 != 0) {
         return;
@@ -104,8 +109,11 @@ void fn_80049C80(void) {
     fn_800569C8();
     fn_800625A4(0, 0x29);
 }
+#pragma dont_inline reset
 
 // .text:0x80049D3C size:0x50
+/* FAKEMATCH: fn_8004A1BC calls this out of line in the original. */
+#pragma dont_inline on
 void fn_80049D3C(void) {
     s32 i;
     u8 mode = g_d_GameSettings.mode;
@@ -114,6 +122,7 @@ void fn_80049D3C(void) {
     for (i = 0; i < (mode == 6 ? 4 : 2); i++) {
     }
 }
+#pragma dont_inline reset
 
 // .text:0x80049D8C size:0x370
 void fn_80049D8C(void) {
@@ -146,8 +155,42 @@ void fn_8004A0FC(void) {
 }
 
 // .text:0x8004A1BC size:0x100
+// Queue task of the mode set-up: step 0 leaves the scene, 1 waits for player 0's request to
+// clear, 2 and 3 run fn_800494CC / fn_80049220 for both players, 4 waits for resource
+// lbl_800FB5B0 (id 6) and restarts, 5 starts the game; fn_80049D3C runs every time.
 void fn_8004A1BC(void) {
-    return;
+    s32 i;
+
+    switch (lbl_803C5F04.step) {
+    case 0:
+        fn_80049C80();
+        break;
+    case 1:
+        if (lbl_803C66B0.unk5D == 0) {
+            lbl_803C5F04.step++;
+        }
+        break;
+    case 2:
+        for (i = 0; i < 2; i++) {
+            fn_800494CC(i);
+        }
+        break;
+    case 3:
+        for (i = 0; i < 2; i++) {
+            fn_80049220(i);
+        }
+        break;
+    case 4:
+        if (fn_80035838(lbl_800FB5B0, 6)) {
+            lbl_803C5F04.unk32 = 1;
+            lbl_803C5F04.step = 0;
+        }
+        break;
+    case 5:
+        startGameRelated();
+        break;
+    }
+    fn_80049D3C();
 }
 
 // .text:0x8004A2BC size:0x6C

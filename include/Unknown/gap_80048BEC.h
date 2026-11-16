@@ -78,13 +78,15 @@ void* memset(void* dst, int value, unsigned long count);
 s32 fn_80048E00(s32 which, s32 value);
 s32 fn_80048EA8(s32 index);
 void startGameRelated(void);
-void fn_80049220(void);
-void fn_800494CC(void);
+void fn_80049220(u8 player);
+void fn_800494CC(u8 player);
 void possiblyTransferDataBetweenDifferentRels(void);
 typedef struct Gap80048BECState66B0 {
     u8 _pad0[0x55];
     /* 0x55 */ u8 unk55;
     /* 0x56 */ u8 unk56;
+    u8 _pad57[6];
+    /* 0x5D */ u8 unk5D; /* player 0's pending command (Gap80062578Status.busy[0]) */
 } Gap80048BECState66B0;
 extern Gap80048BECState66B0 lbl_803C66B0;
 typedef struct Gap80048BECState169C {
@@ -119,7 +121,10 @@ typedef struct Gap80048BECQuad {
 typedef struct Gap80048BECState {
     u8 _pad0[0x2C];
     /* 0x2C */ u16 unk2C;
-    u8 _pad2E[0x8];
+    u8 _pad2E[2];
+    /* 0x30 */ u16 step;  /* fn_8004A1BC state: 0..5 */
+    /* 0x32 */ u8 unk32;
+    u8 _pad33[3];
     /* 0x36 */ u8 enabled;
     u8 _pad37[0x4];
     /* 0x3B */ u8 groupA[5];
@@ -132,6 +137,8 @@ extern Gap80048BECState lbl_803C5F04;
 void fn_80049D3C(void);
 void fn_80049D8C(void);
 void fn_8004A0FC(void);
+extern char lbl_800FB5B0[];
+BOOL fn_80035838(char* name, s32 id);
 void fn_8004A1BC(void);
 typedef struct Gap80048BECScene {
     u8 _pad0[0x4];
