@@ -82,8 +82,28 @@ void fn_800486E0(s32 priority, s8 team, u8 player) {
 }
 
 // .text:0x80048764 size:0xBC
+// State handler, step 0: once neither player has a request pending, queues the pause menu task
+// (priority 0x1000), resets the pause selection (nothing selected, team -1, player 0) and
+// moves to step 1.
 void fn_80048764(void) {
-    return;
+    switch (lbl_803CBBCC->timer) {
+    case 0:
+        if (lbl_803C66B0.flags[0] == 0 && lbl_803C66B0.flags[1] == 0) {
+            fn_800B0A5C_insertQueue(pauseMenuSelection, 0x1000);
+            lbl_803297E0.selection = 0;
+            lbl_803297E0.team = -1;
+            lbl_803297E0.unkCF42 = 0;
+            if (g_d_GameSettings.mode != 2) {
+                lbl_803297E0.player = 0;
+            } else {
+                lbl_803297E0.player = 0;
+            }
+            lbl_803CBBCC->timer++;
+        }
+        break;
+    case 1:
+        break;
+    }
 }
 
 // .text:0x80048820 size:0x3CC

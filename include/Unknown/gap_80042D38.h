@@ -50,6 +50,11 @@ void fn_800471F4(void);
 void fn_80047CE0(void);
 void pauseMenuSelection(void);
 void fn_800486E0(s32 priority, s8 team, u8 player);
+typedef struct Gap80042D38Busy {
+    u8 _pad0[0x55];
+    /* 0x55 */ u8 flags[2]; /* per-player busy flags of lbl_803C66B0 (Gap80062578Status) */
+} Gap80042D38Busy;
+extern Gap80042D38Busy lbl_803C66B0;
 void fn_80048764(void);
 void fn_80048820(void);
 
