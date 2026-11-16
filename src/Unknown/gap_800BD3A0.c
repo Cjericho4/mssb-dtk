@@ -4,6 +4,7 @@
 #include "Dolphin/GX/GXGeometry.h"
 #include "Dolphin/GX/GXFrameBuffer.h"
 #include "Dolphin/GX/GXMisc.h"
+#include "Dolphin/GX/GXTransform.h"
 #include "Dolphin/OS/OSError.h"
 
 // .text:0x800BD3A0 size:0xC
@@ -320,17 +321,29 @@ void fn_800BDFE0(StadiumAnimTable* table) {
 }
 
 // .text:0x800BE09C size:0xBC
-void fn_800BE09C(void) {
-    return;
+// Shadow set-up for one entry (only when shadows are on): full-screen scissor and viewport, the
+// optional hook at state +0x18 (given the address of `arg`), then fn_800BE498 on the entry's
+// data and fn_800BE158 with the shared entry table.
+void fn_800BE09C(void* arg, Gap800BD3A0Entry* entry) {
+    /* Non-matching: one register (the state address for the hook load is formed in r3, not r4). */
+    if (lbl_803009F8.drawShadows) {
+        GXSetScissor(2, 2, 636, 476);
+        GXSetViewport(0.0f, 0.0f, 640.0f, 480.0f, 0.0f, 1.0f);
+        if (lbl_803009F8.unk18 != NULL) {
+            lbl_803009F8.unk18(&arg);
+        }
+        fn_800BE498(&entry->data, 640.0f, 448.0f, 1.0f, 512.0f, 1280.0f);
+        fn_800BE158(lbl_803009F8.entries, entry);
+    }
 }
 
 // .text:0x800BE158 size:0x340
-void fn_800BE158(void) {
+void fn_800BE158(Gap800BD3A0Entry* entries, Gap800BD3A0Entry* entry) {
     return;
 }
 
 // .text:0x800BE498 size:0x56C
-void fn_800BE498(void) {
+void fn_800BE498(Gap800BD3A0EntryData* data, f32 width, f32 height, f32 unk, f32 texWidth, f32 texHeight) {
     return;
 }
 
@@ -396,7 +409,7 @@ void fn_800BF038(void (*preCopy)(Gap800BD3A0EntryData* data, s32 arg)) {
 
 // .text:0x800BF048 size:0x10
 void fn_800BF048(s32 value) {
-    lbl_803009F8.unk18 = value;
+    lbl_803009F8.unk18 = (void (*)(void**))value;
 }
 
 // .text:0x800BF058 size:0x10

@@ -71,7 +71,7 @@ typedef struct Gap800BD3A0State {
     struct Gap800BD3A0Tlut* tlut; /* 0xC */
     u8 _pad10[0x4];
     /* 0x14 */ Gap800BD3A0Entry* entries;
-    /* 0x18 */ s32 unk18;
+    /* 0x18 */ void (*unk18)(void** arg); /* optional hook run by fn_800BE09C */
     /* 0x1C */ Gap800BD3A0Callback callback;
     /* 0x20 */ void (*preCopy)(Gap800BD3A0EntryData* data, s32 arg); /* called before the shadow texture copy */
     u16 boundCount; /* 0x24 */
@@ -147,9 +147,9 @@ void fn_800BDEA0(void);
 void fn_800BDF70(Gap800BD3A0Model* model);
 struct StadiumAnimTable;
 void fn_800BDFE0(struct StadiumAnimTable* table);
-void fn_800BE09C(void);
-void fn_800BE158(void);
-void fn_800BE498(void);
+void fn_800BE09C(void* arg, Gap800BD3A0Entry* entry);
+void fn_800BE158(Gap800BD3A0Entry* entries, Gap800BD3A0Entry* entry);
+void fn_800BE498(Gap800BD3A0EntryData* data, f32 width, f32 height, f32 unk, f32 texWidth, f32 texHeight);
 void fn_800BEA04(void);
 void fn_800BEB3C(void);
 u8* fn_800BEB80(u8 index);
