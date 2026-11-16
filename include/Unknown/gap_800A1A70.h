@@ -14,7 +14,7 @@ void fn_800A1A70(Gap800A1A70Range* range, u8* start, u32 length);
 void fn_800A1A88(void);
 void fn_800A1B80(void);
 void fn_800A1BB0(void);
-void fn_800A1E3C(void);
+void fn_800A1E3C(u32 comp0, u8 ref0, u32 op, u32 comp1, u8 ref1);
 void fn_800A1F40(void);
 extern u8 lbl_803CBAA8[8]; /* BP register id per texture map for the image attributes */
 void fn_800A2194(u32 texMap, u16 width, u16 height, u32 format);

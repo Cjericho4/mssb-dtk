@@ -27,16 +27,6 @@ void fn_800A1BB0(void) {
     return;
 }
 
-// .text:0x800A1E3C size:0x104
-void fn_800A1E3C(void) {
-    return;
-}
-
-// .text:0x800A1F40 size:0x254
-void fn_800A1F40(void) {
-    return;
-}
-
 /* GD display-list writers (the SDK's GDWrite_u8 / GDWrite_u32 with their overflow checks). */
 static inline void gdPutU8(u8 value) {
     *lbl_803CC0F0->cur++ = value;
@@ -57,6 +47,19 @@ static inline void gdWriteU32(u32 value) {
     gdPutU8(value >> 16);
     gdPutU8(value >> 8);
     gdPutU8(value);
+}
+
+// .text:0x800A1E3C size:0x104
+// GDSetAlphaCompare: writes the BP alpha-test command (two compares with their reference
+// values, combined by `op`).
+void fn_800A1E3C(u32 comp0, u8 ref0, u32 op, u32 comp1, u8 ref1) {
+    gdWriteU8(0x61);
+    gdWriteU32(ref0 | (ref1 << 8) | (comp0 << 16) | (comp1 << 19) | (op << 22) | 0xF3000000);
+}
+
+// .text:0x800A1F40 size:0x254
+void fn_800A1F40(void) {
+    return;
 }
 
 // .text:0x800A2194 size:0x100
