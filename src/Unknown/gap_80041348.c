@@ -130,8 +130,27 @@ void transferStatsToInMemRoster(u8 side) {
 }
 
 // .text:0x80042BF0 size:0x54
+/* Next value of the game's linear congruential generator (high 16 bits of the new seed). */
+static inline s32 nextRandom(void) {
+    lbl_803CB750 = lbl_803CB750 * 0x5D588B65 + 1;
+    return lbl_803CB750 >> 16;
+}
+
+// Random integer in [low, high] (either order).
 s32 randRange(s32 low, s32 high) {
-    return 0;
+    /* Non-matching: registers only (the multiply lands in r4 instead of r5, the range in r3). */
+    s32 min;
+
+    if (low == high) {
+        return low;
+    }
+    if (low <= high) {
+        min = low;
+    } else {
+        min = high;
+        high = low;
+    }
+    return nextRandom() % (high - min + 1) + min;
 }
 
 // .text:0x80042C44 size:0xF4
