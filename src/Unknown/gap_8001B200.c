@@ -277,8 +277,67 @@ void fn_8001D148(s32 index, f32 x, f32 y, f32 z) {
 }
 
 // .text:0x8001D180 size:0x154
-void fn_8001D180(void) {
-    return;
+// Attaches (attach != 0) or detaches a sub-item (bat, glove, hand) on the actor in `slotKind`:
+// the owner bone is the one lbl_803CB7B4[item] names; attaching copies the display attachment of
+// the sub-item model's last bone that has one (odd items use the pair's second model).
+void fn_8001D180(s32 slotKind, s32 item, s32 attach) {
+    /* Non-matching: registers only (the slot pointer is loaded into r8 instead of r6 and copied
+       to r9); an inline lookup helper, a copied pointer and declaration order do not change it. */
+    Gap8001196CAnim* owner = g_hugeAnimStruct.slotPtrs[slotKind];
+    Gap8001196CActor* subActor;
+    Gap8001196CActor** actors;
+    Gap8001196CActor* actor;
+    s32 n;
+    Gap8001196CBone* ownerBone;
+    Gap8001196CBone* subBone;
+    s32 boneIdx;
+    s32 actorIndex;
+
+    if (owner != NULL) {
+        boneIdx = owner->boneIndices[lbl_803CB7B4[item]];
+    } else {
+        boneIdx = 0xFFFF;
+    }
+    if (boneIdx == 0xFFFF) {
+        return;
+    }
+    /* FAKEMATCH: the retail one-iteration countdown over the owner's actor pointer. */
+    actors = owner->actors;
+    actorIndex = 0;
+    do {
+        actor = *actors;
+        if (attach == 0) {
+            if (actor != NULL) {
+                ownerBone = actor->boneArray[boneIdx];
+                if (ownerBone != NULL) {
+                    ownerBone->attachment = 0;
+                }
+            }
+        } else if (lbl_800EEAAC[owner->charID] >= 0) {
+            if (owner->subItems != NULL) {
+                ownerBone = actor->boneArray[boneIdx];
+                if (item & 1) {
+                    subActor = g_hugeAnimStruct.subItemActorEntries[owner->subItems->obj1.index0].slot.actor;
+                } else {
+                    subActor = g_hugeAnimStruct.subItemActorEntries[owner->subItems->obj0.index0].slot.actor;
+                }
+                if (subActor == NULL) {
+                    return;
+                }
+                n = subActor->totalBones;
+                do {
+                    n--;
+                    subBone = subActor->boneArray[n];
+                    if (subBone->attachment != 0) {
+                        ownerBone->attachment = subBone->attachment;
+                        return;
+                    }
+                } while (n != 0);
+                return;
+            }
+        }
+        actors--;
+    } while (actorIndex-- != 0);
 }
 
 // .text:0x8001D2D4 size:0x8A0
