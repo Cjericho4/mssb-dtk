@@ -102,7 +102,9 @@ typedef struct Gap8001E460Sound {
     /* 0x2A4 */ Gap8001E460Chorus chorus;
     /* 0x340 */ u8 groups[0x50];
     u8 groupCount; /* 0x390 */
-    u8 _pad391[5];
+    /* 0x391 */ u8 volumeFD; /* sndVolume for sequence group 0xFD */
+    /* 0x392 */ u8 volumeFE; /* sndVolume for sequence group 0xFE */
+    u8 _pad393[3];
     /* 0x396 */ u8 soundMode;
     /* 0x397 */ u8 unk397;
     /* 0x398 */ u8 unk398;
@@ -265,6 +267,14 @@ void fn_800216F8(u8 a, s32 b);
 void fn_80021758(void);
 void fn_80021954(struct Gap8001E460Resource** resource);
 void fn_80021980(struct Gap8001E460Resource* resource);
+extern u8 lbl_80158740[0x4000];  /* stack check block; its first word is the magic 0xABF16D9C, then tagged "SND@" */
+extern u8 lbl_8015C740[0x21BE0]; /* MusyX work memory */
+extern u8 lbl_800EFBB4[0xC];
+/* gap_800AD780.h declares initSound as a (void) stub; arguments from this call. */
+void initSound(u8* config, s32 unk, u8* memory, u32 size);
+void fn_800A8F68(void);
+void fn_800A648C(void);
+void sndVolume(u8 volume, u16 time, u8 group);
 void f_initSound(void);
 void fn_80021AA0(void);
 void fn_80021AC0(void);
