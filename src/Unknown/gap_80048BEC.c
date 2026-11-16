@@ -83,8 +83,25 @@ void possiblyTransferDataBetweenDifferentRels(void) {
 }
 
 // .text:0x80049C80 size:0xBC
+// Leaves the current scene for scene 3 unless lbl_803C66B0 blocks it: in game mode 5 with
+// lbl_8037169C.unk12 clear it first requests scene (1, 6); then saves the previous scene, clears
+// lbl_803C5EE0 and sends command 0x29.
 void fn_80049C80(void) {
-    return;
+    /* Differs only while possiblyTransferDataBetweenDifferentRels is an empty stub above: the
+       compiler inlines the empty call away. */
+    if (lbl_803C66B0.unk55 != 0 || lbl_803C66B0.unk56 != 0) {
+        return;
+    }
+    if (g_d_GameSettings.mode == 5 && lbl_8037169C.unk12 == 0) {
+        changeScene(1, 6);
+    }
+    lbl_803C5EA4.unk36 = 1;
+    lbl_803C5EA4.previousScene = lbl_803C5EA4.scene;
+    lbl_803C5EA4.scene = 3;
+    possiblyTransferDataBetweenDifferentRels();
+    memset(lbl_803C5EE0, 0, sizeof(lbl_803C5EE0));
+    fn_800569C8();
+    fn_800625A4(0, 0x29);
 }
 
 // .text:0x80049D3C size:0x50

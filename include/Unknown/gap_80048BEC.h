@@ -81,6 +81,28 @@ void startGameRelated(void);
 void fn_80049220(void);
 void fn_800494CC(void);
 void possiblyTransferDataBetweenDifferentRels(void);
+typedef struct Gap80048BECState66B0 {
+    u8 _pad0[0x55];
+    /* 0x55 */ u8 unk55;
+    /* 0x56 */ u8 unk56;
+} Gap80048BECState66B0;
+extern Gap80048BECState66B0 lbl_803C66B0;
+typedef struct Gap80048BECState169C {
+    u8 _pad0[0x12];
+    /* 0x12 */ u8 unk12;
+} Gap80048BECState169C;
+extern Gap80048BECState169C lbl_8037169C;
+typedef struct Gap80048BECSceneState {
+    u8 _pad0[0x36];
+    /* 0x36 */ u8 unk36;
+    /* 0x37 */ u8 previousScene;
+    /* 0x38 */ u8 scene;
+} Gap80048BECSceneState;
+extern Gap80048BECSceneState lbl_803C5EA4;
+extern u8 lbl_803C5EE0[0x16];
+void changeScene(s32 arg0, s32 arg1);
+void fn_800569C8(void);
+void fn_800625A4(s32 index, s32 command);
 void fn_80049C80(void);
 typedef struct Gap80048BECSettings {
     u8 _pad0[0x7];
