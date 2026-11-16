@@ -660,8 +660,23 @@ void byteWiseMultiply(void) {
 }
 
 // .text:0x80024B00 size:0xB4
-void LERPToNewRange_Float(void) {
-    return;
+// Maps `value` from [min, max] onto [outMin, outMax], clamped to the ends (an empty input range
+// gives outMax); the result is truncated toward outMin.
+s32 LERPToNewRange_Float(s32 value, s32 min, s32 max, s32 outMin, s32 outMax) {
+    f32 range = max - min;
+    f32 t;
+
+    if (0.0f == range) {
+        t = 1.0f;
+    } else {
+        t = (f32)(value - min) / range;
+        t = (t > 1.0f) ? 1.0f : ((t < 0.0f) ? 0.0f : t);
+    }
+    {
+        f32 outRange = outMax - outMin;
+
+        return outMin + (s32)(outRange * t);
+    }
 }
 
 // .text:0x80024BB4 size:0x50

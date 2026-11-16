@@ -204,7 +204,7 @@ void fn_800247E4(void);
 void challengeStarRelatedInd(void);
 void multBottomBits_asFloat(void);
 void byteWiseMultiply(void);
-void LERPToNewRange_Float(void);
+s32 LERPToNewRange_Float(s32 value, s32 min, s32 max, s32 outMin, s32 outMax);
 f32 LinearInterpolateToNewRange(f32 x, f32 inMin, f32 inMax, f32 outMin, f32 outMax);
 BOOL fn_80024C04(s32 index);
 /* View of the actor slot record (Gap8001196CSlot in gap_8001196C.h, not included here). */
