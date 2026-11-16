@@ -36,7 +36,12 @@ typedef struct Gap8000F8F4State {
     };
     u8 _pad780[0x18];
     Gap8000F8F4Table* tables[8];
-    u8 _pad7B8[0x46];
+    u8 _pad7B8[0x7EC - 0x7B8];
+    /* 0x7EC */ u32 unk7EC; /* text file words 1, 2, 5 and 6 (fn_80010FA0) */
+    /* 0x7F0 */ u32 unk7F0;
+    /* 0x7F4 */ u32 unk7F4;
+    /* 0x7F8 */ u32 unk7F8;
+    u8 _pad7FC[2];
     u8 flag7FE;
 } Gap8000F8F4State;
 extern Gap8000F8F4State lbl_80366B18;
@@ -56,6 +61,7 @@ void fn_8000FF04(void);
 void fn_800100A4(void);
 void DrawText(s32 index);
 void DrawTextOnCondition(s32 condition);
+extern u16 lbl_80366218[]; /* copy of the text file's first u16 list, without its 0x4001 end mark */
 void fn_80010FA0(void);
 void fn_80011000(void);
 void fn_80011140(void);

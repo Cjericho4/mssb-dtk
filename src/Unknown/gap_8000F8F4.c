@@ -109,8 +109,31 @@ void DrawTextOnCondition(s32 condition) {
 }
 
 // .text:0x80010FA0 size:0x60
+// Binds the loaded text file (tables[0]): tables[7] points at its word array, four of the
+// words are cached in the state, and the u16 list its word 7 points to is copied to
+// lbl_80366218 up to the 0x4001 end mark.
 void fn_80010FA0(void) {
-    return;
+    /* Non-matching: registers (state base r5 / table r4 swapped) and the copy destination's
+       address is formed before the stores in the target. */
+    Gap8000F8F4Table* table = lbl_80366B18.tables[0];
+    u16* dst;
+    u16* src;
+
+    lbl_80366B18.tables[7] = (Gap8000F8F4Table*)table->values;
+    lbl_80366B18.unk7EC = table->values[1];
+    lbl_80366B18.unk7F0 = table->values[2];
+    lbl_80366B18.unk7F8 = table->values[6];
+    lbl_80366B18.unk7F4 = table->values[5];
+    src = (u16*)lbl_80366B18.tables[7]->values[6];
+    dst = lbl_80366218;
+    while (1) {
+        if (*src == 0x4001) {
+            return;
+        }
+        *dst = *src;
+        src++;
+        dst++;
+    }
 }
 
 // .text:0x80011000 size:0x140
