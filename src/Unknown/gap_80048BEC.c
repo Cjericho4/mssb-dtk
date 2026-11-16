@@ -337,8 +337,27 @@ void fn_8004C19C(void) {
 }
 
 // .text:0x8004C510 size:0xE8
-void fn_8004C510(void) {
-    return;
+// Animation event handler: on frame 0 hands over to fn_80062D94; on the character's event
+// frame (lbl_800FBD80[charID]) spawns the shared effect at the actor's bone-4 position on
+// the ground (y = 0) in colour lbl_800FC0FC[colorIndex].
+void fn_8004C510(Gap80048BECObj* obj, s32 unused, s32 colorIndex, f32 frame) {
+    Gap80048BECVec pos;
+
+    if (frame == 0.0f) {
+        fn_80062D94();
+        return;
+    }
+    if (frame == (f32)lbl_800FBD80[obj->id]) {
+        pos.x = 0.0f;
+        pos.y = 0.0f;
+        pos.z = 0.0f;
+        fn_8001B728(obj->slotKind, 4, &pos);
+        pos.y = 0.0f;
+        lbl_803CB860->unk0 = lbl_803CBD0C;
+        lbl_803CB860->color = (lbl_800FC0FC[colorIndex].r << 24) | (((u32)lbl_800FC0FC[colorIndex].g << 24) >> 8) |
+                              (lbl_800FC0FC[colorIndex].b << 8);
+        fn_80031CA4((Gap80048BECEffectTarget*)&pos, lbl_803CB860);
+    }
 }
 
 // .text:0x8004C5F8 size:0x404

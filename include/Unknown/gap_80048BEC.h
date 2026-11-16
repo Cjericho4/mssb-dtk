@@ -33,7 +33,9 @@ typedef struct Gap80048BECObj {
     u8 _pad3F[0x1BB];
     u16 actorIndex; /* 0x1FA */
     u8 _pad1FC[0x56];
-    s8 id; /* 0x252 */
+    s8 id; /* 0x252 charID */
+    u8 _pad253;
+    /* 0x254 */ s8 slotKind;
 } Gap80048BECObj;
 
 extern s32 lbl_803CB848;
@@ -156,7 +158,16 @@ void fn_80031CA4(Gap80048BECEffectTarget* target, Gap80048BECEffectParams* param
 void fn_8004C094(Gap80048BECEffectTarget* target);
 void fn_8004C108(Gap80048BECEffectTarget* target, u8 index);
 void fn_8004C19C(void);
-void fn_8004C510(void);
+extern s16 lbl_800FBD80[NUM_CHOOSABLE_CHARACTERS]; /* exact-frame event per charID (stats.md section 7) */
+extern Gap80048BECRGB lbl_800FC0FC[];
+typedef struct Gap80048BECVec {
+    f32 x;
+    f32 y;
+    f32 z;
+} Gap80048BECVec; /* same layout as VecXYZ (UnknownHomes_Game.h), which this unit does not include */
+s32 fn_8001B728(s32 index, u8 type, Gap80048BECVec* out);
+void fn_80062D94(void);
+void fn_8004C510(Gap80048BECObj* obj, s32 unused, s32 colorIndex, f32 frame);
 void fn_8004C5F8(void);
 void fn_8004C9FC(void);
 void fn_8004CA08(s32 value);
