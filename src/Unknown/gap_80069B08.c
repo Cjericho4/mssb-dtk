@@ -246,8 +246,26 @@ void starMissionMenu(void) {
 }
 
 // .text:0x8006CBE4 size:0xC0
-void challengeRelated(void) {
-    return;
+// Value from lbl_8010B444 for a character: row = its variant classification, column = how many
+// of its ten star missions pass challengeStarRelatedInd (always 0 for colour variants).
+s32 challengeRelated(s32 charID) {
+    /* Non-matching: one instruction (the loop counter starts with `li r30, 0`; the target copies
+       the zeroed count, `mr r30, r31`). */
+    s32 count;
+    s32 i;
+    Gap80069B08Mission* mission = &starMissionCompletionTracker.missions[charID];
+
+    if (lbl_800E8558[charID].isBase == 0) {
+        count = 0;
+    } else {
+        count = 0;
+        for (i = 0; i < 10; i++) {
+            if (challengeStarRelatedInd(charID, i)) {
+                count++;
+            }
+        }
+    }
+    return lbl_8010B444[mission->variantClassification][count];
 }
 
 // .text:0x8006CCA4 size:0x11C

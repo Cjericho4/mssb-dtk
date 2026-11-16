@@ -35,7 +35,7 @@ typedef struct Gap80069B08ScoutFlags {
 typedef struct Gap80069B08Mission {
     /* 0x00 */ Gap80069B08ScoutFlags* scoutFlags;
     /* 0x04 */ u8 challengeCaptain;
-    u8 _pad5;
+    /* 0x05 */ s8 variantClassification;
     /* 0x06 */ u8 scoutFlagsAchieved;
     u8 _pad7[0x31 - 0x7];
     /* 0x31 */ s8 state; /* 1 = recruited */
@@ -122,7 +122,19 @@ void starMissionRelated2(void);
 void fn_8006C9D8(void);
 f32 fn_8006CA9C(void);
 void starMissionMenu(void);
-void challengeRelated(void);
+/* View of lbl_800E8558 (characterStaticIndexes, character_select.md section 1). */
+typedef struct Gap80069B08CharIndex {
+    u8 family;
+    u8 baseCharID;
+    u8 uniqueIdx;
+    /* 0x3 */ u8 isBase;
+    u8 isCaptain;
+    u8 colourIdx;
+} Gap80069B08CharIndex;
+extern Gap80069B08CharIndex lbl_800E8558[NUM_CHOOSABLE_CHARACTERS];
+extern s16 lbl_8010B444[][11]; /* [variant classification][stars earned 0..10] */
+BOOL challengeStarRelatedInd(s32 charID, s32 mission);
+s32 challengeRelated(s32 charID);
 void determineIfMissionDescriptionIsShown(void);
 void fn_8006CDC0(void);
 typedef struct Gap80069B08Audio {
