@@ -150,8 +150,31 @@ void fn_800A7AD4(void) {
 }
 
 // .text:0x800A7AD8 size:0xD4
+// Builds the 8x8-cell font: fills the cell origin table (17 columns by 7 rows, written
+// backwards), flushes it, and sets up the 128x128 CI4 texture with its 16-colour palette.
 void fn_800A7AD8(void) {
-    return;
+    /* Non-matching: the end pointer is formed in one addi (target: `addi r3, r31, 0` then
+       `addi r3, r3, 0xEE`), which also shifts two instructions. */
+    Gap800A6870Font* font = &lbl_802ECFC0;
+    u8* cell = font->cells + sizeof(font->cells);
+    s32 x;
+    s32 y;
+
+    y = 0x38;
+    do {
+        x = 0x88;
+        y -= 8;
+        do {
+            x -= 8;
+            cell[-2] = x;
+            cell[-1] = y;
+            cell -= 2;
+        } while (x > 0);
+    } while (y > 0);
+    DCFlushRangeNoSync(cell, 0x100);
+    GXInitTlutObj(&font->tlut, lbl_80110060, 2, 16);
+    GXInitTexObjCI(&font->texture, lbl_8010F460, 128, 128, 8, 0, 0, 0, 0);
+    GXInitTexObjLOD(&font->texture, 0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
 }
 
 // .text:0x800A7BAC size:0x5C

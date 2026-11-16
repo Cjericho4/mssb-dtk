@@ -124,6 +124,23 @@ void fn_800A76BC(void);
 void fn_800A77A0(void);
 void fn_800A7A80(s32 result);
 void fn_800A7AD4(void);
+typedef struct Gap800A6870TexObj { u32 words[8]; } Gap800A6870TexObj;   /* GXTexObj */
+typedef struct Gap800A6870TlutObj { u32 words[3]; } Gap800A6870TlutObj; /* GXTlutObj */
+typedef struct Gap800A6870Font {
+    /* 0x000 */ u8 cells[0xEE]; /* (x, y) texel origin of each 8x8 cell, 17 per row, 7 rows */
+    u8 _padEE[0x150 - 0xEE];
+    /* 0x150 */ Gap800A6870TlutObj tlut;
+    /* 0x15C */ Gap800A6870TexObj texture;
+} Gap800A6870Font;
+extern Gap800A6870Font lbl_802ECFC0;
+extern u16 lbl_80110060[16];  /* palette */
+extern u8 lbl_8010F460[];     /* 128x128 CI4 image */
+void DCFlushRangeNoSync(void* addr, u32 numBytes);
+void GXInitTlutObj(Gap800A6870TlutObj* obj, void* lut, s32 format, u16 entries);
+void GXInitTexObjCI(Gap800A6870TexObj* obj, void* image, u16 width, u16 height, s32 format, s32 wrapS, s32 wrapT,
+                    u8 mipmap, u32 tlutName);
+void GXInitTexObjLOD(Gap800A6870TexObj* obj, s32 minFilter, s32 magFilter, f32 minLod, f32 maxLod, f32 lodBias,
+                     u8 biasClamp, u8 edgeLod, s32 maxAniso);
 void fn_800A7AD8(void);
 void fn_800A7BAC(u8 flag);
 void fn_800A7C08(void);
