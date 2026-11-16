@@ -78,17 +78,18 @@ void fn_800494CC(void) {
 }
 
 // .text:0x80049878 size:0x408
+/* FAKEMATCH: kept out of line while it is an empty stub, so its callers still call it. */
+#pragma dont_inline on
 void possiblyTransferDataBetweenDifferentRels(void) {
     return;
 }
+#pragma dont_inline reset
 
 // .text:0x80049C80 size:0xBC
 // Leaves the current scene for scene 3 unless lbl_803C66B0 blocks it: in game mode 5 with
 // lbl_8037169C.unk12 clear it first requests scene (1, 6); then saves the previous scene, clears
 // lbl_803C5EE0 and sends command 0x29.
 void fn_80049C80(void) {
-    /* Differs only while possiblyTransferDataBetweenDifferentRels is an empty stub above: the
-       compiler inlines the empty call away. */
     if (lbl_803C66B0.unk55 != 0 || lbl_803C66B0.unk56 != 0) {
         return;
     }
