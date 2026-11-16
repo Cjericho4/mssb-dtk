@@ -79,7 +79,6 @@ typedef struct Gap8000F8F4Mtx {
 extern Gap8000F8F4Mtx lbl_800E6630;
 void PSMTXConcat(Gap8000F8F4Mtx* a, Gap8000F8F4Mtx* b, Gap8000F8F4Mtx* out);
 void fn_80011640(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* dst);
-void fn_800116DC(void);
 void PSMTXCopy(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* dst);
 void fn_800117CC(Gap8000F8F4Mtx* position, Gap8000F8F4Mtx* view, Gap8000F8F4Mtx* out);
 extern Gap8000F8F4Mtx lbl_800E6600;
@@ -89,10 +88,17 @@ Gap8000F8F4Mtx* fn_800118AC(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* dst);
 /* Local views of AnimLevel1, HugeAnimEntry68, AnimationStruct and hugeAnimStruct
    (UnknownHeaders.h); that header cannot be included here because this unit declares its own
    matrix types for the PSMTX functions. */
+typedef struct Gap8000F8F4Bone {
+    u8 _pad0[0xEC];
+    /* 0xEC */ Gap8000F8F4Mtx* matrix;
+} Gap8000F8F4Bone;
 typedef struct Gap8000F8F4Model {
-    u8 _pad0[0x99];
+    u8 _pad0[0x18];
+    /* 0x18 */ Gap8000F8F4Bone** boneArray;
+    u8 _pad1C[0x99 - 0x1C];
     /* 0x99 */ u8 unk99;
 } Gap8000F8F4Model;
+void fn_800116DC(Gap8000F8F4Model** model, Gap8000F8F4Mtx* view, u16 boneIndex);
 typedef struct Gap8000F8F4Block {
     u8 _pad0[0x34];
     /* 0x34 */ Gap8000F8F4Model* model;

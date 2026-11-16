@@ -236,8 +236,23 @@ void fn_80011640(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* dst) {
 }
 
 // .text:0x800116DC size:0xF0
-void fn_800116DC(void) {
-    return;
+// Billboards one bone: replaces the bone's matrix with the inverse rotation of `view` (stretched
+// by lbl_800E6600) at the bone's current translation.
+void fn_800116DC(Gap8000F8F4Model** model, Gap8000F8F4Mtx* view, u16 boneIndex) {
+    Gap8000F8F4Mtx result;
+    Gap8000F8F4Mtx mtx = lbl_800E6600;
+    Gap8000F8F4Mtx* boneMatrix;
+
+    PSMTXConcat(&mtx, view, &result);
+    result.m[0][3] = 0.0f;
+    result.m[1][3] = 0.0f;
+    result.m[2][3] = 0.0f;
+    PSMTXInverse(&result, &result);
+    boneMatrix = (*model)->boneArray[boneIndex]->matrix;
+    result.m[0][3] = boneMatrix->m[0][3];
+    result.m[1][3] = boneMatrix->m[1][3];
+    result.m[2][3] = boneMatrix->m[2][3];
+    PSMTXCopy(&result, boneMatrix);
 }
 
 // .text:0x800117CC size:0xE0
