@@ -1997,8 +1997,28 @@ void fn_8001E784(void) {
 }
 
 // .text:0x8001F16C size:0xBC
+// In modes other than 0 and 3, calls fn_800B2D5C on the actor of every live slot whose actor
+// slot has unk6C set (the first `count` slot pointers).
 void fn_8001F16C(void) {
-    return;
+    /* Non-matching: registers only (i, the block pointer and the slot walker want r30, r29, r28). */
+    Gap8001E460ActorBlock* block;
+    s32 i;
+
+    if (g_hugeAnimStruct.mode != 0 && g_hugeAnimStruct.mode != 3) {
+        i = 0;
+        block = g_hugeAnimStruct.actorBlock;
+        for (; i < block->count; i++) {
+            Gap8001E460Anim* anim = g_hugeAnimStruct.slotPtrs[i];
+
+            if (anim != NULL) {
+                Gap8001E460ActorSlot* slot = &g_hugeAnimStruct.actorBlock->slots[anim->blockIndex];
+
+                if (slot->actor != NULL && slot->unk6C != 0) {
+                    fn_800B2D5C(slot->actor);
+                }
+            }
+        }
+    }
 }
 
 // .text:0x8001F228 size:0x298

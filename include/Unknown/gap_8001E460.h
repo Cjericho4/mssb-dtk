@@ -139,7 +139,32 @@ typedef struct Gap8001E460Anim {
     /* 0x072 */ u16 mirrorBones[120]; /* actor bone index -> its left/right counterpart */
     /* 0x162 */ u16 boneIndices[120]; /* bone id -> actor bone index, 0xFFFF = none */
     /* 0x252 */ s8 charID;
+    u8 _pad253[2];
+    /* 0x255 */ s8 blockIndex;
 } Gap8001E460Anim;
+/* Views of the actor block (a header, then 0x90-byte actor slots: Gap8002244CActorSlot) and of
+   hugeAnimStruct (UnknownHeaders.h), neither of which this unit includes. */
+typedef struct Gap8001E460ActorSlot {
+    /* 0x00 */ struct Gap8001E460Actor* actor;
+    u8 _pad4[0x6C - 0x4];
+    /* 0x6C */ u8 unk6C;
+    u8 _pad6D[0x90 - 0x6D];
+} Gap8001E460ActorSlot;
+typedef struct Gap8001E460ActorBlock {
+    /* 0x00 */ u16 count;
+    u8 _pad2[0x34 - 0x2];
+    /* 0x34 */ Gap8001E460ActorSlot slots[1];
+} Gap8001E460ActorBlock;
+typedef struct Gap8001E460HugeAnim {
+    u8 _pad0[0x60];
+    /* 0x0060 */ Gap8001E460ActorBlock* actorBlock;
+    u8 _pad64[0x2C50 - 0x64];
+    /* 0x2C50 */ Gap8001E460Anim* slotPtrs[13];
+    u8 _pad2C84[0x307A - 0x2C84];
+    /* 0x307A */ u8 mode;
+} Gap8001E460HugeAnim;
+extern Gap8001E460HugeAnim g_hugeAnimStruct;
+void fn_800B2D5C(struct Gap8001E460Actor* actor);
 void fn_8001FC4C(Gap8001E460Anim* anim);
 void fn_8001FDD4(struct Gap8001E460Object* obj);
 void fn_8001FE00(void);
