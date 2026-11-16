@@ -82,7 +82,26 @@ extern u8 lbl_803C5F74[0xB4];
 void PSMTXIdentity(f32 matrix[3][4]);
 void fn_80011140(void);
 void fn_800356B8(void);
-void fn_80035750(void);
+/* One of the 20 UI resource slots (data_map.md "UI slots"). */
+typedef struct Gap80032038UiSlot {
+    u8 _pad0[0x30];
+    /* 0x30 */ void* file;     /* NULL = free */
+    /* 0x34 */ void* textures; /* texture archive, converted on load */
+    /* 0x38 */ void* layout;
+} Gap80032038UiSlot; /* 0x3C */
+extern Gap80032038UiSlot lbl_803C4BE0[20];
+extern u16 lbl_8023D6C0[20]; /* resource id held by each UI slot */
+typedef struct Gap80032038SlotStrings {
+    /* 0x00 */ char report[0x1C];
+    /* 0x1C */ char file[0x10];
+    /* 0x2C */ char message[1];
+} Gap80032038SlotStrings;
+extern Gap80032038SlotStrings lbl_800E68A8;
+void OSReport(const char* message, ...);
+void OSPanic(const char* file, s32 line, const char* message, ...);
+void convertTextureHeader(void* textures);
+void fn_8000B9C8(void* layout);
+void fn_80035750(void* file, void* textures, s32 resourceID);
 void fn_80035838(void);
 void fn_80035A00(void);
 void fn_80035B50(void);

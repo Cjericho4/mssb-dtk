@@ -286,8 +286,38 @@ void fn_800356B8(void) {
 }
 
 // .text:0x80035750 size:0xE8
-void fn_80035750(void) {
-    return;
+/* Index of the first free UI slot, or -1. */
+static inline s8 freeUiSlot(void) {
+    u8 i;
+
+    for (i = 0; i < 20; i++) {
+        if (lbl_803C4BE0[i].file == NULL) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// Registers a loaded UI resource in the first free slot (panics if all 20 are taken): records
+// the file, its texture archive and its resource id, converts the textures and runs
+// fn_8000B9C8 on the layout.
+void fn_80035750(void* file, void* textures, s32 resourceID) {
+    /* Non-matching: register allocation (slot index, string base and entry pointer). */
+    Gap80032038SlotStrings* strings = &lbl_800E68A8;
+    s8 slot = freeUiSlot();
+    Gap80032038UiSlot* entry;
+
+    if (slot == -1) {
+        OSReport(strings->report, slot);
+        OSPanic(strings->file, 0x49C, strings->message);
+    }
+    entry = &lbl_803C4BE0[slot];
+    entry->file = file;
+    entry->textures = textures;
+    entry->layout = file;
+    lbl_8023D6C0[slot] = resourceID;
+    convertTextureHeader(entry->textures);
+    fn_8000B9C8(entry->layout);
 }
 
 // .text:0x80035838 size:0x1C8
