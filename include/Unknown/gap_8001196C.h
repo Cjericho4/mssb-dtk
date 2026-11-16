@@ -295,7 +295,9 @@ typedef struct Gap8001196CGameSettings {
     /* 0x09 */ u8 unk_0x09;
     u8 _padA[7];
     /* 0x11 */ u8 unk11;
-    u8 _pad12[0x46];
+    u8 _pad12[0x54 - 0x12];
+    /* 0x54 */ u8 lightSet; /* row of lbl_800F7478 in use (fn_8001CA40) */
+    u8 _pad55[3];
 } Gap8001196CGameSettings; /* 0x58, g_d_GameSettings @0x800E86FC */
 extern Gap8001196CGameSettings g_d_GameSettings;
 extern Gap8001196CAnimTable g_hugeAnimStruct;

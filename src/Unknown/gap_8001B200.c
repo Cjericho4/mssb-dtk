@@ -242,8 +242,27 @@ notReady:
 }
 
 // .text:0x8001CA40 size:0xD0
-void fn_8001CA40(void) {
-    return;
+// Selects light set `lightSet`: converts its four light specs into the runtime lights and
+// hands the normalised direction of the first one to fn_800BEBCC.
+void fn_8001CA40(u8 lightSet) {
+    /* Non-matching: the light array's address is formed in r3 and copied (target forms it in
+       r30 directly) and the two pointer increments straddle the loop compare differently. */
+    Vec direction;
+    s32 i;
+    Gap8001B200Light* light;
+    Gap8001B200LightSpec* spec;
+
+    g_d_GameSettings.lightSet = lightSet;
+    light = lbl_80367318;
+    spec = lbl_800F7478[lightSet].lights;
+    for (i = 0; i < 4; i++, light++, spec++) {
+        fn_80023B90(spec, light);
+    }
+    direction.x = lbl_80367318[0].x;
+    direction.y = lbl_80367318[0].y;
+    direction.z = lbl_80367318[0].z;
+    PSVECNormalize(&direction, &direction);
+    fn_800BEBCC(0, direction);
 }
 
 // .text:0x8001CB10 size:0xC4
