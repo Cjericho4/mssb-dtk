@@ -72,7 +72,34 @@ void fn_8003A848(u8 a, u8 b, u8 c);
 void fn_8003A85C(u8 mode);
 void fn_8003A8A0(void);
 void fn_8003AC90(void);
-void fn_8003AD84(void);
+/* Colour-indexed texture description read by fn_8003AD84. */
+typedef struct Gap80039AA8TexDesc {
+    u8 _pad0[4];
+    /* 0x04 */ void* image;
+    u8 _pad8[4];
+    /* 0x0C */ u16 height;
+    /* 0x0E */ u16 width;
+    /* 0x10 */ u8 wrapS;
+    /* 0x11 */ u8 wrapT;
+    /* 0x12 */ u8 minFilter;
+    /* 0x13 */ u8 magFilter;
+    /* 0x14 */ f32 lodBias;
+    u8 _pad18;
+    /* 0x19 */ u8 minLod;
+    /* 0x1A */ u8 maxLod;
+} Gap80039AA8TexDesc;
+typedef struct Gap80039AA8TexObj { u32 words[8]; } Gap80039AA8TexObj;   /* GXTexObj */
+typedef struct Gap80039AA8TlutObj { u32 words[3]; } Gap80039AA8TlutObj; /* GXTlutObj */
+extern Gap80039AA8TexObj lbl_803C50B0;
+extern Gap80039AA8TlutObj lbl_803C50DC;
+extern u16 lbl_800F7AC0[16]; /* 16-colour palette */
+extern u8 lbl_803CBCAC;      /* set once the texture object is built */
+void GXInitTexObjCI(Gap80039AA8TexObj* obj, void* image, u16 width, u16 height, s32 format, s32 wrapS, s32 wrapT,
+                    u8 mipmap, u32 tlutName);
+void GXInitTlutObj(Gap80039AA8TlutObj* obj, void* lut, s32 format, u16 entries);
+void GXInitTexObjLOD(Gap80039AA8TexObj* obj, s32 minFilter, s32 magFilter, f32 minLod, f32 maxLod, f32 lodBias,
+                     u8 biasClamp, u8 edgeLod, s32 maxAniso);
+void fn_8003AD84(Gap80039AA8TexDesc* desc);
 
 u8* memset(u8* memory, s32 value, u32 size);
 u8 GetDrawShadows(void);

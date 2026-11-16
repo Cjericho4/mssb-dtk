@@ -166,6 +166,12 @@ void fn_8003AC90(void) {
 }
 
 // .text:0x8003AD84 size:0xD0
-void fn_8003AD84(void) {
-    return;
+// Builds the shared colour-indexed texture object (CI4, 16-colour palette lbl_800F7AC0, TLUT
+// slot 0) from a texture description, with its filter and LOD settings.
+void fn_8003AD84(Gap80039AA8TexDesc* desc) {
+    GXInitTexObjCI(&lbl_803C50B0, desc->image, desc->width, desc->height, 8, desc->wrapS, desc->wrapT, 0, 0);
+    GXInitTlutObj(&lbl_803C50DC, lbl_800F7AC0, 0, 16);
+    GXInitTexObjLOD(&lbl_803C50B0, desc->minFilter, desc->magFilter, desc->minLod, desc->maxLod, desc->lodBias, 0, 0,
+                    0);
+    lbl_803CBCAC = 1;
 }
