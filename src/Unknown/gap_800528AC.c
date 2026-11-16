@@ -117,8 +117,21 @@ void challengeCheckStarsMenuLoading(void) {
 }
 
 // .text:0x80057C08 size:0xA4
+// Queue task (first run) of the challenge star menu: starts script lbl_80108048, gives the nine
+// lineup objects their index (in the high half of unk5C) and character (fn_800363D8 on scene
+// items 0x15..0x1D with the team's charIDs), then hands over to challengeCheckStarsMenuLoading.
 void starMenu(void) {
-    return;
+    /* Non-matching: the task pointer is loaded into r3 then copied (target: r28 first), and the
+       +12 object offset is folded into the load displacement (target adds 12 to the index). */
+    Gap800528ACTask* task = lbl_803CC1B8;
+    s32 i;
+
+    fn_80034E20(task, &lbl_80108048);
+    for (i = 0; i < 9; i++) {
+        lbl_80371C30[task->index + i + 12].object->unk5C = i << 16;
+        fn_800363D8(task, i + 0x15, 1, 0x83, inMemRoster[0][i].charID);
+    }
+    lbl_803CC1B8->callback = challengeCheckStarsMenuLoading;
 }
 
 // .text:0x80057CAC size:0x3A4

@@ -39,6 +39,34 @@ void drawStarProgressionMenu(void);
 void someChallengeStarFunction(void);
 void someChallengeStarFunction2(void);
 void challengeCheckStarsMenuLoading(void);
+/* Local views: the queue task, the scene object table, the scene script and the in-memory
+   roster are owned by other headers this unit does not include. */
+typedef struct Gap800528ACTask {
+    /* 0x00 */ void (*callback)(void);
+    u8 _pad4[0x10];
+    /* 0x14 */ u16 index;
+} Gap800528ACTask;
+extern Gap800528ACTask* lbl_803CC1B8;
+typedef struct Gap800528ACObject {
+    u8 _pad0[0x5C];
+    /* 0x5C */ u32 unk5C;
+} Gap800528ACObject;
+typedef struct Gap800528ACObjectRef {
+    Gap800528ACObject* object;
+    u32 unk4;
+} Gap800528ACObjectRef;
+extern Gap800528ACObjectRef lbl_80371C30[];
+typedef struct Gap800528ACScript Gap800528ACScript;
+extern Gap800528ACScript lbl_80108048;
+typedef struct Gap800528ACRosterEntry {
+    u8 _pad0[0x24];
+    /* 0x24 */ s16 charID; /* stats.CharID */
+    u8 _pad26[0xA0 - 0x26];
+} Gap800528ACRosterEntry;
+extern Gap800528ACRosterEntry inMemRoster[2][9];
+void fn_80034E20(Gap800528ACTask* scene, Gap800528ACScript* script);
+/* gap_80035DD4 owns this; arguments from starMenu's call. */
+void fn_800363D8(Gap800528ACTask* scene, s32 id, s32 a, s32 b, s32 value);
 void starMenu(void);
 void fn_80057CAC(void);
 void fn_80058050(void);
