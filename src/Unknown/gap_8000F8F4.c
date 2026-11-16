@@ -241,8 +241,21 @@ void fn_800116DC(void) {
 }
 
 // .text:0x800117CC size:0xE0
-void fn_800117CC(void) {
-    return;
+// Billboard matrix: the inverse rotation of `view` (with the 1.0714 vertical stretch of
+// lbl_800E6600) placed at the translation of `position`.
+void fn_800117CC(Gap8000F8F4Mtx* position, Gap8000F8F4Mtx* view, Gap8000F8F4Mtx* out) {
+    Gap8000F8F4Mtx result;
+    Gap8000F8F4Mtx mtx = lbl_800E6600;
+
+    PSMTXConcat(&mtx, view, &result);
+    result.m[0][3] = 0.0f;
+    result.m[1][3] = 0.0f;
+    result.m[2][3] = 0.0f;
+    PSMTXInverse(&result, &result);
+    result.m[0][3] = position->m[0][3];
+    result.m[1][3] = position->m[1][3];
+    result.m[2][3] = position->m[2][3];
+    PSMTXCopy(&result, out);
 }
 
 // .text:0x800118AC size:0xC0
