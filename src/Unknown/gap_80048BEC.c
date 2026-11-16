@@ -211,8 +211,25 @@ s32 fn_8004ABE8(BOOL clear) {
 }
 
 // .text:0x8004AC00 size:0xC4
-void fn_8004AC00(void) {
-    return;
+// Animation event handler: for Mario, raises lbl_803CBD00 while the frame is inside
+// [lbl_803CBCF8, lbl_803CB850] and sets lbl_803CBCFC only on frame 0.5; Monty goes to
+// fn_8004C19C. Nothing in mode 1.
+void fn_8004AC00(Gap80048BECObj* obj, s32 unused, s32 colorIndex, f32 frame) {
+    if (lbl_80366158.mode == 1) {
+        return;
+    }
+    if (obj->id == CHAR_ID_MARIO) {
+        if (frame >= (f32)lbl_803CBCF8 && frame <= (f32)lbl_803CB850) {
+            lbl_803CBD00 = 1;
+            if (0.5 == frame) {
+                lbl_803CBCFC = 1;
+            } else {
+                lbl_803CBCFC = 0;
+            }
+        }
+    } else if (obj->id == CHAR_ID_MONTY) {
+        fn_8004C19C(obj, unused, colorIndex, frame);
+    }
 }
 
 // .text:0x8004ACC4 size:0x18
@@ -446,7 +463,7 @@ void fn_8004C108(Gap80048BECEffectTarget* target, u8 index) {
 }
 
 // .text:0x8004C19C size:0x374
-void fn_8004C19C(void) {
+void fn_8004C19C(Gap80048BECObj* obj, s32 unused, s32 colorIndex, f32 frame) {
     return;
 }
 

@@ -148,7 +148,7 @@ void fn_8004A9E0(void);
 void Set_803cb848(s32 value);
 s32 fn_8004ABE0(void);
 s32 fn_8004ABE8(BOOL clear);
-void fn_8004AC00(void);
+void fn_8004AC00(Gap80048BECObj* obj, s32 unused, s32 colorIndex, f32 frame);
 s32 fn_8004ACC4(BOOL clear);
 s32 fn_8004ACDC(BOOL clear);
 void fn_8004ACF4(Gap80048BECObj* obj, f32 value, s32 b, s32 c);
@@ -211,7 +211,9 @@ void* memcpy(void* dst, const void* src, unsigned long n);
 void fn_80031CA4(Gap80048BECEffectTarget* target, Gap80048BECEffectParams* params);
 void fn_8004C094(Gap80048BECEffectTarget* target);
 void fn_8004C108(Gap80048BECEffectTarget* target, u8 index);
-void fn_8004C19C(void);
+void fn_8004C19C(Gap80048BECObj* obj, s32 unused, s32 colorIndex, f32 frame);
+extern s32 lbl_803CBCF8; /* first frame of Mario's event window */
+extern s32 lbl_803CB850; /* last frame of Mario's event window (45) */
 extern s16 lbl_800FBD80[NUM_CHOOSABLE_CHARACTERS]; /* exact-frame event per charID (stats.md section 7) */
 extern Gap80048BECRGB lbl_800FC0FC[];
 typedef struct Gap80048BECVec {
