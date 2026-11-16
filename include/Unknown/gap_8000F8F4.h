@@ -25,8 +25,15 @@ typedef struct Gap8000F8F4Entry {
     u8 _pad36[2];
 } Gap8000F8F4Entry;
 typedef struct Gap8000F8F4Table { u32 unk0; u32 values[256]; } Gap8000F8F4Table;
-typedef struct Gap8000F8F4Object { u8 _pad0[0x54]; u32 flags; } Gap8000F8F4Object;
-typedef struct Gap8000F8F4Slot { union { u32 value; Gap8000F8F4Object* object; }; u32 unk4; } Gap8000F8F4Slot;
+typedef struct Gap8000F8F4Object {
+    /* 0x00 */ u32 unk0;
+    u8 _pad4[8];
+    /* 0x0C */ u8 unkC[0x48];
+    /* 0x54 */ u32 flags;
+    u8 _pad58[0x67 - 0x58];
+    /* 0x67 */ u8 unk67;
+} Gap8000F8F4Object;
+typedef struct Gap8000F8F4Slot { union { u32 value; Gap8000F8F4Object* object; }; /* 0x4 */ u16 entry; /* 0x6 */ u16 unk6; } Gap8000F8F4Slot;
 typedef struct Gap8000F8F4Range { u8 _pad0[0x14]; u16 first, count; } Gap8000F8F4Range;
 extern Gap8000F8F4Slot lbl_80371C30[];
 typedef struct Gap8000F8F4State {
@@ -49,7 +56,8 @@ extern Gap8000F8F4State lbl_80366B18;
 extern s32 lbl_803CBC18;
 
 void fn_8000F8F4(Gap8000F8F4Range* range);
-void fn_8000F988(void);
+s32 fn_8000F988(Gap8000F8F4Range* range, s32 id, s32 unk6, s32 a, s32 b, s32 flag8);
+
 void fn_8000FA9C(void);
 void fn_8000FD54(s32 index, s16 a, s16 b, s16 c, s16 d);
 void fn_8000FD78(s32 index, s16 a, s16 b, s16 c, s16 d);
@@ -57,7 +65,7 @@ void fn_8000FD9C(s32 index, s32 flag, s32 state);
 void fn_8000FE08(s32 index, s32 table, s32 value);
 void fn_8000FE54(void);
 void fn_8000FEE8(s32 index);
-void fn_8000FF04(void);
+u16 fn_8000FF04(s32 a, s32 b, s32 c, s32 d, s32 e, s32 f, s32 g);
 void fn_800100A4(void);
 void DrawText(s32 index);
 void DrawTextOnCondition(s32 condition);

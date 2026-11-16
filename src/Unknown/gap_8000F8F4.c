@@ -18,8 +18,33 @@ void fn_8000F8F4(Gap8000F8F4Range* range) {
 }
 
 // .text:0x8000F988 size:0x114
-void fn_8000F988(void) {
-    return;
+// Registers scene object `id` of the range in the first free slot of the 30-slot table, creates
+// its text entry with fn_8000FF04 and points the entry at the object's data (when it has any).
+// Returns the entry index, or -1 if every slot is taken.
+s32 fn_8000F988(Gap8000F8F4Range* range, s32 id, s32 unk6, s32 a, s32 b, s32 flag8) {
+    /* Non-matching: scheduling only (argument moves and the slot address register around the
+       fn_8000FF04 call). */
+    Gap8000F8F4Object* object = lbl_80371C30[range->first + id].object;
+    s32 i;
+
+    object->flags |= 4;
+    if (flag8 != 0) {
+        object->flags |= 8;
+    }
+    for (i = 0; i < 30; i++) {
+        if (lbl_80366B18.slots[i].object == NULL) {
+            lbl_80366B18.slots[i].object = object;
+            lbl_80366B18.slots[i].unk6 = unk6;
+            lbl_80366B18.slots[i].entry = fn_8000FF04(a, b, 0, 0, object->unk67, -1, 0);
+            if (object->unk0 != 0) {
+                lbl_80366B18.entries[lbl_80366B18.slots[i].entry].unk0 = (u32)object->unkC;
+            } else {
+                lbl_80366B18.entries[lbl_80366B18.slots[i].entry].unk0 = 0;
+            }
+            return lbl_80366B18.slots[i].entry;
+        }
+    }
+    return -1;
 }
 
 // .text:0x8000FA9C size:0x2B8
@@ -84,8 +109,8 @@ void fn_8000FEE8(s32 index) {
 }
 
 // .text:0x8000FF04 size:0x1A0
-void fn_8000FF04(void) {
-    return;
+u16 fn_8000FF04(s32 a, s32 b, s32 c, s32 d, s32 e, s32 f, s32 g) {
+    return 0;
 }
 
 // .text:0x800100A4 size:0x3F4
