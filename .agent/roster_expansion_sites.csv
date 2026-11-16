@@ -1,369 +1,369 @@
-module,function,address,instruction,evidence
-challenge,fn_1_1496C,000149FC,"li r5, 0x35",
-challenge,fn_1_1496C,00014A4C,"cmplwi r0, 0x36",
-challenge,fn_1_17B5C,00017B70,"cmpwi r6, 0x36",lbl_1_data_A978
-challenge,fn_1_17B5C,00017C84,"subfic r0, r6, 0x36",lbl_1_data_A978
-challenge,fn_1_17B5C,00017C98,"cmpwi r6, 0x36",lbl_1_data_A978
-challenge,fn_1_A838,0000A860,"li r3, 0x36",
-dol,DrawSprite,800B1744,"li r4, 0x35",
-dol,challengeDrawStarsOnMissionMenu,8006C5AC,"cmpwi r25, 0x36",lbl_800E8558 starMissionCompletionTracker
-dol,characterSelectScreen,80066B60,"li r5, 0x36",lbl_8034E9A0 lbl_803C6724
-dol,fn_8000FA9C,8000FB84,"cmpwi r26, 0x36",
-dol,fn_80014204,80014218,"li r0, 0x36",lbl_800EEAAC
-dol,fn_800145F8,80014700,"li r0, 0x36",lbl_800EEAAC
-dol,fn_80018B74,80018B88,"li r0, 0x36",
-dol,fn_80021BBC,80021BDC,"cmpwi r30, 0x36",lbl_800EFD38 lbl_800F1D78
-dol,fn_80021CA4,80021CCC,"cmpwi r26, 0x36",lbl_800EFBE8
-dol,fn_8002204C,80022078,"cmpwi r30, 0x36",lbl_800EFBE8
-dol,fn_8003C00C,8003CC3C,"li r5, 0x36",starMissionCompletionTracker
-dol,fn_8003C00C,8003D12C,"li r5, 0x36",starMissionCompletionTracker
-dol,fn_8003C00C,8003D9C8,"li r5, 0x36",starMissionCompletionTracker
-dol,fn_8003C00C,8003DB64,"li r5, 0x36",starMissionCompletionTracker
-dol,fn_8003C00C,8003DDB4,"li r5, 0x36",starMissionCompletionTracker
-dol,fn_8003C00C,8003E1B4,"li r5, 0x36",starMissionCompletionTracker
-dol,fn_8003C00C,8003E714,"li r5, 0x36",starMissionCompletionTracker
-dol,fn_80041150,80041230,"li r5, 0x36",starMissionCompletionTracker
-dol,fn_80041150,80041308,"li r5, 0x36",starMissionCompletionTracker
-dol,fn_800415A8,800415CC,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,800415E0,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,800415F4,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041608,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,8004161C,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041630,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041644,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041658,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041668,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,800416C0,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,800417B8,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,800417D0,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,800417E8,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041800,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041818,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041830,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041848,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041860,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041874,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,800419F8,"cmpwi r25, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041A00,"cmpwi r25, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041A24,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041A5C,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041A74,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041A8C,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041AA4,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041ABC,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041AD4,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041AEC,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041B04,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041B18,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041C20,"cmpwi r25, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041C28,"cmpwi r25, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041C44,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041C7C,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041C94,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041CAC,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041CC4,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041CDC,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041CF4,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041D0C,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041D24,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041D38,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041D94,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800415A8,80041F9C,"li r5, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_800471F4,800474E8,"li r5, 0x36",lbl_8034E9A0
-dol,fn_800471F4,80047928,"li r5, 0x36",lbl_8034E9A0
-dol,fn_800471F4,80047B04,"li r5, 0x36",lbl_8034E9A0
-dol,fn_8004B284,8004B5EC,"cmpwi r28, 0x35",lbl_800FB798 lbl_800FB804 lbl_800FB870 lbl_800FB8DC lbl_800FB948 lbl_800FB9B4 lbl_800FBA20 lbl_800FBA8C lbl_800FBAF8 lbl_800FBB64 lbl_800FBBD0 lbl_800FBC3C
-dol,fn_8004B284,8004B638,"cmpwi r28, 0x35",lbl_800FB798 lbl_800FB804 lbl_800FB870 lbl_800FB8DC lbl_800FB948 lbl_800FB9B4 lbl_800FBA20 lbl_800FBA8C lbl_800FBAF8 lbl_800FBB64 lbl_800FBBD0 lbl_800FBC3C
-dol,fn_80051D00,80051E18,"li r22, 0x36",starMissionCompletionTracker
-dol,fn_80051D00,80051ECC,"cmpwi r22, 0x36",starMissionCompletionTracker
-dol,fn_800670A0,800671A4,"cmpwi r10, 0x36",lbl_8034E9A0 lbl_803C6724
-dol,fn_80067C48,80067C74,"cmpwi r4, 0x36",lbl_8034E9A0
-dol,fn_80067C48,80067D68,"subfic r3, r4, 0x36",lbl_8034E9A0
-dol,fn_80067C48,80067D7C,"cmpwi r4, 0x36",lbl_8034E9A0
-dol,fn_80067C48,80067DC4,"subfic r3, r11, 0x36",lbl_8034E9A0
-dol,fn_80067C48,80067DD4,"cmpwi r11, 0x36",lbl_8034E9A0
-dol,fn_80067C48,80067E24,"cmpwi r10, 0x36",lbl_8034E9A0
-dol,fn_80067C48,80067E34,"cmpwi r6, 0x36",lbl_8034E9A0
-dol,fn_80067C48,80067F2C,"subfic r0, r6, 0x36",lbl_8034E9A0
-dol,fn_80067C48,80067F3C,"cmpwi r6, 0x36",lbl_8034E9A0
-dol,fn_80067F70,80067FBC,"li r5, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-dol,fn_80067F70,800680DC,"subfic r0, r6, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-dol,fn_80067F70,800680EC,"cmpwi r6, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-dol,fn_80067F70,8006813C,"cmpwi r6, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-dol,fn_80068838,80068844,"li r5, 0x36",lbl_80108DB8 lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_80068838,80068A20,"cmpwi r4, 0x36",lbl_80108DB8 lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_80068838,80068C6C,"li r5, 0x36",lbl_80108DB8 lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_80068838,80069038,"li r5, 0x36",lbl_80108DB8 lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-dol,fn_80069A68,80069A74,"li r3, 0x35",
-dol,fn_8006C9D8,8006C9DC,"li r0, 0x36",starMissionCompletionTracker
-dol,starMissionRelated2,8006C8A4,"cmpwi r11, 0x36",starMissionCompletionTracker
-dol,transferStatsToInMemRoster,80042B04,"li r5, 0x36",lbl_8034E9A0
-game,fn_3_10E60C,0010E764,"cmpwi r27, 0x36",lbl_8034E9A0 starMissionCompletionTracker
-game,fn_3_12A6C4,0012A8C0,"li r6, 0x35",
-game,fn_3_12B7A0,0012B974,"li r6, 0x35",
-game,fn_3_12CA90,0012CE08,"li r6, 0x36",
-game,fn_3_12CA90,0012CF40,"li r6, 0x35",
-game,fn_3_1608F0,00160CA8,"cmpwi r5, 0x35",lbl_800E8558 starMissionCompletionTracker
-game,fn_3_1608F0,00160CFC,"cmpwi r5, 0x35",lbl_800E8558 starMissionCompletionTracker
-game,fn_3_161078,0016130C,"cmpwi r11, 0x36",lbl_800E8558 starMissionCompletionTracker
-game,fn_3_161078,00161574,"cmpwi r8, 0x36",lbl_800E8558 starMissionCompletionTracker
-game,fn_3_162D54,001637D8,"cmpwi r7, 0x36",lbl_800E8558 lbl_8034E9A0 starMissionCompletionTracker
-game,fn_3_5B5A0,0005B910,"li r0, 0x36",lbl_8034E9A0 starMissionCompletionTracker
-game,fn_3_631AC,000637D0,"li r4, 0x35",lbl_3_data_7870 lbl_800E8558
-game,fn_3_91064,0009108C,"li r3, 0x36",
-game,fn_3_B6C9C,000B6D5C,"cmpwi r0, 0x36",
-game,fn_3_B6D80,000B6E70,"cmpwi r0, 0x36",
-game,fn_3_B7184,000B74FC,"cmpwi r0, 0x36",
-game,fn_3_FDB30,000FF2AC,"cmpwi r0, 0x36",lbl_3_data_37AC lbl_3_data_3B4C starMissionCompletionTracker
-menus,fn_2_102C8,00010310,"cmpwi r0, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_102C8,00010330,"cmpwi r0, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_102C8,00010350,"cmpwi r0, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_104FC,00010814,"cmpwi r6, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_104FC,00010BD8,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_104FC,00010BF8,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_104FC,00010C18,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_104FC,00010C78,"cmpwi r6, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_104FC,00010EAC,"cmpwi r3, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_11EA8,00011FE0,"li r5, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_123CC,000123E4,"li r5, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_13D70,00013D9C,"li r0, 0x35",
-menus,fn_2_13D70,00013DCC,"cmpwi r0, 0x36",
-menus,fn_2_13D70,00013E50,"cmpwi r7, 0x36",
-menus,fn_2_13D70,00013E68,"subfic r0, r7, 0x36",
-menus,fn_2_13D70,00013F34,"cmpwi r7, 0x36",
-menus,fn_2_13D70,00013F58,"cmpwi r7, 0x36",
-menus,fn_2_13D70,00014030,"subfic r0, r7, 0x36",
-menus,fn_2_13D70,00014038,"cmpwi r7, 0x36",
-menus,fn_2_17648,00017688,"cmpwi r5, 0x35",lbl_8034E9A0
-menus,fn_2_17C88,00017CCC,"cmpwi r5, 0x35",lbl_2_data_241C lbl_8034E9A0
-menus,fn_2_17C88,00017CFC,"cmpwi r5, 0x35",lbl_2_data_241C lbl_8034E9A0
-menus,fn_2_17C88,00017D2C,"cmpwi r5, 0x35",lbl_2_data_241C lbl_8034E9A0
-menus,fn_2_17ED8,00017F1C,"cmpwi r8, 0x35",lbl_2_data_241C lbl_8034E9A0
-menus,fn_2_17ED8,00017F4C,"cmpwi r8, 0x35",lbl_2_data_241C lbl_8034E9A0
-menus,fn_2_17ED8,00017F7C,"cmpwi r8, 0x35",lbl_2_data_241C lbl_8034E9A0
-menus,fn_2_188EC,00018978,"cmpwi r8, 0x35",lbl_2_data_241C lbl_8034E9A0
-menus,fn_2_188EC,000189A8,"cmpwi r8, 0x35",lbl_2_data_241C lbl_8034E9A0
-menus,fn_2_188EC,000189D8,"cmpwi r8, 0x35",lbl_2_data_241C lbl_8034E9A0
-menus,fn_2_1C860,0001C8C0,"li r5, 0x36",lbl_800E8558
-menus,fn_2_1C860,0001CB08,"cmpwi r28, 0x36",lbl_800E8558
-menus,fn_2_1C860,0001CC20,"cmpwi r11, 0x36",lbl_800E8558
-menus,fn_2_1CF94,0001CFE8,"li r4, 0x36",
-menus,fn_2_1CF94,0001D2D8,"cmpwi r11, 0x36",
-menus,fn_2_1CF94,0001D404,"cmpwi r9, 0x36",
-menus,fn_2_20D08,00021230,"li r0, 0x36",
-menus,fn_2_20D08,00021BF8,"li r3, 0x36",
-menus,fn_2_20D08,00022954,"li r0, 0x35",
-menus,fn_2_2FC0,00003024,"li r5, 0x36",lbl_800E8558 lbl_8034E9A0
-menus,fn_2_3624,00004448,"cmpwi r5, 0x36",lbl_800FDE84 lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_3624,0000490C,"cmpwi r0, 0x36",lbl_800FDE84 lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_42708,00042BC8,"cmpwi r24, 0x36",lbl_800E8558
-menus,fn_2_42BE8,00042E90,"cmpwi r24, 0x36",lbl_800E8558
-menus,fn_2_42EB0,00042FAC,"cmpwi r5, 0x36",lbl_800E8558
-menus,fn_2_42FC8,000430D4,"cmpwi r24, 0x36",lbl_800E8558
-menus,fn_2_430F4,000432C8,"cmpwi r8, 0x36",lbl_800E8558
-menus,fn_2_432EC,000433E4,"cmpwi r24, 0x36",lbl_800E8558
-menus,fn_2_43404,0004356C,"cmpwi r3, 0x36",lbl_800E8558
-menus,fn_2_4358C,000439B0,"cmpwi r23, 0x36",lbl_800E8558
-menus,fn_2_439D0,00043E68,"cmpwi r8, 0x36",lbl_800E8558
-menus,fn_2_43E8C,00043FE4,"cmpwi r5, 0x36",lbl_800E8558
-menus,fn_2_44014,00044168,"cmpwi r3, 0x36",lbl_800E8558
-menus,fn_2_44504,00044518,"cmpwi r24, 0x36",
-menus,fn_2_44504,000445C8,"subfic r0, r24, 0x36",
-menus,fn_2_44504,000445D8,"cmpwi r24, 0x36",
-menus,fn_2_44504,00044C34,"cmpwi r24, 0x36",
-menus,fn_2_44504,00044CE4,"subfic r0, r24, 0x36",
-menus,fn_2_44504,00044CF4,"cmpwi r24, 0x36",
-menus,fn_2_44F64,00044F6C,"cmpwi r5, 0x36",
-menus,fn_2_44F64,0004509C,"subfic r0, r5, 0x36",
-menus,fn_2_44F64,000450AC,"cmpwi r5, 0x36",
-menus,fn_2_45204,00045334,"cmpwi r31, 0x36",lbl_800E8558
-menus,fn_2_45354,00045368,"cmpwi r3, 0x36",
-menus,fn_2_45354,000453F8,"subfic r0, r3, 0x36",
-menus,fn_2_45354,00045404,"cmpwi r3, 0x36",
-menus,fn_2_454E8,00045504,"cmpwi r29, 0x36",lbl_800E8558
-menus,fn_2_454E8,000455EC,"subfic r0, r29, 0x36",lbl_800E8558
-menus,fn_2_454E8,000455F8,"cmpwi r29, 0x36",lbl_800E8558
-menus,fn_2_454E8,000457EC,"cmpwi r29, 0x36",lbl_800E8558
-menus,fn_2_45810,0004581C,"cmpwi r31, 0x36",
-menus,fn_2_45810,00045904,"subfic r0, r31, 0x36",
-menus,fn_2_45810,00045910,"cmpwi r31, 0x36",
-menus,fn_2_45978,0004597C,"li r0, 0x36",
-menus,fn_2_45A84,00045B8C,"cmpwi r8, 0x36",
-menus,fn_2_45D38,00045D40,"cmpwi r3, 0x36",
-menus,fn_2_45D38,00045E0C,"subfic r0, r3, 0x36",
-menus,fn_2_45D38,00045E1C,"cmpwi r3, 0x36",
-menus,fn_2_45FDC,00045FE4,"cmpwi r3, 0x36",
-menus,fn_2_45FDC,000460B0,"subfic r0, r3, 0x36",
-menus,fn_2_45FDC,000460C0,"cmpwi r3, 0x36",
-menus,fn_2_460F8,0004610C,"cmpwi r16, 0x36",
-menus,fn_2_460F8,000462DC,"subfic r0, r16, 0x36",
-menus,fn_2_460F8,000462EC,"cmpwi r16, 0x36",
-menus,fn_2_46418,00046444,"cmpwi r16, 0x36",
-menus,fn_2_46418,00046614,"subfic r0, r16, 0x36",
-menus,fn_2_46418,00046624,"cmpwi r16, 0x36",
-menus,fn_2_466AC,000467DC,"cmpwi r23, 0x36",lbl_800E8558
-menus,fn_2_468DC,000468E4,"cmpwi r12, 0x36",
-menus,fn_2_468DC,00046A84,"subfic r0, r12, 0x36",
-menus,fn_2_468DC,00046A98,"cmpwi r12, 0x36",
-menus,fn_2_46ADC,00046AE4,"li r0, 0x36",
-menus,fn_2_4970,00004B20,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_4B2D0,0004B3B4,"cmpwi r3, 0x36",
-menus,fn_2_4B2D0,0004B4A0,"subfic r0, r3, 0x36",
-menus,fn_2_4B2D0,0004B4B0,"cmpwi r3, 0x36",
-menus,fn_2_4B2D0,0004B754,"cmpwi r3, 0x36",
-menus,fn_2_4B2D0,0004B834,"subfic r0, r3, 0x36",
-menus,fn_2_4B2D0,0004B844,"cmpwi r3, 0x36",
-menus,fn_2_4B2D0,0004BB9C,"cmpwi r3, 0x36",
-menus,fn_2_4B2D0,0004BC7C,"subfic r0, r3, 0x36",
-menus,fn_2_4B2D0,0004BC8C,"cmpwi r3, 0x36",
-menus,fn_2_4B2D0,0004BF50,"cmpwi r3, 0x36",
-menus,fn_2_4B2D0,0004C030,"subfic r0, r3, 0x36",
-menus,fn_2_4B2D0,0004C040,"cmpwi r3, 0x36",
-menus,fn_2_4C3EC,0004C3FC,"cmpwi r7, 0x36",lbl_8034E9A0
-menus,fn_2_4C3EC,0004C42C,"subfic r0, r7, 0x36",lbl_8034E9A0
-menus,fn_2_4C3EC,0004C4F4,"cmpwi r7, 0x36",lbl_8034E9A0
-menus,fn_2_4D378,0004D3E0,"cmpwi r4, 0x36",
-menus,fn_2_4D378,0004D4A8,"subfic r0, r4, 0x36",
-menus,fn_2_4D378,0004D4B8,"cmpwi r4, 0x36",
-menus,fn_2_4D67C,0004D6C0,"cmpwi r6, 0x36",
-menus,fn_2_4D67C,0004D78C,"subfic r0, r6, 0x36",
-menus,fn_2_4D67C,0004D79C,"cmpwi r6, 0x36",
-menus,fn_2_4D960,0004D988,"cmpwi r3, 0x36",
-menus,fn_2_4D960,0004DA58,"subfic r0, r3, 0x36",
-menus,fn_2_4D960,0004DA68,"cmpwi r3, 0x36",
-menus,fn_2_4DC24,0004DC4C,"cmpwi r3, 0x36",
-menus,fn_2_4DC24,0004DD1C,"subfic r0, r3, 0x36",
-menus,fn_2_4DC24,0004DD2C,"cmpwi r3, 0x36",
-menus,fn_2_4DEE8,0004DF14,"cmpwi r3, 0x36",
-menus,fn_2_4DEE8,0004DFF4,"subfic r0, r3, 0x36",
-menus,fn_2_4DEE8,0004E004,"cmpwi r3, 0x36",
-menus,fn_2_4E1C0,0004E244,"cmpwi r5, 0x36",
-menus,fn_2_4E1C0,0004E308,"subfic r0, r5, 0x36",
-menus,fn_2_4E1C0,0004E318,"cmpwi r5, 0x36",
-menus,fn_2_4E1C0,0004E50C,"cmpwi r5, 0x36",
-menus,fn_2_4E1C0,0004E5D0,"subfic r0, r5, 0x36",
-menus,fn_2_4E1C0,0004E5E0,"cmpwi r5, 0x36",
-menus,fn_2_5163C,0005178C,"li r5, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_52690,00052A04,"li r5, 0x35",lbl_8034E9A0 starMissionCompletionTracker
-menus,fn_2_587F8,00058FD8,"cmpwi r30, 0x36",lbl_800E869C
-menus,fn_2_587F8,000590DC,"subfic r0, r30, 0x36",lbl_800E869C
-menus,fn_2_587F8,000590E4,"cmpwi r30, 0x36",lbl_800E869C
-menus,fn_2_587F8,00059574,"cmpwi r30, 0x36",lbl_800E869C
-menus,fn_2_587F8,000596CC,"subfic r0, r30, 0x36",lbl_800E869C
-menus,fn_2_587F8,000596DC,"cmpwi r30, 0x36",lbl_800E869C
-menus,fn_2_59CF8,00059EEC,"cmpwi r5, 0x36",
-menus,fn_2_59CF8,00059F94,"subfic r0, r5, 0x36",
-menus,fn_2_59CF8,00059FA0,"cmpwi r5, 0x36",
-menus,fn_2_59CF8,00059FCC,"cmpwi r12, 0x36",
-menus,fn_2_59CF8,0005A090,"subfic r0, r12, 0x36",
-menus,fn_2_59CF8,0005A09C,"cmpwi r12, 0x36",
-menus,fn_2_6AF4,00006CA8,"li r3, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_6D3C,000071E0,"li r3, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_72594,000725F4,"li r6, 0x35",
-menus,fn_2_73BF0,00073C1C,"li r3, 0x36",lbl_8034E9A0
-menus,fn_2_73BF0,00073C24,"li r3, 0x36",lbl_8034E9A0
-menus,fn_2_73CBC,00073E18,"li r5, 0x36",lbl_8034E9A0
-menus,fn_2_73EFC,000740C4,"li r29, 0x36",lbl_8034E9A0
-menus,fn_2_73EFC,000740CC,"li r29, 0x36",lbl_8034E9A0
-menus,fn_2_74CD8,00074D18,"li r6, 0x36",
-menus,fn_2_74F40,000756A0,"cmpwi r28, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_74F40,000757B4,"cmpwi r28, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_7504,000077A0,"cmpwi r10, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_7504,00007A40,"subfic r0, r10, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_7504,00007A54,"cmpwi r10, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_75BE4,00075CEC,"cmpwi r12, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_7805C,000781EC,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_7805C,000782F0,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_7836C,00078520,"cmpwi r4, 0x36",lbl_803C6724
-menus,fn_2_7836C,00078608,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_7836C,00078770,"cmpwi r6, 0x36",lbl_803C6724
-menus,fn_2_7836C,0007885C,"cmpwi r4, 0x36",lbl_803C6724
-menus,fn_2_7836C,00078A44,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_78AC0,00078D8C,"cmpwi r5, 0x36",lbl_803C6724
-menus,fn_2_78AC0,00078E80,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_7912C,000791B4,"cmpwi r0, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_7912C,000791FC,"cmpwi r0, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_7912C,00079290,"cmpwi r0, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_79FAC,0007A12C,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_7A194,0007A3F8,"cmpwi r8, 0x36",lbl_803C6724
-menus,fn_2_7D85C,0007D980,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_7D85C,0007DA0C,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_7DAB8,0007DC40,"cmpwi r4, 0x36",lbl_803C6724
-menus,fn_2_7DAB8,0007DD50,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_7DAB8,0007E054,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_7DDC,00007E0C,"li r5, 0x36",lbl_800E8558 lbl_800FDE84 lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_7DDC,000080AC,"cmpwi r23, 0x36",lbl_800E8558 lbl_800FDE84 lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_7F030,0007F174,"cmpwi r0, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_7F2BC,0007F3D4,"cmpwi r0, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_81628,00082260,"cmpwi r0, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_8940,00008AA0,"li r5, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_8CF8,00008E40,"li r5, 0x36",
-menus,fn_2_8CF8,00009070,"li r5, 0x36",
-menus,fn_2_8CF8,00009294,"li r5, 0x36",
-menus,fn_2_8CF8,000094C4,"li r5, 0x36",
-menus,fn_2_95D8,00009840,"cmpwi r8, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_95D8,00009850,"subfic r0, r8, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_95D8,0000991C,"cmpwi r8, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_95D8,00009A80,"cmpwi r7, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_9ACC,00009C20,"li r5, 0x36",lbl_8034E9A0
-menus,fn_2_9ACC,00009E3C,"li r5, 0x36",lbl_8034E9A0
-menus,fn_2_ABC0,0000ABEC,"cmpwi r4, 0x36",lbl_8034E9A0
-menus,fn_2_ABC0,0000ACE0,"subfic r3, r4, 0x36",lbl_8034E9A0
-menus,fn_2_ABC0,0000ACF4,"cmpwi r4, 0x36",lbl_8034E9A0
-menus,fn_2_ABC0,0000AD3C,"subfic r3, r11, 0x36",lbl_8034E9A0
-menus,fn_2_ABC0,0000AD4C,"cmpwi r11, 0x36",lbl_8034E9A0
-menus,fn_2_ABC0,0000AD9C,"cmpwi r10, 0x36",lbl_8034E9A0
-menus,fn_2_ABC0,0000ADAC,"cmpwi r6, 0x36",lbl_8034E9A0
-menus,fn_2_ABC0,0000AEA4,"subfic r0, r6, 0x36",lbl_8034E9A0
-menus,fn_2_ABC0,0000AEB4,"cmpwi r6, 0x36",lbl_8034E9A0
-menus,fn_2_AEE8,0000AF00,"cmpwi r30, 0x36",lbl_8034E9A0
-menus,fn_2_AEE8,0000AF9C,"subfic r0, r30, 0x36",lbl_8034E9A0
-menus,fn_2_AEE8,0000AFA8,"cmpwi r30, 0x36",lbl_8034E9A0
-menus,fn_2_AEE8,0000AFF4,"cmpwi r8, 0x36",lbl_8034E9A0
-menus,fn_2_AEE8,0000B11C,"subfic r9, r8, 0x36",lbl_8034E9A0
-menus,fn_2_AEE8,0000B12C,"cmpwi r8, 0x36",lbl_8034E9A0
-menus,fn_2_AEE8,0000B160,"subfic r8, r29, 0x36",lbl_8034E9A0
-menus,fn_2_AEE8,0000B174,"cmpwi r29, 0x36",lbl_8034E9A0
-menus,fn_2_AEE8,0000B1C4,"cmpwi r30, 0x36",lbl_8034E9A0
-menus,fn_2_AEE8,0000B1EC,"cmpwi r9, 0x36",lbl_8034E9A0
-menus,fn_2_AEE8,0000B2D4,"subfic r0, r9, 0x36",lbl_8034E9A0
-menus,fn_2_AEE8,0000B2E4,"cmpwi r9, 0x36",lbl_8034E9A0
-menus,fn_2_B508,0000B590,"cmpwi r25, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_B508,0000B5D0,"li r11, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_B66C,0000B760,"cmpwi r9, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_B920,0000B93C,"li r5, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_B920,0000BD40,"cmpwi r8, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_B920,0000BEC0,"li r9, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_BF90,0000BFA8,"li r5, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_BF90,0000C164,"cmpwi r9, 0x36",lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
-menus,fn_2_C484,0000C490,"li r0, 0x36",lbl_80108EDC lbl_8034E9A0
-menus,fn_2_C7DC,0000C894,"li r4, 0x35",lbl_800FDE84 lbl_8034E9A0 lbl_803C6724
-menus,fn_2_CA60,0000CAA8,"cmpwi r11, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_CCE0,0000CD38,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_CCE0,0000CD58,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_CCE0,0000CD78,"cmpwi r0, 0x36",lbl_803C6724
-menus,fn_2_CE44,0000CF38,"cmpwi r7, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_CE44,0000CF60,"cmpwi r7, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_CE44,0000CF88,"cmpwi r7, 0x36",lbl_8034E9A0 lbl_803C6724
-menus,fn_2_DFAC,0000E4B0,"cmpwi r4, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_DFAC,0000E504,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_DFAC,0000E52C,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_DFAC,0000E554,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_DFAC,0000E6A0,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_DFAC,0000E6EC,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_EAE0,0000EB7C,"cmpwi r4, 0x36",lbl_800FDE84 lbl_8034E9A0
-menus,fn_2_EAE0,0000EC08,"li r5, 0x36",lbl_800FDE84 lbl_8034E9A0
-menus,fn_2_F200,0000F28C,"cmpwi r9, 0x36",lbl_80108DB8 lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_F200,0000F3A8,"cmpwi r0, 0x36",lbl_80108DB8 lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_F200,0000F900,"li r4, 0x35",lbl_80108DB8 lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_FAA0,0000FB04,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_FAA0,0000FB18,"li r4, 0x35",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_FCB4,0000FCBC,"li r5, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_FCB4,0000FDB8,"cmpwi r12, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_FCB4,0000FDD0,"subfic r0, r7, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_FCB4,0000FDE0,"cmpwi r7, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_FCB4,0000FE24,"cmpwi r7, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_FCB4,0000FE5C,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_FCB4,0000FE7C,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_FCB4,0000FE9C,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
-menus,fn_2_FCB4,0000FEE8,"cmpwi r0, 0x36",lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+module,function,address,instruction,kind,evidence
+challenge,fn_1_1496C,000149FC,"li r5, 0x35",load,
+challenge,fn_1_1496C,00014A4C,"cmplwi r0, 0x36",equals,
+challenge,fn_1_17B5C,00017B70,"cmpwi r6, 0x36",range,lbl_1_data_A978
+challenge,fn_1_17B5C,00017C84,"subfic r0, r6, 0x36",count,lbl_1_data_A978
+challenge,fn_1_17B5C,00017C98,"cmpwi r6, 0x36",range,lbl_1_data_A978
+challenge,fn_1_A838,0000A860,"li r3, 0x36",load,
+dol,DrawSprite,800B1744,"li r4, 0x35",load,
+dol,challengeDrawStarsOnMissionMenu,8006C5AC,"cmpwi r25, 0x36",range,lbl_800E8558 starMissionCompletionTracker
+dol,characterSelectScreen,80066B60,"li r5, 0x36",load,lbl_8034E9A0 lbl_803C6724
+dol,fn_8000FA9C,8000FB84,"cmpwi r26, 0x36",range,
+dol,fn_80014204,80014218,"li r0, 0x36",load,lbl_800EEAAC
+dol,fn_800145F8,80014700,"li r0, 0x36",load,lbl_800EEAAC
+dol,fn_80018B74,80018B88,"li r0, 0x36",load,
+dol,fn_80021BBC,80021BDC,"cmpwi r30, 0x36",range,lbl_800EFD38 lbl_800F1D78
+dol,fn_80021CA4,80021CCC,"cmpwi r26, 0x36",range,lbl_800EFBE8
+dol,fn_8002204C,80022078,"cmpwi r30, 0x36",range,lbl_800EFBE8
+dol,fn_8003C00C,8003CC3C,"li r5, 0x36",load,starMissionCompletionTracker
+dol,fn_8003C00C,8003D12C,"li r5, 0x36",load,starMissionCompletionTracker
+dol,fn_8003C00C,8003D9C8,"li r5, 0x36",load,starMissionCompletionTracker
+dol,fn_8003C00C,8003DB64,"li r5, 0x36",load,starMissionCompletionTracker
+dol,fn_8003C00C,8003DDB4,"li r5, 0x36",load,starMissionCompletionTracker
+dol,fn_8003C00C,8003E1B4,"li r5, 0x36",load,starMissionCompletionTracker
+dol,fn_8003C00C,8003E714,"li r5, 0x36",load,starMissionCompletionTracker
+dol,fn_80041150,80041230,"li r5, 0x36",load,starMissionCompletionTracker
+dol,fn_80041150,80041308,"li r5, 0x36",load,starMissionCompletionTracker
+dol,fn_800415A8,800415CC,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,800415E0,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,800415F4,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041608,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,8004161C,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041630,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041644,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041658,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041668,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,800416C0,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,800417B8,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,800417D0,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,800417E8,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041800,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041818,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041830,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041848,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041860,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041874,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,800419F8,"cmpwi r25, 0x36",range,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041A00,"cmpwi r25, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041A24,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041A5C,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041A74,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041A8C,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041AA4,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041ABC,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041AD4,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041AEC,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041B04,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041B18,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041C20,"cmpwi r25, 0x36",range,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041C28,"cmpwi r25, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041C44,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041C7C,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041C94,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041CAC,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041CC4,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041CDC,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041CF4,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041D0C,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041D24,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041D38,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041D94,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800415A8,80041F9C,"li r5, 0x36",load,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_800471F4,800474E8,"li r5, 0x36",load,lbl_8034E9A0
+dol,fn_800471F4,80047928,"li r5, 0x36",load,lbl_8034E9A0
+dol,fn_800471F4,80047B04,"li r5, 0x36",load,lbl_8034E9A0
+dol,fn_8004B284,8004B5EC,"cmpwi r28, 0x35",range,lbl_800FB798 lbl_800FB804 lbl_800FB870 lbl_800FB8DC lbl_800FB948 lbl_800FB9B4 lbl_800FBA20 lbl_800FBA8C lbl_800FBAF8 lbl_800FBB64 lbl_800FBBD0 lbl_800FBC3C
+dol,fn_8004B284,8004B638,"cmpwi r28, 0x35",range,lbl_800FB798 lbl_800FB804 lbl_800FB870 lbl_800FB8DC lbl_800FB948 lbl_800FB9B4 lbl_800FBA20 lbl_800FBA8C lbl_800FBAF8 lbl_800FBB64 lbl_800FBBD0 lbl_800FBC3C
+dol,fn_80051D00,80051E18,"li r22, 0x36",load,starMissionCompletionTracker
+dol,fn_80051D00,80051ECC,"cmpwi r22, 0x36",range,starMissionCompletionTracker
+dol,fn_800670A0,800671A4,"cmpwi r10, 0x36",range,lbl_8034E9A0 lbl_803C6724
+dol,fn_80067C48,80067C74,"cmpwi r4, 0x36",range,lbl_8034E9A0
+dol,fn_80067C48,80067D68,"subfic r3, r4, 0x36",count,lbl_8034E9A0
+dol,fn_80067C48,80067D7C,"cmpwi r4, 0x36",range,lbl_8034E9A0
+dol,fn_80067C48,80067DC4,"subfic r3, r11, 0x36",count,lbl_8034E9A0
+dol,fn_80067C48,80067DD4,"cmpwi r11, 0x36",range,lbl_8034E9A0
+dol,fn_80067C48,80067E24,"cmpwi r10, 0x36",range,lbl_8034E9A0
+dol,fn_80067C48,80067E34,"cmpwi r6, 0x36",range,lbl_8034E9A0
+dol,fn_80067C48,80067F2C,"subfic r0, r6, 0x36",count,lbl_8034E9A0
+dol,fn_80067C48,80067F3C,"cmpwi r6, 0x36",range,lbl_8034E9A0
+dol,fn_80067F70,80067FBC,"li r5, 0x36",load,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+dol,fn_80067F70,800680DC,"subfic r0, r6, 0x36",count,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+dol,fn_80067F70,800680EC,"cmpwi r6, 0x36",range,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+dol,fn_80067F70,8006813C,"cmpwi r6, 0x36",range,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+dol,fn_80068838,80068844,"li r5, 0x36",load,lbl_80108DB8 lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_80068838,80068A20,"cmpwi r4, 0x36",range,lbl_80108DB8 lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_80068838,80068C6C,"li r5, 0x36",load,lbl_80108DB8 lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_80068838,80069038,"li r5, 0x36",load,lbl_80108DB8 lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+dol,fn_80069A68,80069A74,"li r3, 0x35",load,
+dol,fn_8006C9D8,8006C9DC,"li r0, 0x36",load,starMissionCompletionTracker
+dol,starMissionRelated2,8006C8A4,"cmpwi r11, 0x36",range,starMissionCompletionTracker
+dol,transferStatsToInMemRoster,80042B04,"li r5, 0x36",load,lbl_8034E9A0
+game,fn_3_10E60C,0010E764,"cmpwi r27, 0x36",range,lbl_8034E9A0 starMissionCompletionTracker
+game,fn_3_12A6C4,0012A8C0,"li r6, 0x35",load,
+game,fn_3_12B7A0,0012B974,"li r6, 0x35",load,
+game,fn_3_12CA90,0012CE08,"li r6, 0x36",load,
+game,fn_3_12CA90,0012CF40,"li r6, 0x35",load,
+game,fn_3_1608F0,00160CA8,"cmpwi r5, 0x35",equals,lbl_800E8558 starMissionCompletionTracker
+game,fn_3_1608F0,00160CFC,"cmpwi r5, 0x35",equals,lbl_800E8558 starMissionCompletionTracker
+game,fn_3_161078,0016130C,"cmpwi r11, 0x36",equals,lbl_800E8558 starMissionCompletionTracker
+game,fn_3_161078,00161574,"cmpwi r8, 0x36",range,lbl_800E8558 starMissionCompletionTracker
+game,fn_3_162D54,001637D8,"cmpwi r7, 0x36",range,lbl_800E8558 lbl_8034E9A0 starMissionCompletionTracker
+game,fn_3_5B5A0,0005B910,"li r0, 0x36",load,lbl_8034E9A0 starMissionCompletionTracker
+game,fn_3_631AC,000637D0,"li r4, 0x35",load,lbl_3_data_7870 lbl_800E8558
+game,fn_3_91064,0009108C,"li r3, 0x36",load,
+game,fn_3_B6C9C,000B6D5C,"cmpwi r0, 0x36",equals,
+game,fn_3_B6D80,000B6E70,"cmpwi r0, 0x36",equals,
+game,fn_3_B7184,000B74FC,"cmpwi r0, 0x36",equals,
+game,fn_3_FDB30,000FF2AC,"cmpwi r0, 0x36",equals,lbl_3_data_37AC lbl_3_data_3B4C starMissionCompletionTracker
+menus,fn_2_102C8,00010310,"cmpwi r0, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_102C8,00010330,"cmpwi r0, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_102C8,00010350,"cmpwi r0, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_104FC,00010814,"cmpwi r6, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_104FC,00010BD8,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_104FC,00010BF8,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_104FC,00010C18,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_104FC,00010C78,"cmpwi r6, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_104FC,00010EAC,"cmpwi r3, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_11EA8,00011FE0,"li r5, 0x36",load,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_123CC,000123E4,"li r5, 0x36",load,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_13D70,00013D9C,"li r0, 0x35",load,
+menus,fn_2_13D70,00013DCC,"cmpwi r0, 0x36",equals,
+menus,fn_2_13D70,00013E50,"cmpwi r7, 0x36",range,
+menus,fn_2_13D70,00013E68,"subfic r0, r7, 0x36",count,
+menus,fn_2_13D70,00013F34,"cmpwi r7, 0x36",range,
+menus,fn_2_13D70,00013F58,"cmpwi r7, 0x36",range,
+menus,fn_2_13D70,00014030,"subfic r0, r7, 0x36",count,
+menus,fn_2_13D70,00014038,"cmpwi r7, 0x36",range,
+menus,fn_2_17648,00017688,"cmpwi r5, 0x35",equals,lbl_8034E9A0
+menus,fn_2_17C88,00017CCC,"cmpwi r5, 0x35",equals,lbl_2_data_241C lbl_8034E9A0
+menus,fn_2_17C88,00017CFC,"cmpwi r5, 0x35",equals,lbl_2_data_241C lbl_8034E9A0
+menus,fn_2_17C88,00017D2C,"cmpwi r5, 0x35",equals,lbl_2_data_241C lbl_8034E9A0
+menus,fn_2_17ED8,00017F1C,"cmpwi r8, 0x35",equals,lbl_2_data_241C lbl_8034E9A0
+menus,fn_2_17ED8,00017F4C,"cmpwi r8, 0x35",equals,lbl_2_data_241C lbl_8034E9A0
+menus,fn_2_17ED8,00017F7C,"cmpwi r8, 0x35",equals,lbl_2_data_241C lbl_8034E9A0
+menus,fn_2_188EC,00018978,"cmpwi r8, 0x35",equals,lbl_2_data_241C lbl_8034E9A0
+menus,fn_2_188EC,000189A8,"cmpwi r8, 0x35",equals,lbl_2_data_241C lbl_8034E9A0
+menus,fn_2_188EC,000189D8,"cmpwi r8, 0x35",equals,lbl_2_data_241C lbl_8034E9A0
+menus,fn_2_1C860,0001C8C0,"li r5, 0x36",load,lbl_800E8558
+menus,fn_2_1C860,0001CB08,"cmpwi r28, 0x36",range,lbl_800E8558
+menus,fn_2_1C860,0001CC20,"cmpwi r11, 0x36",range,lbl_800E8558
+menus,fn_2_1CF94,0001CFE8,"li r4, 0x36",load,
+menus,fn_2_1CF94,0001D2D8,"cmpwi r11, 0x36",range,
+menus,fn_2_1CF94,0001D404,"cmpwi r9, 0x36",range,
+menus,fn_2_20D08,00021230,"li r0, 0x36",load,
+menus,fn_2_20D08,00021BF8,"li r3, 0x36",load,
+menus,fn_2_20D08,00022954,"li r0, 0x35",load,
+menus,fn_2_2FC0,00003024,"li r5, 0x36",load,lbl_800E8558 lbl_8034E9A0
+menus,fn_2_3624,00004448,"cmpwi r5, 0x36",equals,lbl_800FDE84 lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_3624,0000490C,"cmpwi r0, 0x36",equals,lbl_800FDE84 lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_42708,00042BC8,"cmpwi r24, 0x36",range,lbl_800E8558
+menus,fn_2_42BE8,00042E90,"cmpwi r24, 0x36",range,lbl_800E8558
+menus,fn_2_42EB0,00042FAC,"cmpwi r5, 0x36",range,lbl_800E8558
+menus,fn_2_42FC8,000430D4,"cmpwi r24, 0x36",range,lbl_800E8558
+menus,fn_2_430F4,000432C8,"cmpwi r8, 0x36",range,lbl_800E8558
+menus,fn_2_432EC,000433E4,"cmpwi r24, 0x36",range,lbl_800E8558
+menus,fn_2_43404,0004356C,"cmpwi r3, 0x36",range,lbl_800E8558
+menus,fn_2_4358C,000439B0,"cmpwi r23, 0x36",range,lbl_800E8558
+menus,fn_2_439D0,00043E68,"cmpwi r8, 0x36",range,lbl_800E8558
+menus,fn_2_43E8C,00043FE4,"cmpwi r5, 0x36",range,lbl_800E8558
+menus,fn_2_44014,00044168,"cmpwi r3, 0x36",range,lbl_800E8558
+menus,fn_2_44504,00044518,"cmpwi r24, 0x36",range,
+menus,fn_2_44504,000445C8,"subfic r0, r24, 0x36",count,
+menus,fn_2_44504,000445D8,"cmpwi r24, 0x36",range,
+menus,fn_2_44504,00044C34,"cmpwi r24, 0x36",range,
+menus,fn_2_44504,00044CE4,"subfic r0, r24, 0x36",count,
+menus,fn_2_44504,00044CF4,"cmpwi r24, 0x36",range,
+menus,fn_2_44F64,00044F6C,"cmpwi r5, 0x36",range,
+menus,fn_2_44F64,0004509C,"subfic r0, r5, 0x36",count,
+menus,fn_2_44F64,000450AC,"cmpwi r5, 0x36",range,
+menus,fn_2_45204,00045334,"cmpwi r31, 0x36",range,lbl_800E8558
+menus,fn_2_45354,00045368,"cmpwi r3, 0x36",range,
+menus,fn_2_45354,000453F8,"subfic r0, r3, 0x36",count,
+menus,fn_2_45354,00045404,"cmpwi r3, 0x36",range,
+menus,fn_2_454E8,00045504,"cmpwi r29, 0x36",range,lbl_800E8558
+menus,fn_2_454E8,000455EC,"subfic r0, r29, 0x36",count,lbl_800E8558
+menus,fn_2_454E8,000455F8,"cmpwi r29, 0x36",range,lbl_800E8558
+menus,fn_2_454E8,000457EC,"cmpwi r29, 0x36",range,lbl_800E8558
+menus,fn_2_45810,0004581C,"cmpwi r31, 0x36",range,
+menus,fn_2_45810,00045904,"subfic r0, r31, 0x36",count,
+menus,fn_2_45810,00045910,"cmpwi r31, 0x36",range,
+menus,fn_2_45978,0004597C,"li r0, 0x36",load,
+menus,fn_2_45A84,00045B8C,"cmpwi r8, 0x36",range,
+menus,fn_2_45D38,00045D40,"cmpwi r3, 0x36",range,
+menus,fn_2_45D38,00045E0C,"subfic r0, r3, 0x36",count,
+menus,fn_2_45D38,00045E1C,"cmpwi r3, 0x36",range,
+menus,fn_2_45FDC,00045FE4,"cmpwi r3, 0x36",range,
+menus,fn_2_45FDC,000460B0,"subfic r0, r3, 0x36",count,
+menus,fn_2_45FDC,000460C0,"cmpwi r3, 0x36",range,
+menus,fn_2_460F8,0004610C,"cmpwi r16, 0x36",range,
+menus,fn_2_460F8,000462DC,"subfic r0, r16, 0x36",count,
+menus,fn_2_460F8,000462EC,"cmpwi r16, 0x36",range,
+menus,fn_2_46418,00046444,"cmpwi r16, 0x36",range,
+menus,fn_2_46418,00046614,"subfic r0, r16, 0x36",count,
+menus,fn_2_46418,00046624,"cmpwi r16, 0x36",range,
+menus,fn_2_466AC,000467DC,"cmpwi r23, 0x36",range,lbl_800E8558
+menus,fn_2_468DC,000468E4,"cmpwi r12, 0x36",range,
+menus,fn_2_468DC,00046A84,"subfic r0, r12, 0x36",count,
+menus,fn_2_468DC,00046A98,"cmpwi r12, 0x36",range,
+menus,fn_2_46ADC,00046AE4,"li r0, 0x36",load,
+menus,fn_2_4970,00004B20,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_4B2D0,0004B3B4,"cmpwi r3, 0x36",range,
+menus,fn_2_4B2D0,0004B4A0,"subfic r0, r3, 0x36",count,
+menus,fn_2_4B2D0,0004B4B0,"cmpwi r3, 0x36",range,
+menus,fn_2_4B2D0,0004B754,"cmpwi r3, 0x36",range,
+menus,fn_2_4B2D0,0004B834,"subfic r0, r3, 0x36",count,
+menus,fn_2_4B2D0,0004B844,"cmpwi r3, 0x36",range,
+menus,fn_2_4B2D0,0004BB9C,"cmpwi r3, 0x36",range,
+menus,fn_2_4B2D0,0004BC7C,"subfic r0, r3, 0x36",count,
+menus,fn_2_4B2D0,0004BC8C,"cmpwi r3, 0x36",range,
+menus,fn_2_4B2D0,0004BF50,"cmpwi r3, 0x36",range,
+menus,fn_2_4B2D0,0004C030,"subfic r0, r3, 0x36",count,
+menus,fn_2_4B2D0,0004C040,"cmpwi r3, 0x36",range,
+menus,fn_2_4C3EC,0004C3FC,"cmpwi r7, 0x36",range,lbl_8034E9A0
+menus,fn_2_4C3EC,0004C42C,"subfic r0, r7, 0x36",count,lbl_8034E9A0
+menus,fn_2_4C3EC,0004C4F4,"cmpwi r7, 0x36",range,lbl_8034E9A0
+menus,fn_2_4D378,0004D3E0,"cmpwi r4, 0x36",range,
+menus,fn_2_4D378,0004D4A8,"subfic r0, r4, 0x36",count,
+menus,fn_2_4D378,0004D4B8,"cmpwi r4, 0x36",range,
+menus,fn_2_4D67C,0004D6C0,"cmpwi r6, 0x36",range,
+menus,fn_2_4D67C,0004D78C,"subfic r0, r6, 0x36",count,
+menus,fn_2_4D67C,0004D79C,"cmpwi r6, 0x36",range,
+menus,fn_2_4D960,0004D988,"cmpwi r3, 0x36",range,
+menus,fn_2_4D960,0004DA58,"subfic r0, r3, 0x36",count,
+menus,fn_2_4D960,0004DA68,"cmpwi r3, 0x36",range,
+menus,fn_2_4DC24,0004DC4C,"cmpwi r3, 0x36",range,
+menus,fn_2_4DC24,0004DD1C,"subfic r0, r3, 0x36",count,
+menus,fn_2_4DC24,0004DD2C,"cmpwi r3, 0x36",range,
+menus,fn_2_4DEE8,0004DF14,"cmpwi r3, 0x36",range,
+menus,fn_2_4DEE8,0004DFF4,"subfic r0, r3, 0x36",count,
+menus,fn_2_4DEE8,0004E004,"cmpwi r3, 0x36",range,
+menus,fn_2_4E1C0,0004E244,"cmpwi r5, 0x36",range,
+menus,fn_2_4E1C0,0004E308,"subfic r0, r5, 0x36",count,
+menus,fn_2_4E1C0,0004E318,"cmpwi r5, 0x36",range,
+menus,fn_2_4E1C0,0004E50C,"cmpwi r5, 0x36",range,
+menus,fn_2_4E1C0,0004E5D0,"subfic r0, r5, 0x36",count,
+menus,fn_2_4E1C0,0004E5E0,"cmpwi r5, 0x36",range,
+menus,fn_2_5163C,0005178C,"li r5, 0x36",load,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_52690,00052A04,"li r5, 0x35",load,lbl_8034E9A0 starMissionCompletionTracker
+menus,fn_2_587F8,00058FD8,"cmpwi r30, 0x36",range,lbl_800E869C
+menus,fn_2_587F8,000590DC,"subfic r0, r30, 0x36",count,lbl_800E869C
+menus,fn_2_587F8,000590E4,"cmpwi r30, 0x36",range,lbl_800E869C
+menus,fn_2_587F8,00059574,"cmpwi r30, 0x36",range,lbl_800E869C
+menus,fn_2_587F8,000596CC,"subfic r0, r30, 0x36",count,lbl_800E869C
+menus,fn_2_587F8,000596DC,"cmpwi r30, 0x36",range,lbl_800E869C
+menus,fn_2_59CF8,00059EEC,"cmpwi r5, 0x36",range,
+menus,fn_2_59CF8,00059F94,"subfic r0, r5, 0x36",count,
+menus,fn_2_59CF8,00059FA0,"cmpwi r5, 0x36",range,
+menus,fn_2_59CF8,00059FCC,"cmpwi r12, 0x36",range,
+menus,fn_2_59CF8,0005A090,"subfic r0, r12, 0x36",count,
+menus,fn_2_59CF8,0005A09C,"cmpwi r12, 0x36",range,
+menus,fn_2_6AF4,00006CA8,"li r3, 0x36",load,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_6D3C,000071E0,"li r3, 0x36",load,lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_72594,000725F4,"li r6, 0x35",load,
+menus,fn_2_73BF0,00073C1C,"li r3, 0x36",load,lbl_8034E9A0
+menus,fn_2_73BF0,00073C24,"li r3, 0x36",load,lbl_8034E9A0
+menus,fn_2_73CBC,00073E18,"li r5, 0x36",load,lbl_8034E9A0
+menus,fn_2_73EFC,000740C4,"li r29, 0x36",load,lbl_8034E9A0
+menus,fn_2_73EFC,000740CC,"li r29, 0x36",load,lbl_8034E9A0
+menus,fn_2_74CD8,00074D18,"li r6, 0x36",load,
+menus,fn_2_74F40,000756A0,"cmpwi r28, 0x36",range,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_74F40,000757B4,"cmpwi r28, 0x36",range,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_7504,000077A0,"cmpwi r10, 0x36",range,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_7504,00007A40,"subfic r0, r10, 0x36",count,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_7504,00007A54,"cmpwi r10, 0x36",range,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_75BE4,00075CEC,"cmpwi r12, 0x36",range,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_7805C,000781EC,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_7805C,000782F0,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_7836C,00078520,"cmpwi r4, 0x36",equals,lbl_803C6724
+menus,fn_2_7836C,00078608,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_7836C,00078770,"cmpwi r6, 0x36",equals,lbl_803C6724
+menus,fn_2_7836C,0007885C,"cmpwi r4, 0x36",equals,lbl_803C6724
+menus,fn_2_7836C,00078A44,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_78AC0,00078D8C,"cmpwi r5, 0x36",equals,lbl_803C6724
+menus,fn_2_78AC0,00078E80,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_7912C,000791B4,"cmpwi r0, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_7912C,000791FC,"cmpwi r0, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_7912C,00079290,"cmpwi r0, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_79FAC,0007A12C,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_7A194,0007A3F8,"cmpwi r8, 0x36",equals,lbl_803C6724
+menus,fn_2_7D85C,0007D980,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_7D85C,0007DA0C,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_7DAB8,0007DC40,"cmpwi r4, 0x36",equals,lbl_803C6724
+menus,fn_2_7DAB8,0007DD50,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_7DAB8,0007E054,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_7DDC,00007E0C,"li r5, 0x36",load,lbl_800E8558 lbl_800FDE84 lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_7DDC,000080AC,"cmpwi r23, 0x36",range,lbl_800E8558 lbl_800FDE84 lbl_80108EDC lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_7F030,0007F174,"cmpwi r0, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_7F2BC,0007F3D4,"cmpwi r0, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_81628,00082260,"cmpwi r0, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_8940,00008AA0,"li r5, 0x36",load,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_8CF8,00008E40,"li r5, 0x36",load,
+menus,fn_2_8CF8,00009070,"li r5, 0x36",load,
+menus,fn_2_8CF8,00009294,"li r5, 0x36",load,
+menus,fn_2_8CF8,000094C4,"li r5, 0x36",load,
+menus,fn_2_95D8,00009840,"cmpwi r8, 0x36",range,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_95D8,00009850,"subfic r0, r8, 0x36",count,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_95D8,0000991C,"cmpwi r8, 0x36",range,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_95D8,00009A80,"cmpwi r7, 0x36",range,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_9ACC,00009C20,"li r5, 0x36",load,lbl_8034E9A0
+menus,fn_2_9ACC,00009E3C,"li r5, 0x36",load,lbl_8034E9A0
+menus,fn_2_ABC0,0000ABEC,"cmpwi r4, 0x36",range,lbl_8034E9A0
+menus,fn_2_ABC0,0000ACE0,"subfic r3, r4, 0x36",count,lbl_8034E9A0
+menus,fn_2_ABC0,0000ACF4,"cmpwi r4, 0x36",range,lbl_8034E9A0
+menus,fn_2_ABC0,0000AD3C,"subfic r3, r11, 0x36",count,lbl_8034E9A0
+menus,fn_2_ABC0,0000AD4C,"cmpwi r11, 0x36",range,lbl_8034E9A0
+menus,fn_2_ABC0,0000AD9C,"cmpwi r10, 0x36",range,lbl_8034E9A0
+menus,fn_2_ABC0,0000ADAC,"cmpwi r6, 0x36",range,lbl_8034E9A0
+menus,fn_2_ABC0,0000AEA4,"subfic r0, r6, 0x36",count,lbl_8034E9A0
+menus,fn_2_ABC0,0000AEB4,"cmpwi r6, 0x36",range,lbl_8034E9A0
+menus,fn_2_AEE8,0000AF00,"cmpwi r30, 0x36",range,lbl_8034E9A0
+menus,fn_2_AEE8,0000AF9C,"subfic r0, r30, 0x36",count,lbl_8034E9A0
+menus,fn_2_AEE8,0000AFA8,"cmpwi r30, 0x36",range,lbl_8034E9A0
+menus,fn_2_AEE8,0000AFF4,"cmpwi r8, 0x36",range,lbl_8034E9A0
+menus,fn_2_AEE8,0000B11C,"subfic r9, r8, 0x36",count,lbl_8034E9A0
+menus,fn_2_AEE8,0000B12C,"cmpwi r8, 0x36",range,lbl_8034E9A0
+menus,fn_2_AEE8,0000B160,"subfic r8, r29, 0x36",count,lbl_8034E9A0
+menus,fn_2_AEE8,0000B174,"cmpwi r29, 0x36",range,lbl_8034E9A0
+menus,fn_2_AEE8,0000B1C4,"cmpwi r30, 0x36",range,lbl_8034E9A0
+menus,fn_2_AEE8,0000B1EC,"cmpwi r9, 0x36",range,lbl_8034E9A0
+menus,fn_2_AEE8,0000B2D4,"subfic r0, r9, 0x36",count,lbl_8034E9A0
+menus,fn_2_AEE8,0000B2E4,"cmpwi r9, 0x36",range,lbl_8034E9A0
+menus,fn_2_B508,0000B590,"cmpwi r25, 0x36",range,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_B508,0000B5D0,"li r11, 0x36",load,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_B66C,0000B760,"cmpwi r9, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_B920,0000B93C,"li r5, 0x36",load,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_B920,0000BD40,"cmpwi r8, 0x36",equals,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_B920,0000BEC0,"li r9, 0x36",load,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_BF90,0000BFA8,"li r5, 0x36",load,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_BF90,0000C164,"cmpwi r9, 0x36",equals,lbl_8034E9A0 lbl_803C6724 starMissionCompletionTracker
+menus,fn_2_C484,0000C490,"li r0, 0x36",load,lbl_80108EDC lbl_8034E9A0
+menus,fn_2_C7DC,0000C894,"li r4, 0x35",load,lbl_800FDE84 lbl_8034E9A0 lbl_803C6724
+menus,fn_2_CA60,0000CAA8,"cmpwi r11, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_CCE0,0000CD38,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_CCE0,0000CD58,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_CCE0,0000CD78,"cmpwi r0, 0x36",equals,lbl_803C6724
+menus,fn_2_CE44,0000CF38,"cmpwi r7, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_CE44,0000CF60,"cmpwi r7, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_CE44,0000CF88,"cmpwi r7, 0x36",equals,lbl_8034E9A0 lbl_803C6724
+menus,fn_2_DFAC,0000E4B0,"cmpwi r4, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_DFAC,0000E504,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_DFAC,0000E52C,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_DFAC,0000E554,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_DFAC,0000E6A0,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_DFAC,0000E6EC,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_EAE0,0000EB7C,"cmpwi r4, 0x36",equals,lbl_800FDE84 lbl_8034E9A0
+menus,fn_2_EAE0,0000EC08,"li r5, 0x36",load,lbl_800FDE84 lbl_8034E9A0
+menus,fn_2_F200,0000F28C,"cmpwi r9, 0x36",equals,lbl_80108DB8 lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_F200,0000F3A8,"cmpwi r0, 0x36",equals,lbl_80108DB8 lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_F200,0000F900,"li r4, 0x35",load,lbl_80108DB8 lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_FAA0,0000FB04,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_FAA0,0000FB18,"li r4, 0x35",load,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_FCB4,0000FCBC,"li r5, 0x36",load,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_FCB4,0000FDB8,"cmpwi r12, 0x36",range,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_FCB4,0000FDD0,"subfic r0, r7, 0x36",count,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_FCB4,0000FDE0,"cmpwi r7, 0x36",range,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_FCB4,0000FE24,"cmpwi r7, 0x36",range,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_FCB4,0000FE5C,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_FCB4,0000FE7C,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_FCB4,0000FE9C,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724
+menus,fn_2_FCB4,0000FEE8,"cmpwi r0, 0x36",equals,lbl_80108EDC lbl_8034E9A0 lbl_803C6724

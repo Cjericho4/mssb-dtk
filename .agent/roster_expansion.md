@@ -5,7 +5,7 @@ have not been traced. Owns: the list of everything keyed by charID or sized 54, 
 code sites that use 54 as a number, and the relocation plan. Table *meanings* stay in their owning
 docs (linked per row). Nothing here has been tried in the game yet.
 
-Reproduce: `python3 tools/roster_scan.py --tables --refs` (needs a built tree). It rewrites
+Reproduce: `python3 tools/roster_scan.py --tables --refs --derived` (needs a built tree). It rewrites
 `.agent/roster_expansion_sites.csv` (uses of 54) and `.agent/roster_expansion_refs.csv` (every
 instruction that forms an address inside a per-character table), and prints the 54 × N data
 symbols whose colour-variant rows equal their base's row.
@@ -20,8 +20,9 @@ symbols whose colour-variant rows equal their base's row.
   2 descriptor tables in menus.rel), plus the stats file and the menu art files. Four of the
   game.rel ones and both challenge.rel ones were not in any doc before this pass (§3).
 * The number 54 appears as an immediate at **368 candidate sites in 136 functions** (252 of them in
-  menus.rel, where `character_select.md` §4 documents 54 as the "empty slot" value; the 252 are not
-  yet split into sentinel, loop and bound). 97 functions also name a known per-character symbol;
+  menus.rel, where `character_select.md` §4 documents 54 as the "empty slot" value). By shape: 130
+  range tests (`< 54`: bounds and loops), 119 equality tests (54 or 53 as a marker), 75 loads
+  of the constant, 44 `54 - i` counts. 97 functions also name a known per-character symbol;
   39 do not (§5, CSV).
 * The hard part is not the tables, it is two layouts that embed 54: the `CharacterStats` row
   (a 54-byte chemistry row inside each 0xA0 row) and the ARAM master descriptor tiers
@@ -39,7 +40,7 @@ symbols whose colour-variant rows equal their base's row.
 | charID count | 54 (`0x36`); 54 also means "none / empty slot" in the menus | every table in §3, the sites in §5 | this doc |
 | unique characters | 32 (`uniqueIdx` 0..31 in `lbl_800E8558`) | voice group `u8[32]` (game `.data+0x8148`, challenge `.data+0xFC0`), unlock list `lbl_803CB748`, announcer and portrait files keyed by grid index | `character_select.md` §1, `sounds.md` §3 |
 | select grid | 32 cells (+0x20 alternate), roster grid `lbl_800FDE84` 36 cells (26 used), captain grid 12 | `mainCharArray` 33, `lbl_800E869C` 32, `secondaryCharacterArray` 22, `lbl_80108DF4` 33 u16, menu layout resources | `character_select.md` §1, §4, §8 |
-| per-charID switches | `jumptable_800EEC40` 48 entries (charID 0..47), `fn_80064918` 0..51, `jumptable_801091F4` in `fn_800698F8` | a charID past the table takes the default case or panics (`fn_800698F8`) | `character_modding_report.md` §1.1, `character_select.md` §4 |
+| per-charID switches | `jumptable_800EEC40` 48 entries (charID 0..47, `fn_80017814`), `fn_80064918` 0..51, `jumptable_801091F4` in `fn_800698F8`; candidates with the same 0..47 bound, index not traced: `jumptable_800EED00` (`fn_80017DBC`), menus `jumptable_2_data_2FEEC` (`fn_2_8D270`), challenge `jumptable_1_data_F690` (`fn_1_135C0`) | a charID past the table takes the default case or panics (`fn_800698F8`) | `character_modding_report.md` §1.1, `character_select.md` §4 |
 | field widths | the challenge lineup stores charID as `s16`; `lbl_800F73B8` is `s8` (master body entry ≤ 127); other charID fields not audited | none found that blocks 55..126 | `roster_flow.md` §2 |
 
 ## 3. Per-character tables
@@ -176,10 +177,16 @@ These are why "append 10 rows" is not enough:
   characters the sub-item tier becomes N*7 and the track-15 tier N, so the bases 54, 432 and 486
   all move. `fn_80021CA4` adds the first base as an immediate (`addi rX, rY, 0x36`, three
   times), so the counts in `lbl_803CB7E0` are not the only copy; sites that use 432 or 486 as an
-  immediate are not scanned yet.
+  immediate are listed below.
 * **Body entries 0..32 / overlay entries 33..53** in the same master table are *not* charID-keyed;
   they are reached through `lbl_800F73B8`. A new unique body needs a new entry there, which the
   first tier (54) currently has no room for.
+* **Immediates derived from 54** (`--derived`; candidates, the values are common numbers):
+  `mulli x, 19` (tracks per character) 46 sites in 18 functions, the same set that loads through
+  `lbl_803CB790` plus `fn_80021BBC`, game `fn_3_59B20`, challenge `fn_1_1E0` and `fn_1_16978`;
+  432 in `fn_80021BBC` (2 sites: the track-15 tier base) and 17 unread sites elsewhere; 486 in
+  `fn_80021ADC` (2: the script tier base), `fn_8005B298`, `fn_80060184`; 1026 (54 × 19) at 5
+  unread sites; no `0x21C0` immediate anywhere.
 * **`CharacterStats` stride.** The row is 0xA0 with the 54-byte chemistry row inside it. More
   characters means either a wider row (every `mulli 0xA0`, every `memcpy(..., 0xA0)`, the
   `inMemRoster` copies and `stats.0`) or chemistry moved to its own N × N table with the three
@@ -194,12 +201,18 @@ per-character tables that function references). Forms scanned: `cmpwi`/`cmplwi`/
 with `0x36` or `0x35`. Not scanned: `addi` (almost all struct offsets), sizes such as `0x21C0`,
 `0x402`, `0x1B0`, `0x1E6`, and counts loaded from data.
 
-| Module | Sites | Functions | Of which name a per-character symbol |
-|---|---|---|---|
-| main.dol | 93 | 24 | 20 |
-| game.rel | 17 | 14 | 7 |
-| challenge.rel | 6 | 3 | 1 |
-| menus.rel | 252 | 95 | 69 |
+| Module | Sites | Functions | Of which name a per-character symbol | range | equals | load | count |
+|---|---|---|---|---|---|---|---|
+| main.dol | 93 | 24 | 20 | 21 | 42 | 26 | 4 |
+| game.rel | 17 | 14 | 7 | 3 | 7 | 7 | 0 |
+| challenge.rel | 6 | 3 | 1 | 2 | 1 | 2 | 1 |
+| menus.rel | 252 | 95 | 69 | 104 | 69 | 40 | 39 |
+
+The last four columns are the CSV's `kind`: **range** = a compare followed by `blt`/`bge`/`ble`/
+`bgt` (a bound or a loop end: must become N), **equals** = followed by `beq`/`bne` (54 or 53 used
+as a marker: must become N only if the marker has to stay outside the charID range), **load** =
+`li` (a loop count, a marker being stored, or a size), **count** = `subfic` (`54 - i`, an
+unrolled loop's remaining count).
 
 An empty `evidence` column does not mean the function reads no table (anchor + offset access,
 §3), and a filled one does not prove the 0x36 in it is a character count.
@@ -265,8 +278,8 @@ Each step is testable on its own; none needs a matching build.
 3. **Raise N for variants only** (new charIDs that reuse an existing unique character: its voice,
    grid cell, portrait slot and switch case via its base charID). Needs: the tables at N rows, the
    §5 bounds and loops at N, the master tiers re-based (§4), `stats.0` and the taken-flags /
-   ranked-ids arrays at N, and the "54 = none" sentinel changed to N in the menus (some share of
-   the 252 menus sites in the CSV; they are not split yet). The save file changes size if `starMissionCompletionTracker` grows: decide
+   ranked-ids arrays at N, and the "54 = none" marker changed to N (the `equals` sites in the CSV:
+   69 in menus.rel, 42 in the DOL). The save file changes size if `starMissionCompletionTracker` grows: decide
    between a new save format and leaving new characters out of mission tracking.
 4. **New unique characters.** Adds the 32-unique limit, grid cells and layout resources, the
    charID switches, announcer and portrait files, body entries in the master table.
@@ -279,10 +292,11 @@ they are behaviour-neutral, and they turn the rest into data edits.
 
 * Trace the index of game 0x37AC, 0x111C8, 0x285A8 and name the four new tables.
 * Identify `lbl_80354768`'s 54-byte block, `lbl_2_data_2FA60`, `lbl_8034E978`.
-* Scan for the derived immediates (432, 486, 0x21C0, 54*19, 54*6) and for `mulli` strides.
+* Read the unread derived-immediate sites (§4) and scan the `mulli` strides 6, 7 and 0xA0.
 * `addi rX, rY, 0x36` is not in the sites CSV. `fn_80021CA4` uses it three times as the master
   tier base (`54 + charID*7 + k`), so that base is an immediate, not only a count read from
   `lbl_803CB7E0`. The other `addi 0x36` sites (`fn_8002244C`, `fn_8005B760`, `fn_8005DE14`,
   `fn_80060184`, game `fn_3_12A910`) are unread.
-* Read the 39 functions with no evidence; split the menus sites into sentinel / loop / bound.
-* Per-charID switch tables: list every one (three are known).
+* Read the 39 functions with no evidence; decide per `equals` site whether its marker must move.
+* Per-charID switch tables: trace the index of the three 0..47 candidates (§2); switches with
+  another bound are not searched.

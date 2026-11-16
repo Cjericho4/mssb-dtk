@@ -9,6 +9,9 @@ per-character tables the same function references as evidence.
     python3 tools/roster_scan.py                 # writes .agent/roster_expansion_sites.csv
     python3 tools/roster_scan.py --tables        # also prints data symbols sized 54 x N whose
                                                  # colour-variant rows equal their base's row
+    python3 tools/roster_scan.py --derived       # also prints what each compare decides, the
+                                                 # immediates derived from 54 (432, 486, 0x21C0,
+                                                 # 1026, x19) and switches bounded at 47/51/53
     python3 tools/roster_scan.py --refs          # also writes .agent/roster_expansion_refs.csv:
                                                  # every instruction that forms the address of a
                                                  # per-character table, by name or anchor + offset
@@ -50,6 +53,10 @@ INSN_RE = re.compile(r'^/\* (\w+) \w+\s+(?:\w\w ){3}\w\w \*/\t(\S+)\s*(.*)$')
 IDENT_RE = re.compile(r'[A-Za-z_][\w$]*')
 BOUND_RE = re.compile(r', 0x3[56]$')
 BOUND_OPS = ('cmpwi', 'cmplwi', 'li', 'subfic')
+# Numbers derived from 54 that the code may use as immediates (candidates; they are common values).
+DERIVED_OPS = ('li', 'addi', 'cmpwi', 'cmplwi', 'subfic')
+DERIVED_IMMS = {'0x1b0': '432 (master tier: track-15 bank base)', '0x1e6': '486 (master tier: script base)',
+                '0x21c0': '0x21C0 (54 stats rows)', '0x402': '1026 (54 x 19 subfiles)'}
 
 # Colour families: a variant's row equals its base's row in most per-character gameplay tables.
 FAMILIES = [[13, 29, 30, 31, 32], [21, 22, 23], [24, 25, 26], [33, 34, 35, 36], [48, 49, 50, 51],
@@ -70,15 +77,17 @@ def load_symbols():
 
 
 def scan_sites():
-    sites = {}                                   # (mod, addr) -> (fn, text)
+    sites = {}                                   # (mod, addr) -> [fn, text, kind]
+    derived = collections.defaultdict(set)       # label -> {(mod, fn, addr)}
     evidence = collections.defaultdict(set)      # (mod, fn) -> char tables referenced
     for mod, (patterns, _) in MODULES.items():
         for pattern in patterns:
             for path in glob.glob(pattern, recursive=True):
-                fn = None
+                fn = pending = None
+                switch = []                      # [instructions left, bound] after a cmplwi 47/51/53
                 for line in open(path, errors='replace'):
                     if line.startswith('.fn '):
-                        fn = line.split()[1].rstrip(',')
+                        fn, pending, switch = line.split()[1].rstrip(','), None, []
                     elif line.startswith('.endfn'):
                         fn = None
                     elif fn:
@@ -86,10 +95,34 @@ def scan_sites():
                         if not m:
                             continue
                         addr, op, args = m.groups()
+                        imm = args.rsplit(', ', 1)[-1]
+                        # what the compare decides: the first conditional branch after it
+                        if pending and op.rstrip('+-')[:3] in ('beq', 'bne', 'blt', 'bge', 'ble', 'bgt'):
+                            sites[pending][2] = 'equals' if op[:3] in ('beq', 'bne') else 'range'
+                            pending = None
+                        elif op.startswith('cmp'):
+                            pending = None
                         if op in BOUND_OPS and BOUND_RE.search(args):
-                            sites[(mod, addr)] = (fn, op + ' ' + args)
+                            kind = {'li': 'load', 'subfic': 'count'}.get(op, 'compare')
+                            sites[(mod, addr)] = [fn, op + ' ' + args, kind]
+                            if kind == 'compare':
+                                pending = (mod, addr)
+                        if op in DERIVED_OPS and imm in DERIVED_IMMS:
+                            derived[DERIVED_IMMS[imm]].add((mod, fn, addr))
+                        if op == 'mulli' and imm == '0x13':
+                            derived['mulli 19 (tracks per character)'].add((mod, fn, addr))
+                        if switch and 'jumptable' in args:
+                            name = re.search(r'jumptable\w+', args).group(0)
+                            derived['switch up to %d: %s' % (int(switch[1], 16), name)].add((mod, fn, addr))
+                            switch = []
+                        if switch:
+                            switch[0] -= 1
+                            if not switch[0]:
+                                switch = []
+                        if op == 'cmplwi' and imm in ('0x2f', '0x33', '0x35'):
+                            switch = [8, imm]
                         evidence[(mod, fn)].update(CHAR_TABLES.intersection(IDENT_RE.findall(args)))
-    return sites, evidence
+    return sites, evidence, derived
 
 
 # Per-character tables as (module, section, start, size, name). REL starts are section offsets.
@@ -270,19 +303,30 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--out', default='.agent/roster_expansion_sites.csv')
     ap.add_argument('--tables', action='store_true', help='print 54 x N data symbols with family-equal rows')
+    ap.add_argument('--derived', action='store_true',
+                    help='print the compare kinds, numbers derived from 54 and charID switch tables')
     ap.add_argument('--refs', action='store_true', help='write the table address-forming sites CSV')
     args = ap.parse_args()
-    sites, evidence = scan_sites()
+    sites, evidence, derived = scan_sites()
     assert sites, 'no asm found: run `python3 configure.py && ninja` first'
     with open(args.out, 'w', newline='') as f:
         w = csv.writer(f, lineterminator='\n')
-        w.writerow(['module', 'function', 'address', 'instruction', 'evidence'])
-        for (mod, addr), (fn, text) in sorted(sites.items(), key=lambda kv: (kv[0][0], kv[1][0], kv[0][1])):
-            w.writerow([mod, fn, addr, text, ' '.join(sorted(evidence[(mod, fn)]))])
+        w.writerow(['module', 'function', 'address', 'instruction', 'kind', 'evidence'])
+        for (mod, addr), (fn, text, kind) in sorted(sites.items(), key=lambda kv: (kv[0][0], kv[1][0], kv[0][1])):
+            w.writerow([mod, fn, addr, text, kind, ' '.join(sorted(evidence[(mod, fn)]))])
     per_mod = collections.Counter(mod for mod, _ in sites)
     print('%d sites in %d functions -> %s  (%s)' % (
-        len(sites), len({(m, fn) for (m, _), (fn, _) in sites.items()}), args.out,
+        len(sites), len({(m, v[0]) for (m, _), v in sites.items()}), args.out,
         ', '.join('%s %d' % kv for kv in sorted(per_mod.items()))))
+    if args.derived:
+        kinds = collections.Counter((mod, v[2]) for (mod, _), v in sites.items())
+        for mod in MODULES:
+            print('  %-9s %s' % (mod, '  '.join('%s %d' % (k, kinds[(mod, k)])
+                                               for k in ('range', 'equals', 'compare', 'load', 'count'))))
+        for label in sorted(derived):
+            fns = collections.Counter((mod, fn) for mod, fn, _ in derived[label])
+            print('  %s: %d sites: %s' % (label, len(derived[label]),
+                                         ' '.join('%s:%s(%d)' % (m, f, n) for (m, f), n in sorted(fns.items()))))
     if args.tables:
         print_tables(load_symbols())
     if args.refs:
