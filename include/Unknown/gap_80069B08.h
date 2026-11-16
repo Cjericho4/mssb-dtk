@@ -24,19 +24,39 @@ extern Gap80069B08Queue* lbl_803CC1B8;
 void fn_800B0A14_removeQueue(void);
 typedef struct Gap80069B08Script Gap80069B08Script;
 Gap80069B08Queue* fn_800B0A5C_insertQueue(void (*callback)(void), u16 priority);
+typedef struct Gap80069B08ScoutFlags {
+    u8 _pad0[0x4];
+    /* 0x04 */ s8 flags[4][6]; /* [difficulty][challengeCaptain] */
+} Gap80069B08ScoutFlags;
+/* Local view of ChallengeTrackingStruct / ChallengeSaveData (UnknownHomes_Game.h). The two
+   headers declare starMissionCompletionTracker with different types, so this unit cannot
+   include the owning one yet; missions[335] spans the 54 per-character records and the
+   0x0AF8..0x440C area in one array. */
 typedef struct Gap80069B08Mission {
-    u8 _pad0[0x31];
-    /* 0x31 */ s8 state;
+    /* 0x00 */ Gap80069B08ScoutFlags* scoutFlags;
+    /* 0x04 */ s8 challengeCaptain;
+    u8 _pad5;
+    /* 0x06 */ s8 scoutFlagsAchieved;
+    u8 _pad7[0x31 - 0x7];
+    /* 0x31 */ s8 state; /* 1 = recruited */
     u8 _pad32[0x2];
 } Gap80069B08Mission;
 typedef struct Gap80069B08Tracker {
     Gap80069B08Mission missions[335];
     u8 _pad440C[9];
-    u8 row; /* 0x4415 */
-    u8 _pad4416[0xC];
+    u8 row; /* 0x4415 challenge difficulty */
+    u8 _pad4416[0x6];
+    /* 0x441C */ u8 challengeCaptain;
+    u8 _pad441D;
+    /* 0x441E */ u8 opponentCaptain;
+    /* 0x441F */ u8 opponentCaptainCharID;
+    u8 _pad4420[0x2];
     u8 column; /* 0x4422 */
-    u8 _pad4423[0xE5];
+    u8 _pad4423[0x444D - 0x4423];
+    /* 0x444D */ u8 newlyRecruited[NUM_CHOOSABLE_CHARACTERS]; /* set with state = 1 by fn_8006C9D8 */
+    u8 _pad4483[0x4508 - 0x4483];
 } Gap80069B08Tracker;
+STATIC_ASSERT(sizeof(Gap80069B08Tracker) == 0x4508);
 extern Gap80069B08Tracker starMissionCompletionTracker;
 extern f32 lbl_8010B590[][7];
 

@@ -196,8 +196,43 @@ void starMissionRelated2(void) {
 }
 
 // .text:0x8006C9D8 size:0xC4
+// Recruits every character whose scout-flag count is met for this difficulty and captain:
+// marks the record recruited and flags the character as newly recruited. Against Bowser Jr.'s
+// team only records already in state 2 are taken; otherwise only the beaten captain's players.
 void fn_8006C9D8(void) {
-    return;
+    /* Non-matching: register numbering only (tracker in r5 instead of r6, and so on down);
+       declaration order, operand order and local types do not change it. */
+    Gap80069B08Tracker* tracker;
+    Gap80069B08Mission* mission;
+    s32 flagIndex;
+    s32 i;
+    s32 state;
+    s8 needed;
+    tracker = &starMissionCompletionTracker;
+    flagIndex = tracker->row * 6 + tracker->challengeCaptain;
+
+    for (i = 0; i < NUM_CHOOSABLE_CHARACTERS; i++) {
+        mission = &tracker->missions[i];
+        state = mission->state;
+
+        if (state == 1) {
+            continue;
+        }
+        /* FAKEMATCH: flat index into flags[difficulty][captain] keeps the row*6+captain sum hoisted */
+        needed = mission->scoutFlags->flags[0][flagIndex];
+        if (mission->scoutFlagsAchieved != needed || needed == 0) {
+            continue;
+        }
+        if (tracker->opponentCaptainCharID == (s32)CHAR_ID_BOWSERJR) {
+            if (state == 2) {
+                mission->state = 1;
+                tracker->newlyRecruited[i] = 1;
+            }
+        } else if (state != 2 && mission->challengeCaptain == tracker->opponentCaptain) {
+            mission->state = 1;
+            tracker->newlyRecruited[i] = 1;
+        }
+    }
 }
 
 // .text:0x8006CA9C size:0x2C
