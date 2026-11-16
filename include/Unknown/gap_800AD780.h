@@ -60,9 +60,20 @@ extern Gap800AD780DrawLists lbl_80111340;
 extern s32 lbl_803CBB30;
 extern s32 lbl_803CC19C;
 extern s32 lbl_803CC1D8[2];
+/* A ring buffer with a read side and a write side (stream audio). */
 typedef struct Gap800AD780State {
-    u8 _pad0[0x28];
+    u8 _pad0[4];
+    /* 0x04 */ u32 end;        /* address past the buffer */
+    /* 0x08 */ u32 readCursor;
+    /* 0x0C */ u32 writeCursor;
+    /* 0x10 */ u32 size;
+    /* 0x14 */ u32 filled;     /* bytes written and not yet read */
+    /* 0x18 */ u32 writeStep;
+    /* 0x1C */ u32 totalWritten;
+    /* 0x20 */ u32 totalRead;
+    /* 0x24 */ u32 readStep;
     /* 0x28 */ u8 unk28;
+    /* 0x29 */ u8 busy;
 } Gap800AD780State;
 extern Gap800AD780State lbl_803C79D4;
 void fn_800A63C8(void);

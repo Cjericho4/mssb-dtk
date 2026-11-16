@@ -213,8 +213,17 @@ void fn_800B0230(void) {
 }
 
 // .text:0x800B0390 size:0x64
+// Finishes a read from the ring: advances the read cursor by readStep (wrapping at the end),
+// updates the fill and total counters and clears the busy flag.
 void fn_800B0390(void) {
-    return;
+    /* Non-matching: registers only (the first address load lands in r5 instead of r6). */
+    lbl_803C79D4.readCursor += lbl_803C79D4.readStep;
+    if (lbl_803C79D4.readCursor >= lbl_803C79D4.end) {
+        lbl_803C79D4.readCursor -= lbl_803C79D4.size;
+    }
+    lbl_803C79D4.filled -= lbl_803C79D4.readStep;
+    lbl_803C79D4.totalRead += lbl_803C79D4.readStep;
+    lbl_803C79D4.busy = 0;
 }
 
 // .text:0x800B03F4 size:0x18C
@@ -223,8 +232,17 @@ void fn_800B03F4(void) {
 }
 
 // .text:0x800B0580 size:0x64
+// Finishes a write to the ring: advances the write cursor by writeStep (wrapping at the end),
+// updates the total and fill counters and clears the busy flag.
 void fn_800B0580(void) {
-    return;
+    /* Non-matching: registers only (the first address load lands in r5 instead of r6). */
+    lbl_803C79D4.writeCursor += lbl_803C79D4.writeStep;
+    if (lbl_803C79D4.writeCursor >= lbl_803C79D4.end) {
+        lbl_803C79D4.writeCursor -= lbl_803C79D4.size;
+    }
+    lbl_803C79D4.totalWritten += lbl_803C79D4.writeStep;
+    lbl_803C79D4.filled += lbl_803C79D4.writeStep;
+    lbl_803C79D4.busy = 0;
 }
 
 // .text:0x800B05E4 size:0x140
