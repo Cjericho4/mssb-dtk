@@ -675,8 +675,51 @@ BOOL fn_80024C04(s32 index) {
 }
 
 // .text:0x80024C6C size:0xC0
-void fn_80024C6C(void) {
-    return;
+// Sub-item index a fielder uses for `side` (0 or 1, compared with the slot's rosterUnk26), or
+// -1 for none. Hard-coded per charID: Petey and the Goombas have none, Boo, King Boo and the
+// Shy Guys use item 2 / 0, everyone else 2 / 1 (Monty has no same-side item).
+s32 fn_80024C6C(Gap8002244CSlotRecord* slot, s32 side) {
+    if (slot->unk274 == 0) {
+        return -1;
+    }
+    if (slot->slotKind >= 9) {
+        return -1;
+    }
+    if (slot->rosterUnk26 != side) {
+        switch (slot->charID) {
+        case CHAR_ID_PETEY:
+        case CHAR_ID_GOOMBA:
+        case CHAR_ID_PARAGOOMBA:
+            return -1;
+        case CHAR_ID_BOO:
+        case CHAR_ID_SHYGUY_RED:
+        case CHAR_ID_KINGBOO:
+        case CHAR_ID_SHYGUY_BLUE:
+        case CHAR_ID_SHYGUY_YELLOW:
+        case CHAR_ID_SHYGUY_GREEN:
+        case CHAR_ID_SHYGUY_BLACK:
+            return 2;
+        default:
+            return 2;
+        }
+    }
+    switch (slot->charID) {
+    case CHAR_ID_MONTY:
+    case CHAR_ID_PETEY:
+    case CHAR_ID_GOOMBA:
+    case CHAR_ID_PARAGOOMBA:
+        return -1;
+    case CHAR_ID_BOO:
+    case CHAR_ID_SHYGUY_RED:
+    case CHAR_ID_KINGBOO:
+    case CHAR_ID_SHYGUY_BLUE:
+    case CHAR_ID_SHYGUY_YELLOW:
+    case CHAR_ID_SHYGUY_GREEN:
+    case CHAR_ID_SHYGUY_BLACK:
+        return 0;
+    default:
+        return 1;
+    }
 }
 
 // .text:0x80024D2C size:0x84

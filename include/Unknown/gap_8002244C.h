@@ -199,7 +199,18 @@ void byteWiseMultiply(void);
 void LERPToNewRange_Float(void);
 f32 LinearInterpolateToNewRange(f32 x, f32 inMin, f32 inMax, f32 outMin, f32 outMax);
 BOOL fn_80024C04(s32 index);
-void fn_80024C6C(void);
+/* View of the actor slot record (Gap8001196CSlot in gap_8001196C.h, not included here). */
+typedef struct Gap8002244CSlotRecord {
+    u8 _pad0[0x252];
+    /* 0x252 */ s8 charID;
+    u8 _pad253;
+    /* 0x254 */ s8 slotKind; /* 0..8 fielders, 9 batter, 10..12 runners */
+    u8 _pad255[0x25A - 0x255];
+    /* 0x25A */ u8 rosterUnk26;
+    u8 _pad25B[0x274 - 0x25B];
+    /* 0x274 */ u8 unk274;
+} Gap8002244CSlotRecord;
+s32 fn_80024C6C(Gap8002244CSlotRecord* slot, s32 side);
 typedef union Gap8002244CKey {
     u32 word;
     struct { u16 time, value; };
