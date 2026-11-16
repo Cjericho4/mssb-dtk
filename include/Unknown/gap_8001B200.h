@@ -4,7 +4,7 @@
 #include "mssbTypes.h"
 
 void fn_8001B200(void);
-void fn_8001B214(void);
+void fn_8001B214(void* value);
 void fn_8001B224(void);
 void fn_8001B2D0(void);
 void fn_8001B308(void);

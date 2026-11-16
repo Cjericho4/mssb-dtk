@@ -288,6 +288,8 @@ typedef struct Gap8001196CAnimTable {
     };
     u8 _pad2DA0[0x307B - 0x2DA0];
     /* 0x307B */ u8 aramLoadBusy;            /* cleared when the fn_800188C0 task finishes */
+    u8 _pad307C[0x308C - 0x307C];
+    /* 0x308C */ void* unk308C;              /* set by fn_8001B214, cleared by fn_8001B200 */
 } Gap8001196CAnimTable;
 typedef struct Gap8001196CGameSettings {
     u8 _pad0[6];

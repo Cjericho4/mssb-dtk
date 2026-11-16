@@ -36,12 +36,12 @@ void fn_8004B208(Gap8001196CAnim* anim, s32 animation, s32 channel, f32 frame);
 
 // .text:0x8001B200 size:0x14
 void fn_8001B200(void) {
-    return;
+    g_hugeAnimStruct.unk308C = NULL;
 }
 
 // .text:0x8001B214 size:0x10
-void fn_8001B214(void) {
-    return;
+void fn_8001B214(void* value) {
+    g_hugeAnimStruct.unk308C = value;
 }
 
 extern Gap8001196CAnim lbl_8036C4FC[13]; /* saved copy of the 13 slot records */
