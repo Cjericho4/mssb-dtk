@@ -441,8 +441,24 @@ zero_loop:
 }
 
 // .text:0x800BF204 size:0xA4
+// Skinning set-up: enables the locked cache at 0xE0000000 if it is not on yet, records the
+// scratch areas the skinning loops use inside it, and sets GQR5 (scale 8, type 4 for loads and stores).
 void SKNInit(void) {
-    return;
+    if (!(PPCMfhid2() & 0x10000000)) {
+        DCInvalidateRange((void*)0xE0000000, 0x4000);
+        LCEnable();
+    }
+    lbl_803CB724[0] = (u8*)0xE0000000;
+    lbl_803CB724[1] = (u8*)0xE0001000;
+    lbl_803CB724[2] = (u8*)0xE0002000;
+    lbl_803CB724[3] = (u8*)0xE0003000;
+    lbl_803CB6FC[0] = (u8*)0xE0000000;
+    lbl_803CB6FC[1] = (u8*)0xE0001000;
+    lbl_803CB6FC[2] = (u8*)0xE0001800;
+    lbl_803CB6FC[3] = (u8*)0xE0002000;
+    lbl_803CB6FC[4] = (u8*)0xE0003000;
+    lbl_803CB6FC[5] = (u8*)0xE0003800;
+    GQRSetup5(8, 4, 8, 4);
 }
 
 // .text:0x800BF2A8 size:0x5F4

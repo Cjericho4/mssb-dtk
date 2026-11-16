@@ -172,6 +172,12 @@ STATIC_ASSERT(sizeof(SkinVertex) == 0x18);
 void SKNFlushByIndex1(const u16* indices, u32 count, SkinVertex* vertices);
 void SKNFlushByIndex2(const u16* indices, u32 count, Vec* vertices);
 void SKNBzero32B(u8* buffer, u32 size);
+u32 PPCMfhid2(void);
+void DCInvalidateRange(void* addr, u32 numBytes);
+void LCEnable(void);
+void GQRSetup5(u32 loadScale, u32 loadType, u32 storeScale, u32 storeType);
+extern u8* lbl_803CB724[4];  /* locked-cache areas, 0x1000 apart */
+extern u8* lbl_803CB6FC[10]; /* locked-cache scratch lines used by the skinning loops (6 set here) */
 void SKNInit(void);
 void fn_800BF2A8(void);
 void SKNIt(void);
