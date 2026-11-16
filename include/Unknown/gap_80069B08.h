@@ -34,9 +34,9 @@ typedef struct Gap80069B08ScoutFlags {
    0x0AF8..0x440C area in one array. */
 typedef struct Gap80069B08Mission {
     /* 0x00 */ Gap80069B08ScoutFlags* scoutFlags;
-    /* 0x04 */ s8 challengeCaptain;
+    /* 0x04 */ u8 challengeCaptain;
     u8 _pad5;
-    /* 0x06 */ s8 scoutFlagsAchieved;
+    /* 0x06 */ u8 scoutFlagsAchieved;
     u8 _pad7[0x31 - 0x7];
     /* 0x31 */ s8 state; /* 1 = recruited */
     u8 _pad32[0x2];

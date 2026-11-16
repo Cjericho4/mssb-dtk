@@ -220,15 +220,15 @@ void fn_8006C9D8(void) {
         }
         /* FAKEMATCH: flat index into flags[difficulty][captain] keeps the row*6+captain sum hoisted */
         needed = mission->scoutFlags->flags[0][flagIndex];
-        if (mission->scoutFlagsAchieved != needed || needed == 0) {
+        if ((s8)mission->scoutFlagsAchieved != needed || needed == 0) {
             continue;
         }
-        if (tracker->opponentCaptainCharID == (s32)CHAR_ID_BOWSERJR) {
+        if ((s32)tracker->opponentCaptainCharID == CHAR_ID_BOWSERJR) {
             if (state == 2) {
                 mission->state = 1;
                 tracker->newlyRecruited[i] = 1;
             }
-        } else if (state != 2 && mission->challengeCaptain == tracker->opponentCaptain) {
+        } else if (state != 2 && (s8)mission->challengeCaptain == tracker->opponentCaptain) {
             mission->state = 1;
             tracker->newlyRecruited[i] = 1;
         }
