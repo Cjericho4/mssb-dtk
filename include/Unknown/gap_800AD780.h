@@ -111,7 +111,19 @@ void makeLookAtMatrix(void);
 void soundQuit(void);
 void initSound(void);
 void fn_800B0934(u8* memory);
-void SndFree(void);
+typedef struct Gap800AD780SndHeap {
+    /* 0x0 */ u32 free; /* bytes left */
+    /* 0x4 */ u32 top;  /* next free address */
+    /* 0x8 */ u32 end;
+} Gap800AD780SndHeap;
+typedef struct Gap800AD780SndBlock {
+    /* 0x0 */ u32 base; /* header stored just before each allocation */
+    /* 0x4 */ u32 size;
+} Gap800AD780SndBlock;
+extern Gap800AD780SndHeap* lbl_803CBB10;
+extern char lbl_800E7CD8[];
+void OSReport(const char* message, ...);
+void SndFree(void* ptr);
 u8* SndAlloc(u32 size);
 void fn_800B0A14_removeQueue(void);
 void fn_800B0A5C_insertQueue(void);

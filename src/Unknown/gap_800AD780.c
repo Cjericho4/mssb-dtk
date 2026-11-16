@@ -255,8 +255,20 @@ void fn_800B0934(u8* memory) {
 }
 
 // .text:0x800B0938 size:0x64
-void SndFree(void) {
-    return;
+// Frees the most recent SndAlloc block (the sound heap is a stack): any other block is a fatal
+// error that reports and hangs.
+void SndFree(void* ptr) {
+    /* Non-matching: registers only (the block end is summed in r0 instead of r3). */
+    Gap800AD780SndBlock* block = (Gap800AD780SndBlock*)ptr - 1;
+    u32 base = block->base;
+
+    if (base + block->size != lbl_803CBB10->top) {
+        OSReport(lbl_800E7CD8);
+        for (;;) {
+        }
+    }
+    lbl_803CBB10->top = base;
+    lbl_803CBB10->free = lbl_803CBB10->end - lbl_803CBB10->top;
 }
 
 // .text:0x800B099C size:0x78
@@ -265,9 +277,17 @@ u8* SndAlloc(u32 size) {
 
 // .text:0x800B0A14 size:0x48
 void fn_800B0A14_removeQueue(void) {
+    /* FAKEMATCH: the temporaries make each link load `previous` before `next`. */
+    Gap800AD780QueueNode* previous;
+    Gap800AD780QueueNode* next;
+
     if (lbl_803CC1B2 == 0) return;
-    lbl_803CC1B8->previous->next = lbl_803CC1B8->next;
-    lbl_803CC1B8->next->previous = lbl_803CC1B8->previous;
+    previous = lbl_803CC1B8->previous;
+    next = lbl_803CC1B8->next;
+    previous->next = next;
+    previous = lbl_803CC1B8->previous;
+    next = lbl_803CC1B8->next;
+    next->previous = previous;
     lbl_803CC1B8->active = 0;
     lbl_803CC1B2--;
 }
