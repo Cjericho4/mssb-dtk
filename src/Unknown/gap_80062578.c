@@ -239,9 +239,11 @@ s32 fn_80063010(s32 arg0, Gap80062578Scene** scene) {
 }
 
 // .text:0x80063028 size:0x384
-void fn_80063028(void) {
+#pragma dont_inline on
+void fn_80063028(Gap80062578Control* control, f32 matrix[3][4], u32 flags) {
     return;
 }
+#pragma dont_inline reset
 
 // .text:0x800633AC size:0x36C
 #pragma dont_inline on
@@ -278,13 +280,31 @@ s32 fn_800637D4(void) {
 }
 
 // .text:0x800637DC size:0xD8
-void fn_800637DC(void) {
-    return;
+// Bone callback installed by fn_800637BC (the Paratroopas' model setup hook): blends the
+// control of bones 0x40, 0x41 and 0x47 toward its target and builds the matrix (fn_80063028
+// with flags 4 for 0x40, the flip variant with 1 for 0x41 and 0 for 0x47).
+BOOL fn_800637DC(Gap80062578RenderObject* obj, Gap80062578Transform* transform, f32 matrix[3][4], f32 weight) {
+    switch (obj->type) {
+    case 0x47:
+        fn_800B84AC(&transform->current, &transform->target, &transform->current, weight);
+        CTRLBuildMatrix_Flip(&transform->current, matrix, 0);
+        return 1;
+    case 0x40:
+        fn_800B84AC(&transform->current, &transform->target, &transform->current, weight);
+        fn_80063028(&transform->current, matrix, 4);
+        return 1;
+    case 0x41:
+        fn_800B84AC(&transform->current, &transform->target, &transform->current, weight);
+        CTRLBuildMatrix_Flip(&transform->current, matrix, 1);
+        return 1;
+    default:
+        return 0;
+    }
 }
 
 // .text:0x800638B4 size:0x18
 s32 fn_800638B4(s32 arg0, Gap80062578Scene** scene) {
-    (*scene)->callback = fn_800637DC;
+    (*scene)->callback = (void (*)(void))fn_800637DC;
     return 0;
 }
 
