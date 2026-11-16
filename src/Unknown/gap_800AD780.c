@@ -1,8 +1,43 @@
 #include "Unknown/gap_800AD780.h"
 
 // .text:0x800AD780 size:0xB0
-void fn_800AD780(void) {
-    return;
+/* Movie state word: 0xC0000000 for no movie, 4 when flag 4 is set, the disc error
+   (0xA0000000 for -1, otherwise the code with the top bit) or the low flags. */
+static inline u32 movieStatus(Gap800AD780Movie* movie) {
+    if (movie == NULL) {
+        return 0xC0000000;
+    }
+    if (movie->flags & 4) {
+        return 4;
+    }
+    switch (lbl_803C6CF8.error) {
+    case 0:
+        break;
+    case -1:
+        return 0xA0000000;
+    default:
+        return lbl_803C6CF8.error | 0x80000000;
+    }
+    if (movie->flags & 2) {
+        return movie->flags & 0x12;
+    }
+    if (movie->flags & 1) {
+        return 1;
+    }
+    return 0;
+}
+
+// TRUE when the movie is idle: status 0, or status 4 while lbl_803CC170 is clear.
+BOOL fn_800AD780(Gap800AD780Movie* movie) {
+    u32 status = movieStatus(movie);
+
+    if (status == 0) {
+        return TRUE;
+    }
+    if (status == 4 && lbl_803CC170 == 0) {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x800AD830 size:0xE4
