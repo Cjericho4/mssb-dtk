@@ -46,8 +46,13 @@ void fn_80036270(Gap80035DD4Task* task, s32 index, s32 a, s32 b, s16* x, s16* y)
 }
 
 // .text:0x800362F0 size:0xE8
-void fn_800362F0(void) {
-    return;
+// Clears every per-layer texture override of scene object `id` (sets all ten to 0xFFFF).
+void fn_800362F0(Gap80035DD4Task* scene, s32 id) {
+    s32 i;
+
+    for (i = 0; i < 10; i++) {
+        lbl_80371C30[scene->baseIndex + id].node->textureOverrides[i] = 0xFFFF;
+    }
 }
 
 // .text:0x800363D8 size:0xC4

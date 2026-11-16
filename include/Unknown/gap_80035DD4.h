@@ -100,7 +100,7 @@ void fn_80035F20(void);
 void fn_80036134(void);
 s32 fn_80036214(Gap80035DD4Task* task, s32 index, s32 a, s32 b);
 void fn_80036270(Gap80035DD4Task* task, s32 index, s32 a, s32 b, s16* x, s16* y);
-void fn_800362F0(void);
+void fn_800362F0(Gap80035DD4Task* scene, s32 id);
 void fn_800363D8(Gap80035DD4Task* task, s32 pane, u32 layer, s32 sequence, s32 frame);
 void fn_8003649C(void);
 void fn_8003656C(void);
