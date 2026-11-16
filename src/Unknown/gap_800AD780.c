@@ -27,8 +27,8 @@ static inline u32 movieStatus(Gap800AD780Movie* movie) {
     return 0;
 }
 
-// TRUE when the movie is idle: status 0, or status 4 while lbl_803CC170 is clear.
-BOOL fn_800AD780(Gap800AD780Movie* movie) {
+/* TRUE when the movie is idle: status 0, or status 4 while lbl_803CC170 is clear. */
+static inline BOOL movieIdle(Gap800AD780Movie* movie) {
     u32 status = movieStatus(movie);
 
     if (status == 0) {
@@ -40,9 +40,17 @@ BOOL fn_800AD780(Gap800AD780Movie* movie) {
     return FALSE;
 }
 
+// TRUE when the movie is idle.
+BOOL fn_800AD780(Gap800AD780Movie* movie) {
+    return movieIdle(movie);
+}
+
 // .text:0x800AD830 size:0xE4
-void fn_800AD830(void) {
-    return;
+// Posts message 2 to the movie thread's queue unless the movie is idle.
+void fn_800AD830(Gap800AD780Movie* movie) {
+    if (!movieIdle(movie)) {
+        OSSendMessage(&lbl_802FB870, 2, 0);
+    }
 }
 
 // .text:0x800AD914 size:0x48

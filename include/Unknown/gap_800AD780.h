@@ -76,7 +76,7 @@ typedef struct Gap800AD780LoadStatus {
 extern Gap800AD780LoadStatus lbl_803C6CF8; /* view of the disc loader state */
 extern u32 lbl_803CC170;
 BOOL fn_800AD780(Gap800AD780Movie* movie);
-void fn_800AD830(void);
+void fn_800AD830(Gap800AD780Movie* movie);
 void fn_800AD914(Gap800AD780Movie* movie);
 void fn_800AD95C(Gap800AD780Movie* movie, u8 mode);
 void fn_800AD9F4(void);
