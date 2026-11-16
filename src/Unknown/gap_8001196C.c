@@ -1438,8 +1438,23 @@ void fn_80017814(Gap8001196CAnim* anim, s32 index, s32 slotKind, void (*callback
 
 
 // .text:0x80017D28 size:0x94
-void fn_80017D28(void) {
-    return;
+// Loads the low-detail copy of a slot's model: fills slot record blockIndex + 4 from `anim`
+// (same character, slot kind and sub-items, alternate file buffer as its body) and runs the
+// body loader on it.
+void fn_80017D28(Gap8001196CAnim* anim) {
+    s32 index = anim->blockIndex + 4;
+    Gap8001196CAnim* copy = &g_hugeAnimStruct.slots[index];
+
+    copy->charID = anim->charID;
+    copy->slotKind = anim->slotKind;
+    copy->blockIndex = index;
+    copy->unk25C = 1;
+    copy->unk25D = 0;
+    copy->subItems = anim->subItems;
+    copy->rosterUnk26 = anim->rosterUnk26;
+    copy->rosterUnk27 = anim->rosterUnk27;
+    copy->fileBuffer = anim->alternateFileBuffer;
+    fn_80017814(copy, index, 0, fn_8001FDD4);
 }
 
 // .text:0x80017DBC size:0x268
