@@ -288,25 +288,25 @@ void fn_8004B6EC(Gap80048BECObj* obj, Gap80048BECActor** actor) {
         clear = ((fn_80024D2C((Gap80048BECKeyAnimation*)obj->slotTable7->animation) >> 28) & 1) ^ 1;
     }
     if (clear) {
-        if (obj->boneIndex75 != 0xFFFF) {
-            fn_800B2BE4(*actor, obj->boneIndex75);
+        if (obj->boneIndices[75] != 0xFFFF) {
+            fn_800B2BE4(*actor, obj->boneIndices[75]);
         }
-        if (obj->actorIndex != 0xFFFF) {
-            fn_800B2BA8(*actor, obj->actorIndex, NULL, 0);
+        if (obj->boneIndices[76] != 0xFFFF) {
+            fn_800B2BA8(*actor, obj->boneIndices[76], NULL, 0);
         }
     } else {
-        if (obj->boneIndex75 != 0xFFFF) {
-            fn_800B2BA8(*actor, obj->boneIndex75, NULL, 0);
+        if (obj->boneIndices[75] != 0xFFFF) {
+            fn_800B2BA8(*actor, obj->boneIndices[75], NULL, 0);
         }
-        if (obj->actorIndex != 0xFFFF) {
-            fn_800B2BE4(*actor, obj->actorIndex);
+        if (obj->boneIndices[76] != 0xFFFF) {
+            fn_800B2BE4(*actor, obj->boneIndices[76]);
         }
     }
 }
 
 // .text:0x8004B7B4 size:0x40
 s32 fn_8004B7B4(Gap80048BECObj* obj, Gap80048BECActor** actor) {
-    if (obj->actorIndex != 0xFFFF) fn_800B2BA8(*actor, obj->actorIndex, NULL, 0);
+    if (obj->boneIndices[76] != 0xFFFF) fn_800B2BA8(*actor, obj->boneIndices[76], NULL, 0);
     return 0;
 }
 
@@ -321,8 +321,53 @@ void fn_8004BAEC(void) {
 }
 
 // .text:0x8004BD6C size:0x144
-void fn_8004BD6C(void) {
-    return;
+// Model setup hook for Petey, Monty and the Goombas: calls fn_8001D180 for sub-items 0 and 1
+// and the character's own pair, and calls fn_800B2B74 on the two bones that pair uses.
+s32 fn_8004BD6C(Gap80048BECObj* obj, Gap80048BECActor** actor) {
+    u16 boneA;
+    u16 boneB;
+    s32 itemA;
+    s32 itemB;
+
+    switch (obj->id) {
+    case CHAR_ID_PETEY:
+        boneA = obj->boneIndices[20];
+        itemA = 2;
+        boneB = obj->boneIndices[26];
+        itemB = 3;
+        break;
+    case CHAR_ID_MONTY:
+        boneA = obj->boneIndices[74];
+        itemA = 4;
+        boneB = obj->boneIndices[75];
+        itemB = 5;
+        break;
+    case CHAR_ID_GOOMBA:
+        boneA = obj->boneIndices[60];
+        itemA = 6;
+        boneB = obj->boneIndices[61];
+        itemB = 7;
+        break;
+    case CHAR_ID_PARAGOOMBA:
+        boneA = obj->boneIndices[60];
+        itemA = 6;
+        boneB = obj->boneIndices[61];
+        itemB = 7;
+        break;
+    default:
+        return 0;
+    }
+    fn_8001D180(obj->slotKind, 0, 0);
+    fn_8001D180(obj->slotKind, 1, 0);
+    fn_8001D180(obj->slotKind, itemA, 0);
+    fn_8001D180(obj->slotKind, itemB, 0);
+    if (boneA != 0xFFFF) {
+        fn_800B2B74(*actor, boneA);
+    }
+    if (boneB != 0xFFFF) {
+        fn_800B2B74(*actor, boneB);
+    }
+    return 0;
 }
 
 // .text:0x8004BEB0 size:0x1E4

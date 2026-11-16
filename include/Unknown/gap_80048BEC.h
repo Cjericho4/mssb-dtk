@@ -40,10 +40,8 @@ typedef struct Gap80048BECObj {
     /* 0x3E */ u8 state;
     u8 _pad3F;
     /* 0x40 */ Vec rotation;
-    u8 _pad4C[0x1F8 - 0x4C];
-    /* 0x1F8 */ u16 boneIndex75; /* boneIndices[75] */
-    u16 actorIndex; /* 0x1FA boneIndices[76] */
-    u8 _pad1FC[0x56];
+    u8 _pad4C[0x162 - 0x4C];
+    /* 0x162 */ u16 boneIndices[120]; /* bone id -> actor bone index, 0xFFFF = none */
     s8 id; /* 0x252 charID */
     u8 _pad253;
     /* 0x254 */ s8 slotKind;
@@ -148,7 +146,10 @@ void fn_8004B6EC(Gap80048BECObj* obj, struct Gap80048BECActor** actor);
 s32 fn_8004B7B4(Gap80048BECObj* obj, struct Gap80048BECActor** actor);
 void fn_8004B7F4(void);
 void fn_8004BAEC(void);
-void fn_8004BD6C(void);
+/* gap_8001B200.h declares this as a (void) stub; arguments from fn_8004BD6C's four calls. */
+void fn_8001D180(s32 slotKind, s32 item, s32 unk);
+void fn_800B2B74(struct Gap80048BECActor* actor, u16 boneIndex);
+s32 fn_8004BD6C(Gap80048BECObj* obj, struct Gap80048BECActor** actor);
 typedef struct Gap80048BECGameState {
     u8 _pad0[0x28];
     /* 0x28 */ u8 mode;
