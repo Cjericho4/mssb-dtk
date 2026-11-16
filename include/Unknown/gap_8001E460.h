@@ -123,8 +123,9 @@ typedef struct Gap8001E460GameSettings {
     u8 _padA[0x4E];
 } Gap8001E460GameSettings;
 extern Gap8001E460GameSettings g_d_GameSettings;
-typedef struct Gap8001E460Entry {
+typedef union Gap8001E460Entry {
     u8 _pad0[0x10];
+    DiskFileDesc desc; /* common UI resource descriptor (res table, data_map.md) */
 } Gap8001E460Entry;
 extern Gap8001E460Entry lbl_800EEFD0[62];
 extern u8 lbl_803CB7CC[8];
@@ -193,7 +194,13 @@ void fn_8001FE00(void);
 void calledWhenStartingMatch(void);
 BOOL fn_80020218(void);
 void fn_8002024C(void);
-void fn_80020278(void);
+typedef struct Gap8001E460TexArchive {
+    u8 _pad0[0x20];
+    /* 0x20 */ u16 count;
+} Gap8001E460TexArchive;
+void* fn_800ACF34(u32 align, u32 size);
+void convertTextureHeader(Gap8001E460TexArchive* textures);
+BOOL fn_80020278(s32 index);
 BOOL fn_80020388(void);
 void fn_800203E0(u8 request, s8 unk14);
 void changeScene(void);
@@ -301,8 +308,12 @@ typedef struct Gap8001E460Resource {
 } Gap8001E460Resource;
 u32 sndPushGroup(u8* project, u16 gid, Gap8001E460Resource* samples, u8* sdir, u8* pool);
 typedef struct Gap8001E460ResourceState {
-    Gap8001E460Resource* resource;
-    u8 _pad4[8];
+    union {
+        Gap8001E460Resource* resource;
+        struct Gap8001E460TexArchive* textures; /* texture archive loaded by fn_80020278 */
+    };
+    /* 0x04 */ u8* unk4;      /* past the archive's 0x20-byte texture records (fn_80020278) */
+    u8 _pad8[4];
     /* 0x0C */ u16 requested; /* 1 when fn_800203E0 has stored a request */
     u8 _padE[2];
     u8 state; /* 0x10 */
@@ -311,7 +322,11 @@ typedef struct Gap8001E460ResourceState {
     /* 0x14 */ u8 unk14;
     u8 _pad15;
     u8 ready;
-    u8 _pad17[5];
+    u8 _pad17;
+    /* 0x18 */ u8 textureIndex; /* fn_80020278 argument */
+    /* 0x19 */ u8 textureStep;  /* 0 start, 1 loading, 2 done */
+    /* 0x1A */ u8 unk1A;
+    u8 _pad1B;
 } Gap8001E460ResourceState;
 extern Gap8001E460ResourceState lbl_8037169C;
 typedef struct Gap8001E460Stage {

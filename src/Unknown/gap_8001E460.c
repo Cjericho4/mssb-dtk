@@ -2136,8 +2136,28 @@ void fn_8002024C(void) {
 }
 
 // .text:0x80020278 size:0x110
-void fn_80020278(void) {
-    return;
+// Loads common resource 0x2D + index as a texture archive in two calls: the first allocates a
+// buffer and starts the read, later ones wait for the loader, then convert the archive and
+// return TRUE.
+BOOL fn_80020278(s32 index) {
+    if (lbl_8037169C.textureStep == 0) {
+        DiskFileDesc* desc = &lbl_800EEFD0[index + 0x2D].desc;
+
+        lbl_8037169C.textures = fn_800ACF34(0x20, desc->sizeFlags & 0x0FFFFFFF);
+        ARAMTransfer(desc, lbl_8037169C.textures, 1, NULL);
+        lbl_8037169C.textureIndex = index;
+        lbl_8037169C.unk1A = 0;
+        lbl_8037169C.textureStep++;
+    } else if (lbl_8037169C.textureStep == 1) {
+        if (lbl_803C6CF8.allowLoad != 1) {
+            return FALSE;
+        }
+        convertTextureHeader(lbl_8037169C.textures);
+        lbl_8037169C.unk4 = (u8*)lbl_8037169C.textures + lbl_8037169C.textures->count * 0x20 + 4;
+        lbl_8037169C.textureStep = 2;
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // .text:0x80020388 size:0x58
