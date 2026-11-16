@@ -264,9 +264,15 @@ typedef struct Gap8001E460QueueNode {
     /* 0x10 */ s16 unk10;
     u8 _pad12[2];
     u16 index;
+    u8 _pad16[2];
+    /* 0x18 */ u16 unk18;
+    /* 0x1A */ u16 unk1A;
+    /* 0x1C */ u16 unk1C;
+    /* 0x1E */ u16 unk1E;
 } Gap8001E460QueueNode;
 typedef struct Gap8001E460Script Gap8001E460Script;
 extern Gap8001E460Script lbl_800EF470;
+extern Gap8001E460Script lbl_800EF3B0;
 extern Gap8001E460QueueNode* lbl_803CC1B8;
 void fn_80034E20(Gap8001E460QueueNode* scene, Gap8001E460Script* script);
 Gap8001E460Task* fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
@@ -315,18 +321,18 @@ typedef struct Gap8001E460ResourceState {
     /* 0x04 */ u8* unk4;      /* past the archive's 0x20-byte texture records (fn_80020278) */
     u8 _pad8[4];
     /* 0x0C */ u16 requested; /* 1 when fn_800203E0 has stored a request */
-    u8 _padE[2];
+    /* 0x0E */ u16 unkE;
     u8 state; /* 0x10 */
     u8 unk11, pending; /* unk11: the requested state */
-    u8 _pad13;
+    /* 0x13 */ u8 unk13;
     /* 0x14 */ u8 unk14;
     u8 _pad15;
     u8 ready;
-    u8 _pad17;
+    /* 0x17 */ u8 unk17;
     /* 0x18 */ u8 textureIndex; /* fn_80020278 argument */
     /* 0x19 */ u8 textureStep;  /* 0 start, 1 loading, 2 done */
     /* 0x1A */ u8 unk1A;
-    u8 _pad1B;
+    /* 0x1B */ u8 unk1B;
 } Gap8001E460ResourceState;
 extern Gap8001E460ResourceState lbl_8037169C;
 typedef struct Gap8001E460Stage {

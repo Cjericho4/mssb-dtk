@@ -2242,8 +2242,33 @@ void fn_800206FC(void) {
 }
 
 // .text:0x80021064 size:0x124
+// Queue task (first run): starts script lbl_800EF3B0 on the task's scene, clears flag 2 on its
+// five scene objects, resets the resource state and the task's counters, and hands the task
+// over to fn_800206FC.
 void fn_80021064(void) {
-    return;
+    Gap8001E460QueueNode* task = lbl_803CC1B8;
+    s32 i;
+
+    fn_80034E20(task, &lbl_800EF3B0);
+    for (i = 0; i < 5; i++) {
+        (&lbl_80371C30[task->index])[i].stage->flags &= ~2;
+    }
+    lbl_8037169C.unkE = 0;
+    lbl_8037169C.state = 0;
+    lbl_8037169C.unk11 = 0;
+    lbl_8037169C.unk13 = 0;
+    lbl_8037169C.pending = 0;
+    lbl_8037169C.ready = 0;
+    lbl_8037169C.unk17 = 0;
+    lbl_8037169C.resource = NULL;
+    lbl_8037169C.textureStep = 0;
+    lbl_8037169C.unk1A = 0;
+    lbl_8037169C.unk1B = 0xFF;
+    task->unk1C = 0;
+    task->unk1E = 0;
+    task->unk18 = 0;
+    task->unk1A = 0;
+    lbl_803CC1B8->callback = fn_800206FC;
 }
 
 // .text:0x80021188 size:0x34
