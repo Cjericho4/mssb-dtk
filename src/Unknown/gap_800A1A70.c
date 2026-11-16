@@ -37,12 +37,6 @@ void fn_800A1F40(void) {
     return;
 }
 
-// .text:0x800A2194 size:0x100
-void fn_800A2194(void) {
-    return;
-}
-
-// .text:0x800A2294 size:0xE8
 /* GD display-list writers (the SDK's GDWrite_u8 / GDWrite_u32 with their overflow checks). */
 static inline void gdPutU8(u8 value) {
     *lbl_803CC0F0->cur++ = value;
@@ -65,6 +59,16 @@ static inline void gdWriteU32(u32 value) {
     gdPutU8(value);
 }
 
+// .text:0x800A2194 size:0x100
+// GDSetTexImgAttr: writes the BP command with a texture map's width, height and format.
+void fn_800A2194(u32 texMap, u16 width, u16 height, u32 format) {
+    u32 command = (width - 1) | ((height - 1) << 10) | (format << 20) | (lbl_803CBAA8[texMap] << 24);
+
+    gdWriteU8(0x61);
+    gdWriteU32(command);
+}
+
+// .text:0x800A2294 size:0xE8
 // GDSetTexImgPtr: writes the BP command that points texture map `texMap` at an image (its
 // physical address in 32-byte units).
 void fn_800A2294(u32 texMap, u32 imageAddress) {
@@ -75,8 +79,13 @@ void fn_800A2294(u32 texMap, u32 imageAddress) {
 }
 
 // .text:0x800A237C size:0xF0
-void fn_800A237C(void) {
-    return;
+// GDSetTexTlut: writes the BP command that selects a texture map's TLUT (its TMEM address
+// above 0x80000, in 512-byte units) and format.
+void fn_800A237C(u32 texMap, u32 tlutAddress, u32 format) {
+    u32 command = ((tlutAddress - 0x80000) >> 9) | (format << 10) | (lbl_803CBAB8[texMap] << 24);
+
+    gdWriteU8(0x61);
+    gdWriteU32(command);
 }
 
 // .text:0x800A246C size:0x290

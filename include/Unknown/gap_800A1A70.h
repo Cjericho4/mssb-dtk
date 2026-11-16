@@ -16,11 +16,13 @@ void fn_800A1B80(void);
 void fn_800A1BB0(void);
 void fn_800A1E3C(void);
 void fn_800A1F40(void);
-void fn_800A2194(void);
+extern u8 lbl_803CBAA8[8]; /* BP register id per texture map for the image attributes */
+void fn_800A2194(u32 texMap, u16 width, u16 height, u32 format);
 extern Gap800A1A70Range* lbl_803CC0F0; /* current GD display list (GDLObj) */
 extern u8 lbl_803CBAB0[8];             /* BP register id per texture map for the image pointer */
 void fn_800A2294(u32 texMap, u32 imageAddress);
-void fn_800A237C(void);
+extern u8 lbl_803CBAB8[8]; /* BP register id per texture map for the TLUT */
+void fn_800A237C(u32 texMap, u32 tlutAddress, u32 format);
 void fn_800A246C(void);
 void fn_800A26FC(void);
 
