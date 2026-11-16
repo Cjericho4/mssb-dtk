@@ -66,8 +66,33 @@ void fn_80068514(void) {
 }
 
 // .text:0x8006862C size:0xF4
-u8 fn_8006862C(s32 id, s32 mode) {
-    return 0;
+// One frame of a music fade-out over `frames` frames down to volume `target`: lowers the
+// stream volume by one every 60 / rate frames. Returns 1 while fading, 0 (state reset) once
+// the target is reached or frames is 1.
+u8 fn_8006862C(u32 frames, s32 target) {
+    s32 volume = (fn_800A8864() >> 8) & 0xFF;
+
+    if (lbl_803CBD18 == 0) {
+        lbl_803CBD20 = volume / (frames / 60);
+        if (lbl_803CBD20 > 60) {
+            lbl_803CBD20 = 60;
+        }
+        lbl_803CBD18 = 1;
+    }
+    if (lbl_803CBD19 % (60 / lbl_803CBD20) == 0) {
+        lbl_803CBD19 = 0;
+        volume--;
+    }
+    if ((u8)volume <= (u8)target || frames == 1) {
+        lbl_803CBD19 = 0;
+        lbl_803CBD1A = 0;
+        lbl_803CBD20 = 0;
+        lbl_803CBD18 = 0;
+        return 0;
+    }
+    fn_800A8878(volume, volume);
+    lbl_803CBD19++;
+    return 1;
 }
 
 // .text:0x80068720 size:0x5C

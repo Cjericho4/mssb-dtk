@@ -28,7 +28,12 @@ void fn_80067C48(void);
 void fn_80067F70(s32 player);
 void fn_800684A4(void);
 void fn_80068514(void);
-u8 fn_8006862C(s32 id, s32 mode);
+u16 fn_800A8864(void); /* current stream volume, left in the high byte */
+extern u8 lbl_803CBD18;  /* fade in progress */
+extern u8 lbl_803CBD19;  /* frames since the last volume step */
+extern u16 lbl_803CBD1A;
+extern u8 lbl_803CBD20;  /* volume steps per second (at most 60) */
+u8 fn_8006862C(u32 frames, s32 target);
 typedef struct Gap80067AC8Voice {
     u8 _pad0[0x50];
 } Gap80067AC8Voice;
