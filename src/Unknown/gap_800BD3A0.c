@@ -296,8 +296,27 @@ void fn_800BDF70(Gap800BD3A0Model* model) {
 }
 
 // .text:0x800BDFE0 size:0xBC
-void fn_800BDFE0(void) {
-    return;
+// Shadow pass over an actor table: when shadows are on and a callback is installed, calls it
+// for every enabled actor whose flags (GameActor +0x98) have one of 0x24 and one of 0x12 set.
+void fn_800BDFE0(StadiumAnimTable* table) {
+    /* Non-matching: registers only (the loop counter and the table pointer want r28 and r29). */
+    StadiumAnimTable* row;
+    s32 i;
+
+    if (lbl_803009F8.drawShadows && lbl_803009F8.callback != NULL) {
+        /* FAKEMATCH: walk the table base by one entry, as fn_800BD670 does. */
+        row = table;
+        for (i = 0; i < table->count; i++) {
+            if (row->entries[0].enabled) {
+                u8 flags = row->entries[0].anim.actor->unk98;
+
+                if ((flags & 0x24) && (flags & 0x12)) {
+                    lbl_803009F8.callback((Gap800BD3A0Model*)&row->entries[0].anim, &lbl_803009F8.entries->data);
+                }
+            }
+            row = (StadiumAnimTable*)((StadiumAnimEntry*)row + 1);
+        }
+    }
 }
 
 // .text:0x800BE09C size:0xBC
