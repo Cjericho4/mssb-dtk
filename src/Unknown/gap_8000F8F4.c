@@ -174,8 +174,47 @@ void fn_800111FC(void) {
 }
 
 // .text:0x80011358 size:0x110
-void fn_80011358(void) {
-    return;
+// Puts held item `item` (0..3) on bone 36 of the actor in `slotKind`, or takes it off (4, also
+// used for any other value): the item is the first bone with an attachment of the model in
+// entry 21 + item of the second actor block.
+void fn_80011358(s32 slotKind, s32 item) {
+    Gap8000F8F4ActorSlot* slot;
+    Gap8000F8F4Block* blocks;
+    Gap8000F8F4Block* blocks64;
+    Gap8000F8F4Model** model;
+    Gap8000F8F4Model* other;
+    u16 boneIndex;
+    s32 i;
+
+    if (slotKind < 0 || slotKind >= 13) {
+        return;
+    }
+    slot = g_hugeAnimStruct.slots[slotKind];
+    if (slot == NULL) {
+        return;
+    }
+    if ((blocks = g_hugeAnimStruct.blocks) == NULL || (blocks64 = g_hugeAnimStruct.blocks64) == NULL) {
+        return;
+    }
+    boneIndex = slot->boneIndices[36];
+    if (boneIndex == 0xFFFF) {
+        return;
+    }
+    if (item < 0 || item >= 5) {
+        item = 4;
+    }
+    model = &blocks[slot->blockIndex].model;
+    if (item == 4) {
+        fn_800B2BA8(*model, boneIndex, NULL, 0);
+        return;
+    }
+    other = blocks64[21 + item].model;
+    for (i = 0; i < other->totalBones; i++) {
+        if (other->boneArray[i]->attachment != 0) {
+            fn_800B2BA8(*model, boneIndex, other, i);
+            return;
+        }
+    }
 }
 
 // .text:0x80011468 size:0x108

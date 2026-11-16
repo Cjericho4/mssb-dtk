@@ -72,7 +72,6 @@ typedef struct MenuPointerArchive {
 } MenuPointerArchive;
 void fn_800111B4(MenuPointerArchive* archive);
 void fn_800111FC(void);
-void fn_80011358(void);
 void fn_80011468(void);
 s32 fn_80011570(void);
 typedef struct Gap8000F8F4Mtx {
@@ -91,11 +90,15 @@ Gap8000F8F4Mtx* fn_800118AC(Gap8000F8F4Mtx* src, Gap8000F8F4Mtx* dst);
    (UnknownHeaders.h); that header cannot be included here because this unit declares its own
    matrix types for the PSMTX functions. */
 typedef struct Gap8000F8F4Bone {
-    u8 _pad0[0xEC];
+    u8 _pad0[0x14];
+    /* 0x14 */ u32 attachment; /* display object carried by the bone, 0 = none */
+    u8 _pad18[0xEC - 0x18];
     /* 0xEC */ Gap8000F8F4Mtx* matrix;
 } Gap8000F8F4Bone;
 typedef struct Gap8000F8F4Model {
-    u8 _pad0[0x18];
+    u8 _pad0[6];
+    /* 0x06 */ u16 totalBones;
+    u8 _pad8[0x10];
     /* 0x18 */ Gap8000F8F4Bone** boneArray;
     u8 _pad1C[0x99 - 0x1C];
     /* 0x99 */ u8 unk99;
@@ -111,7 +114,8 @@ typedef struct Gap8000F8F4ActorSlot {
     /* 0x5C */ void* callback; /* AnimationStruct.funcPtr_0x5c */
     u8 _pad60[2];
     /* 0x62 */ s16 animID;
-    u8 _pad64[0x252 - 0x64];
+    u8 _pad64[0x162 - 0x64];
+    /* 0x162 */ u16 boneIndices[120]; /* bone id -> actor bone index, 0xFFFF = none */
     /* 0x252 */ s8 charID;
     u8 _pad253[2];
     /* 0x255 */ s8 blockIndex;
@@ -119,7 +123,8 @@ typedef struct Gap8000F8F4ActorSlot {
 typedef struct Gap8000F8F4HugeAnim {
     u8 _pad0[0x60];
     /* 0x60 */ Gap8000F8F4Block* blocks;
-    u8 _pad64[0x2C50 - 0x64];
+    /* 0x64 */ Gap8000F8F4Block* blocks64; /* a second actor block; entries 21..24 hold the held-item models */
+    u8 _pad68[0x2C50 - 0x68];
     /* 0x2C50 */ Gap8000F8F4ActorSlot* slots[13];
 } Gap8000F8F4HugeAnim;
 extern Gap8000F8F4HugeAnim g_hugeAnimStruct;
@@ -127,6 +132,8 @@ Gap8000F8F4Model** fn_800111D8(Gap8000F8F4ActorSlot* slot);
 void fn_80011578(void);
 void fn_800115C8(s8 id);
 void fn_80011604(s8 id, void* callback);
+s32 fn_800B2BA8(Gap8000F8F4Model* model, u16 boneIndex, Gap8000F8F4Model* other, u16 otherIndex);
+void fn_80011358(s32 slotKind, s32 item);
 /* Per-character slot updates called by fn_80011468 with the slot in r3 and its model pointer in r4; their owning headers
    (gap_80048BEC.h, gap_800506E8.h) still declare them as (void) stubs. */
 void fn_8004B6EC(Gap8000F8F4ActorSlot* slot, Gap8000F8F4Model** model);
