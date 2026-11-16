@@ -356,7 +356,7 @@ void fn_80052634(Gap8001196CAnim* anim, Gap8001196CActorSlot* slot);
 void fn_80062ED4(Gap8001196CAnim* anim, Gap8001196CActorSlot* slot);
 u8* memset(u8* dst, s32 value, u32 size);
 void fn_80017D28(void);
-void fn_80017DBC(void);
+void fn_80017DBC(Gap8001196CAnim* anim, s32 entryIndex);
 void fn_80018024(void);
 void fn_80018270(void);
 void fn_800188C0(void);

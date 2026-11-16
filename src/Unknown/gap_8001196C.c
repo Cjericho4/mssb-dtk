@@ -1443,8 +1443,87 @@ void fn_80017D28(void) {
 }
 
 // .text:0x80017DBC size:0x268
-void fn_80017DBC(void) {
-    return;
+// Re-applies the per-model bone setup to an actor entry (the tail of fn_80017814 without the
+// load): hides / detaches the fixed helper bones, then runs the character's own setup hook.
+void fn_80017DBC(Gap8001196CAnim* anim, s32 entryIndex) {
+    Gap8001196CActorSlot* slot = &g_hugeAnimStruct.actorEntries[entryIndex].slot;
+    u16 index;
+    s32 boneIndex;
+
+    /* FAKEMATCH: the s32 temporary makes the bone index load before the actor pointer */
+    boneIndex = anim->boneIndices[19];
+    fn_800B2B74(slot->actor, boneIndex);
+    boneIndex = anim->boneIndices[25];
+    fn_800B2B74(slot->actor, boneIndex);
+    boneIndex = anim->boneIndices[36];
+    fn_800B2B74(slot->actor, boneIndex);
+    if ((s32)anim->boneIndices[3] != 0xFFFF) {
+        fn_800B2B54(anim->actor, anim->boneIndices[3], 0xD);
+    }
+    index = anim->boneIndices[3];
+    if ((s32)index != 0xFFFF) {
+        fn_800B2BA8(slot->actor, index, NULL, 0);
+        slot->actor->boneArray[(u16)index]->unk136 = 1;
+    }
+    index = anim->boneIndices[2];
+    if ((s32)index != 0xFFFF) {
+        fn_800B2BA8(slot->actor, index, NULL, 0);
+        slot->actor->boneArray[(u16)index]->unk136 = 1;
+    }
+    index = anim->boneIndices[1];
+    if ((s32)index != 0xFFFF) {
+        fn_800B2BA8(slot->actor, index, NULL, 0);
+        slot->actor->boneArray[(u16)index]->unk136 = 1;
+    }
+    if ((s32)anim->boneIndices[36] != 0xFFFF) {
+        fn_800B2BA8(slot->actor, anim->boneIndices[36], NULL, 0);
+    }
+    index = anim->boneIndices[46];
+    if ((s32)index != 0xFFFF) {
+        fn_800B2BA8(slot->actor, index, NULL, 0);
+        slot->actor->boneArray[(u16)index]->unk136 = 1;
+    }
+    fn_800B2C08(slot->actor, anim->boneIndices[4]);
+    switch (anim->charID) {
+    case CHAR_ID_DK:
+        fn_800638B4(anim, slot);
+        break;
+    case CHAR_ID_MAGIKOOPA_BLUE:
+    case CHAR_ID_MAGIKOOPA_RED:
+    case CHAR_ID_MAGIKOOPA_GREEN:
+    case CHAR_ID_MAGIKOOPA_YELLOW:
+        fn_80063010(anim, slot);
+        break;
+    case CHAR_ID_BOWSERJR:
+        fn_8004B7B4(anim, slot);
+        break;
+    case CHAR_ID_PARATROOPA_RED:
+    case CHAR_ID_PARATROOPA_GREEN:
+        fn_800637BC(anim, slot);
+        break;
+    case CHAR_ID_PETEY:
+        slot->actor->unk99 = 1;
+        fn_8004BD6C(anim, slot);
+        break;
+    case CHAR_ID_PARAGOOMBA:
+        fn_800637D4(anim, slot);
+        /* fallthrough */
+    case CHAR_ID_MONTY:
+    case CHAR_ID_GOOMBA:
+        fn_8004BD6C(anim, slot);
+        break;
+    case CHAR_ID_BOO:
+    case CHAR_ID_KINGBOO:
+        fn_80052634(anim, slot);
+        break;
+    case CHAR_ID_SHYGUY_RED:
+    case CHAR_ID_SHYGUY_BLUE:
+    case CHAR_ID_SHYGUY_YELLOW:
+    case CHAR_ID_SHYGUY_GREEN:
+    case CHAR_ID_SHYGUY_BLACK:
+        fn_80062ED4(anim, slot);
+        break;
+    }
 }
 
 // .text:0x80018024 size:0x24C
