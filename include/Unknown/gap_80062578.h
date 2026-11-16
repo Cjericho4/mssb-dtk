@@ -98,11 +98,23 @@ void fn_80062A94(void);
 void fn_80062BE4(Gap80062578Object* obj);
 void fn_80062C24(Gap80062578Object* obj);
 void fn_80062C60(void);
-void fn_80062D94(void);
 typedef struct Gap80062578Actor {
-    u8 _pad0[0x252];
-    /* 0x252 */ s8 unk252;
+    u8 _pad0[0x162];
+    /* 0x162 */ u16 boneIndices[120]; /* bone id -> actor bone index, 0xFFFF = none */
+    /* 0x252 */ s8 unk252; /* charID */
+    u8 _pad253;
+    /* 0x254 */ s8 slotKind;
 } Gap80062578Actor;
+/* View of hugeAnimStruct (UnknownHeaders.h), which this unit does not include. */
+typedef struct Gap80062578HugeAnim {
+    u8 _pad0[0x2C50];
+    /* 0x2C50 */ Gap80062578Actor* slotPtrs[13];
+} Gap80062578HugeAnim;
+extern Gap80062578HugeAnim g_hugeAnimStruct;
+extern u16 lbl_80108BE0[]; /* candidate bone ids for the effect, 0xFFFF ends the list */
+/* gap_80027918.h owns this; arguments from fn_80062D94's call. */
+void fn_800324EC(s32 boneID, s32 slotKind, s32 unk, Gap80062578Setup* setup);
+void fn_80062D94(Gap80062578Actor* actor);
 extern s8 lbl_80108BF0[5][0x36];
 void fn_8004B1C0(s32 index, Gap80062578Actor* actor, s32 a, s32 b);
 void fn_80062E6C(Gap80062578Actor* actor, s32 a, s32 b);

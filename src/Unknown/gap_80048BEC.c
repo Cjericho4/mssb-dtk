@@ -528,7 +528,7 @@ void fn_8004C510(Gap80048BECObj* obj, s32 unused, s32 colorIndex, f32 frame) {
     Gap80048BECVec pos;
 
     if (frame == 0.0f) {
-        fn_80062D94();
+        fn_80062D94(obj);
         return;
     }
     if (frame == (f32)lbl_800FBD80[obj->id]) {

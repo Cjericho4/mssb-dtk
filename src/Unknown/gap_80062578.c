@@ -155,8 +155,31 @@ void fn_80062C60(void) {
 }
 
 // .text:0x80062D94 size:0xD8
-void fn_80062D94(void) {
-    return;
+/* Actor bone index of bone id `id` on the model in slot `slotKind`, 0xFFFF if there is none. */
+static inline s32 slotBoneIndex(s32 slotKind, s32 id) {
+    Gap80062578Actor* slot = g_hugeAnimStruct.slotPtrs[slotKind];
+
+    if (slot != NULL) {
+        return slot->boneIndices[(u16)id];
+    }
+    return 0xFFFF;
+}
+
+// Starts the lbl_80108B90 effect on the first bone of lbl_80108BE0 that the actor's model has
+// (none if the list runs out). Nothing in mode 1.
+void fn_80062D94(Gap80062578Actor* actor) {
+    /* Non-matching: registers only (the list walker and the slot pointer want r7 and r8). */
+    s32 i;
+
+    if (lbl_80366158.mode == 1) {
+        return;
+    }
+    for (i = 0; lbl_80108BE0[i] != 0xFFFF && slotBoneIndex(actor->slotKind, lbl_80108BE0[i]) == 0xFFFF; i++) {
+    }
+    if (lbl_80108BE0[i] != 0xFFFF) {
+        lbl_80108B90.value = lbl_803CBD0C;
+        fn_800324EC(lbl_80108BE0[i], actor->slotKind, -1, &lbl_80108B90);
+    }
 }
 
 // .text:0x80062E6C size:0x68

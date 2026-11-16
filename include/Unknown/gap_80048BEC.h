@@ -222,7 +222,7 @@ typedef struct Gap80048BECVec {
     f32 z;
 } Gap80048BECVec; /* same layout as VecXYZ (UnknownHomes_Game.h), which this unit does not include */
 s32 fn_8001B728(s32 index, u8 type, Gap80048BECVec* out);
-void fn_80062D94(void);
+void fn_80062D94(Gap80048BECObj* obj);
 void fn_8004C510(Gap80048BECObj* obj, s32 unused, s32 colorIndex, f32 frame);
 void fn_8004C5F8(void);
 void fn_8004C9FC(void);
