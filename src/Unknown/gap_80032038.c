@@ -168,8 +168,30 @@ void fn_80033CC8(void) {
 }
 
 // .text:0x80033F64 size:0xD8
-void fn_80033F64(void) {
-    return;
+// Builds the four corners of a width x height quad (lbl_80180010), rotated `degrees` about Z
+// and transformed by lbl_8017FF78.
+void fn_80033F64(f32 width, f32 height, f32 degrees) {
+    f32 matrix[3][4];
+    f32 rotation[3][4];
+    s32 i;
+
+    lbl_80180010[0].x = 0.5f * -width;
+    lbl_80180010[0].y = 0.5f * -height;
+    lbl_80180010[0].z = 0.0f;
+    lbl_80180010[1].x = 0.5f * width;
+    lbl_80180010[1].y = 0.5f * -height;
+    lbl_80180010[1].z = 0.0f;
+    lbl_80180010[2].x = 0.5f * width;
+    lbl_80180010[2].y = 0.5f * height;
+    lbl_80180010[2].z = 0.0f;
+    lbl_80180010[3].x = 0.5f * -width;
+    lbl_80180010[3].y = 0.5f * height;
+    lbl_80180010[3].z = 0.0f;
+    PSMTXRotRad(rotation, 'z', 0.017453292f * degrees);
+    PSMTXConcat(lbl_8017FF78, rotation, matrix);
+    for (i = 0; i < 4; i++) {
+        PSMTXMultVec(matrix, &lbl_80180010[i], &lbl_80180010[i]);
+    }
 }
 
 // .text:0x8003403C size:0xB8
