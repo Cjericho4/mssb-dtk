@@ -44,13 +44,25 @@ void fn_8001B214(void) {
     return;
 }
 
+extern Gap8001196CAnim lbl_8036C4FC[13]; /* saved copy of the 13 slot records */
+
 // .text:0x8001B224 size:0xAC
+// Restores the 13 slot records from their saved copy and restarts each live slot's animation
+// one frame past where it was (fielder slots 0..8 always, other slots only when unk25D is set).
 void fn_8001B224(void) {
-    return;
+    s32 i;
+
+    memcpy(g_hugeAnimStruct.slots, lbl_8036C4FC, sizeof(g_hugeAnimStruct.slots));
+    for (i = 0; i < 13; i++) {
+        Gap8001196CAnim* anim = g_hugeAnimStruct.slotPtrs[i];
+
+        if (anim != NULL && (anim->unk25D != 0 || i <= 8)) {
+            fn_8001BE50(i, anim->animID, anim->unk25F, anim->unk262, (s16)(anim->unk6A + 1), anim->unk265, 0);
+        }
+    }
 }
 
 // .text:0x8001B2D0 size:0x38
-extern Gap8001196CAnim lbl_8036C4FC[13];
 /* Snapshot all thirteen character animation slots. */
 void fn_8001B2D0(void) {
     memcpy(lbl_8036C4FC,g_hugeAnimStruct.slots,sizeof(g_hugeAnimStruct.slots));
