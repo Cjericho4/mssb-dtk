@@ -243,7 +243,7 @@ typedef struct Gap8001196CAnimTable {
     /* 0x0140 */ Gap8001196CSubItemEntry subItemEntries[13]; /* 13 cached pairs, 0x140..0xC04 */
     /* 0x0C04 */ Gap8001196CAnim slots[13];
     /* 0x2C50 */ Gap8001196CAnim* slotPtrs[13];
-    u8 _pad2C84[4];
+    /* 0x2C84 */ void* aramBlob;             /* result of the game_common ARAM transfer (fn_800188C0) */
     /* 0x2C88 */ u8* allocatedAnimBanks;
     /* 0x2C8C */ u8* bodyBufferPool;
     u8 _pad2C90[0x2CA4 - 0x2C90];
@@ -286,6 +286,8 @@ typedef struct Gap8001196CAnimTable {
             /* 0x2D8E */ u8 loadStarted;
         };
     };
+    u8 _pad2DA0[0x307B - 0x2DA0];
+    /* 0x307B */ u8 aramLoadBusy;            /* cleared when the fn_800188C0 task finishes */
 } Gap8001196CAnimTable;
 typedef struct Gap8001196CGameSettings {
     u8 _pad0[6];
@@ -365,6 +367,7 @@ void fn_80017D28(Gap8001196CAnim* anim);
 void fn_80017DBC(Gap8001196CAnim* anim, s32 entryIndex);
 void fn_80018024(void);
 void fn_80018270(void);
+extern Gap8001196CDiskDesc lbl_800EE910[2]; /* ARAM blob: [0] normal, [1] game mode 6 */
 void fn_800188C0(void);
 void fn_800189B8(void);
 void fn_800189E4(void);

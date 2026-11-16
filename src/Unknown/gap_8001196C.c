@@ -1644,8 +1644,31 @@ void fn_80018270(void) {
 }
 
 // .text:0x800188C0 size:0xF8
+// Queue task that loads the shared ARAM blob: step 0 starts the transfer of lbl_800EE910[0]
+// (entry 1 in game mode 6), step 1 waits for the loader to allow loads again, step 2 clears the
+// busy flag and removes the task.
 void fn_800188C0(void) {
-    return;
+    Gap8001196CLoadTask* task = lbl_803CC1B8;
+
+    switch (task->unk14) {
+    case 0:
+        if (g_d_GameSettings.mode == 6) {
+            g_hugeAnimStruct.aramBlob = ARAMTransfer(&lbl_800EE910[1], NULL, 0, NULL);
+        } else {
+            g_hugeAnimStruct.aramBlob = ARAMTransfer(&lbl_800EE910[0], NULL, 0, NULL);
+        }
+        task->unk14++;
+        break;
+    case 1:
+        if (lbl_803C6CF8.allowLoad == 1) {
+            task->unk14++;
+        }
+        break;
+    case 2:
+        g_hugeAnimStruct.aramLoadBusy = 0;
+        fn_800B0A14_removeQueue();
+        break;
+    }
 }
 
 // .text:0x800189B8 size:0x2C
