@@ -2022,8 +2022,69 @@ void fn_8001F8A4(void) {
 }
 
 // .text:0x8001FC4C size:0x188
-void fn_8001FC4C(void) {
-    return;
+// Builds the slot's mirror map (used to flip a model left/right): identity, then swaps the
+// actor bones of every left/right bone-id pair the character has: the common list plus an extra
+// list for the Shy Guys, Birdo, the Paratroopas and Paragoomba.
+void fn_8001FC4C(Gap8001E460Anim* anim) {
+    /* Non-matching: registers only. The original reaches the lists from the unit's data anchor
+       in r4, loaded at entry; with the tables declared extern the anchor lands in r8. */
+    Gap8001E460Data* data = &lbl_800EE800;
+    Gap8001E460BonePair* list;
+    Gap8001E460BonePair* extra;
+    Gap8001E460BonePair* pair;
+    s32 i;
+    u16 a;
+    u16 b;
+
+    for (i = 0; i < 120; i++) {
+        anim->mirrorBones[i] = i;
+    }
+    list = data->mirrorCommon;
+    pair = list;
+    i = 0;
+    do {
+        a = anim->boneIndices[pair->a];
+        b = anim->boneIndices[pair->b];
+        if (a != 0xFFFF && b != 0xFFFF) {
+            anim->mirrorBones[a] = b;
+            anim->mirrorBones[b] = a;
+        }
+        i++;
+        pair++;
+    } while (list[i].a != 0xFFFF);
+    switch (anim->charID) {
+    case CHAR_ID_PARATROOPA_RED:
+    case CHAR_ID_PARATROOPA_GREEN:
+        extra = lbl_803CB798;
+        break;
+    case CHAR_ID_PARAGOOMBA:
+        extra = data->mirrorParagoomba;
+        break;
+    case CHAR_ID_BIRDO:
+        extra = lbl_803CB7A0;
+        break;
+    case CHAR_ID_SHYGUY_RED:
+    case CHAR_ID_SHYGUY_BLUE:
+    case CHAR_ID_SHYGUY_YELLOW:
+    case CHAR_ID_SHYGUY_GREEN:
+    case CHAR_ID_SHYGUY_BLACK:
+        extra = data->mirrorShyGuy;
+        break;
+    default:
+        extra = NULL;
+        break;
+    }
+    if (extra == NULL) {
+        return;
+    }
+    for (pair = extra; pair->a != 0xFFFF; pair++) {
+        a = anim->boneIndices[pair->a];
+        b = anim->boneIndices[pair->b];
+        if (a != 0xFFFF && b != 0xFFFF) {
+            anim->mirrorBones[a] = b;
+            anim->mirrorBones[b] = a;
+        }
+    }
 }
 
 // .text:0x8001FDD4 size:0x2C

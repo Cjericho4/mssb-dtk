@@ -135,7 +135,7 @@ typedef struct Gap8001196CAnim {
     /* 0x06C */ s16 unk6C;
     /* 0x06E */ s16 unk6E;
     /* 0x070 */ s16 unk70;
-    u8 _pad72[0x162 - 0x72];
+    /* 0x072 */ u16 mirrorBones[120];        /* actor bone index -> its left/right counterpart (fn_8001FC4C) */
     /* 0x162 */ u16 boneIndices[120];        /* bone id -> actor bone index, 0xFFFF = none */
     /* 0x252 */ s8 charID;
     u8 _pad253;

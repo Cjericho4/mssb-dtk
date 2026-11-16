@@ -117,7 +117,30 @@ void fn_8001F228(void);
 void challengeMapMaybe(void);
 void fn_8001F5E8(void);
 void fn_8001F8A4(void);
-void fn_8001FC4C(void);
+typedef struct Gap8001E460BonePair {
+    /* 0x0 */ u16 a; /* bone ids swapped when the model is mirrored; a == 0xFFFF ends a list */
+    /* 0x2 */ u16 b;
+} Gap8001E460BonePair;
+/* FAKEMATCH: one view from the unit's first data symbol, so the lists are reached as anchor +
+   offset like the original; the lists themselves sit in lbl_800EE930 (+0x30, +0x68, +0x80). */
+typedef struct Gap8001E460Data {
+    u8 _pad0[0x160];
+    /* 0x160 */ Gap8001E460BonePair mirrorCommon[14];    /* every character */
+    /* 0x198 */ Gap8001E460BonePair mirrorParagoomba[6];
+    /* 0x1B0 */ Gap8001E460BonePair mirrorShyGuy[1];     /* open-ended here */
+} Gap8001E460Data;
+extern Gap8001E460Data lbl_800EE800;
+extern Gap8001E460BonePair lbl_803CB798[2]; /* Paratroopas */
+extern Gap8001E460BonePair lbl_803CB7A0[2]; /* Birdo */
+/* View of the per-slot record (Gap8001196CAnim in gap_8001196C.h, which declares this function
+   with its own type). */
+typedef struct Gap8001E460Anim {
+    u8 _pad0[0x72];
+    /* 0x072 */ u16 mirrorBones[120]; /* actor bone index -> its left/right counterpart */
+    /* 0x162 */ u16 boneIndices[120]; /* bone id -> actor bone index, 0xFFFF = none */
+    /* 0x252 */ s8 charID;
+} Gap8001E460Anim;
+void fn_8001FC4C(Gap8001E460Anim* anim);
 void fn_8001FDD4(struct Gap8001E460Object* obj);
 void fn_8001FE00(void);
 void calledWhenStartingMatch(void);
