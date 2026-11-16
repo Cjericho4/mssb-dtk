@@ -121,7 +121,15 @@ void fn_80022634(void);
 void fn_800227A0(void);
 void fn_800227E4(void);
 void fn_800229CC(void);
-void fn_80022A24(void);
+extern Gap8002244CDiskDesc lbl_800EFBE8[21]; /* stadium files, three per stadium (DiskFileDesc in gap_8001E460.h) */
+typedef struct Gap8002244CQueueTask {
+    u8 _pad0[0x12];
+    /* 0x12 */ u16 priority;
+} Gap8002244CQueueTask;
+extern Gap8002244CQueueTask* lbl_803CC1B8; /* the queue task being run */
+void* fn_800A6354(u32 size);
+Gap8002244CQueueTask* fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
+BOOL fn_80022A24(s32 stadium, s32 part);
 void fn_80022B14(void);
 void fn_80022B68(void);
 BOOL fn_80022CB4(Gap8002244CDiskDesc* desc, void* dest, s32 mode, void* aramAddr, Gap8002244CLoadCallback callback,

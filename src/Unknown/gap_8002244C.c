@@ -145,8 +145,26 @@ void fn_800229CC(void) {
 }
 
 // .text:0x80022A24 size:0xF0
-void fn_80022A24(void) {
-    return;
+// Starts loading stadium file `part` (0..2) of `stadium` into the stadium buffer (reused if one
+// is kept, else 971,840 bytes are allocated) and queues fn_80022B14 to finish it. Returns FALSE
+// while the loader is busy.
+BOOL fn_80022A24(s32 stadium, s32 part) {
+    if (lbl_803716B8.pending != 0) {
+        fn_800A7568();
+    } else {
+        if (lbl_803C6CF8.complete != 1) {
+            return FALSE;
+        }
+        if (lbl_803716B8.current != 0) {
+            lbl_803716B8.pending = lbl_803716B8.current;
+        } else {
+            lbl_803716B8.pending = (u32)fn_800A6354(0xED440);
+        }
+    }
+    lbl_803716B8.current = 0;
+    ARAMTransfer(&lbl_800EFBE8[stadium * 3 + part], (void*)lbl_803716B8.pending, 2, NULL);
+    fn_800B0A5C_insertQueue(fn_80022B14, (u16)(lbl_803CC1B8->priority + 1));
+    return TRUE;
 }
 
 // .text:0x80022B14 size:0x54
