@@ -153,8 +153,30 @@ void fn_800AC508(void) {
 }
 
 // .text:0x800ACC6C size:0x68
-void fn_800ACC6C(void) {
-    return;
+// Number of 0x2000-byte blocks needed for `size + extra` bytes plus a per-kind overhead
+// (kind 1: 0x1800, kind 2: 0xE00), rounded up.
+s32 fn_800ACC6C(s32 kind, s32 size, s32 extra) {
+    /* Non-matching: operand order of the two adds only. */
+    s32 blocks;
+
+    switch (kind) {
+    case 0:
+        kind = 0;
+        break;
+    case 1:
+        kind = 0x1800;
+        break;
+    case 2:
+        kind = 0xE00;
+        break;
+    }
+    extra += size;
+    extra += kind; /* total bytes */
+    blocks = extra / 0x2000;
+    if (extra % 0x2000 != 0) {
+        blocks++;
+    }
+    return blocks;
 }
 
 // .text:0x800ACCD4 size:0x14
@@ -275,8 +297,30 @@ void fn_800AD070(void) {
 }
 
 // .text:0x800AD490 size:0x70
-void fn_800AD490(void) {
-    return;
+// Movie state word: 0xC0000000 for no movie, 4 when flag 4 is set, the disc error (0xA0000000
+// for -1, otherwise the code with the top bit) or the low flags.
+u32 fn_800AD490(Gap800A97D0Movie* movie) {
+    if (movie == NULL) {
+        return 0xC0000000;
+    }
+    if (movie->flags & 4) {
+        return 4;
+    }
+    switch (lbl_803C6CF8.error) {
+    case 0:
+        break;
+    case -1:
+        return 0xA0000000;
+    default:
+        return lbl_803C6CF8.error | 0x80000000;
+    }
+    if (movie->flags & 2) {
+        return movie->flags & 0x12;
+    }
+    if (movie->flags & 1) {
+        return 1;
+    }
+    return 0;
 }
 
 // .text:0x800AD500 size:0x1BC

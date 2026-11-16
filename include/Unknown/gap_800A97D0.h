@@ -91,7 +91,7 @@ void fn_800ABB60(void);
 void fn_800ABBD0(void);
 void fn_800ABF44(void);
 void fn_800AC508(void);
-void fn_800ACC6C(void);
+s32 fn_800ACC6C(s32 kind, s32 size, s32 extra);
 void fn_800ACCD4(void);
 void fn_800ACCE8(void);
 void fn_800ACD44(void);
@@ -105,7 +105,17 @@ void fn_800AD01C(s32 end);
 void fn_800AD038(s32 start);
 void fn_800AD054(s32 start, s32 end);
 void fn_800AD070(void);
-void fn_800AD490(void);
+/* Views of the movie record (Gap800AD780Movie) and the disc loader state. */
+typedef struct Gap800A97D0Movie {
+    u8 _pad0[0x1BA];
+    /* 0x1BA */ u8 flags;
+} Gap800A97D0Movie;
+typedef struct Gap800A97D0LoadStatus {
+    u8 _pad0[0x722];
+    /* 0x722 */ s8 error; /* 0 none, -1 retry, other values fatal */
+} Gap800A97D0LoadStatus;
+extern Gap800A97D0LoadStatus lbl_803C6CF8;
+u32 fn_800AD490(Gap800A97D0Movie* movie);
 void fn_800AD500(void);
 void fn_800AD6BC(void);
 
