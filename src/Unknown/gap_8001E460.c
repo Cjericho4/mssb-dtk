@@ -2171,8 +2171,24 @@ void fn_8002059C(void) {
 }
 
 // .text:0x80020624 size:0xD8
+// Queue task: on its first run starts script lbl_800EF470 on the task's scene (clearing the
+// scene's unk68 / unk5C pair first when the resource state is 7), sets scene flag 2 and hands
+// the task over to fn_8002059C; once marked ready it removes itself.
 void fn_80020624(void) {
-    return;
+    Gap8001E460QueueNode* task = lbl_803CC1B8;
+
+    if (lbl_8037169C.ready != 0) {
+        fn_800B0A14_removeQueue();
+        return;
+    }
+    fn_80034E20(task, &lbl_800EF470);
+    if (lbl_8037169C.state == 7) {
+        lbl_80371C30[task->index].stage->unk68 = 1;
+        lbl_80371C30[task->index].stage->unk5C = 0;
+    }
+    lbl_80371C30[task->index].stage->flags |= 2;
+    lbl_8037169C.ready = 1;
+    lbl_803CC1B8->callback = fn_8002059C;
 }
 
 // .text:0x800206FC size:0x968

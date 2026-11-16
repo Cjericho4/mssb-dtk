@@ -217,12 +217,16 @@ typedef struct Gap8001E460Task {
     /* 0x19 */ u8 unk19;
 } Gap8001E460Task;
 typedef struct Gap8001E460QueueNode {
-    u8 _pad0[0x10];
+    /* 0x00 */ void (*callback)(void);
+    u8 _pad4[0xC];
     /* 0x10 */ s16 unk10;
     u8 _pad12[2];
     u16 index;
 } Gap8001E460QueueNode;
+typedef struct Gap8001E460Script Gap8001E460Script;
+extern Gap8001E460Script lbl_800EF470;
 extern Gap8001E460QueueNode* lbl_803CC1B8;
+void fn_80034E20(Gap8001E460QueueNode* scene, Gap8001E460Script* script);
 Gap8001E460Task* fn_800B0A5C_insertQueue(void (*callback)(void), s32 priority);
 void fn_800216F8(u8 a, s32 b);
 void fn_80021758(void);
@@ -263,7 +267,15 @@ typedef struct Gap8001E460ResourceState {
     u8 _pad17[5];
 } Gap8001E460ResourceState;
 extern Gap8001E460ResourceState lbl_8037169C;
-typedef struct Gap8001E460Stage { u8 _pad0[0x69]; u8 status; } Gap8001E460Stage;
+typedef struct Gap8001E460Stage {
+    u8 _pad0[0x54];
+    /* 0x54 */ u32 flags;
+    u8 _pad58[4];
+    /* 0x5C */ u32 unk5C;
+    u8 _pad60[8];
+    /* 0x68 */ u8 unk68;
+    /* 0x69 */ u8 status;
+} Gap8001E460Stage;
 typedef struct Gap8001E460StageRef { Gap8001E460Stage* stage; u32 unk4; } Gap8001E460StageRef;
 extern Gap8001E460StageRef lbl_80371C30[];
 void fn_80034CEC(Gap8001E460QueueNode* task);
