@@ -140,8 +140,9 @@ void fn_800111B4(MenuPointerArchive* archive) {
 }
 
 // .text:0x800111D8 size:0x24
-void fn_800111D8(void) {
-    return;
+// Address of the model pointer of a slot record's actor block.
+Gap8000F8F4Model** fn_800111D8(Gap8000F8F4ActorSlot* slot) {
+    return &g_hugeAnimStruct.blocks[slot->blockIndex].model;
 }
 
 // .text:0x800111FC size:0x15C
@@ -214,18 +215,50 @@ s32 fn_80011570(void) {
 }
 
 // .text:0x80011578 size:0x50
+/* Clears the callback of actor slot `id` (0..12) if it is live. */
+static inline void clearSlotCallback(s8 id) {
+    if (id < 0) {
+        return;
+    }
+    if (id >= 13) {
+        return;
+    }
+    if (g_hugeAnimStruct.slots[id] == NULL) {
+        return;
+    }
+    g_hugeAnimStruct.slots[id]->callback = NULL;
+}
+
+// Clears the callback of every live actor slot.
 void fn_80011578(void) {
-    return;
+    s32 i;
+
+    for (i = 0; i < 13; i++) {
+        clearSlotCallback(i);
+    }
 }
 
 // .text:0x800115C8 size:0x3C
-void fn_800115C8(void) {
-    return;
+// Clears the callback of actor slot `id` (0..12) if it is live.
+void fn_800115C8(s8 id) {
+    clearSlotCallback(id);
 }
 
 // .text:0x80011604 size:0x3C
-void fn_80011604(void) {
-    return;
+// Sets the callback of actor slot `id` (0..12) if it is live.
+void fn_80011604(s8 id, void* callback) {
+    Gap8000F8F4ActorSlot* slot;
+
+    if (id < 0) {
+        return;
+    }
+    if (id >= 13) {
+        return;
+    }
+    slot = g_hugeAnimStruct.slots[id];
+    if (slot != NULL) {
+        slot->callback = callback;
+    }
 }
 
 // .text:0x80011640 size:0x9C

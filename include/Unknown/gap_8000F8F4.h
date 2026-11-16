@@ -65,14 +65,10 @@ typedef struct MenuPointerArchive {
     u8* entries[1]; /* Variable-length table with count entries. */
 } MenuPointerArchive;
 void fn_800111B4(MenuPointerArchive* archive);
-void fn_800111D8(void);
 void fn_800111FC(void);
 void fn_80011358(void);
 void fn_80011468(void);
 s32 fn_80011570(void);
-void fn_80011578(void);
-void fn_800115C8(void);
-void fn_80011604(void);
 typedef struct Gap8000F8F4Mtx {
     f32 m[3][4];
 } Gap8000F8F4Mtx;
@@ -105,7 +101,9 @@ typedef struct Gap8000F8F4Block {
     u8 _pad38[0x90 - 0x38];
 } Gap8000F8F4Block;
 typedef struct Gap8000F8F4ActorSlot {
-    u8 _pad0[0x62];
+    u8 _pad0[0x5C];
+    /* 0x5C */ void* callback; /* AnimationStruct.funcPtr_0x5c */
+    u8 _pad60[2];
     /* 0x62 */ s16 animID;
     u8 _pad64[0x252 - 0x64];
     /* 0x252 */ s8 charID;
@@ -119,6 +117,10 @@ typedef struct Gap8000F8F4HugeAnim {
     /* 0x2C50 */ Gap8000F8F4ActorSlot* slots[13];
 } Gap8000F8F4HugeAnim;
 extern Gap8000F8F4HugeAnim g_hugeAnimStruct;
+Gap8000F8F4Model** fn_800111D8(Gap8000F8F4ActorSlot* slot);
+void fn_80011578(void);
+void fn_800115C8(s8 id);
+void fn_80011604(s8 id, void* callback);
 /* Per-character slot updates called by fn_80011468 with the slot in r3 and its model pointer in r4; their owning headers
    (gap_80048BEC.h, gap_800506E8.h) still declare them as (void) stubs. */
 void fn_8004B6EC(Gap8000F8F4ActorSlot* slot, Gap8000F8F4Model** model);
