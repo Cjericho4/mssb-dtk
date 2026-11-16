@@ -302,8 +302,36 @@ void fn_8004BD6C(void) {
 }
 
 // .text:0x8004BEB0 size:0x1E4
-void fn_8004BEB0(void) {
-    return;
+// Animation event handler (animation 0x10, fielder on fire): while the frame is inside the
+// character's window, emits the three effects of lbl_800FC488 from bone 4 plus the character's
+// offset, aimed along the actor's facing.
+void fn_8004BEB0(Gap80048BECObj* obj, f32 frame) {
+    ControlExt control;
+    Mtx matrix;
+    Vec position;
+    Vec direction;
+
+    if (lbl_80366158.mode == 1) {
+        return;
+    }
+    if (frame < (f32)lbl_800FBCA8[obj->id] || frame > (f32)lbl_800FBD14[obj->id]) {
+        return;
+    }
+    position.x = (f32)lbl_800FC494[obj->id].x / 100000.0f;
+    position.y = (f32)lbl_800FC494[obj->id].y / 100000.0f;
+    position.z = (f32)lbl_800FC494[obj->id].z / 100000.0f;
+    fn_8001B728(obj->slotKind, 4, (Gap80048BECVec*)&position);
+    control.control.type = 0;
+    CTRLSetRotation(&control.control, obj->rotation.x, obj->rotation.y, obj->rotation.z);
+    CTRLBuildMatrix(&control.control, matrix);
+    direction.x = 0.0f;
+    direction.y = 0.0f;
+    direction.z = 1.0f;
+    PSMTXMultVec(matrix, &direction, &direction);
+    lbl_800FC488[0]->unk0 = lbl_800FC488[1]->unk0 = lbl_800FC488[2]->unk0 = lbl_803CBD0C;
+    fn_80030D88(&position, &direction, lbl_800FC488[0], 5);
+    fn_80030D88(&position, &direction, lbl_800FC488[1], 5);
+    fn_80030D88(&position, &direction, lbl_800FC488[2], 5);
 }
 
 // .text:0x8004C094 size:0x74

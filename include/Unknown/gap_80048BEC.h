@@ -2,6 +2,7 @@
 #define __UNKNOWN_gap_80048BEC_H_
 
 #include "mssbTypes.h"
+#include "C3/control.h"
 struct Gap80048BECObj;
 typedef union Gap80048BECCallback {
     void (*integer)(s32 a, s32 b, s32 c);
@@ -30,7 +31,9 @@ extern s32 lbl_803CBD0C;
 typedef struct Gap80048BECObj {
     u8 _pad0[0x3E];
     /* 0x3E */ u8 state;
-    u8 _pad3F[0x1BB];
+    u8 _pad3F;
+    /* 0x40 */ Vec rotation;
+    u8 _pad4C[0x1FA - 0x4C];
     u16 actorIndex; /* 0x1FA */
     u8 _pad1FC[0x56];
     s8 id; /* 0x252 charID */
@@ -135,7 +138,25 @@ s32 fn_8004B7B4(Gap80048BECObj* obj, struct Gap80048BECActor** actor);
 void fn_8004B7F4(void);
 void fn_8004BAEC(void);
 void fn_8004BD6C(void);
-void fn_8004BEB0(void);
+typedef struct Gap80048BECGameState {
+    u8 _pad0[0x28];
+    /* 0x28 */ u8 mode;
+    u8 _pad29[0x7];
+} Gap80048BECGameState; /* same view as Gap80027918GameState */
+extern Gap80048BECGameState lbl_80366158;
+typedef struct Gap80048BECOffset {
+    s32 x;
+    s32 y;
+    s32 z;
+} Gap80048BECOffset; /* fixed point, 1/100000 */
+extern s16 lbl_800FBCA8[NUM_CHOOSABLE_CHARACTERS]; /* animation 0x10 window start per charID */
+extern s16 lbl_800FBD14[NUM_CHOOSABLE_CHARACTERS]; /* animation 0x10 window end per charID */
+extern Gap80048BECOffset lbl_800FC494[NUM_CHOOSABLE_CHARACTERS]; /* effect offset per charID (all 0 in retail) */
+struct Gap80048BECEffectParams;
+extern struct Gap80048BECEffectParams* lbl_800FC488[3];
+/* gap_80027918.h still declares this as a (void) stub; arguments from fn_8004BEB0's call sites. */
+void fn_80030D88(Vec* position, Vec* direction, struct Gap80048BECEffectParams* params, s32 count);
+void fn_8004BEB0(Gap80048BECObj* obj, f32 frame);
 typedef struct Gap80048BECEffectParams {
     /* 0x00 */ s32 unk0;
     u8 _pad4[0x8];
