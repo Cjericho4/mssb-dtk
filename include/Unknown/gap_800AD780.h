@@ -122,6 +122,7 @@ typedef struct Gap800AD780SndBlock {
 } Gap800AD780SndBlock;
 extern Gap800AD780SndHeap* lbl_803CBB10;
 extern char lbl_800E7CD8[];
+extern char lbl_800E7CEC[];
 void OSReport(const char* message, ...);
 void SndFree(void* ptr);
 u8* SndAlloc(u32 size);

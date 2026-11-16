@@ -272,7 +272,36 @@ void SndFree(void* ptr) {
 }
 
 // .text:0x800B099C size:0x78
+// Allocates `size` bytes (rounded up to 4) from the sound heap at the next 32-byte boundary
+// that leaves room for the 8-byte block header; running out is a fatal error that reports and
+// hangs.
 u8* SndAlloc(u32 size) {
+    /* Non-matching: registers only. */
+    Gap800AD780SndHeap* heap;
+    u32 top;
+    u32 end;
+    u32 total;
+    s32 remaining;
+    u8* ptr;
+
+    size = (size + 3) & ~3;
+    heap = lbl_803CBB10;
+    top = heap->top;
+    end = heap->end;
+    ptr = (u8*)((top + 0x27) & ~0x1F);
+    total = (u32)ptr - top + size;
+    size += (u32)ptr; /* now the new top of the heap */
+    remaining = end - size;
+    if (remaining < 0) {
+        OSReport(lbl_800E7CEC);
+        for (;;) {
+        }
+    }
+    ((Gap800AD780SndBlock*)ptr - 1)->base = top;
+    ((Gap800AD780SndBlock*)ptr - 1)->size = total;
+    lbl_803CBB10->free = remaining;
+    lbl_803CBB10->top = size;
+    return ptr;
 }
 
 // .text:0x800B0A14 size:0x48
